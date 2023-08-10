@@ -1,7 +1,7 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-/// Represent a StructureType of a <a title="class in org.bukkit.generator.structure" href="Structure.html"><code>Structure</code></a>. Listed structure types are present in the default server. Depending on the server there might be additional structure types present (for example structure types added by data packs), which can be received via <a href="../../Registry.html#STRUCTURE_TYPE"><code>Registry.STRUCTURE_TYPE</code></a>.
+/// Represent a StructureType of a <a href="Structure.html" title="class in org.bukkit.generator.structure"><code>Structure</code></a>. Listed structure types are present in the default server. Depending on the server there might be additional structure types present (for example structure types added by data packs), which can be received via <a href="../../Registry.html#STRUCTURE_TYPE"><code>Registry.STRUCTURE_TYPE</code></a>.
 pub struct StructureType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -36,20 +36,29 @@ impl<'mc> StructureType<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::generator::structure::StructureType<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("org/bukkit/generator/structure/StructureType")?;
-        let res = jni.new_object(cls, "()V", &[])?;
+        let cls = jni.find_class("org/bukkit/generator/structure/StructureType");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, "()V", &[]);
+        let res = jni.translate_error_no_gen(res)?;
         crate::generator::structure::StructureType::from_raw(&jni, res)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -62,6 +71,7 @@ impl<'mc> StructureType<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -75,8 +85,9 @@ impl<'mc> StructureType<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -89,14 +100,16 @@ impl<'mc> StructureType<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -105,6 +118,7 @@ impl<'mc> StructureType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -113,6 +127,7 @@ impl<'mc> StructureType<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -121,6 +136,7 @@ impl<'mc> StructureType<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -137,7 +153,8 @@ impl<'mc> StructureType<'mc> {
 }
 impl<'mc> Into<crate::Keyed<'mc>> for StructureType<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
-        crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::Keyed::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting StructureType into crate::Keyed")
     }
 }
 /// Represent a Structure from the world. Listed structures are present in the default server. Depending on the server there might be additional structures present (for example structures added by data packs), which can be received via <a href="../../Registry.html#STRUCTURE"><code>Registry.STRUCTURE</code></a>.
@@ -174,13 +191,16 @@ impl<'mc> Structure<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::generator::structure::Structure<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("org/bukkit/generator/structure/Structure")?;
-        let res = jni.new_object(cls, "()V", &[])?;
+        let cls = jni.find_class("org/bukkit/generator/structure/Structure");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, "()V", &[]);
+        let res = jni.translate_error_no_gen(res)?;
         crate::generator::structure::Structure::from_raw(&jni, res)
     }
-    /// Returns the type of the structure.
+    //
+
     pub fn structure_type(
         &mut self,
     ) -> Result<crate::generator::structure::StructureType<'mc>, Box<dyn std::error::Error>> {
@@ -195,14 +215,21 @@ impl<'mc> Structure<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -215,6 +242,7 @@ impl<'mc> Structure<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -228,8 +256,9 @@ impl<'mc> Structure<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -242,14 +271,16 @@ impl<'mc> Structure<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -258,6 +289,7 @@ impl<'mc> Structure<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -266,6 +298,7 @@ impl<'mc> Structure<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -274,6 +307,7 @@ impl<'mc> Structure<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -290,6 +324,7 @@ impl<'mc> Structure<'mc> {
 }
 impl<'mc> Into<crate::Keyed<'mc>> for Structure<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
-        crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::Keyed::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting Structure into crate::Keyed")
     }
 }

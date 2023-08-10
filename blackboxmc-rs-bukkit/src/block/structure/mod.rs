@@ -9,7 +9,7 @@ pub enum StructureRotationEnum {
 }
 impl std::fmt::Display for StructureRotationEnum {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match &self {
+        match self {
             StructureRotationEnum::None => f.write_str("NONE"),
             StructureRotationEnum::Clockwise90 => f.write_str("CLOCKWISE_90"),
             StructureRotationEnum::Clockwise180 => f.write_str("CLOCKWISE_180"),
@@ -74,6 +74,36 @@ impl<'mc> StructureRotation<'mc> {
             _ => None,
         }
     }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<StructureRotation<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/block/structure/StructureRotation");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/structure/StructureRotation;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        StructureRotation::from_raw(
+            &jni,
+            raw_obj,
+            StructureRotation::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
 }
 pub enum UsageModeEnum {
     Save,
@@ -83,7 +113,7 @@ pub enum UsageModeEnum {
 }
 impl std::fmt::Display for UsageModeEnum {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match &self {
+        match self {
             UsageModeEnum::Save => f.write_str("SAVE"),
             UsageModeEnum::Load => f.write_str("LOAD"),
             UsageModeEnum::Corner => f.write_str("CORNER"),
@@ -144,6 +174,36 @@ impl<'mc> UsageMode<'mc> {
             _ => None,
         }
     }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<UsageMode<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/block/structure/UsageMode");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/structure/UsageMode;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        UsageMode::from_raw(
+            &jni,
+            raw_obj,
+            UsageMode::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
 }
 pub enum MirrorEnum {
     None,
@@ -152,7 +212,7 @@ pub enum MirrorEnum {
 }
 impl std::fmt::Display for MirrorEnum {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match &self {
+        match self {
             MirrorEnum::None => f.write_str("NONE"),
             MirrorEnum::LeftRight => f.write_str("LEFT_RIGHT"),
             MirrorEnum::FrontBack => f.write_str("FRONT_BACK"),
@@ -209,5 +269,35 @@ impl<'mc> Mirror<'mc> {
             "FRONT_BACK" => Some(MirrorEnum::FrontBack),
             _ => None,
         }
+    }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Mirror<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/block/structure/Mirror");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/structure/Mirror;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        Mirror::from_raw(
+            &jni,
+            raw_obj,
+            Mirror::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
     }
 }

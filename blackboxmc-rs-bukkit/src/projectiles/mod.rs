@@ -29,16 +29,22 @@ impl<'mc> ProjectileSource<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// Launches a <a title="interface in org.bukkit.entity" href="../entity/Projectile.html"><code>Projectile</code></a> from the ProjectileSource.
-    /// Launches a <a title="interface in org.bukkit.entity" href="../entity/Projectile.html"><code>Projectile</code></a> from the ProjectileSource with an initial velocity.
+    //
+
     pub fn launch_projectile_with_class(
         &mut self,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<impl Into<&'mc crate::util::Vector<'mc>>>,
+        arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
     ) -> Result<crate::entity::Projectile<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_2 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "launchProjectile",
@@ -93,7 +99,8 @@ impl<'mc> BlockProjectileSource<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// Gets the block this projectile source belongs to.
+    //
+
     pub fn block(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -106,15 +113,22 @@ impl<'mc> BlockProjectileSource<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn launch_projectile_with_class(
         &mut self,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<impl Into<&'mc crate::util::Vector<'mc>>>,
+        arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
     ) -> Result<crate::entity::Projectile<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_2 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "launchProjectile",
@@ -141,6 +155,8 @@ impl<'mc> JNIRaw<'mc> for BlockProjectileSource<'mc> {
 }
 impl<'mc> Into<crate::projectiles::ProjectileSource<'mc>> for BlockProjectileSource<'mc> {
     fn into(self) -> crate::projectiles::ProjectileSource<'mc> {
-        crate::projectiles::ProjectileSource::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::projectiles::ProjectileSource::from_raw(&self.jni_ref(), self.1).expect(
+            "Error converting BlockProjectileSource into crate::projectiles::ProjectileSource",
+        )
     }
 }

@@ -34,23 +34,27 @@ impl<'mc> MemoryKey<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// Returns a <a href="MemoryKey.html" title="class in org.bukkit.entity.memory"><code>MemoryKey</code></a> by a <a href="../../NamespacedKey.html" title="class in org.bukkit"><code>NamespacedKey</code></a>.
+    //
+
     pub fn get_by_key(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::NamespacedKey<'mc>>,
     ) -> Result<crate::entity::memory::MemoryKey<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/entity/memory/MemoryKey")?;
+        let cls = jni.find_class("org/bukkit/entity/memory/MemoryKey");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "getByKey",
             "(Lorg/bukkit/NamespacedKey;)Lorg/bukkit/entity/memory/MemoryKey;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
+        );
+        let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::entity::memory::MemoryKey::from_raw(&jni, obj)
     }
-    /// Gets the class of values associated with this memory.
+    //
+
     pub fn memory_class(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -63,17 +67,20 @@ impl<'mc> MemoryKey<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    /// Returns the set of all MemoryKeys.
+    //
+
     pub fn values(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("java/util/Set")?;
-        let res = jni.call_static_method(cls, "values", "()Ljava/util/Set;", &[])?;
+        let cls = jni.find_class("java/util/Set");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "values", "()Ljava/util/Set;", &[]);
+        let res = jni.translate_error(res)?;
         let obj = res.l()?;
         blackboxmc_java::JavaSet::from_raw(&jni, obj)
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../../Keyed.html#getKey()">Keyed</a></code></span>
-    /// Return the namespaced identifier for this object.
+    //
+
     pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -86,14 +93,21 @@ impl<'mc> MemoryKey<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -106,6 +120,7 @@ impl<'mc> MemoryKey<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -119,8 +134,9 @@ impl<'mc> MemoryKey<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -133,14 +149,16 @@ impl<'mc> MemoryKey<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -149,6 +167,7 @@ impl<'mc> MemoryKey<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -157,6 +176,7 @@ impl<'mc> MemoryKey<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -168,6 +188,7 @@ impl<'mc> MemoryKey<'mc> {
 }
 impl<'mc> Into<crate::Keyed<'mc>> for MemoryKey<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
-        crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::Keyed::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting MemoryKey into crate::Keyed")
     }
 }

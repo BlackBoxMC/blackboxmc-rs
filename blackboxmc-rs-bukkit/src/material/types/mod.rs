@@ -18,7 +18,7 @@ pub enum MushroomBlockTextureEnum {
 }
 impl std::fmt::Display for MushroomBlockTextureEnum {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match &self {
+        match self {
             MushroomBlockTextureEnum::AllPores => f.write_str("ALL_PORES"),
             MushroomBlockTextureEnum::CapNorthWest => f.write_str("CAP_NORTH_WEST"),
             MushroomBlockTextureEnum::CapNorth => f.write_str("CAP_NORTH"),
@@ -108,5 +108,35 @@ impl<'mc> MushroomBlockTexture<'mc> {
             "ALL_STEM" => Some(MushroomBlockTextureEnum::AllStem),
             _ => None,
         }
+    }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<MushroomBlockTexture<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/material/types/MushroomBlockTexture");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/material/types/MushroomBlockTexture;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        MushroomBlockTexture::from_raw(
+            &jni,
+            raw_obj,
+            MushroomBlockTexture::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
     }
 }

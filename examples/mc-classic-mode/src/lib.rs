@@ -51,14 +51,16 @@ pub extern "system" fn __extends__BukkitRunnable__HungerThread__run<'mc>(
 pub extern "system" fn __on__PluginEnableEvent(env: JNIEnv<'_>, obj: JObject<'_>) {
     color_eyre::install().expect("Java exception");
     let e = SharedJNIEnv::new(env);
-    let mut event = PluginEnableEvent::from_raw(&e, obj).expect("Java exception");
+    let mut ev1 = PluginEnableEvent::from_raw(&e, unsafe { JObject::from_raw(obj.clone()) })
+        .expect("Java exception");
+    let mut ev2 = PluginEnableEvent::from_raw(&e, obj).expect("Java exception");
 
-    let plugin = event.plugin().expect("Java exception");
-
+    let plug1 = ev1.plugin().expect("Java exception");
+    let plug2 = ev2.plugin().expect("Java exception");
     // New runnable
     println!("run task timer");
-    let mut runnable = HungerThread::new(&e, &plugin).expect("Java exception");
+    let mut runnable = HungerThread::new(&e, &plug1).expect("Java exception");
     runnable
-        .run_task_timer(&plugin, 0, 20)
+        .run_task_timer(plug2, 0, 20)
         .expect("Java exception");
 }

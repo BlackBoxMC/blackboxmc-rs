@@ -1,12 +1,29 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-/// Each entry here represents a particular plugin's awareness. These can be checked by using <a href="PluginDescriptionFile.html#getAwareness()"><code>PluginDescriptionFile.getAwareness()</code></a>.<a class="external-link" href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html#contains-java.lang.Object-" title="class or interface in java.util"><code>contains(flag)</code></a>.
+/// Each entry here represents a particular plugin's awareness. These can be checked by using <a href="PluginDescriptionFile.html#getAwareness()"><code>PluginDescriptionFile.getAwareness()</code></a>.<a class="external-link" title="class or interface in java.util" href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html#contains-java.lang.Object-"><code>contains(flag)</code></a>.
+pub enum PluginAwarenessFlagsEnum {
+    Utf8,
+}
+impl std::fmt::Display for PluginAwarenessFlagsEnum {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            PluginAwarenessFlagsEnum::Utf8 => f.write_str("UTF8"),
+        }
+    }
+}
 pub struct PluginAwarenessFlags<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
+    pub PluginAwarenessFlagsEnum,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PluginAwarenessFlags<'mc> {
+impl<'mc> std::ops::Deref for PluginAwarenessFlags<'mc> {
+    type Target = PluginAwarenessFlagsEnum;
+    fn deref(&self) -> &Self::Target {
+        return &self.2;
+    }
+}
+impl<'mc> JNIRaw<'mc> for PluginAwarenessFlags<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -19,13 +36,14 @@ impl<'mc> PluginAwarenessFlags<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
+        e: PluginAwarenessFlagsEnum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
                 eyre::eyre!("Tried to instantiate PluginAwarenessFlags from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/plugin/PluginAwarenessFlags")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/plugin/PluginAwareness$Flags")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a PluginAwarenessFlags object, got {}",
@@ -33,157 +51,48 @@ impl<'mc> PluginAwarenessFlags<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self(env.clone(), obj, e))
         }
     }
-    /// Returns the enum constant of this type with the specified name. The string must match <i>exactly</i> an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
-    pub fn value_of_with_string(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<impl Into<&'mc String>>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
-        let cls = &jni.find_class("java/lang/Enum")?;
+    pub const UTF8: PluginAwarenessFlagsEnum = PluginAwarenessFlagsEnum::Utf8;
+    pub fn from_string(str: String) -> std::option::Option<PluginAwarenessFlagsEnum> {
+        match str.as_str() {
+            "UTF8" => Some(PluginAwarenessFlagsEnum::Utf8),
+            _ => None,
+        }
+    }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<PluginAwarenessFlags<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/plugin/PluginAwareness$Flags");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "valueOf",
-            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let obj = res.l()?;
-        Self::from_raw(&jni, obj)
-    }
-
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
+            "(Ljava/lang/String;)Lorg/bukkit/plugin/PluginAwareness$Flags;",
             &[jni::objects::JValueGen::from(&val_1)],
         );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
-            .to_string())
+            .to_string();
+        PluginAwarenessFlags::from_raw(
+            &jni,
+            raw_obj,
+            PluginAwarenessFlags::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
     }
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn declaring_class(
-        &mut self,
-    ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDeclaringClass",
-            "()Ljava/lang/Class;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-
-    pub fn wait(
-        &mut self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "wait",
-            "(JI)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+    //
 }
 /// This type is the runtime-container for the information in the plugin.yml. All plugins must have a respective plugin.yml. For plugins written in java using the standard plugin loader, this file must be in the root of the jar file.
 /// <p>When Bukkit loads a plugin, it needs to know some basic information about it. It reads this information from a YAML file, 'plugin.yml'. This file consists of a set of attributes, each defined on a new line and with no indentation.</p>
@@ -391,29 +300,37 @@ impl<'mc> PluginDescriptionFile<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub unsafe fn new_with_reader(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn new_with_reader(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<crate::plugin::PluginDescriptionFile<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let cls = &jni.find_class("org/bukkit/plugin/PluginDescriptionFile")?;
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let cls = jni.find_class("org/bukkit/plugin/PluginDescriptionFile");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Ljava/io/InputStream;)V",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         crate::plugin::PluginDescriptionFile::from_raw(&jni, res)
     }
     pub fn new_with_string(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc String>,
-        arg2: std::option::Option<impl Into<&'mc String>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+        arg1: impl Into<String>,
+        arg2: std::option::Option<impl Into<String>>,
     ) -> Result<crate::plugin::PluginDescriptionFile<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.into()).unwrap());
-        let val_3 = jni::objects::JObject::from(jni.new_string(arg2.unwrap().into()).unwrap());
-        let cls = &jni.find_class("org/bukkit/plugin/PluginDescriptionFile")?;
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.into())?);
+        let val_3 = jni::objects::JObject::from(
+            jni.new_string(
+                arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let cls = jni.find_class("org/bukkit/plugin/PluginDescriptionFile");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V",
@@ -422,10 +339,12 @@ impl<'mc> PluginDescriptionFile<'mc> {
                 jni::objects::JValueGen::from(&val_2),
                 jni::objects::JValueGen::from(&val_3),
             ],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         crate::plugin::PluginDescriptionFile::from_raw(&jni, res)
     }
-    /// Returns the name of a plugin, including the version. This method is provided for convenience; it uses the <a href="#getName()"><code>getName()</code></a> and <a href="#getVersion()"><code>getVersion()</code></a> entries.
+    //
+
     pub fn full_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -440,17 +359,8 @@ impl<'mc> PluginDescriptionFile<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    /// Gives the version of the plugin.
-    /// <ul>
-    /// <li>Version is an arbitrary string, however the most common format is MajorRelease.MinorRelease.Build (eg: 1.4.1).</li>
-    /// <li>Typically you will increment this every time you release a new feature or bug fix.</li>
-    /// <li>Displayed when a user types <code>/version PluginName</code></li>
-    /// </ul>
-    /// <p>In the plugin.yml, this entry is named <code>version</code>.</p>
-    /// <p>Example:</p>
-    /// <blockquote>
-    /// <pre>version: 1.4.1</pre>
-    /// </blockquote>
+    //
+
     pub fn version(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -465,13 +375,8 @@ impl<'mc> PluginDescriptionFile<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// unused
-    /// </div>
-    /// unused
-    ///
+    //
+
     pub fn class_loader_of(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -486,16 +391,8 @@ impl<'mc> PluginDescriptionFile<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    /// Gives a human-friendly description of the functionality the plugin provides.
-    /// <ul>
-    /// <li>The description can have multiple lines.</li>
-    /// <li>Displayed when a user types <code>/version PluginName</code></li>
-    /// </ul>
-    /// <p>In the plugin.yml, this entry is named <code>description</code>.</p>
-    /// <p>Example:</p>
-    /// <blockquote>
-    /// <pre>description: This plugin is so 31337. You can set yourself on fire.</pre>
-    /// </blockquote>
+    //
+
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -510,17 +407,8 @@ impl<'mc> PluginDescriptionFile<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    /// Gives the token to prefix plugin-specific logging messages with.
-    /// <ul>
-    /// <li>This includes all messages using <a href="Plugin.html#getLogger()"><code>Plugin.getLogger()</code></a>.</li>
-    /// <li>If not specified, the server uses the plugin's <a href="#getName()"><code>name</code></a>.</li>
-    /// <li>This should clearly indicate what plugin is being logged.</li>
-    /// </ul>
-    /// <p>In the plugin.yml, this entry is named <code>prefix</code>.</p>
-    /// <p>Example:</p>
-    /// <blockquote>
-    /// <pre>prefix: ex-why-zee</pre>
-    /// </blockquote>
+    //
+
     pub fn prefix(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -535,21 +423,8 @@ impl<'mc> PluginDescriptionFile<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    /// Gives the list of other plugin APIs which this plugin provides. These are usable for other plugins to depend on.
-    /// <ul>
-    /// <li>Must consist of all alphanumeric characters, underscores, hyphon, and period (a-z,A-Z,0-9, _.-). Any other character will cause the plugin.yml to fail loading.</li>
-    /// <li>A different plugin providing the same one or using it as their name will not result in the plugin to fail loading.</li>
-    /// <li>Case sensitive.</li>
-    /// <li>An entry of this list can be referenced in <a href="#getDepend()"><code>getDepend()</code></a>, <a href="#getSoftDepend()"><code>getSoftDepend()</code></a>, and <a href="#getLoadBefore()"><code>getLoadBefore()</code></a>.</li>
-    /// <li><code>provides</code> must be in <a href="http://en.wikipedia.org/wiki/YAML#Lists">YAML list format</a>.</li>
-    /// </ul>
-    /// <p>In the plugin.yml, this entry is named <code>provides</code>.</p>
-    /// <p>Example:</p>
-    /// <blockquote>
-    /// <pre>provides:
-    /// - OtherPluginName
-    /// - OldPluginName</pre>
-    /// </blockquote>
+    //
+
     pub fn provides(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -572,17 +447,8 @@ impl<'mc> PluginDescriptionFile<'mc> {
         }
         Ok(new_vec)
     }
-    /// Gives the fully qualified name of the main class for a plugin. The format should follow the <a title="class or interface in java.lang" class="external-link" href="https://docs.oracle.com/javase/8/docs/api/java/lang/ClassLoader.html#loadClass-java.lang.String-"><code>ClassLoader.loadClass(String)</code></a> syntax to successfully be resolved at runtime. For most plugins, this is the class that extends <a href="java/JavaPlugin.html" title="class in org.bukkit.plugin.java"><code>JavaPlugin</code></a>.
-    /// <ul>
-    /// <li>This must contain the full namespace including the class file itself.</li>
-    /// <li>If your namespace is <code>org.bukkit.plugin</code>, and your class file is called <code>MyPlugin</code> then this must be <code>org.bukkit.plugin.MyPlugin</code></li>
-    /// <li>No plugin can use <code>org.bukkit.</code> as a base package for <b>any class</b>, including the main class.</li>
-    /// </ul>
-    /// <p>In the plugin.yml, this entry is named <code>main</code>.</p>
-    /// <p>Example:</p>
-    /// <blockquote>
-    /// <pre>main: org.bukkit.plugin.MyPlugin</pre>
-    /// </blockquote>
+    //
+
     pub fn main(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -594,32 +460,8 @@ impl<'mc> PluginDescriptionFile<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    /// Gives the phase of server startup that the plugin should be loaded.
-    /// <ul>
-    /// <li>Possible values are in <a title="enum in org.bukkit.plugin" href="PluginLoadOrder.html"><code>PluginLoadOrder</code></a>.</li>
-    /// <li>Defaults to <a href="PluginLoadOrder.html#POSTWORLD"><code>PluginLoadOrder.POSTWORLD</code></a>.</li>
-    /// <li>Certain caveats apply to each phase.</li>
-    /// <li>When different, <a href="#getDepend()"><code>getDepend()</code></a>, <a href="#getSoftDepend()"><code>getSoftDepend()</code></a>, and <a href="#getLoadBefore()"><code>getLoadBefore()</code></a> become relative in order loaded per-phase. If a plugin loads at <code>STARTUP</code>, but a dependency loads at <code>POSTWORLD</code>, the dependency will not be loaded before the plugin is loaded.</li>
-    /// </ul>
-    /// <p>In the plugin.yml, this entry is named <code>load</code>.</p>
-    /// <p>Example:</p>
-    /// <blockquote>
-    /// <pre>load: STARTUP</pre>
-    /// </blockquote>
-    /// Gets the list of plugins that should consider this plugin a soft-dependency.
-    /// <ul>
-    /// <li>Use the value in the <a href="#getName()"><code>getName()</code></a> of the target plugin to specify the dependency.</li>
-    /// <li>The plugin should load before any other plugins listed here.</li>
-    /// <li>Specifying another plugin here is strictly equivalent to having the specified plugin's <a href="#getSoftDepend()"><code>getSoftDepend()</code></a> include <a href="#getName()"><code>this plugin</code></a>.</li>
-    /// <li><code>loadbefore</code> must be in <a href="http://en.wikipedia.org/wiki/YAML#Lists">YAML list format</a>.</li>
-    /// </ul>
-    /// <p>In the plugin.yml, this entry is named <code>loadbefore</code>.</p>
-    /// <p>Example:</p>
-    /// <blockquote>
-    /// <pre>loadbefore:
-    /// - OnePlugin
-    /// - AnotherPlugin</pre>
-    /// </blockquote>
+    //
+
     pub fn load(
         &mut self,
     ) -> Result<crate::plugin::PluginLoadOrder<'mc>, Box<dyn std::error::Error>> {
@@ -633,7 +475,8 @@ impl<'mc> PluginDescriptionFile<'mc> {
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
         let variant = self
             .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = self.jni_ref().translate_error(variant)?;
         let variant_str = self
             .0
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -642,32 +485,12 @@ impl<'mc> PluginDescriptionFile<'mc> {
         crate::plugin::PluginLoadOrder::from_raw(
             &self.jni_ref(),
             raw_obj,
-            crate::plugin::PluginLoadOrder::from_string(variant_str).unwrap(),
+            crate::plugin::PluginLoadOrder::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    /// Gives the list of authors for the plugin.
-    /// <ul>
-    /// <li>Gives credit to the developer.</li>
-    /// <li>Used in some server error messages to provide helpful feedback on who to contact when an error occurs.</li>
-    /// <li>A SpigotMC forum handle or email address is recommended.</li>
-    /// <li>Is displayed when a user types <code>/version PluginName</code></li>
-    /// <li><code>authors</code> must be in <a href="http://en.wikipedia.org/wiki/YAML#Lists">YAML list format</a>.</li>
-    /// </ul>
-    /// <p>In the plugin.yml, this has two entries, <code>author</code> and <code>authors</code>.</p>
-    /// <p>Single author example:</p>
-    /// <blockquote>
-    /// <pre>author: CaptainInflamo</pre>
-    /// </blockquote> Multiple author example:
-    /// <blockquote>
-    /// <pre>authors: [Cogito, verrier, EvilSeph]</pre>
-    /// </blockquote> When both are specified, author will be the first entry in the list, so this example:
-    /// <blockquote>
-    /// <pre>author: Grum
-    /// authors:
-    /// - feildmaster
-    /// - amaranth</pre>
-    /// </blockquote> Is equivilant to this example:
-    /// <pre>authors: [Grum, feildmaster, aramanth]</pre>
+    //
+
     pub fn authors(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -687,18 +510,8 @@ impl<'mc> PluginDescriptionFile<'mc> {
         }
         Ok(new_vec)
     }
-    /// Gives the list of contributors for the plugin.
-    /// <ul>
-    /// <li>Gives credit to those that have contributed to the plugin, though not enough so to warrant authorship.</li>
-    /// <li>Unlike <a href="#getAuthors()"><code>getAuthors()</code></a>, contributors will not be mentioned in server error messages as a means of contact.</li>
-    /// <li>A SpigotMC forum handle or email address is recommended.</li>
-    /// <li>Is displayed when a user types <code>/version PluginName</code></li>
-    /// <li><code>contributors</code> must be in <a href="http://en.wikipedia.org/wiki/YAML#Lists">YAML list format</a>.</li>
-    /// </ul>
-    /// <p>Example:</p>
-    /// <blockquote>
-    /// <pre>authors: [Choco, md_5]</pre>
-    /// </blockquote>
+    //
+
     pub fn contributors(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -721,16 +534,8 @@ impl<'mc> PluginDescriptionFile<'mc> {
         }
         Ok(new_vec)
     }
-    /// Gives the plugin's or plugin's author's website.
-    /// <ul>
-    /// <li>A link to the Curse page that includes documentation and downloads is highly recommended.</li>
-    /// <li>Displayed when a user types <code>/version PluginName</code></li>
-    /// </ul>
-    /// <p>In the plugin.yml, this entry is named <code>website</code>.</p>
-    /// <p>Example:</p>
-    /// <blockquote>
-    /// <pre>website: http://www.curse.com/server-mods/minecraft/myplugin</pre>
-    /// </blockquote>
+    //
+
     pub fn website(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -745,20 +550,8 @@ impl<'mc> PluginDescriptionFile<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    /// Gives a list of other plugins that the plugin requires.
-    /// <ul>
-    /// <li>Use the value in the <a href="#getName()"><code>getName()</code></a> of the target plugin to specify the dependency.</li>
-    /// <li>If any plugin listed here is not found, your plugin will fail to load at startup.</li>
-    /// <li>If multiple plugins list each other in <code>depend</code>, creating a network with no individual plugin does not list another plugin in the <a href="https://en.wikipedia.org/wiki/Circular_dependency">network</a>, all plugins in that network will fail.</li>
-    /// <li><code>depend</code> must be in <a href="http://en.wikipedia.org/wiki/YAML#Lists">YAML list format</a>.</li>
-    /// </ul>
-    /// <p>In the plugin.yml, this entry is named <code>depend</code>.</p>
-    /// <p>Example:</p>
-    /// <blockquote>
-    /// <pre>depend:
-    /// - OnePlugin
-    /// - AnotherPlugin</pre>
-    /// </blockquote>
+    //
+
     pub fn depend(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -778,18 +571,8 @@ impl<'mc> PluginDescriptionFile<'mc> {
         }
         Ok(new_vec)
     }
-    /// Gives a list of other plugins that the plugin requires for full functionality. The <a href="PluginManager.html" title="interface in org.bukkit.plugin"><code>PluginManager</code></a> will make best effort to treat all entries here as if they were a <a href="#getDepend()"><code>dependency</code></a>, but will never fail because of one of these entries.
-    /// <ul>
-    /// <li>Use the value in the <a href="#getName()"><code>getName()</code></a> of the target plugin to specify the dependency.</li>
-    /// <li>When an unresolvable plugin is listed, it will be ignored and does not affect load order.</li>
-    /// <li>When a circular dependency occurs (a network of plugins depending or soft-dependending each other), it will arbitrarily choose a plugin that can be resolved when ignoring soft-dependencies.</li>
-    /// <li><code>softdepend</code> must be in <a href="http://en.wikipedia.org/wiki/YAML#Lists">YAML list format</a>.</li>
-    /// </ul>
-    /// <p>In the plugin.yml, this entry is named <code>softdepend</code>.</p>
-    /// <p>Example:</p>
-    /// <blockquote>
-    /// <pre>softdepend: [OnePlugin, AnotherPlugin]</pre>
-    /// </blockquote>
+    //
+
     pub fn soft_depend(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -812,20 +595,8 @@ impl<'mc> PluginDescriptionFile<'mc> {
         }
         Ok(new_vec)
     }
-    /// Gets the list of plugins that should consider this plugin a soft-dependency.
-    /// <ul>
-    /// <li>Use the value in the <a href="#getName()"><code>getName()</code></a> of the target plugin to specify the dependency.</li>
-    /// <li>The plugin should load before any other plugins listed here.</li>
-    /// <li>Specifying another plugin here is strictly equivalent to having the specified plugin's <a href="#getSoftDepend()"><code>getSoftDepend()</code></a> include <a href="#getName()"><code>this plugin</code></a>.</li>
-    /// <li><code>loadbefore</code> must be in <a href="http://en.wikipedia.org/wiki/YAML#Lists">YAML list format</a>.</li>
-    /// </ul>
-    /// <p>In the plugin.yml, this entry is named <code>loadbefore</code>.</p>
-    /// <p>Example:</p>
-    /// <blockquote>
-    /// <pre>loadbefore:
-    /// - OnePlugin
-    /// - AnotherPlugin</pre>
-    /// </blockquote>
+    //
+
     pub fn load_before(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -848,107 +619,8 @@ impl<'mc> PluginDescriptionFile<'mc> {
         }
         Ok(new_vec)
     }
-    /// Gives the map of command-name to command-properties. Each entry in this map corresponds to a single command and the respective values are the properties of the command. Each property, <i>with the exception of aliases</i>, can be defined at runtime using methods in <a title="class in org.bukkit.command" href="../command/PluginCommand.html"><code>PluginCommand</code></a> and are defined here only as a convenience.
-    /// <table border="1">
-    /// <caption>
-    /// The command section's description
-    /// </caption>
-    /// <tbody>
-    /// <tr>
-    /// <th>Node</th>
-    /// <th>Method</th>
-    /// <th>Type</th>
-    /// <th>Description</th>
-    /// <th>Example</th>
-    /// </tr>
-    /// <tr>
-    /// <td><code>description</code></td>
-    /// <td><a href="../command/Command.html#setDescription(java.lang.String)"><code>Command.setDescription(String)</code></a></td>
-    /// <td>String</td>
-    /// <td>A user-friendly description for a command. It is useful for documentation purposes as well as in-game help.</td>
-    /// <td>
-    /// <blockquote>
-    /// <pre>description: Set yourself on fire</pre>
-    /// </blockquote></td>
-    /// </tr>
-    /// <tr>
-    /// <td><code>aliases</code></td>
-    /// <td><a href="../command/Command.html#setAliases(java.util.List)"><code>Command.setAliases(List)</code></a></td>
-    /// <td>String or <a href="http://en.wikipedia.org/wiki/YAML#Lists">List</a> of strings</td>
-    /// <td>Alternative command names, with special usefulness for commands that are already registered. <i>Aliases are not effective when defined at runtime,</i> so the plugin description file is the only way to have them properly defined.
-    /// <p>Note: Command aliases may not have a colon in them.</p></td>
-    /// <td>Single alias format:
-    /// <blockquote>
-    /// <pre>aliases: combust_me</pre>
-    /// </blockquote> or multiple alias format:
-    /// <blockquote>
-    /// <pre>aliases: [combust_me, combustMe]</pre>
-    /// </blockquote></td>
-    /// </tr>
-    /// <tr>
-    /// <td><code>permission</code></td>
-    /// <td><a href="../command/Command.html#setPermission(java.lang.String)"><code>Command.setPermission(String)</code></a></td>
-    /// <td>String</td>
-    /// <td>The name of the <a href="../permissions/Permission.html" title="class in org.bukkit.permissions"><code>Permission</code></a> required to use the command. A user without the permission will receive the specified message (see <a href="../command/Command.html#setPermissionMessage(java.lang.String)">below</a>), or a standard one if no specific message is defined. Without the permission node, no <a href="../command/PluginCommand.html#setExecutor(org.bukkit.command.CommandExecutor)"><code>CommandExecutor</code></a> or <a href="../command/PluginCommand.html#setTabCompleter(org.bukkit.command.TabCompleter)"><code>PluginCommand.setTabCompleter(TabCompleter)</code></a> will be called.</td>
-    /// <td>
-    /// <blockquote>
-    /// <pre>permission: inferno.flagrate</pre>
-    /// </blockquote></td>
-    /// </tr>
-    /// <tr>
-    /// <td><code>permission-message</code></td>
-    /// <td><a href="../command/Command.html#setPermissionMessage(java.lang.String)"><code>Command.setPermissionMessage(String)</code></a></td>
-    /// <td>String</td>
-    /// <td>
-    /// <ul>
-    /// <li>Displayed to a player that attempts to use a command, but does not have the required permission. See <a href="../command/Command.html#getPermission()"><code>above</code></a>.</li>
-    /// <li>&lt;permission&gt; is a macro that is replaced with the permission node required to use the command.</li>
-    /// <li>Using empty quotes is a valid way to indicate nothing should be displayed to a player.</li>
-    /// </ul></td>
-    /// <td>
-    /// <blockquote>
-    /// <pre>permission-message: You do not have /&lt;permission&gt;</pre>
-    /// </blockquote></td>
-    /// </tr>
-    /// <tr>
-    /// <td><code>usage</code></td>
-    /// <td><a href="../command/Command.html#setUsage(java.lang.String)"><code>Command.setUsage(String)</code></a></td>
-    /// <td>String</td>
-    /// <td>This message is displayed to a player when the <a href="../command/PluginCommand.html#setExecutor(org.bukkit.command.CommandExecutor)"><code>PluginCommand.setExecutor(CommandExecutor)</code></a> <a href="../command/CommandExecutor.html#onCommand(org.bukkit.command.CommandSender,org.bukkit.command.Command,java.lang.String,java.lang.String%5B%5D)">returns false</a>. &lt;command&gt; is a macro that is replaced the command issued.</td>
-    /// <td>
-    /// <blockquote>
-    /// <pre>usage: Syntax error! Perhaps you meant /&lt;command&gt; PlayerName?</pre>
-    /// </blockquote> It is worth noting that to use a colon in a yaml, like <code>`usage: Usage: /god [player]'</code>, you need to <a href="http://yaml.org/spec/current.html#id2503232">surround the message with double-quote</a>:
-    /// <blockquote>
-    /// <pre>usage: "Usage: /god [player]"</pre>
-    /// </blockquote></td>
-    /// </tr>
-    /// </tbody>
-    /// </table> The commands are structured as a hiearchy of <a href="http://yaml.org/spec/current.html#id2502325">nested mappings</a>. The primary (top-level, no intendentation) node is `<code>commands</code>', while each individual command name is indented, indicating it maps to some value (in our case, the properties of the table above).
-    /// <p>Here is an example bringing together the piecemeal examples above, as well as few more definitions:</p>
-    /// <blockquote>
-    /// <pre>commands:
-    /// flagrate:
-    /// description: Set yourself on fire.
-    /// aliases: [combust_me, combustMe]
-    /// permission: inferno.flagrate
-    /// permission-message: You do not have /&lt;permission&gt;
-    /// usage: Syntax error! Perhaps you meant /&lt;command&gt; PlayerName?
-    /// burningdeaths:
-    /// description: List how many times you have died by fire.
-    /// aliases:
-    /// - burning_deaths
-    /// - burningDeaths
-    /// permission: inferno.burningdeaths
-    /// usage: |
-    /// /&lt;command&gt; [player]
-    /// Example: /&lt;command&gt; - see how many times you have burned to death
-    /// Example: /&lt;command&gt; CaptainIce - see how many times CaptainIce has burned to death
-    /// # The next command has no description, aliases, etc. defined, but is still valid
-    /// # Having an empty declaration is useful for defining the description, permission, and messages from a configuration dynamically
-    /// apocalypse:
-    /// </pre>
-    /// </blockquote> Note: Command names may not have a colon in their name.
+    //
+
     pub fn commands(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -960,18 +632,8 @@ impl<'mc> PluginDescriptionFile<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gives the default <a href="../permissions/Permission.html#getDefault()"><code>default</code></a> state of <a href="#getPermissions()"><code>permissions</code></a> registered for the plugin.
-    /// <ul>
-    /// <li>If not specified, it will be <a href="../permissions/PermissionDefault.html#OP"><code>PermissionDefault.OP</code></a>.</li>
-    /// <li>It is matched using <a href="../permissions/PermissionDefault.html#getByName(java.lang.String)"><code>PermissionDefault.getByName(String)</code></a></li>
-    /// <li>It only affects permissions that do not define the <code>default</code> node.</li>
-    /// <li>It may be any value in <a href="../permissions/PermissionDefault.html" title="enum in org.bukkit.permissions"><code>PermissionDefault</code></a>.</li>
-    /// </ul>
-    /// <p>In the plugin.yml, this entry is named <code>default-permission</code>.</p>
-    /// <p>Example:</p>
-    /// <blockquote>
-    /// <pre>default-permission: NOT_OP</pre>
-    /// </blockquote>
+    //
+
     pub fn permission_default(
         &mut self,
     ) -> Result<crate::permissions::PermissionDefault<'mc>, Box<dyn std::error::Error>> {
@@ -985,7 +647,8 @@ impl<'mc> PluginDescriptionFile<'mc> {
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
         let variant = self
             .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = self.jni_ref().translate_error(variant)?;
         let variant_str = self
             .0
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -994,24 +657,12 @@ impl<'mc> PluginDescriptionFile<'mc> {
         crate::permissions::PermissionDefault::from_raw(
             &self.jni_ref(),
             raw_obj,
-            crate::permissions::PermissionDefault::from_string(variant_str).unwrap(),
+            crate::permissions::PermissionDefault::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    /// Gives a set of every <a href="PluginAwareness.html" title="interface in org.bukkit.plugin"><code>PluginAwareness</code></a> for a plugin. An awareness dictates something that a plugin developer acknowledges when the plugin is compiled. Some implementions may define extra awarenesses that are not included in the API. Any unrecognized awareness (one unsupported or in a future version) will cause a dummy object to be created instead of failing.
-    /// <ul>
-    /// <li>Currently only supports the enumerated values in <a title="enum in org.bukkit.plugin" href="PluginAwareness.Flags.html"><code>PluginAwareness.Flags</code></a>.</li>
-    /// <li>Each awareness starts the identifier with bang-at (<code>!@</code>).</li>
-    /// <li>Unrecognized (future / unimplemented) entries are quietly replaced by a generic object that implements PluginAwareness.</li>
-    /// <li>A type of awareness must be defined by the runtime and acknowledged by the API, effectively discluding any derived type from any plugin's classpath.</li>
-    /// <li><code>awareness</code> must be in <a href="http://en.wikipedia.org/wiki/YAML#Lists">YAML list format</a>.</li>
-    /// </ul>
-    /// <p>In the plugin.yml, this entry is named <code>awareness</code>.</p>
-    /// <p>Example:</p>
-    /// <blockquote>
-    /// <pre>awareness:
-    /// - !@UTF8</pre>
-    /// </blockquote>
-    /// <p><b>Note:</b> Although unknown versions of some future awareness are gracefully substituted, previous versions of Bukkit (ones prior to the first implementation of awareness) will fail to load a plugin that defines any awareness.</p>
+    //
+
     pub fn awareness(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -1026,15 +677,8 @@ impl<'mc> PluginDescriptionFile<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gives the API version which this plugin is designed to support. No specific format is guaranteed.
-    /// <ul>
-    /// <li>Refer to release notes for supported API versions.</li>
-    /// </ul>
-    /// <p>In the plugin.yml, this entry is named <code>api-version</code>.</p>
-    /// <p>Example:</p>
-    /// <blockquote>
-    /// <pre>api-version: 1.13</pre>
-    /// </blockquote>
+    //
+
     pub fn apiversion(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1049,15 +693,8 @@ impl<'mc> PluginDescriptionFile<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    /// Gets the libraries this plugin requires. This is a preview feature.
-    /// <ul>
-    /// <li>Libraries must be GAV specifiers and are loaded from Maven Central.</li>
-    /// </ul>
-    /// <p>Example:</p>
-    /// <blockquote>
-    /// <pre>libraries:
-    /// - com.squareup.okhttp3:okhttp:4.9.0</pre>
-    /// </blockquote>
+    //
+
     pub fn libraries(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1080,13 +717,8 @@ impl<'mc> PluginDescriptionFile<'mc> {
         }
         Ok(new_vec)
     }
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Internal use
-    /// </div>
-    /// Internal use
-    ///
+    //
+
     pub fn raw_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1101,20 +733,8 @@ impl<'mc> PluginDescriptionFile<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    /// Gives the name of the plugin. This name is a unique identifier for plugins.
-    /// <ul>
-    /// <li>Must consist of all alphanumeric characters, underscores, hyphon, and period (a-z,A-Z,0-9, _.-). Any other character will cause the plugin.yml to fail loading.</li>
-    /// <li>Used to determine the name of the plugin's data folder. Data folders are placed in the ./plugins/ directory by default, but this behavior should not be relied on. <a href="Plugin.html#getDataFolder()"><code>Plugin.getDataFolder()</code></a> should be used to reference the data folder.</li>
-    /// <li>It is good practice to name your jar the same as this, for example 'MyPlugin.jar'.</li>
-    /// <li>Case sensitive.</li>
-    /// <li>The is the token referenced in <a href="#getDepend()"><code>getDepend()</code></a>, <a href="#getSoftDepend()"><code>getSoftDepend()</code></a>, and <a href="#getLoadBefore()"><code>getLoadBefore()</code></a>.</li>
-    /// <li>Using spaces in the plugin's name is deprecated.</li>
-    /// </ul>
-    /// <p>In the plugin.yml, this entry is named <code>name</code>.</p>
-    /// <p>Example:</p>
-    /// <blockquote>
-    /// <pre>name: MyPlugin</pre>
-    /// </blockquote>
+    //
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1126,83 +746,8 @@ impl<'mc> PluginDescriptionFile<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    /// Gives the list of permissions the plugin will register at runtime, immediately proceding enabling. The format for defining permissions is a map from permission name to properties. To represent a map without any specific property, empty <a href="http://yaml.org/spec/current.html#id2502702">curly-braces</a> ( <code>{}</code> ) may be used (as a null value is not accepted, unlike the <a href="#getCommands()"><code>commands</code></a> above).
-    /// <p>A list of optional properties for permissions:</p>
-    /// <table border="1">
-    /// <caption>
-    /// The permission section's description
-    /// </caption>
-    /// <tbody>
-    /// <tr>
-    /// <th>Node</th>
-    /// <th>Description</th>
-    /// <th>Example</th>
-    /// </tr>
-    /// <tr>
-    /// <td><code>description</code></td>
-    /// <td>Plaintext (user-friendly) description of what the permission is for.</td>
-    /// <td>
-    /// <blockquote>
-    /// <pre>description: Allows you to set yourself on fire</pre>
-    /// </blockquote></td>
-    /// </tr>
-    /// <tr>
-    /// <td><code>default</code></td>
-    /// <td>The default state for the permission, as defined by <a href="../permissions/Permission.html#getDefault()"><code>Permission.getDefault()</code></a>. If not defined, it will be set to the value of <a href="#getPermissionDefault()"><code>getPermissionDefault()</code></a>.
-    /// <p>For reference:</p>
-    /// <ul>
-    /// <li><code>true</code> - Represents a positive assignment to <a title="interface in org.bukkit.permissions" href="../permissions/Permissible.html"><code>permissibles</code></a>.</li>
-    /// <li><code>false</code> - Represents no assignment to <a title="interface in org.bukkit.permissions" href="../permissions/Permissible.html"><code>permissibles</code></a>.</li>
-    /// <li><code>op</code> - Represents a positive assignment to <a href="../permissions/ServerOperator.html#isOp()"><code>operator permissibles</code></a>.</li>
-    /// <li><code>notop</code> - Represents a positive assignment to <a href="../permissions/ServerOperator.html#isOp()"><code>non-operator permissibiles</code></a>.</li>
-    /// </ul></td>
-    /// <td>
-    /// <blockquote>
-    /// <pre>default: true</pre>
-    /// </blockquote></td>
-    /// </tr>
-    /// <tr>
-    /// <td><code>children</code></td>
-    /// <td>Allows other permissions to be set as a <a href="../permissions/Permission.html#getChildren()">relation</a> to the parent permission. When a parent permissions is assigned, child permissions are respectively assigned as well.
-    /// <ul>
-    /// <li>When a parent permission is assigned negatively, child permissions are assigned based on an inversion of their association.</li>
-    /// <li>When a parent permission is assigned positively, child permissions are assigned based on their association.</li>
-    /// </ul>
-    /// <p>Child permissions may be defined in a number of ways:</p>
-    /// <ul>
-    /// <li>Children may be defined as a <a href="http://en.wikipedia.org/wiki/YAML#Lists">list</a> of names. Using a list will treat all children associated positively to their parent.</li>
-    /// <li>Children may be defined as a map. Each permission name maps to either a boolean (representing the association), or a nested permission definition (just as another permission). Using a nested definition treats the child as a positive association.</li>
-    /// <li>A nested permission definition must be a map of these same properties. To define a valid nested permission without defining any specific property, empty curly-braces ( <code>{}</code> ) must be used.</li>
-    /// <li>A nested permission may carry it's own nested permissions as children, as they may also have nested permissions, and so forth. There is no direct limit to how deep the permission tree is defined.</li>
-    /// </ul></td>
-    /// <td>As a list:
-    /// <blockquote>
-    /// <pre>children: [inferno.flagrate, inferno.burningdeaths]</pre>
-    /// </blockquote> Or as a mapping:
-    /// <blockquote>
-    /// <pre>children:
-    /// inferno.flagrate: true
-    /// inferno.burningdeaths: true</pre>
-    /// </blockquote> An additional example showing basic nested values can be seen <a href="doc-files/permissions-example_plugin.yml">here</a>.</td>
-    /// </tr>
-    /// </tbody>
-    /// </table> The permissions are structured as a hiearchy of <a href="http://yaml.org/spec/current.html#id2502325">nested mappings</a>. The primary (top-level, no intendentation) node is `<code>permissions</code>', while each individual permission name is indented, indicating it maps to some value (in our case, the properties of the table above).
-    /// <p>Here is an example using some of the properties:</p>
-    /// <blockquote>
-    /// <pre>permissions:
-    /// inferno.*:
-    /// description: Gives access to all Inferno commands
-    /// children:
-    /// inferno.flagrate: true
-    /// inferno.burningdeaths: true
-    /// inferno.flagate:
-    /// description: Allows you to ignite yourself
-    /// default: true
-    /// inferno.burningdeaths:
-    /// description: Allows you to see how many times you have burned to death
-    /// default: true
-    /// </pre>
-    /// </blockquote> Another example, with nested definitions, can be found <a href="doc-files/permissions-example_plugin.yml">here</a>.
+    //
+
     pub fn permissions(
         &mut self,
     ) -> Result<Vec<crate::permissions::Permission<'mc>>, Box<dyn std::error::Error>> {
@@ -1222,8 +767,9 @@ impl<'mc> PluginDescriptionFile<'mc> {
         }
         Ok(new_vec)
     }
-    /// Saves this PluginDescriptionFile to the given writer
-    pub unsafe fn save(
+    //
+
+    pub fn save(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1237,14 +783,21 @@ impl<'mc> PluginDescriptionFile<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -1257,6 +810,7 @@ impl<'mc> PluginDescriptionFile<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -1270,8 +824,9 @@ impl<'mc> PluginDescriptionFile<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -1284,20 +839,17 @@ impl<'mc> PluginDescriptionFile<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// unused
-    /// </div>
-    /// unused
-    ///
+    //
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1305,6 +857,7 @@ impl<'mc> PluginDescriptionFile<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1313,6 +866,7 @@ impl<'mc> PluginDescriptionFile<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1328,7 +882,7 @@ pub enum PluginLoadOrderEnum {
 }
 impl std::fmt::Display for PluginLoadOrderEnum {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match &self {
+        match self {
             PluginLoadOrderEnum::Startup => f.write_str("STARTUP"),
             PluginLoadOrderEnum::Postworld => f.write_str("POSTWORLD"),
         }
@@ -1385,6 +939,36 @@ impl<'mc> PluginLoadOrder<'mc> {
             _ => None,
         }
     }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<PluginLoadOrder<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/plugin/PluginLoadOrder");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/plugin/PluginLoadOrder;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        PluginLoadOrder::from_raw(
+            &jni,
+            raw_obj,
+            PluginLoadOrder::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
 }
 /// A registered service provider.
 pub struct RegisteredServiceProvider<'mc>(
@@ -1424,21 +1008,24 @@ impl<'mc> RegisteredServiceProvider<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JClass<'mc>,
         arg1: jni::objects::JObject<'mc>,
-        arg2: impl Into<&'mc crate::plugin::ServicePriority<'mc>>,
-        arg3: impl Into<&'mc crate::plugin::Plugin<'mc>>,
+        arg2: impl Into<crate::plugin::ServicePriority<'mc>>,
+        arg3: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<crate::plugin::RegisteredServiceProvider<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
         let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
         let val_4 = unsafe { jni::objects::JObject::from_raw(arg3.into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/plugin/RegisteredServiceProvider")?;
+        let cls = jni.find_class("org/bukkit/plugin/RegisteredServiceProvider");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(cls,
-"(Ljava/lang/Class;Ljava/lang/Object;Lorg/bukkit/plugin/ServicePriority;Lorg/bukkit/plugin/Plugin;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)])?;
+"(Ljava/lang/Class;Ljava/lang/Object;Lorg/bukkit/plugin/ServicePriority;Lorg/bukkit/plugin/Plugin;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)]);
+        let res = jni.translate_error_no_gen(res)?;
         crate::plugin::RegisteredServiceProvider::from_raw(&jni, res)
     }
+    //
 
     pub fn provider(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1448,8 +1035,9 @@ impl<'mc> RegisteredServiceProvider<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn plugin(&mut self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1463,6 +1051,7 @@ impl<'mc> RegisteredServiceProvider<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn service(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1474,12 +1063,13 @@ impl<'mc> RegisteredServiceProvider<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn compare_to_with_registered_service_provider(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "compareTo",
@@ -1487,8 +1077,9 @@ impl<'mc> RegisteredServiceProvider<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn priority(
         &mut self,
@@ -1504,14 +1095,21 @@ impl<'mc> RegisteredServiceProvider<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -1524,6 +1122,7 @@ impl<'mc> RegisteredServiceProvider<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -1537,8 +1136,9 @@ impl<'mc> RegisteredServiceProvider<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -1551,14 +1151,16 @@ impl<'mc> RegisteredServiceProvider<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -1567,6 +1169,7 @@ impl<'mc> RegisteredServiceProvider<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1575,6 +1178,7 @@ impl<'mc> RegisteredServiceProvider<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1582,6 +1186,98 @@ impl<'mc> RegisteredServiceProvider<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+}
+pub enum FlagsEnum {
+    //['since', '']
+
+    //['forRemoval', 'false']
+    #[deprecated]
+    Utf8,
+}
+impl std::fmt::Display for FlagsEnum {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            FlagsEnum::Utf8 => f.write_str("UTF8"),
+        }
+    }
+}
+pub struct Flags<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+    pub FlagsEnum,
+);
+impl<'mc> std::ops::Deref for Flags<'mc> {
+    type Target = FlagsEnum;
+    fn deref(&self) -> &Self::Target {
+        return &self.2;
+    }
+}
+impl<'mc> JNIRaw<'mc> for Flags<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Flags<'mc> {
+    pub fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+        e: FlagsEnum,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Flags from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/plugin/Flags")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Flags object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj, e))
+        }
+    }
+    pub const UTF8: FlagsEnum = FlagsEnum::Utf8;
+    pub fn from_string(str: String) -> std::option::Option<FlagsEnum> {
+        match str.as_str() {
+            "UTF8" => Some(FlagsEnum::Utf8),
+            _ => None,
+        }
+    }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Flags<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/plugin/Flags");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/plugin/Flags;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        Flags::from_raw(
+            &jni,
+            raw_obj,
+            Flags::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
     }
 }
 /// Represents various priorities of a provider.
@@ -1619,154 +1315,7 @@ impl<'mc> ServicePriority<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// Returns the enum constant of this type with the specified name. The string must match <i>exactly</i> an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
-    pub fn value_of_with_string(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<impl Into<&'mc String>>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
-        let cls = &jni.find_class("java/lang/Enum")?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let obj = res.l()?;
-        Self::from_raw(&jni, obj)
-    }
-
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn declaring_class(
-        &mut self,
-    ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDeclaringClass",
-            "()Ljava/lang/Class;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-
-    pub fn wait(
-        &mut self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "wait",
-            "(JI)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+    //
 }
 /// Represents a concept that a plugin is aware of.
 /// <p>The internal representation may be singleton, or be a parameterized instance, but must be immutable.</p>
@@ -1833,15 +1382,13 @@ impl<'mc> PluginManager<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// Gets a <a href="../permissions/Permission.html" title="class in org.bukkit.permissions"><code>Permission</code></a> from its fully qualified name
-    /// Gets a set containing all subscribed <a href="../permissions/Permissible.html" title="interface in org.bukkit.permissions"><code>Permissible</code></a>s to the given permission, by name
-    /// Gets a set of all registered permissions.
-    /// <p>This set is a copy and will not be modified live.</p>
+    //
+
     pub fn get_permission(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<crate::permissions::Permission<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPermission",
@@ -1853,14 +1400,13 @@ impl<'mc> PluginManager<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Checks if the given plugin is loaded and returns it when applicable
-    /// <p>Please note that the name of the plugin is case-sensitive</p>
-    /// Gets a list of all currently loaded plugins
+    //
+
     pub fn get_plugin(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPlugin",
@@ -1872,10 +1418,11 @@ impl<'mc> PluginManager<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Calls an event with the given details
+    //
+
     pub fn call_event(
         &mut self,
-        arg0: impl Into<&'mc crate::event::Event<'mc>>,
+        arg0: impl Into<crate::event::Event<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -1887,12 +1434,13 @@ impl<'mc> PluginManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Gets a set containing all subscribed <a href="../permissions/Permissible.html" title="interface in org.bukkit.permissions"><code>Permissible</code></a>s to the given permission, by name
+    //
+
     pub fn get_permission_subscriptions(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPermissionSubscriptions",
@@ -1904,11 +1452,11 @@ impl<'mc> PluginManager<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Recalculates the defaults for the given <a href="../permissions/Permission.html" title="class in org.bukkit.permissions"><code>Permission</code></a>.
-    /// <p>This will have no effect if the specified permission is not registered here.</p>
+    //
+
     pub fn recalculate_permission_defaults(
         &mut self,
-        arg0: impl Into<&'mc crate::permissions::Permission<'mc>>,
+        arg0: impl Into<crate::permissions::Permission<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -1920,11 +1468,11 @@ impl<'mc> PluginManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Adds a <a href="../permissions/Permission.html" title="class in org.bukkit.permissions"><code>Permission</code></a> to this plugin manager.
-    /// <p>If a permission is already defined with the given name of the new permission, an exception will be thrown.</p>
+    //
+
     pub fn add_permission(
         &mut self,
-        arg0: impl Into<&'mc crate::permissions::Permission<'mc>>,
+        arg0: impl Into<crate::permissions::Permission<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -1936,6 +1484,8 @@ impl<'mc> PluginManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //@NotNull
+
     /// Gets the default permissions for the given op status
     pub fn get_default_permissions(
         &mut self,
@@ -1954,12 +1504,12 @@ impl<'mc> PluginManager<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Subscribes to the given Default permissions by operator status
-    /// <p>If the specified defaults change in any form, the Permissible will be asked to recalculate.</p>
+    //
+
     pub fn subscribe_to_default_perms(
         &mut self,
         arg0: bool,
-        arg1: impl Into<&'mc crate::permissions::Permissible<'mc>>,
+        arg1: impl Into<crate::permissions::Permissible<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -1976,14 +1526,14 @@ impl<'mc> PluginManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Subscribes the given Permissible for information about the requested Permission, by name.
-    /// <p>If the specified Permission changes in any form, the Permissible will be asked to recalculate.</p>
+    //
+
     pub fn subscribe_to_permission(
         &mut self,
-        arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc crate::permissions::Permissible<'mc>>,
+        arg0: impl Into<String>,
+        arg1: impl Into<crate::permissions::Permissible<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1997,13 +1547,14 @@ impl<'mc> PluginManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Unsubscribes the given Permissible for information about the requested Permission, by name.
+    //
+
     pub fn unsubscribe_from_permission(
         &mut self,
-        arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc crate::permissions::Permissible<'mc>>,
+        arg0: impl Into<String>,
+        arg1: impl Into<crate::permissions::Permissible<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2017,11 +1568,12 @@ impl<'mc> PluginManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Unsubscribes from the given Default permissions by operator status
+    //
+
     pub fn unsubscribe_from_default_perms(
         &mut self,
         arg0: bool,
-        arg1: impl Into<&'mc crate::permissions::Permissible<'mc>>,
+        arg1: impl Into<crate::permissions::Permissible<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -2038,10 +1590,9 @@ impl<'mc> PluginManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Loads the plugin in the specified file
-    /// <p>File must be valid according to the current enabled Plugin interfaces</p>
-    /// Loads the plugins contained within the specified directory
-    pub unsafe fn load_plugin(
+    //
+
+    pub fn load_plugin(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
@@ -2057,19 +1608,20 @@ impl<'mc> PluginManager<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Returns whether or not timing code should be used for event calls
+    //
+
     pub fn use_timings(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "useTimings", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
-    /// Enables the specified plugin
-    /// <p>Attempting to enable a plugin that is already enabled will have no effect</p>
+    //
+
     pub fn enable_plugin(
         &mut self,
-        arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -2081,12 +1633,11 @@ impl<'mc> PluginManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Disables all the loaded plugins
-    /// Disables the specified plugin
-    /// <p>Attempting to disable a plugin that is not enabled will have no effect</p>
+    //
+
     pub fn disable_plugin(
         &mut self,
-        arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -2098,7 +1649,8 @@ impl<'mc> PluginManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Registers the specified plugin loader
+    //
+
     pub fn register_interface(
         &mut self,
         arg0: jni::objects::JClass<'mc>,
@@ -2113,15 +1665,20 @@ impl<'mc> PluginManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Checks if the given plugin is enabled or not
-    /// <p>Please note that the name of the plugin is case-sensitive.</p>
-    /// Checks if the given plugin is enabled or not
+    //
+
+    //
+
     pub fn is_plugin_enabled_with_plugin(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isPluginEnabled",
@@ -2129,9 +1686,12 @@ impl<'mc> PluginManager<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
-    /// Disables all the loaded plugins
+    //
+
+    //
+
     pub fn disable_plugins(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2139,7 +1699,8 @@ impl<'mc> PluginManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Disables and removes all plugins
+    //
+
     pub fn clear_plugins(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -2147,11 +1708,12 @@ impl<'mc> PluginManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Registers all the events in the given listener class
+    //
+
     pub fn register_events(
         &mut self,
-        arg0: impl Into<&'mc crate::event::Listener<'mc>>,
-        arg1: impl Into<&'mc crate::plugin::Plugin<'mc>>,
+        arg0: impl Into<crate::event::Listener<'mc>>,
+        arg1: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -2167,42 +1729,50 @@ impl<'mc> PluginManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Registers all the events in the given listener class
-    /// Registers the specified executor to the given event class
-    /// Registers the specified executor to the given event class
+    //
+
     pub fn register_event_with_class(
         &mut self,
         arg0: jni::objects::JClass<'mc>,
-        arg1: impl Into<&'mc crate::event::Listener<'mc>>,
-        arg2: impl Into<&'mc crate::event::EventPriority<'mc>>,
-        arg3: impl Into<&'mc crate::plugin::EventExecutor<'mc>>,
-        arg4: std::option::Option<impl Into<&'mc crate::plugin::Plugin<'mc>>>,
+        arg1: impl Into<crate::event::Listener<'mc>>,
+        arg2: impl Into<crate::event::EventPriority<'mc>>,
+        arg3: impl Into<crate::plugin::EventExecutor<'mc>>,
+        arg4: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
         arg5: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
         let val_4 = unsafe { jni::objects::JObject::from_raw(arg3.into().jni_object().clone()) };
-        let val_5 =
-            unsafe { jni::objects::JObject::from_raw(arg4.unwrap().into().jni_object().clone()) };
+        let val_5 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg4.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
         // 4
-        let val_6 = jni::objects::JValueGen::Bool(arg5.unwrap().into());
+        let val_6 = jni::objects::JValueGen::Bool(
+            arg5.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(&self.jni_object(),"registerEvent","(Ljava/lang/Class;Lorg/bukkit/event/Listener;Lorg/bukkit/event/EventPriority;Lorg/bukkit/plugin/EventExecutor;Lorg/bukkit/plugin/Plugin;Z)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6)]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Removes a <a href="../permissions/Permission.html" title="class in org.bukkit.permissions"><code>Permission</code></a> registration from this plugin manager.
-    /// <p>If the specified permission does not exist in this plugin manager, nothing will happen.</p>
-    /// <p>Removing a permission registration will <b>not</b> remove the permission from any <a title="interface in org.bukkit.permissions" href="../permissions/Permissible.html"><code>Permissible</code></a>s that have it.</p>
-    /// Removes a <a href="../permissions/Permission.html" title="class in org.bukkit.permissions"><code>Permission</code></a> registration from this plugin manager.
-    /// <p>If the specified permission does not exist in this plugin manager, nothing will happen.</p>
-    /// <p>Removing a permission registration will <b>not</b> remove the permission from any <a href="../permissions/Permissible.html" title="interface in org.bukkit.permissions"><code>Permissible</code></a>s that have it.</p>
+    //
+
     pub fn remove_permission_with_permission(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removePermission",
@@ -2212,6 +1782,8 @@ impl<'mc> PluginManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //@NotNull
+
     /// Gets a set containing all subscribed <a title="interface in org.bukkit.permissions" href="../permissions/Permissible.html"><code>Permissible</code></a>s to the given default list, by op status
     pub fn get_default_perm_subscriptions(
         &mut self,
@@ -2230,8 +1802,8 @@ impl<'mc> PluginManager<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gets a set of all registered permissions.
-    /// <p>This set is a copy and will not be modified live.</p>
+    //
+
     pub fn permissions(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -2301,15 +1873,16 @@ impl<'mc> PluginBase<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::plugin::PluginBase<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("org/bukkit/plugin/PluginBase")?;
-        let res = jni.new_object(cls, "()V", &[])?;
+        let cls = jni.find_class("org/bukkit/plugin/PluginBase");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, "()V", &[]);
+        let res = jni.translate_error_no_gen(res)?;
         crate::plugin::PluginBase::from_raw(&jni, res)
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="Plugin.html#getName()">Plugin</a></code></span>
-    /// Returns the name of the plugin.
-    /// <p>This should return the bare name of the plugin and should be used for comparison.</p>
+    //
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -2321,6 +1894,7 @@ impl<'mc> PluginBase<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -2334,24 +1908,32 @@ impl<'mc> PluginBase<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -2364,6 +1946,7 @@ impl<'mc> PluginBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -2376,6 +1959,7 @@ impl<'mc> PluginBase<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -2384,6 +1968,7 @@ impl<'mc> PluginBase<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2392,6 +1977,7 @@ impl<'mc> PluginBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2400,6 +1986,21 @@ impl<'mc> PluginBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
+
+    pub fn server(&mut self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getServer",
+            "()Lorg/bukkit/Server;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Server::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
 
     pub fn description(
         &mut self,
@@ -2415,35 +2016,15 @@ impl<'mc> PluginBase<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-
-    pub fn server(&mut self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getServer",
-            "()Lorg/bukkit/Server;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Server::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn is_enabled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isEnabled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    //
 
     pub fn get_default_biome_provider(
         &mut self,
-        arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc String>,
+        arg0: impl Into<String>,
+        arg1: impl Into<String>,
     ) -> Result<crate::generator::BiomeProvider<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDefaultBiomeProvider",
@@ -2458,6 +2039,16 @@ impl<'mc> PluginBase<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
+
+    pub fn is_enabled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isEnabled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
 
     pub fn config(
         &mut self,
@@ -2474,6 +2065,7 @@ impl<'mc> PluginBase<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn data_folder(
         &mut self,
@@ -2485,8 +2077,9 @@ impl<'mc> PluginBase<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn save_config(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2495,6 +2088,7 @@ impl<'mc> PluginBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn save_default_config(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2503,13 +2097,14 @@ impl<'mc> PluginBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn save_resource(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
         arg1: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         // -2
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
@@ -2524,6 +2119,7 @@ impl<'mc> PluginBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn reload_config(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2532,6 +2128,7 @@ impl<'mc> PluginBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn plugin_loader(
         &mut self,
@@ -2547,6 +2144,7 @@ impl<'mc> PluginBase<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn on_disable(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2555,6 +2153,7 @@ impl<'mc> PluginBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn on_load(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2563,6 +2162,7 @@ impl<'mc> PluginBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn on_enable(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2571,14 +2171,16 @@ impl<'mc> PluginBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn is_naggable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isNaggable", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn set_naggable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
@@ -2592,14 +2194,15 @@ impl<'mc> PluginBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn get_default_world_generator(
         &mut self,
-        arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc String>,
+        arg0: impl Into<String>,
+        arg1: impl Into<String>,
     ) -> Result<crate::generator::ChunkGenerator<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDefaultWorldGenerator",
@@ -2614,12 +2217,13 @@ impl<'mc> PluginBase<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn get_resource(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getResource",
@@ -2627,8 +2231,9 @@ impl<'mc> PluginBase<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn logger(
         &mut self,
@@ -2644,17 +2249,18 @@ impl<'mc> PluginBase<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn on_tab_complete(
         &mut self,
-        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
-        arg1: impl Into<&'mc crate::command::Command<'mc>>,
-        arg2: impl Into<&'mc String>,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<crate::command::Command<'mc>>,
+        arg2: impl Into<String>,
         arg3: Vec<impl Into<String>>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = jni::objects::JObject::from(self.jni_ref().new_string(arg2.into()).unwrap());
+        let val_3 = jni::objects::JObject::from(self.jni_ref().new_string(arg2.into())?);
         let res = self.jni_ref().call_method(&self.jni_object(),"onTabComplete","(Lorg/bukkit/command/CommandSender;Lorg/bukkit/command/Command;Ljava/lang/String;Ljava/lang/String;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
@@ -2671,25 +2277,27 @@ impl<'mc> PluginBase<'mc> {
         }
         Ok(new_vec)
     }
+    //
 
     pub fn on_command(
         &mut self,
-        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
-        arg1: impl Into<&'mc crate::command::Command<'mc>>,
-        arg2: impl Into<&'mc String>,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<crate::command::Command<'mc>>,
+        arg2: impl Into<String>,
         arg3: Vec<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = jni::objects::JObject::from(self.jni_ref().new_string(arg2.into()).unwrap());
+        let val_3 = jni::objects::JObject::from(self.jni_ref().new_string(arg2.into())?);
         let res = self.jni_ref().call_method(&self.jni_object(),"onCommand","(Lorg/bukkit/command/CommandSender;Lorg/bukkit/command/Command;Ljava/lang/String;Ljava/lang/String;)Z",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
 }
 impl<'mc> Into<crate::plugin::Plugin<'mc>> for PluginBase<'mc> {
     fn into(self) -> crate::plugin::Plugin<'mc> {
-        crate::plugin::Plugin::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::plugin::Plugin::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting PluginBase into crate::plugin::Plugin")
     }
 }
 /// Interface which defines the class for event call backs to plugins
@@ -2718,11 +2326,12 @@ impl<'mc> EventExecutor<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
     pub fn execute(
         &mut self,
-        arg0: impl Into<&'mc crate::event::Listener<'mc>>,
-        arg1: impl Into<&'mc crate::event::Event<'mc>>,
+        arg0: impl Into<crate::event::Listener<'mc>>,
+        arg1: impl Into<crate::event::Event<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -2776,16 +2385,15 @@ impl<'mc> ServicesManager<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// Unregister all the providers registered by a particular plugin.
-    /// Unregister a particular provider for a particular service.
-    /// Unregister a particular provider.
+    //
+
     pub fn unregister_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = arg1.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "unregister",
@@ -2798,10 +2406,11 @@ impl<'mc> ServicesManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Unregister all the providers registered by a particular plugin.
+    //
+
     pub fn unregister_all(
         &mut self,
-        arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -2813,9 +2422,8 @@ impl<'mc> ServicesManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Queries for a provider registration. This may return null if no provider has been registered for a service.
-    /// Get registrations of providers for a plugin.
-    /// Get registrations of providers for a service. The returned list is unmodifiable.
+    //
+
     pub fn get_registration(
         &mut self,
         arg0: jni::objects::JClass<'mc>,
@@ -2832,15 +2440,21 @@ impl<'mc> ServicesManager<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Get registrations of providers for a plugin.
-    /// Get registrations of providers for a service. The returned list is unmodifiable.
+    //
+
     pub fn get_registrations_with_class(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc crate::plugin::Plugin<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
     ) -> Result<Vec<crate::plugin::RegisteredServiceProvider<'mc>>, Box<dyn std::error::Error>>
     {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
+        let val_1 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getRegistrations",
@@ -2860,7 +2474,8 @@ impl<'mc> ServicesManager<'mc> {
         }
         Ok(new_vec)
     }
-    /// Get a list of known services. A service is known if it has registered providers for it.
+    //
+
     pub fn known_services(
         &mut self,
     ) -> Result<Vec<jni::objects::JClass<'mc>>, Box<dyn std::error::Error>> {
@@ -2880,7 +2495,8 @@ impl<'mc> ServicesManager<'mc> {
         }
         Ok(new_vec)
     }
-    /// Returns whether a provider has been registered for a service. Do not check this first only to call <code>load(service)</code> later, as that would be a non-thread safe situation.
+    //
+
     pub fn is_provided_for(
         &mut self,
         arg0: jni::objects::JClass<'mc>,
@@ -2893,9 +2509,10 @@ impl<'mc> ServicesManager<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
-    /// Queries for a provider. This may return null if no provider has been registered for a service. The highest priority provider is returned.
+    //
+
     pub fn load(
         &mut self,
         arg0: jni::objects::JClass<'mc>,
@@ -2908,15 +2525,16 @@ impl<'mc> ServicesManager<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
-    /// Register a provider of a service.
+    //
+
     pub fn register(
         &mut self,
         arg0: jni::objects::JClass<'mc>,
         arg1: jni::objects::JObject<'mc>,
-        arg2: impl Into<&'mc crate::plugin::Plugin<'mc>>,
-        arg3: impl Into<&'mc crate::plugin::ServicePriority<'mc>>,
+        arg2: impl Into<crate::plugin::Plugin<'mc>>,
+        arg3: impl Into<crate::plugin::ServicePriority<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
@@ -2934,6 +2552,98 @@ impl<'mc> JNIRaw<'mc> for ServicesManager<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+pub enum FlagsFlagsEnum {
+    //['since', '']
+
+    //['forRemoval', 'false']
+    #[deprecated]
+    Utf8,
+}
+impl std::fmt::Display for FlagsFlagsEnum {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            FlagsFlagsEnum::Utf8 => f.write_str("UTF8"),
+        }
+    }
+}
+pub struct FlagsFlags<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+    pub FlagsFlagsEnum,
+);
+impl<'mc> std::ops::Deref for FlagsFlags<'mc> {
+    type Target = FlagsFlagsEnum;
+    fn deref(&self) -> &Self::Target {
+        return &self.2;
+    }
+}
+impl<'mc> JNIRaw<'mc> for FlagsFlags<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> FlagsFlags<'mc> {
+    pub fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+        e: FlagsFlagsEnum,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate FlagsFlags from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/plugin/Flags$Flags")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a FlagsFlags object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj, e))
+        }
+    }
+    pub const UTF8: FlagsFlagsEnum = FlagsFlagsEnum::Utf8;
+    pub fn from_string(str: String) -> std::option::Option<FlagsFlagsEnum> {
+        match str.as_str() {
+            "UTF8" => Some(FlagsFlagsEnum::Utf8),
+            _ => None,
+        }
+    }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<FlagsFlags<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/plugin/Flags$Flags");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/plugin/Flags$Flags;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        FlagsFlags::from_raw(
+            &jni,
+            raw_obj,
+            FlagsFlags::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
     }
 }
 /// Extends RegisteredListener to include timing information
@@ -2973,11 +2683,11 @@ impl<'mc> TimedRegisteredListener<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::event::Listener<'mc>>,
-        arg1: impl Into<&'mc crate::plugin::EventExecutor<'mc>>,
-        arg2: impl Into<&'mc crate::event::EventPriority<'mc>>,
-        arg3: impl Into<&'mc crate::plugin::Plugin<'mc>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::event::Listener<'mc>>,
+        arg1: impl Into<crate::plugin::EventExecutor<'mc>>,
+        arg2: impl Into<crate::event::EventPriority<'mc>>,
+        arg3: impl Into<crate::plugin::Plugin<'mc>>,
         arg4: bool,
     ) -> Result<crate::plugin::TimedRegisteredListener<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
@@ -2986,24 +2696,27 @@ impl<'mc> TimedRegisteredListener<'mc> {
         let val_4 = unsafe { jni::objects::JObject::from_raw(arg3.into().jni_object().clone()) };
         // -2
         let val_5 = jni::objects::JValueGen::Bool(arg4.into());
-        let cls = &jni.find_class("org/bukkit/plugin/TimedRegisteredListener")?;
+        let cls = jni.find_class("org/bukkit/plugin/TimedRegisteredListener");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(cls,
-"(Lorg/bukkit/event/Listener;Lorg/bukkit/plugin/EventExecutor;Lorg/bukkit/event/EventPriority;Lorg/bukkit/plugin/Plugin;Z)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)])?;
+"(Lorg/bukkit/event/Listener;Lorg/bukkit/plugin/EventExecutor;Lorg/bukkit/event/EventPriority;Lorg/bukkit/plugin/Plugin;Z)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)]);
+        let res = jni.translate_error_no_gen(res)?;
         crate::plugin::TimedRegisteredListener::from_raw(&jni, res)
     }
-    /// Gets the total times this listener has been called
+    //
+
     pub fn count(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getCount", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
-    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="RegisteredListener.html#callEvent(org.bukkit.event.Event)">RegisteredListener</a></code></span>
-    /// Calls the event executor
+    //
+
     pub fn call_event(
         &mut self,
-        arg0: impl Into<&'mc crate::event::Event<'mc>>,
+        arg0: impl Into<crate::event::Event<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -3015,15 +2728,17 @@ impl<'mc> TimedRegisteredListener<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Gets the total time calls to this listener have taken
+    //
+
     pub fn total_time(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getTotalTime", "()J", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
+        Ok(res.j()?)
     }
-    /// Gets the class of the events this listener handled. If it handled multiple classes of event, the closest shared superclass will be returned, such that for any event this listener has handled, <code>this.getEventClass().isAssignableFrom(event.getClass())</code> and no class <code>this.getEventClass().isAssignableFrom(clazz) &amp;&amp; this.getEventClass() != clazz &amp;&amp; event.getClass().isAssignableFrom(clazz)</code> for all handled events.
+    //
+
     pub fn event_class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3034,15 +2749,17 @@ impl<'mc> TimedRegisteredListener<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    /// Gets whether this listener has handled multiple events, such that for some two events, <code>eventA.getClass() != eventB.getClass()</code>.
+    //
+
     pub fn has_multiple(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hasMultiple", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
-    /// Resets the call count and total time for this listener
+    //
+
     pub fn reset(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3050,6 +2767,7 @@ impl<'mc> TimedRegisteredListener<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn listener(&mut self) -> Result<crate::event::Listener<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -3063,6 +2781,7 @@ impl<'mc> TimedRegisteredListener<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn plugin(&mut self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -3076,14 +2795,16 @@ impl<'mc> TimedRegisteredListener<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn is_ignoring_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isIgnoringCancelled", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn priority(
         &mut self,
@@ -3098,7 +2819,8 @@ impl<'mc> TimedRegisteredListener<'mc> {
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
         let variant = self
             .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = self.jni_ref().translate_error(variant)?;
         let variant_str = self
             .0
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -3107,17 +2829,25 @@ impl<'mc> TimedRegisteredListener<'mc> {
         crate::event::EventPriority::from_raw(
             &self.jni_ref(),
             raw_obj,
-            crate::event::EventPriority::from_string(variant_str).unwrap(),
+            crate::event::EventPriority::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -3130,6 +2860,7 @@ impl<'mc> TimedRegisteredListener<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -3143,8 +2874,9 @@ impl<'mc> TimedRegisteredListener<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -3157,14 +2889,16 @@ impl<'mc> TimedRegisteredListener<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -3173,6 +2907,7 @@ impl<'mc> TimedRegisteredListener<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -3181,6 +2916,7 @@ impl<'mc> TimedRegisteredListener<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -3192,7 +2928,9 @@ impl<'mc> TimedRegisteredListener<'mc> {
 }
 impl<'mc> Into<crate::plugin::RegisteredListener<'mc>> for TimedRegisteredListener<'mc> {
     fn into(self) -> crate::plugin::RegisteredListener<'mc> {
-        crate::plugin::RegisteredListener::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::plugin::RegisteredListener::from_raw(&self.jni_ref(), self.1).expect(
+            "Error converting TimedRegisteredListener into crate::plugin::RegisteredListener",
+        )
     }
 }
 /// Represents a plugin loader, which handles direct access to specific types of plugins
@@ -3231,8 +2969,9 @@ impl<'mc> PluginLoader<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// Loads the plugin contained in the specified file
-    pub unsafe fn load_plugin(
+    //
+
+    pub fn load_plugin(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
@@ -3248,8 +2987,9 @@ impl<'mc> PluginLoader<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Loads a PluginDescriptionFile from the specified file
-    pub unsafe fn get_plugin_description(
+    //
+
+    pub fn get_plugin_description(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<crate::plugin::PluginDescriptionFile<'mc>, Box<dyn std::error::Error>> {
@@ -3265,11 +3005,14 @@ impl<'mc> PluginLoader<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Creates and returns registered listeners for the event classes used in this listener
+    //
+
+    //
+
     pub fn create_registered_listeners(
         &mut self,
-        arg0: impl Into<&'mc crate::event::Listener<'mc>>,
-        arg1: impl Into<&'mc crate::plugin::Plugin<'mc>>,
+        arg0: impl Into<crate::event::Listener<'mc>>,
+        arg1: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -3287,11 +3030,11 @@ impl<'mc> PluginLoader<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Enables the specified plugin
-    /// <p>Attempting to enable a plugin that is already enabled will have no effect</p>
+    //
+
     pub fn enable_plugin(
         &mut self,
-        arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -3303,11 +3046,11 @@ impl<'mc> PluginLoader<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Disables the specified plugin
-    /// <p>Attempting to disable a plugin that is not enabled will have no effect</p>
+    //
+
     pub fn disable_plugin(
         &mut self,
-        arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -3365,11 +3108,11 @@ impl<'mc> RegisteredListener<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::event::Listener<'mc>>,
-        arg1: impl Into<&'mc crate::plugin::EventExecutor<'mc>>,
-        arg2: impl Into<&'mc crate::event::EventPriority<'mc>>,
-        arg3: impl Into<&'mc crate::plugin::Plugin<'mc>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::event::Listener<'mc>>,
+        arg1: impl Into<crate::plugin::EventExecutor<'mc>>,
+        arg2: impl Into<crate::event::EventPriority<'mc>>,
+        arg3: impl Into<crate::plugin::Plugin<'mc>>,
         arg4: bool,
     ) -> Result<crate::plugin::RegisteredListener<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
@@ -3378,12 +3121,15 @@ impl<'mc> RegisteredListener<'mc> {
         let val_4 = unsafe { jni::objects::JObject::from_raw(arg3.into().jni_object().clone()) };
         // -2
         let val_5 = jni::objects::JValueGen::Bool(arg4.into());
-        let cls = &jni.find_class("org/bukkit/plugin/RegisteredListener")?;
+        let cls = jni.find_class("org/bukkit/plugin/RegisteredListener");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(cls,
-"(Lorg/bukkit/event/Listener;Lorg/bukkit/plugin/EventExecutor;Lorg/bukkit/event/EventPriority;Lorg/bukkit/plugin/Plugin;Z)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)])?;
+"(Lorg/bukkit/event/Listener;Lorg/bukkit/plugin/EventExecutor;Lorg/bukkit/event/EventPriority;Lorg/bukkit/plugin/Plugin;Z)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)]);
+        let res = jni.translate_error_no_gen(res)?;
         crate::plugin::RegisteredListener::from_raw(&jni, res)
     }
-    /// Gets the listener for this registration
+    //
+
     pub fn listener(&mut self) -> Result<crate::event::Listener<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3396,7 +3142,8 @@ impl<'mc> RegisteredListener<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gets the plugin for this registration
+    //
+
     pub fn plugin(&mut self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3409,10 +3156,11 @@ impl<'mc> RegisteredListener<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Calls the event executor
+    //
+
     pub fn call_event(
         &mut self,
-        arg0: impl Into<&'mc crate::event::Event<'mc>>,
+        arg0: impl Into<crate::event::Event<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -3424,15 +3172,17 @@ impl<'mc> RegisteredListener<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Whether this listener accepts cancelled events
+    //
+
     pub fn is_ignoring_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isIgnoringCancelled", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
-    /// Gets the priority for this registration
+    //
+
     pub fn priority(
         &mut self,
     ) -> Result<crate::event::EventPriority<'mc>, Box<dyn std::error::Error>> {
@@ -3446,7 +3196,8 @@ impl<'mc> RegisteredListener<'mc> {
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
         let variant = self
             .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = self.jni_ref().translate_error(variant)?;
         let variant_str = self
             .0
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -3455,17 +3206,25 @@ impl<'mc> RegisteredListener<'mc> {
         crate::event::EventPriority::from_raw(
             &self.jni_ref(),
             raw_obj,
-            crate::event::EventPriority::from_string(variant_str).unwrap(),
+            crate::event::EventPriority::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -3478,6 +3237,7 @@ impl<'mc> RegisteredListener<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -3491,8 +3251,9 @@ impl<'mc> RegisteredListener<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -3505,14 +3266,16 @@ impl<'mc> RegisteredListener<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -3521,6 +3284,7 @@ impl<'mc> RegisteredListener<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -3529,6 +3293,7 @@ impl<'mc> RegisteredListener<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -3610,7 +3375,22 @@ impl<'mc> Plugin<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// Returns the plugin.yaml file containing the details for this plugin
+    //
+
+    pub fn server(&mut self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getServer",
+            "()Lorg/bukkit/Server;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Server::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn description(
         &mut self,
     ) -> Result<crate::plugin::PluginDescriptionFile<'mc>, Box<dyn std::error::Error>> {
@@ -3625,35 +3405,15 @@ impl<'mc> Plugin<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Returns the Server instance currently running this plugin
-    pub fn server(&mut self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getServer",
-            "()Lorg/bukkit/Server;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Server::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Returns a value indicating whether or not this plugin is currently enabled
-    pub fn is_enabled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isEnabled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    /// Gets a <a title="class in org.bukkit.generator" href="../generator/BiomeProvider.html"><code>BiomeProvider</code></a> for use in a default world, as specified in the server configuration
+    //
+
     pub fn get_default_biome_provider(
         &mut self,
-        arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc String>,
+        arg0: impl Into<String>,
+        arg1: impl Into<String>,
     ) -> Result<crate::generator::BiomeProvider<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDefaultBiomeProvider",
@@ -3668,8 +3428,17 @@ impl<'mc> Plugin<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gets a <a href="../configuration/file/FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> for this plugin, read through "config.yml"
-    /// <p>If there is a default config.yml embedded in this plugin, it will be provided as a default for this Configuration.</p>
+    //
+
+    pub fn is_enabled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isEnabled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
     pub fn config(
         &mut self,
     ) -> Result<crate::configuration::file::FileConfiguration<'mc>, Box<dyn std::error::Error>>
@@ -3685,7 +3454,8 @@ impl<'mc> Plugin<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Returns the folder that the plugin data's files are located in. The folder may not yet exist.
+    //
+
     pub fn data_folder(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -3696,9 +3466,10 @@ impl<'mc> Plugin<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
-    /// Saves the <a href="../configuration/file/FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> retrievable by <a href="#getConfig()"><code>getConfig()</code></a>.
+    //
+
     pub fn save_config(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3706,8 +3477,8 @@ impl<'mc> Plugin<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Saves the raw contents of the default config.yml file to the location retrievable by <a href="#getConfig()"><code>getConfig()</code></a>.
-    /// <p>This should fail silently if the config.yml already exists.</p>
+    //
+
     pub fn save_default_config(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3715,14 +3486,14 @@ impl<'mc> Plugin<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Saves the raw contents of any resource embedded with a plugin's .jar file assuming it can be found using <a href="#getResource(java.lang.String)"><code>getResource(String)</code></a>.
-    /// <p>The resource is saved into the plugin's data folder using the same hierarchy as the .jar file (subdirectories are preserved).</p>
+    //
+
     pub fn save_resource(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
         arg1: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         // -2
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
@@ -3737,7 +3508,8 @@ impl<'mc> Plugin<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Discards any data in <a href="#getConfig()"><code>getConfig()</code></a> and reloads from disk.
+    //
+
     pub fn reload_config(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3745,7 +3517,8 @@ impl<'mc> Plugin<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Gets the associated PluginLoader responsible for this plugin
+    //
+
     pub fn plugin_loader(
         &mut self,
     ) -> Result<crate::plugin::PluginLoader<'mc>, Box<dyn std::error::Error>> {
@@ -3760,7 +3533,8 @@ impl<'mc> Plugin<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Called when this plugin is disabled
+    //
+
     pub fn on_disable(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3768,8 +3542,8 @@ impl<'mc> Plugin<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Called after a plugin is loaded but before it has been enabled.
-    /// <p>When multiple plugins are loaded, the onLoad() for all plugins is called before any onEnable() is called.</p>
+    //
+
     pub fn on_load(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3777,7 +3551,8 @@ impl<'mc> Plugin<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Called when this plugin is enabled
+    //
+
     pub fn on_enable(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -3785,14 +3560,17 @@ impl<'mc> Plugin<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Simple boolean if we can still nag to the logs about things
+    //
+
     pub fn is_naggable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isNaggable", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
+
     /// Set naggable state
     pub fn set_naggable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
@@ -3806,14 +3584,15 @@ impl<'mc> Plugin<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Gets a <a title="class in org.bukkit.generator" href="../generator/ChunkGenerator.html"><code>ChunkGenerator</code></a> for use in a default world, as specified in the server configuration
+    //
+
     pub fn get_default_world_generator(
         &mut self,
-        arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc String>,
+        arg0: impl Into<String>,
+        arg1: impl Into<String>,
     ) -> Result<crate::generator::ChunkGenerator<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDefaultWorldGenerator",
@@ -3828,8 +3607,8 @@ impl<'mc> Plugin<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Returns the name of the plugin.
-    /// <p>This should return the bare name of the plugin and should be used for comparison.</p>
+    //
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -3841,12 +3620,13 @@ impl<'mc> Plugin<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    /// Gets an embedded resource in this plugin
+    //
+
     pub fn get_resource(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getResource",
@@ -3854,9 +3634,10 @@ impl<'mc> Plugin<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
-    /// Returns the plugin logger associated with this server's logger. The returned logger automatically tags all log messages with the plugin's name.
+    //
+
     pub fn logger(
         &mut self,
     ) -> Result<blackboxmc_java::logging::JavaLogger<'mc>, Box<dyn std::error::Error>> {
@@ -3871,17 +3652,18 @@ impl<'mc> Plugin<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn on_tab_complete(
         &mut self,
-        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
-        arg1: impl Into<&'mc crate::command::Command<'mc>>,
-        arg2: impl Into<&'mc String>,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<crate::command::Command<'mc>>,
+        arg2: impl Into<String>,
         arg3: Vec<impl Into<String>>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = jni::objects::JObject::from(self.jni_ref().new_string(arg2.into()).unwrap());
+        let val_3 = jni::objects::JObject::from(self.jni_ref().new_string(arg2.into())?);
         let res = self.jni_ref().call_method(&self.jni_object(),"onTabComplete","(Lorg/bukkit/command/CommandSender;Lorg/bukkit/command/Command;Ljava/lang/String;Ljava/lang/String;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
@@ -3898,20 +3680,21 @@ impl<'mc> Plugin<'mc> {
         }
         Ok(new_vec)
     }
+    //
 
     pub fn on_command(
         &mut self,
-        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
-        arg1: impl Into<&'mc crate::command::Command<'mc>>,
-        arg2: impl Into<&'mc String>,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<crate::command::Command<'mc>>,
+        arg2: impl Into<String>,
         arg3: Vec<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = jni::objects::JObject::from(self.jni_ref().new_string(arg2.into()).unwrap());
+        let val_3 = jni::objects::JObject::from(self.jni_ref().new_string(arg2.into())?);
         let res = self.jni_ref().call_method(&self.jni_object(),"onCommand","(Lorg/bukkit/command/CommandSender;Lorg/bukkit/command/Command;Ljava/lang/String;Ljava/lang/String;)Z",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
 }
 impl<'mc> JNIRaw<'mc> for Plugin<'mc> {
@@ -3925,7 +3708,8 @@ impl<'mc> JNIRaw<'mc> for Plugin<'mc> {
 }
 impl<'mc> Into<crate::command::TabExecutor<'mc>> for Plugin<'mc> {
     fn into(self) -> crate::command::TabExecutor<'mc> {
-        crate::command::TabExecutor::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::command::TabExecutor::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting Plugin into crate::command::TabExecutor")
     }
 }
 pub mod java;

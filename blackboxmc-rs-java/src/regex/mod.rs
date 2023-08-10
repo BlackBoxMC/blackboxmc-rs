@@ -25,18 +25,18 @@ use color_eyre::eyre::Result;
 /// <th>&nbsp;</th>
 /// </tr>
 /// <tr align="left">
-/// <th colspan="2" id="characters">Characters</th>
+/// <th id="characters" colspan="2">Characters</th>
 /// </tr>
 /// <tr>
 /// <td headers="construct characters" valign="top"><i>x</i></td>
 /// <td headers="matches">The character <i>x</i></td>
 /// </tr>
 /// <tr>
-/// <td valign="top" headers="construct characters"><tt>\\</tt></td>
+/// <td headers="construct characters" valign="top"><tt>\\</tt></td>
 /// <td headers="matches">The backslash character</td>
 /// </tr>
 /// <tr>
-/// <td valign="top" headers="construct characters"><tt>\0</tt><i>n</i></td>
+/// <td headers="construct characters" valign="top"><tt>\0</tt><i>n</i></td>
 /// <td headers="matches">The character with octal value <tt>0</tt><i>n</i> (0&nbsp;<tt>&lt;=</tt>&nbsp;<i>n</i>&nbsp;<tt>&lt;=</tt>&nbsp;7)</td>
 /// </tr>
 /// <tr>
@@ -44,7 +44,7 @@ use color_eyre::eyre::Result;
 /// <td headers="matches">The character with octal value <tt>0</tt><i>nn</i> (0&nbsp;<tt>&lt;=</tt>&nbsp;<i>n</i>&nbsp;<tt>&lt;=</tt>&nbsp;7)</td>
 /// </tr>
 /// <tr>
-/// <td headers="construct characters" valign="top"><tt>\0</tt><i>mnn</i></td>
+/// <td valign="top" headers="construct characters"><tt>\0</tt><i>mnn</i></td>
 /// <td headers="matches">The character with octal value <tt>0</tt><i>mnn</i> (0&nbsp;<tt>&lt;=</tt>&nbsp;<i>m</i>&nbsp;<tt>&lt;=</tt>&nbsp;3, 0&nbsp;<tt>&lt;=</tt>&nbsp;<i>n</i>&nbsp;<tt>&lt;=</tt>&nbsp;7)</td>
 /// </tr>
 /// <tr>
@@ -52,19 +52,19 @@ use color_eyre::eyre::Result;
 /// <td headers="matches">The character with hexadecimal&nbsp;value&nbsp;<tt>0x</tt><i>hh</i></td>
 /// </tr>
 /// <tr>
-/// <td valign="top" headers="construct characters"><tt>\u</tt><i>hhhh</i></td>
+/// <td headers="construct characters" valign="top"><tt>\u</tt><i>hhhh</i></td>
 /// <td headers="matches">The character with hexadecimal&nbsp;value&nbsp;<tt>0x</tt><i>hhhh</i></td>
 /// </tr>
 /// <tr>
-/// <td valign="top" headers="construct characters"><tt>\x</tt><i>{h...h}</i></td>
+/// <td headers="construct characters" valign="top"><tt>\x</tt><i>{h...h}</i></td>
 /// <td headers="matches">The character with hexadecimal&nbsp;value&nbsp;<tt>0x</tt><i>h...h</i> (<a href="../../../java/lang/Character.html#MIN_CODE_POINT"><code>Character.MIN_CODE_POINT</code></a> &nbsp;&lt;=&nbsp;<tt>0x</tt><i>h...h</i>&nbsp;&lt;=&nbsp; <a href="../../../java/lang/Character.html#MAX_CODE_POINT"><code>Character.MAX_CODE_POINT</code></a>)</td>
 /// </tr>
 /// <tr>
-/// <td headers="matches" valign="top"><tt>\t</tt></td>
+/// <td valign="top" headers="matches"><tt>\t</tt></td>
 /// <td headers="matches">The tab character (<tt>'\u0009'</tt>)</td>
 /// </tr>
 /// <tr>
-/// <td headers="construct characters" valign="top"><tt>\n</tt></td>
+/// <td valign="top" headers="construct characters"><tt>\n</tt></td>
 /// <td headers="matches">The newline (line feed) character (<tt>'\u000A'</tt>)</td>
 /// </tr>
 /// <tr>
@@ -80,7 +80,7 @@ use color_eyre::eyre::Result;
 /// <td headers="matches">The alert (bell) character (<tt>'\u0007'</tt>)</td>
 /// </tr>
 /// <tr>
-/// <td valign="top" headers="construct characters"><tt>\e</tt></td>
+/// <td headers="construct characters" valign="top"><tt>\e</tt></td>
 /// <td headers="matches">The escape character (<tt>'\u001B'</tt>)</td>
 /// </tr>
 /// <tr>
@@ -94,7 +94,7 @@ use color_eyre::eyre::Result;
 /// <th colspan="2" id="classes">Character classes</th>
 /// </tr>
 /// <tr>
-/// <td headers="construct classes" valign="top"><code>[abc]</code></td>
+/// <td valign="top" headers="construct classes"><code>[abc]</code></td>
 /// <td headers="matches"><code>a</code>, <code>b</code>, or <code>c</code> (simple class)</td>
 /// </tr>
 /// <tr>
@@ -110,7 +110,7 @@ use color_eyre::eyre::Result;
 /// <td headers="matches"><code>a</code> through <code>d</code>, or <code>m</code> through <code>p</code>: <code>[a-dm-p]</code> (union)</td>
 /// </tr>
 /// <tr>
-/// <td valign="top" headers="construct classes"><code>[a-z&amp;&amp;[def]]</code></td>
+/// <td headers="construct classes" valign="top"><code>[a-z&amp;&amp;[def]]</code></td>
 /// <td headers="matches"><code>d</code>, <code>e</code>, or <code>f</code> (intersection)</td>
 /// </tr>
 /// <tr>
@@ -118,17 +118,17 @@ use color_eyre::eyre::Result;
 /// <td headers="matches"><code>a</code> through <code>z</code>, except for <code>b</code> and <code>c</code>: <code>[ad-z]</code> (subtraction)</td>
 /// </tr>
 /// <tr>
-/// <td valign="top" headers="construct classes"><code>[a-z&amp;&amp;[^m-p]]</code></td>
+/// <td headers="construct classes" valign="top"><code>[a-z&amp;&amp;[^m-p]]</code></td>
 /// <td headers="matches"><code>a</code> through <code>z</code>, and not <code>m</code> through <code>p</code>: <code>[a-lq-z]</code>(subtraction)</td>
 /// </tr>
 /// <tr>
 /// <th>&nbsp;</th>
 /// </tr>
 /// <tr align="left">
-/// <th colspan="2" id="predef">Predefined character classes</th>
+/// <th id="predef" colspan="2">Predefined character classes</th>
 /// </tr>
 /// <tr>
-/// <td headers="construct predef" valign="top"><tt>.</tt></td>
+/// <td valign="top" headers="construct predef"><tt>.</tt></td>
 /// <td headers="matches">Any character (may or may not match <a href="#lt">line terminators</a>)</td>
 /// </tr>
 /// <tr>
@@ -136,7 +136,7 @@ use color_eyre::eyre::Result;
 /// <td headers="matches">A digit: <tt>[0-9]</tt></td>
 /// </tr>
 /// <tr>
-/// <td headers="construct predef" valign="top"><tt>\D</tt></td>
+/// <td valign="top" headers="construct predef"><tt>\D</tt></td>
 /// <td headers="matches">A non-digit: <tt>[^0-9]</tt></td>
 /// </tr>
 /// <tr>
@@ -144,11 +144,11 @@ use color_eyre::eyre::Result;
 /// <td headers="matches">A horizontal whitespace character: <tt>[ \t\xA0\u1680\u180e\u2000-\u200a\u202f\u205f\u3000]</tt></td>
 /// </tr>
 /// <tr>
-/// <td headers="construct predef" valign="top"><tt>\H</tt></td>
+/// <td valign="top" headers="construct predef"><tt>\H</tt></td>
 /// <td headers="matches">A non-horizontal whitespace character: <tt>[^\h]</tt></td>
 /// </tr>
 /// <tr>
-/// <td headers="construct predef" valign="top"><tt>\s</tt></td>
+/// <td valign="top" headers="construct predef"><tt>\s</tt></td>
 /// <td headers="matches">A whitespace character: <tt>[ \t\n\x0B\f\r]</tt></td>
 /// </tr>
 /// <tr>
@@ -156,7 +156,7 @@ use color_eyre::eyre::Result;
 /// <td headers="matches">A non-whitespace character: <tt>[^\s]</tt></td>
 /// </tr>
 /// <tr>
-/// <td headers="construct predef" valign="top"><tt>\v</tt></td>
+/// <td valign="top" headers="construct predef"><tt>\v</tt></td>
 /// <td headers="matches">A vertical whitespace character: <tt>[\n\x0B\f\r\x85\u2028\u2029]</tt></td>
 /// </tr>
 /// <tr>
@@ -164,11 +164,11 @@ use color_eyre::eyre::Result;
 /// <td headers="matches">A non-vertical whitespace character: <tt>[^\v]</tt></td>
 /// </tr>
 /// <tr>
-/// <td valign="top" headers="construct predef"><tt>\w</tt></td>
+/// <td headers="construct predef" valign="top"><tt>\w</tt></td>
 /// <td headers="matches">A word character: <tt>[a-zA-Z_0-9]</tt></td>
 /// </tr>
 /// <tr>
-/// <td valign="top" headers="construct predef"><tt>\W</tt></td>
+/// <td headers="construct predef" valign="top"><tt>\W</tt></td>
 /// <td headers="matches">A non-word character: <tt>[^\w]</tt></td>
 /// </tr>
 /// <tr>
@@ -178,7 +178,7 @@ use color_eyre::eyre::Result;
 /// <th id="posix" colspan="2"><b>POSIX character classes (US-ASCII only)</b></th>
 /// </tr>
 /// <tr>
-/// <td headers="construct posix" valign="top"><code>\p{Lower}</code></td>
+/// <td valign="top" headers="construct posix"><code>\p{Lower}</code></td>
 /// <td headers="matches">A lower-case alphabetic character: <code>[a-z]</code></td>
 /// </tr>
 /// <tr>
@@ -190,7 +190,7 @@ use color_eyre::eyre::Result;
 /// <td headers="matches">All ASCII:<code>[\x00-\x7F]</code></td>
 /// </tr>
 /// <tr>
-/// <td valign="top" headers="construct posix"><code>\p{Alpha}</code></td>
+/// <td headers="construct posix" valign="top"><code>\p{Alpha}</code></td>
 /// <td headers="matches">An alphabetic character:<code>[\p{Lower}\p{Upper}]</code></td>
 /// </tr>
 /// <tr>
@@ -202,16 +202,16 @@ use color_eyre::eyre::Result;
 /// <td headers="matches">An alphanumeric character:<code>[\p{Alpha}\p{Digit}]</code></td>
 /// </tr>
 /// <tr>
-/// <td headers="construct posix" valign="top"><code>\p{Punct}</code></td>
+/// <td valign="top" headers="construct posix"><code>\p{Punct}</code></td>
 /// <td headers="matches">Punctuation: One of <code>!"#$%&amp;'()*+,-./:;&lt;=&gt;?@[\]^_`{|}~</code></td>
 /// </tr><!-- <code>[\!"#\$%&amp;'\(\)\*\+,\-\./:;\&lt;=\&gt;\?@\[\\\]\^_`\{\|\}~]</code>
 /// <code>[\X21-\X2F\X31-\X40\X5B-\X60\X7B-\X7E]</code> -->
 /// <tr>
-/// <td valign="top" headers="construct posix"><code>\p{Graph}</code></td>
+/// <td headers="construct posix" valign="top"><code>\p{Graph}</code></td>
 /// <td headers="matches">A visible character: <code>[\p{Alnum}\p{Punct}]</code></td>
 /// </tr>
 /// <tr>
-/// <td valign="top" headers="construct posix"><code>\p{Print}</code></td>
+/// <td headers="construct posix" valign="top"><code>\p{Print}</code></td>
 /// <td headers="matches">A printable character: <code>[\p{Graph}\x20]</code></td>
 /// </tr>
 /// <tr>
@@ -219,7 +219,7 @@ use color_eyre::eyre::Result;
 /// <td headers="matches">A space or a tab: <code>[ \t]</code></td>
 /// </tr>
 /// <tr>
-/// <td valign="top" headers="construct posix"><code>\p{Cntrl}</code></td>
+/// <td headers="construct posix" valign="top"><code>\p{Cntrl}</code></td>
 /// <td headers="matches">A control character: <code>[\x00-\x1F\x7F]</code></td>
 /// </tr>
 /// <tr>
@@ -259,7 +259,7 @@ use color_eyre::eyre::Result;
 /// <th id="unicode" colspan="2">Classes for Unicode scripts, blocks, categories and binary properties</th>
 /// </tr>
 /// <tr>
-/// <td valign="top" headers="construct unicode"><code>\p{IsLatin}</code></td>
+/// <td headers="construct unicode" valign="top"><code>\p{IsLatin}</code></td>
 /// <td headers="matches">A Latin&nbsp;script character (<a href="#usc">script</a>)</td>
 /// </tr>
 /// <tr>
@@ -275,11 +275,11 @@ use color_eyre::eyre::Result;
 /// <td headers="matches">An alphabetic character (<a href="#ubpc">binary property</a>)</td>
 /// </tr>
 /// <tr>
-/// <td valign="top" headers="construct unicode"><code>\p{Sc}</code></td>
+/// <td headers="construct unicode" valign="top"><code>\p{Sc}</code></td>
 /// <td headers="matches">A currency symbol</td>
 /// </tr>
 /// <tr>
-/// <td valign="top" headers="construct unicode"><code>\P{InGreek}</code></td>
+/// <td headers="construct unicode" valign="top"><code>\P{InGreek}</code></td>
 /// <td headers="matches">Any character except one in the Greek block (negation)</td>
 /// </tr>
 /// <tr>
@@ -290,7 +290,7 @@ use color_eyre::eyre::Result;
 /// <th>&nbsp;</th>
 /// </tr>
 /// <tr align="left">
-/// <th id="bounds" colspan="2">Boundary matchers</th>
+/// <th colspan="2" id="bounds">Boundary matchers</th>
 /// </tr>
 /// <tr>
 /// <td valign="top" headers="construct bounds"><tt>^</tt></td>
@@ -309,15 +309,15 @@ use color_eyre::eyre::Result;
 /// <td headers="matches">A non-word boundary</td>
 /// </tr>
 /// <tr>
-/// <td valign="top" headers="construct bounds"><tt>\A</tt></td>
+/// <td headers="construct bounds" valign="top"><tt>\A</tt></td>
 /// <td headers="matches">The beginning of the input</td>
 /// </tr>
 /// <tr>
-/// <td headers="construct bounds" valign="top"><tt>\G</tt></td>
+/// <td valign="top" headers="construct bounds"><tt>\G</tt></td>
 /// <td headers="matches">The end of the previous match</td>
 /// </tr>
 /// <tr>
-/// <td headers="construct bounds" valign="top"><tt>\Z</tt></td>
+/// <td valign="top" headers="construct bounds"><tt>\Z</tt></td>
 /// <td headers="matches">The end of the input but for the final <a href="#lt">terminator</a>, if&nbsp;any</td>
 /// </tr>
 /// <tr>
@@ -338,18 +338,18 @@ use color_eyre::eyre::Result;
 /// <th>&nbsp;</th>
 /// </tr>
 /// <tr align="left">
-/// <th colspan="2" id="greedy">Greedy quantifiers</th>
+/// <th id="greedy" colspan="2">Greedy quantifiers</th>
 /// </tr>
 /// <tr>
-/// <td valign="top" headers="construct greedy"><i>X</i><tt>?</tt></td>
+/// <td headers="construct greedy" valign="top"><i>X</i><tt>?</tt></td>
 /// <td headers="matches"><i>X</i>, once or not at all</td>
 /// </tr>
 /// <tr>
-/// <td valign="top" headers="construct greedy"><i>X</i><tt>*</tt></td>
+/// <td headers="construct greedy" valign="top"><i>X</i><tt>*</tt></td>
 /// <td headers="matches"><i>X</i>, zero or more times</td>
 /// </tr>
 /// <tr>
-/// <td headers="construct greedy" valign="top"><i>X</i><tt>+</tt></td>
+/// <td valign="top" headers="construct greedy"><i>X</i><tt>+</tt></td>
 /// <td headers="matches"><i>X</i>, one or more times</td>
 /// </tr>
 /// <tr>
@@ -368,10 +368,10 @@ use color_eyre::eyre::Result;
 /// <th>&nbsp;</th>
 /// </tr>
 /// <tr align="left">
-/// <th id="reluc" colspan="2">Reluctant quantifiers</th>
+/// <th colspan="2" id="reluc">Reluctant quantifiers</th>
 /// </tr>
 /// <tr>
-/// <td headers="construct reluc" valign="top"><i>X</i><tt>??</tt></td>
+/// <td valign="top" headers="construct reluc"><i>X</i><tt>??</tt></td>
 /// <td headers="matches"><i>X</i>, once or not at all</td>
 /// </tr>
 /// <tr>
@@ -379,11 +379,11 @@ use color_eyre::eyre::Result;
 /// <td headers="matches"><i>X</i>, zero or more times</td>
 /// </tr>
 /// <tr>
-/// <td headers="construct reluc" valign="top"><i>X</i><tt>+?</tt></td>
+/// <td valign="top" headers="construct reluc"><i>X</i><tt>+?</tt></td>
 /// <td headers="matches"><i>X</i>, one or more times</td>
 /// </tr>
 /// <tr>
-/// <td valign="top" headers="construct reluc"><i>X</i><tt>{</tt><i>n</i><tt>}?</tt></td>
+/// <td headers="construct reluc" valign="top"><i>X</i><tt>{</tt><i>n</i><tt>}?</tt></td>
 /// <td headers="matches"><i>X</i>, exactly <i>n</i> times</td>
 /// </tr>
 /// <tr>
@@ -391,7 +391,7 @@ use color_eyre::eyre::Result;
 /// <td headers="matches"><i>X</i>, at least <i>n</i> times</td>
 /// </tr>
 /// <tr>
-/// <td headers="construct reluc" valign="top"><i>X</i><tt>{</tt><i>n</i><tt>,</tt><i>m</i><tt>}?</tt></td>
+/// <td valign="top" headers="construct reluc"><i>X</i><tt>{</tt><i>n</i><tt>,</tt><i>m</i><tt>}?</tt></td>
 /// <td headers="matches"><i>X</i>, at least <i>n</i> but not more than <i>m</i> times</td>
 /// </tr>
 /// <tr>
@@ -413,7 +413,7 @@ use color_eyre::eyre::Result;
 /// <td headers="matches"><i>X</i>, one or more times</td>
 /// </tr>
 /// <tr>
-/// <td headers="construct poss" valign="top"><i>X</i><tt>{</tt><i>n</i><tt>}+</tt></td>
+/// <td valign="top" headers="construct poss"><i>X</i><tt>{</tt><i>n</i><tt>}+</tt></td>
 /// <td headers="matches"><i>X</i>, exactly <i>n</i> times</td>
 /// </tr>
 /// <tr>
@@ -431,7 +431,7 @@ use color_eyre::eyre::Result;
 /// <th id="logical" colspan="2">Logical operators</th>
 /// </tr>
 /// <tr>
-/// <td valign="top" headers="construct logical"><i>XY</i></td>
+/// <td headers="construct logical" valign="top"><i>XY</i></td>
 /// <td headers="matches"><i>X</i> followed by <i>Y</i></td>
 /// </tr>
 /// <tr>
@@ -449,18 +449,18 @@ use color_eyre::eyre::Result;
 /// <th colspan="2" id="backref">Back references</th>
 /// </tr>
 /// <tr>
-/// <td headers="construct backref" valign="bottom"><tt>\</tt><i>n</i></td>
+/// <td valign="bottom" headers="construct backref"><tt>\</tt><i>n</i></td>
 /// <td valign="bottom" headers="matches">Whatever the <i>n</i><sup>th</sup> <a href="#cg">capturing group</a> matched</td>
 /// </tr>
 /// <tr>
-/// <td valign="bottom" headers="construct backref"><tt>\</tt><i>k</i>&lt;<i>name</i>&gt;</td>
-/// <td headers="matches" valign="bottom">Whatever the <a href="#groupname">named-capturing group</a> "name" matched</td>
+/// <td headers="construct backref" valign="bottom"><tt>\</tt><i>k</i>&lt;<i>name</i>&gt;</td>
+/// <td valign="bottom" headers="matches">Whatever the <a href="#groupname">named-capturing group</a> "name" matched</td>
 /// </tr>
 /// <tr>
 /// <th>&nbsp;</th>
 /// </tr>
 /// <tr align="left">
-/// <th colspan="2" id="quot">Quotation</th>
+/// <th id="quot" colspan="2">Quotation</th>
 /// </tr>
 /// <tr>
 /// <td headers="construct quot" valign="top"><tt>\</tt></td>
@@ -478,14 +478,14 @@ use color_eyre::eyre::Result;
 /// <th>&nbsp;</th>
 /// </tr>
 /// <tr align="left">
-/// <th id="special" colspan="2">Special constructs (named-capturing and non-capturing)</th>
+/// <th colspan="2" id="special">Special constructs (named-capturing and non-capturing)</th>
 /// </tr>
 /// <tr>
-/// <td valign="top" headers="construct special"><tt>(?&lt;<a href="#groupname">name</a>&gt;</tt><i>X</i><tt>)</tt></td>
+/// <td headers="construct special" valign="top"><tt>(?&lt;<a href="#groupname">name</a>&gt;</tt><i>X</i><tt>)</tt></td>
 /// <td headers="matches"><i>X</i>, as a named-capturing group</td>
 /// </tr>
 /// <tr>
-/// <td valign="top" headers="construct special"><tt>(?:</tt><i>X</i><tt>)</tt></td>
+/// <td headers="construct special" valign="top"><tt>(?:</tt><i>X</i><tt>)</tt></td>
 /// <td headers="matches"><i>X</i>, as a non-capturing group</td>
 /// </tr>
 /// <tr>
@@ -501,7 +501,7 @@ use color_eyre::eyre::Result;
 /// <td headers="matches"><i>X</i>, via zero-width positive lookahead</td>
 /// </tr>
 /// <tr>
-/// <td valign="top" headers="construct special"><tt>(?!</tt><i>X</i><tt>)</tt></td>
+/// <td headers="construct special" valign="top"><tt>(?!</tt><i>X</i><tt>)</tt></td>
 /// <td headers="matches"><i>X</i>, via zero-width negative lookahead</td>
 /// </tr>
 /// <tr>
@@ -513,7 +513,7 @@ use color_eyre::eyre::Result;
 /// <td headers="matches"><i>X</i>, via zero-width negative lookbehind</td>
 /// </tr>
 /// <tr>
-/// <td valign="top" headers="construct special"><tt>(?&gt;</tt><i>X</i><tt>)</tt></td>
+/// <td headers="construct special" valign="top"><tt>(?&gt;</tt><i>X</i><tt>)</tt></td>
 /// <td headers="matches"><i>X</i>, as an independent, non-capturing group</td>
 /// </tr>
 /// </tbody>
@@ -527,7 +527,7 @@ use color_eyre::eyre::Result;
 /// <p>Character classes may appear within other character classes, and may be composed by the union operator (implicit) and the intersection operator (<tt>&amp;&amp;</tt>). The union operator denotes a class that contains every character that is in at least one of its operand classes. The intersection operator denotes a class that contains every character that is in both of its operand classes.</p>
 /// <p>The precedence of character-class operators is as follows, from highest to lowest:</p>
 /// <blockquote>
-/// <table cellspacing="0" border="0" summary="Precedence of character class operators." cellpadding="1">
+/// <table summary="Precedence of character class operators." border="0" cellpadding="1" cellspacing="0">
 /// <tbody>
 /// <tr>
 /// <th>1&nbsp;&nbsp;&nbsp;&nbsp;</th>
@@ -575,7 +575,7 @@ use color_eyre::eyre::Result;
 /// <h4><a name="gnumber">Group number</a></h4>
 /// <p>Capturing groups are numbered by counting their opening parentheses from left to right. In the expression <tt>((A)(B(C)))</tt>, for example, there are four such groups:</p>
 /// <blockquote>
-/// <table cellpadding="1" cellspacing="0" summary="Capturing group numberings">
+/// <table summary="Capturing group numberings" cellpadding="1" cellspacing="0">
 /// <tbody>
 /// <tr>
 /// <th>1&nbsp;&nbsp;&nbsp;&nbsp;</th>
@@ -619,7 +619,7 @@ use color_eyre::eyre::Result;
 /// <p><b><a name="ubc">Blocks</a></b> are specified with the prefix <code>In</code>, as in <code>InMongolian</code>, or by using the keyword <code>block</code> (or its short form <code>blk</code>) as in <code>block=Mongolian</code> or <code>blk=Mongolian</code>.</p>
 /// <p>The block names supported by <code>Pattern</code> are the valid block names accepted and defined by <a href="../../../java/lang/Character.UnicodeBlock.html#forName-java.lang.String-"><code>UnicodeBlock.forName</code></a>.</p>
 /// <p><b><a name="ucc">Categories</a></b> may be specified with the optional prefix <code>Is</code>: Both <code>\p{L}</code> and <code>\p{IsL}</code> denote the category of Unicode letters. Same as scripts and blocks, categories can also be specified by using the keyword <code>general_category</code> (or its short form <code>gc</code>) as in <code>general_category=Lu</code> or <code>gc=Lu</code>.</p>
-/// <p>The supported categories are those of <a href="http://www.unicode.org/unicode/standard/standard.html"> <i>The Unicode Standard</i></a> in the version specified by the <a title="class in java.lang" href="../../../java/lang/Character.html"><code>Character</code></a> class. The category names are those defined in the Standard, both normative and informative.</p>
+/// <p>The supported categories are those of <a href="http://www.unicode.org/unicode/standard/standard.html"> <i>The Unicode Standard</i></a> in the version specified by the <a href="../../../java/lang/Character.html" title="class in java.lang"><code>Character</code></a> class. The category names are those defined in the Standard, both normative and informative.</p>
 /// <p><b><a name="ubpc">Binary properties</a></b> are specified with the prefix <code>Is</code>, as in <code>IsAlphabetic</code>. The supported binary properties by <code>Pattern</code> are</p>
 /// <ul>
 /// <li>Alphabetic</li>
@@ -642,7 +642,7 @@ use color_eyre::eyre::Result;
 /// <tbody>
 /// <tr align="left">
 /// <th id="predef_classes" align="left">Classes</th>
-/// <th id="predef_matches" align="left">Matches</th>
+/// <th align="left" id="predef_matches">Matches</th>
 /// </tr>
 /// <tr>
 /// <td><tt>\p{Lower}</tt></td>
@@ -790,6 +790,7 @@ impl<'mc> JavaPattern<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
     pub fn pattern(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -802,24 +803,28 @@ impl<'mc> JavaPattern<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn quote(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
     ) -> Result<String, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("Javajava/lang/String")?;
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("Javajava/lang/String");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "quote",
             "(Ljava/lang/String;)Ljava/lang/String;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
+        );
+        let res = jni.translate_error(res)?;
         Ok(jni
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn as_predicate(
         &mut self,
@@ -831,8 +836,9 @@ impl<'mc> JavaPattern<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn as_match_predicate(
         &mut self,
@@ -844,10 +850,11 @@ impl<'mc> JavaPattern<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn split_as_stream(
+    pub fn split_as_stream(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -859,8 +866,9 @@ impl<'mc> JavaPattern<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -873,23 +881,26 @@ impl<'mc> JavaPattern<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn flags(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "flags", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn matches(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
+    pub fn matches(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
         let val_2 = arg1;
-        let cls = &jni.find_class("Javaboolean")?;
+        let cls = jni.find_class("Javaboolean");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "matches",
@@ -898,18 +909,29 @@ impl<'mc> JavaPattern<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
-        Ok(res.z().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.z()?)
     }
+    //
 
     pub fn compile_with_string(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.unwrap().into()).unwrap());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let cls = &jni.find_class("Javajava/util/regex/Pattern")?;
+        let val_1 = jni::objects::JObject::from(
+            jni.new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let cls = jni.find_class("Javajava/util/regex/Pattern");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "compile",
@@ -918,11 +940,13 @@ impl<'mc> JavaPattern<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn matcher(
+    pub fn matcher(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -934,16 +958,25 @@ impl<'mc> JavaPattern<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
+
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -956,8 +989,9 @@ impl<'mc> JavaPattern<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -969,16 +1003,18 @@ impl<'mc> JavaPattern<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -987,6 +1023,7 @@ impl<'mc> JavaPattern<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -995,6 +1032,7 @@ impl<'mc> JavaPattern<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self

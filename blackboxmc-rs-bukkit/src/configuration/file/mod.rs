@@ -1,7 +1,7 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-/// This is a base class for all File based implementations of <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a>
+/// This is a base class for all File based implementations of <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a>
 pub struct FileConfiguration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -38,21 +38,30 @@ impl<'mc> FileConfiguration<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::configuration::Configuration<'mc>>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<impl Into<crate::configuration::Configuration<'mc>>>,
     ) -> Result<crate::configuration::file::FileConfiguration<'mc>, Box<dyn std::error::Error>>
     {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/configuration/file/FileConfiguration")?;
+        let val_1 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
+        let cls = jni.find_class("org/bukkit/configuration/file/FileConfiguration");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Lorg/bukkit/configuration/Configuration;)V",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         crate::configuration::file::FileConfiguration::from_raw(&jni, res)
     }
-    /// Saves this <a title="class in org.bukkit.configuration.file" href="FileConfiguration.html"><code>FileConfiguration</code></a> to a string, and returns it.
+    //
+
     pub fn save_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -67,14 +76,13 @@ impl<'mc> FileConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    /// Loads this <a title="class in org.bukkit.configuration.file" href="FileConfiguration.html"><code>FileConfiguration</code></a> from the specified string, as opposed to from file.
-    /// <p>All the values contained within this configuration will be removed, leaving only settings and defaults, and the new values will be loaded from the given string.</p>
-    /// <p>If the string is invalid in any way, an exception will be thrown.</p>
+    //
+
     pub fn load_from_string(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "loadFromString",
@@ -84,22 +92,13 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Loads this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> from the specified location.
-    /// <p>All the values contained within this configuration will be removed, leaving only settings and defaults, and the new values will be loaded from the given file.</p>
-    /// <p>If the file cannot be loaded for any reason, an exception will be thrown.</p>
-    /// Loads this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> from the specified reader.
-    /// <p>All the values contained within this configuration will be removed, leaving only settings and defaults, and the new values will be loaded from the given stream.</p>
-    /// Loads this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> from the specified location.
-    /// <p>All the values contained within this configuration will be removed, leaving only settings and defaults, and the new values will be loaded from the given file.</p>
-    /// <p>If the file cannot be loaded for any reason, an exception will be thrown.</p>
-    /// Loads this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> from the specified string, as opposed to from file.
-    /// <p>All the values contained within this configuration will be removed, leaving only settings and defaults, and the new values will be loaded from the given string.</p>
-    /// <p>If the string is invalid in any way, an exception will be thrown.</p>
-    pub unsafe fn load_with_string(
+    //
+
+    pub fn load_with_string(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "load",
@@ -109,22 +108,13 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Loads this <a title="class in org.bukkit.configuration.file" href="FileConfiguration.html"><code>FileConfiguration</code></a> from the specified location.
-    /// <p>All the values contained within this configuration will be removed, leaving only settings and defaults, and the new values will be loaded from the given file.</p>
-    /// <p>If the file cannot be loaded for any reason, an exception will be thrown.</p>
-    /// Loads this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> from the specified reader.
-    /// <p>All the values contained within this configuration will be removed, leaving only settings and defaults, and the new values will be loaded from the given stream.</p>
-    /// Loads this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> from the specified location.
-    /// <p>All the values contained within this configuration will be removed, leaving only settings and defaults, and the new values will be loaded from the given file.</p>
-    /// <p>If the file cannot be loaded for any reason, an exception will be thrown.</p>
-    /// Loads this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> from the specified string, as opposed to from file.
-    /// <p>All the values contained within this configuration will be removed, leaving only settings and defaults, and the new values will be loaded from the given string.</p>
-    /// <p>If the string is invalid in any way, an exception will be thrown.</p>
-    pub unsafe fn load_with_file(
+    //
+
+    pub fn load_with_file(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "load",
@@ -134,19 +124,18 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Saves this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> to the specified location.
-    /// <p>If the file does not exist, it will be created. If already exists, it will be overwritten. If it cannot be overwritten or created, an exception will be thrown.</p>
-    /// <p>This method will save using the system default encoding, or possibly using UTF8.</p>
-    /// Saves this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> to the specified location.
-    /// <p>If the file does not exist, it will be created. If already exists, it will be overwritten. If it cannot be overwritten or created, an exception will be thrown.</p>
-    /// <p>This method will save using the system default encoding, or possibly using UTF8.</p>
-    /// Saves this <a title="class in org.bukkit.configuration.file" href="FileConfiguration.html"><code>FileConfiguration</code></a> to a string, and returns it.
+    //
+
     pub fn save_with_file(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "save",
@@ -156,9 +145,8 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Configuration.html#options()">Configuration</a></code></span>
-    /// Gets the <a title="class in org.bukkit.configuration" href="../ConfigurationOptions.html"><code>ConfigurationOptions</code></a> for this <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a>.
-    /// <p>All setters through this method are chainable.</p>
+    //
+
     pub fn options(
         &mut self,
     ) -> Result<crate::configuration::file::FileConfigurationOptions<'mc>, Box<dyn std::error::Error>>
@@ -174,13 +162,14 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn add_default(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let val_2 = arg1;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -194,6 +183,7 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn defaults(
         &mut self,
@@ -209,13 +199,20 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn add_defaults_with_configuration(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc blackboxmc_java::JavaMap<'mc>>>,
+        arg0: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
+        let val_1 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addDefaults",
@@ -225,10 +222,11 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn set_defaults(
         &mut self,
-        arg0: impl Into<&'mc crate::configuration::Configuration<'mc>>,
+        arg0: impl Into<crate::configuration::Configuration<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -240,6 +238,7 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn parent(
         &mut self,
@@ -255,16 +254,25 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn get_string_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<String>>,
+        arg1: std::option::Option<impl Into<String>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_2 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getString",
@@ -281,6 +289,7 @@ impl<'mc> FileConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //@NotNull
 
     pub fn get_keys(
         &mut self,
@@ -299,40 +308,27 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-
-    pub fn get_offline_player_with_string(
-        &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc crate::OfflinePlayer<'mc>>>,
-    ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getOfflinePlayer",
-            "(Ljava/lang/String;Lorg/bukkit/OfflinePlayer;)Lorg/bukkit/OfflinePlayer;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::OfflinePlayer::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
+    //
 
     pub fn get_color_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc crate::Color<'mc>>>,
+        arg0: std::option::Option<impl Into<String>>,
+        arg1: std::option::Option<impl Into<crate::Color<'mc>>>,
     ) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_2 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getColor",
@@ -347,16 +343,27 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn get_item_stack_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+        arg0: std::option::Option<impl Into<String>>,
+        arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_2 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getItemStack",
@@ -371,6 +378,42 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
+
+    pub fn get_offline_player_with_string(
+        &mut self,
+        arg0: std::option::Option<impl Into<String>>,
+        arg1: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
+    ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_2 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getOfflinePlayer",
+            "(Ljava/lang/String;Lorg/bukkit/OfflinePlayer;)Lorg/bukkit/OfflinePlayer;",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::OfflinePlayer::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //@NotNull
 
     pub fn get_values(
         &mut self,
@@ -389,25 +432,40 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn create_path_with_configuration_section(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::configuration::ConfigurationSection<'mc>>,
-        arg1: std::option::Option<impl Into<&'mc String>>,
-        arg2: std::option::Option<impl Into<&'mc crate::configuration::ConfigurationSection<'mc>>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::configuration::ConfigurationSection<'mc>>,
+        arg1: std::option::Option<impl Into<String>>,
+        arg2: std::option::Option<impl Into<crate::configuration::ConfigurationSection<'mc>>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
-        let val_3 =
-            unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("java/lang/String")?;
+        let val_2 = jni::objects::JObject::from(
+            jni.new_string(
+                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_3 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
+        let cls = jni.find_class("java/lang/String");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls,"createPath",
-"(Lorg/bukkit/configuration/ConfigurationSection;Ljava/lang/String;Lorg/bukkit/configuration/ConfigurationSection;)Ljava/lang/String;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+"(Lorg/bukkit/configuration/ConfigurationSection;Ljava/lang/String;Lorg/bukkit/configuration/ConfigurationSection;)Ljava/lang/String;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
+        let res = jni.translate_error(res)?;
         Ok(jni
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn default_section(
         &mut self,
@@ -423,6 +481,7 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn current_path(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -438,12 +497,13 @@ impl<'mc> FileConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn is_configuration_section(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isConfigurationSection",
@@ -451,14 +511,15 @@ impl<'mc> FileConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn get_configuration_section(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getConfigurationSection",
@@ -470,16 +531,27 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn create_section_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc blackboxmc_java::JavaMap<'mc>>>,
+        arg0: std::option::Option<impl Into<String>>,
+        arg1: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_2 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "createSection",
@@ -494,12 +566,13 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn is_string(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isString",
@@ -507,14 +580,12 @@ impl<'mc> FileConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub fn is_int(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+    pub fn is_int(&mut self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isInt",
@@ -522,14 +593,15 @@ impl<'mc> FileConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn is_boolean(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isBoolean",
@@ -537,14 +609,15 @@ impl<'mc> FileConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn is_double(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isDouble",
@@ -552,14 +625,12 @@ impl<'mc> FileConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub fn is_long(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+    pub fn is_long(&mut self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isLong",
@@ -567,14 +638,12 @@ impl<'mc> FileConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub fn is_list(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+    pub fn is_list(&mut self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isList",
@@ -582,14 +651,15 @@ impl<'mc> FileConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn get_string_list(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getStringList",
@@ -611,22 +681,45 @@ impl<'mc> FileConfiguration<'mc> {
         }
         Ok(new_vec)
     }
+    //
+
+    //
+
+    //
+
+    //
+
+    //
+
+    //
+
+    //
+
+    //
+
+    //
 
     pub fn get_serializable_with_string(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
         arg2: std::option::Option<
-            impl Into<&'mc crate::configuration::serialization::ConfigurationSerializable<'mc>>,
+            impl Into<crate::configuration::serialization::ConfigurationSerializable<'mc>>,
         >,
     ) -> Result<
         crate::configuration::serialization::ConfigurationSerializable<'mc>,
         Box<dyn std::error::Error>,
     > {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let val_2 = arg1.unwrap();
-        let val_3 =
-            unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().jni_object().clone()) };
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_3 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
         let res = self.jni_ref().call_method(&self.jni_object(),"getSerializable","(Ljava/lang/String;Ljava/lang/Class;Lorg/bukkit/configuration/serialization/ConfigurationSerializable;)Lorg/bukkit/configuration/serialization/ConfigurationSerializable;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
         let res = self.jni_ref().translate_error(res)?;
         crate::configuration::serialization::ConfigurationSerializable::from_raw(
@@ -634,16 +727,27 @@ impl<'mc> FileConfiguration<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
+    //
 
     pub fn get_vector_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc crate::util::Vector<'mc>>>,
+        arg0: std::option::Option<impl Into<String>>,
+        arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_2 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getVector",
@@ -658,12 +762,13 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn is_vector(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isVector",
@@ -671,14 +776,15 @@ impl<'mc> FileConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn is_offline_player(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isOfflinePlayer",
@@ -686,14 +792,15 @@ impl<'mc> FileConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn is_item_stack(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isItemStack",
@@ -701,14 +808,15 @@ impl<'mc> FileConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn is_color(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isColor",
@@ -716,14 +824,15 @@ impl<'mc> FileConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn is_location(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isLocation",
@@ -731,14 +840,15 @@ impl<'mc> FileConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn get_comments(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getComments",
@@ -760,12 +870,13 @@ impl<'mc> FileConfiguration<'mc> {
         }
         Ok(new_vec)
     }
+    //
 
     pub fn get_inline_comments(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getInlineComments",
@@ -787,20 +898,19 @@ impl<'mc> FileConfiguration<'mc> {
         }
         Ok(new_vec)
     }
+    //
 
     pub fn set_comments(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
         arg1: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let raw_val_2 = self
             .jni_ref()
-            .new_object("java/util/ArrayList", "()V", &[])
-            .unwrap();
+            .new_object("java/util/ArrayList", "()V", &[])?;
         for v in arg1 {
-            let map_val_0 =
-                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
+            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v.into())?);
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
@@ -821,20 +931,19 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn set_inline_comments(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
         arg1: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let raw_val_2 = self
             .jni_ref()
-            .new_object("java/util/ArrayList", "()V", &[])
-            .unwrap();
+            .new_object("java/util/ArrayList", "()V", &[])?;
         for v in arg1 {
-            let map_val_0 =
-                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
+            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v.into())?);
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
@@ -855,6 +964,7 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -867,15 +977,20 @@ impl<'mc> FileConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn get_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 = arg1.unwrap();
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "get",
@@ -886,8 +1001,9 @@ impl<'mc> FileConfiguration<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -900,16 +1016,24 @@ impl<'mc> FileConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn get_boolean_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
         // 0
-        let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Bool(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getBoolean",
@@ -920,17 +1044,25 @@ impl<'mc> FileConfiguration<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn get_int_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getInt",
@@ -941,17 +1073,25 @@ impl<'mc> FileConfiguration<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn get_long_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 = jni::objects::JValueGen::Long(arg1.unwrap().into());
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_2 = jni::objects::JValueGen::Long(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLong",
@@ -962,17 +1102,25 @@ impl<'mc> FileConfiguration<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
+        Ok(res.j()?)
     }
+    //
 
     pub fn get_double_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_2 = jni::objects::JValueGen::Double(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDouble",
@@ -983,18 +1131,26 @@ impl<'mc> FileConfiguration<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn contains_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
         // 0
-        let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Bool(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "contains",
@@ -1005,18 +1161,29 @@ impl<'mc> FileConfiguration<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn get_location_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
+        arg0: std::option::Option<impl Into<String>>,
+        arg1: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_2 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -1031,13 +1198,14 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn set(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let val_2 = arg1;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1051,12 +1219,10 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub fn is_set(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+    pub fn is_set(&mut self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSet",
@@ -1064,8 +1230,9 @@ impl<'mc> FileConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn root(
         &mut self,
@@ -1081,16 +1248,17 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn get_object_with_string(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let val_2 = arg1.unwrap();
-        let val_3 = arg2.unwrap();
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_3 = arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getObject",
@@ -1102,16 +1270,23 @@ impl<'mc> FileConfiguration<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -1124,6 +1299,7 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -1137,16 +1313,18 @@ impl<'mc> FileConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -1155,6 +1333,7 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1163,6 +1342,7 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1174,10 +1354,12 @@ impl<'mc> FileConfiguration<'mc> {
 }
 impl<'mc> Into<crate::configuration::MemoryConfiguration<'mc>> for FileConfiguration<'mc> {
     fn into(self) -> crate::configuration::MemoryConfiguration<'mc> {
-        crate::configuration::MemoryConfiguration::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::configuration::MemoryConfiguration::from_raw(&self.jni_ref(), self.1).expect(
+            "Error converting FileConfiguration into crate::configuration::MemoryConfiguration",
+        )
     }
 }
-/// Various settings for controlling the input and output of a <a title="class in org.bukkit.configuration.file" href="FileConfiguration.html"><code>FileConfiguration</code></a>
+/// Various settings for controlling the input and output of a <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a>
 pub struct FileConfigurationOptions<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1216,26 +1398,19 @@ impl<'mc> FileConfigurationOptions<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// use getHeader() instead.
-    /// </div>
-    /// use getHeader() instead.
-    ///
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// use setHeader() instead
-    /// </div>
-    /// use setHeader() instead
-    ///
+    //
+
     pub fn header(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<String>>,
     ) -> Result<crate::configuration::file::FileConfigurationOptions<'mc>, Box<dyn std::error::Error>>
     {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "header",
@@ -1247,6 +1422,8 @@ impl<'mc> FileConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //@NotNull
+
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="../ConfigurationOptions.html#pathSeparator(char)">ConfigurationOptions</a></code></span>
     /// Sets the char that will be used to separate <a href="../ConfigurationSection.html" title="interface in org.bukkit.configuration"><code>ConfigurationSection</code></a>s
     /// <p>This value does not affect how the <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> is stored, only in how you access the data. The default value is '.'.</p>
@@ -1255,7 +1432,10 @@ impl<'mc> FileConfigurationOptions<'mc> {
         arg0: std::option::Option<u16>,
     ) -> Result<crate::configuration::file::FileConfigurationOptions<'mc>, Box<dyn std::error::Error>>
     {
-        let val_1 = jni::objects::JValueGen::Char(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Char(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "pathSeparator",
@@ -1267,8 +1447,10 @@ impl<'mc> FileConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //@NotNull
+
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="../ConfigurationOptions.html#copyDefaults(boolean)">ConfigurationOptions</a></code></span>
-    /// Sets if the <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a> should copy values from its default <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> directly.
+    /// Sets if the <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> should copy values from its default <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a> directly.
     /// <p>If this is true, all values in the default Configuration will be directly copied, making it impossible to distinguish between values that were set and values that are provided by default. As a result, <a href="../ConfigurationSection.html#contains(java.lang.String)"><code>ConfigurationSection.contains(java.lang.String)</code></a> will always return the same value as <a href="../ConfigurationSection.html#isSet(java.lang.String)"><code>ConfigurationSection.isSet(java.lang.String)</code></a>. The default value is false.</p>
     pub fn copy_defaults(
         &mut self,
@@ -1276,7 +1458,10 @@ impl<'mc> FileConfigurationOptions<'mc> {
     ) -> Result<crate::configuration::file::FileConfigurationOptions<'mc>, Box<dyn std::error::Error>>
     {
         // -1
-        let val_1 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Bool(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "copyDefaults",
@@ -1288,8 +1473,8 @@ impl<'mc> FileConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gets whether or not comments should be loaded and saved.
-    /// <p>Defaults to true.</p>
+    //@NotNull
+
     /// Sets whether or not comments should be loaded and saved.
     /// <p>Defaults to true.</p>
     pub fn parse_comments(
@@ -1298,7 +1483,10 @@ impl<'mc> FileConfigurationOptions<'mc> {
     ) -> Result<crate::configuration::MemoryConfigurationOptions<'mc>, Box<dyn std::error::Error>>
     {
         // -1
-        let val_1 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Bool(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "parseComments",
@@ -1310,9 +1498,8 @@ impl<'mc> FileConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Sets the header that will be applied to the top of the saved output.
-    /// <p>This header will be commented out and applied directly at the top of the generated output of the <a title="class in org.bukkit.configuration.file" href="FileConfiguration.html"><code>FileConfiguration</code></a>. It is not required to include a newline at the end of the header as it will automatically be applied, but you may include one if you wish for extra spacing.</p>
-    /// <p>If no comments exist, an empty list will be returned. A null entry represents an empty line and an empty String represents an empty comment line.</p>
+    //
+
     pub fn set_header(
         &mut self,
         arg0: Vec<impl Into<String>>,
@@ -1320,11 +1507,9 @@ impl<'mc> FileConfigurationOptions<'mc> {
     {
         let raw_val_1 = self
             .jni_ref()
-            .new_object("java/util/ArrayList", "()V", &[])
-            .unwrap();
+            .new_object("java/util/ArrayList", "()V", &[])?;
         for v in arg0 {
-            let map_val_0 =
-                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
+            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v.into())?);
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
@@ -1344,9 +1529,8 @@ impl<'mc> FileConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gets the footer that will be applied to the bottom of the saved output.
-    /// <p>This footer will be commented out and applied directly at the bottom of the generated output of the <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a>. It is not required to include a newline at the beginning of the footer as it will automatically be applied, but you may include one if you wish for extra spacing.</p>
-    /// <p>If no comments exist, an empty list will be returned. A null entry represents an empty line and an empty String represents an empty comment line.</p>
+    //
+
     pub fn footer(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1366,9 +1550,8 @@ impl<'mc> FileConfigurationOptions<'mc> {
         }
         Ok(new_vec)
     }
-    /// Sets the footer that will be applied to the bottom of the saved output.
-    /// <p>This footer will be commented out and applied directly at the bottom of the generated output of the <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a>. It is not required to include a newline at the beginning of the footer as it will automatically be applied, but you may include one if you wish for extra spacing.</p>
-    /// <p>If no comments exist, an empty list will be returned. A null entry represents an empty line and an empty String represents an empty comment line.</p>
+    //
+
     pub fn set_footer(
         &mut self,
         arg0: Vec<impl Into<String>>,
@@ -1376,11 +1559,9 @@ impl<'mc> FileConfigurationOptions<'mc> {
     {
         let raw_val_1 = self
             .jni_ref()
-            .new_object("java/util/ArrayList", "()V", &[])
-            .unwrap();
+            .new_object("java/util/ArrayList", "()V", &[])?;
         for v in arg0 {
-            let map_val_0 =
-                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
+            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v.into())?);
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
@@ -1400,13 +1581,11 @@ impl<'mc> FileConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //@NotNull
+
+    //@Deprecated
+
     #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Call <a href="#parseComments()"><code>parseComments()</code></a> instead.
-    /// </div>
-    /// Call <a href="#parseComments()"><code>parseComments()</code></a> instead.
-    ///
     /// <span class="deprecated-label">Deprecated.</span>
     /// <div class="deprecation-comment">
     /// Call <a href="#parseComments(boolean)"><code>parseComments(boolean)</code></a> instead.
@@ -1419,7 +1598,10 @@ impl<'mc> FileConfigurationOptions<'mc> {
     ) -> Result<crate::configuration::file::FileConfigurationOptions<'mc>, Box<dyn std::error::Error>>
     {
         // -1
-        let val_1 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Bool(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "copyHeader",
@@ -1431,8 +1613,8 @@ impl<'mc> FileConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="../ConfigurationOptions.html#configuration()">ConfigurationOptions</a></code></span>
-    /// Returns the <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a> that this object is responsible for.
+    //
+
     pub fn configuration(
         &mut self,
     ) -> Result<crate::configuration::MemoryConfiguration<'mc>, Box<dyn std::error::Error>> {
@@ -1447,14 +1629,21 @@ impl<'mc> FileConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -1467,6 +1656,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -1480,8 +1670,9 @@ impl<'mc> FileConfigurationOptions<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -1494,14 +1685,16 @@ impl<'mc> FileConfigurationOptions<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -1510,6 +1703,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1518,6 +1712,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1531,7 +1726,7 @@ impl<'mc> Into<crate::configuration::MemoryConfigurationOptions<'mc>>
     for FileConfigurationOptions<'mc>
 {
     fn into(self) -> crate::configuration::MemoryConfigurationOptions<'mc> {
-        crate::configuration::MemoryConfigurationOptions::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::configuration::MemoryConfigurationOptions::from_raw(&self.jni_ref(), self.1).expect("Error converting FileConfigurationOptions into crate::configuration::MemoryConfigurationOptions")
     }
 }
 /// Various settings for controlling the input and output of a <a href="YamlConfiguration.html" title="class in org.bukkit.configuration.file"><code>YamlConfiguration</code></a>
@@ -1573,14 +1768,18 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// Gets how long a line can be, before it gets split.
+    //@NotNull
+
     /// Sets how long a line can be, before it gets split.
     pub fn width(
         &mut self,
         arg0: std::option::Option<i32>,
     ) -> Result<crate::configuration::file::YamlConfigurationOptions<'mc>, Box<dyn std::error::Error>>
     {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "width",
@@ -1592,14 +1791,19 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// <span class="deprecated-label">Deprecated.</span>
+    //
+
     pub fn header(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<String>>,
     ) -> Result<crate::configuration::file::FileConfigurationOptions<'mc>, Box<dyn std::error::Error>>
     {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getHeader",
@@ -1611,6 +1815,8 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //@NotNull
+
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="../ConfigurationOptions.html#pathSeparator(char)">ConfigurationOptions</a></code></span>
     /// Sets the char that will be used to separate <a href="../ConfigurationSection.html" title="interface in org.bukkit.configuration"><code>ConfigurationSection</code></a>s
     /// <p>This value does not affect how the <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> is stored, only in how you access the data. The default value is '.'.</p>
@@ -1619,7 +1825,10 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         arg0: std::option::Option<u16>,
     ) -> Result<crate::configuration::file::YamlConfigurationOptions<'mc>, Box<dyn std::error::Error>>
     {
-        let val_1 = jni::objects::JValueGen::Char(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Char(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "pathSeparator",
@@ -1631,8 +1840,10 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //@NotNull
+
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="../ConfigurationOptions.html#copyDefaults(boolean)">ConfigurationOptions</a></code></span>
-    /// Sets if the <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> should copy values from its default <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> directly.
+    /// Sets if the <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a> should copy values from its default <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a> directly.
     /// <p>If this is true, all values in the default Configuration will be directly copied, making it impossible to distinguish between values that were set and values that are provided by default. As a result, <a href="../ConfigurationSection.html#contains(java.lang.String)"><code>ConfigurationSection.contains(java.lang.String)</code></a> will always return the same value as <a href="../ConfigurationSection.html#isSet(java.lang.String)"><code>ConfigurationSection.isSet(java.lang.String)</code></a>. The default value is false.</p>
     pub fn copy_defaults(
         &mut self,
@@ -1640,7 +1851,10 @@ impl<'mc> YamlConfigurationOptions<'mc> {
     ) -> Result<crate::configuration::file::FileConfigurationOptions<'mc>, Box<dyn std::error::Error>>
     {
         // -1
-        let val_1 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Bool(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "copyDefaults",
@@ -1652,6 +1866,8 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //@NotNull
+
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="FileConfigurationOptions.html#parseComments(boolean)">FileConfigurationOptions</a></code></span>
     /// Sets whether or not comments should be loaded and saved.
     /// <p>Defaults to true.</p>
@@ -1661,7 +1877,10 @@ impl<'mc> YamlConfigurationOptions<'mc> {
     ) -> Result<crate::configuration::file::YamlConfigurationOptions<'mc>, Box<dyn std::error::Error>>
     {
         // -1
-        let val_1 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Bool(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "parseComments",
@@ -1673,10 +1892,8 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="FileConfigurationOptions.html#setHeader(java.util.List)">FileConfigurationOptions</a></code></span>
-    /// Sets the header that will be applied to the top of the saved output.
-    /// <p>This header will be commented out and applied directly at the top of the generated output of the <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a>. It is not required to include a newline at the end of the header as it will automatically be applied, but you may include one if you wish for extra spacing.</p>
-    /// <p>If no comments exist, an empty list will be returned. A null entry represents an empty line and an empty String represents an empty comment line.</p>
+    //
+
     pub fn set_header_with_list(
         &mut self,
         arg0: std::option::Option<Vec<impl Into<String>>>,
@@ -1684,11 +1901,9 @@ impl<'mc> YamlConfigurationOptions<'mc> {
     {
         let raw_val_1 = self
             .jni_ref()
-            .new_object("java/util/ArrayList", "()V", &[])
-            .unwrap();
-        for v in arg0.unwrap() {
-            let map_val_0 =
-                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
+            .new_object("java/util/ArrayList", "()V", &[])?;
+        for v in arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))? {
+            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v.into())?);
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
@@ -1708,6 +1923,11 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //@NotNull
+
+    //@Deprecated
+
+    #[deprecated]
     /// <span class="deprecated-label">Deprecated.</span>
     pub fn copy_header(
         &mut self,
@@ -1715,7 +1935,10 @@ impl<'mc> YamlConfigurationOptions<'mc> {
     ) -> Result<crate::configuration::file::FileConfigurationOptions<'mc>, Box<dyn std::error::Error>>
     {
         // -1
-        let val_1 = jni::objects::JValueGen::Bool(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Bool(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "copyHeader",
@@ -1727,8 +1950,8 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gets how much spaces should be used to indent each line.
-    /// <p>The minimum value this may be is 2, and the maximum is 9.</p>
+    //@NotNull
+
     /// Sets how much spaces should be used to indent each line.
     /// <p>The minimum value this may be is 2, and the maximum is 9.</p>
     pub fn indent(
@@ -1736,7 +1959,10 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         arg0: std::option::Option<i32>,
     ) -> Result<crate::configuration::file::YamlConfigurationOptions<'mc>, Box<dyn std::error::Error>>
     {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "indent",
@@ -1748,8 +1974,8 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="../ConfigurationOptions.html#configuration()">ConfigurationOptions</a></code></span>
-    /// Returns the <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> that this object is responsible for.
+    //
+
     pub fn configuration(
         &mut self,
     ) -> Result<crate::configuration::Configuration<'mc>, Box<dyn std::error::Error>> {
@@ -1764,6 +1990,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn footer(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let res =
@@ -1784,14 +2011,21 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         }
         Ok(new_vec)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -1804,6 +2038,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -1817,8 +2052,9 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -1831,14 +2067,16 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -1847,6 +2085,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1855,6 +2094,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1868,11 +2108,10 @@ impl<'mc> Into<crate::configuration::file::FileConfigurationOptions<'mc>>
     for YamlConfigurationOptions<'mc>
 {
     fn into(self) -> crate::configuration::file::FileConfigurationOptions<'mc> {
-        crate::configuration::file::FileConfigurationOptions::from_raw(&self.jni_ref(), self.1)
-            .unwrap()
+        crate::configuration::file::FileConfigurationOptions::from_raw(&self.jni_ref(), self.1).expect("Error converting YamlConfigurationOptions into crate::configuration::file::FileConfigurationOptions")
     }
 }
-/// An implementation of <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a> which saves all files in Yaml. Note that this implementation is not synchronized.
+/// An implementation of <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> which saves all files in Yaml. Note that this implementation is not synchronized.
 pub struct YamlConfiguration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1909,36 +2148,37 @@ impl<'mc> YamlConfiguration<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::configuration::file::YamlConfiguration<'mc>, Box<dyn std::error::Error>>
     {
-        let cls = &jni.find_class("org/bukkit/configuration/file/YamlConfiguration")?;
-        let res = jni.new_object(cls, "()V", &[])?;
+        let cls = jni.find_class("org/bukkit/configuration/file/YamlConfiguration");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, "()V", &[]);
+        let res = jni.translate_error_no_gen(res)?;
         crate::configuration::file::YamlConfiguration::from_raw(&jni, res)
     }
-    /// Creates a new <a href="YamlConfiguration.html" title="class in org.bukkit.configuration.file"><code>YamlConfiguration</code></a>, loading from the given file.
-    /// <p>Any errors loading the Configuration will be logged and then ignored. If the specified input is not a valid config, a blank config will be returned.</p>
-    /// <p>The encoding used may follow the system dependent default.</p>
-    /// Creates a new <a href="YamlConfiguration.html" title="class in org.bukkit.configuration.file"><code>YamlConfiguration</code></a>, loading from the given reader.
-    /// <p>Any errors loading the Configuration will be logged and then ignored. If the specified input is not a valid config, a blank config will be returned.</p>
-    pub unsafe fn load_configuration_with_file(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    //
+
+    pub fn load_configuration_with_file(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<crate::configuration::file::YamlConfiguration<'mc>, Box<dyn std::error::Error>>
     {
-        let val_1 = arg0.unwrap();
-        let cls = &jni.find_class("org/bukkit/configuration/file/YamlConfiguration")?;
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let cls = jni.find_class("org/bukkit/configuration/file/YamlConfiguration");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "loadConfiguration",
             "(Ljava/io/Reader;)Lorg/bukkit/configuration/file/YamlConfiguration;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
+        );
+        let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::configuration::file::YamlConfiguration::from_raw(&jni, obj)
     }
-    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="FileConfiguration.html#saveToString()">FileConfiguration</a></code></span>
-    /// Saves this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> to a string, and returns it.
+    //
+
     pub fn save_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1953,15 +2193,13 @@ impl<'mc> YamlConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="FileConfiguration.html#loadFromString(java.lang.String)">FileConfiguration</a></code></span>
-    /// Loads this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> from the specified string, as opposed to from file.
-    /// <p>All the values contained within this configuration will be removed, leaving only settings and defaults, and the new values will be loaded from the given string.</p>
-    /// <p>If the string is invalid in any way, an exception will be thrown.</p>
+    //
+
     pub fn load_from_string(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "loadFromString",
@@ -1971,9 +2209,8 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Configuration.html#options()">Configuration</a></code></span>
-    /// Gets the <a href="../ConfigurationOptions.html" title="class in org.bukkit.configuration"><code>ConfigurationOptions</code></a> for this <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a>.
-    /// <p>All setters through this method are chainable.</p>
+    //
+
     pub fn options(
         &mut self,
     ) -> Result<crate::configuration::file::YamlConfigurationOptions<'mc>, Box<dyn std::error::Error>>
@@ -1989,20 +2226,13 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="FileConfiguration.html#loadFromString(java.lang.String)">FileConfiguration</a></code></span>
-    /// Loads this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> from the specified string, as opposed to from file.
-    /// <p>All the values contained within this configuration will be removed, leaving only settings and defaults, and the new values will be loaded from the given string.</p>
-    /// <p>If the string is invalid in any way, an exception will be thrown.</p>
-    /// Creates a new <a href="YamlConfiguration.html" title="class in org.bukkit.configuration.file"><code>YamlConfiguration</code></a>, loading from the given file.
-    /// <p>Any errors loading the Configuration will be logged and then ignored. If the specified input is not a valid config, a blank config will be returned.</p>
-    /// <p>The encoding used may follow the system dependent default.</p>
-    /// Creates a new <a href="YamlConfiguration.html" title="class in org.bukkit.configuration.file"><code>YamlConfiguration</code></a>, loading from the given reader.
-    /// <p>Any errors loading the Configuration will be logged and then ignored. If the specified input is not a valid config, a blank config will be returned.</p>
-    pub unsafe fn load_with_string(
+    //
+
+    pub fn load_with_string(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "load",
@@ -2012,20 +2242,13 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="FileConfiguration.html#loadFromString(java.lang.String)">FileConfiguration</a></code></span>
-    /// Loads this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> from the specified string, as opposed to from file.
-    /// <p>All the values contained within this configuration will be removed, leaving only settings and defaults, and the new values will be loaded from the given string.</p>
-    /// <p>If the string is invalid in any way, an exception will be thrown.</p>
-    /// Creates a new <a href="YamlConfiguration.html" title="class in org.bukkit.configuration.file"><code>YamlConfiguration</code></a>, loading from the given file.
-    /// <p>Any errors loading the Configuration will be logged and then ignored. If the specified input is not a valid config, a blank config will be returned.</p>
-    /// <p>The encoding used may follow the system dependent default.</p>
-    /// Creates a new <a href="YamlConfiguration.html" title="class in org.bukkit.configuration.file"><code>YamlConfiguration</code></a>, loading from the given reader.
-    /// <p>Any errors loading the Configuration will be logged and then ignored. If the specified input is not a valid config, a blank config will be returned.</p>
-    pub unsafe fn load_with_file(
+    //
+
+    pub fn load_with_file(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "load",
@@ -2035,14 +2258,18 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="FileConfiguration.html#saveToString()">FileConfiguration</a></code></span>
-    /// Saves this <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a> to a string, and returns it.
+    //
+
     pub fn save_with_file(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "save",
@@ -2052,13 +2279,14 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn add_default(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let val_2 = arg1;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2072,6 +2300,7 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn defaults(
         &mut self,
@@ -2087,13 +2316,20 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn add_defaults_with_configuration(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc blackboxmc_java::JavaMap<'mc>>>,
+        arg0: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
+        let val_1 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addDefaults",
@@ -2103,10 +2339,11 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn set_defaults(
         &mut self,
-        arg0: impl Into<&'mc crate::configuration::Configuration<'mc>>,
+        arg0: impl Into<crate::configuration::Configuration<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -2118,6 +2355,7 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn parent(
         &mut self,
@@ -2133,16 +2371,25 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn get_string_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<String>>,
+        arg1: std::option::Option<impl Into<String>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_2 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getString",
@@ -2159,6 +2406,7 @@ impl<'mc> YamlConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //@NotNull
 
     pub fn get_keys(
         &mut self,
@@ -2177,40 +2425,27 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-
-    pub fn get_offline_player_with_string(
-        &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc crate::OfflinePlayer<'mc>>>,
-    ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getOfflinePlayer",
-            "(Ljava/lang/String;Lorg/bukkit/OfflinePlayer;)Lorg/bukkit/OfflinePlayer;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::OfflinePlayer::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
+    //
 
     pub fn get_color_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc crate::Color<'mc>>>,
+        arg0: std::option::Option<impl Into<String>>,
+        arg1: std::option::Option<impl Into<crate::Color<'mc>>>,
     ) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_2 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getColor",
@@ -2225,16 +2460,27 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn get_item_stack_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc crate::inventory::ItemStack<'mc>>>,
+        arg0: std::option::Option<impl Into<String>>,
+        arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_2 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getItemStack",
@@ -2249,6 +2495,42 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
+
+    pub fn get_offline_player_with_string(
+        &mut self,
+        arg0: std::option::Option<impl Into<String>>,
+        arg1: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
+    ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_2 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getOfflinePlayer",
+            "(Ljava/lang/String;Lorg/bukkit/OfflinePlayer;)Lorg/bukkit/OfflinePlayer;",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::OfflinePlayer::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //@NotNull
 
     pub fn get_values(
         &mut self,
@@ -2267,25 +2549,40 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn create_path_with_configuration_section(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::configuration::ConfigurationSection<'mc>>,
-        arg1: std::option::Option<impl Into<&'mc String>>,
-        arg2: std::option::Option<impl Into<&'mc crate::configuration::ConfigurationSection<'mc>>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::configuration::ConfigurationSection<'mc>>,
+        arg1: std::option::Option<impl Into<String>>,
+        arg2: std::option::Option<impl Into<crate::configuration::ConfigurationSection<'mc>>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
-        let val_3 =
-            unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("java/lang/String")?;
+        let val_2 = jni::objects::JObject::from(
+            jni.new_string(
+                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_3 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
+        let cls = jni.find_class("java/lang/String");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls,"createPath",
-"(Lorg/bukkit/configuration/ConfigurationSection;Ljava/lang/String;Lorg/bukkit/configuration/ConfigurationSection;)Ljava/lang/String;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)])?;
+"(Lorg/bukkit/configuration/ConfigurationSection;Ljava/lang/String;Lorg/bukkit/configuration/ConfigurationSection;)Ljava/lang/String;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
+        let res = jni.translate_error(res)?;
         Ok(jni
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn default_section(
         &mut self,
@@ -2301,6 +2598,7 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn current_path(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -2316,12 +2614,13 @@ impl<'mc> YamlConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn is_configuration_section(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isConfigurationSection",
@@ -2329,14 +2628,15 @@ impl<'mc> YamlConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn get_configuration_section(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getConfigurationSection",
@@ -2348,16 +2648,27 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn create_section_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc blackboxmc_java::JavaMap<'mc>>>,
+        arg0: std::option::Option<impl Into<String>>,
+        arg1: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_2 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "createSection",
@@ -2372,12 +2683,13 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn is_string(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isString",
@@ -2385,14 +2697,12 @@ impl<'mc> YamlConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub fn is_int(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+    pub fn is_int(&mut self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isInt",
@@ -2400,14 +2710,15 @@ impl<'mc> YamlConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn is_boolean(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isBoolean",
@@ -2415,14 +2726,15 @@ impl<'mc> YamlConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn is_double(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isDouble",
@@ -2430,14 +2742,12 @@ impl<'mc> YamlConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub fn is_long(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+    pub fn is_long(&mut self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isLong",
@@ -2445,14 +2755,12 @@ impl<'mc> YamlConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub fn is_list(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+    pub fn is_list(&mut self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isList",
@@ -2460,14 +2768,15 @@ impl<'mc> YamlConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn get_string_list(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getStringList",
@@ -2489,22 +2798,45 @@ impl<'mc> YamlConfiguration<'mc> {
         }
         Ok(new_vec)
     }
+    //
+
+    //
+
+    //
+
+    //
+
+    //
+
+    //
+
+    //
+
+    //
+
+    //
 
     pub fn get_serializable_with_string(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
         arg2: std::option::Option<
-            impl Into<&'mc crate::configuration::serialization::ConfigurationSerializable<'mc>>,
+            impl Into<crate::configuration::serialization::ConfigurationSerializable<'mc>>,
         >,
     ) -> Result<
         crate::configuration::serialization::ConfigurationSerializable<'mc>,
         Box<dyn std::error::Error>,
     > {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let val_2 = arg1.unwrap();
-        let val_3 =
-            unsafe { jni::objects::JObject::from_raw(arg2.unwrap().into().jni_object().clone()) };
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_3 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
         let res = self.jni_ref().call_method(&self.jni_object(),"getSerializable","(Ljava/lang/String;Ljava/lang/Class;Lorg/bukkit/configuration/serialization/ConfigurationSerializable;)Lorg/bukkit/configuration/serialization/ConfigurationSerializable;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
         let res = self.jni_ref().translate_error(res)?;
         crate::configuration::serialization::ConfigurationSerializable::from_raw(
@@ -2512,16 +2844,27 @@ impl<'mc> YamlConfiguration<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
+    //
 
     pub fn get_vector_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc crate::util::Vector<'mc>>>,
+        arg0: std::option::Option<impl Into<String>>,
+        arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_2 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getVector",
@@ -2536,12 +2879,13 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn is_vector(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isVector",
@@ -2549,14 +2893,15 @@ impl<'mc> YamlConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn is_offline_player(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isOfflinePlayer",
@@ -2564,14 +2909,15 @@ impl<'mc> YamlConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn is_item_stack(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isItemStack",
@@ -2579,14 +2925,15 @@ impl<'mc> YamlConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn is_color(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isColor",
@@ -2594,14 +2941,15 @@ impl<'mc> YamlConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn is_location(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isLocation",
@@ -2609,14 +2957,15 @@ impl<'mc> YamlConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn get_comments(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getComments",
@@ -2638,12 +2987,13 @@ impl<'mc> YamlConfiguration<'mc> {
         }
         Ok(new_vec)
     }
+    //
 
     pub fn get_inline_comments(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getInlineComments",
@@ -2665,20 +3015,19 @@ impl<'mc> YamlConfiguration<'mc> {
         }
         Ok(new_vec)
     }
+    //
 
     pub fn set_comments(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
         arg1: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let raw_val_2 = self
             .jni_ref()
-            .new_object("java/util/ArrayList", "()V", &[])
-            .unwrap();
+            .new_object("java/util/ArrayList", "()V", &[])?;
         for v in arg1 {
-            let map_val_0 =
-                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
+            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v.into())?);
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
@@ -2699,20 +3048,19 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn set_inline_comments(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
         arg1: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let raw_val_2 = self
             .jni_ref()
-            .new_object("java/util/ArrayList", "()V", &[])
-            .unwrap();
+            .new_object("java/util/ArrayList", "()V", &[])?;
         for v in arg1 {
-            let map_val_0 =
-                jni::objects::JObject::from(self.jni_ref().new_string(v.into()).unwrap());
+            let map_val_0 = jni::objects::JObject::from(self.jni_ref().new_string(v.into())?);
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
@@ -2733,6 +3081,7 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -2745,15 +3094,20 @@ impl<'mc> YamlConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn get_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 = arg1.unwrap();
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "get",
@@ -2764,8 +3118,9 @@ impl<'mc> YamlConfiguration<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -2778,16 +3133,24 @@ impl<'mc> YamlConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn get_boolean_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
         // 0
-        let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Bool(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getBoolean",
@@ -2798,17 +3161,25 @@ impl<'mc> YamlConfiguration<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn get_int_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getInt",
@@ -2819,17 +3190,25 @@ impl<'mc> YamlConfiguration<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn get_long_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 = jni::objects::JValueGen::Long(arg1.unwrap().into());
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_2 = jni::objects::JValueGen::Long(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLong",
@@ -2840,17 +3219,25 @@ impl<'mc> YamlConfiguration<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
+        Ok(res.j()?)
     }
+    //
 
     pub fn get_double_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_2 = jni::objects::JValueGen::Double(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDouble",
@@ -2861,18 +3248,26 @@ impl<'mc> YamlConfiguration<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn contains_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
         // 0
-        let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Bool(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "contains",
@@ -2883,18 +3278,29 @@ impl<'mc> YamlConfiguration<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn get_location_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc crate::Location<'mc>>>,
+        arg0: std::option::Option<impl Into<String>>,
+        arg1: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_2 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLocation",
@@ -2909,13 +3315,14 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn set(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let val_2 = arg1;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2929,12 +3336,10 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub fn is_set(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+    pub fn is_set(&mut self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isSet",
@@ -2942,8 +3347,9 @@ impl<'mc> YamlConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn root(
         &mut self,
@@ -2959,16 +3365,17 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn get_object_with_string(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let val_2 = arg1.unwrap();
-        let val_3 = arg2.unwrap();
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_3 = arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getObject",
@@ -2980,16 +3387,23 @@ impl<'mc> YamlConfiguration<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -3002,6 +3416,7 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -3015,16 +3430,18 @@ impl<'mc> YamlConfiguration<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -3033,6 +3450,7 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -3041,6 +3459,7 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -3052,6 +3471,8 @@ impl<'mc> YamlConfiguration<'mc> {
 }
 impl<'mc> Into<crate::configuration::file::FileConfiguration<'mc>> for YamlConfiguration<'mc> {
     fn into(self) -> crate::configuration::file::FileConfiguration<'mc> {
-        crate::configuration::file::FileConfiguration::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::configuration::file::FileConfiguration::from_raw(&self.jni_ref(), self.1).expect(
+            "Error converting YamlConfiguration into crate::configuration::file::FileConfiguration",
+        )
     }
 }

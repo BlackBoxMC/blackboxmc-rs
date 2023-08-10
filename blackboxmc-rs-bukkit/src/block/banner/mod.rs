@@ -46,7 +46,7 @@ pub enum PatternTypeEnum {
 }
 impl std::fmt::Display for PatternTypeEnum {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match &self {
+        match self {
             PatternTypeEnum::Base => f.write_str("BASE"),
             PatternTypeEnum::SquareBottomLeft => f.write_str("SQUARE_BOTTOM_LEFT"),
             PatternTypeEnum::SquareBottomRight => f.write_str("SQUARE_BOTTOM_RIGHT"),
@@ -218,6 +218,36 @@ impl<'mc> PatternType<'mc> {
             _ => None,
         }
     }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<PatternType<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/block/banner/PatternType");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/block/banner/PatternType;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        PatternType::from_raw(
+            &jni,
+            raw_obj,
+            PatternType::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
 }
 
 pub struct Pattern<'mc>(
@@ -253,15 +283,28 @@ impl<'mc> Pattern<'mc> {
         }
     }
     pub fn new_with_map(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::DyeColor<'mc>>>,
-        arg1: std::option::Option<impl Into<&'mc crate::block::banner::PatternType<'mc>>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<impl Into<crate::DyeColor<'mc>>>,
+        arg1: std::option::Option<impl Into<crate::block::banner::PatternType<'mc>>>,
     ) -> Result<crate::block::banner::Pattern<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/block/banner/Pattern")?;
+        let val_1 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
+        let val_2 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
+        let cls = jni.find_class("org/bukkit/block/banner/Pattern");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Lorg/bukkit/DyeColor;Lorg/bukkit/block/banner/PatternType;)V",
@@ -269,12 +312,12 @@ impl<'mc> Pattern<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         crate::block::banner::Pattern::from_raw(&jni, res)
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../../configuration/serialization/ConfigurationSerializable.html#serialize()">ConfigurationSerializable</a></code></span>
-    /// Creates a Map representation of this class.
-    /// <p>This class must provide a method to restore this class, as defined in the <a title="interface in org.bukkit.configuration.serialization" href="../../configuration/serialization/ConfigurationSerializable.html"><code>ConfigurationSerializable</code></a> interface javadocs.</p>
+    //
+
     pub fn serialize(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -286,7 +329,8 @@ impl<'mc> Pattern<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Returns the color of the pattern
+    //
+
     pub fn color(&mut self) -> Result<crate::DyeColor<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -298,7 +342,8 @@ impl<'mc> Pattern<'mc> {
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
         let variant = self
             .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = self.jni_ref().translate_error(variant)?;
         let variant_str = self
             .0
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -307,10 +352,12 @@ impl<'mc> Pattern<'mc> {
         crate::DyeColor::from_raw(
             &self.jni_ref(),
             raw_obj,
-            crate::DyeColor::from_string(variant_str).unwrap(),
+            crate::DyeColor::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    /// Returns the type of pattern
+    //
+
     pub fn pattern(
         &mut self,
     ) -> Result<crate::block::banner::PatternType<'mc>, Box<dyn std::error::Error>> {
@@ -324,7 +371,8 @@ impl<'mc> Pattern<'mc> {
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
         let variant = self
             .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = self.jni_ref().translate_error(variant)?;
         let variant_str = self
             .0
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -333,9 +381,11 @@ impl<'mc> Pattern<'mc> {
         crate::block::banner::PatternType::from_raw(
             &self.jni_ref(),
             raw_obj,
-            crate::block::banner::PatternType::from_string(variant_str).unwrap(),
+            crate::block::banner::PatternType::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -349,24 +399,32 @@ impl<'mc> Pattern<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -379,6 +437,7 @@ impl<'mc> Pattern<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -391,6 +450,7 @@ impl<'mc> Pattern<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -399,6 +459,7 @@ impl<'mc> Pattern<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -407,6 +468,7 @@ impl<'mc> Pattern<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -420,10 +482,6 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
     for Pattern<'mc>
 {
     fn into(self) -> crate::configuration::serialization::ConfigurationSerializable<'mc> {
-        crate::configuration::serialization::ConfigurationSerializable::from_raw(
-            &self.jni_ref(),
-            self.1,
-        )
-        .unwrap()
+        crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting Pattern into crate::configuration::serialization::ConfigurationSerializable")
     }
 }

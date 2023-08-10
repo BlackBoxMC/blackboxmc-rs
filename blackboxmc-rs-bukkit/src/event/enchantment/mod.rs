@@ -38,14 +38,14 @@ impl<'mc> EnchantItemEvent<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::entity::Player<'mc>>,
-        arg1: impl Into<&'mc crate::inventory::InventoryView<'mc>>,
-        arg2: impl Into<&'mc crate::block::Block<'mc>>,
-        arg3: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::entity::Player<'mc>>,
+        arg1: impl Into<crate::inventory::InventoryView<'mc>>,
+        arg2: impl Into<crate::block::Block<'mc>>,
+        arg3: impl Into<crate::inventory::ItemStack<'mc>>,
         arg4: i32,
-        arg5: impl Into<&'mc blackboxmc_java::JavaMap<'mc>>,
-        arg6: impl Into<&'mc crate::enchantments::Enchantment<'mc>>,
+        arg5: impl Into<blackboxmc_java::JavaMap<'mc>>,
+        arg6: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg7: i32,
         arg8: i32,
     ) -> Result<crate::event::enchantment::EnchantItemEvent<'mc>, Box<dyn std::error::Error>> {
@@ -58,33 +58,23 @@ impl<'mc> EnchantItemEvent<'mc> {
         let val_7 = unsafe { jni::objects::JObject::from_raw(arg6.into().jni_object().clone()) };
         let val_8 = jni::objects::JValueGen::Int(arg7.into());
         let val_9 = jni::objects::JValueGen::Int(arg8.into());
-        let cls = &jni.find_class("org/bukkit/event/enchantment/EnchantItemEvent")?;
+        let cls = jni.find_class("org/bukkit/event/enchantment/EnchantItemEvent");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(cls,
-"(Lorg/bukkit/entity/Player;Lorg/bukkit/inventory/InventoryView;Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;ILjava/util/Map;Lorg/bukkit/enchantments/Enchantment;II)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6),jni::objects::JValueGen::from(&val_7),jni::objects::JValueGen::from(&val_8),jni::objects::JValueGen::from(&val_9)])?;
+"(Lorg/bukkit/entity/Player;Lorg/bukkit/inventory/InventoryView;Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;ILjava/util/Map;Lorg/bukkit/enchantments/Enchantment;II)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6),jni::objects::JValueGen::from(&val_7),jni::objects::JValueGen::from(&val_8),jni::objects::JValueGen::from(&val_9)]);
+        let res = jni.translate_error_no_gen(res)?;
         crate::event::enchantment::EnchantItemEvent::from_raw(&jni, res)
     }
-    /// Gets the item to be enchanted (can be modified)
-    pub fn item(&mut self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getItem",
-            "()Lorg/bukkit/inventory/ItemStack;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
-    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    //
+
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn handlers(
         &mut self,
@@ -100,6 +90,22 @@ impl<'mc> EnchantItemEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
+
+    pub fn item(&mut self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getItem",
+            "()Lorg/bukkit/inventory/ItemStack;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -114,21 +120,25 @@ impl<'mc> EnchantItemEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn handler_list(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
+        let cls = jni.find_class("org/bukkit/event/HandlerList");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "getHandlerList",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    /// Gets the player enchanting the item
+    //
+
     pub fn enchanter(&mut self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -141,7 +151,8 @@ impl<'mc> EnchantItemEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gets the block being used to enchant the item
+    //
+
     pub fn enchant_block(
         &mut self,
     ) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
@@ -156,14 +167,17 @@ impl<'mc> EnchantItemEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gets the cost (minimum level) which is displayed as a number on the right hand side of the enchantment offer.
+    //
+
     pub fn exp_level_cost(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getExpLevelCost", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
+
     /// Sets the cost (minimum level) which is displayed as a number on the right hand side of the enchantment offer.
     pub fn set_exp_level_cost(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -176,7 +190,8 @@ impl<'mc> EnchantItemEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Get map of enchantment (levels, keyed by type) to be added to item (modify map returned to change values). Note: Any enchantments not allowed for the item will be ignored
+    //
+
     pub fn enchants_to_add(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -191,7 +206,8 @@ impl<'mc> EnchantItemEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Get the <a title="class in org.bukkit.enchantments" href="../../enchantments/Enchantment.html"><code>Enchantment</code></a> that was displayed as a hint to the player on the selected enchantment offer.
+    //
+
     pub fn enchantment_hint(
         &mut self,
     ) -> Result<crate::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
@@ -206,22 +222,25 @@ impl<'mc> EnchantItemEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Get the level of the enchantment that was displayed as a hint to the player on the selected enchantment offer.
+    //
+
     pub fn level_hint(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLevelHint", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
-    /// Which button was pressed to initiate the enchanting.
+    //
+
     pub fn which_button(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "whichButton", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn inventory(
         &mut self,
@@ -237,6 +256,7 @@ impl<'mc> EnchantItemEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn viewers(
         &mut self,
@@ -254,6 +274,7 @@ impl<'mc> EnchantItemEvent<'mc> {
         }
         Ok(new_vec)
     }
+    //
 
     pub fn view(
         &mut self,
@@ -269,6 +290,7 @@ impl<'mc> EnchantItemEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -284,22 +306,30 @@ impl<'mc> EnchantItemEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -312,6 +342,7 @@ impl<'mc> EnchantItemEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -325,8 +356,9 @@ impl<'mc> EnchantItemEvent<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -339,14 +371,16 @@ impl<'mc> EnchantItemEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -355,6 +389,7 @@ impl<'mc> EnchantItemEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -363,6 +398,7 @@ impl<'mc> EnchantItemEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -374,12 +410,15 @@ impl<'mc> EnchantItemEvent<'mc> {
 }
 impl<'mc> Into<crate::event::Cancellable<'mc>> for EnchantItemEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting EnchantItemEvent into crate::event::Cancellable")
     }
 }
 impl<'mc> Into<crate::event::inventory::InventoryEvent<'mc>> for EnchantItemEvent<'mc> {
     fn into(self) -> crate::event::inventory::InventoryEvent<'mc> {
-        crate::event::inventory::InventoryEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::event::inventory::InventoryEvent::from_raw(&self.jni_ref(), self.1).expect(
+            "Error converting EnchantItemEvent into crate::event::inventory::InventoryEvent",
+        )
     }
 }
 /// Called when an ItemStack is inserted in an enchantment table - can be called multiple times
@@ -420,11 +459,11 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::entity::Player<'mc>>,
-        arg1: impl Into<&'mc crate::inventory::InventoryView<'mc>>,
-        arg2: impl Into<&'mc crate::block::Block<'mc>>,
-        arg3: impl Into<&'mc crate::inventory::ItemStack<'mc>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::entity::Player<'mc>>,
+        arg1: impl Into<crate::inventory::InventoryView<'mc>>,
+        arg2: impl Into<crate::block::Block<'mc>>,
+        arg3: impl Into<crate::inventory::ItemStack<'mc>>,
         arg4: Vec<impl Into<crate::enchantments::EnchantmentOffer<'mc>>>,
         arg5: i32,
     ) -> Result<crate::event::enchantment::PrepareItemEnchantEvent<'mc>, Box<dyn std::error::Error>>
@@ -434,33 +473,23 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
         let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
         let val_4 = unsafe { jni::objects::JObject::from_raw(arg3.into().jni_object().clone()) };
         let val_6 = jni::objects::JValueGen::Int(arg5.into());
-        let cls = &jni.find_class("org/bukkit/event/enchantment/PrepareItemEnchantEvent")?;
+        let cls = jni.find_class("org/bukkit/event/enchantment/PrepareItemEnchantEvent");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(cls,
-"(Lorg/bukkit/entity/Player;Lorg/bukkit/inventory/InventoryView;Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/enchantments/EnchantmentOffer;I)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_6)])?;
+"(Lorg/bukkit/entity/Player;Lorg/bukkit/inventory/InventoryView;Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/enchantments/EnchantmentOffer;I)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_6)]);
+        let res = jni.translate_error_no_gen(res)?;
         crate::event::enchantment::PrepareItemEnchantEvent::from_raw(&jni, res)
     }
-    /// Gets the item to be enchanted.
-    pub fn item(&mut self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getItem",
-            "()Lorg/bukkit/inventory/ItemStack;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
-    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    //
+
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn handlers(
         &mut self,
@@ -476,6 +505,22 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
+
+    pub fn item(&mut self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getItem",
+            "()Lorg/bukkit/inventory/ItemStack;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -490,21 +535,25 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn handler_list(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
+        let cls = jni.find_class("org/bukkit/event/HandlerList");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "getHandlerList",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    /// Gets the player enchanting the item
+    //
+
     pub fn enchanter(&mut self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -517,7 +566,8 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gets the block being used to enchant the item
+    //
+
     pub fn enchant_block(
         &mut self,
     ) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
@@ -532,14 +582,20 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Get enchantment bonus in effect - corresponds to number of bookshelves
+    //
+
+    //
+
     pub fn enchantment_bonus(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getEnchantmentBonus", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
+
+    //
 
     pub fn inventory(
         &mut self,
@@ -555,6 +611,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn viewers(
         &mut self,
@@ -572,6 +629,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
         }
         Ok(new_vec)
     }
+    //
 
     pub fn view(
         &mut self,
@@ -587,6 +645,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -602,22 +661,30 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -630,6 +697,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -643,8 +711,9 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -657,14 +726,16 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -673,6 +744,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -681,6 +753,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -692,11 +765,14 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
 }
 impl<'mc> Into<crate::event::Cancellable<'mc>> for PrepareItemEnchantEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting PrepareItemEnchantEvent into crate::event::Cancellable")
     }
 }
 impl<'mc> Into<crate::event::inventory::InventoryEvent<'mc>> for PrepareItemEnchantEvent<'mc> {
     fn into(self) -> crate::event::inventory::InventoryEvent<'mc> {
-        crate::event::inventory::InventoryEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::event::inventory::InventoryEvent::from_raw(&self.jni_ref(), self.1).expect(
+            "Error converting PrepareItemEnchantEvent into crate::event::inventory::InventoryEvent",
+        )
     }
 }

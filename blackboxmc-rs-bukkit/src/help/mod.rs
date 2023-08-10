@@ -33,7 +33,7 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
         }
         let (valid, name) = env.validate_name(
             &obj,
-            "org/bukkit/help/HelpTopicComparatorTopicNameComparator",
+            "org/bukkit/help/HelpTopicComparator$TopicNameComparator",
         )?;
         if !valid {
             Err(eyre::eyre!(
@@ -45,13 +45,15 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
+
     pub fn compare_with_string(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = arg1.unwrap();
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "compare",
@@ -62,15 +64,23 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
+
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -83,6 +93,8 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
+
     pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
@@ -95,8 +107,10 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
+
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -108,13 +122,17 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
+
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
+
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -122,6 +140,8 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
+
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -129,6 +149,8 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
+
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -136,6 +158,8 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
+
     pub fn reversed(
         &mut self,
     ) -> Result<blackboxmc_java::JavaComparator<'mc>, Box<dyn std::error::Error>> {
@@ -155,7 +179,7 @@ impl<'mc> Into<blackboxmc_java::JavaComparator<'mc>>
     for HelpTopicComparatorTopicNameComparator<'mc>
 {
     fn into(self) -> blackboxmc_java::JavaComparator<'mc> {
-        blackboxmc_java::JavaComparator::from_raw(&self.jni_ref(), self.1).unwrap()
+        blackboxmc_java::JavaComparator::from_raw(&self.jni_ref(), self.1).expect("Error converting HelpTopicComparatorTopicNameComparator into blackboxmc_java::JavaComparator")
     }
 }
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for HelpTopicComparator<'mc> {
@@ -188,35 +212,42 @@ impl<'mc> HelpTopicComparator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
     pub fn topic_name_comparator_instance(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::help::HelpTopicComparatorTopicNameComparator<'mc>, Box<dyn std::error::Error>>
     {
-        let cls = &jni.find_class("org/bukkit/help/HelpTopicComparator$TopicNameComparator")?;
+        let cls = jni.find_class("org/bukkit/help/HelpTopicComparator$TopicNameComparator");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "topicNameComparatorInstance",
             "()Lorg/bukkit/help/HelpTopicComparator$TopicNameComparator;",
             &[],
-        )?;
+        );
+        let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::help::HelpTopicComparatorTopicNameComparator::from_raw(&jni, obj)
     }
+    //
 
     pub fn help_topic_comparator_instance(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::help::HelpTopicComparator<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("org/bukkit/help/HelpTopicComparator")?;
+        let cls = jni.find_class("org/bukkit/help/HelpTopicComparator");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "helpTopicComparatorInstance",
             "()Lorg/bukkit/help/HelpTopicComparator;",
             &[],
-        )?;
+        );
+        let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::help::HelpTopicComparator::from_raw(&jni, obj)
     }
+    //
 
     pub fn compare_with_help_topic(
         &mut self,
@@ -224,7 +255,7 @@ impl<'mc> HelpTopicComparator<'mc> {
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = arg1.unwrap();
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "compare",
@@ -235,16 +266,23 @@ impl<'mc> HelpTopicComparator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -257,6 +295,7 @@ impl<'mc> HelpTopicComparator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -270,8 +309,9 @@ impl<'mc> HelpTopicComparator<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -284,14 +324,16 @@ impl<'mc> HelpTopicComparator<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -300,6 +342,7 @@ impl<'mc> HelpTopicComparator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -308,6 +351,7 @@ impl<'mc> HelpTopicComparator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -316,6 +360,7 @@ impl<'mc> HelpTopicComparator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn reversed(
         &mut self,
@@ -334,12 +379,13 @@ impl<'mc> HelpTopicComparator<'mc> {
 }
 impl<'mc> Into<blackboxmc_java::JavaComparator<'mc>> for HelpTopicComparator<'mc> {
     fn into(self) -> blackboxmc_java::JavaComparator<'mc> {
-        blackboxmc_java::JavaComparator::from_raw(&self.jni_ref(), self.1).unwrap()
+        blackboxmc_java::JavaComparator::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting HelpTopicComparator into blackboxmc_java::JavaComparator")
     }
 }
-/// A HelpTopicFactory is used to create custom <a title="class in org.bukkit.help" href="HelpTopic.html"><code>HelpTopic</code></a> objects from commands that inherit from a common base class or have executors that inherit from a common base class. You can use a custom HelpTopic to change the way all the commands in your plugin display in the help. If your plugin implements a complex permissions system, a custom help topic may also be appropriate.
+/// A HelpTopicFactory is used to create custom <a href="HelpTopic.html" title="class in org.bukkit.help"><code>HelpTopic</code></a> objects from commands that inherit from a common base class or have executors that inherit from a common base class. You can use a custom HelpTopic to change the way all the commands in your plugin display in the help. If your plugin implements a complex permissions system, a custom help topic may also be appropriate.
 /// <p>To automatically bind your plugin's commands to your custom HelpTopic implementation, first make sure all your commands or executors derive from a custom base class (it doesn't have to do anything). Next implement a custom HelpTopicFactory that accepts your custom command base class and instantiates an instance of your custom HelpTopic from it. Finally, register your HelpTopicFactory against your command base class using the <a href="HelpMap.html#registerHelpTopicFactory(java.lang.Class,org.bukkit.help.HelpTopicFactory)"><code>HelpMap.registerHelpTopicFactory(Class, HelpTopicFactory)</code></a> method.</p>
-/// <p>As the help system iterates over all registered commands to make help topics, it first checks to see if there is a HelpTopicFactory registered for the command's base class. If so, the factory is used to make a help topic rather than a generic help topic. If no factory is found for the command's base class and the command derives from <a href="../command/PluginCommand.html" title="class in org.bukkit.command"><code>PluginCommand</code></a>, then the type of the command's executor is inspected looking for a registered HelpTopicFactory. Finally, if no factory is found, a generic help topic is created for the command.</p>
+/// <p>As the help system iterates over all registered commands to make help topics, it first checks to see if there is a HelpTopicFactory registered for the command's base class. If so, the factory is used to make a help topic rather than a generic help topic. If no factory is found for the command's base class and the command derives from <a title="class in org.bukkit.command" href="../command/PluginCommand.html"><code>PluginCommand</code></a>, then the type of the command's executor is inspected looking for a registered HelpTopicFactory. Finally, if no factory is found, a generic help topic is created for the command.</p>
 ///
 /// This is a representation of an abstract class.
 pub struct HelpTopicFactory<'mc>(
@@ -377,10 +423,11 @@ impl<'mc> HelpTopicFactory<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// This method accepts a command deriving from a custom command base class and constructs a custom HelpTopic for it.
+    //
+
     pub fn create_topic(
         &mut self,
-        arg0: impl Into<&'mc crate::command::Command<'mc>>,
+        arg0: impl Into<crate::command::Command<'mc>>,
     ) -> Result<crate::help::HelpTopic<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -450,17 +497,19 @@ impl<'mc> HelpTopic<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::help::HelpTopic<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("org/bukkit/help/HelpTopic")?;
-        let res = jni.new_object(cls, "()V", &[])?;
+        let cls = jni.find_class("org/bukkit/help/HelpTopic");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, "()V", &[]);
+        let res = jni.translate_error_no_gen(res)?;
         crate::help::HelpTopic::from_raw(&jni, res)
     }
-    /// Determines if a <a title="interface in org.bukkit.entity" href="../entity/Player.html"><code>Player</code></a> is allowed to see this help topic.
-    /// <p>HelpTopic implementations should take server administrator wishes into account as set by the <a href="#amendCanSee(java.lang.String)"><code>amendCanSee(String)</code></a> function.</p>
+    //
+
     pub fn can_see(
         &mut self,
-        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -470,15 +519,15 @@ impl<'mc> HelpTopic<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
-    /// Allows the server administrator to override the permission required to see a help topic.
-    /// <p>HelpTopic implementations should take this into account when determining topic visibility on the <a href="#canSee(org.bukkit.command.CommandSender)"><code>canSee(org.bukkit.command.CommandSender)</code></a> function.</p>
+    //
+
     pub fn amend_can_see(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "amendCanSee",
@@ -488,7 +537,8 @@ impl<'mc> HelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Returns a brief description that will be displayed in the topic index.
+    //
+
     pub fn short_text(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -503,11 +553,11 @@ impl<'mc> HelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    /// Returns the full description of this help topic that is displayed when the user requests this topic's details.
-    /// <p>The result will be paginated to properly fit the user's client.</p>
+    //
+
     pub fn get_full_text(
         &mut self,
-        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -523,15 +573,15 @@ impl<'mc> HelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    /// Allows the server admin (or another plugin) to add or replace the contents of a help topic.
-    /// <p>A null in either parameter will leave that part of the topic unchanged. In either amending parameter, the string &lt;text&gt; is replaced with the existing contents in the help topic. Use this to append or prepend additional content into an automatically generated help topic.</p>
+    //
+
     pub fn amend_topic(
         &mut self,
-        arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc String>,
+        arg0: impl Into<String>,
+        arg1: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "amendTopic",
@@ -544,7 +594,8 @@ impl<'mc> HelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Returns the name of this help topic.
+    //
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -556,14 +607,21 @@ impl<'mc> HelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -576,6 +634,7 @@ impl<'mc> HelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -589,8 +648,9 @@ impl<'mc> HelpTopic<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -603,14 +663,16 @@ impl<'mc> HelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -619,6 +681,7 @@ impl<'mc> HelpTopic<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -627,6 +690,7 @@ impl<'mc> HelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -640,7 +704,7 @@ impl<'mc> HelpTopic<'mc> {
 /// <ol>
 /// <li>General topics are loaded from the help.yml</li>
 /// <li>Plugins load and optionally call <code>addTopic()</code></li>
-/// <li>Registered plugin commands are processed by <a title="interface in org.bukkit.help" href="HelpTopicFactory.html"><code>HelpTopicFactory</code></a> objects to create topics</li>
+/// <li>Registered plugin commands are processed by <a href="HelpTopicFactory.html" title="interface in org.bukkit.help"><code>HelpTopicFactory</code></a> objects to create topics</li>
 /// <li>Topic contents are amended as directed in help.yml</li>
 /// </ol>
 ///
@@ -668,13 +732,13 @@ impl<'mc> HelpMap<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// Returns a help topic for a given topic name.
-    /// Returns a collection of all the registered help topics.
+    //
+
     pub fn get_help_topic(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<crate::help::HelpTopic<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getHelpTopic",
@@ -686,7 +750,8 @@ impl<'mc> HelpMap<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Returns a collection of all the registered help topics.
+    //
+
     pub fn help_topics(
         &mut self,
     ) -> Result<Vec<crate::help::HelpTopic<'mc>>, Box<dyn std::error::Error>> {
@@ -706,10 +771,11 @@ impl<'mc> HelpMap<'mc> {
         }
         Ok(new_vec)
     }
-    /// Adds a topic to the server's help index.
+    //
+
     pub fn add_topic(
         &mut self,
-        arg0: impl Into<&'mc crate::help::HelpTopic<'mc>>,
+        arg0: impl Into<crate::help::HelpTopic<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -721,11 +787,12 @@ impl<'mc> HelpMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Associates a <a href="HelpTopicFactory.html" title="interface in org.bukkit.help"><code>HelpTopicFactory</code></a> object with given command base class. Plugins typically call this method during <code>onLoad()</code>. Once registered, the custom HelpTopicFactory will be used to create a custom <a href="HelpTopic.html" title="class in org.bukkit.help"><code>HelpTopic</code></a> for all commands deriving from the <code> commandClass</code> base class, or all commands deriving from <a href="../command/PluginCommand.html" title="class in org.bukkit.command"><code>PluginCommand</code></a> who's executor derives from <code> commandClass</code> base class.
+    //
+
     pub fn register_help_topic_factory(
         &mut self,
         arg0: jni::objects::JClass<'mc>,
-        arg1: impl Into<&'mc crate::help::HelpTopicFactory<'mc>>,
+        arg1: impl Into<crate::help::HelpTopicFactory<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -741,7 +808,8 @@ impl<'mc> HelpMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Gets the list of plugins the server administrator has chosen to exclude from the help index. Plugin authors who choose to directly extend <a title="class in org.bukkit.command" href="../command/Command.html"><code>Command</code></a> instead of <a title="class in org.bukkit.command" href="../command/PluginCommand.html"><code>PluginCommand</code></a> will need to check this collection in their <a href="HelpTopicFactory.html" title="interface in org.bukkit.help"><code>HelpTopicFactory</code></a> implementations to ensure they meet the server administrator's expectations.
+    //
+
     pub fn ignored_plugins(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -764,7 +832,8 @@ impl<'mc> HelpMap<'mc> {
         }
         Ok(new_vec)
     }
-    /// Clears out the contents of the help index. Normally called during server reload.
+    //
+
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -818,12 +887,11 @@ impl<'mc> IndexHelpTopic<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="HelpTopic.html#canSee(org.bukkit.command.CommandSender)">HelpTopic</a></code></span>
-    /// Determines if a <a href="../entity/Player.html" title="interface in org.bukkit.entity"><code>Player</code></a> is allowed to see this help topic.
-    /// <p>HelpTopic implementations should take server administrator wishes into account as set by the <a href="HelpTopic.html#amendCanSee(java.lang.String)"><code>HelpTopic.amendCanSee(String)</code></a> function.</p>
+    //
+
     pub fn can_see(
         &mut self,
-        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -833,16 +901,15 @@ impl<'mc> IndexHelpTopic<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
-    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="HelpTopic.html#amendCanSee(java.lang.String)">HelpTopic</a></code></span>
-    /// Allows the server administrator to override the permission required to see a help topic.
-    /// <p>HelpTopic implementations should take this into account when determining topic visibility on the <a href="HelpTopic.html#canSee(org.bukkit.command.CommandSender)"><code>HelpTopic.canSee(org.bukkit.command.CommandSender)</code></a> function.</p>
+    //
+
     pub fn amend_can_see(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "amendCanSee",
@@ -852,12 +919,11 @@ impl<'mc> IndexHelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="HelpTopic.html#getFullText(org.bukkit.command.CommandSender)">HelpTopic</a></code></span>
-    /// Returns the full description of this help topic that is displayed when the user requests this topic's details.
-    /// <p>The result will be paginated to properly fit the user's client.</p>
+    //
+
     pub fn get_full_text(
         &mut self,
-        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -873,6 +939,7 @@ impl<'mc> IndexHelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn short_text(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -888,14 +955,15 @@ impl<'mc> IndexHelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn amend_topic(
         &mut self,
-        arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc String>,
+        arg0: impl Into<String>,
+        arg1: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "amendTopic",
@@ -908,6 +976,7 @@ impl<'mc> IndexHelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -920,14 +989,21 @@ impl<'mc> IndexHelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -940,6 +1016,7 @@ impl<'mc> IndexHelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -953,8 +1030,9 @@ impl<'mc> IndexHelpTopic<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -967,14 +1045,16 @@ impl<'mc> IndexHelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -983,6 +1063,7 @@ impl<'mc> IndexHelpTopic<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -991,6 +1072,7 @@ impl<'mc> IndexHelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1002,7 +1084,8 @@ impl<'mc> IndexHelpTopic<'mc> {
 }
 impl<'mc> Into<crate::help::HelpTopic<'mc>> for IndexHelpTopic<'mc> {
     fn into(self) -> crate::help::HelpTopic<'mc> {
-        crate::help::HelpTopic::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::help::HelpTopic::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting IndexHelpTopic into crate::help::HelpTopic")
     }
 }
 /// Lacking an alternative, the help system will create instances of GenericCommandHelpTopic for each command in the server's CommandMap. You can use this class as a base class for custom help topics, or as an example for how to write your own.
@@ -1042,24 +1125,25 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::command::Command<'mc>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::command::Command<'mc>>,
     ) -> Result<crate::help::GenericCommandHelpTopic<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/help/GenericCommandHelpTopic")?;
+        let cls = jni.find_class("org/bukkit/help/GenericCommandHelpTopic");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Lorg/bukkit/command/Command;)V",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         crate::help::GenericCommandHelpTopic::from_raw(&jni, res)
     }
-    /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="HelpTopic.html#canSee(org.bukkit.command.CommandSender)">HelpTopic</a></code></span>
-    /// Determines if a <a href="../entity/Player.html" title="interface in org.bukkit.entity"><code>Player</code></a> is allowed to see this help topic.
-    /// <p>HelpTopic implementations should take server administrator wishes into account as set by the <a href="HelpTopic.html#amendCanSee(java.lang.String)"><code>HelpTopic.amendCanSee(String)</code></a> function.</p>
+    //
+
     pub fn can_see(
         &mut self,
-        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -1069,14 +1153,15 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn amend_can_see(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "amendCanSee",
@@ -1086,6 +1171,7 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn short_text(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1101,10 +1187,11 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn get_full_text(
         &mut self,
-        arg0: impl Into<&'mc crate::command::CommandSender<'mc>>,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -1120,14 +1207,15 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn amend_topic(
         &mut self,
-        arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc String>,
+        arg0: impl Into<String>,
+        arg1: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "amendTopic",
@@ -1140,6 +1228,7 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -1152,14 +1241,21 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -1172,6 +1268,7 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -1185,8 +1282,9 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -1199,14 +1297,16 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -1215,6 +1315,7 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1223,6 +1324,7 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1234,6 +1336,7 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
 }
 impl<'mc> Into<crate::help::HelpTopic<'mc>> for GenericCommandHelpTopic<'mc> {
     fn into(self) -> crate::help::HelpTopic<'mc> {
-        crate::help::HelpTopic::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::help::HelpTopic::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting GenericCommandHelpTopic into crate::help::HelpTopic")
     }
 }

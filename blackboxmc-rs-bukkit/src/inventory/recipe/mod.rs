@@ -8,7 +8,7 @@ pub enum CookingBookCategoryEnum {
 }
 impl std::fmt::Display for CookingBookCategoryEnum {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match &self {
+        match self {
             CookingBookCategoryEnum::Food => f.write_str("FOOD"),
             CookingBookCategoryEnum::Blocks => f.write_str("BLOCKS"),
             CookingBookCategoryEnum::Misc => f.write_str("MISC"),
@@ -69,6 +69,36 @@ impl<'mc> CookingBookCategory<'mc> {
             _ => None,
         }
     }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<CookingBookCategory<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/inventory/recipe/CookingBookCategory");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/inventory/recipe/CookingBookCategory;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        CookingBookCategory::from_raw(
+            &jni,
+            raw_obj,
+            CookingBookCategory::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
 }
 pub enum CraftingBookCategoryEnum {
     Building,
@@ -78,7 +108,7 @@ pub enum CraftingBookCategoryEnum {
 }
 impl std::fmt::Display for CraftingBookCategoryEnum {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match &self {
+        match self {
             CraftingBookCategoryEnum::Building => f.write_str("BUILDING"),
             CraftingBookCategoryEnum::Redstone => f.write_str("REDSTONE"),
             CraftingBookCategoryEnum::Equipment => f.write_str("EQUIPMENT"),
@@ -141,5 +171,35 @@ impl<'mc> CraftingBookCategory<'mc> {
             "MISC" => Some(CraftingBookCategoryEnum::Misc),
             _ => None,
         }
+    }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<CraftingBookCategory<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/inventory/recipe/CraftingBookCategory");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/inventory/recipe/CraftingBookCategory;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        CraftingBookCategory::from_raw(
+            &jni,
+            raw_obj,
+            CraftingBookCategory::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
     }
 }

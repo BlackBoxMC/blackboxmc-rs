@@ -54,8 +54,8 @@ impl<'mc> ItemTagType<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// Returns the primitive data type of this tag.
+    //
+
     pub fn primitive_type(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -68,8 +68,8 @@ impl<'mc> ItemTagType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// Returns the complex object type the primitive value resembles.
+    //
+
     pub fn complex_type(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -82,31 +82,31 @@ impl<'mc> ItemTagType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// Returns the primitive data that resembles the complex object passed to this method.
+    //
+
     pub fn to_primitive(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagAdapterContext<'mc>>,
+        arg1: impl Into<crate::inventory::meta::tags::ItemTagAdapterContext<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(&self.jni_object(),"toPrimitive","(Ljava/lang/Object;Lorg/bukkit/inventory/meta/tags/ItemTagAdapterContext;)Ljava/lang/Object;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// Creates a complex object based of the passed primitive value
+    //
+
     pub fn from_primitive(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagAdapterContext<'mc>>,
+        arg1: impl Into<crate::inventory::meta::tags::ItemTagAdapterContext<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(&self.jni_object(),"fromPrimitive","(Ljava/lang/Object;Lorg/bukkit/inventory/meta/tags/ItemTagAdapterContext;)Ljava/lang/Object;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
 }
 impl<'mc> JNIRaw<'mc> for ItemTagType<'mc> {
@@ -148,8 +148,8 @@ impl<'mc> ItemTagAdapterContext<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// Creates a new and empty tag container instance.
+    //
+
     pub fn new_tag_container(
         &mut self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
@@ -202,7 +202,7 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
         }
         let (valid, name) = env.validate_name(
             &obj,
-            "org/bukkit/inventory/meta/tags/ItemTagTypePrimitiveTagType",
+            "org/bukkit/inventory/meta/tags/ItemTagType$PrimitiveTagType",
         )?;
         if !valid {
             Err(eyre::eyre!(
@@ -214,8 +214,8 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="ItemTagType.html#getPrimitiveType()">ItemTagType</a></code></span>
-    /// Returns the primitive data type of this tag.
+    //
+
     pub fn primitive_type(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -228,8 +228,8 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="ItemTagType.html#getComplexType()">ItemTagType</a></code></span>
-    /// Returns the complex object type the primitive value resembles.
+    //
+
     pub fn complex_type(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -242,40 +242,47 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="ItemTagType.html#toPrimitive(Z,org.bukkit.inventory.meta.tags.ItemTagAdapterContext)">ItemTagType</a></code></span>
-    /// Returns the primitive data that resembles the complex object passed to this method.
+    //
+
     pub fn to_primitive(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagAdapterContext<'mc>>,
+        arg1: impl Into<crate::inventory::meta::tags::ItemTagAdapterContext<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(&self.jni_object(),"toPrimitive","(Ljava/lang/Object;Lorg/bukkit/inventory/meta/tags/ItemTagAdapterContext;)Ljava/lang/Object;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="ItemTagType.html#fromPrimitive(T,org.bukkit.inventory.meta.tags.ItemTagAdapterContext)">ItemTagType</a></code></span>
-    /// Creates a complex object based of the passed primitive value
+    //
+
     pub fn from_primitive(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagAdapterContext<'mc>>,
+        arg1: impl Into<crate::inventory::meta::tags::ItemTagAdapterContext<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(&self.jni_object(),"fromPrimitive","(Ljava/lang/Object;Lorg/bukkit/inventory/meta/tags/ItemTagAdapterContext;)Ljava/lang/Object;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -288,6 +295,7 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -301,8 +309,9 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -315,14 +324,16 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -331,6 +342,7 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -339,6 +351,7 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -380,8 +393,8 @@ impl<'mc> CustomItemTagContainer<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// Returns the adapter context this tag container uses.
+    //
+
     pub fn adapter_context(
         &mut self,
     ) -> Result<crate::inventory::meta::tags::ItemTagAdapterContext<'mc>, Box<dyn std::error::Error>>
@@ -397,12 +410,12 @@ impl<'mc> CustomItemTagContainer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// Stores a custom value on the <a title="interface in org.bukkit.inventory.meta" href="../ItemMeta.html"><code>ItemMeta</code></a>. This API cannot be used to manipulate minecraft tags, as the values will be stored using your namespace. This method will override any existing value the meta may have stored under the provided key.
+    //
+
     pub fn set_custom_tag(
         &mut self,
-        arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
-        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagType<'mc>>,
+        arg0: impl Into<crate::NamespacedKey<'mc>>,
+        arg1: impl Into<crate::inventory::meta::tags::ItemTagType<'mc>>,
         arg2: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
@@ -412,12 +425,12 @@ impl<'mc> CustomItemTagContainer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// Returns if the item meta has a custom tag registered matching the provided parameters. This method will only return if the found value has the same primitive data type as the provided key. Storing a value using a custom <a title="interface in org.bukkit.inventory.meta.tags" href="ItemTagType.html"><code>ItemTagType</code></a> implementation will not store the complex data type. Therefore storing a UUID (by storing a byte[]) will match hasCustomTag("key" , <a href="ItemTagType.html#BYTE_ARRAY"><code>ItemTagType.BYTE_ARRAY</code></a>). Likewise a stored byte[] will always match your UUID <a title="interface in org.bukkit.inventory.meta.tags" href="ItemTagType.html"><code>ItemTagType</code></a> even if it is not 16 bytes long. This method is only usable for custom object keys. Overwriting existing tags, like the the display name, will not work as the values are stored using your namespace.
+    //
+
     pub fn has_custom_tag(
         &mut self,
-        arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
-        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagType<'mc>>,
+        arg0: impl Into<crate::NamespacedKey<'mc>>,
+        arg1: impl Into<crate::inventory::meta::tags::ItemTagType<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
@@ -431,26 +444,26 @@ impl<'mc> CustomItemTagContainer<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// Returns the custom tag's value that is stored on the item.
+    //
+
     pub fn get_custom_tag(
         &mut self,
-        arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
-        arg1: impl Into<&'mc crate::inventory::meta::tags::ItemTagType<'mc>>,
+        arg0: impl Into<crate::NamespacedKey<'mc>>,
+        arg1: impl Into<crate::inventory::meta::tags::ItemTagType<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(&self.jni_object(),"getCustomTag","(Lorg/bukkit/NamespacedKey;Lorg/bukkit/inventory/meta/tags/ItemTagType;)Ljava/lang/Object;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// Removes a custom key from the item meta.
+    //
+
     pub fn remove_custom_tag(
         &mut self,
-        arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
+        arg0: impl Into<crate::NamespacedKey<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -462,14 +475,14 @@ impl<'mc> CustomItemTagContainer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// Returns if the container instance is empty, therefore has no entries inside it.
+    //
+
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
 }
 impl<'mc> JNIRaw<'mc> for CustomItemTagContainer<'mc> {

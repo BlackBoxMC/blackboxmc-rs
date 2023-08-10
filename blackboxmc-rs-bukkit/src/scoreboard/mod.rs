@@ -34,14 +34,21 @@ impl<'mc> Criterias<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -54,6 +61,7 @@ impl<'mc> Criterias<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -67,8 +75,9 @@ impl<'mc> Criterias<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -81,14 +90,16 @@ impl<'mc> Criterias<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -97,6 +108,7 @@ impl<'mc> Criterias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -105,6 +117,7 @@ impl<'mc> Criterias<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -112,6 +125,444 @@ impl<'mc> Criterias<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+}
+/// How an option may be applied to members of this team.
+pub enum TeamOptionStatusEnum {
+    Always,
+    Never,
+    ForOtherTeams,
+    ForOwnTeam,
+}
+impl std::fmt::Display for TeamOptionStatusEnum {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            TeamOptionStatusEnum::Always => f.write_str("ALWAYS"),
+            TeamOptionStatusEnum::Never => f.write_str("NEVER"),
+            TeamOptionStatusEnum::ForOtherTeams => f.write_str("FOR_OTHER_TEAMS"),
+            TeamOptionStatusEnum::ForOwnTeam => f.write_str("FOR_OWN_TEAM"),
+        }
+    }
+}
+pub struct TeamOptionStatus<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+    pub TeamOptionStatusEnum,
+);
+impl<'mc> std::ops::Deref for TeamOptionStatus<'mc> {
+    type Target = TeamOptionStatusEnum;
+    fn deref(&self) -> &Self::Target {
+        return &self.2;
+    }
+}
+impl<'mc> JNIRaw<'mc> for TeamOptionStatus<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> TeamOptionStatus<'mc> {
+    pub fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+        e: TeamOptionStatusEnum,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate TeamOptionStatus from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/scoreboard/Team$OptionStatus")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a TeamOptionStatus object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj, e))
+        }
+    }
+    pub const ALWAYS: TeamOptionStatusEnum = TeamOptionStatusEnum::Always;
+    pub const NEVER: TeamOptionStatusEnum = TeamOptionStatusEnum::Never;
+    pub const FOR_OTHER_TEAMS: TeamOptionStatusEnum = TeamOptionStatusEnum::ForOtherTeams;
+    pub const FOR_OWN_TEAM: TeamOptionStatusEnum = TeamOptionStatusEnum::ForOwnTeam;
+    pub fn from_string(str: String) -> std::option::Option<TeamOptionStatusEnum> {
+        match str.as_str() {
+            "ALWAYS" => Some(TeamOptionStatusEnum::Always),
+            "NEVER" => Some(TeamOptionStatusEnum::Never),
+            "FOR_OTHER_TEAMS" => Some(TeamOptionStatusEnum::ForOtherTeams),
+            "FOR_OWN_TEAM" => Some(TeamOptionStatusEnum::ForOwnTeam),
+            _ => None,
+        }
+    }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<TeamOptionStatus<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/scoreboard/Team$OptionStatus");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/Team$OptionStatus;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        TeamOptionStatus::from_raw(
+            &jni,
+            raw_obj,
+            TeamOptionStatus::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
+
+    //
+}
+/// Represents a scoreboard criteria, either custom or built-in to the Minecraft server, used to keep track of and manually or automatically change scores on a scoreboard.
+/// <p>While this class outlines constants for standard criteria, see <a href="#statistic(org.bukkit.Statistic)"><code>statistic(Statistic)</code></a> (and its overloads) to create instances for statistically-backed criteria.</p>
+///
+/// This is a representation of an abstract class.
+pub struct Criteria<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+impl<'mc> Criteria<'mc> {
+    pub fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Criteria from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/scoreboard/Criteria")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Criteria object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    //
+
+    pub fn default_render_type(
+        &mut self,
+    ) -> Result<crate::scoreboard::RenderType<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getDefaultRenderType",
+            "()Lorg/bukkit/scoreboard/RenderType;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant = self
+            .jni_ref()
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = self.jni_ref().translate_error(variant)?;
+        let variant_str = self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::scoreboard::RenderType::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::scoreboard::RenderType::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
+    //
+
+    pub fn statistic_with_statistic(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<impl Into<crate::Statistic<'mc>>>,
+        arg1: std::option::Option<impl Into<crate::entity::EntityType<'mc>>>,
+    ) -> Result<crate::scoreboard::Criteria<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
+        let val_2 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
+        let cls = jni.find_class("org/bukkit/scoreboard/Criteria");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls,"statistic",
+"(Lorg/bukkit/Statistic;Lorg/bukkit/entity/EntityType;)Lorg/bukkit/scoreboard/Criteria;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::scoreboard::Criteria::from_raw(&jni, obj)
+    }
+    //
+
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //
+
+    pub fn create(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<crate::scoreboard::Criteria<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/scoreboard/Criteria");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "create",
+            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/Criteria;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::scoreboard::Criteria::from_raw(&jni, obj)
+    }
+    //
+
+    pub fn is_read_only(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isReadOnly", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+}
+impl<'mc> JNIRaw<'mc> for Criteria<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+pub enum NameTagVisibilityEnum {
+    Always,
+    Never,
+    HideForOtherTeams,
+    HideForOwnTeam,
+}
+impl std::fmt::Display for NameTagVisibilityEnum {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            NameTagVisibilityEnum::Always => f.write_str("ALWAYS"),
+            NameTagVisibilityEnum::Never => f.write_str("NEVER"),
+            NameTagVisibilityEnum::HideForOtherTeams => f.write_str("HIDE_FOR_OTHER_TEAMS"),
+            NameTagVisibilityEnum::HideForOwnTeam => f.write_str("HIDE_FOR_OWN_TEAM"),
+        }
+    }
+}
+pub struct NameTagVisibility<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+    pub NameTagVisibilityEnum,
+);
+impl<'mc> std::ops::Deref for NameTagVisibility<'mc> {
+    type Target = NameTagVisibilityEnum;
+    fn deref(&self) -> &Self::Target {
+        return &self.2;
+    }
+}
+impl<'mc> JNIRaw<'mc> for NameTagVisibility<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> NameTagVisibility<'mc> {
+    pub fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+        e: NameTagVisibilityEnum,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate NameTagVisibility from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/scoreboard/NameTagVisibility")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a NameTagVisibility object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj, e))
+        }
+    }
+    pub const ALWAYS: NameTagVisibilityEnum = NameTagVisibilityEnum::Always;
+    pub const NEVER: NameTagVisibilityEnum = NameTagVisibilityEnum::Never;
+    pub const HIDE_FOR_OTHER_TEAMS: NameTagVisibilityEnum =
+        NameTagVisibilityEnum::HideForOtherTeams;
+    pub const HIDE_FOR_OWN_TEAM: NameTagVisibilityEnum = NameTagVisibilityEnum::HideForOwnTeam;
+    pub fn from_string(str: String) -> std::option::Option<NameTagVisibilityEnum> {
+        match str.as_str() {
+            "ALWAYS" => Some(NameTagVisibilityEnum::Always),
+            "NEVER" => Some(NameTagVisibilityEnum::Never),
+            "HIDE_FOR_OTHER_TEAMS" => Some(NameTagVisibilityEnum::HideForOtherTeams),
+            "HIDE_FOR_OWN_TEAM" => Some(NameTagVisibilityEnum::HideForOwnTeam),
+            _ => None,
+        }
+    }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<NameTagVisibility<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/scoreboard/NameTagVisibility");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/NameTagVisibility;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        NameTagVisibility::from_raw(
+            &jni,
+            raw_obj,
+            NameTagVisibility::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
+}
+pub enum RenderTypeEnum {
+    Integer,
+    Hearts,
+}
+impl std::fmt::Display for RenderTypeEnum {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            RenderTypeEnum::Integer => f.write_str("INTEGER"),
+            RenderTypeEnum::Hearts => f.write_str("HEARTS"),
+        }
+    }
+}
+pub struct RenderType<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+    pub RenderTypeEnum,
+);
+impl<'mc> std::ops::Deref for RenderType<'mc> {
+    type Target = RenderTypeEnum;
+    fn deref(&self) -> &Self::Target {
+        return &self.2;
+    }
+}
+impl<'mc> JNIRaw<'mc> for RenderType<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> RenderType<'mc> {
+    pub fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+        e: RenderTypeEnum,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate RenderType from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/scoreboard/RenderType")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a RenderType object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj, e))
+        }
+    }
+    pub const INTEGER: RenderTypeEnum = RenderTypeEnum::Integer;
+    pub const HEARTS: RenderTypeEnum = RenderTypeEnum::Hearts;
+    pub fn from_string(str: String) -> std::option::Option<RenderTypeEnum> {
+        match str.as_str() {
+            "INTEGER" => Some(RenderTypeEnum::Integer),
+            "HEARTS" => Some(RenderTypeEnum::Hearts),
+            _ => None,
+        }
+    }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<RenderType<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/scoreboard/RenderType");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/RenderType;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        RenderType::from_raw(
+            &jni,
+            raw_obj,
+            RenderType::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
     }
 }
 /// An objective on a scoreboard that can show scores specific to entries. This objective is only relevant to the display of the associated <a href="#getScoreboard()"><code>scoreboard</code></a>.
@@ -140,7 +591,17 @@ impl<'mc> Objective<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// Gets the name displayed to players for this objective
+    //
+
+    pub fn unregister(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "unregister", "()V", &[]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
     pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -155,22 +616,8 @@ impl<'mc> Objective<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    /// Unregisters this objective from the <a title="interface in org.bukkit.scoreboard" href="Scoreboard.html"><code>scoreboard.</code></a>
-    pub fn unregister(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "unregister", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// use <a href="#getTrackedCriteria()"><code>getTrackedCriteria()</code></a>
-    /// </div>
-    /// use <a href="#getTrackedCriteria()"><code>getTrackedCriteria()</code></a>
-    ///
-    /// Gets the criteria this objective tracks.
+    //
+
     pub fn criteria(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -185,12 +632,13 @@ impl<'mc> Objective<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    /// Sets the name displayed to players for this objective.
+    //
+
     pub fn set_display_name(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setDisplayName",
@@ -200,7 +648,8 @@ impl<'mc> Objective<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Gets the scoreboard to which this objective is attached.
+    //
+
     pub fn scoreboard(
         &mut self,
     ) -> Result<crate::scoreboard::Scoreboard<'mc>, Box<dyn std::error::Error>> {
@@ -215,21 +664,18 @@ impl<'mc> Objective<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gets the scoreboard to which this objective is attached.
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Scoreboards can contain entries that aren't players
-    /// </div>
-    /// Scoreboards can contain entries that aren't players
-    ///
-    /// Gets a player's Score for an Objective on this Scoreboard
-    /// Gets an entry's Score for an Objective on this Scoreboard.
+    //
+
     pub fn get_score_with_offline_player(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<String>>,
     ) -> Result<crate::scoreboard::Score<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getScore",
@@ -241,7 +687,8 @@ impl<'mc> Objective<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gets the criteria this objective tracks.
+    //
+
     pub fn tracked_criteria(
         &mut self,
     ) -> Result<crate::scoreboard::Criteria<'mc>, Box<dyn std::error::Error>> {
@@ -256,18 +703,20 @@ impl<'mc> Objective<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gets if the objective's scores can be modified directly by a plugin.
+    //
+
     pub fn is_modifiable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isModifiable", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
-    /// Sets this objective to display on the specified slot for the scoreboard, removing it from any other display slot.
+    //
+
     pub fn set_display_slot(
         &mut self,
-        arg0: impl Into<&'mc crate::scoreboard::DisplaySlot<'mc>>,
+        arg0: impl Into<crate::scoreboard::DisplaySlot<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -279,7 +728,8 @@ impl<'mc> Objective<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Gets the display slot this objective is displayed at.
+    //
+
     pub fn display_slot(
         &mut self,
     ) -> Result<crate::scoreboard::DisplaySlot<'mc>, Box<dyn std::error::Error>> {
@@ -291,9 +741,10 @@ impl<'mc> Objective<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+        let variant = self
+            .jni_ref()
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = self.jni_ref().translate_error(variant)?;
         let variant_str = self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -302,13 +753,15 @@ impl<'mc> Objective<'mc> {
         crate::scoreboard::DisplaySlot::from_raw(
             &self.jni_ref(),
             raw_obj,
-            crate::scoreboard::DisplaySlot::from_string(variant_str).unwrap(),
+            crate::scoreboard::DisplaySlot::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    /// Sets manner in which this objective will be rendered.
+    //
+
     pub fn set_render_type(
         &mut self,
-        arg0: impl Into<&'mc crate::scoreboard::RenderType<'mc>>,
+        arg0: impl Into<crate::scoreboard::RenderType<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -320,7 +773,8 @@ impl<'mc> Objective<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Sets manner in which this objective will be rendered.
+    //
+
     pub fn render_type(
         &mut self,
     ) -> Result<crate::scoreboard::RenderType<'mc>, Box<dyn std::error::Error>> {
@@ -332,9 +786,10 @@ impl<'mc> Objective<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+        let variant = self
+            .jni_ref()
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = self.jni_ref().translate_error(variant)?;
         let variant_str = self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -343,10 +798,12 @@ impl<'mc> Objective<'mc> {
         crate::scoreboard::RenderType::from_raw(
             &self.jni_ref(),
             raw_obj,
-            crate::scoreboard::RenderType::from_string(variant_str).unwrap(),
+            crate::scoreboard::RenderType::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    /// Gets the name of this Objective
+    //
+
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -394,7 +851,8 @@ impl<'mc> Score<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// Gets the entry being tracked by this Score
+    //
+
     pub fn entry(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -406,14 +864,8 @@ impl<'mc> Score<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Scoreboards can contain entries that aren't players
-    /// </div>
-    /// Scoreboards can contain entries that aren't players
-    ///
-    /// Gets the OfflinePlayer being tracked by this Score
+    //
+
     pub fn player(&mut self) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -426,7 +878,8 @@ impl<'mc> Score<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gets the scoreboard for the associated objective.
+    //
+
     pub fn scoreboard(
         &mut self,
     ) -> Result<crate::scoreboard::Scoreboard<'mc>, Box<dyn std::error::Error>> {
@@ -441,7 +894,8 @@ impl<'mc> Score<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gets the Objective being tracked by this Score
+    //
+
     pub fn objective(
         &mut self,
     ) -> Result<crate::scoreboard::Objective<'mc>, Box<dyn std::error::Error>> {
@@ -456,15 +910,17 @@ impl<'mc> Score<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gets the current score
-    /// Gets the scoreboard for the associated objective.
+    //
+
     pub fn score(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getScore", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
+
     /// Sets the current score.
     pub fn set_score(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -477,13 +933,14 @@ impl<'mc> Score<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Shows if this score has been set at any point in time.
+    //
+
     pub fn is_score_set(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isScoreSet", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
 }
 impl<'mc> JNIRaw<'mc> for Score<'mc> {
@@ -521,14 +978,8 @@ impl<'mc> Scoreboard<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Scoreboards can contain entries that aren't players
-    /// </div>
-    /// Scoreboards can contain entries that aren't players
-    ///
-    /// Gets all players tracked by this Scoreboard
+    //
+
     pub fn players(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -538,64 +989,44 @@ impl<'mc> Scoreboard<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// a displayName should be explicitly specified
-    /// </div>
-    /// a displayName should be explicitly specified
-    ///
-    /// Registers an Objective on this Scoreboard
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// use <a href="#registerNewObjective(java.lang.String,org.bukkit.scoreboard.Criteria,java.lang.String)"><code>registerNewObjective(String, Criteria, String)</code></a>
-    /// </div>
-    /// use <a href="#registerNewObjective(java.lang.String,org.bukkit.scoreboard.Criteria,java.lang.String)"><code>registerNewObjective(String, Criteria, String)</code></a>
-    ///
-    /// Registers an Objective on this Scoreboard
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// use <a href="#registerNewObjective(java.lang.String,org.bukkit.scoreboard.Criteria,java.lang.String,org.bukkit.scoreboard.RenderType)"><code>registerNewObjective(String, Criteria, String, RenderType)</code></a>
-    /// </div>
-    /// use <a href="#registerNewObjective(java.lang.String,org.bukkit.scoreboard.Criteria,java.lang.String,org.bukkit.scoreboard.RenderType)"><code>registerNewObjective(String, Criteria, String, RenderType)</code></a>
-    ///
-    /// Registers an Objective on this Scoreboard
-    /// Registers an Objective on this Scoreboard
-    /// Registers an Objective on this Scoreboard
+    //
+
     pub fn register_new_objective_with_string(
         &mut self,
-        arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc String>,
-        arg2: impl Into<&'mc String>,
-        arg3: std::option::Option<impl Into<&'mc crate::scoreboard::RenderType<'mc>>>,
+        arg0: impl Into<String>,
+        arg1: impl Into<String>,
+        arg2: impl Into<String>,
+        arg3: std::option::Option<impl Into<crate::scoreboard::RenderType<'mc>>>,
     ) -> Result<crate::scoreboard::Objective<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
-        let val_3 = jni::objects::JObject::from(self.jni_ref().new_string(arg2.into()).unwrap());
-        let val_4 =
-            unsafe { jni::objects::JObject::from_raw(arg3.unwrap().into().jni_object().clone()) };
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
+        let val_3 = jni::objects::JObject::from(self.jni_ref().new_string(arg2.into())?);
+        let val_4 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg3.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
         let res = self.jni_ref().call_method(&self.jni_object(),"registerNewObjective","(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lorg/bukkit/scoreboard/RenderType;)Lorg/bukkit/scoreboard/Objective;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)]);
         let res = self.jni_ref().translate_error(res)?;
         crate::scoreboard::Objective::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gets an Objective on this Scoreboard by name
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// use <a href="#getObjectivesByCriteria(org.bukkit.scoreboard.Criteria)"><code>getObjectivesByCriteria(Criteria)</code></a>
-    /// </div>
-    /// use <a href="#getObjectivesByCriteria(org.bukkit.scoreboard.Criteria)"><code>getObjectivesByCriteria(Criteria)</code></a>
-    ///
-    /// Gets all Objectives of a Criteria on the Scoreboard
-    /// Gets all Objectives of a Criteria on the Scoreboard
-    /// Gets all Objectives on this Scoreboard
-    /// Gets the Objective currently displayed in a DisplaySlot on this Scoreboard
+    //
+
     pub fn get_objective_with_display_slot(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<String>>,
     ) -> Result<crate::scoreboard::Objective<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getObjective",
@@ -607,20 +1038,20 @@ impl<'mc> Scoreboard<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// use <a href="#getObjectivesByCriteria(org.bukkit.scoreboard.Criteria)"><code>getObjectivesByCriteria(Criteria)</code></a>
-    /// </div>
-    /// use <a href="#getObjectivesByCriteria(org.bukkit.scoreboard.Criteria)"><code>getObjectivesByCriteria(Criteria)</code></a>
-    ///
-    /// Gets all Objectives of a Criteria on the Scoreboard
-    /// Gets all Objectives of a Criteria on the Scoreboard
+    //
+
     pub fn get_objectives_by_criteria_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc crate::scoreboard::Criteria<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::scoreboard::Criteria<'mc>>>,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
+        let val_1 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getObjectivesByCriteria",
@@ -632,15 +1063,8 @@ impl<'mc> Scoreboard<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// use <a href="#getObjectivesByCriteria(org.bukkit.scoreboard.Criteria)"><code>getObjectivesByCriteria(Criteria)</code></a>
-    /// </div>
-    /// use <a href="#getObjectivesByCriteria(org.bukkit.scoreboard.Criteria)"><code>getObjectivesByCriteria(Criteria)</code></a>
-    ///
-    /// Gets all Objectives of a Criteria on the Scoreboard
-    /// Gets all Objectives of a Criteria on the Scoreboard
-    /// Gets all Objectives on this Scoreboard
+    //
+
     pub fn objectives(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -655,21 +1079,20 @@ impl<'mc> Scoreboard<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Scoreboards can contain entries that aren't players
-    /// </div>
-    /// Scoreboards can contain entries that aren't players
-    ///
-    /// Gets all scores for a player on this Scoreboard
-    /// Gets all scores for an entry on this Scoreboard
+    //
+
     pub fn get_scores_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc crate::OfflinePlayer<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
+        let val_1 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getScores",
@@ -681,20 +1104,18 @@ impl<'mc> Scoreboard<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Scoreboards can contain entries that aren't players
-    /// </div>
-    /// Scoreboards can contain entries that aren't players
-    ///
-    /// Removes all scores for a player on this Scoreboard
-    /// Removes all scores for an entry on this Scoreboard
+    //
+
     pub fn reset_scores_with_offline_player(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "resetScores",
@@ -704,17 +1125,11 @@ impl<'mc> Scoreboard<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Scoreboards can contain entries that aren't players
-    /// </div>
-    /// Scoreboards can contain entries that aren't players
-    ///
-    /// Gets a player's Team on this Scoreboard
+    //
+
     pub fn get_player_team(
         &mut self,
-        arg0: impl Into<&'mc crate::OfflinePlayer<'mc>>,
+        arg0: impl Into<crate::OfflinePlayer<'mc>>,
     ) -> Result<crate::scoreboard::Team<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -728,12 +1143,13 @@ impl<'mc> Scoreboard<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gets a entries Team on this Scoreboard
+    //
+
     pub fn get_entry_team(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<crate::scoreboard::Team<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEntryTeam",
@@ -745,13 +1161,13 @@ impl<'mc> Scoreboard<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gets a Team by name on this Scoreboard
-    /// Gets all teams on this Scoreboard
+    //
+
     pub fn get_team(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<crate::scoreboard::Team<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getTeam",
@@ -763,7 +1179,8 @@ impl<'mc> Scoreboard<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gets all teams on this Scoreboard
+    //
+
     pub fn teams(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -773,12 +1190,13 @@ impl<'mc> Scoreboard<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Registers a Team on this Scoreboard
+    //
+
     pub fn register_new_team(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<crate::scoreboard::Team<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "registerNewTeam",
@@ -790,10 +1208,11 @@ impl<'mc> Scoreboard<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Clears any objective in the specified slot.
+    //
+
     pub fn clear_slot(
         &mut self,
-        arg0: impl Into<&'mc crate::scoreboard::DisplaySlot<'mc>>,
+        arg0: impl Into<crate::scoreboard::DisplaySlot<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -805,7 +1224,8 @@ impl<'mc> Scoreboard<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Gets all entries tracked by this Scoreboard
+    //
+
     pub fn entries(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -848,7 +1268,7 @@ pub enum DisplaySlotEnum {
 }
 impl std::fmt::Display for DisplaySlotEnum {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match &self {
+        match self {
             DisplaySlotEnum::BelowName => f.write_str("BELOW_NAME"),
             DisplaySlotEnum::PlayerList => f.write_str("PLAYER_LIST"),
             DisplaySlotEnum::Sidebar => f.write_str("SIDEBAR"),
@@ -954,6 +1374,511 @@ impl<'mc> DisplaySlot<'mc> {
             _ => None,
         }
     }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<DisplaySlot<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/scoreboard/DisplaySlot");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/DisplaySlot;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        DisplaySlot::from_raw(
+            &jni,
+            raw_obj,
+            DisplaySlot::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
+}
+/// A team on a scoreboard that has a common display theme and other properties. This team is only relevant to the display of the associated <a href="#getScoreboard()"><code>scoreboard</code></a>.
+///
+/// This is a representation of an abstract class.
+pub struct Team<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+impl<'mc> Team<'mc> {
+    pub fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Team from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/scoreboard/Team")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Team object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    //
+
+    pub fn remove_entry(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeEntry",
+            "(Ljava/lang/String;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn set_color(
+        &mut self,
+        arg0: impl Into<crate::ChatColor<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setColor",
+            "(Lorg/bukkit/ChatColor;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn unregister(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "unregister", "()V", &[]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getDisplayName",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //
+
+    pub fn prefix(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getPrefix",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //
+
+    pub fn color(&mut self) -> Result<crate::ChatColor<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getColor",
+            "()Lorg/bukkit/ChatColor;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::ChatColor::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
+    pub fn set_display_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setDisplayName",
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn set_prefix(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setPrefix",
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn suffix(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getSuffix",
+            "()Ljava/lang/String;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //
+
+    pub fn set_suffix(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setSuffix",
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn allow_friendly_fire(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "allowFriendlyFire", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    /// Sets the team friendly fire state
+    pub fn set_allow_friendly_fire(
+        &mut self,
+        arg0: bool,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
+        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setAllowFriendlyFire",
+            "(Z)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn can_see_friendly_invisibles(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "canSeeFriendlyInvisibles", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    /// Sets the team's ability to see <a href="../potion/PotionEffectType.html#INVISIBILITY"><code>invisible</code></a> teammates.
+    pub fn set_can_see_friendly_invisibles(
+        &mut self,
+        arg0: bool,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        // -2
+        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setCanSeeFriendlyInvisibles",
+            "(Z)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn name_tag_visibility(
+        &mut self,
+    ) -> Result<crate::scoreboard::NameTagVisibility<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getNameTagVisibility",
+            "()Lorg/bukkit/scoreboard/NameTagVisibility;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant = self
+            .jni_ref()
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = self.jni_ref().translate_error(variant)?;
+        let variant_str = self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::scoreboard::NameTagVisibility::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::scoreboard::NameTagVisibility::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
+    //
+
+    pub fn set_name_tag_visibility(
+        &mut self,
+        arg0: impl Into<crate::scoreboard::NameTagVisibility<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setNameTagVisibility",
+            "(Lorg/bukkit/scoreboard/NameTagVisibility;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn players(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPlayers", "()Ljava/util/Set;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
+    pub fn scoreboard(
+        &mut self,
+    ) -> Result<crate::scoreboard::Scoreboard<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getScoreboard",
+            "()Lorg/bukkit/scoreboard/Scoreboard;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::scoreboard::Scoreboard::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
+    pub fn add_player(
+        &mut self,
+        arg0: impl Into<crate::OfflinePlayer<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addPlayer",
+            "(Lorg/bukkit/OfflinePlayer;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn remove_player(
+        &mut self,
+        arg0: impl Into<crate::OfflinePlayer<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removePlayer",
+            "(Lorg/bukkit/OfflinePlayer;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn has_player(
+        &mut self,
+        arg0: impl Into<crate::OfflinePlayer<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasPlayer",
+            "(Lorg/bukkit/OfflinePlayer;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn has_entry(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "hasEntry",
+            "(Ljava/lang/String;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn get_option(
+        &mut self,
+        arg0: impl Into<crate::scoreboard::TeamOption<'mc>>,
+    ) -> Result<crate::scoreboard::TeamOptionStatus<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getOption",
+            "(Lorg/bukkit/scoreboard/Team$Option;)Lorg/bukkit/scoreboard/Team$OptionStatus;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant = self
+            .jni_ref()
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = self.jni_ref().translate_error(variant)?;
+        let variant_str = self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::scoreboard::TeamOptionStatus::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::scoreboard::TeamOptionStatus::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
+    //
+
+    pub fn set_option(
+        &mut self,
+        arg0: impl Into<crate::scoreboard::TeamOption<'mc>>,
+        arg1: impl Into<crate::scoreboard::TeamOptionStatus<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setOption",
+            "(Lorg/bukkit/scoreboard/Team$Option;Lorg/bukkit/scoreboard/Team$OptionStatus;)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //
+
+    pub fn add_entry(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addEntry",
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getSize", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    //
+
+    pub fn entries(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEntries", "()Ljava/util/Set;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+}
+impl<'mc> JNIRaw<'mc> for Team<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
 }
 /// Manager of Scoreboards
 ///
@@ -983,8 +1908,8 @@ impl<'mc> ScoreboardManager<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// Gets the primary Scoreboard controlled by the server.
-    /// <p>This Scoreboard is saved by the server, is affected by the /scoreboard command, and is the scoreboard shown by default to players.</p>
+    //
+
     pub fn main_scoreboard(
         &mut self,
     ) -> Result<crate::scoreboard::Scoreboard<'mc>, Box<dyn std::error::Error>> {
@@ -999,7 +1924,8 @@ impl<'mc> ScoreboardManager<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gets a new Scoreboard to be tracked by the server. This scoreboard will be tracked as long as a reference is kept, either by a player or by a plugin.
+    //
+
     pub fn new_scoreboard(
         &mut self,
     ) -> Result<crate::scoreboard::Scoreboard<'mc>, Box<dyn std::error::Error>> {
@@ -1024,831 +1950,32 @@ impl<'mc> JNIRaw<'mc> for ScoreboardManager<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// A team on a scoreboard that has a common display theme and other properties. This team is only relevant to the display of the associated <a href="#getScoreboard()"><code>scoreboard</code></a>.
-///
-/// This is a representation of an abstract class.
-pub struct Team<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> Team<'mc> {
-    pub fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate Team from null object.").into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/scoreboard/Team")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a Team object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-    /// Gets the name displayed to entries for this team
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDisplayName",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    /// Unregisters this team from the Scoreboard
-    pub fn unregister(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "unregister", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Sets the color of the team.
-    ///
-    /// This only sets the team outline, other occurrences of colors such as in names are handled by prefixes / suffixes.
-    pub fn set_color(
-        &mut self,
-        arg0: impl Into<&'mc crate::ChatColor<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setColor",
-            "(Lorg/bukkit/ChatColor;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Removes the entry from this team.
-    pub fn remove_entry(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeEntry",
-            "(Ljava/lang/String;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    /// Get an option for this team
-    pub fn get_option(
-        &mut self,
-        arg0: impl Into<&'mc crate::scoreboard::TeamOption<'mc>>,
-    ) -> Result<crate::scoreboard::TeamOptionStatus<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getOption",
-            "(Lorg/bukkit/scoreboard/Team$Option;)Lorg/bukkit/scoreboard/Team$OptionStatus;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::scoreboard::TeamOptionStatus::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Set an option for this team
-    pub fn set_option(
-        &mut self,
-        arg0: impl Into<&'mc crate::scoreboard::TeamOption<'mc>>,
-        arg1: impl Into<&'mc crate::scoreboard::TeamOptionStatus<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setOption",
-            "(Lorg/bukkit/scoreboard/Team$Option;Lorg/bukkit/scoreboard/Team$OptionStatus;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Gets the prefix prepended to the display of entries on this team.
-    pub fn prefix(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPrefix",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    /// Gets the color of the team.
-    ///
-    /// This only sets the team outline, other occurrences of colors such as in names are handled by prefixes / suffixes.
-    pub fn color(&mut self) -> Result<crate::ChatColor<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getColor",
-            "()Lorg/bukkit/ChatColor;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::ChatColor::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Sets the name displayed to entries for this team
-    pub fn set_display_name(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setDisplayName",
-            "(Ljava/lang/String;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Sets the prefix prepended to the display of entries on this team.
-    pub fn set_prefix(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setPrefix",
-            "(Ljava/lang/String;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Gets the suffix appended to the display of entries on this team.
-    pub fn suffix(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getSuffix",
-            "()Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    /// Sets the suffix appended to the display of entries on this team.
-    pub fn set_suffix(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setSuffix",
-            "(Ljava/lang/String;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Gets the team friendly fire state
-    pub fn allow_friendly_fire(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "allowFriendlyFire", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    /// Sets the team friendly fire state
-    pub fn set_allow_friendly_fire(
-        &mut self,
-        arg0: bool,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setAllowFriendlyFire",
-            "(Z)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Gets the team's ability to see <a href="../potion/PotionEffectType.html#INVISIBILITY"><code>invisible</code></a> teammates.
-    pub fn can_see_friendly_invisibles(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "canSeeFriendlyInvisibles", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    /// Sets the team's ability to see <a href="../potion/PotionEffectType.html#INVISIBILITY"><code>invisible</code></a> teammates.
-    pub fn set_can_see_friendly_invisibles(
-        &mut self,
-        arg0: bool,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setCanSeeFriendlyInvisibles",
-            "(Z)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// see <a href="#getOption(org.bukkit.scoreboard.Team.Option)"><code>getOption(Team.Option)</code></a>
-    /// </div>
-    /// see <a href="#getOption(org.bukkit.scoreboard.Team.Option)"><code>getOption(Team.Option)</code></a>
-    ///
-    /// Gets the team's ability to see name tags
-    pub fn name_tag_visibility(
-        &mut self,
-    ) -> Result<crate::scoreboard::NameTagVisibility<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getNameTagVisibility",
-            "()Lorg/bukkit/scoreboard/NameTagVisibility;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::scoreboard::NameTagVisibility::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::scoreboard::NameTagVisibility::from_string(variant_str).unwrap(),
-        )
-    }
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// see <a href="#setOption(org.bukkit.scoreboard.Team.Option,org.bukkit.scoreboard.Team.OptionStatus)"><code>setOption(Team.Option, Team.OptionStatus)</code></a>
-    /// </div>
-    /// see <a href="#setOption(org.bukkit.scoreboard.Team.Option,org.bukkit.scoreboard.Team.OptionStatus)"><code>setOption(Team.Option, Team.OptionStatus)</code></a>
-    ///
-    /// Set's the team's ability to see name tags
-    pub fn set_name_tag_visibility(
-        &mut self,
-        arg0: impl Into<&'mc crate::scoreboard::NameTagVisibility<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setNameTagVisibility",
-            "(Lorg/bukkit/scoreboard/NameTagVisibility;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Teams can contain entries that aren't players
-    /// </div>
-    /// Teams can contain entries that aren't players
-    ///
-    /// Gets the Set of players on the team
-    pub fn players(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getPlayers", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Gets the Scoreboard to which this team is attached
-    pub fn scoreboard(
-        &mut self,
-    ) -> Result<crate::scoreboard::Scoreboard<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getScoreboard",
-            "()Lorg/bukkit/scoreboard/Scoreboard;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::scoreboard::Scoreboard::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Teams can contain entries that aren't players
-    /// </div>
-    /// Teams can contain entries that aren't players
-    ///
-    /// This puts the specified player onto this team for the scoreboard.
-    /// <p>This will remove the player from any other team on the scoreboard.</p>
-    pub fn add_player(
-        &mut self,
-        arg0: impl Into<&'mc crate::OfflinePlayer<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addPlayer",
-            "(Lorg/bukkit/OfflinePlayer;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Teams can contain entries that aren't players
-    /// </div>
-    /// Teams can contain entries that aren't players
-    ///
-    /// Removes the player from this team.
-    pub fn remove_player(
-        &mut self,
-        arg0: impl Into<&'mc crate::OfflinePlayer<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removePlayer",
-            "(Lorg/bukkit/OfflinePlayer;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Teams can contain entries that aren't players
-    /// </div>
-    /// Teams can contain entries that aren't players
-    ///
-    /// Checks to see if the specified player is a member of this team.
-    pub fn has_player(
-        &mut self,
-        arg0: impl Into<&'mc crate::OfflinePlayer<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "hasPlayer",
-            "(Lorg/bukkit/OfflinePlayer;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    /// Checks to see if the specified entry is a member of this team.
-    pub fn has_entry(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "hasEntry",
-            "(Ljava/lang/String;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    /// Gets the name of this Team
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// see <a href="#getOption(org.bukkit.scoreboard.Team.Option)"><code>getOption(Team.Option)</code></a>
-    /// </div>
-    /// see <a href="#getOption(org.bukkit.scoreboard.Team.Option)"><code>getOption(Team.Option)</code></a>
-    ///
-    /// Gets the team's ability to see name tags
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    /// This puts the specified entry onto this team for the scoreboard.
-    /// <p>This will remove the entry from any other team on the scoreboard.</p>
-    pub fn add_entry(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addEntry",
-            "(Ljava/lang/String;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Gets the size of the team
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getSize", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-    /// Gets the Set of entries on the team
-    pub fn entries(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getEntries", "()Ljava/util/Set;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
+pub enum OptionEnum {
+    NameTagVisibility,
+    DeathMessageVisibility,
+    CollisionRule,
 }
-impl<'mc> JNIRaw<'mc> for Team<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-/// How an option may be applied to members of this team.
-pub struct TeamOptionStatus<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for TeamOptionStatus<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> TeamOptionStatus<'mc> {
-    pub fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate TeamOptionStatus from null object.").into(),
-            );
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/scoreboard/TeamOptionStatus")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a TeamOptionStatus object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-    /// Returns the enum constant of this type with the specified name. The string must match <i>exactly</i> an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
-    pub fn value_of_with_string(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<impl Into<&'mc String>>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
-        let cls = &jni.find_class("java/lang/Enum")?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let obj = res.l()?;
-        Self::from_raw(&jni, obj)
-    }
-
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn declaring_class(
-        &mut self,
-    ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDeclaringClass",
-            "()Ljava/lang/Class;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-
-    pub fn wait(
-        &mut self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "wait",
-            "(JI)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-}
-/// Represents a scoreboard criteria, either custom or built-in to the Minecraft server, used to keep track of and manually or automatically change scores on a scoreboard.
-/// <p>While this class outlines constants for standard criteria, see <a href="#statistic(org.bukkit.Statistic)"><code>statistic(Statistic)</code></a> (and its overloads) to create instances for statistically-backed criteria.</p>
-///
-/// This is a representation of an abstract class.
-pub struct Criteria<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> Criteria<'mc> {
-    pub fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate Criteria from null object.").into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/scoreboard/Criteria")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a Criteria object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-    /// Get the <a href="RenderType.html" title="enum in org.bukkit.scoreboard"><code>RenderType</code></a> used by default for this criteria.
-    pub fn default_render_type(
-        &mut self,
-    ) -> Result<crate::scoreboard::RenderType<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDefaultRenderType",
-            "()Lorg/bukkit/scoreboard/RenderType;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::scoreboard::RenderType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::scoreboard::RenderType::from_string(variant_str).unwrap(),
-        )
-    }
-    /// Get a <a title="interface in org.bukkit.scoreboard" href="Criteria.html"><code>Criteria</code></a> for the specified statistic pertaining to blocks or items.
-    /// <p>This method expects a <a href="../Statistic.html" title="enum in org.bukkit"><code>Statistic</code></a> of <a href="../Statistic.Type.html#BLOCK"><code>Statistic.Type.BLOCK</code></a> or <a href="../Statistic.Type.html#ITEM"><code>Statistic.Type.ITEM</code></a> and the <a title="enum in org.bukkit" href="../Material.html"><code>Material</code></a> matching said type (e.g. BLOCK statistics require materials where <a href="../Material.html#isBlock()"><code>Material.isBlock()</code></a> is true). This acts as a convenience to create more complex compound criteria such as those that increment on block breaks, or item uses. An example would be <code>Criteria.statistic(Statistic.CRAFT_ITEM, Material.STICK)</code>, returning a Criteria representing "minecraft.crafted:minecraft.stick" which will increment when the player crafts a stick.</p>
-    /// <p>If the provided statistic does not require additional data, <a href="#statistic(org.bukkit.Statistic)"><code>statistic(Statistic)</code></a> is called and returned instead.</p>
-    /// <p>This method provides no guarantee that any given criteria exists on the vanilla server.</p>
-    /// Get a <a title="interface in org.bukkit.scoreboard" href="Criteria.html"><code>Criteria</code></a> for the specified statistic pertaining to an entity type.
-    /// <p>This method expects a <a title="enum in org.bukkit" href="../Statistic.html"><code>Statistic</code></a> of <a href="../Statistic.Type.html#ENTITY"><code>Statistic.Type.ENTITY</code></a>. This acts as a convenience to create more complex compound criteria such as being killed by a specific entity type. An example would be <code>Criteria.statistic(Statistic.KILL_ENTITY, EntityType.CREEPER)</code>, returning a Criteria representing "minecraft.killed:minecraft.creeper" which will increment when the player kills a creepers.</p>
-    /// <p>If the provided statistic does not require additional data, <a href="#statistic(org.bukkit.Statistic)"><code>statistic(Statistic)</code></a> is called and returned instead.</p>
-    /// <p>This method provides no guarantee that any given criteria exists on the vanilla server.</p>
-    /// Get a <a href="Criteria.html" title="interface in org.bukkit.scoreboard"><code>Criteria</code></a> for the specified statistic.
-    /// <p>An example would be <code>Criteria.statistic(Statistic.FLY_ONE_CM)</code>, returning a Criteria representing "minecraft.custom:minecraft.aviate_one_cm" which will increment when the player flies with an elytra.</p>
-    /// <p>This method provides no guarantee that any given criteria exists on the vanilla server. All statistics are accepted, however some may not operate as expected if additional data is required. For block/item-related statistics, see <a href="#statistic(org.bukkit.Statistic,org.bukkit.Material)"><code>statistic(Statistic, Material)</code></a>, and for entity-related statistics, see <a href="#statistic(org.bukkit.Statistic,org.bukkit.entity.EntityType)"><code>statistic(Statistic, EntityType)</code></a></p>
-    pub fn statistic_with_statistic(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc crate::Statistic<'mc>>>,
-        arg1: std::option::Option<impl Into<&'mc crate::entity::EntityType<'mc>>>,
-    ) -> Result<crate::scoreboard::Criteria<'mc>, Box<dyn std::error::Error>> {
-        let val_1 =
-            unsafe { jni::objects::JObject::from_raw(arg0.unwrap().into().jni_object().clone()) };
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/scoreboard/Criteria")?;
-        let res = jni.call_static_method(cls,"statistic",
-"(Lorg/bukkit/Statistic;Lorg/bukkit/entity/EntityType;)Lorg/bukkit/scoreboard/Criteria;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
-        let obj = res.l()?;
-        crate::scoreboard::Criteria::from_raw(&jni, obj)
-    }
-    /// Get the name of this criteria (its unique id).
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    /// Get (or create) a new <a title="interface in org.bukkit.scoreboard" href="Criteria.html"><code>Criteria</code></a> by its name.
-    pub fn create(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<crate::scoreboard::Criteria<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("org/bukkit/scoreboard/Criteria")?;
-        let res = jni.call_static_method(
-            cls,
-            "create",
-            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/Criteria;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        let obj = res.l()?;
-        crate::scoreboard::Criteria::from_raw(&jni, obj)
-    }
-    /// Get whether or not this criteria is read only. If read only, scoreboards with this criteria cannot have their scores changed.
-    pub fn is_read_only(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isReadOnly", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-}
-impl<'mc> JNIRaw<'mc> for Criteria<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-pub enum NameTagVisibilityEnum {
-    Always,
-    Never,
-    HideForOtherTeams,
-    HideForOwnTeam,
-}
-impl std::fmt::Display for NameTagVisibilityEnum {
+impl std::fmt::Display for OptionEnum {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match &self {
-            NameTagVisibilityEnum::Always => f.write_str("ALWAYS"),
-            NameTagVisibilityEnum::Never => f.write_str("NEVER"),
-            NameTagVisibilityEnum::HideForOtherTeams => f.write_str("HIDE_FOR_OTHER_TEAMS"),
-            NameTagVisibilityEnum::HideForOwnTeam => f.write_str("HIDE_FOR_OWN_TEAM"),
+        match self {
+            OptionEnum::NameTagVisibility => f.write_str("NAME_TAG_VISIBILITY"),
+            OptionEnum::DeathMessageVisibility => f.write_str("DEATH_MESSAGE_VISIBILITY"),
+            OptionEnum::CollisionRule => f.write_str("COLLISION_RULE"),
         }
     }
 }
-pub struct NameTagVisibility<'mc>(
+pub struct Option<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub NameTagVisibilityEnum,
+    pub OptionEnum,
 );
-impl<'mc> std::ops::Deref for NameTagVisibility<'mc> {
-    type Target = NameTagVisibilityEnum;
+impl<'mc> std::ops::Deref for Option<'mc> {
+    type Target = OptionEnum;
     fn deref(&self) -> &Self::Target {
         return &self.2;
     }
 }
-impl<'mc> JNIRaw<'mc> for NameTagVisibility<'mc> {
+impl<'mc> JNIRaw<'mc> for Option<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1857,21 +1984,19 @@ impl<'mc> JNIRaw<'mc> for NameTagVisibility<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> NameTagVisibility<'mc> {
+impl<'mc> Option<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: NameTagVisibilityEnum,
+        e: OptionEnum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate NameTagVisibility from null object.").into(),
-            );
+            return Err(eyre::eyre!("Tried to instantiate Option from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/scoreboard/NameTagVisibility")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/scoreboard/Option")?;
         if !valid {
             Err(eyre::eyre!(
-                "Invalid argument passed. Expected a NameTagVisibility object, got {}",
+                "Invalid argument passed. Expected a Option object, got {}",
                 name
             )
             .into())
@@ -1879,27 +2004,175 @@ impl<'mc> NameTagVisibility<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
-    pub const ALWAYS: NameTagVisibilityEnum = NameTagVisibilityEnum::Always;
-    pub const NEVER: NameTagVisibilityEnum = NameTagVisibilityEnum::Never;
-    pub const HIDE_FOR_OTHER_TEAMS: NameTagVisibilityEnum =
-        NameTagVisibilityEnum::HideForOtherTeams;
-    pub const HIDE_FOR_OWN_TEAM: NameTagVisibilityEnum = NameTagVisibilityEnum::HideForOwnTeam;
-    pub fn from_string(str: String) -> std::option::Option<NameTagVisibilityEnum> {
+    pub const NAME_TAG_VISIBILITY: OptionEnum = OptionEnum::NameTagVisibility;
+    pub const DEATH_MESSAGE_VISIBILITY: OptionEnum = OptionEnum::DeathMessageVisibility;
+    pub const COLLISION_RULE: OptionEnum = OptionEnum::CollisionRule;
+    pub fn from_string(str: String) -> std::option::Option<OptionEnum> {
         match str.as_str() {
-            "ALWAYS" => Some(NameTagVisibilityEnum::Always),
-            "NEVER" => Some(NameTagVisibilityEnum::Never),
-            "HIDE_FOR_OTHER_TEAMS" => Some(NameTagVisibilityEnum::HideForOtherTeams),
-            "HIDE_FOR_OWN_TEAM" => Some(NameTagVisibilityEnum::HideForOwnTeam),
+            "NAME_TAG_VISIBILITY" => Some(OptionEnum::NameTagVisibility),
+            "DEATH_MESSAGE_VISIBILITY" => Some(OptionEnum::DeathMessageVisibility),
+            "COLLISION_RULE" => Some(OptionEnum::CollisionRule),
             _ => None,
         }
     }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Option<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/scoreboard/Option");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/Option;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        Option::from_raw(
+            &jni,
+            raw_obj,
+            Option::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
+}
+pub enum OptionStatusEnum {
+    Always,
+    Never,
+    ForOtherTeams,
+    ForOwnTeam,
+}
+impl std::fmt::Display for OptionStatusEnum {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            OptionStatusEnum::Always => f.write_str("ALWAYS"),
+            OptionStatusEnum::Never => f.write_str("NEVER"),
+            OptionStatusEnum::ForOtherTeams => f.write_str("FOR_OTHER_TEAMS"),
+            OptionStatusEnum::ForOwnTeam => f.write_str("FOR_OWN_TEAM"),
+        }
+    }
+}
+pub struct OptionStatus<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+    pub OptionStatusEnum,
+);
+impl<'mc> std::ops::Deref for OptionStatus<'mc> {
+    type Target = OptionStatusEnum;
+    fn deref(&self) -> &Self::Target {
+        return &self.2;
+    }
+}
+impl<'mc> JNIRaw<'mc> for OptionStatus<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> OptionStatus<'mc> {
+    pub fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+        e: OptionStatusEnum,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate OptionStatus from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/scoreboard/OptionStatus")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a OptionStatus object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj, e))
+        }
+    }
+    pub const ALWAYS: OptionStatusEnum = OptionStatusEnum::Always;
+    pub const NEVER: OptionStatusEnum = OptionStatusEnum::Never;
+    pub const FOR_OTHER_TEAMS: OptionStatusEnum = OptionStatusEnum::ForOtherTeams;
+    pub const FOR_OWN_TEAM: OptionStatusEnum = OptionStatusEnum::ForOwnTeam;
+    pub fn from_string(str: String) -> std::option::Option<OptionStatusEnum> {
+        match str.as_str() {
+            "ALWAYS" => Some(OptionStatusEnum::Always),
+            "NEVER" => Some(OptionStatusEnum::Never),
+            "FOR_OTHER_TEAMS" => Some(OptionStatusEnum::ForOtherTeams),
+            "FOR_OWN_TEAM" => Some(OptionStatusEnum::ForOwnTeam),
+            _ => None,
+        }
+    }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<OptionStatus<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/scoreboard/OptionStatus");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/OptionStatus;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        OptionStatus::from_raw(
+            &jni,
+            raw_obj,
+            OptionStatus::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
 }
 /// Represents an option which may be applied to this team.
+pub enum TeamOptionEnum {
+    NameTagVisibility,
+    DeathMessageVisibility,
+    CollisionRule,
+}
+impl std::fmt::Display for TeamOptionEnum {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            TeamOptionEnum::NameTagVisibility => f.write_str("NAME_TAG_VISIBILITY"),
+            TeamOptionEnum::DeathMessageVisibility => f.write_str("DEATH_MESSAGE_VISIBILITY"),
+            TeamOptionEnum::CollisionRule => f.write_str("COLLISION_RULE"),
+        }
+    }
+}
 pub struct TeamOption<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
+    pub TeamOptionEnum,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for TeamOption<'mc> {
+impl<'mc> std::ops::Deref for TeamOption<'mc> {
+    type Target = TeamOptionEnum;
+    fn deref(&self) -> &Self::Target {
+        return &self.2;
+    }
+}
+impl<'mc> JNIRaw<'mc> for TeamOption<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1912,11 +2185,12 @@ impl<'mc> TeamOption<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
+        e: TeamOptionEnum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate TeamOption from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/scoreboard/TeamOption")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/scoreboard/Team$Option")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a TeamOption object, got {}",
@@ -1924,217 +2198,50 @@ impl<'mc> TeamOption<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-    /// Returns the enum constant of this type with the specified name. The string must match <i>exactly</i> an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
-    pub fn value_of_with_string(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<impl Into<&'mc String>>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
-        let cls = &jni.find_class("java/lang/Enum")?;
-        let res = jni.call_static_method(
-            cls,
-            "valueOf",
-            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let obj = res.l()?;
-        Self::from_raw(&jni, obj)
-    }
-
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn declaring_class(
-        &mut self,
-    ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDeclaringClass",
-            "()Ljava/lang/Class;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-
-    pub fn wait(
-        &mut self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "wait",
-            "(JI)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-}
-pub enum RenderTypeEnum {
-    Integer,
-    Hearts,
-}
-impl std::fmt::Display for RenderTypeEnum {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match &self {
-            RenderTypeEnum::Integer => f.write_str("INTEGER"),
-            RenderTypeEnum::Hearts => f.write_str("HEARTS"),
-        }
-    }
-}
-pub struct RenderType<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-    pub RenderTypeEnum,
-);
-impl<'mc> std::ops::Deref for RenderType<'mc> {
-    type Target = RenderTypeEnum;
-    fn deref(&self) -> &Self::Target {
-        return &self.2;
-    }
-}
-impl<'mc> JNIRaw<'mc> for RenderType<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> RenderType<'mc> {
-    pub fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-        e: RenderTypeEnum,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate RenderType from null object.").into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/scoreboard/RenderType")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a RenderType object, got {}",
-                name
-            )
-            .into())
-        } else {
             Ok(Self(env.clone(), obj, e))
         }
     }
-    pub const INTEGER: RenderTypeEnum = RenderTypeEnum::Integer;
-    pub const HEARTS: RenderTypeEnum = RenderTypeEnum::Hearts;
-    pub fn from_string(str: String) -> std::option::Option<RenderTypeEnum> {
+    pub const NAME_TAG_VISIBILITY: TeamOptionEnum = TeamOptionEnum::NameTagVisibility;
+    pub const DEATH_MESSAGE_VISIBILITY: TeamOptionEnum = TeamOptionEnum::DeathMessageVisibility;
+    pub const COLLISION_RULE: TeamOptionEnum = TeamOptionEnum::CollisionRule;
+    pub fn from_string(str: String) -> std::option::Option<TeamOptionEnum> {
         match str.as_str() {
-            "INTEGER" => Some(RenderTypeEnum::Integer),
-            "HEARTS" => Some(RenderTypeEnum::Hearts),
+            "NAME_TAG_VISIBILITY" => Some(TeamOptionEnum::NameTagVisibility),
+            "DEATH_MESSAGE_VISIBILITY" => Some(TeamOptionEnum::DeathMessageVisibility),
+            "COLLISION_RULE" => Some(TeamOptionEnum::CollisionRule),
             _ => None,
         }
     }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<TeamOption<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/scoreboard/Team$Option");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/Team$Option;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        TeamOption::from_raw(
+            &jni,
+            raw_obj,
+            TeamOption::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
+
+    //
 }

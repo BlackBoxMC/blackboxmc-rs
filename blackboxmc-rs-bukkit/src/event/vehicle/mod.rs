@@ -38,18 +38,21 @@ impl<'mc> VehicleUpdateEvent<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::entity::Vehicle<'mc>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::entity::Vehicle<'mc>>,
     ) -> Result<crate::event::vehicle::VehicleUpdateEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/event/vehicle/VehicleUpdateEvent")?;
+        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleUpdateEvent");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Lorg/bukkit/entity/Vehicle;)V",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         crate::event::vehicle::VehicleUpdateEvent::from_raw(&jni, res)
     }
+    //
 
     pub fn handlers(
         &mut self,
@@ -65,20 +68,24 @@ impl<'mc> VehicleUpdateEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn handler_list(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
+        let cls = jni.find_class("org/bukkit/event/HandlerList");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "getHandlerList",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //
 
     pub fn vehicle(&mut self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -92,6 +99,7 @@ impl<'mc> VehicleUpdateEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -107,22 +115,30 @@ impl<'mc> VehicleUpdateEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -135,6 +151,7 @@ impl<'mc> VehicleUpdateEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -148,8 +165,9 @@ impl<'mc> VehicleUpdateEvent<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -162,14 +180,16 @@ impl<'mc> VehicleUpdateEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -178,6 +198,7 @@ impl<'mc> VehicleUpdateEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -186,6 +207,7 @@ impl<'mc> VehicleUpdateEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -197,7 +219,8 @@ impl<'mc> VehicleUpdateEvent<'mc> {
 }
 impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleUpdateEvent<'mc> {
     fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
-        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting VehicleUpdateEvent into crate::event::vehicle::VehicleEvent")
     }
 }
 /// Raised when an entity enters a vehicle.
@@ -237,13 +260,14 @@ impl<'mc> VehicleEnterEvent<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::entity::Vehicle<'mc>>,
-        arg1: impl Into<&'mc crate::entity::Entity<'mc>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::entity::Vehicle<'mc>>,
+        arg1: impl Into<crate::entity::Entity<'mc>>,
     ) -> Result<crate::event::vehicle::VehicleEnterEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/event/vehicle/VehicleEnterEvent")?;
+        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleEnterEvent");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/entity/Entity;)V",
@@ -251,18 +275,20 @@ impl<'mc> VehicleEnterEvent<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         crate::event::vehicle::VehicleEnterEvent::from_raw(&jni, res)
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
-    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    //
+
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn handlers(
         &mut self,
@@ -278,6 +304,8 @@ impl<'mc> VehicleEnterEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
+
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -292,21 +320,25 @@ impl<'mc> VehicleEnterEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn handler_list(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
+        let cls = jni.find_class("org/bukkit/event/HandlerList");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "getHandlerList",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    /// Gets the Entity that entered the vehicle.
+    //
+
     pub fn entered(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -319,6 +351,7 @@ impl<'mc> VehicleEnterEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn vehicle(&mut self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -332,6 +365,7 @@ impl<'mc> VehicleEnterEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -347,22 +381,30 @@ impl<'mc> VehicleEnterEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -375,6 +417,7 @@ impl<'mc> VehicleEnterEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -388,8 +431,9 @@ impl<'mc> VehicleEnterEvent<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -402,14 +446,16 @@ impl<'mc> VehicleEnterEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -418,6 +464,7 @@ impl<'mc> VehicleEnterEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -426,6 +473,7 @@ impl<'mc> VehicleEnterEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -437,12 +485,14 @@ impl<'mc> VehicleEnterEvent<'mc> {
 }
 impl<'mc> Into<crate::event::Cancellable<'mc>> for VehicleEnterEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting VehicleEnterEvent into crate::event::Cancellable")
     }
 }
 impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleEnterEvent<'mc> {
     fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
-        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting VehicleEnterEvent into crate::event::vehicle::VehicleEvent")
     }
 }
 /// Raised when a vehicle collides with an entity.
@@ -483,14 +533,15 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::entity::Vehicle<'mc>>,
-        arg1: impl Into<&'mc crate::entity::Entity<'mc>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::entity::Vehicle<'mc>>,
+        arg1: impl Into<crate::entity::Entity<'mc>>,
     ) -> Result<crate::event::vehicle::VehicleEntityCollisionEvent<'mc>, Box<dyn std::error::Error>>
     {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/event/vehicle/VehicleEntityCollisionEvent")?;
+        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleEntityCollisionEvent");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/entity/Entity;)V",
@@ -498,18 +549,20 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         crate::event::vehicle::VehicleEntityCollisionEvent::from_raw(&jni, res)
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
-    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    //
+
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn handlers(
         &mut self,
@@ -525,6 +578,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -538,6 +592,8 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
+
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -552,28 +608,33 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn handler_list(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
+        let cls = jni.find_class("org/bukkit/event/HandlerList");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "getHandlerList",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //
 
     pub fn is_pickup_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isPickupCancelled", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn set_pickup_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
@@ -587,14 +648,16 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn is_collision_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "isCollisionCancelled", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn set_collision_cancelled(
         &mut self,
@@ -611,6 +674,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn vehicle(&mut self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -624,6 +688,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -639,22 +704,30 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -667,6 +740,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -680,8 +754,9 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -694,14 +769,16 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -710,6 +787,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -718,6 +796,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -729,14 +808,15 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
 }
 impl<'mc> Into<crate::event::Cancellable<'mc>> for VehicleEntityCollisionEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting VehicleEntityCollisionEvent into crate::event::Cancellable")
     }
 }
 impl<'mc> Into<crate::event::vehicle::VehicleCollisionEvent<'mc>>
     for VehicleEntityCollisionEvent<'mc>
 {
     fn into(self) -> crate::event::vehicle::VehicleCollisionEvent<'mc> {
-        crate::event::vehicle::VehicleCollisionEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::event::vehicle::VehicleCollisionEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting VehicleEntityCollisionEvent into crate::event::vehicle::VehicleCollisionEvent")
     }
 }
 /// Raised when a living entity exits a vehicle.
@@ -775,13 +855,14 @@ impl<'mc> VehicleExitEvent<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::entity::Vehicle<'mc>>,
-        arg1: impl Into<&'mc crate::entity::LivingEntity<'mc>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::entity::Vehicle<'mc>>,
+        arg1: impl Into<crate::entity::LivingEntity<'mc>>,
     ) -> Result<crate::event::vehicle::VehicleExitEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/event/vehicle/VehicleExitEvent")?;
+        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleExitEvent");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/entity/LivingEntity;)V",
@@ -789,18 +870,20 @@ impl<'mc> VehicleExitEvent<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         crate::event::vehicle::VehicleExitEvent::from_raw(&jni, res)
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
-    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    //
+
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn handlers(
         &mut self,
@@ -816,6 +899,8 @@ impl<'mc> VehicleExitEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
+
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -830,21 +915,25 @@ impl<'mc> VehicleExitEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn handler_list(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
+        let cls = jni.find_class("org/bukkit/event/HandlerList");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "getHandlerList",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    /// Get the living entity that exited the vehicle.
+    //
+
     pub fn exited(
         &mut self,
     ) -> Result<crate::entity::LivingEntity<'mc>, Box<dyn std::error::Error>> {
@@ -859,6 +948,7 @@ impl<'mc> VehicleExitEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn vehicle(&mut self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -872,6 +962,7 @@ impl<'mc> VehicleExitEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -887,22 +978,30 @@ impl<'mc> VehicleExitEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -915,6 +1014,7 @@ impl<'mc> VehicleExitEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -928,8 +1028,9 @@ impl<'mc> VehicleExitEvent<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -942,14 +1043,16 @@ impl<'mc> VehicleExitEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -958,6 +1061,7 @@ impl<'mc> VehicleExitEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -966,6 +1070,7 @@ impl<'mc> VehicleExitEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -977,12 +1082,14 @@ impl<'mc> VehicleExitEvent<'mc> {
 }
 impl<'mc> Into<crate::event::Cancellable<'mc>> for VehicleExitEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting VehicleExitEvent into crate::event::Cancellable")
     }
 }
 impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleExitEvent<'mc> {
     fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
-        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting VehicleExitEvent into crate::event::vehicle::VehicleEvent")
     }
 }
 /// Raised when a vehicle collides.
@@ -1023,18 +1130,21 @@ impl<'mc> VehicleCollisionEvent<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::entity::Vehicle<'mc>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::entity::Vehicle<'mc>>,
     ) -> Result<crate::event::vehicle::VehicleCollisionEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/event/vehicle/VehicleCollisionEvent")?;
+        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleCollisionEvent");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Lorg/bukkit/entity/Vehicle;)V",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         crate::event::vehicle::VehicleCollisionEvent::from_raw(&jni, res)
     }
+    //
 
     pub fn vehicle(&mut self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1048,6 +1158,7 @@ impl<'mc> VehicleCollisionEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn handlers(
         &mut self,
@@ -1063,6 +1174,7 @@ impl<'mc> VehicleCollisionEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1078,22 +1190,30 @@ impl<'mc> VehicleCollisionEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -1106,6 +1226,7 @@ impl<'mc> VehicleCollisionEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -1119,8 +1240,9 @@ impl<'mc> VehicleCollisionEvent<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -1133,14 +1255,16 @@ impl<'mc> VehicleCollisionEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -1149,6 +1273,7 @@ impl<'mc> VehicleCollisionEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1157,6 +1282,7 @@ impl<'mc> VehicleCollisionEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1168,7 +1294,9 @@ impl<'mc> VehicleCollisionEvent<'mc> {
 }
 impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleCollisionEvent<'mc> {
     fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
-        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).expect(
+            "Error converting VehicleCollisionEvent into crate::event::vehicle::VehicleEvent",
+        )
     }
 }
 /// Raised when a vehicle collides with a block.
@@ -1209,14 +1337,15 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::entity::Vehicle<'mc>>,
-        arg1: impl Into<&'mc crate::block::Block<'mc>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::entity::Vehicle<'mc>>,
+        arg1: impl Into<crate::block::Block<'mc>>,
     ) -> Result<crate::event::vehicle::VehicleBlockCollisionEvent<'mc>, Box<dyn std::error::Error>>
     {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/event/vehicle/VehicleBlockCollisionEvent")?;
+        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleBlockCollisionEvent");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/block/Block;)V",
@@ -1224,9 +1353,11 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         crate::event::vehicle::VehicleBlockCollisionEvent::from_raw(&jni, res)
     }
+    //
 
     pub fn handlers(
         &mut self,
@@ -1242,7 +1373,8 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gets the block the vehicle collided with
+    //
+
     pub fn block(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1255,20 +1387,24 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn handler_list(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
+        let cls = jni.find_class("org/bukkit/event/HandlerList");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "getHandlerList",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //
 
     pub fn vehicle(&mut self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1282,6 +1418,7 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1297,22 +1434,30 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -1325,6 +1470,7 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -1338,8 +1484,9 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -1352,14 +1499,16 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -1368,6 +1517,7 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1376,6 +1526,7 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1389,7 +1540,7 @@ impl<'mc> Into<crate::event::vehicle::VehicleCollisionEvent<'mc>>
     for VehicleBlockCollisionEvent<'mc>
 {
     fn into(self) -> crate::event::vehicle::VehicleCollisionEvent<'mc> {
-        crate::event::vehicle::VehicleCollisionEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::event::vehicle::VehicleCollisionEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting VehicleBlockCollisionEvent into crate::event::vehicle::VehicleCollisionEvent")
     }
 }
 /// Raised when a vehicle is created.
@@ -1429,27 +1580,30 @@ impl<'mc> VehicleCreateEvent<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::entity::Vehicle<'mc>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::entity::Vehicle<'mc>>,
     ) -> Result<crate::event::vehicle::VehicleCreateEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/event/vehicle/VehicleCreateEvent")?;
+        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleCreateEvent");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Lorg/bukkit/entity/Vehicle;)V",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         crate::event::vehicle::VehicleCreateEvent::from_raw(&jni, res)
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
-    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    //
+
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn handlers(
         &mut self,
@@ -1465,6 +1619,8 @@ impl<'mc> VehicleCreateEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
+
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -1479,20 +1635,24 @@ impl<'mc> VehicleCreateEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn handler_list(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
+        let cls = jni.find_class("org/bukkit/event/HandlerList");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "getHandlerList",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
+    //
 
     pub fn vehicle(&mut self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1506,6 +1666,7 @@ impl<'mc> VehicleCreateEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1521,22 +1682,30 @@ impl<'mc> VehicleCreateEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -1549,6 +1718,7 @@ impl<'mc> VehicleCreateEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -1562,8 +1732,9 @@ impl<'mc> VehicleCreateEvent<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -1576,14 +1747,16 @@ impl<'mc> VehicleCreateEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -1592,6 +1765,7 @@ impl<'mc> VehicleCreateEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1600,6 +1774,7 @@ impl<'mc> VehicleCreateEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1611,12 +1786,14 @@ impl<'mc> VehicleCreateEvent<'mc> {
 }
 impl<'mc> Into<crate::event::Cancellable<'mc>> for VehicleCreateEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting VehicleCreateEvent into crate::event::Cancellable")
     }
 }
 impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleCreateEvent<'mc> {
     fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
-        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting VehicleCreateEvent into crate::event::vehicle::VehicleEvent")
     }
 }
 /// Raised when a vehicle moves.
@@ -1655,15 +1832,16 @@ impl<'mc> VehicleMoveEvent<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::entity::Vehicle<'mc>>,
-        arg1: impl Into<&'mc crate::Location<'mc>>,
-        arg2: impl Into<&'mc crate::Location<'mc>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::entity::Vehicle<'mc>>,
+        arg1: impl Into<crate::Location<'mc>>,
+        arg2: impl Into<crate::Location<'mc>>,
     ) -> Result<crate::event::vehicle::VehicleMoveEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/event/vehicle/VehicleMoveEvent")?;
+        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleMoveEvent");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/Location;Lorg/bukkit/Location;)V",
@@ -1672,22 +1850,11 @@ impl<'mc> VehicleMoveEvent<'mc> {
                 jni::objects::JValueGen::from(&val_2),
                 jni::objects::JValueGen::from(&val_3),
             ],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         crate::event::vehicle::VehicleMoveEvent::from_raw(&jni, res)
     }
-    /// Get the previous position.
-    pub fn from(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getFrom",
-            "()Lorg/bukkit/Location;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Location::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
+    //
 
     pub fn handlers(
         &mut self,
@@ -1703,21 +1870,39 @@ impl<'mc> VehicleMoveEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn handler_list(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
+        let cls = jni.find_class("org/bukkit/event/HandlerList");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "getHandlerList",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    /// Get the next position.
+    //
+
+    pub fn from(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getFrom",
+            "()Lorg/bukkit/Location;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Location::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn to(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1727,6 +1912,7 @@ impl<'mc> VehicleMoveEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn vehicle(&mut self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1740,6 +1926,7 @@ impl<'mc> VehicleMoveEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1755,22 +1942,30 @@ impl<'mc> VehicleMoveEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -1783,6 +1978,7 @@ impl<'mc> VehicleMoveEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -1796,8 +1992,9 @@ impl<'mc> VehicleMoveEvent<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -1810,14 +2007,16 @@ impl<'mc> VehicleMoveEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -1826,6 +2025,7 @@ impl<'mc> VehicleMoveEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1834,6 +2034,7 @@ impl<'mc> VehicleMoveEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1845,7 +2046,8 @@ impl<'mc> VehicleMoveEvent<'mc> {
 }
 impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleMoveEvent<'mc> {
     fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
-        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting VehicleMoveEvent into crate::event::vehicle::VehicleEvent")
     }
 }
 /// Raised when a vehicle is destroyed, which could be caused by either a player or the environment. This is not raised if the boat is simply 'removed' due to other means.
@@ -1885,13 +2087,14 @@ impl<'mc> VehicleDestroyEvent<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::entity::Vehicle<'mc>>,
-        arg1: impl Into<&'mc crate::entity::Entity<'mc>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::entity::Vehicle<'mc>>,
+        arg1: impl Into<crate::entity::Entity<'mc>>,
     ) -> Result<crate::event::vehicle::VehicleDestroyEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/event/vehicle/VehicleDestroyEvent")?;
+        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleDestroyEvent");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/entity/Entity;)V",
@@ -1899,18 +2102,20 @@ impl<'mc> VehicleDestroyEvent<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         crate::event::vehicle::VehicleDestroyEvent::from_raw(&jni, res)
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
-    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    //
+
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn handlers(
         &mut self,
@@ -1926,6 +2131,8 @@ impl<'mc> VehicleDestroyEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
+
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -1940,21 +2147,25 @@ impl<'mc> VehicleDestroyEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn handler_list(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
+        let cls = jni.find_class("org/bukkit/event/HandlerList");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "getHandlerList",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    /// Gets the Entity that has destroyed the vehicle, potentially null
+    //
+
     pub fn attacker(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1967,6 +2178,7 @@ impl<'mc> VehicleDestroyEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn vehicle(&mut self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1980,6 +2192,7 @@ impl<'mc> VehicleDestroyEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1995,22 +2208,30 @@ impl<'mc> VehicleDestroyEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -2023,6 +2244,7 @@ impl<'mc> VehicleDestroyEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -2036,8 +2258,9 @@ impl<'mc> VehicleDestroyEvent<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -2050,14 +2273,16 @@ impl<'mc> VehicleDestroyEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -2066,6 +2291,7 @@ impl<'mc> VehicleDestroyEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2074,6 +2300,7 @@ impl<'mc> VehicleDestroyEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2085,12 +2312,14 @@ impl<'mc> VehicleDestroyEvent<'mc> {
 }
 impl<'mc> Into<crate::event::Cancellable<'mc>> for VehicleDestroyEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting VehicleDestroyEvent into crate::event::Cancellable")
     }
 }
 impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleDestroyEvent<'mc> {
     fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
-        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting VehicleDestroyEvent into crate::event::vehicle::VehicleEvent")
     }
 }
 /// Raised when a vehicle receives damage.
@@ -2130,15 +2359,16 @@ impl<'mc> VehicleDamageEvent<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::entity::Vehicle<'mc>>,
-        arg1: impl Into<&'mc crate::entity::Entity<'mc>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::entity::Vehicle<'mc>>,
+        arg1: impl Into<crate::entity::Entity<'mc>>,
         arg2: f64,
     ) -> Result<crate::event::vehicle::VehicleDamageEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let val_3 = jni::objects::JValueGen::Double(arg2.into());
-        let cls = &jni.find_class("org/bukkit/event/vehicle/VehicleDamageEvent")?;
+        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleDamageEvent");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Lorg/bukkit/entity/Vehicle;Lorg/bukkit/entity/Entity;D)V",
@@ -2147,18 +2377,20 @@ impl<'mc> VehicleDamageEvent<'mc> {
                 jni::objects::JValueGen::from(&val_2),
                 jni::objects::JValueGen::from(&val_3),
             ],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         crate::event::vehicle::VehicleDamageEvent::from_raw(&jni, res)
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#isCancelled()">Cancellable</a></code></span>
-    /// Gets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins
+    //
+
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn handlers(
         &mut self,
@@ -2174,6 +2406,8 @@ impl<'mc> VehicleDamageEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
+
     /// Sets the damage done to the vehicle
     pub fn set_damage(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
@@ -2186,14 +2420,17 @@ impl<'mc> VehicleDamageEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Gets the damage done to the vehicle
+    //
+
     pub fn damage(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getDamage", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
+
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -2208,21 +2445,25 @@ impl<'mc> VehicleDamageEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn handler_list(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("org/bukkit/event/HandlerList")?;
+        let cls = jni.find_class("org/bukkit/event/HandlerList");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "getHandlerList",
             "()Lorg/bukkit/event/HandlerList;",
             &[],
-        )?;
+        );
+        let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    /// Gets the Entity that is attacking the vehicle
+    //
+
     pub fn attacker(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2235,6 +2476,7 @@ impl<'mc> VehicleDamageEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn vehicle(&mut self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -2248,6 +2490,7 @@ impl<'mc> VehicleDamageEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -2263,22 +2506,30 @@ impl<'mc> VehicleDamageEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -2291,6 +2542,7 @@ impl<'mc> VehicleDamageEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -2304,8 +2556,9 @@ impl<'mc> VehicleDamageEvent<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -2318,14 +2571,16 @@ impl<'mc> VehicleDamageEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -2334,6 +2589,7 @@ impl<'mc> VehicleDamageEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2342,6 +2598,7 @@ impl<'mc> VehicleDamageEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2353,12 +2610,14 @@ impl<'mc> VehicleDamageEvent<'mc> {
 }
 impl<'mc> Into<crate::event::Cancellable<'mc>> for VehicleDamageEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
-        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting VehicleDamageEvent into crate::event::Cancellable")
     }
 }
 impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleDamageEvent<'mc> {
     fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
-        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting VehicleDamageEvent into crate::event::vehicle::VehicleEvent")
     }
 }
 /// Represents a vehicle-related event.
@@ -2395,19 +2654,22 @@ impl<'mc> VehicleEvent<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::entity::Vehicle<'mc>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::entity::Vehicle<'mc>>,
     ) -> Result<crate::event::vehicle::VehicleEvent<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/event/vehicle/VehicleEvent")?;
+        let cls = jni.find_class("org/bukkit/event/vehicle/VehicleEvent");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Lorg/bukkit/entity/Vehicle;)V",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         crate::event::vehicle::VehicleEvent::from_raw(&jni, res)
     }
-    /// Get the vehicle.
+    //
+
     pub fn vehicle(&mut self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2420,6 +2682,7 @@ impl<'mc> VehicleEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn handlers(
         &mut self,
@@ -2435,6 +2698,7 @@ impl<'mc> VehicleEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -2450,22 +2714,30 @@ impl<'mc> VehicleEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isAsynchronous", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -2478,6 +2750,7 @@ impl<'mc> VehicleEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -2491,8 +2764,9 @@ impl<'mc> VehicleEvent<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -2505,14 +2779,16 @@ impl<'mc> VehicleEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -2521,6 +2797,7 @@ impl<'mc> VehicleEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2529,6 +2806,7 @@ impl<'mc> VehicleEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2540,6 +2818,7 @@ impl<'mc> VehicleEvent<'mc> {
 }
 impl<'mc> Into<crate::event::Event<'mc>> for VehicleEvent<'mc> {
     fn into(self) -> crate::event::Event<'mc> {
-        crate::event::Event::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::event::Event::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting VehicleEvent into crate::event::Event")
     }
 }

@@ -10,7 +10,7 @@ pub enum BarStyleEnum {
 }
 impl std::fmt::Display for BarStyleEnum {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match &self {
+        match self {
             BarStyleEnum::Solid => f.write_str("SOLID"),
             BarStyleEnum::Segmented6 => f.write_str("SEGMENTED_6"),
             BarStyleEnum::Segmented10 => f.write_str("SEGMENTED_10"),
@@ -74,6 +74,36 @@ impl<'mc> BarStyle<'mc> {
             _ => None,
         }
     }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<BarStyle<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/boss/BarStyle");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/boss/BarStyle;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        BarStyle::from_raw(
+            &jni,
+            raw_obj,
+            BarStyle::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
 }
 pub enum BarColorEnum {
     Pink,
@@ -86,7 +116,7 @@ pub enum BarColorEnum {
 }
 impl std::fmt::Display for BarColorEnum {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match &self {
+        match self {
             BarColorEnum::Pink => f.write_str("PINK"),
             BarColorEnum::Blue => f.write_str("BLUE"),
             BarColorEnum::Red => f.write_str("RED"),
@@ -156,6 +186,36 @@ impl<'mc> BarColor<'mc> {
             _ => None,
         }
     }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<BarColor<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/boss/BarColor");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/boss/BarColor;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        BarColor::from_raw(
+            &jni,
+            raw_obj,
+            BarColor::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
 }
 pub enum BarFlagEnum {
     DarkenSky,
@@ -164,7 +224,7 @@ pub enum BarFlagEnum {
 }
 impl std::fmt::Display for BarFlagEnum {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match &self {
+        match self {
             BarFlagEnum::DarkenSky => f.write_str("DARKEN_SKY"),
             BarFlagEnum::PlayBossMusic => f.write_str("PLAY_BOSS_MUSIC"),
             BarFlagEnum::CreateFog => f.write_str("CREATE_FOG"),
@@ -222,8 +282,149 @@ impl<'mc> BarFlag<'mc> {
             _ => None,
         }
     }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<BarFlag<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/boss/BarFlag");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/boss/BarFlag;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        BarFlag::from_raw(
+            &jni,
+            raw_obj,
+            BarFlag::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
 }
-/// Represents a custom <a title="interface in org.bukkit.boss" href="BossBar.html"><code>BossBar</code></a> that has a <a href="../NamespacedKey.html" title="class in org.bukkit"><code>NamespacedKey</code></a>
+pub enum RespawnPhaseEnum {
+    Start,
+    PreparingToSummonPillars,
+    SummoningPillars,
+    SummoningDragon,
+    End,
+    None,
+}
+impl std::fmt::Display for RespawnPhaseEnum {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            RespawnPhaseEnum::Start => f.write_str("START"),
+            RespawnPhaseEnum::PreparingToSummonPillars => {
+                f.write_str("PREPARING_TO_SUMMON_PILLARS")
+            }
+            RespawnPhaseEnum::SummoningPillars => f.write_str("SUMMONING_PILLARS"),
+            RespawnPhaseEnum::SummoningDragon => f.write_str("SUMMONING_DRAGON"),
+            RespawnPhaseEnum::End => f.write_str("END"),
+            RespawnPhaseEnum::None => f.write_str("NONE"),
+        }
+    }
+}
+pub struct RespawnPhase<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+    pub RespawnPhaseEnum,
+);
+impl<'mc> std::ops::Deref for RespawnPhase<'mc> {
+    type Target = RespawnPhaseEnum;
+    fn deref(&self) -> &Self::Target {
+        return &self.2;
+    }
+}
+impl<'mc> JNIRaw<'mc> for RespawnPhase<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> RespawnPhase<'mc> {
+    pub fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+        e: RespawnPhaseEnum,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate RespawnPhase from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/boss/RespawnPhase")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a RespawnPhase object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj, e))
+        }
+    }
+    pub const START: RespawnPhaseEnum = RespawnPhaseEnum::Start;
+    pub const PREPARING_TO_SUMMON_PILLARS: RespawnPhaseEnum =
+        RespawnPhaseEnum::PreparingToSummonPillars;
+    pub const SUMMONING_PILLARS: RespawnPhaseEnum = RespawnPhaseEnum::SummoningPillars;
+    pub const SUMMONING_DRAGON: RespawnPhaseEnum = RespawnPhaseEnum::SummoningDragon;
+    pub const END: RespawnPhaseEnum = RespawnPhaseEnum::End;
+    pub const NONE: RespawnPhaseEnum = RespawnPhaseEnum::None;
+    pub fn from_string(str: String) -> std::option::Option<RespawnPhaseEnum> {
+        match str.as_str() {
+            "START" => Some(RespawnPhaseEnum::Start),
+            "PREPARING_TO_SUMMON_PILLARS" => Some(RespawnPhaseEnum::PreparingToSummonPillars),
+            "SUMMONING_PILLARS" => Some(RespawnPhaseEnum::SummoningPillars),
+            "SUMMONING_DRAGON" => Some(RespawnPhaseEnum::SummoningDragon),
+            "END" => Some(RespawnPhaseEnum::End),
+            "NONE" => Some(RespawnPhaseEnum::None),
+            _ => None,
+        }
+    }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<RespawnPhase<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/boss/RespawnPhase");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/boss/RespawnPhase;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        RespawnPhase::from_raw(
+            &jni,
+            raw_obj,
+            RespawnPhase::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
+}
+/// Represents a custom <a href="BossBar.html" title="interface in org.bukkit.boss"><code>BossBar</code></a> that has a <a href="../NamespacedKey.html" title="class in org.bukkit"><code>NamespacedKey</code></a>
 ///
 /// This is a representation of an abstract class.
 pub struct KeyedBossBar<'mc>(
@@ -249,25 +450,11 @@ impl<'mc> KeyedBossBar<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-
-    pub fn add_flag(
-        &mut self,
-        arg0: impl Into<&'mc crate::boss::BarFlag<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addFlag",
-            "(Lorg/bukkit/boss/BarFlag;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+    //
 
     pub fn set_color(
         &mut self,
-        arg0: impl Into<&'mc crate::boss::BarColor<'mc>>,
+        arg0: impl Into<crate::boss::BarColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -279,14 +466,32 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
+
+    pub fn add_flag(
+        &mut self,
+        arg0: impl Into<crate::boss::BarFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addFlag",
+            "(Lorg/bukkit/boss/BarFlag;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
 
     pub fn is_visible(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isVisible", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn set_visible(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
@@ -300,6 +505,7 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn color(&mut self) -> Result<crate::boss::BarColor<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -310,9 +516,10 @@ impl<'mc> KeyedBossBar<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+        let variant = self
+            .jni_ref()
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = self.jni_ref().translate_error(variant)?;
         let variant_str = self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -321,9 +528,11 @@ impl<'mc> KeyedBossBar<'mc> {
         crate::boss::BarColor::from_raw(
             &self.jni_ref(),
             raw_obj,
-            crate::boss::BarColor::from_string(variant_str).unwrap(),
+            crate::boss::BarColor::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+    //
 
     pub fn title(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -336,6 +545,7 @@ impl<'mc> KeyedBossBar<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn players(
         &mut self,
@@ -353,10 +563,11 @@ impl<'mc> KeyedBossBar<'mc> {
         }
         Ok(new_vec)
     }
+    //
 
     pub fn add_player(
         &mut self,
-        arg0: impl Into<&'mc crate::entity::Player<'mc>>,
+        arg0: impl Into<crate::entity::Player<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -368,10 +579,11 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn remove_player(
         &mut self,
-        arg0: impl Into<&'mc crate::entity::Player<'mc>>,
+        arg0: impl Into<crate::entity::Player<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -383,12 +595,10 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub fn set_title(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+    pub fn set_title(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setTitle",
@@ -398,6 +608,7 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn style(&mut self) -> Result<crate::boss::BarStyle<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -408,9 +619,10 @@ impl<'mc> KeyedBossBar<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+        let variant = self
+            .jni_ref()
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = self.jni_ref().translate_error(variant)?;
         let variant_str = self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -419,13 +631,15 @@ impl<'mc> KeyedBossBar<'mc> {
         crate::boss::BarStyle::from_raw(
             &self.jni_ref(),
             raw_obj,
-            crate::boss::BarStyle::from_string(variant_str).unwrap(),
+            crate::boss::BarStyle::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
+    //
 
     pub fn set_style(
         &mut self,
-        arg0: impl Into<&'mc crate::boss::BarStyle<'mc>>,
+        arg0: impl Into<crate::boss::BarStyle<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -437,10 +651,11 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn remove_flag(
         &mut self,
-        arg0: impl Into<&'mc crate::boss::BarFlag<'mc>>,
+        arg0: impl Into<crate::boss::BarFlag<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -452,10 +667,11 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn has_flag(
         &mut self,
-        arg0: impl Into<&'mc crate::boss::BarFlag<'mc>>,
+        arg0: impl Into<crate::boss::BarFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -465,8 +681,9 @@ impl<'mc> KeyedBossBar<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn set_progress(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
@@ -479,15 +696,16 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn progress(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getProgress", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
-    #[deprecated]
+    //
 
     pub fn show(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -496,7 +714,7 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated]
+    //
 
     pub fn hide(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -505,6 +723,7 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn remove_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -513,6 +732,7 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -538,12 +758,14 @@ impl<'mc> JNIRaw<'mc> for KeyedBossBar<'mc> {
 }
 impl<'mc> Into<crate::boss::BossBar<'mc>> for KeyedBossBar<'mc> {
     fn into(self) -> crate::boss::BossBar<'mc> {
-        crate::boss::BossBar::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::boss::BossBar::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting KeyedBossBar into crate::boss::BossBar")
     }
 }
 impl<'mc> Into<crate::Keyed<'mc>> for KeyedBossBar<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
-        crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::Keyed::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting KeyedBossBar into crate::Keyed")
     }
 }
 
@@ -572,25 +794,11 @@ impl<'mc> BossBar<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// Add an optional flag to this boss bar
-    pub fn add_flag(
-        &mut self,
-        arg0: impl Into<&'mc crate::boss::BarFlag<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addFlag",
-            "(Lorg/bukkit/boss/BarFlag;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    /// Sets the color of this boss bar.
+    //
+
     pub fn set_color(
         &mut self,
-        arg0: impl Into<&'mc crate::boss::BarColor<'mc>>,
+        arg0: impl Into<crate::boss::BarColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -602,14 +810,33 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Return if the boss bar is displayed to attached players.
+    //
+
+    pub fn add_flag(
+        &mut self,
+        arg0: impl Into<crate::boss::BarFlag<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addFlag",
+            "(Lorg/bukkit/boss/BarFlag;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
     pub fn is_visible(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isVisible", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
+
     /// Set if the boss bar is displayed to attached players.
     pub fn set_visible(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         // -2
@@ -623,7 +850,8 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Returns the color of this boss bar
+    //
+
     pub fn color(&mut self) -> Result<crate::boss::BarColor<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -633,9 +861,10 @@ impl<'mc> BossBar<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+        let variant = self
+            .jni_ref()
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = self.jni_ref().translate_error(variant)?;
         let variant_str = self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -644,10 +873,12 @@ impl<'mc> BossBar<'mc> {
         crate::boss::BarColor::from_raw(
             &self.jni_ref(),
             raw_obj,
-            crate::boss::BarColor::from_string(variant_str).unwrap(),
+            crate::boss::BarColor::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    /// Returns the title of this boss bar
+    //
+
     pub fn title(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -659,7 +890,8 @@ impl<'mc> BossBar<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    /// Returns all players viewing this boss bar
+    //
+
     pub fn players(
         &mut self,
     ) -> Result<Vec<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
@@ -676,10 +908,11 @@ impl<'mc> BossBar<'mc> {
         }
         Ok(new_vec)
     }
-    /// Adds the player to this boss bar causing it to display on their screen.
+    //
+
     pub fn add_player(
         &mut self,
-        arg0: impl Into<&'mc crate::entity::Player<'mc>>,
+        arg0: impl Into<crate::entity::Player<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -691,10 +924,11 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Removes the player from this boss bar causing it to be removed from their screen.
+    //
+
     pub fn remove_player(
         &mut self,
-        arg0: impl Into<&'mc crate::entity::Player<'mc>>,
+        arg0: impl Into<crate::entity::Player<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -706,12 +940,10 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Sets the title of this boss bar
-    pub fn set_title(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+    //
+
+    pub fn set_title(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setTitle",
@@ -721,7 +953,8 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Returns the style of this boss bar
+    //
+
     pub fn style(&mut self) -> Result<crate::boss::BarStyle<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -731,9 +964,10 @@ impl<'mc> BossBar<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[])?;
+        let variant = self
+            .jni_ref()
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = self.jni_ref().translate_error(variant)?;
         let variant_str = self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -742,13 +976,15 @@ impl<'mc> BossBar<'mc> {
         crate::boss::BarStyle::from_raw(
             &self.jni_ref(),
             raw_obj,
-            crate::boss::BarStyle::from_string(variant_str).unwrap(),
+            crate::boss::BarStyle::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    /// Sets the bar style of this boss bar
+    //
+
     pub fn set_style(
         &mut self,
-        arg0: impl Into<&'mc crate::boss::BarStyle<'mc>>,
+        arg0: impl Into<crate::boss::BarStyle<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -760,10 +996,11 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Remove an existing flag on this boss bar
+    //
+
     pub fn remove_flag(
         &mut self,
-        arg0: impl Into<&'mc crate::boss::BarFlag<'mc>>,
+        arg0: impl Into<crate::boss::BarFlag<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -775,10 +1012,11 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Returns whether this boss bar as the passed flag set
+    //
+
     pub fn has_flag(
         &mut self,
-        arg0: impl Into<&'mc crate::boss::BarFlag<'mc>>,
+        arg0: impl Into<crate::boss::BarFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -788,8 +1026,10 @@ impl<'mc> BossBar<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
+
     /// Sets the progress of the bar. Values should be between 0.0 (empty) and 1.0 (full)
     pub fn set_progress(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
@@ -802,22 +1042,17 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Returns the progress of the bar between 0.0 and 1.0
+    //
+
     pub fn progress(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getProgress", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// <a href="#setVisible(boolean)"><code>setVisible(boolean)</code></a>
-    /// </div>
-    /// <a href="#setVisible(boolean)"><code>setVisible(boolean)</code></a>
-    ///
-    /// Shows the previously hidden boss bar to all attached players
+    //
+
     pub fn show(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -825,14 +1060,8 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// <a href="#setVisible(boolean)"><code>setVisible(boolean)</code></a>
-    /// </div>
-    /// <a href="#setVisible(boolean)"><code>setVisible(boolean)</code></a>
-    ///
-    /// Hides this boss bar from all attached players
+    //
+
     pub fn hide(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -840,7 +1069,8 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Removes all players from this boss bar
+    //
+
     pub fn remove_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -884,7 +1114,8 @@ impl<'mc> DragonBattle<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// Get the boss bar to be displayed for this dragon battle.
+    //
+
     pub fn boss_bar(&mut self) -> Result<crate::boss::BossBar<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -897,7 +1128,8 @@ impl<'mc> DragonBattle<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Get the <a title="interface in org.bukkit.entity" href="../entity/EnderDragon.html"><code>EnderDragon</code></a> active in this battle. Will return null if the dragon has been slain.
+    //
+
     pub fn ender_dragon(
         &mut self,
     ) -> Result<crate::entity::EnderDragon<'mc>, Box<dyn std::error::Error>> {
@@ -912,7 +1144,8 @@ impl<'mc> DragonBattle<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Get the location of the end portal. This location will be at the center of the base (bottom) of the portal.
+    //
+
     pub fn end_portal_location(
         &mut self,
     ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
@@ -927,6 +1160,8 @@ impl<'mc> DragonBattle<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
+
     /// Generate the end portal.
     pub fn generate_end_portal(&mut self, arg0: bool) -> Result<bool, Box<dyn std::error::Error>> {
         // -2
@@ -938,17 +1173,19 @@ impl<'mc> DragonBattle<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
-    /// Check whether or not the first dragon has been killed already.
+    //
+
     pub fn has_been_previously_killed(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "hasBeenPreviouslyKilled", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
-    /// Get this battle's current respawn phase.
+    //
+
     pub fn respawn_phase(
         &mut self,
     ) -> Result<crate::boss::DragonBattleRespawnPhase<'mc>, Box<dyn std::error::Error>> {
@@ -959,14 +1196,28 @@ impl<'mc> DragonBattle<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::boss::DragonBattleRespawnPhase::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant = self
+            .jni_ref()
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = self.jni_ref().translate_error(variant)?;
+        let variant_str = self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::boss::DragonBattleRespawnPhase::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::boss::DragonBattleRespawnPhase::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
     }
-    /// Set the dragon's respawn phase. This method will is unsuccessful if a dragon respawn is not in progress.
+    //
+
     pub fn set_respawn_phase(
         &mut self,
-        arg0: impl Into<&'mc crate::boss::DragonBattleRespawnPhase<'mc>>,
+        arg0: impl Into<crate::boss::DragonBattleRespawnPhase<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -976,9 +1227,10 @@ impl<'mc> DragonBattle<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
-    /// Reset the crystals located on the obsidian pillars (remove their beam targets and invulnerability).
+    //
+
     pub fn reset_crystals(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -997,11 +1249,40 @@ impl<'mc> JNIRaw<'mc> for DragonBattle<'mc> {
     }
 }
 /// Represents a phase in the dragon respawn process.
+pub enum DragonBattleRespawnPhaseEnum {
+    Start,
+    PreparingToSummonPillars,
+    SummoningPillars,
+    SummoningDragon,
+    End,
+    None,
+}
+impl std::fmt::Display for DragonBattleRespawnPhaseEnum {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            DragonBattleRespawnPhaseEnum::Start => f.write_str("START"),
+            DragonBattleRespawnPhaseEnum::PreparingToSummonPillars => {
+                f.write_str("PREPARING_TO_SUMMON_PILLARS")
+            }
+            DragonBattleRespawnPhaseEnum::SummoningPillars => f.write_str("SUMMONING_PILLARS"),
+            DragonBattleRespawnPhaseEnum::SummoningDragon => f.write_str("SUMMONING_DRAGON"),
+            DragonBattleRespawnPhaseEnum::End => f.write_str("END"),
+            DragonBattleRespawnPhaseEnum::None => f.write_str("NONE"),
+        }
+    }
+}
 pub struct DragonBattleRespawnPhase<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
+    pub DragonBattleRespawnPhaseEnum,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for DragonBattleRespawnPhase<'mc> {
+impl<'mc> std::ops::Deref for DragonBattleRespawnPhase<'mc> {
+    type Target = DragonBattleRespawnPhaseEnum;
+    fn deref(&self) -> &Self::Target {
+        return &self.2;
+    }
+}
+impl<'mc> JNIRaw<'mc> for DragonBattleRespawnPhase<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1014,6 +1295,7 @@ impl<'mc> DragonBattleRespawnPhase<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
+        e: DragonBattleRespawnPhaseEnum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -1021,7 +1303,7 @@ impl<'mc> DragonBattleRespawnPhase<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/boss/DragonBattleRespawnPhase")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/boss/DragonBattle$RespawnPhase")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a DragonBattleRespawnPhase object, got {}",
@@ -1029,155 +1311,61 @@ impl<'mc> DragonBattleRespawnPhase<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self(env.clone(), obj, e))
         }
     }
-    /// Returns the enum constant of this type with the specified name. The string must match <i>exactly</i> an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
-    pub fn value_of_with_string(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<impl Into<&'mc String>>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
-        let cls = &jni.find_class("java/lang/Enum")?;
+    pub const START: DragonBattleRespawnPhaseEnum = DragonBattleRespawnPhaseEnum::Start;
+    pub const PREPARING_TO_SUMMON_PILLARS: DragonBattleRespawnPhaseEnum =
+        DragonBattleRespawnPhaseEnum::PreparingToSummonPillars;
+    pub const SUMMONING_PILLARS: DragonBattleRespawnPhaseEnum =
+        DragonBattleRespawnPhaseEnum::SummoningPillars;
+    pub const SUMMONING_DRAGON: DragonBattleRespawnPhaseEnum =
+        DragonBattleRespawnPhaseEnum::SummoningDragon;
+    pub const END: DragonBattleRespawnPhaseEnum = DragonBattleRespawnPhaseEnum::End;
+    pub const NONE: DragonBattleRespawnPhaseEnum = DragonBattleRespawnPhaseEnum::None;
+    pub fn from_string(str: String) -> std::option::Option<DragonBattleRespawnPhaseEnum> {
+        match str.as_str() {
+            "START" => Some(DragonBattleRespawnPhaseEnum::Start),
+            "PREPARING_TO_SUMMON_PILLARS" => {
+                Some(DragonBattleRespawnPhaseEnum::PreparingToSummonPillars)
+            }
+            "SUMMONING_PILLARS" => Some(DragonBattleRespawnPhaseEnum::SummoningPillars),
+            "SUMMONING_DRAGON" => Some(DragonBattleRespawnPhaseEnum::SummoningDragon),
+            "END" => Some(DragonBattleRespawnPhaseEnum::End),
+            "NONE" => Some(DragonBattleRespawnPhaseEnum::None),
+            _ => None,
+        }
+    }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<DragonBattleRespawnPhase<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/boss/DragonBattle$RespawnPhase");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "valueOf",
-            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let obj = res.l()?;
-        Self::from_raw(&jni, obj)
-    }
-
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
+            "(Ljava/lang/String;)Lorg/bukkit/boss/DragonBattle$RespawnPhase;",
             &[jni::objects::JValueGen::from(&val_1)],
         );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
-            .to_string())
+            .to_string();
+        DragonBattleRespawnPhase::from_raw(
+            &jni,
+            raw_obj,
+            DragonBattleRespawnPhase::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
     }
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn declaring_class(
-        &mut self,
-    ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDeclaringClass",
-            "()Ljava/lang/Class;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-
-    pub fn wait(
-        &mut self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "wait",
-            "(JI)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+    //
 }

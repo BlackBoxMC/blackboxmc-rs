@@ -37,30 +37,117 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-
-    pub fn all(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("Javajava/util/stream/Stream")?;
-        let res = jni.call_static_method(cls, "all", "()Ljava/util/stream/Stream;", &[])?;
-        Ok(res.l().unwrap())
-    }
+    //
 
     pub fn equidistribution(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "equidistribution", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn is_deprecated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isDeprecated", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
+
+    pub fn is_stochastic(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isStochastic", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn is_hardware(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isHardware", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn state_bits(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "stateBits", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    //
+
+    pub fn is_statistical(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isStatistical", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn is_arbitrarily_jumpable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isArbitrarilyJumpable", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn is_jumpable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isJumpable", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn is_leapable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isLeapable", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn is_splittable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSplittable", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn is_streamable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isStreamable", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn all(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let cls = jni.find_class("Javajava/util/stream/Stream");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "all", "()Ljava/util/stream/Stream;", &[]);
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
 
     pub fn period(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -70,80 +157,9 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
-
-    pub fn is_stochastic(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isStochastic", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn is_hardware(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isHardware", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn state_bits(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "stateBits", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-
-    pub fn is_statistical(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isStatistical", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn is_arbitrarily_jumpable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isArbitrarilyJumpable", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn is_jumpable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isJumpable", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn is_leapable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isLeapable", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn is_splittable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isSplittable", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn is_streamable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isStreamable", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
+    //
 
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -156,6 +172,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn group(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -168,40 +185,50 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn default(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("Javajava/util/random/RandomGeneratorFactory")?;
+        let cls = jni.find_class("Javajava/util/random/RandomGeneratorFactory");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "getDefault",
             "()Ljava/util/random/RandomGeneratorFactory;",
             &[],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("Javajava/util/random/RandomGeneratorFactory")?;
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("Javajava/util/random/RandomGeneratorFactory");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "of",
             "(Ljava/lang/String;)Ljava/util/random/RandomGeneratorFactory;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn create(
         &mut self,
         arg0: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "create",
@@ -209,16 +236,23 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -231,8 +265,9 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -244,8 +279,9 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -258,14 +294,16 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -274,6 +312,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -282,6 +321,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -310,7 +350,7 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
             .into());
         }
         let (valid, name) =
-            env.validate_name(&obj, "java/util/random/RandomGeneratorSplittableGenerator")?;
+            env.validate_name(&obj, "java/util/random/RandomGenerator$SplittableGenerator")?;
         if !valid {
             Err(eyre::eyre!(
         "Invalid argument passed. Expected a JavaRandomGeneratorSplittableGenerator object, got {}",
@@ -321,12 +361,16 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
     pub fn rngs(
         &mut self,
         arg0: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "rngs",
@@ -334,14 +378,15 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn splits(
+    pub fn splits(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "splits",
@@ -349,16 +394,17 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn splits_with_long(
+    pub fn splits_with_long(
         &mut self,
         arg0: i64,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let val_2 = arg1.unwrap();
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "splits",
@@ -369,49 +415,61 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn split(
+    pub fn split(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(&self.jni_object(),"split","(Ljava/util/random/RandomGenerator$SplittableGenerator;)Ljava/util/random/RandomGenerator$SplittableGenerator;",&[jni::objects::JValueGen::from(&val_1)]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("Javajava/util/random/RandomGenerator$SplittableGenerator")?;
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("Javajava/util/random/RandomGenerator$SplittableGenerator");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "of",
             "(Ljava/lang/String;)Ljava/util/random/RandomGenerator$SplittableGenerator;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn next_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "nextBoolean", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn next_long(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Long(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextLong",
@@ -422,16 +480,23 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
+        Ok(res.j()?)
     }
+    //
 
     pub fn next_float(
         &mut self,
         arg0: std::option::Option<f32>,
         arg1: std::option::Option<f32>,
     ) -> Result<f32, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Float(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Float(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Float(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Float(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextFloat",
@@ -442,16 +507,23 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.f().unwrap())
+        Ok(res.f()?)
     }
+    //
 
     pub fn ints(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "ints",
@@ -462,8 +534,9 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn ints_with_long(
         &mut self,
@@ -473,7 +546,10 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
+        let val_3 = jni::objects::JValueGen::Int(
+            arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "ints",
@@ -485,8 +561,9 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn longs(
         &mut self,
@@ -494,9 +571,18 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
         arg1: std::option::Option<i64>,
         arg2: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Long(arg2.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Long(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_3 = jni::objects::JValueGen::Long(
+            arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "longs",
@@ -508,16 +594,23 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn doubles(
         &mut self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Double(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Double(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "doubles",
@@ -528,8 +621,9 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn doubles_with_long(
         &mut self,
@@ -539,7 +633,10 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let val_2 = jni::objects::JValueGen::Double(arg1.into());
-        let val_3 = jni::objects::JValueGen::Double(arg2.unwrap().into());
+        let val_3 = jni::objects::JValueGen::Double(
+            arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "doubles",
@@ -551,8 +648,9 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn next_bytes(&mut self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -561,14 +659,21 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn next_gaussian(
         &mut self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Double(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Double(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextGaussian",
@@ -579,32 +684,41 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn is_deprecated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isDeprecated", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn next_exponential(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "nextExponential", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn next_double(
         &mut self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Double(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Double(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextDouble",
@@ -615,16 +729,23 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn next_int(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextInt",
@@ -635,7 +756,7 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
 }
 impl<'mc> JNIRaw<'mc> for JavaRandomGeneratorSplittableGenerator<'mc> {
@@ -671,7 +792,7 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
             .into());
         }
         let (valid, name) =
-            env.validate_name(&obj, "java/util/random/RandomGeneratorStreamableGenerator")?;
+            env.validate_name(&obj, "java/util/random/RandomGenerator$StreamableGenerator")?;
         if !valid {
             Err(eyre::eyre!(
         "Invalid argument passed. Expected a JavaRandomGeneratorStreamableGenerator object, got {}",
@@ -682,12 +803,16 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
     pub fn rngs(
         &mut self,
         arg0: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "rngs",
@@ -695,39 +820,50 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("Javajava/util/random/RandomGenerator$StreamableGenerator")?;
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("Javajava/util/random/RandomGenerator$StreamableGenerator");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "of",
             "(Ljava/lang/String;)Ljava/util/random/RandomGenerator$StreamableGenerator;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn next_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "nextBoolean", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn next_long(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Long(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextLong",
@@ -738,16 +874,23 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
+        Ok(res.j()?)
     }
+    //
 
     pub fn next_float(
         &mut self,
         arg0: std::option::Option<f32>,
         arg1: std::option::Option<f32>,
     ) -> Result<f32, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Float(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Float(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Float(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Float(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextFloat",
@@ -758,16 +901,23 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.f().unwrap())
+        Ok(res.f()?)
     }
+    //
 
     pub fn ints(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "ints",
@@ -778,8 +928,9 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn ints_with_long(
         &mut self,
@@ -789,7 +940,10 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
+        let val_3 = jni::objects::JValueGen::Int(
+            arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "ints",
@@ -801,8 +955,9 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn longs(
         &mut self,
@@ -810,9 +965,18 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
         arg1: std::option::Option<i64>,
         arg2: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Long(arg2.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Long(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_3 = jni::objects::JValueGen::Long(
+            arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "longs",
@@ -824,16 +988,23 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn doubles(
         &mut self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Double(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Double(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "doubles",
@@ -844,8 +1015,9 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn doubles_with_long(
         &mut self,
@@ -855,7 +1027,10 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let val_2 = jni::objects::JValueGen::Double(arg1.into());
-        let val_3 = jni::objects::JValueGen::Double(arg2.unwrap().into());
+        let val_3 = jni::objects::JValueGen::Double(
+            arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "doubles",
@@ -867,8 +1042,9 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn next_bytes(&mut self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -877,14 +1053,21 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn next_gaussian(
         &mut self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Double(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Double(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextGaussian",
@@ -895,32 +1078,41 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn is_deprecated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isDeprecated", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn next_exponential(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "nextExponential", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn next_double(
         &mut self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Double(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Double(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextDouble",
@@ -931,16 +1123,23 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn next_int(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextInt",
@@ -951,7 +1150,7 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
 }
 impl<'mc> JNIRaw<'mc> for JavaRandomGeneratorStreamableGenerator<'mc> {
@@ -982,7 +1181,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             .into());
         }
         let (valid, name) =
-            env.validate_name(&obj, "java/util/random/RandomGeneratorLeapableGenerator")?;
+            env.validate_name(&obj, "java/util/random/RandomGenerator$LeapableGenerator")?;
         if !valid {
             Err(eyre::eyre!(
         "Invalid argument passed. Expected a JavaRandomGeneratorLeapableGenerator object, got {}",
@@ -993,14 +1192,16 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
     pub fn leap_distance(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "leapDistance", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn leap(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1009,12 +1210,16 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn leaps(
         &mut self,
         arg0: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "leaps",
@@ -1022,8 +1227,9 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn copy_and_leap(
         &mut self,
@@ -1035,23 +1241,27 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("Javajava/util/random/RandomGenerator$LeapableGenerator")?;
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("Javajava/util/random/RandomGenerator$LeapableGenerator");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "of",
             "(Ljava/lang/String;)Ljava/util/random/RandomGenerator$LeapableGenerator;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn copy(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1061,30 +1271,27 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
-
-    pub fn jump(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "jump", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+    //
 
     pub fn jump_distance(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "jumpDistance", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn jumps(
         &mut self,
         arg0: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "jumps",
@@ -1092,8 +1299,9 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn copy_and_jump(
         &mut self,
@@ -1105,14 +1313,18 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn rngs(
         &mut self,
         arg0: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "rngs",
@@ -1120,24 +1332,41 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
+
+    pub fn jump(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "jump", "()V", &[]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
 
     pub fn next_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "nextBoolean", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn next_long(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Long(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextLong",
@@ -1148,16 +1377,23 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
+        Ok(res.j()?)
     }
+    //
 
     pub fn next_float(
         &mut self,
         arg0: std::option::Option<f32>,
         arg1: std::option::Option<f32>,
     ) -> Result<f32, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Float(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Float(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Float(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Float(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextFloat",
@@ -1168,16 +1404,23 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.f().unwrap())
+        Ok(res.f()?)
     }
+    //
 
     pub fn ints(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "ints",
@@ -1188,8 +1431,9 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn ints_with_long(
         &mut self,
@@ -1199,7 +1443,10 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
+        let val_3 = jni::objects::JValueGen::Int(
+            arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "ints",
@@ -1211,8 +1458,9 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn longs(
         &mut self,
@@ -1220,9 +1468,18 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         arg1: std::option::Option<i64>,
         arg2: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Long(arg2.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Long(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_3 = jni::objects::JValueGen::Long(
+            arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "longs",
@@ -1234,16 +1491,23 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn doubles(
         &mut self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Double(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Double(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "doubles",
@@ -1254,8 +1518,9 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn doubles_with_long(
         &mut self,
@@ -1265,7 +1530,10 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let val_2 = jni::objects::JValueGen::Double(arg1.into());
-        let val_3 = jni::objects::JValueGen::Double(arg2.unwrap().into());
+        let val_3 = jni::objects::JValueGen::Double(
+            arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "doubles",
@@ -1277,8 +1545,9 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn next_bytes(&mut self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1287,14 +1556,21 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn next_gaussian(
         &mut self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Double(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Double(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextGaussian",
@@ -1305,32 +1581,41 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn is_deprecated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isDeprecated", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn next_exponential(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "nextExponential", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn next_double(
         &mut self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Double(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Double(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextDouble",
@@ -1341,16 +1626,23 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn next_int(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextInt",
@@ -1361,7 +1653,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
 }
 impl<'mc> JNIRaw<'mc> for JavaRandomGeneratorLeapableGenerator<'mc> {
@@ -1406,22 +1698,30 @@ impl<'mc> JavaRandomGenerator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
     pub fn next_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "nextBoolean", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn next_long(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Long(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextLong",
@@ -1432,16 +1732,23 @@ impl<'mc> JavaRandomGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
+        Ok(res.j()?)
     }
+    //
 
     pub fn next_float(
         &mut self,
         arg0: std::option::Option<f32>,
         arg1: std::option::Option<f32>,
     ) -> Result<f32, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Float(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Float(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Float(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Float(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextFloat",
@@ -1452,16 +1759,23 @@ impl<'mc> JavaRandomGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.f().unwrap())
+        Ok(res.f()?)
     }
+    //
 
     pub fn ints(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "ints",
@@ -1472,8 +1786,9 @@ impl<'mc> JavaRandomGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn ints_with_long(
         &mut self,
@@ -1483,7 +1798,10 @@ impl<'mc> JavaRandomGenerator<'mc> {
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
+        let val_3 = jni::objects::JValueGen::Int(
+            arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "ints",
@@ -1495,8 +1813,9 @@ impl<'mc> JavaRandomGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn longs(
         &mut self,
@@ -1504,9 +1823,18 @@ impl<'mc> JavaRandomGenerator<'mc> {
         arg1: std::option::Option<i64>,
         arg2: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Long(arg2.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Long(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_3 = jni::objects::JValueGen::Long(
+            arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "longs",
@@ -1518,16 +1846,23 @@ impl<'mc> JavaRandomGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn doubles(
         &mut self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Double(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Double(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "doubles",
@@ -1538,8 +1873,9 @@ impl<'mc> JavaRandomGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn doubles_with_long(
         &mut self,
@@ -1549,7 +1885,10 @@ impl<'mc> JavaRandomGenerator<'mc> {
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let val_2 = jni::objects::JValueGen::Double(arg1.into());
-        let val_3 = jni::objects::JValueGen::Double(arg2.unwrap().into());
+        let val_3 = jni::objects::JValueGen::Double(
+            arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "doubles",
@@ -1561,8 +1900,9 @@ impl<'mc> JavaRandomGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn next_bytes(&mut self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1571,14 +1911,21 @@ impl<'mc> JavaRandomGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn next_gaussian(
         &mut self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Double(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Double(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextGaussian",
@@ -1589,32 +1936,41 @@ impl<'mc> JavaRandomGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn is_deprecated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isDeprecated", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn next_exponential(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "nextExponential", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn next_double(
         &mut self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Double(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Double(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextDouble",
@@ -1625,16 +1981,23 @@ impl<'mc> JavaRandomGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn next_int(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextInt",
@@ -1645,35 +2008,41 @@ impl<'mc> JavaRandomGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn default(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("Javajava/util/random/RandomGenerator")?;
+        let cls = jni.find_class("Javajava/util/random/RandomGenerator");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "getDefault",
             "()Ljava/util/random/RandomGenerator;",
             &[],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("Javajava/util/random/RandomGenerator")?;
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("Javajava/util/random/RandomGenerator");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "of",
             "(Ljava/lang/String;)Ljava/util/random/RandomGenerator;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
 }
 impl<'mc> JNIRaw<'mc> for JavaRandomGenerator<'mc> {
@@ -1704,7 +2073,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         }
         let (valid, name) = env.validate_name(
             &obj,
-            "java/util/random/RandomGeneratorArbitrarilyJumpableGenerator",
+            "java/util/random/RandomGenerator$ArbitrarilyJumpableGenerator",
         )?;
         if !valid {
             Err(eyre::eyre!(
@@ -1716,27 +2085,16 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-
-    pub fn jump(
-        &mut self,
-        arg0: std::option::Option<f64>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "jump",
-            "(D)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+    //
 
     pub fn jumps(
         &mut self,
         arg0: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "jumps",
@@ -1744,8 +2102,9 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn jumps_with_long(
         &mut self,
@@ -1753,7 +2112,10 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         arg1: std::option::Option<f64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Double(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "jumps",
@@ -1764,14 +2126,18 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn copy_and_jump(
         &mut self,
         arg0: std::option::Option<f64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Double(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "copyAndJump",
@@ -1779,8 +2145,9 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn jump_power_of_two(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -1793,6 +2160,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn leap(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1801,22 +2169,45 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
+
+    pub fn jump(
+        &mut self,
+        arg0: std::option::Option<f64>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Double(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "jump",
+            "(D)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
 
     pub fn of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
         let cls =
-            &jni.find_class("Javajava/util/random/RandomGenerator$ArbitrarilyJumpableGenerator")?;
+            jni.find_class("Javajava/util/random/RandomGenerator$ArbitrarilyJumpableGenerator");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "of",
             "(Ljava/lang/String;)Ljava/util/random/RandomGenerator$ArbitrarilyJumpableGenerator;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn copy(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1826,22 +2217,27 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn leap_distance(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "leapDistance", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn leaps(
         &mut self,
         arg0: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "leaps",
@@ -1849,8 +2245,9 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn copy_and_leap(
         &mut self,
@@ -1862,22 +2259,27 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn jump_distance(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "jumpDistance", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn rngs(
         &mut self,
         arg0: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "rngs",
@@ -1885,24 +2287,32 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn next_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "nextBoolean", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn next_long(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Long(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextLong",
@@ -1913,16 +2323,23 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
+        Ok(res.j()?)
     }
+    //
 
     pub fn next_float(
         &mut self,
         arg0: std::option::Option<f32>,
         arg1: std::option::Option<f32>,
     ) -> Result<f32, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Float(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Float(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Float(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Float(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextFloat",
@@ -1933,16 +2350,23 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.f().unwrap())
+        Ok(res.f()?)
     }
+    //
 
     pub fn ints(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "ints",
@@ -1953,8 +2377,9 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn ints_with_long(
         &mut self,
@@ -1964,7 +2389,10 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
+        let val_3 = jni::objects::JValueGen::Int(
+            arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "ints",
@@ -1976,8 +2404,9 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn longs(
         &mut self,
@@ -1985,9 +2414,18 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         arg1: std::option::Option<i64>,
         arg2: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Long(arg2.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Long(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_3 = jni::objects::JValueGen::Long(
+            arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "longs",
@@ -1999,16 +2437,23 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn doubles(
         &mut self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Double(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Double(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "doubles",
@@ -2019,8 +2464,9 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn doubles_with_long(
         &mut self,
@@ -2030,7 +2476,10 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let val_2 = jni::objects::JValueGen::Double(arg1.into());
-        let val_3 = jni::objects::JValueGen::Double(arg2.unwrap().into());
+        let val_3 = jni::objects::JValueGen::Double(
+            arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "doubles",
@@ -2042,8 +2491,9 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn next_bytes(&mut self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2052,14 +2502,21 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn next_gaussian(
         &mut self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Double(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Double(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextGaussian",
@@ -2070,32 +2527,41 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn is_deprecated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isDeprecated", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn next_exponential(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "nextExponential", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn next_double(
         &mut self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Double(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Double(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextDouble",
@@ -2106,16 +2572,23 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn next_int(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextInt",
@@ -2126,7 +2599,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
 }
 impl<'mc> JNIRaw<'mc> for JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
@@ -2164,7 +2637,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
             .into());
         }
         let (valid, name) =
-            env.validate_name(&obj, "java/util/random/RandomGeneratorJumpableGenerator")?;
+            env.validate_name(&obj, "java/util/random/RandomGenerator$JumpableGenerator")?;
         if !valid {
             Err(eyre::eyre!(
         "Invalid argument passed. Expected a JavaRandomGeneratorJumpableGenerator object, got {}",
@@ -2175,28 +2648,25 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-
-    pub fn jump(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "jump", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+    //
 
     pub fn jump_distance(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "jumpDistance", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn jumps(
         &mut self,
         arg0: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "jumps",
@@ -2204,8 +2674,9 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn copy_and_jump(
         &mut self,
@@ -2217,14 +2688,18 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn rngs(
         &mut self,
         arg0: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "rngs",
@@ -2232,23 +2707,36 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
+
+    pub fn jump(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "jump", "()V", &[]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
 
     pub fn of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("Javajava/util/random/RandomGenerator$JumpableGenerator")?;
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("Javajava/util/random/RandomGenerator$JumpableGenerator");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "of",
             "(Ljava/lang/String;)Ljava/util/random/RandomGenerator$JumpableGenerator;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn copy(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -2258,24 +2746,32 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn next_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "nextBoolean", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn next_long(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Long(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextLong",
@@ -2286,16 +2782,23 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
+        Ok(res.j()?)
     }
+    //
 
     pub fn next_float(
         &mut self,
         arg0: std::option::Option<f32>,
         arg1: std::option::Option<f32>,
     ) -> Result<f32, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Float(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Float(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Float(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Float(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextFloat",
@@ -2306,16 +2809,23 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.f().unwrap())
+        Ok(res.f()?)
     }
+    //
 
     pub fn ints(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "ints",
@@ -2326,8 +2836,9 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn ints_with_long(
         &mut self,
@@ -2337,7 +2848,10 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
+        let val_3 = jni::objects::JValueGen::Int(
+            arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "ints",
@@ -2349,8 +2863,9 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn longs(
         &mut self,
@@ -2358,9 +2873,18 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         arg1: std::option::Option<i64>,
         arg2: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Long(arg2.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Long(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_3 = jni::objects::JValueGen::Long(
+            arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "longs",
@@ -2372,16 +2896,23 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn doubles(
         &mut self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Double(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Double(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "doubles",
@@ -2392,8 +2923,9 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn doubles_with_long(
         &mut self,
@@ -2403,7 +2935,10 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let val_2 = jni::objects::JValueGen::Double(arg1.into());
-        let val_3 = jni::objects::JValueGen::Double(arg2.unwrap().into());
+        let val_3 = jni::objects::JValueGen::Double(
+            arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "doubles",
@@ -2415,8 +2950,9 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn next_bytes(&mut self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2425,14 +2961,21 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn next_gaussian(
         &mut self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Double(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Double(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextGaussian",
@@ -2443,32 +2986,41 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn is_deprecated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isDeprecated", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn next_exponential(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "nextExponential", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn next_double(
         &mut self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Double(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Double(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextDouble",
@@ -2479,16 +3031,23 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn next_int(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextInt",
@@ -2499,7 +3058,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
 }
 impl<'mc> JNIRaw<'mc> for JavaRandomGeneratorJumpableGenerator<'mc> {

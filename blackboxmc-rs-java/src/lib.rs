@@ -43,22 +43,31 @@ impl<'mc> JavaArrayList<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let cls = &jni.find_class("Javajava/util/ArrayList")?;
-        let res = jni.new_object(cls, "(I)V", &[jni::objects::JValueGen::from(&val_1)])?;
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let cls = jni.find_class("Javajava/util/ArrayList");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, "(I)V", &[jni::objects::JValueGen::from(&val_1)]);
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
+    //
 
-    pub unsafe fn add_with_object(
+    pub fn add_with_object(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = arg1.unwrap();
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "add",
@@ -71,12 +80,16 @@ impl<'mc> JavaArrayList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn remove_with_object(
         &mut self,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "remove",
@@ -84,8 +97,9 @@ impl<'mc> JavaArrayList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn get(
         &mut self,
@@ -99,10 +113,11 @@ impl<'mc> JavaArrayList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -114,26 +129,29 @@ impl<'mc> JavaArrayList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn index_of(
+    pub fn index_of(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -145,8 +163,9 @@ impl<'mc> JavaArrayList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -155,8 +174,9 @@ impl<'mc> JavaArrayList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn last_index_of(
+    pub fn last_index_of(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -168,18 +188,20 @@ impl<'mc> JavaArrayList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn replace_all(
+    pub fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -193,14 +215,16 @@ impl<'mc> JavaArrayList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "size", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn sub_list(
         &mut self,
@@ -219,8 +243,11 @@ impl<'mc> JavaArrayList<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
+
+    //
 
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -230,10 +257,11 @@ impl<'mc> JavaArrayList<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn contains(
+    pub fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -245,8 +273,9 @@ impl<'mc> JavaArrayList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn spliterator(
         &mut self,
@@ -258,16 +287,20 @@ impl<'mc> JavaArrayList<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn add_all_with_collection(
+    pub fn add_all_with_collection(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = arg1.unwrap();
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAll",
@@ -278,10 +311,11 @@ impl<'mc> JavaArrayList<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn set(
+    pub fn set(
         &mut self,
         arg0: i32,
         arg1: jni::objects::JObject<'mc>,
@@ -298,10 +332,11 @@ impl<'mc> JavaArrayList<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn for_each(
+    pub fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -315,6 +350,7 @@ impl<'mc> JavaArrayList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn ensure_capacity(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -327,6 +363,7 @@ impl<'mc> JavaArrayList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn trim_to_size(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -335,8 +372,9 @@ impl<'mc> JavaArrayList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn remove_if(
+    pub fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -348,10 +386,11 @@ impl<'mc> JavaArrayList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn sort(
+    pub fn sort(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -365,8 +404,9 @@ impl<'mc> JavaArrayList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn remove_all(
+    pub fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -378,10 +418,11 @@ impl<'mc> JavaArrayList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn retain_all(
+    pub fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -393,14 +434,18 @@ impl<'mc> JavaArrayList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn list_iterator(
         &mut self,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "listIterator",
@@ -408,8 +453,9 @@ impl<'mc> JavaArrayList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -422,8 +468,9 @@ impl<'mc> JavaArrayList<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
-    pub unsafe fn contains_all(
+    pub fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -435,16 +482,23 @@ impl<'mc> JavaArrayList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -457,6 +511,7 @@ impl<'mc> JavaArrayList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -465,6 +520,7 @@ impl<'mc> JavaArrayList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -473,6 +529,7 @@ impl<'mc> JavaArrayList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -481,6 +538,7 @@ impl<'mc> JavaArrayList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -490,8 +548,9 @@ impl<'mc> JavaArrayList<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn parallel_stream(
         &mut self,
@@ -503,7 +562,7 @@ impl<'mc> JavaArrayList<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
 }
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaArrayList<'mc> {
@@ -551,14 +610,15 @@ impl<'mc> JavaAbstractMap<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub unsafe fn remove_with_object(
+    pub fn remove_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = arg1.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "remove",
@@ -569,10 +629,11 @@ impl<'mc> JavaAbstractMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn get(
+    pub fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -584,10 +645,11 @@ impl<'mc> JavaAbstractMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn put(
+    pub fn put(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -604,10 +666,11 @@ impl<'mc> JavaAbstractMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -619,8 +682,9 @@ impl<'mc> JavaAbstractMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -633,6 +697,7 @@ impl<'mc> JavaAbstractMap<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn values(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -642,16 +707,18 @@ impl<'mc> JavaAbstractMap<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -660,32 +727,36 @@ impl<'mc> JavaAbstractMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "size", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn entry_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "entrySet", "()Ljava/util/Set;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn put_all(
+    pub fn put_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -699,8 +770,9 @@ impl<'mc> JavaAbstractMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn contains_key(
+    pub fn contains_key(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -712,18 +784,20 @@ impl<'mc> JavaAbstractMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn key_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "keySet", "()Ljava/util/Set;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn contains_value(
+    pub fn contains_value(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -735,16 +809,23 @@ impl<'mc> JavaAbstractMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -757,6 +838,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -765,6 +847,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -773,6 +856,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -781,16 +865,17 @@ impl<'mc> JavaAbstractMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn replace_with_object(
+    pub fn replace_with_object(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = arg1.unwrap();
-        let val_3 = arg2.unwrap();
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_3 = arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "replace",
@@ -802,10 +887,11 @@ impl<'mc> JavaAbstractMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn replace_all(
+    pub fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -819,8 +905,9 @@ impl<'mc> JavaAbstractMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn merge(
+    pub fn merge(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -831,10 +918,11 @@ impl<'mc> JavaAbstractMap<'mc> {
         let val_3 = arg2;
         let res = self.jni_ref().call_method(&self.jni_object(),"merge","(Ljava/lang/Object;Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn put_if_absent(
+    pub fn put_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -851,10 +939,11 @@ impl<'mc> JavaAbstractMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn compute(
+    pub fn compute(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -871,10 +960,11 @@ impl<'mc> JavaAbstractMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn for_each(
+    pub fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -888,8 +978,9 @@ impl<'mc> JavaAbstractMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn compute_if_absent(
+    pub fn compute_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -906,10 +997,11 @@ impl<'mc> JavaAbstractMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn get_or_default(
+    pub fn get_or_default(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -926,10 +1018,11 @@ impl<'mc> JavaAbstractMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn compute_if_present(
+    pub fn compute_if_present(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -946,7 +1039,7 @@ impl<'mc> JavaAbstractMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
 }
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaAbstractMap<'mc> {
@@ -954,7 +1047,7 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaAbstractMap<'mc> {
         self.1
     }
 }
-/// A <a href="../../java/util/NavigableSet.html" title="interface in java.util"><code>NavigableSet</code></a> implementation based on a <a title="class in java.util" href="../../java/util/TreeMap.html"><code>TreeMap</code></a>. The elements are ordered using their <a title="interface in java.lang" href="../../java/lang/Comparable.html">natural ordering</a>, or by a <a title="interface in java.util" href="../../java/util/Comparator.html"><code>Comparator</code></a> provided at set creation time, depending on which constructor is used.
+/// A <a href="../../java/util/NavigableSet.html" title="interface in java.util"><code>NavigableSet</code></a> implementation based on a <a title="class in java.util" href="../../java/util/TreeMap.html"><code>TreeMap</code></a>. The elements are ordered using their <a href="../../java/lang/Comparable.html" title="interface in java.lang">natural ordering</a>, or by a <a href="../../java/util/Comparator.html" title="interface in java.util"><code>Comparator</code></a> provided at set creation time, depending on which constructor is used.
 /// <p>This implementation provides guaranteed log(n) time cost for the basic operations (<code>add</code>, <code>remove</code> and <code>contains</code>).</p>
 /// <p>Note that the ordering maintained by a set (whether or not an explicit comparator is provided) must be <i>consistent with equals</i> if it is to correctly implement the <code>Set</code> interface. (See <code>Comparable</code> or <code>Comparator</code> for a precise definition of <i>consistent with equals</i>.) This is so because the <code>Set</code> interface is defined in terms of the <code>equals</code> operation, but a <code>TreeSet</code> instance performs all element comparisons using its <code>compareTo</code> (or <code>compare</code>) method, so two elements that are deemed equal by this method are, from the standpoint of the set, equal. The behavior of a set <i>is</i> well-defined even if its ordering is inconsistent with equals; it just fails to obey the general contract of the <code>Set</code> interface.</p>
 /// <p><strong>Note that this implementation is not synchronized.</strong> If multiple threads access a tree set concurrently, and at least one of the threads modifies the set, it <i>must</i> be synchronized externally. This is typically accomplished by synchronizing on some object that naturally encapsulates the set. If no such object exists, the set should be "wrapped" using the <a href="../../java/util/Collections.html#synchronizedSortedSet-java.util.SortedSet-"><code>Collections.synchronizedSortedSet</code></a> method. This is best done at creation time, to prevent accidental unsynchronized access to the set:</p>
@@ -994,66 +1087,39 @@ impl<'mc> JavaTreeSet<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub unsafe fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let cls = &jni.find_class("Javajava/util/TreeSet")?;
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let cls = jni.find_class("Javajava/util/TreeSet");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Ljava/util/SortedSet;)V",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
-    pub unsafe fn new_with_comparator(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn new_with_comparator(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let cls = &jni.find_class("Javajava/util/TreeSet")?;
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let cls = jni.find_class("Javajava/util/TreeSet");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Ljava/util/Comparator;)V",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
+    //
 
-    pub fn poll_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "pollFirst",
-            "()Ljava/lang/Object;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub fn poll_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "pollLast", "()Ljava/lang/Object;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub fn descending_iterator(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "descendingIterator",
-            "()Ljava/util/Iterator;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub unsafe fn sub_set_with_object(
+    pub fn sub_set_with_object(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<bool>,
@@ -1062,10 +1128,16 @@ impl<'mc> JavaTreeSet<'mc> {
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         // 1
-        let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
-        let val_3 = arg2.unwrap();
+        let val_2 = jni::objects::JValueGen::Bool(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_3 = arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         // 1
-        let val_4 = jni::objects::JValueGen::Bool(arg3.unwrap().into());
+        let val_4 = jni::objects::JValueGen::Bool(
+            arg3.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "subSet",
@@ -1078,17 +1150,21 @@ impl<'mc> JavaTreeSet<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn head_set_with_object(
+    pub fn head_set_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<bool>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         // 0
-        let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Bool(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "headSet",
@@ -1099,17 +1175,21 @@ impl<'mc> JavaTreeSet<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn tail_set_with_object(
+    pub fn tail_set_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<bool>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         // 0
-        let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Bool(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "tailSet",
@@ -1120,8 +1200,9 @@ impl<'mc> JavaTreeSet<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn descending_set(
         &mut self,
@@ -1133,10 +1214,11 @@ impl<'mc> JavaTreeSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn ceiling(
+    pub fn ceiling(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -1148,10 +1230,11 @@ impl<'mc> JavaTreeSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn higher(
+    pub fn higher(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -1163,10 +1246,46 @@ impl<'mc> JavaTreeSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn add(
+    pub fn poll_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "pollFirst",
+            "()Ljava/lang/Object;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn poll_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "pollLast", "()Ljava/lang/Object;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn descending_iterator(
+        &mut self,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "descendingIterator",
+            "()Ljava/util/Iterator;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn add(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1178,10 +1297,11 @@ impl<'mc> JavaTreeSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn remove(
+    pub fn remove(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1193,18 +1313,20 @@ impl<'mc> JavaTreeSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn floor(
+    pub fn floor(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -1216,8 +1338,9 @@ impl<'mc> JavaTreeSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1226,22 +1349,25 @@ impl<'mc> JavaTreeSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "size", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1251,10 +1377,11 @@ impl<'mc> JavaTreeSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn contains(
+    pub fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1266,16 +1393,18 @@ impl<'mc> JavaTreeSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "last", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn spliterator(
         &mut self,
@@ -1287,10 +1416,11 @@ impl<'mc> JavaTreeSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn add_all(
+    pub fn add_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1302,18 +1432,20 @@ impl<'mc> JavaTreeSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "first", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn lower(
+    pub fn lower(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -1325,8 +1457,9 @@ impl<'mc> JavaTreeSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn comparator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1336,10 +1469,11 @@ impl<'mc> JavaTreeSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1351,18 +1485,20 @@ impl<'mc> JavaTreeSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn remove_all(
+    pub fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1374,8 +1510,9 @@ impl<'mc> JavaTreeSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -1388,8 +1525,11 @@ impl<'mc> JavaTreeSet<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
-    pub unsafe fn retain_all(
+    //
+
+    pub fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1401,10 +1541,11 @@ impl<'mc> JavaTreeSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn contains_all(
+    pub fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1416,16 +1557,23 @@ impl<'mc> JavaTreeSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -1438,6 +1586,7 @@ impl<'mc> JavaTreeSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -1446,6 +1595,7 @@ impl<'mc> JavaTreeSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1454,6 +1604,7 @@ impl<'mc> JavaTreeSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1462,6 +1613,7 @@ impl<'mc> JavaTreeSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1471,10 +1623,11 @@ impl<'mc> JavaTreeSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn remove_if(
+    pub fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1486,8 +1639,9 @@ impl<'mc> JavaTreeSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn parallel_stream(
         &mut self,
@@ -1499,10 +1653,11 @@ impl<'mc> JavaTreeSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn for_each(
+    pub fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1524,9 +1679,9 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaTreeSet<'mc> {
 }
 /// The <code>Vector</code> class implements a growable array of objects. Like an array, it contains components that can be accessed using an integer index. However, the size of a <code>Vector</code> can grow or shrink as needed to accommodate adding and removing items after the <code>Vector</code> has been created.
 /// <p>Each vector tries to optimize storage management by maintaining a <code>capacity</code> and a <code>capacityIncrement</code>. The <code>capacity</code> is always at least as large as the vector size; it is usually larger because as components are added to the vector, the vector's storage increases in chunks the size of <code>capacityIncrement</code>. An application can increase the capacity of a vector before inserting a large number of components; this reduces the amount of incremental reallocation.</p>
-/// <p><a name="fail-fast"> The iterators returned by this class's </a><a href="../../java/util/Vector.html#iterator--"><code>iterator</code></a> and <a href="../../java/util/Vector.html#listIterator-int-"><code>listIterator</code></a> methods are <em>fail-fast</em>: if the vector is structurally modified at any time after the iterator is created, in any way except through the iterator's own <a href="../../java/util/ListIterator.html#remove--"><code>remove</code></a> or <a href="../../java/util/ListIterator.html#add-E-"><code>add</code></a> methods, the iterator will throw a <a title="class in java.util" href="../../java/util/ConcurrentModificationException.html"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future. The <a href="../../java/util/Enumeration.html" title="interface in java.util"><code>Enumerations</code></a> returned by the <a href="../../java/util/Vector.html#elements--"><code>elements</code></a> method are <em>not</em> fail-fast.</p>
+/// <p><a name="fail-fast"> The iterators returned by this class's </a><a href="../../java/util/Vector.html#iterator--"><code>iterator</code></a> and <a href="../../java/util/Vector.html#listIterator-int-"><code>listIterator</code></a> methods are <em>fail-fast</em>: if the vector is structurally modified at any time after the iterator is created, in any way except through the iterator's own <a href="../../java/util/ListIterator.html#remove--"><code>remove</code></a> or <a href="../../java/util/ListIterator.html#add-E-"><code>add</code></a> methods, the iterator will throw a <a title="class in java.util" href="../../java/util/ConcurrentModificationException.html"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future. The <a title="interface in java.util" href="../../java/util/Enumeration.html"><code>Enumerations</code></a> returned by the <a href="../../java/util/Vector.html#elements--"><code>elements</code></a> method are <em>not</em> fail-fast.</p>
 /// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <code>ConcurrentModificationException</code> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
-/// <p>As of the Java 2 platform v1.2, this class was retrofitted to implement the <a href="../../java/util/List.html" title="interface in java.util"><code>List</code></a> interface, making it a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>. Unlike the new collection implementations, <code>Vector</code> is synchronized. If a thread-safe implementation is not needed, it is recommended to use <a title="class in java.util" href="../../java/util/ArrayList.html"><code>ArrayList</code></a> in place of <code>Vector</code>.</p>
+/// <p>As of the Java 2 platform v1.2, this class was retrofitted to implement the <a href="../../java/util/List.html" title="interface in java.util"><code>List</code></a> interface, making it a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>. Unlike the new collection implementations, <code>Vector</code> is synchronized. If a thread-safe implementation is not needed, it is recommended to use <a href="../../java/util/ArrayList.html" title="class in java.util"><code>ArrayList</code></a> in place of <code>Vector</code>.</p>
 pub struct JavaVector<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1559,27 +1714,33 @@ impl<'mc> JavaVector<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub unsafe fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let cls = &jni.find_class("Javajava/util/Vector")?;
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let cls = jni.find_class("Javajava/util/Vector");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Ljava/util/Collection;)V",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
     pub fn new_with_int(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let cls = &jni.find_class("Javajava/util/Vector")?;
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let cls = jni.find_class("Javajava/util/Vector");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(II)V",
@@ -1587,23 +1748,11 @@ impl<'mc> JavaVector<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
-
-    pub unsafe fn copy_into(
-        &mut self,
-        arg0: Vec<jni::objects::JObject<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "copyInto",
-            "(Ljava/lang/Object;)V",
-            &[],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+    //
 
     pub fn set_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -1616,6 +1765,22 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
+
+    pub fn copy_into(
+        &mut self,
+        arg0: Vec<jni::objects::JObject<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "copyInto",
+            "(Ljava/lang/Object;)V",
+            &[],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
 
     pub fn remove_element_at(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -1628,8 +1793,9 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn remove_element(
+    pub fn remove_element(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1641,10 +1807,11 @@ impl<'mc> JavaVector<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn insert_element_at(
+    pub fn insert_element_at(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: i32,
@@ -1663,6 +1830,7 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn remove_all_elements(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1671,6 +1839,7 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn first_element(
         &mut self,
@@ -1682,8 +1851,9 @@ impl<'mc> JavaVector<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn last_element(
         &mut self,
@@ -1695,10 +1865,11 @@ impl<'mc> JavaVector<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn set_element_at(
+    pub fn set_element_at(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: i32,
@@ -1717,8 +1888,9 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn add_element(
+    pub fn add_element(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1732,14 +1904,18 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn add_with_object(
+    pub fn add_with_object(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = arg1.unwrap();
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "add",
@@ -1752,12 +1928,13 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn remove_with_int(
+    pub fn remove_with_int(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "remove",
@@ -1765,8 +1942,9 @@ impl<'mc> JavaVector<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn get(
         &mut self,
@@ -1780,10 +1958,11 @@ impl<'mc> JavaVector<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1795,8 +1974,9 @@ impl<'mc> JavaVector<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -1809,30 +1989,36 @@ impl<'mc> JavaVector<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn index_of_with_object(
+    pub fn index_of_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "indexOf",
@@ -1843,8 +2029,9 @@ impl<'mc> JavaVector<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1853,14 +2040,18 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn last_index_of_with_object(
+    pub fn last_index_of_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "lastIndexOf",
@@ -1871,18 +2062,20 @@ impl<'mc> JavaVector<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn replace_all(
+    pub fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1896,14 +2089,16 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "size", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn sub_list(
         &mut self,
@@ -1922,8 +2117,11 @@ impl<'mc> JavaVector<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
+
+    //
 
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1933,10 +2131,11 @@ impl<'mc> JavaVector<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn contains(
+    pub fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1948,8 +2147,9 @@ impl<'mc> JavaVector<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn elements(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1959,8 +2159,9 @@ impl<'mc> JavaVector<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn spliterator(
         &mut self,
@@ -1972,16 +2173,20 @@ impl<'mc> JavaVector<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn add_all_with_collection(
+    pub fn add_all_with_collection(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = arg1.unwrap();
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAll",
@@ -1992,10 +2197,11 @@ impl<'mc> JavaVector<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn set(
+    pub fn set(
         &mut self,
         arg0: i32,
         arg1: jni::objects::JObject<'mc>,
@@ -2012,10 +2218,11 @@ impl<'mc> JavaVector<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn for_each(
+    pub fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2029,14 +2236,16 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn capacity(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "capacity", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn ensure_capacity(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -2049,6 +2258,7 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn trim_to_size(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2057,6 +2267,7 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn element_at(
         &mut self,
@@ -2070,10 +2281,11 @@ impl<'mc> JavaVector<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn remove_if(
+    pub fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2085,10 +2297,11 @@ impl<'mc> JavaVector<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn sort(
+    pub fn sort(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2102,8 +2315,9 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn remove_all(
+    pub fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2115,10 +2329,11 @@ impl<'mc> JavaVector<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn retain_all(
+    pub fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2130,14 +2345,18 @@ impl<'mc> JavaVector<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn list_iterator(
         &mut self,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "listIterator",
@@ -2145,10 +2364,11 @@ impl<'mc> JavaVector<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn contains_all(
+    pub fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2160,16 +2380,23 @@ impl<'mc> JavaVector<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -2182,6 +2409,7 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -2190,6 +2418,7 @@ impl<'mc> JavaVector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2198,6 +2427,7 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2206,6 +2436,7 @@ impl<'mc> JavaVector<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -2215,8 +2446,9 @@ impl<'mc> JavaVector<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn parallel_stream(
         &mut self,
@@ -2228,7 +2460,7 @@ impl<'mc> JavaVector<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
 }
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaVector<'mc> {
@@ -2283,176 +2515,6 @@ impl<'mc> JNIRaw<'mc> for JavaRandomAccess<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// An Entry maintaining an immutable key and value. This class does not support method <tt>setValue</tt>. This class may be convenient in methods that return thread-safe snapshots of key-value mappings.
-pub struct JavaAbstractMapSimpleImmutableEntry<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaAbstractMapSimpleImmutableEntry<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JavaAbstractMapSimpleImmutableEntry<'mc> {
-    pub fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!(
-                "Tried to instantiate JavaAbstractMapSimpleImmutableEntry from null object."
-            )
-            .into());
-        }
-        let (valid, name) = env.validate_name(&obj, "java/util/AbstractMapSimpleImmutableEntry")?;
-        if !valid {
-            Err(eyre::eyre!(
-        "Invalid argument passed. Expected a JavaAbstractMapSimpleImmutableEntry object, got {}",
-        name
-    )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-    pub unsafe fn new_with_mapentry(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<jni::objects::JObject<'mc>>,
-        arg1: std::option::Option<jni::objects::JObject<'mc>>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = arg1.unwrap();
-        let cls = &jni.find_class("Javajava/util/AbstractMap$SimpleImmutableEntry")?;
-        let res = jni.new_object(
-            cls,
-            "(Ljava/lang/Object;Ljava/lang/Object;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        Ok(res)
-    }
-
-    pub unsafe fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-
-    pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getValue", "()Ljava/lang/Object;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub fn key(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getKey", "()Ljava/lang/Object;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub unsafe fn set_value(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setValue",
-            "(Ljava/lang/Object;)Ljava/lang/Object;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub fn wait(
-        &mut self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "wait",
-            "(JI)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-}
-impl<'mc> Into<jni::objects::JObject<'mc>> for JavaAbstractMapSimpleImmutableEntry<'mc> {
-    fn into(self) -> jni::objects::JObject<'mc> {
-        self.1
-    }
-}
 /// An object that maps keys to values. A map cannot contain duplicate keys; each key can map to at most one value.
 /// <p>This interface takes the place of the <tt>Dictionary</tt> class, which was a totally abstract class rather than an interface.</p>
 /// <p>The <tt>Map</tt> interface provides three <i>collection views</i>, which allow a map's contents to be viewed as a set of keys, collection of values, or set of key-value mappings. The <i>order</i> of a map is defined as the order in which the iterators on the map's collection views return their elements. Some map implementations, like the <tt>TreeMap</tt> class, make specific guarantees as to their order; others, like the <tt>HashMap</tt> class, do not.</p>
@@ -2460,7 +2522,7 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaAbstractMapSimpleImmutableEnt
 /// <p>All general-purpose map implementation classes should provide two "standard" constructors: a void (no arguments) constructor which creates an empty map, and a constructor with a single argument of type <tt>Map</tt>, which creates a new map with the same key-value mappings as its argument. In effect, the latter constructor allows the user to copy any map, producing an equivalent map of the desired class. There is no way to enforce this recommendation (as interfaces cannot contain constructors) but all of the general-purpose map implementations in the JDK comply.</p>
 /// <p>The "destructive" methods contained in this interface, that is, the methods that modify the map on which they operate, are specified to throw <tt>UnsupportedOperationException</tt> if this map does not support the operation. If this is the case, these methods may, but are not required to, throw an <tt>UnsupportedOperationException</tt> if the invocation would have no effect on the map. For example, invoking the <a href="../../java/util/Map.html#putAll-java.util.Map-"><code>putAll(Map)</code></a> method on an unmodifiable map may, but is not required to, throw the exception if the map whose mappings are to be "superimposed" is empty.</p>
 /// <p>Some map implementations have restrictions on the keys and values they may contain. For example, some implementations prohibit null keys and values, and some have restrictions on the types of their keys. Attempting to insert an ineligible key or value throws an unchecked exception, typically <tt>NullPointerException</tt> or <tt>ClassCastException</tt>. Attempting to query the presence of an ineligible key or value may throw an exception, or it may simply return false; some implementations will exhibit the former behavior and some will exhibit the latter. More generally, attempting an operation on an ineligible key or value whose completion would not result in the insertion of an ineligible element into the map may throw an exception or it may succeed, at the option of the implementation. Such exceptions are marked as "optional" in the specification for this interface.</p>
-/// <p>Many methods in Collections Framework interfaces are defined in terms of the <a href="../../java/lang/Object.html#equals-java.lang.Object-"><code>equals</code></a> method. For example, the specification for the <a href="../../java/util/Map.html#containsKey-java.lang.Object-"><code>containsKey(Object key)</code></a> method says: "returns <tt>true</tt> if and only if this map contains a mapping for a key <tt>k</tt> such that <tt>(key==null ? k==null : key.equals(k))</tt>." This specification should <i>not</i> be construed to imply that invoking <tt>Map.containsKey</tt> with a non-null argument <tt>key</tt> will cause <tt>key.equals(k)</tt> to be invoked for any key <tt>k</tt>. Implementations are free to implement optimizations whereby the <tt>equals</tt> invocation is avoided, for example, by first comparing the hash codes of the two keys. (The <a href="../../java/lang/Object.html#hashCode--"><code>Object.hashCode()</code></a> specification guarantees that two objects with unequal hash codes cannot be equal.) More generally, implementations of the various Collections Framework interfaces are free to take advantage of the specified behavior of underlying <a href="../../java/lang/Object.html" title="class in java.lang"><code>Object</code></a> methods wherever the implementor deems it appropriate.</p>
+/// <p>Many methods in Collections Framework interfaces are defined in terms of the <a href="../../java/lang/Object.html#equals-java.lang.Object-"><code>equals</code></a> method. For example, the specification for the <a href="../../java/util/Map.html#containsKey-java.lang.Object-"><code>containsKey(Object key)</code></a> method says: "returns <tt>true</tt> if and only if this map contains a mapping for a key <tt>k</tt> such that <tt>(key==null ? k==null : key.equals(k))</tt>." This specification should <i>not</i> be construed to imply that invoking <tt>Map.containsKey</tt> with a non-null argument <tt>key</tt> will cause <tt>key.equals(k)</tt> to be invoked for any key <tt>k</tt>. Implementations are free to implement optimizations whereby the <tt>equals</tt> invocation is avoided, for example, by first comparing the hash codes of the two keys. (The <a href="../../java/lang/Object.html#hashCode--"><code>Object.hashCode()</code></a> specification guarantees that two objects with unequal hash codes cannot be equal.) More generally, implementations of the various Collections Framework interfaces are free to take advantage of the specified behavior of underlying <a title="class in java.lang" href="../../java/lang/Object.html"><code>Object</code></a> methods wherever the implementor deems it appropriate.</p>
 /// <p>Some map operations which perform recursive traversal of the map may fail with an exception for self-referential instances where the map directly or indirectly contains itself. This includes the <code>clone()</code>, <code>equals()</code>, <code>hashCode()</code> and <code>toString()</code> methods. Implementations may optionally handle the self-referential scenario, however most current implementations do not do so.</p>
 /// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 ///
@@ -2488,14 +2550,15 @@ impl<'mc> JavaMap<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub unsafe fn remove_with_object(
+    pub fn remove_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = arg1.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "remove",
@@ -2506,10 +2569,11 @@ impl<'mc> JavaMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn get(
+    pub fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -2521,10 +2585,11 @@ impl<'mc> JavaMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn put(
+    pub fn put(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -2541,10 +2606,11 @@ impl<'mc> JavaMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2556,8 +2622,9 @@ impl<'mc> JavaMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn values(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -2567,31 +2634,36 @@ impl<'mc> JavaMap<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn copy_of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn copy_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let cls = &jni.find_class("Javajava/util/Map")?;
+        let cls = jni.find_class("Javajava/util/Map");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "copyOf",
             "(Ljava/util/Map;)Ljava/util/Map;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2600,24 +2672,26 @@ impl<'mc> JavaMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn replace_with_object(
+    pub fn replace_with_object(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = arg1.unwrap();
-        let val_3 = arg2.unwrap();
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_3 = arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "replace",
@@ -2629,10 +2703,11 @@ impl<'mc> JavaMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn replace_all(
+    pub fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2646,17 +2721,19 @@ impl<'mc> JavaMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "size", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -2678,33 +2755,36 @@ impl<'mc> JavaMap<'mc> {
         arg18: std::option::Option<jni::objects::JObject<'mc>>,
         arg19: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = arg1.unwrap();
-        let val_3 = arg2.unwrap();
-        let val_4 = arg3.unwrap();
-        let val_5 = arg4.unwrap();
-        let val_6 = arg5.unwrap();
-        let val_7 = arg6.unwrap();
-        let val_8 = arg7.unwrap();
-        let val_9 = arg8.unwrap();
-        let val_10 = arg9.unwrap();
-        let val_11 = arg10.unwrap();
-        let val_12 = arg11.unwrap();
-        let val_13 = arg12.unwrap();
-        let val_14 = arg13.unwrap();
-        let val_15 = arg14.unwrap();
-        let val_16 = arg15.unwrap();
-        let val_17 = arg16.unwrap();
-        let val_18 = arg17.unwrap();
-        let val_19 = arg18.unwrap();
-        let val_20 = arg19.unwrap();
-        let cls = &jni.find_class("Javajava/util/Map")?;
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_3 = arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_4 = arg3.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_5 = arg4.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_6 = arg5.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_7 = arg6.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_8 = arg7.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_9 = arg8.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_10 = arg9.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_11 = arg10.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_12 = arg11.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_13 = arg12.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_14 = arg13.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_15 = arg14.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_16 = arg15.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_17 = arg16.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_18 = arg17.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_19 = arg18.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_20 = arg19.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let cls = jni.find_class("Javajava/util/Map");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls,"of",
-"(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6),jni::objects::JValueGen::from(&val_7),jni::objects::JValueGen::from(&val_8),jni::objects::JValueGen::from(&val_9),jni::objects::JValueGen::from(&val_10),jni::objects::JValueGen::from(&val_11),jni::objects::JValueGen::from(&val_12),jni::objects::JValueGen::from(&val_13),jni::objects::JValueGen::from(&val_14),jni::objects::JValueGen::from(&val_15),jni::objects::JValueGen::from(&val_16),jni::objects::JValueGen::from(&val_17),jni::objects::JValueGen::from(&val_18),jni::objects::JValueGen::from(&val_19),jni::objects::JValueGen::from(&val_20)])?;
-        Ok(res.l().unwrap())
+"(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6),jni::objects::JValueGen::from(&val_7),jni::objects::JValueGen::from(&val_8),jni::objects::JValueGen::from(&val_9),jni::objects::JValueGen::from(&val_10),jni::objects::JValueGen::from(&val_11),jni::objects::JValueGen::from(&val_12),jni::objects::JValueGen::from(&val_13),jni::objects::JValueGen::from(&val_14),jni::objects::JValueGen::from(&val_15),jni::objects::JValueGen::from(&val_16),jni::objects::JValueGen::from(&val_17),jni::objects::JValueGen::from(&val_18),jni::objects::JValueGen::from(&val_19),jni::objects::JValueGen::from(&val_20)]);
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn merge(
+    pub fn merge(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -2715,18 +2795,20 @@ impl<'mc> JavaMap<'mc> {
         let val_3 = arg2;
         let res = self.jni_ref().call_method(&self.jni_object(),"merge","(Ljava/lang/Object;Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn entry_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "entrySet", "()Ljava/util/Set;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn put_all(
+    pub fn put_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2740,8 +2822,9 @@ impl<'mc> JavaMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn put_if_absent(
+    pub fn put_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -2758,10 +2841,11 @@ impl<'mc> JavaMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn compute(
+    pub fn compute(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -2778,17 +2862,19 @@ impl<'mc> JavaMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn entry(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn entry(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
-        let cls = &jni.find_class("Javajava/util/Map$Entry")?;
+        let cls = jni.find_class("Javajava/util/Map$Entry");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "entry",
@@ -2797,11 +2883,13 @@ impl<'mc> JavaMap<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn for_each(
+    pub fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2815,8 +2903,9 @@ impl<'mc> JavaMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn contains_key(
+    pub fn contains_key(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2828,10 +2917,11 @@ impl<'mc> JavaMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn compute_if_absent(
+    pub fn compute_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -2848,18 +2938,20 @@ impl<'mc> JavaMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn key_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "keySet", "()Ljava/util/Set;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn contains_value(
+    pub fn contains_value(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2871,10 +2963,11 @@ impl<'mc> JavaMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn get_or_default(
+    pub fn get_or_default(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -2891,10 +2984,11 @@ impl<'mc> JavaMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn compute_if_present(
+    pub fn compute_if_present(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -2911,21 +3005,24 @@ impl<'mc> JavaMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn of_entries(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn of_entries(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: Vec<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("Javajava/util/Map")?;
+        let cls = jni.find_class("Javajava/util/Map");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "ofEntries",
             "(Ljava/util/Map$Entry;)Ljava/util/Map;",
             &[],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
 }
 impl<'mc> JNIRaw<'mc> for JavaMap<'mc> {
@@ -2982,22 +3079,31 @@ impl<'mc> JavaWeakHashMap<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let cls = &jni.find_class("Javajava/util/WeakHashMap")?;
-        let res = jni.new_object(cls, "(I)V", &[jni::objects::JValueGen::from(&val_1)])?;
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let cls = jni.find_class("Javajava/util/WeakHashMap");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, "(I)V", &[jni::objects::JValueGen::from(&val_1)]);
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
     pub fn new_with_int(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: std::option::Option<f32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Float(arg1.unwrap().into());
-        let cls = &jni.find_class("Javajava/util/WeakHashMap")?;
+        let val_2 = jni::objects::JValueGen::Float(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let cls = jni.find_class("Javajava/util/WeakHashMap");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(IF)V",
@@ -3005,17 +3111,19 @@ impl<'mc> JavaWeakHashMap<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
+    //
 
-    pub unsafe fn remove_with_object(
+    pub fn remove_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = arg1.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "remove",
@@ -3026,10 +3134,11 @@ impl<'mc> JavaWeakHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn get(
+    pub fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -3041,10 +3150,11 @@ impl<'mc> JavaWeakHashMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn put(
+    pub fn put(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -3061,8 +3171,9 @@ impl<'mc> JavaWeakHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn values(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -3072,8 +3183,9 @@ impl<'mc> JavaWeakHashMap<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -3082,16 +3194,18 @@ impl<'mc> JavaWeakHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn replace_all(
+    pub fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3105,24 +3219,27 @@ impl<'mc> JavaWeakHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "size", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn entry_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "entrySet", "()Ljava/util/Set;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn put_all(
+    pub fn put_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3136,8 +3253,9 @@ impl<'mc> JavaWeakHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn for_each(
+    pub fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3151,8 +3269,9 @@ impl<'mc> JavaWeakHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn contains_key(
+    pub fn contains_key(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3164,18 +3283,20 @@ impl<'mc> JavaWeakHashMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn key_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "keySet", "()Ljava/util/Set;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn contains_value(
+    pub fn contains_value(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3187,10 +3308,11 @@ impl<'mc> JavaWeakHashMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3202,8 +3324,9 @@ impl<'mc> JavaWeakHashMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -3216,22 +3339,30 @@ impl<'mc> JavaWeakHashMap<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -3244,6 +3375,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -3252,6 +3384,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -3260,6 +3393,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -3268,16 +3402,17 @@ impl<'mc> JavaWeakHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn replace_with_object(
+    pub fn replace_with_object(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = arg1.unwrap();
-        let val_3 = arg2.unwrap();
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_3 = arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "replace",
@@ -3289,10 +3424,11 @@ impl<'mc> JavaWeakHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn merge(
+    pub fn merge(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -3303,10 +3439,11 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let val_3 = arg2;
         let res = self.jni_ref().call_method(&self.jni_object(),"merge","(Ljava/lang/Object;Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn put_if_absent(
+    pub fn put_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -3323,10 +3460,11 @@ impl<'mc> JavaWeakHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn compute(
+    pub fn compute(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -3343,10 +3481,11 @@ impl<'mc> JavaWeakHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn compute_if_absent(
+    pub fn compute_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -3363,10 +3502,11 @@ impl<'mc> JavaWeakHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn get_or_default(
+    pub fn get_or_default(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -3383,10 +3523,11 @@ impl<'mc> JavaWeakHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn compute_if_present(
+    pub fn compute_if_present(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -3403,7 +3544,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
 }
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaWeakHashMap<'mc> {
@@ -3442,8 +3583,9 @@ impl<'mc> JavaSet<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub unsafe fn add(
+    pub fn add(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3455,10 +3597,11 @@ impl<'mc> JavaSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn remove(
+    pub fn remove(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3470,10 +3613,11 @@ impl<'mc> JavaSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3485,31 +3629,36 @@ impl<'mc> JavaSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn copy_of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn copy_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let cls = &jni.find_class("Javajava/util/Set")?;
+        let cls = jni.find_class("Javajava/util/Set");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "copyOf",
             "(Ljava/util/Collection;)Ljava/util/Set;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -3518,22 +3667,27 @@ impl<'mc> JavaSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "size", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
+
+    //
 
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -3543,20 +3697,24 @@ impl<'mc> JavaSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("Javajava/util/Set")?;
-        let res = jni.call_static_method(cls, "of", "(Ljava/lang/Object;)Ljava/util/Set;", &[])?;
-        Ok(res.l().unwrap())
+        let cls = jni.find_class("Javajava/util/Set");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "of", "(Ljava/lang/Object;)Ljava/util/Set;", &[]);
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn of_with_object(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn of_with_object(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: jni::objects::JObject<'mc>,
@@ -3577,14 +3735,17 @@ impl<'mc> JavaSet<'mc> {
         let val_7 = arg6;
         let val_8 = arg7;
         let val_9 = arg8;
-        let val_10 = arg9.unwrap();
-        let cls = &jni.find_class("Javajava/util/Set")?;
+        let val_10 = arg9.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let cls = jni.find_class("Javajava/util/Set");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls,"of",
-"(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Set;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6),jni::objects::JValueGen::from(&val_7),jni::objects::JValueGen::from(&val_8),jni::objects::JValueGen::from(&val_9),jni::objects::JValueGen::from(&val_10)])?;
-        Ok(res.l().unwrap())
+"(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Set;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6),jni::objects::JValueGen::from(&val_7),jni::objects::JValueGen::from(&val_8),jni::objects::JValueGen::from(&val_9),jni::objects::JValueGen::from(&val_10)]);
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn contains(
+    pub fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3596,8 +3757,9 @@ impl<'mc> JavaSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn spliterator(
         &mut self,
@@ -3609,10 +3771,11 @@ impl<'mc> JavaSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn add_all(
+    pub fn add_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3624,10 +3787,11 @@ impl<'mc> JavaSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn remove_all(
+    pub fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3639,10 +3803,11 @@ impl<'mc> JavaSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn retain_all(
+    pub fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3654,10 +3819,11 @@ impl<'mc> JavaSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn contains_all(
+    pub fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3669,8 +3835,9 @@ impl<'mc> JavaSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -3680,10 +3847,11 @@ impl<'mc> JavaSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn remove_if(
+    pub fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3695,8 +3863,9 @@ impl<'mc> JavaSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn parallel_stream(
         &mut self,
@@ -3708,10 +3877,11 @@ impl<'mc> JavaSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn for_each(
+    pub fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3749,7 +3919,7 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaSet<'mc> {
 /// <li><a name="mime"><b>MIME</b></a>
 /// <p>Uses the "The Base64 Alphabet" as specified in Table 1 of RFC 2045 for encoding and decoding operation. The encoded output must be represented in lines of no more than 76 characters each and uses a carriage return <code>'\r'</code> followed immediately by a linefeed <code>'\n'</code> as the line separator. No line separator is added to the end of the encoded output. All line separators or other characters not found in the base64 alphabet table are ignored in decoding operation.</p></li>
 /// </ul>
-/// <p>Unless otherwise noted, passing a <code>null</code> argument to a method of this class will cause a <a title="class in java.lang" href="../../java/lang/NullPointerException.html"><code>NullPointerException</code></a> to be thrown.</p>
+/// <p>Unless otherwise noted, passing a <code>null</code> argument to a method of this class will cause a <a href="../../java/lang/NullPointerException.html" title="class in java.lang"><code>NullPointerException</code></a> to be thrown.</p>
 pub struct JavaBase64<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3782,73 +3952,96 @@ impl<'mc> JavaBase64<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
     pub fn encoder(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("Javajava/util/Base64$Encoder")?;
-        let res = jni.call_static_method(cls, "getEncoder", "()Ljava/util/Base64$Encoder;", &[])?;
-        Ok(res.l().unwrap())
+        let cls = jni.find_class("Javajava/util/Base64$Encoder");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "getEncoder", "()Ljava/util/Base64$Encoder;", &[]);
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn url_encoder(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("Javajava/util/Base64$Encoder")?;
-        let res =
-            jni.call_static_method(cls, "getUrlEncoder", "()Ljava/util/Base64$Encoder;", &[])?;
-        Ok(res.l().unwrap())
+        let cls = jni.find_class("Javajava/util/Base64$Encoder");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "getUrlEncoder", "()Ljava/util/Base64$Encoder;", &[]);
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn get_mime_encoder(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: Vec<i8>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let cls = &jni.find_class("Javajava/util/Base64$Encoder")?;
+        let cls = jni.find_class("Javajava/util/Base64$Encoder");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "getMimeEncoder",
             "(IB)Ljava/util/Base64$Encoder;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn decoder(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("Javajava/util/Base64$Decoder")?;
-        let res = jni.call_static_method(cls, "getDecoder", "()Ljava/util/Base64$Decoder;", &[])?;
-        Ok(res.l().unwrap())
+        let cls = jni.find_class("Javajava/util/Base64$Decoder");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "getDecoder", "()Ljava/util/Base64$Decoder;", &[]);
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn url_decoder(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("Javajava/util/Base64$Decoder")?;
-        let res =
-            jni.call_static_method(cls, "getUrlDecoder", "()Ljava/util/Base64$Decoder;", &[])?;
-        Ok(res.l().unwrap())
+        let cls = jni.find_class("Javajava/util/Base64$Decoder");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "getUrlDecoder", "()Ljava/util/Base64$Decoder;", &[]);
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn mime_decoder(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("Javajava/util/Base64$Decoder")?;
+        let cls = jni.find_class("Javajava/util/Base64$Decoder");
+        let cls = jni.translate_error_with_class(cls)?;
         let res =
-            jni.call_static_method(cls, "getMimeDecoder", "()Ljava/util/Base64$Decoder;", &[])?;
-        Ok(res.l().unwrap())
+            jni.call_static_method(cls, "getMimeDecoder", "()Ljava/util/Base64$Decoder;", &[]);
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -3861,8 +4054,9 @@ impl<'mc> JavaBase64<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3874,8 +4068,9 @@ impl<'mc> JavaBase64<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -3888,14 +4083,16 @@ impl<'mc> JavaBase64<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -3904,6 +4101,7 @@ impl<'mc> JavaBase64<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -3912,6 +4110,7 @@ impl<'mc> JavaBase64<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -3962,8 +4161,9 @@ impl<'mc> JavaAbstractCollection<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub unsafe fn add(
+    pub fn add(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3975,10 +4175,11 @@ impl<'mc> JavaAbstractCollection<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn remove(
+    pub fn remove(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3990,8 +4191,9 @@ impl<'mc> JavaAbstractCollection<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -4004,6 +4206,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -4012,22 +4215,27 @@ impl<'mc> JavaAbstractCollection<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "size", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
+
+    //
 
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -4037,10 +4245,11 @@ impl<'mc> JavaAbstractCollection<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn contains(
+    pub fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4052,10 +4261,11 @@ impl<'mc> JavaAbstractCollection<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn add_all(
+    pub fn add_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4067,10 +4277,11 @@ impl<'mc> JavaAbstractCollection<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn remove_all(
+    pub fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4082,10 +4293,11 @@ impl<'mc> JavaAbstractCollection<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn retain_all(
+    pub fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4097,10 +4309,11 @@ impl<'mc> JavaAbstractCollection<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn contains_all(
+    pub fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4112,16 +4325,23 @@ impl<'mc> JavaAbstractCollection<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -4134,8 +4354,9 @@ impl<'mc> JavaAbstractCollection<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4147,16 +4368,18 @@ impl<'mc> JavaAbstractCollection<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -4165,6 +4388,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -4173,6 +4397,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -4181,6 +4406,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -4190,8 +4416,9 @@ impl<'mc> JavaAbstractCollection<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn spliterator(
         &mut self,
@@ -4203,10 +4430,11 @@ impl<'mc> JavaAbstractCollection<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn remove_if(
+    pub fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4218,8 +4446,9 @@ impl<'mc> JavaAbstractCollection<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn parallel_stream(
         &mut self,
@@ -4231,10 +4460,11 @@ impl<'mc> JavaAbstractCollection<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn for_each(
+    pub fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4291,8 +4521,9 @@ impl<'mc> JavaAbstractQueue<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub unsafe fn add(
+    pub fn add(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4304,14 +4535,15 @@ impl<'mc> JavaAbstractQueue<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn remove(
+    pub fn remove(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "remove",
@@ -4319,8 +4551,9 @@ impl<'mc> JavaAbstractQueue<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -4329,8 +4562,9 @@ impl<'mc> JavaAbstractQueue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn add_all(
+    pub fn add_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4342,16 +4576,18 @@ impl<'mc> JavaAbstractQueue<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn element(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "element", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -4364,22 +4600,27 @@ impl<'mc> JavaAbstractQueue<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "size", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
+
+    //
 
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -4389,10 +4630,11 @@ impl<'mc> JavaAbstractQueue<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn contains(
+    pub fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4404,10 +4646,11 @@ impl<'mc> JavaAbstractQueue<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn remove_all(
+    pub fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4419,10 +4662,11 @@ impl<'mc> JavaAbstractQueue<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn retain_all(
+    pub fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4434,10 +4678,11 @@ impl<'mc> JavaAbstractQueue<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn contains_all(
+    pub fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4449,16 +4694,23 @@ impl<'mc> JavaAbstractQueue<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -4471,8 +4723,9 @@ impl<'mc> JavaAbstractQueue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4484,16 +4737,18 @@ impl<'mc> JavaAbstractQueue<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -4502,6 +4757,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -4510,6 +4766,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -4518,6 +4775,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -4527,8 +4785,9 @@ impl<'mc> JavaAbstractQueue<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn spliterator(
         &mut self,
@@ -4540,10 +4799,11 @@ impl<'mc> JavaAbstractQueue<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn remove_if(
+    pub fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4555,8 +4815,9 @@ impl<'mc> JavaAbstractQueue<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn parallel_stream(
         &mut self,
@@ -4568,10 +4829,11 @@ impl<'mc> JavaAbstractQueue<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn for_each(
+    pub fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4585,8 +4847,9 @@ impl<'mc> JavaAbstractQueue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn offer(
+    pub fn offer(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4598,23 +4861,25 @@ impl<'mc> JavaAbstractQueue<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn poll(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "poll", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn peek(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "peek", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
 }
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaAbstractQueue<'mc> {
@@ -4647,7 +4912,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "java/util/AbstractMapSimpleEntry")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/AbstractMap$SimpleEntry")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaAbstractMapSimpleEntry object, got {}",
@@ -4658,14 +4923,15 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub unsafe fn new_with_mapentry(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn new_with_mapentry(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = arg1.unwrap();
-        let cls = &jni.find_class("Javajava/util/AbstractMap$SimpleEntry")?;
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let cls = jni.find_class("Javajava/util/AbstractMap$SimpleEntry");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Ljava/lang/Object;Ljava/lang/Object;)V",
@@ -4673,11 +4939,13 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4689,8 +4957,9 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -4703,32 +4972,36 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getValue", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn key(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getKey", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn set_value(
+    pub fn set_value(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -4740,16 +5013,23 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -4762,6 +5042,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -4770,6 +5051,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -4778,6 +5060,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -4818,8 +5101,9 @@ impl<'mc> JavaObserver<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub unsafe fn update(
+    pub fn update(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -4886,8 +5170,8 @@ impl<'mc> JNIRaw<'mc> for JavaEventListener<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// A collection designed for holding elements prior to processing. Besides basic <a title="interface in java.util" href="../../java/util/Collection.html"><code>Collection</code></a> operations, queues provide additional insertion, extraction, and inspection operations. Each of these methods exists in two forms: one throws an exception if the operation fails, the other returns a special value (either <code>null</code> or <code>false</code>, depending on the operation). The latter form of the insert operation is designed specifically for use with capacity-restricted <code>Queue</code> implementations; in most implementations, insert operations cannot fail.
-/// <table border="" cellspacing="1" cellpadding="3">
+/// A collection designed for holding elements prior to processing. Besides basic <a href="../../java/util/Collection.html" title="interface in java.util"><code>Collection</code></a> operations, queues provide additional insertion, extraction, and inspection operations. Each of these methods exists in two forms: one throws an exception if the operation fails, the other returns a special value (either <code>null</code> or <code>false</code>, depending on the operation). The latter form of the insert operation is designed specifically for use with capacity-restricted <code>Queue</code> implementations; in most implementations, insert operations cannot fail.
+/// <table border="" cellpadding="3" cellspacing="1">
 /// <caption>
 /// Summary of Queue methods
 /// </caption>
@@ -4919,7 +5203,7 @@ impl<'mc> JNIRaw<'mc> for JavaEventListener<'mc> {
 /// <p>The <a href="../../java/util/Queue.html#remove--"><code>remove()</code></a> and <a href="../../java/util/Queue.html#poll--"><code>poll()</code></a> methods remove and return the head of the queue. Exactly which element is removed from the queue is a function of the queue's ordering policy, which differs from implementation to implementation. The <code>remove()</code> and <code>poll()</code> methods differ only in their behavior when the queue is empty: the <code>remove()</code> method throws an exception, while the <code>poll()</code> method returns <code>null</code>.</p>
 /// <p>The <a href="../../java/util/Queue.html#element--"><code>element()</code></a> and <a href="../../java/util/Queue.html#peek--"><code>peek()</code></a> methods return, but do not remove, the head of the queue.</p>
 /// <p>The <code>Queue</code> interface does not define the <i>blocking queue methods</i>, which are common in concurrent programming. These methods, which wait for elements to appear or for space to become available, are defined in the <a href="../../java/util/concurrent/BlockingQueue.html" title="interface in java.util.concurrent"><code>BlockingQueue</code></a> interface, which extends this interface.</p>
-/// <p><code>Queue</code> implementations generally do not allow insertion of <code>null</code> elements, although some implementations, such as <a href="../../java/util/LinkedList.html" title="class in java.util"><code>LinkedList</code></a>, do not prohibit insertion of <code>null</code>. Even in the implementations that permit it, <code>null</code> should not be inserted into a <code>Queue</code>, as <code>null</code> is also used as a special return value by the <code>poll</code> method to indicate that the queue contains no elements.</p>
+/// <p><code>Queue</code> implementations generally do not allow insertion of <code>null</code> elements, although some implementations, such as <a title="class in java.util" href="../../java/util/LinkedList.html"><code>LinkedList</code></a>, do not prohibit insertion of <code>null</code>. Even in the implementations that permit it, <code>null</code> should not be inserted into a <code>Queue</code>, as <code>null</code> is also used as a special return value by the <code>poll</code> method to indicate that the queue contains no elements.</p>
 /// <p><code>Queue</code> implementations generally do not define element-based versions of methods <code>equals</code> and <code>hashCode</code> but instead inherit the identity based versions from class <code>Object</code>, because element-based equality is not always well-defined for queues with the same elements but different ordering properties.</p>
 /// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 ///
@@ -4947,8 +5231,9 @@ impl<'mc> JavaQueue<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub unsafe fn offer(
+    pub fn offer(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4960,10 +5245,11 @@ impl<'mc> JavaQueue<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn add(
+    pub fn add(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4975,14 +5261,15 @@ impl<'mc> JavaQueue<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn remove(
+    pub fn remove(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "remove",
@@ -4990,34 +5277,38 @@ impl<'mc> JavaQueue<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn poll(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "poll", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn peek(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "peek", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn element(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "element", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5029,16 +5320,18 @@ impl<'mc> JavaQueue<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -5047,22 +5340,27 @@ impl<'mc> JavaQueue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "size", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
+
+    //
 
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -5072,8 +5370,9 @@ impl<'mc> JavaQueue<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -5083,10 +5382,11 @@ impl<'mc> JavaQueue<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn contains(
+    pub fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5098,8 +5398,9 @@ impl<'mc> JavaQueue<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn spliterator(
         &mut self,
@@ -5111,10 +5412,11 @@ impl<'mc> JavaQueue<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn add_all(
+    pub fn add_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5126,10 +5428,11 @@ impl<'mc> JavaQueue<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn remove_if(
+    pub fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5141,10 +5444,11 @@ impl<'mc> JavaQueue<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn remove_all(
+    pub fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5156,10 +5460,11 @@ impl<'mc> JavaQueue<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn retain_all(
+    pub fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5171,10 +5476,11 @@ impl<'mc> JavaQueue<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn contains_all(
+    pub fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5186,8 +5492,9 @@ impl<'mc> JavaQueue<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn parallel_stream(
         &mut self,
@@ -5199,10 +5506,11 @@ impl<'mc> JavaQueue<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn for_each(
+    pub fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -5264,6 +5572,7 @@ impl<'mc> JavaEnumeration<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
     pub fn as_iterator(
         &mut self,
@@ -5275,16 +5584,18 @@ impl<'mc> JavaEnumeration<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn has_more_elements(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hasMoreElements", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn next_element(
         &mut self,
@@ -5296,7 +5607,7 @@ impl<'mc> JavaEnumeration<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
 }
 impl<'mc> JNIRaw<'mc> for JavaEnumeration<'mc> {
@@ -5327,7 +5638,7 @@ impl<'mc> JNIRaw<'mc> for JavaEnumeration<'mc> {
 /// if (n != null) {
 /// System.out.println("two = " + n);
 /// }</code></pre>
-/// <p>The iterators returned by the <tt>iterator</tt> method of the collections returned by all of this class's "collection view methods" are <em>fail-fast</em>: if the Hashtable is structurally modified at any time after the iterator is created, in any way except through the iterator's own <tt>remove</tt> method, the iterator will throw a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future. The Enumerations returned by Hashtable's keys and elements methods are <em>not</em> fail-fast.</p>
+/// <p>The iterators returned by the <tt>iterator</tt> method of the collections returned by all of this class's "collection view methods" are <em>fail-fast</em>: if the Hashtable is structurally modified at any time after the iterator is created, in any way except through the iterator's own <tt>remove</tt> method, the iterator will throw a <a title="class in java.util" href="../../java/util/ConcurrentModificationException.html"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future. The Enumerations returned by Hashtable's keys and elements methods are <em>not</em> fail-fast.</p>
 /// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <tt>ConcurrentModificationException</tt> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
 /// <p>As of the Java 2 platform v1.2, this class was retrofitted to implement the <a href="../../java/util/Map.html" title="interface in java.util"><code>Map</code></a> interface, making it a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>. Unlike the new collection implementations, <code>Hashtable</code> is synchronized. If a thread-safe implementation is not needed, it is recommended to use <a title="class in java.util" href="../../java/util/HashMap.html"><code>HashMap</code></a> in place of <code>Hashtable</code>. If a thread-safe highly-concurrent implementation is desired, then it is recommended to use <a title="class in java.util.concurrent" href="../../java/util/concurrent/ConcurrentHashMap.html"><code>ConcurrentHashMap</code></a> in place of <code>Hashtable</code>.</p>
 pub struct JavaHashtable<'mc>(
@@ -5363,22 +5674,31 @@ impl<'mc> JavaHashtable<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let cls = &jni.find_class("Javajava/util/Hashtable")?;
-        let res = jni.new_object(cls, "(I)V", &[jni::objects::JValueGen::from(&val_1)])?;
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let cls = jni.find_class("Javajava/util/Hashtable");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, "(I)V", &[jni::objects::JValueGen::from(&val_1)]);
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
     pub fn new_with_int(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: std::option::Option<f32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Float(arg1.unwrap().into());
-        let cls = &jni.find_class("Javajava/util/Hashtable")?;
+        let val_2 = jni::objects::JValueGen::Float(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let cls = jni.find_class("Javajava/util/Hashtable");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(IF)V",
@@ -5386,17 +5706,19 @@ impl<'mc> JavaHashtable<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
+    //
 
-    pub unsafe fn remove_with_object(
+    pub fn remove_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = arg1.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "remove",
@@ -5407,10 +5729,11 @@ impl<'mc> JavaHashtable<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn get(
+    pub fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -5422,10 +5745,11 @@ impl<'mc> JavaHashtable<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn put(
+    pub fn put(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -5442,10 +5766,11 @@ impl<'mc> JavaHashtable<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5457,8 +5782,9 @@ impl<'mc> JavaHashtable<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -5471,6 +5797,7 @@ impl<'mc> JavaHashtable<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn values(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -5480,24 +5807,27 @@ impl<'mc> JavaHashtable<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -5506,24 +5836,26 @@ impl<'mc> JavaHashtable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn replace_with_object(
+    pub fn replace_with_object(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = arg1.unwrap();
-        let val_3 = arg2.unwrap();
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_3 = arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "replace",
@@ -5535,10 +5867,11 @@ impl<'mc> JavaHashtable<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn replace_all(
+    pub fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -5552,16 +5885,18 @@ impl<'mc> JavaHashtable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "size", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn contains(
+    pub fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5573,8 +5908,9 @@ impl<'mc> JavaHashtable<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn elements(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -5584,10 +5920,11 @@ impl<'mc> JavaHashtable<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn merge(
+    pub fn merge(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -5598,18 +5935,20 @@ impl<'mc> JavaHashtable<'mc> {
         let val_3 = arg2;
         let res = self.jni_ref().call_method(&self.jni_object(),"merge","(Ljava/lang/Object;Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn entry_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "entrySet", "()Ljava/util/Set;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn put_all(
+    pub fn put_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -5623,8 +5962,9 @@ impl<'mc> JavaHashtable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn put_if_absent(
+    pub fn put_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -5641,10 +5981,11 @@ impl<'mc> JavaHashtable<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn compute(
+    pub fn compute(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -5661,10 +6002,11 @@ impl<'mc> JavaHashtable<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn for_each(
+    pub fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -5678,8 +6020,9 @@ impl<'mc> JavaHashtable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn contains_key(
+    pub fn contains_key(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5691,10 +6034,11 @@ impl<'mc> JavaHashtable<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn compute_if_absent(
+    pub fn compute_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -5711,8 +6055,9 @@ impl<'mc> JavaHashtable<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn keys(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -5722,18 +6067,20 @@ impl<'mc> JavaHashtable<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn key_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "keySet", "()Ljava/util/Set;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn contains_value(
+    pub fn contains_value(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5745,10 +6092,11 @@ impl<'mc> JavaHashtable<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn get_or_default(
+    pub fn get_or_default(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -5765,10 +6113,11 @@ impl<'mc> JavaHashtable<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn compute_if_present(
+    pub fn compute_if_present(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -5785,16 +6134,23 @@ impl<'mc> JavaHashtable<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -5807,6 +6163,7 @@ impl<'mc> JavaHashtable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -5815,6 +6172,7 @@ impl<'mc> JavaHashtable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -5823,6 +6181,7 @@ impl<'mc> JavaHashtable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -5875,8 +6234,9 @@ impl<'mc> JavaAbstractSet<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5888,18 +6248,20 @@ impl<'mc> JavaAbstractSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn remove_all(
+    pub fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5911,10 +6273,11 @@ impl<'mc> JavaAbstractSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn add(
+    pub fn add(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5926,10 +6289,11 @@ impl<'mc> JavaAbstractSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn remove(
+    pub fn remove(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5941,8 +6305,9 @@ impl<'mc> JavaAbstractSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -5955,6 +6320,7 @@ impl<'mc> JavaAbstractSet<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -5963,22 +6329,27 @@ impl<'mc> JavaAbstractSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "size", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
+
+    //
 
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -5988,10 +6359,11 @@ impl<'mc> JavaAbstractSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn contains(
+    pub fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6003,10 +6375,11 @@ impl<'mc> JavaAbstractSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn add_all(
+    pub fn add_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6018,10 +6391,11 @@ impl<'mc> JavaAbstractSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn retain_all(
+    pub fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6033,10 +6407,11 @@ impl<'mc> JavaAbstractSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn contains_all(
+    pub fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6048,16 +6423,23 @@ impl<'mc> JavaAbstractSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -6070,6 +6452,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -6078,6 +6461,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -6086,6 +6470,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -6094,6 +6479,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -6103,8 +6489,9 @@ impl<'mc> JavaAbstractSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn spliterator(
         &mut self,
@@ -6116,10 +6503,11 @@ impl<'mc> JavaAbstractSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn remove_if(
+    pub fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6131,8 +6519,9 @@ impl<'mc> JavaAbstractSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn parallel_stream(
         &mut self,
@@ -6144,10 +6533,11 @@ impl<'mc> JavaAbstractSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn for_each(
+    pub fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -6204,31 +6594,9 @@ impl<'mc> JavaOptionalInt<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub fn as_int(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getAsInt", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-
-    pub unsafe fn if_present(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "ifPresent",
-            "(Ljava/util/function/IntConsumer;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub unsafe fn if_present_or_else(
+    pub fn if_present_or_else(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -6247,8 +6615,9 @@ impl<'mc> JavaOptionalInt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn or_else_get(
+    pub fn or_else_get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -6260,10 +6629,36 @@ impl<'mc> JavaOptionalInt<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn if_present(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "ifPresent",
+            "(Ljava/util/function/IntConsumer;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn as_int(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getAsInt", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    //
+
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6275,8 +6670,9 @@ impl<'mc> JavaOptionalInt<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -6289,22 +6685,25 @@ impl<'mc> JavaOptionalInt<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -6314,39 +6713,47 @@ impl<'mc> JavaOptionalInt<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let cls = &jni.find_class("Javajava/util/OptionalInt")?;
+        let cls = jni.find_class("Javajava/util/OptionalInt");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "of",
             "(I)Ljava/util/OptionalInt;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn empty(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("Javajava/util/OptionalInt")?;
-        let res = jni.call_static_method(cls, "empty", "()Ljava/util/OptionalInt;", &[])?;
-        Ok(res.l().unwrap())
+        let cls = jni.find_class("Javajava/util/OptionalInt");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "empty", "()Ljava/util/OptionalInt;", &[]);
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn is_present(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isPresent", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn or_else(&mut self, arg0: i32) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -6357,14 +6764,15 @@ impl<'mc> JavaOptionalInt<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn or_else_throw(
+    pub fn or_else_throw(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "orElseThrow",
@@ -6372,16 +6780,23 @@ impl<'mc> JavaOptionalInt<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -6394,6 +6809,7 @@ impl<'mc> JavaOptionalInt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -6402,6 +6818,7 @@ impl<'mc> JavaOptionalInt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -6410,6 +6827,7 @@ impl<'mc> JavaOptionalInt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -6460,40 +6878,37 @@ impl<'mc> JavaTreeMap<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub unsafe fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let cls = &jni.find_class("Javajava/util/TreeMap")?;
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let cls = jni.find_class("Javajava/util/TreeMap");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Ljava/util/Map;)V",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
-    pub unsafe fn new_with_comparator(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn new_with_comparator(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let cls = &jni.find_class("Javajava/util/TreeMap")?;
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let cls = jni.find_class("Javajava/util/TreeMap");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Ljava/util/Comparator;)V",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
-
-    pub fn first_key(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "firstKey", "()Ljava/lang/Object;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
+    //
 
     pub fn navigable_key_set(
         &mut self,
@@ -6505,8 +6920,9 @@ impl<'mc> JavaTreeMap<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn descending_key_set(
         &mut self,
@@ -6518,8 +6934,9 @@ impl<'mc> JavaTreeMap<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn descending_map(
         &mut self,
@@ -6531,10 +6948,11 @@ impl<'mc> JavaTreeMap<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn sub_map_with_object(
+    pub fn sub_map_with_object(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<bool>,
@@ -6543,10 +6961,16 @@ impl<'mc> JavaTreeMap<'mc> {
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         // 1
-        let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
-        let val_3 = arg2.unwrap();
+        let val_2 = jni::objects::JValueGen::Bool(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_3 = arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         // 1
-        let val_4 = jni::objects::JValueGen::Bool(arg3.unwrap().into());
+        let val_4 = jni::objects::JValueGen::Bool(
+            arg3.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "subMap",
@@ -6559,17 +6983,21 @@ impl<'mc> JavaTreeMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn head_map_with_object(
+    pub fn head_map_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<bool>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         // 0
-        let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Bool(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "headMap",
@@ -6580,17 +7008,21 @@ impl<'mc> JavaTreeMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn tail_map_with_object(
+    pub fn tail_map_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<bool>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         // 0
-        let val_2 = jni::objects::JValueGen::Bool(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Bool(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "tailMap",
@@ -6601,18 +7033,20 @@ impl<'mc> JavaTreeMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn last_key(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "lastKey", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn lower_key(
+    pub fn lower_key(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -6624,10 +7058,11 @@ impl<'mc> JavaTreeMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn floor_key(
+    pub fn floor_key(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -6639,10 +7074,11 @@ impl<'mc> JavaTreeMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn ceiling_key(
+    pub fn ceiling_key(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -6654,10 +7090,11 @@ impl<'mc> JavaTreeMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn higher_key(
+    pub fn higher_key(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -6669,8 +7106,9 @@ impl<'mc> JavaTreeMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn poll_first_entry(
         &mut self,
@@ -6682,8 +7120,9 @@ impl<'mc> JavaTreeMap<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn poll_last_entry(
         &mut self,
@@ -6695,8 +7134,9 @@ impl<'mc> JavaTreeMap<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn first_entry(
         &mut self,
@@ -6708,8 +7148,9 @@ impl<'mc> JavaTreeMap<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn last_entry(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -6719,10 +7160,11 @@ impl<'mc> JavaTreeMap<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn lower_entry(
+    pub fn lower_entry(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -6734,10 +7176,11 @@ impl<'mc> JavaTreeMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn floor_entry(
+    pub fn floor_entry(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -6749,10 +7192,11 @@ impl<'mc> JavaTreeMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn ceiling_entry(
+    pub fn ceiling_entry(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -6764,10 +7208,11 @@ impl<'mc> JavaTreeMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn higher_entry(
+    pub fn higher_entry(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -6779,16 +7224,26 @@ impl<'mc> JavaTreeMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn remove_with_object(
+    pub fn first_key(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "firstKey", "()Ljava/lang/Object;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn remove_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = arg1.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "remove",
@@ -6799,10 +7254,11 @@ impl<'mc> JavaTreeMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn get(
+    pub fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -6814,10 +7270,11 @@ impl<'mc> JavaTreeMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn put(
+    pub fn put(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -6834,8 +7291,9 @@ impl<'mc> JavaTreeMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn values(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -6845,16 +7303,18 @@ impl<'mc> JavaTreeMap<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -6863,16 +7323,17 @@ impl<'mc> JavaTreeMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn replace_with_object(
+    pub fn replace_with_object(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = arg1.unwrap();
-        let val_3 = arg2.unwrap();
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_3 = arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "replace",
@@ -6884,10 +7345,11 @@ impl<'mc> JavaTreeMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn replace_all(
+    pub fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -6901,16 +7363,18 @@ impl<'mc> JavaTreeMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "size", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn merge(
+    pub fn merge(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -6921,18 +7385,20 @@ impl<'mc> JavaTreeMap<'mc> {
         let val_3 = arg2;
         let res = self.jni_ref().call_method(&self.jni_object(),"merge","(Ljava/lang/Object;Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn entry_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "entrySet", "()Ljava/util/Set;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn put_all(
+    pub fn put_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -6946,8 +7412,9 @@ impl<'mc> JavaTreeMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn put_if_absent(
+    pub fn put_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -6964,10 +7431,11 @@ impl<'mc> JavaTreeMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn compute(
+    pub fn compute(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -6984,10 +7452,11 @@ impl<'mc> JavaTreeMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn for_each(
+    pub fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -7001,8 +7470,9 @@ impl<'mc> JavaTreeMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn contains_key(
+    pub fn contains_key(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7014,10 +7484,11 @@ impl<'mc> JavaTreeMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn compute_if_absent(
+    pub fn compute_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -7034,18 +7505,20 @@ impl<'mc> JavaTreeMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn key_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "keySet", "()Ljava/util/Set;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn contains_value(
+    pub fn contains_value(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7057,10 +7530,11 @@ impl<'mc> JavaTreeMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn compute_if_present(
+    pub fn compute_if_present(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -7077,8 +7551,9 @@ impl<'mc> JavaTreeMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn comparator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -7088,10 +7563,11 @@ impl<'mc> JavaTreeMap<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7103,8 +7579,9 @@ impl<'mc> JavaTreeMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -7117,30 +7594,39 @@ impl<'mc> JavaTreeMap<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -7153,6 +7639,7 @@ impl<'mc> JavaTreeMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -7161,6 +7648,7 @@ impl<'mc> JavaTreeMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -7169,6 +7657,7 @@ impl<'mc> JavaTreeMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -7177,8 +7666,9 @@ impl<'mc> JavaTreeMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn get_or_default(
+    pub fn get_or_default(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -7195,7 +7685,7 @@ impl<'mc> JavaTreeMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
 }
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaTreeMap<'mc> {
@@ -7206,7 +7696,7 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaTreeMap<'mc> {
 /// A linear collection that supports element insertion and removal at both ends. The name <i>deque</i> is short for "double ended queue" and is usually pronounced "deck". Most <code>Deque</code> implementations place no fixed limits on the number of elements they may contain, but this interface supports capacity-restricted deques as well as those with no fixed size limit.
 /// <p>This interface defines methods to access the elements at both ends of the deque. Methods are provided to insert, remove, and examine the element. Each of these methods exists in two forms: one throws an exception if the operation fails, the other returns a special value (either <code>null</code> or <code>false</code>, depending on the operation). The latter form of the insert operation is designed specifically for use with capacity-restricted <code>Deque</code> implementations; in most implementations, insert operations cannot fail.</p>
 /// <p>The twelve methods described above are summarized in the following table:</p>
-/// <table border="" cellpadding="3" cellspacing="1">
+/// <table border="" cellspacing="1" cellpadding="3">
 /// <caption>
 /// Summary of Deque methods
 /// </caption>
@@ -7246,8 +7736,8 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaTreeMap<'mc> {
 /// </tr>
 /// </tbody>
 /// </table>
-/// <p>This interface extends the <a href="../../java/util/Queue.html" title="interface in java.util"><code>Queue</code></a> interface. When a deque is used as a queue, FIFO (First-In-First-Out) behavior results. Elements are added at the end of the deque and removed from the beginning. The methods inherited from the <code>Queue</code> interface are precisely equivalent to <code>Deque</code> methods as indicated in the following table:</p>
-/// <table cellspacing="1" cellpadding="3" border="">
+/// <p>This interface extends the <a title="interface in java.util" href="../../java/util/Queue.html"><code>Queue</code></a> interface. When a deque is used as a queue, FIFO (First-In-First-Out) behavior results. Elements are added at the end of the deque and removed from the beginning. The methods inherited from the <code>Queue</code> interface are precisely equivalent to <code>Deque</code> methods as indicated in the following table:</p>
+/// <table border="" cellpadding="3" cellspacing="1">
 /// <caption>
 /// Comparison of Queue and Deque methods
 /// </caption>
@@ -7282,8 +7772,8 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaTreeMap<'mc> {
 /// </tr>
 /// </tbody>
 /// </table>
-/// <p>Deques can also be used as LIFO (Last-In-First-Out) stacks. This interface should be used in preference to the legacy <a title="class in java.util" href="../../java/util/Stack.html"><code>Stack</code></a> class. When a deque is used as a stack, elements are pushed and popped from the beginning of the deque. Stack methods are precisely equivalent to <code>Deque</code> methods as indicated in the table below:</p>
-/// <table cellpadding="3" cellspacing="1" border="">
+/// <p>Deques can also be used as LIFO (Last-In-First-Out) stacks. This interface should be used in preference to the legacy <a href="../../java/util/Stack.html" title="class in java.util"><code>Stack</code></a> class. When a deque is used as a stack, elements are pushed and popped from the beginning of the deque. Stack methods are precisely equivalent to <code>Deque</code> methods as indicated in the table below:</p>
+/// <table border="" cellpadding="3" cellspacing="1">
 /// <caption>
 /// Comparison of Stack and Deque methods
 /// </caption>
@@ -7308,7 +7798,7 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaTreeMap<'mc> {
 /// </table>
 /// <p>Note that the <a href="../../java/util/Deque.html#peek--"><code>peek</code></a> method works equally well when a deque is used as a queue or a stack; in either case, elements are drawn from the beginning of the deque.</p>
 /// <p>This interface provides two methods to remove interior elements, <a href="../../java/util/Deque.html#removeFirstOccurrence-java.lang.Object-"><code>removeFirstOccurrence</code></a> and <a href="../../java/util/Deque.html#removeLastOccurrence-java.lang.Object-"><code>removeLastOccurrence</code></a>.</p>
-/// <p>Unlike the <a href="../../java/util/List.html" title="interface in java.util"><code>List</code></a> interface, this interface does not provide support for indexed access to elements.</p>
+/// <p>Unlike the <a title="interface in java.util" href="../../java/util/List.html"><code>List</code></a> interface, this interface does not provide support for indexed access to elements.</p>
 /// <p>While <code>Deque</code> implementations are not strictly required to prohibit the insertion of null elements, they are strongly encouraged to do so. Users of any <code>Deque</code> implementations that do allow null elements are strongly encouraged <i>not</i> to take advantage of the ability to insert nulls. This is so because <code>null</code> is used as a special return value by various methods to indicated that the deque is empty.</p>
 /// <p><code>Deque</code> implementations generally do not define element-based versions of the <code>equals</code> and <code>hashCode</code> methods, but instead inherit the identity-based versions from class <code>Object</code>.</p>
 /// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
@@ -7337,8 +7827,9 @@ impl<'mc> JavaDeque<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub unsafe fn push(
+    pub fn push(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -7352,16 +7843,18 @@ impl<'mc> JavaDeque<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn pop(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "pop", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn add_first(
+    pub fn add_first(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -7375,8 +7868,9 @@ impl<'mc> JavaDeque<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn add_last(
+    pub fn add_last(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -7390,6 +7884,7 @@ impl<'mc> JavaDeque<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn poll_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -7399,18 +7894,20 @@ impl<'mc> JavaDeque<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn poll_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "pollLast", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn offer_last(
+    pub fn offer_last(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7422,8 +7919,9 @@ impl<'mc> JavaDeque<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn remove_first(
         &mut self,
@@ -7435,16 +7933,18 @@ impl<'mc> JavaDeque<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getFirst", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn peek_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -7454,10 +7954,11 @@ impl<'mc> JavaDeque<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn remove_first_occurrence(
+    pub fn remove_first_occurrence(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7469,10 +7970,11 @@ impl<'mc> JavaDeque<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn offer_first(
+    pub fn offer_first(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7484,8 +7986,9 @@ impl<'mc> JavaDeque<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn remove_last(
         &mut self,
@@ -7497,26 +8000,29 @@ impl<'mc> JavaDeque<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getLast", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn peek_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "peekLast", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn remove_last_occurrence(
+    pub fn remove_last_occurrence(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7528,10 +8034,11 @@ impl<'mc> JavaDeque<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn offer(
+    pub fn offer(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7543,8 +8050,9 @@ impl<'mc> JavaDeque<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn descending_iterator(
         &mut self,
@@ -7556,10 +8064,11 @@ impl<'mc> JavaDeque<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn add(
+    pub fn add(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7571,14 +8080,15 @@ impl<'mc> JavaDeque<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn remove(
+    pub fn remove(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "remove",
@@ -7586,16 +8096,18 @@ impl<'mc> JavaDeque<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "size", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -7605,10 +8117,11 @@ impl<'mc> JavaDeque<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn contains(
+    pub fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7620,10 +8133,11 @@ impl<'mc> JavaDeque<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn add_all(
+    pub fn add_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7635,34 +8149,38 @@ impl<'mc> JavaDeque<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn poll(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "poll", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn peek(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "peek", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn element(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "element", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7674,16 +8192,18 @@ impl<'mc> JavaDeque<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -7692,14 +8212,18 @@ impl<'mc> JavaDeque<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
+
+    //
 
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -7709,8 +8233,9 @@ impl<'mc> JavaDeque<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn spliterator(
         &mut self,
@@ -7722,10 +8247,11 @@ impl<'mc> JavaDeque<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn remove_if(
+    pub fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7737,10 +8263,11 @@ impl<'mc> JavaDeque<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn remove_all(
+    pub fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7752,10 +8279,11 @@ impl<'mc> JavaDeque<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn retain_all(
+    pub fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7767,10 +8295,11 @@ impl<'mc> JavaDeque<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn contains_all(
+    pub fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7782,8 +8311,9 @@ impl<'mc> JavaDeque<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn parallel_stream(
         &mut self,
@@ -7795,10 +8325,11 @@ impl<'mc> JavaDeque<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn for_each(
+    pub fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -7827,10 +8358,10 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaDeque<'mc> {
         self.1
     }
 }
-/// The <tt>Formattable</tt> interface must be implemented by any class that needs to perform custom formatting using the <tt>'s'</tt> conversion specifier of <a href="../../java/util/Formatter.html" title="class in java.util"><code>Formatter</code></a>. This interface allows basic control for formatting arbitrary objects. For example, the following class prints out different representations of a stock's name depending on the flags and length constraints: <code>import java.nio.CharBuffer; import java.util.Formatter; import java.util.Formattable; import java.util.Locale; import static java.util.FormattableFlags.*; ... public class StockName implements Formattable { private String symbol, companyName, frenchCompanyName; public StockName(String symbol, String companyName, String frenchCompanyName) { ... } ... public void formatTo(Formatter fmt, int f, int width, int precision) { StringBuilder sb = new StringBuilder(); // decide form of name String name = companyName; if (fmt.locale().equals(Locale.FRANCE)) name = frenchCompanyName; boolean alternate = (f &amp; ALTERNATE) == ALTERNATE; boolean usesymbol = alternate || (precision != -1 &amp;&amp; precision &lt; 10); String out = (usesymbol ? symbol : name); // apply precision if (precision == -1 || out.length() &lt; precision) { // write it all sb.append(out); } else { sb.append(out.substring(0, precision - 1)).append('*'); } // apply width and justification int len = sb.length(); if (len &lt; width) for (int i = 0; i &lt; width - len; i++) if ((f &amp; LEFT_JUSTIFY) == LEFT_JUSTIFY) sb.append(' '); else sb.insert(0, ' '); fmt.format(sb.toString()); } public String toString() { return String.format("%s - %s", symbol, companyName); } } </code>
+/// The <tt>Formattable</tt> interface must be implemented by any class that needs to perform custom formatting using the <tt>'s'</tt> conversion specifier of <a title="class in java.util" href="../../java/util/Formatter.html"><code>Formatter</code></a>. This interface allows basic control for formatting arbitrary objects. For example, the following class prints out different representations of a stock's name depending on the flags and length constraints: <code>import java.nio.CharBuffer; import java.util.Formatter; import java.util.Formattable; import java.util.Locale; import static java.util.FormattableFlags.*; ... public class StockName implements Formattable { private String symbol, companyName, frenchCompanyName; public StockName(String symbol, String companyName, String frenchCompanyName) { ... } ... public void formatTo(Formatter fmt, int f, int width, int precision) { StringBuilder sb = new StringBuilder(); // decide form of name String name = companyName; if (fmt.locale().equals(Locale.FRANCE)) name = frenchCompanyName; boolean alternate = (f &amp; ALTERNATE) == ALTERNATE; boolean usesymbol = alternate || (precision != -1 &amp;&amp; precision &lt; 10); String out = (usesymbol ? symbol : name); // apply precision if (precision == -1 || out.length() &lt; precision) { // write it all sb.append(out); } else { sb.append(out.substring(0, precision - 1)).append('*'); } // apply width and justification int len = sb.length(); if (len &lt; width) for (int i = 0; i &lt; width - len; i++) if ((f &amp; LEFT_JUSTIFY) == LEFT_JUSTIFY) sb.append(' '); else sb.insert(0, ' '); fmt.format(sb.toString()); } public String toString() { return String.format("%s - %s", symbol, companyName); } } </code>
 /// <p>When used in conjunction with the <a href="../../java/util/Formatter.html" title="class in java.util"><code>Formatter</code></a>, the above class produces the following output for various format strings. <code>Formatter fmt = new Formatter(); StockName sn = new StockName("HUGE", "Huge Fruit, Inc.", "Fruit Titanesque, Inc."); fmt.format("%s", sn); // -&gt; "Huge Fruit, Inc." fmt.format("%s", sn.toString()); // -&gt; "HUGE - Huge Fruit, Inc." fmt.format("%#s", sn); // -&gt; "HUGE" fmt.format("%-10.8s", sn); // -&gt; "HUGE " fmt.format("%.12s", sn); // -&gt; "Huge Fruit,*" fmt.format(Locale.FRANCE, "%25s", sn); // -&gt; " Fruit Titanesque, Inc." </code></p>
 /// <p>Formattables are not necessarily safe for multithreaded access. Thread safety is optional and may be enforced by classes that extend and implement this interface.</p>
-/// <p>Unless otherwise specified, passing a <tt>null</tt> argument to any method in this interface will cause a <a title="class in java.lang" href="../../java/lang/NullPointerException.html"><code>NullPointerException</code></a> to be thrown.</p>
+/// <p>Unless otherwise specified, passing a <tt>null</tt> argument to any method in this interface will cause a <a href="../../java/lang/NullPointerException.html" title="class in java.lang"><code>NullPointerException</code></a> to be thrown.</p>
 ///
 /// This is a representation of an abstract class.
 pub struct JavaFormattable<'mc>(
@@ -7858,8 +8389,9 @@ impl<'mc> JavaFormattable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub unsafe fn format_to(
+    pub fn format_to(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: i32,
@@ -7931,31 +8463,9 @@ impl<'mc> JavaOptionalDouble<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub fn as_double(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getAsDouble", "()D", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
-    }
-
-    pub unsafe fn if_present(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "ifPresent",
-            "(Ljava/util/function/DoubleConsumer;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub unsafe fn if_present_or_else(
+    pub fn if_present_or_else(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -7974,8 +8484,9 @@ impl<'mc> JavaOptionalDouble<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn or_else_get(
+    pub fn or_else_get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
@@ -7987,10 +8498,36 @@ impl<'mc> JavaOptionalDouble<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn if_present(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "ifPresent",
+            "(Ljava/util/function/DoubleConsumer;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn as_double(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getAsDouble", "()D", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+    //
+
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8002,8 +8539,9 @@ impl<'mc> JavaOptionalDouble<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -8016,22 +8554,25 @@ impl<'mc> JavaOptionalDouble<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -8041,39 +8582,47 @@ impl<'mc> JavaOptionalDouble<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: f64,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
-        let cls = &jni.find_class("Javajava/util/OptionalDouble")?;
+        let cls = jni.find_class("Javajava/util/OptionalDouble");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "of",
             "(D)Ljava/util/OptionalDouble;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn empty(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("Javajava/util/OptionalDouble")?;
-        let res = jni.call_static_method(cls, "empty", "()Ljava/util/OptionalDouble;", &[])?;
-        Ok(res.l().unwrap())
+        let cls = jni.find_class("Javajava/util/OptionalDouble");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "empty", "()Ljava/util/OptionalDouble;", &[]);
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn is_present(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isPresent", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn or_else(&mut self, arg0: f64) -> Result<f64, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
@@ -8084,14 +8633,15 @@ impl<'mc> JavaOptionalDouble<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
-    pub unsafe fn or_else_throw(
+    pub fn or_else_throw(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "orElseThrow",
@@ -8099,16 +8649,23 @@ impl<'mc> JavaOptionalDouble<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -8121,6 +8678,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -8129,6 +8687,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -8137,6 +8696,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -8183,31 +8743,9 @@ impl<'mc> JavaOptionalLong<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub fn as_long(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getAsLong", "()J", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
-    }
-
-    pub unsafe fn if_present(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "ifPresent",
-            "(Ljava/util/function/LongConsumer;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub unsafe fn if_present_or_else(
+    pub fn if_present_or_else(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -8226,8 +8764,9 @@ impl<'mc> JavaOptionalLong<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn or_else_get(
+    pub fn or_else_get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
@@ -8239,10 +8778,36 @@ impl<'mc> JavaOptionalLong<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
+        Ok(res.j()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn if_present(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "ifPresent",
+            "(Ljava/util/function/LongConsumer;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn as_long(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getAsLong", "()J", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.j()?)
+    }
+    //
+
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8254,8 +8819,9 @@ impl<'mc> JavaOptionalLong<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -8268,22 +8834,25 @@ impl<'mc> JavaOptionalLong<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -8293,39 +8862,47 @@ impl<'mc> JavaOptionalLong<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i64,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let cls = &jni.find_class("Javajava/util/OptionalLong")?;
+        let cls = jni.find_class("Javajava/util/OptionalLong");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "of",
             "(J)Ljava/util/OptionalLong;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn empty(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("Javajava/util/OptionalLong")?;
-        let res = jni.call_static_method(cls, "empty", "()Ljava/util/OptionalLong;", &[])?;
-        Ok(res.l().unwrap())
+        let cls = jni.find_class("Javajava/util/OptionalLong");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "empty", "()Ljava/util/OptionalLong;", &[]);
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn is_present(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isPresent", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn or_else(&mut self, arg0: i64) -> Result<i64, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
@@ -8336,14 +8913,15 @@ impl<'mc> JavaOptionalLong<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
+        Ok(res.j()?)
     }
+    //
 
-    pub unsafe fn or_else_throw(
+    pub fn or_else_throw(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "orElseThrow",
@@ -8351,16 +8929,23 @@ impl<'mc> JavaOptionalLong<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
+        Ok(res.j()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -8373,6 +8958,7 @@ impl<'mc> JavaOptionalLong<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -8381,6 +8967,7 @@ impl<'mc> JavaOptionalLong<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -8389,6 +8976,7 @@ impl<'mc> JavaOptionalLong<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -8399,7 +8987,7 @@ impl<'mc> JavaOptionalLong<'mc> {
     }
 }
 /// <p>Hash table and linked list implementation of the <tt>Set</tt> interface, with predictable iteration order. This implementation differs from <tt>HashSet</tt> in that it maintains a doubly-linked list running through all of its entries. This linked list defines the iteration ordering, which is the order in which elements were inserted into the set (<i>insertion-order</i>). Note that insertion order is <i>not</i> affected if an element is <i>re-inserted</i> into the set. (An element <tt>e</tt> is reinserted into a set <tt>s</tt> if <tt>s.add(e)</tt> is invoked when <tt>s.contains(e)</tt> would return <tt>true</tt> immediately prior to the invocation.)</p>
-/// <p>This implementation spares its clients from the unspecified, generally chaotic ordering provided by <a href="../../java/util/HashSet.html" title="class in java.util"><code>HashSet</code></a>, without incurring the increased cost associated with <a title="class in java.util" href="../../java/util/TreeSet.html"><code>TreeSet</code></a>. It can be used to produce a copy of a set that has the same order as the original, regardless of the original set's implementation:</p>
+/// <p>This implementation spares its clients from the unspecified, generally chaotic ordering provided by <a title="class in java.util" href="../../java/util/HashSet.html"><code>HashSet</code></a>, without incurring the increased cost associated with <a href="../../java/util/TreeSet.html" title="class in java.util"><code>TreeSet</code></a>. It can be used to produce a copy of a set that has the same order as the original, regardless of the original set's implementation:</p>
 /// <pre> void foo(Set s) {
 /// Set copy = new LinkedHashSet(s);
 /// ...
@@ -8447,22 +9035,31 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let cls = &jni.find_class("Javajava/util/LinkedHashSet")?;
-        let res = jni.new_object(cls, "(I)V", &[jni::objects::JValueGen::from(&val_1)])?;
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let cls = jni.find_class("Javajava/util/LinkedHashSet");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, "(I)V", &[jni::objects::JValueGen::from(&val_1)]);
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
     pub fn new_with_int(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: std::option::Option<f32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Float(arg1.unwrap().into());
-        let cls = &jni.find_class("Javajava/util/LinkedHashSet")?;
+        let val_2 = jni::objects::JValueGen::Float(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let cls = jni.find_class("Javajava/util/LinkedHashSet");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(IF)V",
@@ -8470,9 +9067,11 @@ impl<'mc> JavaLinkedHashSet<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
+    //
 
     pub fn spliterator(
         &mut self,
@@ -8484,10 +9083,11 @@ impl<'mc> JavaLinkedHashSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn add(
+    pub fn add(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8499,10 +9099,11 @@ impl<'mc> JavaLinkedHashSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn remove(
+    pub fn remove(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8514,16 +9115,18 @@ impl<'mc> JavaLinkedHashSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -8532,22 +9135,27 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "size", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
+
+    //
 
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -8557,10 +9165,11 @@ impl<'mc> JavaLinkedHashSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn contains(
+    pub fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8572,10 +9181,11 @@ impl<'mc> JavaLinkedHashSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8587,18 +9197,20 @@ impl<'mc> JavaLinkedHashSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn remove_all(
+    pub fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8610,8 +9222,9 @@ impl<'mc> JavaLinkedHashSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -8624,8 +9237,9 @@ impl<'mc> JavaLinkedHashSet<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
-    pub unsafe fn add_all(
+    pub fn add_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8637,10 +9251,11 @@ impl<'mc> JavaLinkedHashSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn retain_all(
+    pub fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8652,10 +9267,11 @@ impl<'mc> JavaLinkedHashSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn contains_all(
+    pub fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8667,16 +9283,23 @@ impl<'mc> JavaLinkedHashSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -8689,6 +9312,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -8697,6 +9321,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -8705,6 +9330,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -8713,6 +9339,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -8722,10 +9349,11 @@ impl<'mc> JavaLinkedHashSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn remove_if(
+    pub fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8737,8 +9365,9 @@ impl<'mc> JavaLinkedHashSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn parallel_stream(
         &mut self,
@@ -8750,10 +9379,11 @@ impl<'mc> JavaLinkedHashSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn for_each(
+    pub fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -8816,22 +9446,31 @@ impl<'mc> JavaHashMap<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let cls = &jni.find_class("Javajava/util/HashMap")?;
-        let res = jni.new_object(cls, "(I)V", &[jni::objects::JValueGen::from(&val_1)])?;
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let cls = jni.find_class("Javajava/util/HashMap");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, "(I)V", &[jni::objects::JValueGen::from(&val_1)]);
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
     pub fn new_with_int(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: std::option::Option<f32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Float(arg1.unwrap().into());
-        let cls = &jni.find_class("Javajava/util/HashMap")?;
+        let val_2 = jni::objects::JValueGen::Float(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let cls = jni.find_class("Javajava/util/HashMap");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(IF)V",
@@ -8839,17 +9478,19 @@ impl<'mc> JavaHashMap<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
+    //
 
-    pub unsafe fn remove_with_object(
+    pub fn remove_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = arg1.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "remove",
@@ -8860,10 +9501,11 @@ impl<'mc> JavaHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn get(
+    pub fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -8875,10 +9517,11 @@ impl<'mc> JavaHashMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn put(
+    pub fn put(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -8895,8 +9538,9 @@ impl<'mc> JavaHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn values(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -8906,16 +9550,18 @@ impl<'mc> JavaHashMap<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -8924,24 +9570,26 @@ impl<'mc> JavaHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn replace_with_object(
+    pub fn replace_with_object(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = arg1.unwrap();
-        let val_3 = arg2.unwrap();
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_3 = arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "replace",
@@ -8953,10 +9601,11 @@ impl<'mc> JavaHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn replace_all(
+    pub fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -8970,16 +9619,18 @@ impl<'mc> JavaHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "size", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn merge(
+    pub fn merge(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -8990,18 +9641,20 @@ impl<'mc> JavaHashMap<'mc> {
         let val_3 = arg2;
         let res = self.jni_ref().call_method(&self.jni_object(),"merge","(Ljava/lang/Object;Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn entry_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "entrySet", "()Ljava/util/Set;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn put_all(
+    pub fn put_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -9015,8 +9668,9 @@ impl<'mc> JavaHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn put_if_absent(
+    pub fn put_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -9033,10 +9687,11 @@ impl<'mc> JavaHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn compute(
+    pub fn compute(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -9053,10 +9708,11 @@ impl<'mc> JavaHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn for_each(
+    pub fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -9070,8 +9726,9 @@ impl<'mc> JavaHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn contains_key(
+    pub fn contains_key(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -9083,10 +9740,11 @@ impl<'mc> JavaHashMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn compute_if_absent(
+    pub fn compute_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -9103,18 +9761,20 @@ impl<'mc> JavaHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn key_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "keySet", "()Ljava/util/Set;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn contains_value(
+    pub fn contains_value(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -9126,10 +9786,11 @@ impl<'mc> JavaHashMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn get_or_default(
+    pub fn get_or_default(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -9146,10 +9807,11 @@ impl<'mc> JavaHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn compute_if_present(
+    pub fn compute_if_present(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -9166,10 +9828,11 @@ impl<'mc> JavaHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -9181,8 +9844,9 @@ impl<'mc> JavaHashMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -9195,22 +9859,30 @@ impl<'mc> JavaHashMap<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -9223,6 +9895,7 @@ impl<'mc> JavaHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -9231,6 +9904,7 @@ impl<'mc> JavaHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -9239,6 +9913,7 @@ impl<'mc> JavaHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -9264,7 +9939,7 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaHashMap<'mc> {
 /// <pre> Map m = Collections.synchronizedMap(new IdentityHashMap(...));</pre>
 /// <p>The iterators returned by the <tt>iterator</tt> method of the collections returned by all of this class's "collection view methods" are <i>fail-fast</i>: if the map is structurally modified at any time after the iterator is created, in any way except through the iterator's own <tt>remove</tt> method, the iterator will throw a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
 /// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <tt>ConcurrentModificationException</tt> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>fail-fast iterators should be used only to detect bugs.</i></p>
-/// <p>Implementation note: This is a simple <i>linear-probe</i> hash table, as described for example in texts by Sedgewick and Knuth. The array alternates holding keys and values. (This has better locality for large tables than does using separate arrays.) For many JRE implementations and operation mixes, this class will yield better performance than <a title="class in java.util" href="../../java/util/HashMap.html"><code>HashMap</code></a> (which uses <i>chaining</i> rather than linear-probing).</p>
+/// <p>Implementation note: This is a simple <i>linear-probe</i> hash table, as described for example in texts by Sedgewick and Knuth. The array alternates holding keys and values. (This has better locality for large tables than does using separate arrays.) For many JRE implementations and operation mixes, this class will yield better performance than <a href="../../java/util/HashMap.html" title="class in java.util"><code>HashMap</code></a> (which uses <i>chaining</i> rather than linear-probing).</p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 pub struct JavaIdentityHashMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -9301,22 +9976,28 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let cls = &jni.find_class("Javajava/util/IdentityHashMap")?;
-        let res = jni.new_object(cls, "(I)V", &[jni::objects::JValueGen::from(&val_1)])?;
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let cls = jni.find_class("Javajava/util/IdentityHashMap");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, "(I)V", &[jni::objects::JValueGen::from(&val_1)]);
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
+    //
 
-    pub unsafe fn remove_with_object(
+    pub fn remove_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = arg1.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "remove",
@@ -9327,10 +10008,11 @@ impl<'mc> JavaIdentityHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn get(
+    pub fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -9342,10 +10024,11 @@ impl<'mc> JavaIdentityHashMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn put(
+    pub fn put(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -9362,10 +10045,11 @@ impl<'mc> JavaIdentityHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -9377,8 +10061,9 @@ impl<'mc> JavaIdentityHashMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn values(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -9388,24 +10073,27 @@ impl<'mc> JavaIdentityHashMap<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -9414,16 +10102,18 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn replace_all(
+    pub fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -9437,24 +10127,27 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "size", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn entry_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "entrySet", "()Ljava/util/Set;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn put_all(
+    pub fn put_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -9468,8 +10161,9 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn for_each(
+    pub fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -9483,8 +10177,9 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn contains_key(
+    pub fn contains_key(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -9496,18 +10191,20 @@ impl<'mc> JavaIdentityHashMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn key_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "keySet", "()Ljava/util/Set;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn contains_value(
+    pub fn contains_value(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -9519,8 +10216,9 @@ impl<'mc> JavaIdentityHashMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -9533,14 +10231,21 @@ impl<'mc> JavaIdentityHashMap<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -9553,6 +10258,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -9561,6 +10267,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -9569,6 +10276,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -9577,16 +10285,17 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn replace_with_object(
+    pub fn replace_with_object(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = arg1.unwrap();
-        let val_3 = arg2.unwrap();
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_3 = arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "replace",
@@ -9598,10 +10307,11 @@ impl<'mc> JavaIdentityHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn merge(
+    pub fn merge(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -9612,10 +10322,11 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let val_3 = arg2;
         let res = self.jni_ref().call_method(&self.jni_object(),"merge","(Ljava/lang/Object;Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn put_if_absent(
+    pub fn put_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -9632,10 +10343,11 @@ impl<'mc> JavaIdentityHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn compute(
+    pub fn compute(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -9652,10 +10364,11 @@ impl<'mc> JavaIdentityHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn compute_if_absent(
+    pub fn compute_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -9672,10 +10385,11 @@ impl<'mc> JavaIdentityHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn get_or_default(
+    pub fn get_or_default(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -9692,10 +10406,11 @@ impl<'mc> JavaIdentityHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn compute_if_present(
+    pub fn compute_if_present(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -9712,7 +10427,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
 }
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaIdentityHashMap<'mc> {
@@ -9721,7 +10436,7 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaIdentityHashMap<'mc> {
     }
 }
 /// <p>Hash table and linked list implementation of the <tt>Map</tt> interface, with predictable iteration order. This implementation differs from <tt>HashMap</tt> in that it maintains a doubly-linked list running through all of its entries. This linked list defines the iteration ordering, which is normally the order in which keys were inserted into the map (<i>insertion-order</i>). Note that insertion order is not affected if a key is <i>re-inserted</i> into the map. (A key <tt>k</tt> is reinserted into a map <tt>m</tt> if <tt>m.put(k, v)</tt> is invoked when <tt>m.containsKey(k)</tt> would return <tt>true</tt> immediately prior to the invocation.)</p>
-/// <p>This implementation spares its clients from the unspecified, generally chaotic ordering provided by <a title="class in java.util" href="../../java/util/HashMap.html"><code>HashMap</code></a> (and <a title="class in java.util" href="../../java/util/Hashtable.html"><code>Hashtable</code></a>), without incurring the increased cost associated with <a title="class in java.util" href="../../java/util/TreeMap.html"><code>TreeMap</code></a>. It can be used to produce a copy of a map that has the same order as the original, regardless of the original map's implementation:</p>
+/// <p>This implementation spares its clients from the unspecified, generally chaotic ordering provided by <a title="class in java.util" href="../../java/util/HashMap.html"><code>HashMap</code></a> (and <a href="../../java/util/Hashtable.html" title="class in java.util"><code>Hashtable</code></a>), without incurring the increased cost associated with <a title="class in java.util" href="../../java/util/TreeMap.html"><code>TreeMap</code></a>. It can be used to produce a copy of a map that has the same order as the original, regardless of the original map's implementation:</p>
 /// <pre> void foo(Map m) {
 /// Map copy = new LinkedHashMap(m);
 /// ...
@@ -9733,7 +10448,7 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaIdentityHashMap<'mc> {
 /// <p>A linked hash map has two parameters that affect its performance: <i>initial capacity</i> and <i>load factor</i>. They are defined precisely as for <tt>HashMap</tt>. Note, however, that the penalty for choosing an excessively high value for initial capacity is less severe for this class than for <tt>HashMap</tt>, as iteration times for this class are unaffected by capacity.</p>
 /// <p><strong>Note that this implementation is not synchronized.</strong> If multiple threads access a linked hash map concurrently, and at least one of the threads modifies the map structurally, it <em>must</em> be synchronized externally. This is typically accomplished by synchronizing on some object that naturally encapsulates the map. If no such object exists, the map should be "wrapped" using the <a href="../../java/util/Collections.html#synchronizedMap-java.util.Map-"><code>Collections.synchronizedMap</code></a> method. This is best done at creation time, to prevent accidental unsynchronized access to the map:</p>
 /// <pre> Map m = Collections.synchronizedMap(new LinkedHashMap(...));</pre> A structural modification is any operation that adds or deletes one or more mappings or, in the case of access-ordered linked hash maps, affects iteration order. In insertion-ordered linked hash maps, merely changing the value associated with a key that is already contained in the map is not a structural modification. <strong>In access-ordered linked hash maps, merely querying the map with <tt>get</tt> is a structural modification. </strong>)
-/// <p>The iterators returned by the <tt>iterator</tt> method of the collections returned by all of this class's collection view methods are <em>fail-fast</em>: if the map is structurally modified at any time after the iterator is created, in any way except through the iterator's own <tt>remove</tt> method, the iterator will throw a <a title="class in java.util" href="../../java/util/ConcurrentModificationException.html"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
+/// <p>The iterators returned by the <tt>iterator</tt> method of the collections returned by all of this class's collection view methods are <em>fail-fast</em>: if the map is structurally modified at any time after the iterator is created, in any way except through the iterator's own <tt>remove</tt> method, the iterator will throw a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
 /// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <tt>ConcurrentModificationException</tt> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
 /// <p>The spliterators returned by the spliterator method of the collections returned by all of this class's collection view methods are <em><a href="Spliterator.html#binding">late-binding</a></em>, <em>fail-fast</em>, and additionally report <a href="../../java/util/Spliterator.html#ORDERED"><code>Spliterator.ORDERED</code></a>.</p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
@@ -9771,30 +10486,39 @@ impl<'mc> JavaLinkedHashMap<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub unsafe fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let cls = &jni.find_class("Javajava/util/LinkedHashMap")?;
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let cls = jni.find_class("Javajava/util/LinkedHashMap");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Ljava/util/Map;)V",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
     pub fn new_with_int(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: std::option::Option<f32>,
         arg2: std::option::Option<bool>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Float(arg1.unwrap().into());
+        let val_2 = jni::objects::JValueGen::Float(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         // 1
-        let val_3 = jni::objects::JValueGen::Bool(arg2.unwrap().into());
-        let cls = &jni.find_class("Javajava/util/LinkedHashMap")?;
+        let val_3 = jni::objects::JValueGen::Bool(
+            arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let cls = jni.find_class("Javajava/util/LinkedHashMap");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(IFZ)V",
@@ -9803,11 +10527,13 @@ impl<'mc> JavaLinkedHashMap<'mc> {
                 jni::objects::JValueGen::from(&val_2),
                 jni::objects::JValueGen::from(&val_3),
             ],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
+    //
 
-    pub unsafe fn get(
+    pub fn get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -9819,8 +10545,9 @@ impl<'mc> JavaLinkedHashMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn values(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -9830,8 +10557,9 @@ impl<'mc> JavaLinkedHashMap<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -9840,8 +10568,9 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn replace_all(
+    pub fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -9855,16 +10584,18 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn entry_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "entrySet", "()Ljava/util/Set;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn for_each(
+    pub fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -9878,16 +10609,18 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn key_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "keySet", "()Ljava/util/Set;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn contains_value(
+    pub fn contains_value(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -9899,10 +10632,11 @@ impl<'mc> JavaLinkedHashMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn get_or_default(
+    pub fn get_or_default(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -9919,16 +10653,17 @@ impl<'mc> JavaLinkedHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn remove_with_object(
+    pub fn remove_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = arg1.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "remove",
@@ -9939,10 +10674,11 @@ impl<'mc> JavaLinkedHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn put(
+    pub fn put(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -9959,34 +10695,37 @@ impl<'mc> JavaLinkedHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn replace_with_object(
+    pub fn replace_with_object(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = arg1.unwrap();
-        let val_3 = arg2.unwrap();
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_3 = arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "replace",
@@ -9998,18 +10737,20 @@ impl<'mc> JavaLinkedHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "size", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn merge(
+    pub fn merge(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -10020,10 +10761,11 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let val_3 = arg2;
         let res = self.jni_ref().call_method(&self.jni_object(),"merge","(Ljava/lang/Object;Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn put_all(
+    pub fn put_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -10037,8 +10779,9 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn put_if_absent(
+    pub fn put_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -10055,10 +10798,11 @@ impl<'mc> JavaLinkedHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn compute(
+    pub fn compute(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -10075,10 +10819,11 @@ impl<'mc> JavaLinkedHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn contains_key(
+    pub fn contains_key(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10090,10 +10835,11 @@ impl<'mc> JavaLinkedHashMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn compute_if_absent(
+    pub fn compute_if_absent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -10110,10 +10856,11 @@ impl<'mc> JavaLinkedHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn compute_if_present(
+    pub fn compute_if_present(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -10130,10 +10877,11 @@ impl<'mc> JavaLinkedHashMap<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10145,8 +10893,9 @@ impl<'mc> JavaLinkedHashMap<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -10159,22 +10908,30 @@ impl<'mc> JavaLinkedHashMap<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -10187,6 +10944,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -10195,6 +10953,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -10203,6 +10962,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -10258,14 +11018,18 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub unsafe fn add_with_object(
+    pub fn add_with_object(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = arg1.unwrap();
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "add",
@@ -10278,12 +11042,13 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn remove_with_int(
+    pub fn remove_with_int(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "remove",
@@ -10291,8 +11056,9 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn get(
         &mut self,
@@ -10306,8 +11072,9 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -10317,16 +11084,20 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn add_all_with_collection(
+    pub fn add_all_with_collection(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = arg1.unwrap();
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAll",
@@ -10337,10 +11108,11 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn set(
+    pub fn set(
         &mut self,
         arg0: i32,
         arg1: jni::objects::JObject<'mc>,
@@ -10357,14 +11129,18 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn list_iterator(
         &mut self,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "listIterator",
@@ -10372,10 +11148,11 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10387,18 +11164,20 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn index_of(
+    pub fn index_of(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -10410,8 +11189,9 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -10420,8 +11200,9 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn last_index_of(
+    pub fn last_index_of(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -10433,8 +11214,9 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn sub_list(
         &mut self,
@@ -10453,8 +11235,9 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -10467,24 +11250,29 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "size", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn contains(
+    //
+
+    pub fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10496,10 +11284,11 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn remove_all(
+    pub fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10511,10 +11300,11 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn retain_all(
+    pub fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10526,10 +11316,11 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn contains_all(
+    pub fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10541,16 +11332,23 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -10563,6 +11361,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -10571,6 +11370,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -10579,6 +11379,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -10587,6 +11388,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -10596,8 +11398,9 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn spliterator(
         &mut self,
@@ -10609,10 +11412,11 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn remove_if(
+    pub fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10624,8 +11428,9 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn parallel_stream(
         &mut self,
@@ -10637,10 +11442,11 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn for_each(
+    pub fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -10654,8 +11460,9 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn replace_all(
+    pub fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -10669,8 +11476,9 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn sort(
+    pub fn sort(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -10690,11 +11498,11 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaAbstractSequentialList<'mc> {
         self.1
     }
 }
-/// A comparison function, which imposes a <i>total ordering</i> on some collection of objects. Comparators can be passed to a sort method (such as <a href="../../java/util/Collections.html#sort-java.util.List-java.util.Comparator-"><code>Collections.sort</code></a> or <a href="../../java/util/Arrays.html#sort-T:A-java.util.Comparator-"><code>Arrays.sort</code></a>) to allow precise control over the sort order. Comparators can also be used to control the order of certain data structures (such as <a href="../../java/util/SortedSet.html" title="interface in java.util"><code>sorted sets</code></a> or <a title="interface in java.util" href="../../java/util/SortedMap.html"><code>sorted maps</code></a>), or to provide an ordering for collections of objects that don't have a <a href="../../java/lang/Comparable.html" title="interface in java.lang"><code>natural ordering</code></a>.
+/// A comparison function, which imposes a <i>total ordering</i> on some collection of objects. Comparators can be passed to a sort method (such as <a href="../../java/util/Collections.html#sort-java.util.List-java.util.Comparator-"><code>Collections.sort</code></a> or <a href="../../java/util/Arrays.html#sort-T:A-java.util.Comparator-"><code>Arrays.sort</code></a>) to allow precise control over the sort order. Comparators can also be used to control the order of certain data structures (such as <a href="../../java/util/SortedSet.html" title="interface in java.util"><code>sorted sets</code></a> or <a title="interface in java.util" href="../../java/util/SortedMap.html"><code>sorted maps</code></a>), or to provide an ordering for collections of objects that don't have a <a title="interface in java.lang" href="../../java/lang/Comparable.html"><code>natural ordering</code></a>.
 /// <p>The ordering imposed by a comparator <tt>c</tt> on a set of elements <tt>S</tt> is said to be <i>consistent with equals</i> if and only if <tt>c.compare(e1, e2)==0</tt> has the same boolean value as <tt>e1.equals(e2)</tt> for every <tt>e1</tt> and <tt>e2</tt> in <tt>S</tt>.</p>
 /// <p>Caution should be exercised when using a comparator capable of imposing an ordering inconsistent with equals to order a sorted set (or sorted map). Suppose a sorted set (or sorted map) with an explicit comparator <tt>c</tt> is used with elements (or keys) drawn from a set <tt>S</tt>. If the ordering imposed by <tt>c</tt> on <tt>S</tt> is inconsistent with equals, the sorted set (or sorted map) will behave "strangely." In particular the sorted set (or sorted map) will violate the general contract for set (or map), which is defined in terms of <tt>equals</tt>.</p>
 /// <p>For example, suppose one adds two elements <code>a</code> and <code>b</code> such that <code>(a.equals(b) &amp;&amp; c.compare(a, b) != 0)</code> to an empty <code>TreeSet</code> with comparator <code>c</code>. The second <code>add</code> operation will return true (and the size of the tree set will increase) because <code>a</code> and <code>b</code> are not equivalent from the tree set's perspective, even though this is contrary to the specification of the <a href="../../java/util/Set.html#add-E-"><code>Set.add</code></a> method.</p>
-/// <p>Note: It is generally a good idea for comparators to also implement <tt>java.io.Serializable</tt>, as they may be used as ordering methods in serializable data structures (like <a href="../../java/util/TreeSet.html" title="class in java.util"><code>TreeSet</code></a>, <a title="class in java.util" href="../../java/util/TreeMap.html"><code>TreeMap</code></a>). In order for the data structure to serialize successfully, the comparator (if provided) must implement <tt>Serializable</tt>.</p>
+/// <p>Note: It is generally a good idea for comparators to also implement <tt>java.io.Serializable</tt>, as they may be used as ordering methods in serializable data structures (like <a title="class in java.util" href="../../java/util/TreeSet.html"><code>TreeSet</code></a>, <a href="../../java/util/TreeMap.html" title="class in java.util"><code>TreeMap</code></a>). In order for the data structure to serialize successfully, the comparator (if provided) must implement <tt>Serializable</tt>.</p>
 /// <p>For the mathematically inclined, the <i>relation</i> that defines the <i>imposed ordering</i> that a given comparator <tt>c</tt> imposes on a given set of objects <tt>S</tt> is:</p>
 /// <pre> {(x, y) such that c.compare(x, y) &lt;= 0}.
 /// </pre> The <i>quotient</i> for this total order is:
@@ -10730,8 +11538,9 @@ impl<'mc> JavaComparator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10743,10 +11552,11 @@ impl<'mc> JavaComparator<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn compare(
+    pub fn compare(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -10763,25 +11573,30 @@ impl<'mc> JavaComparator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn reverse_order(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("Javajava/util/Comparator")?;
-        let res = jni.call_static_method(cls, "reverseOrder", "()Ljava/util/Comparator;", &[])?;
-        Ok(res.l().unwrap())
+        let cls = jni.find_class("Javajava/util/Comparator");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "reverseOrder", "()Ljava/util/Comparator;", &[]);
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn comparing_with_function(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn comparing_with_function(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = arg1.unwrap();
-        let cls = &jni.find_class("Javajava/util/Comparator")?;
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let cls = jni.find_class("Javajava/util/Comparator");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "comparing",
@@ -10790,15 +11605,17 @@ impl<'mc> JavaComparator<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn then_comparing_with_comparator(
+    pub fn then_comparing_with_comparator(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "thenComparing",
@@ -10806,16 +11623,17 @@ impl<'mc> JavaComparator<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn then_comparing_with_function(
+    pub fn then_comparing_with_function(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = arg1.unwrap();
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "thenComparing",
@@ -10826,53 +11644,63 @@ impl<'mc> JavaComparator<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn comparing_int(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn comparing_int(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let cls = &jni.find_class("Javajava/util/Comparator")?;
+        let cls = jni.find_class("Javajava/util/Comparator");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "comparingInt",
             "(Ljava/util/function/ToIntFunction;)Ljava/util/Comparator;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn comparing_long(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn comparing_long(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let cls = &jni.find_class("Javajava/util/Comparator")?;
+        let cls = jni.find_class("Javajava/util/Comparator");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "comparingLong",
             "(Ljava/util/function/ToLongFunction;)Ljava/util/Comparator;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn comparing_double(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn comparing_double(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let cls = &jni.find_class("Javajava/util/Comparator")?;
+        let cls = jni.find_class("Javajava/util/Comparator");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "comparingDouble",
             "(Ljava/util/function/ToDoubleFunction;)Ljava/util/Comparator;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn reversed(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -10882,10 +11710,11 @@ impl<'mc> JavaComparator<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn then_comparing_int(
+    pub fn then_comparing_int(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -10897,10 +11726,11 @@ impl<'mc> JavaComparator<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn then_comparing_long(
+    pub fn then_comparing_long(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -10912,10 +11742,11 @@ impl<'mc> JavaComparator<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn then_comparing_double(
+    pub fn then_comparing_double(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -10927,45 +11758,54 @@ impl<'mc> JavaComparator<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn natural_order(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("Javajava/util/Comparator")?;
-        let res = jni.call_static_method(cls, "naturalOrder", "()Ljava/util/Comparator;", &[])?;
-        Ok(res.l().unwrap())
+        let cls = jni.find_class("Javajava/util/Comparator");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "naturalOrder", "()Ljava/util/Comparator;", &[]);
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn nulls_first(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn nulls_first(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let cls = &jni.find_class("Javajava/util/Comparator")?;
+        let cls = jni.find_class("Javajava/util/Comparator");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "nullsFirst",
             "(Ljava/util/Comparator;)Ljava/util/Comparator;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn nulls_last(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn nulls_last(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let cls = &jni.find_class("Javajava/util/Comparator")?;
+        let cls = jni.find_class("Javajava/util/Comparator");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "nullsLast",
             "(Ljava/util/Comparator;)Ljava/util/Comparator;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
 }
 impl<'mc> JNIRaw<'mc> for JavaComparator<'mc> {
@@ -10977,187 +11817,12 @@ impl<'mc> JNIRaw<'mc> for JavaComparator<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// This class implements an encoder for encoding byte data using the Base64 encoding scheme as specified in RFC 4648 and RFC 2045.
-/// <p>Instances of <a href="../../java/util/Base64.Encoder.html" title="class in java.util"><code>Base64.Encoder</code></a> class are safe for use by multiple concurrent threads.</p>
-/// <p>Unless otherwise noted, passing a <code>null</code> argument to a method of this class will cause a <a title="class in java.lang" href="../../java/lang/NullPointerException.html"><code>NullPointerException</code></a> to be thrown.</p>
-pub struct JavaBase64Encoder<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaBase64Encoder<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JavaBase64Encoder<'mc> {
-    pub fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate JavaBase64Encoder from null object.").into(),
-            );
-        }
-        let (valid, name) = env.validate_name(&obj, "java/util/Base64Encoder")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a JavaBase64Encoder object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-
-    pub fn encode_to_string(
-        &mut self,
-        arg0: Vec<i8>,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "encodeToString",
-            "(B)Ljava/lang/String;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub fn without_padding(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "withoutPadding",
-            "()Ljava/util/Base64$Encoder;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub unsafe fn wrap(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "wrap",
-            "(Ljava/io/OutputStream;)Ljava/io/OutputStream;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub fn encode_with_bytes(
-        &mut self,
-        arg0: Vec<i8>,
-        arg1: std::option::Option<Vec<i8>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "encode", "(BB)I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-
-    pub fn wait(
-        &mut self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "wait",
-            "(JI)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub unsafe fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-}
 /// An instance of this class is used to generate a stream of pseudorandom numbers. The class uses a 48-bit seed, which is modified using a linear congruential formula. (See Donald Knuth, <i>The Art of Computer Programming, Volume 2</i>, Section 3.2.1.)
 /// <p>If two instances of <code>Random</code> are created with the same seed, and the same sequence of method calls is made for each, they will generate and return identical sequences of numbers. In order to guarantee this property, particular algorithms are specified for the class <code>Random</code>. Java implementations must use all the algorithms shown here for the class <code>Random</code>, for the sake of absolute portability of Java code. However, subclasses of class <code>Random</code> are permitted to use other algorithms, so long as they adhere to the general contracts for all the methods.</p>
 /// <p>The algorithms implemented by class <code>Random</code> use a <code>protected</code> utility method that on each invocation can supply up to 32 pseudorandomly generated bits.</p>
 /// <p>Many applications will find the method <a href="../../java/lang/Math.html#random--"><code>Math.random()</code></a> simpler to use.</p>
-/// <p>Instances of <code>java.util.Random</code> are threadsafe. However, the concurrent use of the same <code>java.util.Random</code> instance across threads may encounter contention and consequent poor performance. Consider instead using <a href="../../java/util/concurrent/ThreadLocalRandom.html" title="class in java.util.concurrent"><code>ThreadLocalRandom</code></a> in multithreaded designs.</p>
-/// <p>Instances of <code>java.util.Random</code> are not cryptographically secure. Consider instead using <a href="../../java/security/SecureRandom.html" title="class in java.security"><code>SecureRandom</code></a> to get a cryptographically secure pseudo-random number generator for use by security-sensitive applications.</p>
+/// <p>Instances of <code>java.util.Random</code> are threadsafe. However, the concurrent use of the same <code>java.util.Random</code> instance across threads may encounter contention and consequent poor performance. Consider instead using <a title="class in java.util.concurrent" href="../../java/util/concurrent/ThreadLocalRandom.html"><code>ThreadLocalRandom</code></a> in multithreaded designs.</p>
+/// <p>Instances of <code>java.util.Random</code> are not cryptographically secure. Consider instead using <a title="class in java.security" href="../../java/security/SecureRandom.html"><code>SecureRandom</code></a> to get a cryptographically secure pseudo-random number generator for use by security-sensitive applications.</p>
 pub struct JavaRandom<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -11191,30 +11856,43 @@ impl<'mc> JavaRandom<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let cls = &jni.find_class("Javajava/util/Random")?;
-        let res = jni.new_object(cls, "(J)V", &[jni::objects::JValueGen::from(&val_1)])?;
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let cls = jni.find_class("Javajava/util/Random");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, "(J)V", &[jni::objects::JValueGen::from(&val_1)]);
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
+    //
 
     pub fn next_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "nextBoolean", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn next_long(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Long(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextLong",
@@ -11225,16 +11903,23 @@ impl<'mc> JavaRandom<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
+        Ok(res.j()?)
     }
+    //
 
     pub fn next_float(
         &mut self,
         arg0: std::option::Option<f32>,
         arg1: std::option::Option<f32>,
     ) -> Result<f32, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Float(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Float(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Float(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Float(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextFloat",
@@ -11245,16 +11930,23 @@ impl<'mc> JavaRandom<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.f().unwrap())
+        Ok(res.f()?)
     }
+    //
 
     pub fn ints(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "ints",
@@ -11265,8 +11957,9 @@ impl<'mc> JavaRandom<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn ints_with_long(
         &mut self,
@@ -11276,7 +11969,10 @@ impl<'mc> JavaRandom<'mc> {
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.unwrap().into());
+        let val_3 = jni::objects::JValueGen::Int(
+            arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "ints",
@@ -11288,8 +11984,9 @@ impl<'mc> JavaRandom<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn longs(
         &mut self,
@@ -11297,9 +11994,18 @@ impl<'mc> JavaRandom<'mc> {
         arg1: std::option::Option<i64>,
         arg2: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.unwrap().into());
-        let val_3 = jni::objects::JValueGen::Long(arg2.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Long(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_3 = jni::objects::JValueGen::Long(
+            arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "longs",
@@ -11311,16 +12017,23 @@ impl<'mc> JavaRandom<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn doubles(
         &mut self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Double(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Double(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "doubles",
@@ -11331,8 +12044,9 @@ impl<'mc> JavaRandom<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn doubles_with_long(
         &mut self,
@@ -11342,7 +12056,10 @@ impl<'mc> JavaRandom<'mc> {
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let val_2 = jni::objects::JValueGen::Double(arg1.into());
-        let val_3 = jni::objects::JValueGen::Double(arg2.unwrap().into());
+        let val_3 = jni::objects::JValueGen::Double(
+            arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "doubles",
@@ -11354,8 +12071,9 @@ impl<'mc> JavaRandom<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn set_seed(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
@@ -11368,6 +12086,7 @@ impl<'mc> JavaRandom<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn next_bytes(&mut self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -11376,14 +12095,21 @@ impl<'mc> JavaRandom<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn next_gaussian(
         &mut self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Double(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Double(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextGaussian",
@@ -11394,16 +12120,23 @@ impl<'mc> JavaRandom<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn next_double(
         &mut self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Double(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Double(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Double(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextDouble",
@@ -11414,16 +12147,23 @@ impl<'mc> JavaRandom<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn next_int(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "nextInt",
@@ -11434,16 +12174,23 @@ impl<'mc> JavaRandom<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -11456,8 +12203,9 @@ impl<'mc> JavaRandom<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11469,8 +12217,9 @@ impl<'mc> JavaRandom<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -11483,14 +12232,16 @@ impl<'mc> JavaRandom<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -11499,6 +12250,7 @@ impl<'mc> JavaRandom<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -11507,6 +12259,7 @@ impl<'mc> JavaRandom<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -11515,21 +12268,23 @@ impl<'mc> JavaRandom<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn is_deprecated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isDeprecated", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn next_exponential(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "nextExponential", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
 }
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaRandom<'mc> {
@@ -11572,14 +12327,18 @@ impl<'mc> JavaList<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub unsafe fn add_with_object(
+    pub fn add_with_object(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = arg1.unwrap();
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "add",
@@ -11592,12 +12351,16 @@ impl<'mc> JavaList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn remove_with_object(
         &mut self,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "remove",
@@ -11605,8 +12368,9 @@ impl<'mc> JavaList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn get(
         &mut self,
@@ -11620,10 +12384,11 @@ impl<'mc> JavaList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11635,33 +12400,38 @@ impl<'mc> JavaList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn copy_of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn copy_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let cls = &jni.find_class("Javajava/util/List")?;
+        let cls = jni.find_class("Javajava/util/List");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "copyOf",
             "(Ljava/util/Collection;)Ljava/util/List;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn index_of(
+    pub fn index_of(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -11673,8 +12443,9 @@ impl<'mc> JavaList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -11683,8 +12454,9 @@ impl<'mc> JavaList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn last_index_of(
+    pub fn last_index_of(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -11696,18 +12468,20 @@ impl<'mc> JavaList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn replace_all(
+    pub fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -11721,14 +12495,16 @@ impl<'mc> JavaList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "size", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn sub_list(
         &mut self,
@@ -11747,8 +12523,11 @@ impl<'mc> JavaList<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
+
+    //
 
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -11758,20 +12537,24 @@ impl<'mc> JavaList<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("Javajava/util/List")?;
-        let res = jni.call_static_method(cls, "of", "(Ljava/lang/Object;)Ljava/util/List;", &[])?;
-        Ok(res.l().unwrap())
+        let cls = jni.find_class("Javajava/util/List");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "of", "(Ljava/lang/Object;)Ljava/util/List;", &[]);
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn of_with_object(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn of_with_object(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: jni::objects::JObject<'mc>,
@@ -11792,14 +12575,17 @@ impl<'mc> JavaList<'mc> {
         let val_7 = arg6;
         let val_8 = arg7;
         let val_9 = arg8;
-        let val_10 = arg9.unwrap();
-        let cls = &jni.find_class("Javajava/util/List")?;
+        let val_10 = arg9.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let cls = jni.find_class("Javajava/util/List");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls,"of",
-"(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6),jni::objects::JValueGen::from(&val_7),jni::objects::JValueGen::from(&val_8),jni::objects::JValueGen::from(&val_9),jni::objects::JValueGen::from(&val_10)])?;
-        Ok(res.l().unwrap())
+"(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6),jni::objects::JValueGen::from(&val_7),jni::objects::JValueGen::from(&val_8),jni::objects::JValueGen::from(&val_9),jni::objects::JValueGen::from(&val_10)]);
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn contains(
+    pub fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11811,8 +12597,9 @@ impl<'mc> JavaList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn spliterator(
         &mut self,
@@ -11824,16 +12611,20 @@ impl<'mc> JavaList<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn add_all_with_collection(
+    pub fn add_all_with_collection(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = arg1.unwrap();
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAll",
@@ -11844,10 +12635,11 @@ impl<'mc> JavaList<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn set(
+    pub fn set(
         &mut self,
         arg0: i32,
         arg1: jni::objects::JObject<'mc>,
@@ -11864,10 +12656,11 @@ impl<'mc> JavaList<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn sort(
+    pub fn sort(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -11881,8 +12674,9 @@ impl<'mc> JavaList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn remove_all(
+    pub fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11894,10 +12688,11 @@ impl<'mc> JavaList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn retain_all(
+    pub fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11909,14 +12704,18 @@ impl<'mc> JavaList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn list_iterator(
         &mut self,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "listIterator",
@@ -11924,10 +12723,11 @@ impl<'mc> JavaList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn contains_all(
+    pub fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11939,8 +12739,9 @@ impl<'mc> JavaList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -11950,10 +12751,11 @@ impl<'mc> JavaList<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn remove_if(
+    pub fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11965,8 +12767,9 @@ impl<'mc> JavaList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn parallel_stream(
         &mut self,
@@ -11978,10 +12781,11 @@ impl<'mc> JavaList<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn for_each(
+    pub fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -12057,40 +12861,51 @@ impl<'mc> JavaUUID<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub fn variant(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "variant", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
+    //
 
     pub fn least_significant_bits(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getLeastSignificantBits", "()J", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
+        Ok(res.j()?)
     }
+    //
 
     pub fn most_significant_bits(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getMostSignificantBits", "()J", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
+        Ok(res.j()?)
     }
+    //
 
     pub fn clock_sequence(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "clockSequence", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn variant(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "variant", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    //
+
+    //
+
+    //
+
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12102,8 +12917,9 @@ impl<'mc> JavaUUID<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -12116,34 +12932,39 @@ impl<'mc> JavaUUID<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn version(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "version", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn compare_to_with_object(
         &mut self,
         arg0: std::option::Option<u128>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let upper = (arg0.unwrap() >> 64) as u64 as i64;
-        let lower = arg0.unwrap() as u64 as i64;
-        let val_1 = jni::objects::JValueGen::Object(
-            self.jni_ref()
-                .new_object("java/util/UUID", "(JJ)V", &[upper.into(), lower.into()])
-                .unwrap(),
-        );
+        let upper = (arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))? >> 64)
+            as u64 as i64;
+        let lower =
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))? as u64 as i64;
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/util/UUID",
+            "(JJ)V",
+            &[upper.into(), lower.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "compareTo",
@@ -12151,32 +12972,41 @@ impl<'mc> JavaUUID<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn timestamp(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "timestamp", "()J", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
+        Ok(res.j()?)
     }
+    //
 
     pub fn node(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "node", "()J", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
+        Ok(res.j()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -12189,6 +13019,7 @@ impl<'mc> JavaUUID<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -12197,6 +13028,7 @@ impl<'mc> JavaUUID<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -12205,6 +13037,7 @@ impl<'mc> JavaUUID<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -12253,27 +13086,33 @@ impl<'mc> JavaHashSet<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub unsafe fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let cls = &jni.find_class("Javajava/util/HashSet")?;
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let cls = jni.find_class("Javajava/util/HashSet");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Ljava/util/Collection;)V",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
     pub fn new_with_int(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: std::option::Option<f32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Float(arg1.unwrap().into());
-        let cls = &jni.find_class("Javajava/util/HashSet")?;
+        let val_2 = jni::objects::JValueGen::Float(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let cls = jni.find_class("Javajava/util/HashSet");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(IF)V",
@@ -12281,11 +13120,13 @@ impl<'mc> JavaHashSet<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
+    //
 
-    pub unsafe fn add(
+    pub fn add(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12297,10 +13138,11 @@ impl<'mc> JavaHashSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn remove(
+    pub fn remove(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12312,16 +13154,18 @@ impl<'mc> JavaHashSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -12330,22 +13174,27 @@ impl<'mc> JavaHashSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "size", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
+
+    //
 
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -12355,10 +13204,11 @@ impl<'mc> JavaHashSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn contains(
+    pub fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12370,8 +13220,9 @@ impl<'mc> JavaHashSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn spliterator(
         &mut self,
@@ -12383,10 +13234,11 @@ impl<'mc> JavaHashSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12398,18 +13250,20 @@ impl<'mc> JavaHashSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn remove_all(
+    pub fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12421,8 +13275,9 @@ impl<'mc> JavaHashSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -12435,8 +13290,9 @@ impl<'mc> JavaHashSet<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
-    pub unsafe fn add_all(
+    pub fn add_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12448,10 +13304,11 @@ impl<'mc> JavaHashSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn retain_all(
+    pub fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12463,10 +13320,11 @@ impl<'mc> JavaHashSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn contains_all(
+    pub fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12478,16 +13336,23 @@ impl<'mc> JavaHashSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -12500,6 +13365,7 @@ impl<'mc> JavaHashSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -12508,6 +13374,7 @@ impl<'mc> JavaHashSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -12516,6 +13383,7 @@ impl<'mc> JavaHashSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -12524,6 +13392,7 @@ impl<'mc> JavaHashSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -12533,10 +13402,11 @@ impl<'mc> JavaHashSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn remove_if(
+    pub fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12548,8 +13418,9 @@ impl<'mc> JavaHashSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn parallel_stream(
         &mut self,
@@ -12561,10 +13432,11 @@ impl<'mc> JavaHashSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn for_each(
+    pub fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -12584,10 +13456,10 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaHashSet<'mc> {
         self.1
     }
 }
-/// This class provides a skeletal implementation of the <a href="../../java/util/List.html" title="interface in java.util"><code>List</code></a> interface to minimize the effort required to implement this interface backed by a "random access" data store (such as an array). For sequential access data (such as a linked list), <a href="../../java/util/AbstractSequentialList.html" title="class in java.util"><code>AbstractSequentialList</code></a> should be used in preference to this class.
+/// This class provides a skeletal implementation of the <a title="interface in java.util" href="../../java/util/List.html"><code>List</code></a> interface to minimize the effort required to implement this interface backed by a "random access" data store (such as an array). For sequential access data (such as a linked list), <a title="class in java.util" href="../../java/util/AbstractSequentialList.html"><code>AbstractSequentialList</code></a> should be used in preference to this class.
 /// <p>To implement an unmodifiable list, the programmer needs only to extend this class and provide implementations for the <a href="../../java/util/AbstractList.html#get-int-"><code>get(int)</code></a> and <a href="../../java/util/List.html#size--"><code>size()</code></a> methods.</p>
 /// <p>To implement a modifiable list, the programmer must additionally override the <a href="../../java/util/AbstractList.html#set-int-E-"><code>set(int, E)</code></a> method (which otherwise throws an <code>UnsupportedOperationException</code>). If the list is variable-size the programmer must additionally override the <a href="../../java/util/AbstractList.html#add-int-E-"><code>add(int, E)</code></a> and <a href="../../java/util/AbstractList.html#remove-int-"><code>remove(int)</code></a> methods.</p>
-/// <p>The programmer should generally provide a void (no argument) and collection constructor, as per the recommendation in the <a href="../../java/util/Collection.html" title="interface in java.util"><code>Collection</code></a> interface specification.</p>
+/// <p>The programmer should generally provide a void (no argument) and collection constructor, as per the recommendation in the <a title="interface in java.util" href="../../java/util/Collection.html"><code>Collection</code></a> interface specification.</p>
 /// <p>Unlike the other abstract collection implementations, the programmer does <i>not</i> have to provide an iterator implementation; the iterator and list iterator are implemented by this class, on top of the "random access" methods: <a href="../../java/util/AbstractList.html#get-int-"><code>get(int)</code></a>, <a href="../../java/util/AbstractList.html#set-int-E-"><code>set(int, E)</code></a>, <a href="../../java/util/AbstractList.html#add-int-E-"><code>add(int, E)</code></a> and <a href="../../java/util/AbstractList.html#remove-int-"><code>remove(int)</code></a>.</p>
 /// <p>The documentation for each non-abstract method in this class describes its implementation in detail. Each of these methods may be overridden if the collection being implemented admits a more efficient implementation.</p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
@@ -12625,14 +13497,18 @@ impl<'mc> JavaAbstractList<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub unsafe fn add_with_object(
+    pub fn add_with_object(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = arg1.unwrap();
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "add",
@@ -12645,12 +13521,13 @@ impl<'mc> JavaAbstractList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn remove_with_int(
+    pub fn remove_with_int(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "remove",
@@ -12658,8 +13535,9 @@ impl<'mc> JavaAbstractList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn get(
         &mut self,
@@ -12673,10 +13551,11 @@ impl<'mc> JavaAbstractList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12688,18 +13567,20 @@ impl<'mc> JavaAbstractList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn index_of(
+    pub fn index_of(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -12711,8 +13592,9 @@ impl<'mc> JavaAbstractList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -12721,8 +13603,9 @@ impl<'mc> JavaAbstractList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn last_index_of(
+    pub fn last_index_of(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -12734,8 +13617,9 @@ impl<'mc> JavaAbstractList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn sub_list(
         &mut self,
@@ -12754,8 +13638,9 @@ impl<'mc> JavaAbstractList<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -12765,16 +13650,20 @@ impl<'mc> JavaAbstractList<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn add_all_with_collection(
+    pub fn add_all_with_collection(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = arg1.unwrap();
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAll",
@@ -12785,10 +13674,11 @@ impl<'mc> JavaAbstractList<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn set(
+    pub fn set(
         &mut self,
         arg0: i32,
         arg1: jni::objects::JObject<'mc>,
@@ -12805,14 +13695,18 @@ impl<'mc> JavaAbstractList<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn list_iterator(
         &mut self,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "listIterator",
@@ -12820,8 +13714,9 @@ impl<'mc> JavaAbstractList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -12834,24 +13729,29 @@ impl<'mc> JavaAbstractList<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "size", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn contains(
+    //
+
+    pub fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12863,10 +13763,11 @@ impl<'mc> JavaAbstractList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn remove_all(
+    pub fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12878,10 +13779,11 @@ impl<'mc> JavaAbstractList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn retain_all(
+    pub fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12893,10 +13795,11 @@ impl<'mc> JavaAbstractList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn contains_all(
+    pub fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12908,16 +13811,23 @@ impl<'mc> JavaAbstractList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -12930,6 +13840,7 @@ impl<'mc> JavaAbstractList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -12938,6 +13849,7 @@ impl<'mc> JavaAbstractList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -12946,6 +13858,7 @@ impl<'mc> JavaAbstractList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -12954,6 +13867,7 @@ impl<'mc> JavaAbstractList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -12963,8 +13877,9 @@ impl<'mc> JavaAbstractList<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn spliterator(
         &mut self,
@@ -12976,10 +13891,11 @@ impl<'mc> JavaAbstractList<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn remove_if(
+    pub fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12991,8 +13907,9 @@ impl<'mc> JavaAbstractList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn parallel_stream(
         &mut self,
@@ -13004,10 +13921,11 @@ impl<'mc> JavaAbstractList<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn for_each(
+    pub fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -13021,8 +13939,9 @@ impl<'mc> JavaAbstractList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn replace_all(
+    pub fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -13036,8 +13955,9 @@ impl<'mc> JavaAbstractList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn sort(
+    pub fn sort(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -13092,23 +14012,9 @@ impl<'mc> JavaOptional<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub unsafe fn if_present(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "ifPresent",
-            "(Ljava/util/function/Consumer;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub unsafe fn if_present_or_else(
+    pub fn if_present_or_else(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -13127,8 +14033,9 @@ impl<'mc> JavaOptional<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn or(
+    pub fn or(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -13140,10 +14047,11 @@ impl<'mc> JavaOptional<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn or_else_get(
+    pub fn or_else_get(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -13155,33 +14063,54 @@ impl<'mc> JavaOptional<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn of_nullable(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn if_present(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "ifPresent",
+            "(Ljava/util/function/Consumer;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn of_nullable(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let cls = &jni.find_class("Javajava/util/Optional")?;
+        let cls = jni.find_class("Javajava/util/Optional");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "ofNullable",
             "(Ljava/lang/Object;)Ljava/util/Optional;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn get(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "get", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -13193,8 +14122,9 @@ impl<'mc> JavaOptional<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -13207,24 +14137,27 @@ impl<'mc> JavaOptional<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn map(
+    pub fn map(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -13236,8 +14169,9 @@ impl<'mc> JavaOptional<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -13247,25 +14181,29 @@ impl<'mc> JavaOptional<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let cls = &jni.find_class("Javajava/util/Optional")?;
+        let cls = jni.find_class("Javajava/util/Optional");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "of",
             "(Ljava/lang/Object;)Ljava/util/Optional;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn filter(
+    pub fn filter(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -13277,18 +14215,22 @@ impl<'mc> JavaOptional<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn empty(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("Javajava/util/Optional")?;
-        let res = jni.call_static_method(cls, "empty", "()Ljava/util/Optional;", &[])?;
-        Ok(res.l().unwrap())
+        let cls = jni.find_class("Javajava/util/Optional");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "empty", "()Ljava/util/Optional;", &[]);
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn flat_map(
+    pub fn flat_map(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -13300,18 +14242,20 @@ impl<'mc> JavaOptional<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn is_present(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isPresent", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn or_else(
+    pub fn or_else(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -13323,14 +14267,15 @@ impl<'mc> JavaOptional<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn or_else_throw(
+    pub fn or_else_throw(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "orElseThrow",
@@ -13338,16 +14283,23 @@ impl<'mc> JavaOptional<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -13360,6 +14312,7 @@ impl<'mc> JavaOptional<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -13368,6 +14321,7 @@ impl<'mc> JavaOptional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -13376,6 +14330,7 @@ impl<'mc> JavaOptional<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -13417,8 +14372,9 @@ impl<'mc> JavaListIterator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub unsafe fn add(
+    pub fn add(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -13432,6 +14388,7 @@ impl<'mc> JavaListIterator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -13440,24 +14397,27 @@ impl<'mc> JavaListIterator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn has_next(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hasNext", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn next(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "next", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn set(
+    pub fn set(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -13471,40 +14431,45 @@ impl<'mc> JavaListIterator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn next_index(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "nextIndex", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn previous_index(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "previousIndex", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn has_previous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hasPrevious", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn previous(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "previous", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn for_each_remaining(
+    pub fn for_each_remaining(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -13574,21 +14539,24 @@ impl<'mc> JavaLinkedList<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub unsafe fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let cls = &jni.find_class("Javajava/util/LinkedList")?;
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let cls = jni.find_class("Javajava/util/LinkedList");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Ljava/util/Collection;)V",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
+    //
 
-    pub unsafe fn push(
+    pub fn push(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -13602,16 +14570,18 @@ impl<'mc> JavaLinkedList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn pop(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "pop", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn add_first(
+    pub fn add_first(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -13625,8 +14595,9 @@ impl<'mc> JavaLinkedList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn add_last(
+    pub fn add_last(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -13640,6 +14611,7 @@ impl<'mc> JavaLinkedList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn poll_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -13649,18 +14621,20 @@ impl<'mc> JavaLinkedList<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn poll_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "pollLast", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn offer_last(
+    pub fn offer_last(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -13672,8 +14646,9 @@ impl<'mc> JavaLinkedList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn remove_first(
         &mut self,
@@ -13685,16 +14660,18 @@ impl<'mc> JavaLinkedList<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getFirst", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn peek_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -13704,10 +14681,11 @@ impl<'mc> JavaLinkedList<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn remove_first_occurrence(
+    pub fn remove_first_occurrence(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -13719,10 +14697,11 @@ impl<'mc> JavaLinkedList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn offer_first(
+    pub fn offer_first(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -13734,8 +14713,9 @@ impl<'mc> JavaLinkedList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn remove_last(
         &mut self,
@@ -13747,26 +14727,29 @@ impl<'mc> JavaLinkedList<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getLast", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn peek_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "peekLast", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn remove_last_occurrence(
+    pub fn remove_last_occurrence(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -13778,10 +14761,11 @@ impl<'mc> JavaLinkedList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn offer(
+    pub fn offer(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -13793,8 +14777,9 @@ impl<'mc> JavaLinkedList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn descending_iterator(
         &mut self,
@@ -13806,16 +14791,20 @@ impl<'mc> JavaLinkedList<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn add_with_object(
+    pub fn add_with_object(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = arg1.unwrap();
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "add",
@@ -13828,12 +14817,13 @@ impl<'mc> JavaLinkedList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn remove(
+    pub fn remove(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "remove",
@@ -13841,8 +14831,9 @@ impl<'mc> JavaLinkedList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn get(
         &mut self,
@@ -13856,18 +14847,20 @@ impl<'mc> JavaLinkedList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn index_of(
+    pub fn index_of(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -13879,8 +14872,9 @@ impl<'mc> JavaLinkedList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -13889,8 +14883,9 @@ impl<'mc> JavaLinkedList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn last_index_of(
+    pub fn last_index_of(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -13902,18 +14897,22 @@ impl<'mc> JavaLinkedList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "size", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn contains(
+    //
+
+    pub fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -13925,8 +14924,9 @@ impl<'mc> JavaLinkedList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn spliterator(
         &mut self,
@@ -13938,16 +14938,20 @@ impl<'mc> JavaLinkedList<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn add_all_with_collection(
+    pub fn add_all_with_collection(
         &mut self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let val_2 = arg1.unwrap();
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addAll",
@@ -13958,10 +14962,11 @@ impl<'mc> JavaLinkedList<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn set(
+    pub fn set(
         &mut self,
         arg0: i32,
         arg1: jni::objects::JObject<'mc>,
@@ -13978,38 +14983,45 @@ impl<'mc> JavaLinkedList<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn poll(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "poll", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn peek(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "peek", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn element(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "element", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn list_iterator(
         &mut self,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "listIterator",
@@ -14017,8 +15029,9 @@ impl<'mc> JavaLinkedList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -14028,10 +15041,11 @@ impl<'mc> JavaLinkedList<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14043,16 +15057,18 @@ impl<'mc> JavaLinkedList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn sub_list(
         &mut self,
@@ -14071,8 +15087,9 @@ impl<'mc> JavaLinkedList<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -14085,16 +15102,18 @@ impl<'mc> JavaLinkedList<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn remove_all(
+    pub fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14106,10 +15125,11 @@ impl<'mc> JavaLinkedList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn retain_all(
+    pub fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14121,10 +15141,11 @@ impl<'mc> JavaLinkedList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn contains_all(
+    pub fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14136,16 +15157,23 @@ impl<'mc> JavaLinkedList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -14158,6 +15186,7 @@ impl<'mc> JavaLinkedList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -14166,6 +15195,7 @@ impl<'mc> JavaLinkedList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -14174,6 +15204,7 @@ impl<'mc> JavaLinkedList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -14182,6 +15213,7 @@ impl<'mc> JavaLinkedList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -14191,10 +15223,11 @@ impl<'mc> JavaLinkedList<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn remove_if(
+    pub fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14206,8 +15239,9 @@ impl<'mc> JavaLinkedList<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn parallel_stream(
         &mut self,
@@ -14219,10 +15253,11 @@ impl<'mc> JavaLinkedList<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn for_each(
+    pub fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -14236,8 +15271,9 @@ impl<'mc> JavaLinkedList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn replace_all(
+    pub fn replace_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -14251,8 +15287,9 @@ impl<'mc> JavaLinkedList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn sort(
+    pub fn sort(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -14308,8 +15345,9 @@ impl<'mc> JavaCollection<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub unsafe fn add(
+    pub fn add(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14321,10 +15359,11 @@ impl<'mc> JavaCollection<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn remove(
+    pub fn remove(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14336,10 +15375,11 @@ impl<'mc> JavaCollection<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14351,16 +15391,18 @@ impl<'mc> JavaCollection<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -14369,22 +15411,27 @@ impl<'mc> JavaCollection<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "size", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
+
+    //
 
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -14394,8 +15441,9 @@ impl<'mc> JavaCollection<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -14405,10 +15453,11 @@ impl<'mc> JavaCollection<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn contains(
+    pub fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14420,8 +15469,9 @@ impl<'mc> JavaCollection<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn spliterator(
         &mut self,
@@ -14433,10 +15483,11 @@ impl<'mc> JavaCollection<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn add_all(
+    pub fn add_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14448,10 +15499,11 @@ impl<'mc> JavaCollection<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn remove_if(
+    pub fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14463,10 +15515,11 @@ impl<'mc> JavaCollection<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn remove_all(
+    pub fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14478,10 +15531,11 @@ impl<'mc> JavaCollection<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn retain_all(
+    pub fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14493,10 +15547,11 @@ impl<'mc> JavaCollection<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn contains_all(
+    pub fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14508,8 +15563,9 @@ impl<'mc> JavaCollection<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn parallel_stream(
         &mut self,
@@ -14521,10 +15577,11 @@ impl<'mc> JavaCollection<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn for_each(
+    pub fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -14566,7 +15623,7 @@ impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "java/util/PrimitiveIteratorOfInt")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/PrimitiveIterator$OfInt")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaPrimitiveIteratorOfInt object, got {}",
@@ -14577,20 +15634,22 @@ impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
     pub fn next_int(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "nextInt", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn for_each_remaining_with_object(
+    pub fn for_each_remaining_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "forEachRemaining",
@@ -14600,12 +15659,13 @@ impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn for_each_remaining_with_int_consumer(
+    pub fn for_each_remaining_with_int_consumer(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "forEachRemaining",
@@ -14615,14 +15675,16 @@ impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn next(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "next", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -14631,13 +15693,14 @@ impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn has_next(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hasNext", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
 }
 impl<'mc> JNIRaw<'mc> for JavaPrimitiveIteratorOfInt<'mc> {
@@ -14667,7 +15730,7 @@ impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "java/util/PrimitiveIteratorOfLong")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/PrimitiveIterator$OfLong")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaPrimitiveIteratorOfLong object, got {}",
@@ -14678,20 +15741,22 @@ impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
     pub fn next_long(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "nextLong", "()J", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
+        Ok(res.j()?)
     }
+    //
 
-    pub unsafe fn for_each_remaining_with_object(
+    pub fn for_each_remaining_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "forEachRemaining",
@@ -14701,12 +15766,13 @@ impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn for_each_remaining_with_long_consumer(
+    pub fn for_each_remaining_with_long_consumer(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "forEachRemaining",
@@ -14716,14 +15782,16 @@ impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn next(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "next", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -14732,13 +15800,14 @@ impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn has_next(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hasNext", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
 }
 impl<'mc> JNIRaw<'mc> for JavaPrimitiveIteratorOfLong<'mc> {
@@ -14781,6 +15850,7 @@ impl<'mc> JavaIterator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
     pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -14789,8 +15859,9 @@ impl<'mc> JavaIterator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn for_each_remaining(
+    pub fn for_each_remaining(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -14804,21 +15875,23 @@ impl<'mc> JavaIterator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn has_next(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hasNext", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn next(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "next", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
 }
 impl<'mc> JNIRaw<'mc> for JavaIterator<'mc> {
@@ -14830,7 +15903,7 @@ impl<'mc> JNIRaw<'mc> for JavaIterator<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// A base type for primitive specializations of <code>Iterator</code>. Specialized subtypes are provided for <a href="../../java/util/PrimitiveIterator.OfInt.html" title="interface in java.util"><code>int</code></a>, <a title="interface in java.util" href="../../java/util/PrimitiveIterator.OfLong.html"><code>long</code></a>, and <a href="../../java/util/PrimitiveIterator.OfDouble.html" title="interface in java.util"><code>double</code></a> values.
+/// A base type for primitive specializations of <code>Iterator</code>. Specialized subtypes are provided for <a href="../../java/util/PrimitiveIterator.OfInt.html" title="interface in java.util"><code>int</code></a>, <a title="interface in java.util" href="../../java/util/PrimitiveIterator.OfLong.html"><code>long</code></a>, and <a title="interface in java.util" href="../../java/util/PrimitiveIterator.OfDouble.html"><code>double</code></a> values.
 /// <p>The specialized subtype default implementations of <a href="../../java/util/Iterator.html#next--"><code>Iterator.next()</code></a> and <a href="../../java/util/Iterator.html#forEachRemaining-java.util.function.Consumer-"><code>Iterator.forEachRemaining(java.util.function.Consumer)</code></a> box primitive values to instances of their corresponding wrapper class. Such boxing may offset any advantages gained when using the primitive specializations. To avoid boxing, the corresponding primitive-based methods should be used. For example, <a href="../../java/util/PrimitiveIterator.OfInt.html#nextInt--"><code>PrimitiveIterator.OfInt.nextInt()</code></a> and <a href="../../java/util/PrimitiveIterator.OfInt.html#forEachRemaining-java.util.function.IntConsumer-"><code>PrimitiveIterator.OfInt.forEachRemaining(java.util.function.IntConsumer)</code></a> should be used in preference to <a href="../../java/util/PrimitiveIterator.OfInt.html#next--"><code>PrimitiveIterator.OfInt.next()</code></a> and <a href="../../java/util/PrimitiveIterator.OfInt.html#forEachRemaining-java.util.function.Consumer-"><code>PrimitiveIterator.OfInt.forEachRemaining(java.util.function.Consumer)</code></a>.</p>
 /// <p>Iteration of primitive values using boxing-based methods <a href="../../java/util/Iterator.html#next--"><code>next()</code></a> and <a href="../../java/util/Iterator.html#forEachRemaining-java.util.function.Consumer-"><code>forEachRemaining()</code></a>, does not affect the order in which the values, transformed to boxed values, are encountered.</p>
 ///
@@ -14861,12 +15934,13 @@ impl<'mc> JavaPrimitiveIterator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub unsafe fn for_each_remaining_with_object(
+    pub fn for_each_remaining_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "forEachRemaining",
@@ -14876,6 +15950,7 @@ impl<'mc> JavaPrimitiveIterator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -14884,21 +15959,23 @@ impl<'mc> JavaPrimitiveIterator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn has_next(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hasNext", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn next(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "next", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
 }
 impl<'mc> JNIRaw<'mc> for JavaPrimitiveIterator<'mc> {
@@ -14930,7 +16007,7 @@ impl<'mc> JavaMapEntry<'mc> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate JavaMapEntry from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "java/util/MapEntry")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/Map$Entry")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaMapEntry object, got {}",
@@ -14941,38 +16018,45 @@ impl<'mc> JavaMapEntry<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub unsafe fn comparing_by_key(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn comparing_by_key(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let cls = &jni.find_class("Javajava/util/Comparator")?;
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let cls = jni.find_class("Javajava/util/Comparator");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "comparingByKey",
             "(Ljava/util/Comparator;)Ljava/util/Comparator;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn comparing_by_value(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn comparing_by_value(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let cls = &jni.find_class("Javajava/util/Comparator")?;
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let cls = jni.find_class("Javajava/util/Comparator");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "comparingByValue",
             "(Ljava/util/Comparator;)Ljava/util/Comparator;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14984,49 +16068,56 @@ impl<'mc> JavaMapEntry<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn copy_of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn copy_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let cls = &jni.find_class("Javajava/util/Map$Entry")?;
+        let cls = jni.find_class("Javajava/util/Map$Entry");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "copyOf",
             "(Ljava/util/Map$Entry;)Ljava/util/Map$Entry;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getValue", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn key(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getKey", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn set_value(
+    pub fn set_value(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -15038,7 +16129,7 @@ impl<'mc> JavaMapEntry<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
 }
 impl<'mc> JNIRaw<'mc> for JavaMapEntry<'mc> {
@@ -15050,8 +16141,8 @@ impl<'mc> JNIRaw<'mc> for JavaMapEntry<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// A specialized <a title="interface in java.util" href="../../java/util/Set.html"><code>Set</code></a> implementation for use with enum types. All of the elements in an enum set must come from a single enum type that is specified, explicitly or implicitly, when the set is created. Enum sets are represented internally as bit vectors. This representation is extremely compact and efficient. The space and time performance of this class should be good enough to allow its use as a high-quality, typesafe alternative to traditional <tt>int</tt>-based "bit flags." Even bulk operations (such as <tt>containsAll</tt> and <tt>retainAll</tt>) should run very quickly if their argument is also an enum set.
-/// <p>The iterator returned by the <tt>iterator</tt> method traverses the elements in their <i>natural order</i> (the order in which the enum constants are declared). The returned iterator is <i>weakly consistent</i>: it will never throw <a title="class in java.util" href="../../java/util/ConcurrentModificationException.html"><code>ConcurrentModificationException</code></a> and it may or may not show the effects of any modifications to the set that occur while the iteration is in progress.</p>
+/// A specialized <a href="../../java/util/Set.html" title="interface in java.util"><code>Set</code></a> implementation for use with enum types. All of the elements in an enum set must come from a single enum type that is specified, explicitly or implicitly, when the set is created. Enum sets are represented internally as bit vectors. This representation is extremely compact and efficient. The space and time performance of this class should be good enough to allow its use as a high-quality, typesafe alternative to traditional <tt>int</tt>-based "bit flags." Even bulk operations (such as <tt>containsAll</tt> and <tt>retainAll</tt>) should run very quickly if their argument is also an enum set.
+/// <p>The iterator returned by the <tt>iterator</tt> method traverses the elements in their <i>natural order</i> (the order in which the enum constants are declared). The returned iterator is <i>weakly consistent</i>: it will never throw <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a> and it may or may not show the effects of any modifications to the set that occur while the iteration is in progress.</p>
 /// <p>Null elements are not permitted. Attempts to insert a null element will throw <a href="../../java/lang/NullPointerException.html" title="class in java.lang"><code>NullPointerException</code></a>. Attempts to test for the presence of a null element or to remove one will, however, function properly.</p>
 /// <p>Like most collection implementations, <tt>EnumSet</tt> is not synchronized. If multiple threads access an enum set concurrently, and at least one of the threads modifies the set, it should be synchronized externally. This is typically accomplished by synchronizing on some object that naturally encapsulates the enum set. If no such object exists, the set should be "wrapped" using the <a href="../../java/util/Collections.html#synchronizedSet-java.util.Set-"><code>Collections.synchronizedSet(java.util.Set&lt;T&gt;)</code></a> method. This is best done at creation time, to prevent accidental unsynchronized access:</p>
 /// <pre> Set&lt;MyEnum&gt; s = Collections.synchronizedSet(EnumSet.noneOf(MyEnum.class));
@@ -15090,45 +16181,53 @@ impl<'mc> JavaEnumSet<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
     pub fn all_of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JClass<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let cls = &jni.find_class("Javajava/util/EnumSet")?;
+        let cls = jni.find_class("Javajava/util/EnumSet");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "allOf",
             "(Ljava/lang/Class;)Ljava/util/EnumSet;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn complement_of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn complement_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let cls = &jni.find_class("Javajava/util/EnumSet")?;
+        let cls = jni.find_class("Javajava/util/EnumSet");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "complementOf",
             "(Ljava/util/EnumSet;)Ljava/util/EnumSet;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn range(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn range(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
         let val_2 = arg1;
-        let cls = &jni.find_class("Javajava/util/EnumSet")?;
+        let cls = jni.find_class("Javajava/util/EnumSet");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "range",
@@ -15137,35 +16236,41 @@ impl<'mc> JavaEnumSet<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "clone", "()Ljava/util/EnumSet;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn copy_of_with_collection(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn copy_of_with_collection(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let cls = &jni.find_class("Javajava/util/EnumSet")?;
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let cls = jni.find_class("Javajava/util/EnumSet");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "copyOf",
             "(Ljava/util/EnumSet;)Ljava/util/EnumSet;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn of_with_enum(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn of_with_enum(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: jni::objects::JObject<'mc>,
@@ -15176,29 +16281,35 @@ impl<'mc> JavaEnumSet<'mc> {
         let val_2 = arg1;
         let val_3 = arg2;
         let val_4 = arg3;
-        let val_5 = arg4.unwrap();
-        let cls = &jni.find_class("Javajava/util/EnumSet")?;
+        let val_5 = arg4.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let cls = jni.find_class("Javajava/util/EnumSet");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls,"of",
-"(Ljava/lang/Enum;Ljava/lang/Enum;Ljava/lang/Enum;Ljava/lang/Enum;Ljava/lang/Enum;)Ljava/util/EnumSet;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)])?;
-        Ok(res.l().unwrap())
+"(Ljava/lang/Enum;Ljava/lang/Enum;Ljava/lang/Enum;Ljava/lang/Enum;Ljava/lang/Enum;)Ljava/util/EnumSet;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)]);
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn none_of(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JClass<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let cls = &jni.find_class("Javajava/util/EnumSet")?;
+        let cls = jni.find_class("Javajava/util/EnumSet");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "noneOf",
             "(Ljava/lang/Class;)Ljava/util/EnumSet;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -15210,18 +16321,20 @@ impl<'mc> JavaEnumSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn remove_all(
+    pub fn remove_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -15233,10 +16346,11 @@ impl<'mc> JavaEnumSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn add(
+    pub fn add(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -15248,10 +16362,11 @@ impl<'mc> JavaEnumSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn remove(
+    pub fn remove(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -15263,8 +16378,9 @@ impl<'mc> JavaEnumSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -15277,6 +16393,7 @@ impl<'mc> JavaEnumSet<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -15285,22 +16402,27 @@ impl<'mc> JavaEnumSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "size", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
+
+    //
 
     pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -15310,10 +16432,11 @@ impl<'mc> JavaEnumSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn contains(
+    pub fn contains(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -15325,10 +16448,11 @@ impl<'mc> JavaEnumSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn add_all(
+    pub fn add_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -15340,10 +16464,11 @@ impl<'mc> JavaEnumSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn retain_all(
+    pub fn retain_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -15355,10 +16480,11 @@ impl<'mc> JavaEnumSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn contains_all(
+    pub fn contains_all(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -15370,16 +16496,23 @@ impl<'mc> JavaEnumSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -15392,6 +16525,7 @@ impl<'mc> JavaEnumSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -15400,6 +16534,7 @@ impl<'mc> JavaEnumSet<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -15408,6 +16543,7 @@ impl<'mc> JavaEnumSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -15416,6 +16552,7 @@ impl<'mc> JavaEnumSet<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -15425,8 +16562,9 @@ impl<'mc> JavaEnumSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn spliterator(
         &mut self,
@@ -15438,10 +16576,11 @@ impl<'mc> JavaEnumSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn remove_if(
+    pub fn remove_if(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -15453,8 +16592,9 @@ impl<'mc> JavaEnumSet<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn parallel_stream(
         &mut self,
@@ -15466,10 +16606,11 @@ impl<'mc> JavaEnumSet<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn for_each(
+    pub fn for_each(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -15485,603 +16626,6 @@ impl<'mc> JavaEnumSet<'mc> {
     }
 }
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaEnumSet<'mc> {
-    fn into(self) -> jni::objects::JObject<'mc> {
-        self.1
-    }
-}
-/// Resizable-array implementation of the <a title="interface in java.util" href="../../java/util/Deque.html"><code>Deque</code></a> interface. Array deques have no capacity restrictions; they grow as necessary to support usage. They are not thread-safe; in the absence of external synchronization, they do not support concurrent access by multiple threads. Null elements are prohibited. This class is likely to be faster than <a href="../../java/util/Stack.html" title="class in java.util"><code>Stack</code></a> when used as a stack, and faster than <a href="../../java/util/LinkedList.html" title="class in java.util"><code>LinkedList</code></a> when used as a queue.
-/// <p>Most <code>ArrayDeque</code> operations run in amortized constant time. Exceptions include <a href="../../java/util/ArrayDeque.html#remove-java.lang.Object-"><code>remove</code></a>, <a href="../../java/util/ArrayDeque.html#removeFirstOccurrence-java.lang.Object-"><code>removeFirstOccurrence</code></a>, <a href="../../java/util/ArrayDeque.html#removeLastOccurrence-java.lang.Object-"><code>removeLastOccurrence</code></a>, <a href="../../java/util/ArrayDeque.html#contains-java.lang.Object-"><code>contains</code></a>, <a href="../../java/util/ArrayDeque.html#iterator--"><code>iterator.remove()</code></a>, and the bulk operations, all of which run in linear time.</p>
-/// <p>The iterators returned by this class's <code>iterator</code> method are <i>fail-fast</i>: If the deque is modified at any time after the iterator is created, in any way except through the iterator's own <code>remove</code> method, the iterator will generally throw a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
-/// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <code>ConcurrentModificationException</code> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
-/// <p>This class and its iterator implement all of the <em>optional</em> methods of the <a href="../../java/util/Collection.html" title="interface in java.util"><code>Collection</code></a> and <a title="interface in java.util" href="../../java/util/Iterator.html"><code>Iterator</code></a> interfaces.</p>
-/// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
-pub struct JavaArrayDeque<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaArrayDeque<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JavaArrayDeque<'mc> {
-    pub fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate JavaArrayDeque from null object.").into(),
-            );
-        }
-        let (valid, name) = env.validate_name(&obj, "java/util/ArrayDeque")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a JavaArrayDeque object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-    pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<i32>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.unwrap().into());
-        let cls = &jni.find_class("Javajava/util/ArrayDeque")?;
-        let res = jni.new_object(cls, "(I)V", &[jni::objects::JValueGen::from(&val_1)])?;
-        Ok(res)
-    }
-
-    pub unsafe fn push(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "push",
-            "(Ljava/lang/Object;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn pop(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "pop", "()Ljava/lang/Object;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub unsafe fn add_first(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addFirst",
-            "(Ljava/lang/Object;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub unsafe fn add_last(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addLast",
-            "(Ljava/lang/Object;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn poll_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "pollFirst",
-            "()Ljava/lang/Object;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub fn poll_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "pollLast", "()Ljava/lang/Object;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub unsafe fn offer_last(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "offerLast",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn remove_first(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeFirst",
-            "()Ljava/lang/Object;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub fn first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getFirst", "()Ljava/lang/Object;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub fn peek_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "peekFirst",
-            "()Ljava/lang/Object;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub unsafe fn remove_first_occurrence(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeFirstOccurrence",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub unsafe fn offer_first(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "offerFirst",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn remove_last(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeLast",
-            "()Ljava/lang/Object;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub fn last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getLast", "()Ljava/lang/Object;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub fn peek_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "peekLast", "()Ljava/lang/Object;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub unsafe fn remove_last_occurrence(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeLastOccurrence",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub unsafe fn offer(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "offer",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn descending_iterator(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "descendingIterator",
-            "()Ljava/util/Iterator;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub unsafe fn add(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "add",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub unsafe fn remove(
-        &mut self,
-        arg0: std::option::Option<jni::objects::JObject<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "remove",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "clone",
-            "()Ljava/util/ArrayDeque;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "clear", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "size", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-
-    pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "iterator",
-            "()Ljava/util/Iterator;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub unsafe fn contains(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "contains",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn spliterator(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "spliterator",
-            "()Ljava/util/Spliterator;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub unsafe fn add_all(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "addAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub unsafe fn for_each(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "forEach",
-            "(Ljava/util/function/Consumer;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn poll(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "poll", "()Ljava/lang/Object;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub fn peek(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "peek", "()Ljava/lang/Object;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub unsafe fn remove_if(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeIf",
-            "(Ljava/util/function/Predicate;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn element(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "element", "()Ljava/lang/Object;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub unsafe fn remove_all(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub unsafe fn retain_all(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "retainAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub unsafe fn contains_all(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "containsAll",
-            "(Ljava/util/Collection;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn wait(
-        &mut self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "wait",
-            "(JI)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub unsafe fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "stream",
-            "()Ljava/util/stream/Stream;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub fn parallel_stream(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "parallelStream",
-            "()Ljava/util/stream/Stream;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-}
-impl<'mc> Into<jni::objects::JObject<'mc>> for JavaArrayDeque<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
     }
@@ -16142,17 +16686,26 @@ impl<'mc> JavaDate<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let cls = &jni.find_class("Javajava/util/Date")?;
-        let res = jni.new_object(cls, "(J)V", &[jni::objects::JValueGen::from(&val_1)])?;
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let cls = jni.find_class("Javajava/util/Date");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, "(J)V", &[jni::objects::JValueGen::from(&val_1)]);
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
+    //['since', '']
+
+    //['forRemoval', 'false']
+
     #[deprecated]
     pub fn new_with_int(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: i32,
         arg2: i32,
@@ -16165,8 +16718,12 @@ impl<'mc> JavaDate<'mc> {
         let val_3 = jni::objects::JValueGen::Int(arg2.into());
         let val_4 = jni::objects::JValueGen::Int(arg3.into());
         let val_5 = jni::objects::JValueGen::Int(arg4.into());
-        let val_6 = jni::objects::JValueGen::Int(arg5.unwrap().into());
-        let cls = &jni.find_class("Javajava/util/Date")?;
+        let val_6 = jni::objects::JValueGen::Int(
+            arg5.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let cls = jni.find_class("Javajava/util/Date");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(IIIIII)V",
@@ -16178,10 +16735,107 @@ impl<'mc> JavaDate<'mc> {
                 jni::objects::JValueGen::from(&val_5),
                 jni::objects::JValueGen::from(&val_6),
             ],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
-    #[deprecated]
+    //
+
+    pub fn set_time(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setTime",
+            "(J)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn time(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getTime", "()J", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.j()?)
+    }
+    //
+
+    pub fn year(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getYear", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    //
+
+    pub fn seconds(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getSeconds", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    //
+
+    pub fn to_instant(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "toInstant",
+            "()Ljava/time/Instant;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn utc(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: i32,
+        arg1: i32,
+        arg2: i32,
+        arg3: i32,
+        arg4: i32,
+        arg5: i32,
+    ) -> Result<i64, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_3 = jni::objects::JValueGen::Int(arg2.into());
+        let val_4 = jni::objects::JValueGen::Int(arg3.into());
+        let val_5 = jni::objects::JValueGen::Int(arg4.into());
+        let val_6 = jni::objects::JValueGen::Int(arg5.into());
+        let cls = jni.find_class("Javalong");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "UTC",
+            "(IIIIII)J",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+                jni::objects::JValueGen::from(&val_3),
+                jni::objects::JValueGen::from(&val_4),
+                jni::objects::JValueGen::from(&val_5),
+                jni::objects::JValueGen::from(&val_6),
+            ],
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.j()?)
+    }
+    //
+
+    pub fn date(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getDate", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    //
 
     pub fn set_date(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -16194,16 +16848,16 @@ impl<'mc> JavaDate<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated]
+    //
 
     pub fn month(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMonth", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
-    #[deprecated]
+    //
 
     pub fn set_month(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -16216,16 +16870,16 @@ impl<'mc> JavaDate<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated]
+    //
 
     pub fn hours(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getHours", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
-    #[deprecated]
+    //
 
     pub fn set_hours(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -16238,16 +16892,16 @@ impl<'mc> JavaDate<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated]
+    //
 
     pub fn minutes(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMinutes", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
-    #[deprecated]
+    //
 
     pub fn set_minutes(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -16260,7 +16914,7 @@ impl<'mc> JavaDate<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated]
+    //
 
     pub fn set_seconds(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -16273,7 +16927,7 @@ impl<'mc> JavaDate<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated]
+    //
 
     pub fn set_year(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -16286,25 +16940,16 @@ impl<'mc> JavaDate<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated]
-
-    pub fn date(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getDate", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-    #[deprecated]
+    //
 
     pub fn day(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getDay", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
-    #[deprecated]
+    //
 
     pub fn to_locale_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -16320,7 +16965,7 @@ impl<'mc> JavaDate<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    #[deprecated]
+    //
 
     pub fn to_gmtstring(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -16336,115 +16981,36 @@ impl<'mc> JavaDate<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    #[deprecated]
+    //
 
     pub fn timezone_offset(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getTimezoneOffset", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
-
-    pub fn time(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getTime", "()J", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
-    }
-    #[deprecated]
-
-    pub fn year(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getYear", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-    #[deprecated]
-
-    pub fn seconds(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getSeconds", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-
-    pub fn to_instant(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "toInstant",
-            "()Ljava/time/Instant;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-    #[deprecated]
-
-    pub fn utc(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: i32,
-        arg1: i32,
-        arg2: i32,
-        arg3: i32,
-        arg4: i32,
-        arg5: i32,
-    ) -> Result<i64, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
-        let val_5 = jni::objects::JValueGen::Int(arg4.into());
-        let val_6 = jni::objects::JValueGen::Int(arg5.into());
-        let cls = &jni.find_class("Javalong")?;
-        let res = jni.call_static_method(
-            cls,
-            "UTC",
-            "(IIIIII)J",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-                jni::objects::JValueGen::from(&val_4),
-                jni::objects::JValueGen::from(&val_5),
-                jni::objects::JValueGen::from(&val_6),
-            ],
-        )?;
-        Ok(res.j().unwrap())
-    }
-
-    pub fn set_time(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setTime",
-            "(J)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    #[deprecated]
+    //
 
     pub fn parse(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("Javalong")?;
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("Javalong");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "parse",
             "(Ljava/lang/String;)J",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.j().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.j()?)
     }
+    //
 
-    pub unsafe fn before(
+    pub fn before(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -16456,10 +17022,11 @@ impl<'mc> JavaDate<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn after(
+    pub fn after(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -16471,10 +17038,11 @@ impl<'mc> JavaDate<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -16486,8 +17054,9 @@ impl<'mc> JavaDate<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -16500,28 +17069,31 @@ impl<'mc> JavaDate<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "clone", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn compare_to_with_date(
+    pub fn compare_to_with_date(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "compareTo",
@@ -16529,31 +17101,41 @@ impl<'mc> JavaDate<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn from(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn from(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let cls = &jni.find_class("Javajava/util/Date")?;
+        let cls = jni.find_class("Javajava/util/Date");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "from",
             "(Ljava/time/Instant;)Ljava/util/Date;",
             &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -16566,6 +17148,7 @@ impl<'mc> JavaDate<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -16574,6 +17157,7 @@ impl<'mc> JavaDate<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -16582,6 +17166,7 @@ impl<'mc> JavaDate<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -16589,6 +17174,661 @@ impl<'mc> JavaDate<'mc> {
             .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+}
+/// Resizable-array implementation of the <a href="../../java/util/Deque.html" title="interface in java.util"><code>Deque</code></a> interface. Array deques have no capacity restrictions; they grow as necessary to support usage. They are not thread-safe; in the absence of external synchronization, they do not support concurrent access by multiple threads. Null elements are prohibited. This class is likely to be faster than <a href="../../java/util/Stack.html" title="class in java.util"><code>Stack</code></a> when used as a stack, and faster than <a title="class in java.util" href="../../java/util/LinkedList.html"><code>LinkedList</code></a> when used as a queue.
+/// <p>Most <code>ArrayDeque</code> operations run in amortized constant time. Exceptions include <a href="../../java/util/ArrayDeque.html#remove-java.lang.Object-"><code>remove</code></a>, <a href="../../java/util/ArrayDeque.html#removeFirstOccurrence-java.lang.Object-"><code>removeFirstOccurrence</code></a>, <a href="../../java/util/ArrayDeque.html#removeLastOccurrence-java.lang.Object-"><code>removeLastOccurrence</code></a>, <a href="../../java/util/ArrayDeque.html#contains-java.lang.Object-"><code>contains</code></a>, <a href="../../java/util/ArrayDeque.html#iterator--"><code>iterator.remove()</code></a>, and the bulk operations, all of which run in linear time.</p>
+/// <p>The iterators returned by this class's <code>iterator</code> method are <i>fail-fast</i>: If the deque is modified at any time after the iterator is created, in any way except through the iterator's own <code>remove</code> method, the iterator will generally throw a <a title="class in java.util" href="../../java/util/ConcurrentModificationException.html"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
+/// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <code>ConcurrentModificationException</code> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
+/// <p>This class and its iterator implement all of the <em>optional</em> methods of the <a href="../../java/util/Collection.html" title="interface in java.util"><code>Collection</code></a> and <a title="interface in java.util" href="../../java/util/Iterator.html"><code>Iterator</code></a> interfaces.</p>
+/// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
+pub struct JavaArrayDeque<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaArrayDeque<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> JavaArrayDeque<'mc> {
+    pub fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(
+                eyre::eyre!("Tried to instantiate JavaArrayDeque from null object.").into(),
+            );
+        }
+        let (valid, name) = env.validate_name(&obj, "java/util/ArrayDeque")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a JavaArrayDeque object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<i32>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Int(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let cls = jni.find_class("Javajava/util/ArrayDeque");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, "(I)V", &[jni::objects::JValueGen::from(&val_1)]);
+        let res = jni.translate_error_no_gen(res)?;
+        Ok(res)
+    }
+    //
+
+    pub fn push(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "push",
+            "(Ljava/lang/Object;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn pop(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "pop", "()Ljava/lang/Object;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn add_first(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addFirst",
+            "(Ljava/lang/Object;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn add_last(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addLast",
+            "(Ljava/lang/Object;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn poll_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "pollFirst",
+            "()Ljava/lang/Object;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn poll_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "pollLast", "()Ljava/lang/Object;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn offer_last(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "offerLast",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn remove_first(
+        &mut self,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeFirst",
+            "()Ljava/lang/Object;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFirst", "()Ljava/lang/Object;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn peek_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "peekFirst",
+            "()Ljava/lang/Object;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn remove_first_occurrence(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeFirstOccurrence",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn offer_first(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "offerFirst",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn remove_last(
+        &mut self,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeLast",
+            "()Ljava/lang/Object;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getLast", "()Ljava/lang/Object;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn peek_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "peekLast", "()Ljava/lang/Object;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn remove_last_occurrence(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeLastOccurrence",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn offer(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "offer",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn descending_iterator(
+        &mut self,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "descendingIterator",
+            "()Ljava/util/Iterator;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn add(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "add",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn remove(
+        &mut self,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "remove",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "clone",
+            "()Ljava/util/ArrayDeque;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "clear", "()V", &[]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "size", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    //
+
+    //
+
+    pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "iterator",
+            "()Ljava/util/Iterator;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn contains(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "contains",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn spliterator(
+        &mut self,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "spliterator",
+            "()Ljava/util/Spliterator;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn add_all(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "addAll",
+            "(Ljava/util/Collection;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn for_each(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "forEach",
+            "(Ljava/util/function/Consumer;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn poll(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "poll", "()Ljava/lang/Object;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn peek(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "peek", "()Ljava/lang/Object;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn remove_if(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeIf",
+            "(Ljava/util/function/Predicate;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn element(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "element", "()Ljava/lang/Object;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn remove_all(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeAll",
+            "(Ljava/util/Collection;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn retain_all(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "retainAll",
+            "(Ljava/util/Collection;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //
+
+    pub fn contains_all(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "containsAll",
+            "(Ljava/util/Collection;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn wait(
+        &mut self,
+        arg0: std::option::Option<i64>,
+        arg1: std::option::Option<i32>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "wait",
+            "(JI)V",
+            &[
+                jni::objects::JValueGen::from(&val_1),
+                jni::objects::JValueGen::from(&val_2),
+            ],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn equals(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "equals",
+            "(Ljava/lang/Object;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    //
+
+    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
+    }
+    //
+
+    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notify", "()V", &[]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "stream",
+            "()Ljava/util/stream/Stream;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn parallel_stream(
+        &mut self,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "parallelStream",
+            "()Ljava/util/stream/Stream;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+}
+impl<'mc> Into<jni::objects::JObject<'mc>> for JavaArrayDeque<'mc> {
+    fn into(self) -> jni::objects::JObject<'mc> {
+        self.1
     }
 }
 /// An Iterator specialized for <code>double</code> values.
@@ -16609,7 +17849,7 @@ impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "java/util/PrimitiveIteratorOfDouble")?;
+        let (valid, name) = env.validate_name(&obj, "java/util/PrimitiveIterator$OfDouble")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a JavaPrimitiveIteratorOfDouble object, got {}",
@@ -16620,20 +17860,22 @@ impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
     pub fn next_double(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "nextDouble", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
-    pub unsafe fn for_each_remaining_with_object(
+    pub fn for_each_remaining_with_object(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "forEachRemaining",
@@ -16643,12 +17885,13 @@ impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn for_each_remaining_with_double_consumer(
+    pub fn for_each_remaining_with_double_consumer(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "forEachRemaining",
@@ -16658,14 +17901,16 @@ impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn next(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "next", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -16674,13 +17919,14 @@ impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn has_next(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hasNext", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
 }
 impl<'mc> JNIRaw<'mc> for JavaPrimitiveIteratorOfDouble<'mc> {
@@ -16690,166 +17936,6 @@ impl<'mc> JNIRaw<'mc> for JavaPrimitiveIteratorOfDouble<'mc> {
 
     fn jni_object(&self) -> jni::objects::JObject<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-/// This class implements a decoder for decoding byte data using the Base64 encoding scheme as specified in RFC 4648 and RFC 2045.
-/// <p>The Base64 padding character <code>'='</code> is accepted and interpreted as the end of the encoded byte data, but is not required. So if the final unit of the encoded byte data only has two or three Base64 characters (without the corresponding padding character(s) padded), they are decoded as if followed by padding character(s). If there is a padding character present in the final unit, the correct number of padding character(s) must be present, otherwise <code>IllegalArgumentException</code> ( <code>IOException</code> when reading from a Base64 stream) is thrown during decoding.</p>
-/// <p>Instances of <a title="class in java.util" href="../../java/util/Base64.Decoder.html"><code>Base64.Decoder</code></a> class are safe for use by multiple concurrent threads.</p>
-/// <p>Unless otherwise noted, passing a <code>null</code> argument to a method of this class will cause a <a title="class in java.lang" href="../../java/lang/NullPointerException.html"><code>NullPointerException</code></a> to be thrown.</p>
-pub struct JavaBase64Decoder<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaBase64Decoder<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> JavaBase64Decoder<'mc> {
-    pub fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(
-                eyre::eyre!("Tried to instantiate JavaBase64Decoder from null object.").into(),
-            );
-        }
-        let (valid, name) = env.validate_name(&obj, "java/util/Base64Decoder")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a JavaBase64Decoder object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
-    }
-
-    pub unsafe fn decode_with_bytes(
-        &mut self,
-        arg0: std::option::Option<jni::objects::JObject<'mc>>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "decode",
-            "(Ljava/nio/ByteBuffer;)Ljava/nio/ByteBuffer;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub fn decode_with_string(
-        &mut self,
-        arg0: std::option::Option<Vec<i8>>,
-        arg1: std::option::Option<Vec<i8>>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "decode", "(BB)I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-
-    pub unsafe fn wrap(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "wrap",
-            "(Ljava/io/InputStream;)Ljava/io/InputStream;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub fn wait(
-        &mut self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "wait",
-            "(JI)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub unsafe fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
 }
 pub mod logging;

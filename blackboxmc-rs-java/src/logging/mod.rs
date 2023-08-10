@@ -38,20 +38,23 @@ impl<'mc> JavaErrorManager<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("Javajava/util/logging/ErrorManager")?;
-        let res = jni.new_object(cls, "()V", &[])?;
+        let cls = jni.find_class("Javajava/util/logging/ErrorManager");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, "()V", &[]);
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
+    //
 
-    pub unsafe fn error(
+    pub fn error(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
         arg1: jni::objects::JObject<'mc>,
         arg2: i32,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let val_2 = arg1;
         let val_3 = jni::objects::JValueGen::Int(arg2.into());
         let res = self.jni_ref().call_method(
@@ -67,14 +70,21 @@ impl<'mc> JavaErrorManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -87,8 +97,9 @@ impl<'mc> JavaErrorManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -100,8 +111,9 @@ impl<'mc> JavaErrorManager<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -114,14 +126,16 @@ impl<'mc> JavaErrorManager<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -130,6 +144,7 @@ impl<'mc> JavaErrorManager<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -138,6 +153,7 @@ impl<'mc> JavaErrorManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -185,14 +201,17 @@ impl<'mc> JavaXMLFormatter<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("Javajava/util/logging/XMLFormatter")?;
-        let res = jni.new_object(cls, "()V", &[])?;
+        let cls = jni.find_class("Javajava/util/logging/XMLFormatter");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, "()V", &[]);
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
+    //
 
-    pub unsafe fn get_head(
+    pub fn get_head(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -210,8 +229,9 @@ impl<'mc> JavaXMLFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
-    pub unsafe fn get_tail(
+    pub fn get_tail(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -229,8 +249,9 @@ impl<'mc> JavaXMLFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
-    pub unsafe fn format(
+    pub fn format(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -248,8 +269,9 @@ impl<'mc> JavaXMLFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
-    pub unsafe fn format_message(
+    pub fn format_message(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -267,14 +289,21 @@ impl<'mc> JavaXMLFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -287,8 +316,9 @@ impl<'mc> JavaXMLFormatter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -300,8 +330,9 @@ impl<'mc> JavaXMLFormatter<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -314,14 +345,16 @@ impl<'mc> JavaXMLFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -330,6 +363,7 @@ impl<'mc> JavaXMLFormatter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -338,6 +372,7 @@ impl<'mc> JavaXMLFormatter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -387,8 +422,9 @@ impl<'mc> JavaFormatter<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub unsafe fn get_head(
+    pub fn get_head(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -406,8 +442,9 @@ impl<'mc> JavaFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
-    pub unsafe fn get_tail(
+    pub fn get_tail(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -425,8 +462,9 @@ impl<'mc> JavaFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
-    pub unsafe fn format_message(
+    pub fn format_message(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -444,8 +482,9 @@ impl<'mc> JavaFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
-    pub unsafe fn format(
+    pub fn format(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -463,14 +502,21 @@ impl<'mc> JavaFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -483,8 +529,9 @@ impl<'mc> JavaFormatter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -496,8 +543,9 @@ impl<'mc> JavaFormatter<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -510,14 +558,16 @@ impl<'mc> JavaFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -526,6 +576,7 @@ impl<'mc> JavaFormatter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -534,6 +585,7 @@ impl<'mc> JavaFormatter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -600,13 +652,22 @@ impl<'mc> JavaSocketHandler<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.unwrap().into()).unwrap());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let cls = &jni.find_class("Javajava/util/logging/SocketHandler")?;
+        let val_1 = jni::objects::JObject::from(
+            jni.new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let cls = jni.find_class("Javajava/util/logging/SocketHandler");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Ljava/lang/String;I)V",
@@ -614,11 +675,13 @@ impl<'mc> JavaSocketHandler<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
+    //
 
-    pub unsafe fn publish(
+    pub fn publish(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -632,6 +695,7 @@ impl<'mc> JavaSocketHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn close(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -640,8 +704,9 @@ impl<'mc> JavaSocketHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn is_loggable(
+    pub fn is_loggable(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -653,14 +718,15 @@ impl<'mc> JavaSocketHandler<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn set_encoding(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setEncoding",
@@ -670,6 +736,7 @@ impl<'mc> JavaSocketHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn flush(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -678,60 +745,9 @@ impl<'mc> JavaSocketHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub fn filter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getFilter",
-            "()Ljava/util/logging/Filter;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub unsafe fn set_level(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLevel",
-            "(Ljava/util/logging/Level;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn formatter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getFormatter",
-            "()Ljava/util/logging/Formatter;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub unsafe fn set_formatter(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFormatter",
-            "(Ljava/util/logging/Formatter;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub unsafe fn set_filter(
+    pub fn set_filter(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -745,8 +761,53 @@ impl<'mc> JavaSocketHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn set_error_manager(
+    pub fn set_level(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLevel",
+            "(Ljava/util/logging/Level;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn set_formatter(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFormatter",
+            "(Ljava/util/logging/Formatter;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn formatter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getFormatter",
+            "()Ljava/util/logging/Formatter;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn set_error_manager(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -760,6 +821,7 @@ impl<'mc> JavaSocketHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn error_manager(
         &mut self,
@@ -771,8 +833,9 @@ impl<'mc> JavaSocketHandler<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn encoding(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -788,6 +851,19 @@ impl<'mc> JavaSocketHandler<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
+
+    pub fn filter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getFilter",
+            "()Ljava/util/logging/Filter;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
 
     pub fn level(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -797,16 +873,23 @@ impl<'mc> JavaSocketHandler<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -819,8 +902,9 @@ impl<'mc> JavaSocketHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -832,8 +916,9 @@ impl<'mc> JavaSocketHandler<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -846,14 +931,16 @@ impl<'mc> JavaSocketHandler<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -862,6 +949,7 @@ impl<'mc> JavaSocketHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -870,6 +958,7 @@ impl<'mc> JavaSocketHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -921,14 +1010,17 @@ impl<'mc> JavaSimpleFormatter<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("Javajava/util/logging/SimpleFormatter")?;
-        let res = jni.new_object(cls, "()V", &[])?;
+        let cls = jni.find_class("Javajava/util/logging/SimpleFormatter");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, "()V", &[]);
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
+    //
 
-    pub unsafe fn format(
+    pub fn format(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -946,8 +1038,9 @@ impl<'mc> JavaSimpleFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
-    pub unsafe fn get_head(
+    pub fn get_head(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -965,8 +1058,9 @@ impl<'mc> JavaSimpleFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
-    pub unsafe fn get_tail(
+    pub fn get_tail(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -984,8 +1078,9 @@ impl<'mc> JavaSimpleFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
-    pub unsafe fn format_message(
+    pub fn format_message(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -1003,14 +1098,21 @@ impl<'mc> JavaSimpleFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -1023,8 +1125,9 @@ impl<'mc> JavaSimpleFormatter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1036,8 +1139,9 @@ impl<'mc> JavaSimpleFormatter<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -1050,14 +1154,16 @@ impl<'mc> JavaSimpleFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -1066,6 +1172,7 @@ impl<'mc> JavaSimpleFormatter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1074,6 +1181,7 @@ impl<'mc> JavaSimpleFormatter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1123,90 +1231,9 @@ impl<'mc> JavaHandler<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub unsafe fn is_loggable(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isLoggable",
-            "(Ljava/util/logging/LogRecord;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn filter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getFilter",
-            "()Ljava/util/logging/Filter;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub unsafe fn set_level(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLevel",
-            "(Ljava/util/logging/Level;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn set_encoding(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setEncoding",
-            "(Ljava/lang/String;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn formatter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getFormatter",
-            "()Ljava/util/logging/Formatter;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub unsafe fn set_formatter(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFormatter",
-            "(Ljava/util/logging/Formatter;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub unsafe fn set_filter(
+    pub fn set_filter(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1220,8 +1247,85 @@ impl<'mc> JavaHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn set_error_manager(
+    pub fn is_loggable(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isLoggable",
+            "(Ljava/util/logging/LogRecord;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn set_level(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLevel",
+            "(Ljava/util/logging/Level;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn set_formatter(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFormatter",
+            "(Ljava/util/logging/Formatter;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn formatter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getFormatter",
+            "()Ljava/util/logging/Formatter;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn set_encoding(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setEncoding",
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn set_error_manager(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1235,6 +1339,7 @@ impl<'mc> JavaHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn error_manager(
         &mut self,
@@ -1246,10 +1351,11 @@ impl<'mc> JavaHandler<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn publish(
+    pub fn publish(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1263,6 +1369,7 @@ impl<'mc> JavaHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn encoding(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1278,6 +1385,19 @@ impl<'mc> JavaHandler<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
+
+    pub fn filter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getFilter",
+            "()Ljava/util/logging/Filter;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
 
     pub fn level(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1287,8 +1407,9 @@ impl<'mc> JavaHandler<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn flush(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1297,6 +1418,7 @@ impl<'mc> JavaHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn close(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1305,14 +1427,21 @@ impl<'mc> JavaHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -1325,8 +1454,9 @@ impl<'mc> JavaHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1338,8 +1468,9 @@ impl<'mc> JavaHandler<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -1352,14 +1483,16 @@ impl<'mc> JavaHandler<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -1368,6 +1501,7 @@ impl<'mc> JavaHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1376,6 +1510,7 @@ impl<'mc> JavaHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1446,16 +1581,20 @@ impl<'mc> JavaMemoryHandler<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub unsafe fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<i32>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let val_3 = arg2.unwrap();
-        let cls = &jni.find_class("Javajava/util/logging/MemoryHandler")?;
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_3 = arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let cls = jni.find_class("Javajava/util/logging/MemoryHandler");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Ljava/util/logging/Handler;ILjava/util/logging/Level;)V",
@@ -1464,11 +1603,13 @@ impl<'mc> JavaMemoryHandler<'mc> {
                 jni::objects::JValueGen::from(&val_2),
                 jni::objects::JValueGen::from(&val_3),
             ],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
+    //
 
-    pub unsafe fn is_loggable(
+    pub fn is_loggable(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1480,8 +1621,9 @@ impl<'mc> JavaMemoryHandler<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn push(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1490,8 +1632,9 @@ impl<'mc> JavaMemoryHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn set_push_level(
+    pub fn set_push_level(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1505,6 +1648,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn push_level(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1514,10 +1658,11 @@ impl<'mc> JavaMemoryHandler<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn publish(
+    pub fn publish(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1531,6 +1676,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn flush(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1539,6 +1685,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn close(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1547,75 +1694,9 @@ impl<'mc> JavaMemoryHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub fn filter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getFilter",
-            "()Ljava/util/logging/Filter;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub unsafe fn set_level(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLevel",
-            "(Ljava/util/logging/Level;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn set_encoding(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setEncoding",
-            "(Ljava/lang/String;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn formatter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getFormatter",
-            "()Ljava/util/logging/Formatter;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub unsafe fn set_formatter(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFormatter",
-            "(Ljava/util/logging/Formatter;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub unsafe fn set_filter(
+    pub fn set_filter(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1629,8 +1710,69 @@ impl<'mc> JavaMemoryHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn set_error_manager(
+    pub fn set_level(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLevel",
+            "(Ljava/util/logging/Level;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn set_formatter(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFormatter",
+            "(Ljava/util/logging/Formatter;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn formatter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getFormatter",
+            "()Ljava/util/logging/Formatter;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn set_encoding(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setEncoding",
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn set_error_manager(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1644,6 +1786,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn error_manager(
         &mut self,
@@ -1655,8 +1798,9 @@ impl<'mc> JavaMemoryHandler<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn encoding(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1672,6 +1816,19 @@ impl<'mc> JavaMemoryHandler<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
+
+    pub fn filter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getFilter",
+            "()Ljava/util/logging/Filter;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
 
     pub fn level(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1681,16 +1838,23 @@ impl<'mc> JavaMemoryHandler<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -1703,8 +1867,9 @@ impl<'mc> JavaMemoryHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1716,8 +1881,9 @@ impl<'mc> JavaMemoryHandler<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -1730,14 +1896,16 @@ impl<'mc> JavaMemoryHandler<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -1746,6 +1914,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1754,6 +1923,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1778,7 +1948,7 @@ impl<'mc> Into<jni::objects::JObject<'mc>> for JavaMemoryHandler<'mc> {
 /// <p>After passing this initial (cheap) test, the Logger will allocate a LogRecord to describe the logging message. It will then call a Filter (if present) to do a more detailed check on whether the record should be published. If that passes it will then publish the LogRecord to its output Handlers. By default, loggers also publish to their parent's Handlers, recursively up the tree.</p>
 /// <p>Each Logger may have a <code>ResourceBundle</code> associated with it. The <code>ResourceBundle</code> may be specified by name, using the <a href="../../../java/util/logging/Logger.html#getLogger-java.lang.String-java.lang.String-"><code>getLogger(java.lang.String, java.lang.String)</code></a> factory method, or by value - using the <a href="../../../java/util/logging/Logger.html#setResourceBundle-java.util.ResourceBundle-"><code>setResourceBundle</code></a> method. This bundle will be used for localizing logging messages. If a Logger does not have its own <code>ResourceBundle</code> or resource bundle name, then it will inherit the <code>ResourceBundle</code> or resource bundle name from its parent, recursively up the tree.</p>
 /// <p>Most of the logger output methods take a "msg" argument. This msg argument may be either a raw value or a localization key. During formatting, if the logger has (or inherits) a localization <code>ResourceBundle</code> and if the <code>ResourceBundle</code> has a mapping for the msg string, then the msg string is replaced by the localized value. Otherwise the original msg string is used. Typically, formatters use java.text.MessageFormat style formatting to format parameters, so for example a format string "{0} {1}" would format two parameters as strings.</p>
-/// <p>A set of methods alternatively take a "msgSupplier" instead of a "msg" argument. These methods take a <a href="../../../java/util/function/Supplier.html" title="interface in java.util.function"><code>Supplier</code></a><code>&lt;String&gt;</code> function which is invoked to construct the desired log message only when the message actually is to be logged based on the effective log level thus eliminating unnecessary message construction. For example, if the developer wants to log system health status for diagnosis, with the String-accepting version, the code would look like:</p>
+/// <p>A set of methods alternatively take a "msgSupplier" instead of a "msg" argument. These methods take a <a title="interface in java.util.function" href="../../../java/util/function/Supplier.html"><code>Supplier</code></a><code>&lt;String&gt;</code> function which is invoked to construct the desired log message only when the message actually is to be logged based on the effective log level thus eliminating unnecessary message construction. For example, if the developer wants to log system health status for diagnosis, with the String-accepting version, the code would look like:</p>
 /// <pre><code>
 /// class DiagnosisMessages {
 /// static String systemHealthStatus() {
@@ -1846,54 +2016,18 @@ impl<'mc> JavaLogger<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-
-    pub unsafe fn is_loggable(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isLoggable",
-            "(Ljava/util/logging/Level;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub unsafe fn config_with_string(
-        &mut self,
-        arg0: std::option::Option<jni::objects::JObject<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "config",
-            "(Ljava/util/function/Supplier;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn filter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getFilter",
-            "()Ljava/util/logging/Filter;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
+    //
 
     pub fn warning_with_supplier(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "warning",
@@ -1903,34 +2037,39 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub fn resource_bundle(
+    pub fn config_with_string(
         &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getResourceBundle",
-            "()Ljava/util/ResourceBundle;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub unsafe fn set_resource_bundle(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "setResourceBundle",
-            "(Ljava/util/ResourceBundle;)V",
+            "config",
+            "(Ljava/util/function/Supplier;)V",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
+
+    pub fn anonymous_logger(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let cls = jni.find_class("Javajava/util/logging/Logger");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "getAnonymousLogger",
+            "()Ljava/util/logging/Logger;",
+            &[],
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
 
     pub fn resource_bundle_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -1946,23 +2085,9 @@ impl<'mc> JavaLogger<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
-    pub unsafe fn set_level(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLevel",
-            "(Ljava/util/logging/Level;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub unsafe fn set_filter(
+    pub fn set_filter(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1976,8 +2101,71 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn add_handler(
+    pub fn is_loggable(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isLoggable",
+            "(Ljava/util/logging/Level;)Z",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    //
+
+    pub fn use_parent_handlers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getUseParentHandlers", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn set_resource_bundle(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setResourceBundle",
+            "(Ljava/util/ResourceBundle;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn logp_with_level(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: impl Into<String>,
+        arg2: impl Into<String>,
+        arg3: impl Into<String>,
+        arg4: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
+        let val_3 = jni::objects::JObject::from(self.jni_ref().new_string(arg2.into())?);
+        let val_4 = jni::objects::JObject::from(self.jni_ref().new_string(arg3.into())?);
+        let val_5 = arg4.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let res = self.jni_ref().call_method(&self.jni_object(),"logp","(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn add_handler(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1991,8 +2179,9 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn remove_handler(
+    pub fn remove_handler(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2006,6 +2195,7 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn set_use_parent_handlers(
         &mut self,
@@ -2022,85 +2212,67 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub fn get_anonymous_logger(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("Javajava/util/logging/Logger")?;
-        let res = jni.call_static_method(
-            cls,
-            "getAnonymousLogger",
-            "(Ljava/lang/String;)Ljava/util/logging/Logger;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
-    }
-
-    pub fn use_parent_handlers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getUseParentHandlers", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub unsafe fn logp_with_level(
+    pub fn resource_bundle(
         &mut self,
-        arg0: jni::objects::JObject<'mc>,
-        arg1: impl Into<&'mc String>,
-        arg2: impl Into<&'mc String>,
-        arg3: impl Into<&'mc String>,
-        arg4: std::option::Option<jni::objects::JObject<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
-        let val_3 = jni::objects::JObject::from(self.jni_ref().new_string(arg2.into()).unwrap());
-        let val_4 = jni::objects::JObject::from(self.jni_ref().new_string(arg3.into()).unwrap());
-        let val_5 = arg4.unwrap();
-        let res = self.jni_ref().call_method(&self.jni_object(),"logp","(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Object;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getResourceBundle",
+            "()Ljava/util/ResourceBundle;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
     pub fn global(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("Javajava/util/logging/Logger")?;
-        let res = jni.call_static_method(cls, "getGlobal", "()Ljava/util/logging/Logger;", &[])?;
-        Ok(res.l().unwrap())
+        let cls = jni.find_class("Javajava/util/logging/Logger");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "getGlobal", "()Ljava/util/logging/Logger;", &[]);
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn logrb_with_level(
+    pub fn logrb_with_level(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-        arg1: impl Into<&'mc String>,
-        arg2: impl Into<&'mc String>,
+        arg1: impl Into<String>,
+        arg2: impl Into<String>,
         arg3: jni::objects::JObject<'mc>,
-        arg4: impl Into<&'mc String>,
+        arg4: impl Into<String>,
         arg5: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
-        let val_3 = jni::objects::JObject::from(self.jni_ref().new_string(arg2.into()).unwrap());
+        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
+        let val_3 = jni::objects::JObject::from(self.jni_ref().new_string(arg2.into())?);
         let val_4 = arg3;
-        let val_5 = jni::objects::JObject::from(self.jni_ref().new_string(arg4.into()).unwrap());
+        let val_5 = jni::objects::JObject::from(self.jni_ref().new_string(arg4.into())?);
         let res = self.jni_ref().call_method(&self.jni_object(),"logrb","(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/String;Ljava/util/ResourceBundle;Ljava/lang/String;Ljava/lang/Object;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn entering_with_string(
+    pub fn entering_with_string(
         &mut self,
-        arg0: impl Into<&'mc String>,
-        arg1: std::option::Option<impl Into<&'mc String>>,
+        arg0: impl Into<String>,
+        arg1: std::option::Option<impl Into<String>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let val_2 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
-        let val_3 = arg2.unwrap();
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let val_2 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_3 = arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "entering",
@@ -2114,17 +2286,22 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn exiting_with_string(
+    pub fn exiting_with_string(
         &mut self,
-        arg0: impl Into<&'mc String>,
-        arg1: std::option::Option<impl Into<&'mc String>>,
+        arg0: impl Into<String>,
+        arg1: std::option::Option<impl Into<String>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let val_2 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg1.unwrap().into()).unwrap());
-        let val_3 = arg2.unwrap();
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let val_2 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_3 = arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "exiting",
@@ -2138,15 +2315,16 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn throwing(
+    pub fn throwing(
         &mut self,
-        arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc String>,
+        arg0: impl Into<String>,
+        arg1: impl Into<String>,
         arg2: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
         let val_3 = arg2;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2161,13 +2339,18 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn severe_with_supplier(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "severe",
@@ -2177,53 +2360,88 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn fine_with_string(
+    pub fn fine_with_supplier(
         &mut self,
-        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+        arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = jni::objects::JObject::from(
+            self.jni_ref().new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "fine",
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn finer_with_string(
+        &mut self,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "finer",
             "(Ljava/util/function/Supplier;)V",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub fn finer_with_supplier(
+    pub fn finest_with_string(
         &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "finer",
-            "(Ljava/lang/String;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn finest_with_supplier(
-        &mut self,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 =
-            jni::objects::JObject::from(self.jni_ref().new_string(arg0.unwrap().into()).unwrap());
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "finest",
-            "(Ljava/lang/String;)V",
+            "(Ljava/util/function/Supplier;)V",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
+
+    pub fn set_level(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLevel",
+            "(Ljava/util/logging/Level;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn filter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getFilter",
+            "()Ljava/util/logging/Filter;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
 
     pub fn level(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -2233,8 +2451,9 @@ impl<'mc> JavaLogger<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -2247,14 +2466,15 @@ impl<'mc> JavaLogger<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
-    pub unsafe fn log_with_log_record(
+    pub fn log_with_log_record(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = arg1.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "log",
@@ -2267,20 +2487,21 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn log_with_level(
+    pub fn log_with_level(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-        arg1: impl Into<&'mc String>,
+        arg1: impl Into<String>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
-        let val_3 = arg2.unwrap();
+        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
+        let val_3 = arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "log",
-            "(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Object;)V",
+            "(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V",
             &[
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
@@ -2290,12 +2511,13 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn info_with_string(
+    pub fn info_with_string(
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "info",
@@ -2305,6 +2527,7 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn parent(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -2314,17 +2537,29 @@ impl<'mc> JavaLogger<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn get_logger_with_string(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<&'mc String>>,
-        arg1: std::option::Option<impl Into<&'mc String>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<impl Into<String>>,
+        arg1: std::option::Option<impl Into<String>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.unwrap().into()).unwrap());
-        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
-        let cls = &jni.find_class("Javajava/util/logging/Logger")?;
+        let val_1 = jni::objects::JObject::from(
+            jni.new_string(
+                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let val_2 = jni::objects::JObject::from(
+            jni.new_string(
+                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into(),
+            )?,
+        );
+        let cls = jni.find_class("Javajava/util/logging/Logger");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "getLogger",
@@ -2333,11 +2568,13 @@ impl<'mc> JavaLogger<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
-        Ok(res.l().unwrap())
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn set_parent(
+    pub fn set_parent(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2351,14 +2588,21 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -2371,8 +2615,9 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2384,8 +2629,9 @@ impl<'mc> JavaLogger<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -2398,14 +2644,16 @@ impl<'mc> JavaLogger<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -2414,6 +2662,7 @@ impl<'mc> JavaLogger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2422,6 +2671,7 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2485,14 +2735,17 @@ impl<'mc> JavaConsoleHandler<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("Javajava/util/logging/ConsoleHandler")?;
-        let res = jni.new_object(cls, "()V", &[])?;
+        let cls = jni.find_class("Javajava/util/logging/ConsoleHandler");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, "()V", &[]);
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
+    //
 
-    pub unsafe fn publish(
+    pub fn publish(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2506,6 +2759,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn close(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2514,8 +2768,9 @@ impl<'mc> JavaConsoleHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn is_loggable(
+    pub fn is_loggable(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2527,14 +2782,15 @@ impl<'mc> JavaConsoleHandler<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn set_encoding(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setEncoding",
@@ -2544,6 +2800,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn flush(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2552,60 +2809,9 @@ impl<'mc> JavaConsoleHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub fn filter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getFilter",
-            "()Ljava/util/logging/Filter;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub unsafe fn set_level(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLevel",
-            "(Ljava/util/logging/Level;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn formatter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getFormatter",
-            "()Ljava/util/logging/Formatter;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub unsafe fn set_formatter(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFormatter",
-            "(Ljava/util/logging/Formatter;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub unsafe fn set_filter(
+    pub fn set_filter(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2619,8 +2825,53 @@ impl<'mc> JavaConsoleHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn set_error_manager(
+    pub fn set_level(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLevel",
+            "(Ljava/util/logging/Level;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn set_formatter(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFormatter",
+            "(Ljava/util/logging/Formatter;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn formatter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getFormatter",
+            "()Ljava/util/logging/Formatter;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn set_error_manager(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2634,6 +2885,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn error_manager(
         &mut self,
@@ -2645,8 +2897,9 @@ impl<'mc> JavaConsoleHandler<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn encoding(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -2662,6 +2915,19 @@ impl<'mc> JavaConsoleHandler<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
+
+    pub fn filter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getFilter",
+            "()Ljava/util/logging/Filter;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
 
     pub fn level(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -2671,16 +2937,23 @@ impl<'mc> JavaConsoleHandler<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -2693,8 +2966,9 @@ impl<'mc> JavaConsoleHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2706,8 +2980,9 @@ impl<'mc> JavaConsoleHandler<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -2720,14 +2995,16 @@ impl<'mc> JavaConsoleHandler<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -2736,6 +3013,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2744,6 +3022,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2797,13 +3076,14 @@ impl<'mc> JavaLoggingPermission<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc String>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+        arg1: impl Into<String>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.into()).unwrap());
-        let cls = &jni.find_class("Javajava/util/logging/LoggingPermission")?;
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.into())?);
+        let cls = jni.find_class("Javajava/util/logging/LoggingPermission");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Ljava/lang/String;Ljava/lang/String;)V",
@@ -2811,9 +3091,11 @@ impl<'mc> JavaLoggingPermission<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
+    //
 
     pub fn new_permission_collection(
         &mut self,
@@ -2825,10 +3107,11 @@ impl<'mc> JavaLoggingPermission<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2840,18 +3123,20 @@ impl<'mc> JavaLoggingPermission<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
-    pub unsafe fn implies(
+    pub fn implies(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2863,8 +3148,9 @@ impl<'mc> JavaLoggingPermission<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn actions(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -2880,8 +3166,9 @@ impl<'mc> JavaLoggingPermission<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
-    pub unsafe fn check_guard(
+    pub fn check_guard(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2895,6 +3182,7 @@ impl<'mc> JavaLoggingPermission<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -2907,6 +3195,7 @@ impl<'mc> JavaLoggingPermission<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -2919,14 +3208,21 @@ impl<'mc> JavaLoggingPermission<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -2939,6 +3235,7 @@ impl<'mc> JavaLoggingPermission<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -2947,6 +3244,7 @@ impl<'mc> JavaLoggingPermission<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2955,6 +3253,7 @@ impl<'mc> JavaLoggingPermission<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -2991,8 +3290,9 @@ impl<'mc> JavaFilter<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
-    pub unsafe fn is_loggable(
+    pub fn is_loggable(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3004,7 +3304,7 @@ impl<'mc> JavaFilter<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
 }
 impl<'mc> JNIRaw<'mc> for JavaFilter<'mc> {
@@ -3057,14 +3357,15 @@ impl<'mc> JavaLogRecord<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub unsafe fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
-        arg1: impl Into<&'mc String>,
+        arg1: impl Into<String>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.into()).unwrap());
-        let cls = &jni.find_class("Javajava/util/logging/LogRecord")?;
+        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.into())?);
+        let cls = jni.find_class("Javajava/util/logging/LogRecord");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Ljava/util/logging/Level;Ljava/lang/String;)V",
@@ -3072,118 +3373,20 @@ impl<'mc> JavaLogRecord<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
-
-    pub unsafe fn set_instant(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setInstant",
-            "(Ljava/time/Instant;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+    //
 
     pub fn millis(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getMillis", "()J", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
+        Ok(res.j()?)
     }
-    #[deprecated]
-
-    pub fn set_millis(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setMillis",
-            "(J)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn set_source_class_name(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setSourceClassName",
-            "(Ljava/lang/String;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn set_source_method_name(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setSourceMethodName",
-            "(Ljava/lang/String;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn set_logger_name(
-        &mut self,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLoggerName",
-            "(Ljava/lang/String;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn resource_bundle(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getResourceBundle",
-            "()Ljava/util/ResourceBundle;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub unsafe fn set_resource_bundle(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setResourceBundle",
-            "(Ljava/util/ResourceBundle;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+    //
 
     pub fn resource_bundle_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -3199,12 +3402,29 @@ impl<'mc> JavaLogRecord<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
+
+    pub fn set_logger_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLoggerName",
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
 
     pub fn set_resource_bundle_name(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setResourceBundleName",
@@ -3214,8 +3434,102 @@ impl<'mc> JavaLogRecord<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn set_level(
+    pub fn set_resource_bundle(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setResourceBundle",
+            "(Ljava/util/ResourceBundle;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn set_parameters(
+        &mut self,
+        arg0: Vec<jni::objects::JObject<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setParameters",
+            "(Ljava/lang/Object;)V",
+            &[],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn set_thrown(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setThrown",
+            "(Ljava/lang/Throwable;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn set_source_class_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setSourceClassName",
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn set_source_method_name(
+        &mut self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setSourceMethodName",
+            "(Ljava/lang/String;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn resource_bundle(
+        &mut self,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getResourceBundle",
+            "()Ljava/util/ResourceBundle;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn set_level(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3229,14 +3543,32 @@ impl<'mc> JavaLogRecord<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
+
+    pub fn set_instant(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setInstant",
+            "(Ljava/time/Instant;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
 
     pub fn sequence_number(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getSequenceNumber", "()J", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
+        Ok(res.j()?)
     }
+    //
 
     pub fn set_sequence_number(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
@@ -3249,6 +3581,7 @@ impl<'mc> JavaLogRecord<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn source_class_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -3264,6 +3597,7 @@ impl<'mc> JavaLogRecord<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn source_method_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -3279,30 +3613,16 @@ impl<'mc> JavaLogRecord<'mc> {
             .to_string_lossy()
             .to_string())
     }
-
-    pub unsafe fn set_parameters(
-        &mut self,
-        arg0: Vec<jni::objects::JObject<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setParameters",
-            "(Ljava/lang/Object;)V",
-            &[],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    #[deprecated]
+    //
 
     pub fn thread_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getThreadID", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
-    #[deprecated]
+    //
 
     pub fn set_thread_id(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -3315,14 +3635,16 @@ impl<'mc> JavaLogRecord<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn long_thread_id(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLongThreadID", "()J", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
+        Ok(res.j()?)
     }
+    //
 
     pub fn set_long_thread_id(
         &mut self,
@@ -3336,8 +3658,9 @@ impl<'mc> JavaLogRecord<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn instant(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -3347,8 +3670,9 @@ impl<'mc> JavaLogRecord<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn thrown(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -3358,23 +3682,22 @@ impl<'mc> JavaLogRecord<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
-    pub unsafe fn set_thrown(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
+    pub fn set_millis(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "setThrown",
-            "(Ljava/lang/Throwable;)V",
+            "setMillis",
+            "(J)V",
             &[jni::objects::JValueGen::from(&val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn logger_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -3390,6 +3713,7 @@ impl<'mc> JavaLogRecord<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn level(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -3399,14 +3723,15 @@ impl<'mc> JavaLogRecord<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn set_message(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setMessage",
@@ -3416,6 +3741,7 @@ impl<'mc> JavaLogRecord<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn message(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -3431,14 +3757,23 @@ impl<'mc> JavaLogRecord<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
+
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -3451,8 +3786,9 @@ impl<'mc> JavaLogRecord<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3464,8 +3800,9 @@ impl<'mc> JavaLogRecord<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -3478,14 +3815,16 @@ impl<'mc> JavaLogRecord<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -3494,6 +3833,7 @@ impl<'mc> JavaLogRecord<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -3502,6 +3842,7 @@ impl<'mc> JavaLogRecord<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -3566,14 +3907,15 @@ impl<'mc> JavaStreamHandler<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    pub unsafe fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = arg1.unwrap();
-        let cls = &jni.find_class("Javajava/util/logging/StreamHandler")?;
+        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let cls = jni.find_class("Javajava/util/logging/StreamHandler");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Ljava/io/OutputStream;Ljava/util/logging/Formatter;)V",
@@ -3581,11 +3923,13 @@ impl<'mc> JavaStreamHandler<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         Ok(res)
     }
+    //
 
-    pub unsafe fn is_loggable(
+    pub fn is_loggable(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3597,14 +3941,15 @@ impl<'mc> JavaStreamHandler<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn set_encoding(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setEncoding",
@@ -3614,8 +3959,9 @@ impl<'mc> JavaStreamHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn publish(
+    pub fn publish(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3629,6 +3975,7 @@ impl<'mc> JavaStreamHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn flush(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -3637,6 +3984,7 @@ impl<'mc> JavaStreamHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn close(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -3645,60 +3993,9 @@ impl<'mc> JavaStreamHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub fn filter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getFilter",
-            "()Ljava/util/logging/Filter;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub unsafe fn set_level(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLevel",
-            "(Ljava/util/logging/Level;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn formatter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getFormatter",
-            "()Ljava/util/logging/Formatter;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
-    }
-
-    pub unsafe fn set_formatter(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setFormatter",
-            "(Ljava/util/logging/Formatter;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub unsafe fn set_filter(
+    pub fn set_filter(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3712,8 +4009,53 @@ impl<'mc> JavaStreamHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn set_error_manager(
+    pub fn set_level(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLevel",
+            "(Ljava/util/logging/Level;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn set_formatter(
+        &mut self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let val_1 = arg0;
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setFormatter",
+            "(Ljava/util/logging/Formatter;)V",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn formatter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getFormatter",
+            "()Ljava/util/logging/Formatter;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn set_error_manager(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3727,6 +4069,7 @@ impl<'mc> JavaStreamHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn error_manager(
         &mut self,
@@ -3738,8 +4081,9 @@ impl<'mc> JavaStreamHandler<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn encoding(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -3755,6 +4099,19 @@ impl<'mc> JavaStreamHandler<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
+
+    pub fn filter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getFilter",
+            "()Ljava/util/logging/Filter;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
 
     pub fn level(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -3764,16 +4121,23 @@ impl<'mc> JavaStreamHandler<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -3786,8 +4150,9 @@ impl<'mc> JavaStreamHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3799,8 +4164,9 @@ impl<'mc> JavaStreamHandler<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -3813,14 +4179,16 @@ impl<'mc> JavaStreamHandler<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -3829,6 +4197,7 @@ impl<'mc> JavaStreamHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -3837,6 +4206,7 @@ impl<'mc> JavaStreamHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -3896,6 +4266,7 @@ impl<'mc> JavaLevel<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
     pub fn resource_bundle_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -3911,6 +4282,25 @@ impl<'mc> JavaLevel<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
+
+    pub fn parse(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("Javajava/util/logging/Level");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "parse",
+            "(Ljava/lang/String;)Ljava/util/logging/Level;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
 
     pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -3926,21 +4316,7 @@ impl<'mc> JavaLevel<'mc> {
             .to_string_lossy()
             .to_string())
     }
-
-    pub fn parse(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc String>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into()).unwrap());
-        let cls = &jni.find_class("Javajava/util/logging/Level")?;
-        let res = jni.call_static_method(
-            cls,
-            "parse",
-            "(Ljava/lang/String;)Ljava/util/logging/Level;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        )?;
-        Ok(res.l().unwrap())
-    }
+    //
 
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -3953,8 +4329,9 @@ impl<'mc> JavaLevel<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
-    pub unsafe fn equals(
+    pub fn equals(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3966,8 +4343,9 @@ impl<'mc> JavaLevel<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -3980,30 +4358,39 @@ impl<'mc> JavaLevel<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn int_value(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "intValue", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -4016,6 +4403,7 @@ impl<'mc> JavaLevel<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -4024,6 +4412,7 @@ impl<'mc> JavaLevel<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -4032,6 +4421,7 @@ impl<'mc> JavaLevel<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self

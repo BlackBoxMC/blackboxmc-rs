@@ -35,18 +35,21 @@ impl<'mc> ArmorTrim<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::inventory::meta::trim::TrimMaterial<'mc>>,
-        arg1: impl Into<&'mc crate::inventory::meta::trim::TrimPattern<'mc>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::inventory::meta::trim::TrimMaterial<'mc>>,
+        arg1: impl Into<crate::inventory::meta::trim::TrimPattern<'mc>>,
     ) -> Result<crate::inventory::meta::trim::ArmorTrim<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let cls = &jni.find_class("org/bukkit/inventory/meta/trim/ArmorTrim")?;
+        let cls = jni.find_class("org/bukkit/inventory/meta/trim/ArmorTrim");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(cls,
-"(Lorg/bukkit/inventory/meta/trim/TrimMaterial;Lorg/bukkit/inventory/meta/trim/TrimPattern;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)])?;
+"(Lorg/bukkit/inventory/meta/trim/TrimMaterial;Lorg/bukkit/inventory/meta/trim/TrimPattern;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)]);
+        let res = jni.translate_error_no_gen(res)?;
         crate::inventory::meta::trim::ArmorTrim::from_raw(&jni, res)
     }
-    /// Get the <a href="TrimMaterial.html" title="interface in org.bukkit.inventory.meta.trim"><code>TrimMaterial</code></a> for this armor trim.
+    //
+
     pub fn material(
         &mut self,
     ) -> Result<crate::inventory::meta::trim::TrimMaterial<'mc>, Box<dyn std::error::Error>> {
@@ -61,7 +64,8 @@ impl<'mc> ArmorTrim<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Get the <a href="TrimPattern.html" title="interface in org.bukkit.inventory.meta.trim"><code>TrimPattern</code></a> for this armor trim.
+    //
+
     pub fn pattern(
         &mut self,
     ) -> Result<crate::inventory::meta::trim::TrimPattern<'mc>, Box<dyn std::error::Error>> {
@@ -76,6 +80,7 @@ impl<'mc> ArmorTrim<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -89,24 +94,32 @@ impl<'mc> ArmorTrim<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -119,6 +132,7 @@ impl<'mc> ArmorTrim<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -131,6 +145,7 @@ impl<'mc> ArmorTrim<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -139,6 +154,7 @@ impl<'mc> ArmorTrim<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -147,6 +163,7 @@ impl<'mc> ArmorTrim<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -183,6 +200,7 @@ impl<'mc> TrimMaterial<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
     pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -208,7 +226,8 @@ impl<'mc> JNIRaw<'mc> for TrimMaterial<'mc> {
 }
 impl<'mc> Into<crate::Keyed<'mc>> for TrimMaterial<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
-        crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::Keyed::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting TrimMaterial into crate::Keyed")
     }
 }
 /// Represents a pattern that may be used in an <a title="class in org.bukkit.inventory.meta.trim" href="ArmorTrim.html"><code>ArmorTrim</code></a>.
@@ -238,6 +257,7 @@ impl<'mc> TrimPattern<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
 
     pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -263,6 +283,7 @@ impl<'mc> JNIRaw<'mc> for TrimPattern<'mc> {
 }
 impl<'mc> Into<crate::Keyed<'mc>> for TrimPattern<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
-        crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::Keyed::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting TrimPattern into crate::Keyed")
     }
 }

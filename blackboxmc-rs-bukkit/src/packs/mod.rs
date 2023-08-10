@@ -2,11 +2,32 @@
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Show the compatibility of the data pack with the server.
+pub enum DataPackCompatibilityEnum {
+    New,
+    Old,
+    Compatible,
+}
+impl std::fmt::Display for DataPackCompatibilityEnum {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            DataPackCompatibilityEnum::New => f.write_str("NEW"),
+            DataPackCompatibilityEnum::Old => f.write_str("OLD"),
+            DataPackCompatibilityEnum::Compatible => f.write_str("COMPATIBLE"),
+        }
+    }
+}
 pub struct DataPackCompatibility<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
+    pub DataPackCompatibilityEnum,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for DataPackCompatibility<'mc> {
+impl<'mc> std::ops::Deref for DataPackCompatibility<'mc> {
+    type Target = DataPackCompatibilityEnum;
+    fn deref(&self) -> &Self::Target {
+        return &self.2;
+    }
+}
+impl<'mc> JNIRaw<'mc> for DataPackCompatibility<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -19,6 +40,7 @@ impl<'mc> DataPackCompatibility<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
+        e: DataPackCompatibilityEnum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -26,7 +48,7 @@ impl<'mc> DataPackCompatibility<'mc> {
             )
             .into());
         }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/packs/DataPackCompatibility")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/packs/DataPack$Compatibility")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a DataPackCompatibility object, got {}",
@@ -34,157 +56,52 @@ impl<'mc> DataPackCompatibility<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self(env.clone(), obj, e))
         }
     }
-    /// Returns the enum constant of this type with the specified name. The string must match <i>exactly</i> an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
-    pub fn value_of_with_string(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<impl Into<&'mc String>>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
-        let cls = &jni.find_class("java/lang/Enum")?;
+    pub const NEW: DataPackCompatibilityEnum = DataPackCompatibilityEnum::New;
+    pub const OLD: DataPackCompatibilityEnum = DataPackCompatibilityEnum::Old;
+    pub const COMPATIBLE: DataPackCompatibilityEnum = DataPackCompatibilityEnum::Compatible;
+    pub fn from_string(str: String) -> std::option::Option<DataPackCompatibilityEnum> {
+        match str.as_str() {
+            "NEW" => Some(DataPackCompatibilityEnum::New),
+            "OLD" => Some(DataPackCompatibilityEnum::Old),
+            "COMPATIBLE" => Some(DataPackCompatibilityEnum::Compatible),
+            _ => None,
+        }
+    }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<DataPackCompatibility<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/packs/DataPack$Compatibility");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "valueOf",
-            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let obj = res.l()?;
-        Self::from_raw(&jni, obj)
-    }
-
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
+            "(Ljava/lang/String;)Lorg/bukkit/packs/DataPack$Compatibility;",
             &[jni::objects::JValueGen::from(&val_1)],
         );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
-            .to_string())
+            .to_string();
+        DataPackCompatibility::from_raw(
+            &jni,
+            raw_obj,
+            DataPackCompatibility::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
     }
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn declaring_class(
-        &mut self,
-    ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDeclaringClass",
-            "()Ljava/lang/Class;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-
-    pub fn wait(
-        &mut self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "wait",
-            "(JI)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+    //
 }
 /// Represents a data pack.
 ///
@@ -212,7 +129,8 @@ impl<'mc> DataPack<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// Gets the source of this data pack.
+    //
+
     pub fn source(
         &mut self,
     ) -> Result<crate::packs::DataPackSource<'mc>, Box<dyn std::error::Error>> {
@@ -223,26 +141,25 @@ impl<'mc> DataPack<'mc> {
             &[],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::packs::DataPackSource::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant = self
+            .jni_ref()
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = self.jni_ref().translate_error(variant)?;
+        let variant_str = self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::packs::DataPackSource::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::packs::DataPackSource::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
     }
-    /// Gets the compatibility of this data pack with the server.
-    pub fn compatibility(
-        &mut self,
-    ) -> Result<crate::packs::DataPackCompatibility<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getCompatibility",
-            "()Lorg/bukkit/packs/DataPack$Compatibility;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::packs::DataPackCompatibility::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    /// Gets the description of the data pack.
+    //
+
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -257,15 +174,8 @@ impl<'mc> DataPack<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    /// Gets if the data pack is enabled on the server.
-    pub fn is_enabled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isEnabled", "()Z", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    /// Gets a set of features requested by this data pack.
+    //
+
     pub fn requested_features(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -280,7 +190,8 @@ impl<'mc> DataPack<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gets the title of the data pack.
+    //
+
     pub fn title(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -292,24 +203,63 @@ impl<'mc> DataPack<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    /// Gets the pack version.
-    ///
-    /// This is related to the server version to work.
+    //
+
     pub fn pack_format(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getPackFormat", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
-    /// Gets if the data pack is required on the server.
+    //
+
+    pub fn is_enabled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isEnabled", "()Z", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
     pub fn is_required(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isRequired", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
+
+    pub fn compatibility(
+        &mut self,
+    ) -> Result<crate::packs::DataPackCompatibility<'mc>, Box<dyn std::error::Error>> {
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCompatibility",
+            "()Lorg/bukkit/packs/DataPack$Compatibility;",
+            &[],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant = self
+            .jni_ref()
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = self.jni_ref().translate_error(variant)?;
+        let variant_str = self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::packs::DataPackCompatibility::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::packs::DataPackCompatibility::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
+    //
 
     pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
@@ -335,7 +285,8 @@ impl<'mc> JNIRaw<'mc> for DataPack<'mc> {
 }
 impl<'mc> Into<crate::Keyed<'mc>> for DataPack<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
-        crate::Keyed::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::Keyed::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting DataPack into crate::Keyed")
     }
 }
 /// Manager of data packs.
@@ -366,10 +317,11 @@ impl<'mc> DataPackManager<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// Return all the enabled <a href="DataPack.html" title="interface in org.bukkit.packs"><code>DataPack</code></a> in the World.
+    //
+
     pub fn get_enabled_data_packs(
         &mut self,
-        arg0: impl Into<&'mc crate::World<'mc>>,
+        arg0: impl Into<crate::World<'mc>>,
     ) -> Result<Vec<crate::packs::DataPack<'mc>>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -388,7 +340,8 @@ impl<'mc> DataPackManager<'mc> {
         }
         Ok(new_vec)
     }
-    /// Return all the available <a href="DataPack.html" title="interface in org.bukkit.packs"><code>DataPack</code></a>s on the server.
+    //
+
     pub fn data_packs(
         &mut self,
     ) -> Result<Vec<crate::packs::DataPack<'mc>>, Box<dyn std::error::Error>> {
@@ -408,11 +361,11 @@ impl<'mc> DataPackManager<'mc> {
         }
         Ok(new_vec)
     }
-    /// Return all the available <a title="interface in org.bukkit.packs" href="DataPack.html"><code>DataPack</code></a>s on the server.
-    /// Gets a <a href="DataPack.html" title="interface in org.bukkit.packs"><code>DataPack</code></a> by its key.
+    //
+
     pub fn get_data_pack(
         &mut self,
-        arg0: impl Into<&'mc crate::NamespacedKey<'mc>>,
+        arg0: impl Into<crate::NamespacedKey<'mc>>,
     ) -> Result<crate::packs::DataPack<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -426,10 +379,11 @@ impl<'mc> DataPackManager<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Return all the disabled <a href="DataPack.html" title="interface in org.bukkit.packs"><code>DataPack</code></a> in the World.
+    //
+
     pub fn get_disabled_data_packs(
         &mut self,
-        arg0: impl Into<&'mc crate::World<'mc>>,
+        arg0: impl Into<crate::World<'mc>>,
     ) -> Result<Vec<crate::packs::DataPack<'mc>>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -448,16 +402,22 @@ impl<'mc> DataPackManager<'mc> {
         }
         Ok(new_vec)
     }
-    /// Gets if the Material is enabled for use by the features in World.
-    /// Gets if the EntityType is enabled for use by the Features in World.
+    //
+
     pub fn is_enabled_by_feature_with_material(
         &mut self,
-        arg0: impl Into<&'mc crate::entity::EntityType<'mc>>,
-        arg1: std::option::Option<impl Into<&'mc crate::World<'mc>>>,
+        arg0: impl Into<crate::entity::EntityType<'mc>>,
+        arg1: std::option::Option<impl Into<crate::World<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 =
-            unsafe { jni::objects::JObject::from_raw(arg1.unwrap().into().jni_object().clone()) };
+        let val_2 = unsafe {
+            jni::objects::JObject::from_raw(
+                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                    .into()
+                    .jni_object()
+                    .clone(),
+            )
+        };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isEnabledByFeature",
@@ -468,7 +428,7 @@ impl<'mc> DataPackManager<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
 }
 impl<'mc> JNIRaw<'mc> for DataPackManager<'mc> {
@@ -481,11 +441,36 @@ impl<'mc> JNIRaw<'mc> for DataPackManager<'mc> {
     }
 }
 /// Represent the source of a data pack.
+pub enum DataPackSourceEnum {
+    Default,
+    BuiltIn,
+    Feature,
+    World,
+    Server,
+}
+impl std::fmt::Display for DataPackSourceEnum {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            DataPackSourceEnum::Default => f.write_str("DEFAULT"),
+            DataPackSourceEnum::BuiltIn => f.write_str("BUILT_IN"),
+            DataPackSourceEnum::Feature => f.write_str("FEATURE"),
+            DataPackSourceEnum::World => f.write_str("WORLD"),
+            DataPackSourceEnum::Server => f.write_str("SERVER"),
+        }
+    }
+}
 pub struct DataPackSource<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
+    pub DataPackSourceEnum,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for DataPackSource<'mc> {
+impl<'mc> std::ops::Deref for DataPackSource<'mc> {
+    type Target = DataPackSourceEnum;
+    fn deref(&self) -> &Self::Target {
+        return &self.2;
+    }
+}
+impl<'mc> JNIRaw<'mc> for DataPackSource<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -498,13 +483,14 @@ impl<'mc> DataPackSource<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
+        e: DataPackSourceEnum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
                 eyre::eyre!("Tried to instantiate DataPackSource from null object.").into(),
             );
         }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/packs/DataPackSource")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/packs/DataPack$Source")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a DataPackSource object, got {}",
@@ -512,155 +498,254 @@ impl<'mc> DataPackSource<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self(env.clone(), obj, e))
         }
     }
-    /// Returns the enum constant of this type with the specified name. The string must match <i>exactly</i> an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)
-    pub fn value_of_with_string(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<impl Into<&'mc String>>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
-        let cls = &jni.find_class("java/lang/Enum")?;
+    pub const DEFAULT: DataPackSourceEnum = DataPackSourceEnum::Default;
+    pub const BUILT_IN: DataPackSourceEnum = DataPackSourceEnum::BuiltIn;
+    pub const FEATURE: DataPackSourceEnum = DataPackSourceEnum::Feature;
+    pub const WORLD: DataPackSourceEnum = DataPackSourceEnum::World;
+    pub const SERVER: DataPackSourceEnum = DataPackSourceEnum::Server;
+    pub fn from_string(str: String) -> std::option::Option<DataPackSourceEnum> {
+        match str.as_str() {
+            "DEFAULT" => Some(DataPackSourceEnum::Default),
+            "BUILT_IN" => Some(DataPackSourceEnum::BuiltIn),
+            "FEATURE" => Some(DataPackSourceEnum::Feature),
+            "WORLD" => Some(DataPackSourceEnum::World),
+            "SERVER" => Some(DataPackSourceEnum::Server),
+            _ => None,
+        }
+    }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<DataPackSource<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/packs/DataPack$Source");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "valueOf",
-            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let obj = res.l()?;
-        Self::from_raw(&jni, obj)
-    }
-
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-
-    pub fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
+            "(Ljava/lang/String;)Lorg/bukkit/packs/DataPack$Source;",
             &[jni::objects::JValueGen::from(&val_1)],
         );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
-            .to_string())
+            .to_string();
+        DataPackSource::from_raw(
+            &jni,
+            raw_obj,
+            DataPackSource::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
     }
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+    //
+}
+pub enum CompatibilityEnum {
+    New,
+    Old,
+    Compatible,
+}
+impl std::fmt::Display for CompatibilityEnum {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            CompatibilityEnum::New => f.write_str("NEW"),
+            CompatibilityEnum::Old => f.write_str("OLD"),
+            CompatibilityEnum::Compatible => f.write_str("COMPATIBLE"),
+        }
+    }
+}
+pub struct Compatibility<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+    pub CompatibilityEnum,
+);
+impl<'mc> std::ops::Deref for Compatibility<'mc> {
+    type Target = CompatibilityEnum;
+    fn deref(&self) -> &Self::Target {
+        return &self.2;
+    }
+}
+impl<'mc> JNIRaw<'mc> for Compatibility<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Compatibility<'mc> {
+    pub fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+        e: CompatibilityEnum,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Compatibility from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/packs/Compatibility")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Compatibility object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj, e))
+        }
+    }
+    pub const NEW: CompatibilityEnum = CompatibilityEnum::New;
+    pub const OLD: CompatibilityEnum = CompatibilityEnum::Old;
+    pub const COMPATIBLE: CompatibilityEnum = CompatibilityEnum::Compatible;
+    pub fn from_string(str: String) -> std::option::Option<CompatibilityEnum> {
+        match str.as_str() {
+            "NEW" => Some(CompatibilityEnum::New),
+            "OLD" => Some(CompatibilityEnum::Old),
+            "COMPATIBLE" => Some(CompatibilityEnum::Compatible),
+            _ => None,
+        }
+    }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Compatibility<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/packs/Compatibility");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/packs/Compatibility;",
+            &[jni::objects::JValueGen::from(&val_1)],
         );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        Compatibility::from_raw(
+            &jni,
+            raw_obj,
+            Compatibility::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
+}
+pub enum SourceEnum {
+    Default,
+    BuiltIn,
+    Feature,
+    World,
+    Server,
+}
+impl std::fmt::Display for SourceEnum {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            SourceEnum::Default => f.write_str("DEFAULT"),
+            SourceEnum::BuiltIn => f.write_str("BUILT_IN"),
+            SourceEnum::Feature => f.write_str("FEATURE"),
+            SourceEnum::World => f.write_str("WORLD"),
+            SourceEnum::Server => f.write_str("SERVER"),
+        }
+    }
+}
+pub struct Source<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+    pub SourceEnum,
+);
+impl<'mc> std::ops::Deref for Source<'mc> {
+    type Target = SourceEnum;
+    fn deref(&self) -> &Self::Target {
+        return &self.2;
+    }
+}
+impl<'mc> JNIRaw<'mc> for Source<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
 
-    pub fn declaring_class(
-        &mut self,
-    ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDeclaringClass",
-            "()Ljava/lang/Class;",
-            &[],
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> Source<'mc> {
+    pub fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+        e: SourceEnum,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Source from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/packs/Source")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Source object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj, e))
+        }
+    }
+    pub const DEFAULT: SourceEnum = SourceEnum::Default;
+    pub const BUILT_IN: SourceEnum = SourceEnum::BuiltIn;
+    pub const FEATURE: SourceEnum = SourceEnum::Feature;
+    pub const WORLD: SourceEnum = SourceEnum::World;
+    pub const SERVER: SourceEnum = SourceEnum::Server;
+    pub fn from_string(str: String) -> std::option::Option<SourceEnum> {
+        match str.as_str() {
+            "DEFAULT" => Some(SourceEnum::Default),
+            "BUILT_IN" => Some(SourceEnum::BuiltIn),
+            "FEATURE" => Some(SourceEnum::Feature),
+            "WORLD" => Some(SourceEnum::World),
+            "SERVER" => Some(SourceEnum::Server),
+            _ => None,
+        }
+    }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<Source<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/packs/Source");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/packs/Source;",
+            &[jni::objects::JValueGen::from(&val_1)],
         );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-
-    pub fn wait(
-        &mut self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "wait",
-            "(JI)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        Source::from_raw(
+            &jni,
+            raw_obj,
+            Source::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
     }
 }

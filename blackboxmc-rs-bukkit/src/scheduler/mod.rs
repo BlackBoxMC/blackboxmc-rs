@@ -27,7 +27,8 @@ impl<'mc> BukkitTask<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// Will attempt to cancel this task.
+    //
+
     pub fn cancel(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -35,23 +36,26 @@ impl<'mc> BukkitTask<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Returns true if this task has been cancelled.
+    //
+
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
-    /// Returns true if the Task is a sync task.
+    //
+
     pub fn is_sync(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isSync", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
-    /// Returns the Plugin that owns this task.
+    //
+
     pub fn owner(&mut self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -64,13 +68,14 @@ impl<'mc> BukkitTask<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Returns the taskId for the task.
+    //
+
     pub fn task_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getTaskId", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
 }
 impl<'mc> JNIRaw<'mc> for BukkitTask<'mc> {
@@ -109,7 +114,8 @@ impl<'mc> BukkitWorker<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// Returns the Plugin that owns this task.
+    //
+
     pub fn owner(&mut self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -122,13 +128,14 @@ impl<'mc> BukkitWorker<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Returns the taskId for the task being executed by this worker.
+    //
+
     pub fn task_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getTaskId", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
 }
 impl<'mc> JNIRaw<'mc> for BukkitWorker<'mc> {
@@ -168,6 +175,8 @@ impl<'mc> BukkitScheduler<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+    //
+
     /// Check if the task queued to be run later.
     /// <p>If a repeating task is currently running, it might not be queued now but could be in the future. A task that is not queued, and not running, will not be queued again.</p>
     pub fn is_queued(&mut self, arg0: i32) -> Result<bool, Box<dyn std::error::Error>> {
@@ -179,34 +188,22 @@ impl<'mc> BukkitScheduler<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
-    #[deprecated]
-    /// Schedules a once off task to occur after a delay.
-    /// <p>This task will be executed by the main server thread.</p>
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Use <a href="BukkitRunnable.html#runTaskLater(org.bukkit.plugin.Plugin,long)"><code>BukkitRunnable.runTaskLater(Plugin, long)</code></a>
-    /// </div>
-    /// Use <a href="BukkitRunnable.html#runTaskLater(org.bukkit.plugin.Plugin,long)"><code>BukkitRunnable.runTaskLater(Plugin, long)</code></a>
-    ///
-    /// Schedules a once off task to occur as soon as possible.
-    /// <p>This task will be executed by the main server thread.</p>
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Use <a href="BukkitRunnable.html#runTask(org.bukkit.plugin.Plugin)"><code>BukkitRunnable.runTask(Plugin)</code></a>
-    /// </div>
-    /// Use <a href="BukkitRunnable.html#runTask(org.bukkit.plugin.Plugin)"><code>BukkitRunnable.runTask(Plugin)</code></a>
-    ///
+    //
+
     pub fn schedule_sync_delayed_task_with_plugin(
         &mut self,
-        arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
-        arg1: impl Into<&'mc crate::scheduler::BukkitRunnable<'mc>>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
+        arg1: impl Into<crate::scheduler::BukkitRunnable<'mc>>,
         arg2: std::option::Option<i64>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = jni::objects::JValueGen::Long(arg2.unwrap().into());
+        let val_3 = jni::objects::JValueGen::Long(
+            arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "scheduleSyncDelayedTask",
@@ -218,10 +215,11 @@ impl<'mc> BukkitScheduler<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
+
     /// Removes task from scheduler.
-    /// Removes all tasks associated with a particular plugin from the scheduler.
     pub fn cancel_task(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -233,10 +231,11 @@ impl<'mc> BukkitScheduler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Removes all tasks associated with a particular plugin from the scheduler.
+    //
+
     pub fn cancel_tasks(
         &mut self,
-        arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -248,6 +247,8 @@ impl<'mc> BukkitScheduler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
+
     /// Check if the task currently running.
     /// <p>A repeating task might not be running currently, but will be running in the future. A task that has finished, and does not repeat, will not be running ever again.</p>
     /// <p>Explicitly, a task is running if there exists a thread for it, and that thread is alive.</p>
@@ -260,10 +261,10 @@ impl<'mc> BukkitScheduler<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
-    /// Returns a list of all active workers.
-    /// <p>This list contains asynch tasks that are being executed by separate threads.</p>
+    //
+
     pub fn active_workers(
         &mut self,
     ) -> Result<Vec<crate::scheduler::BukkitWorker<'mc>>, Box<dyn std::error::Error>> {
@@ -286,7 +287,8 @@ impl<'mc> BukkitScheduler<'mc> {
         }
         Ok(new_vec)
     }
-    /// Returns a list of all pending tasks. The ordering of the tasks is not related to their order of execution.
+    //
+
     pub fn pending_tasks(
         &mut self,
     ) -> Result<Vec<crate::scheduler::BukkitTask<'mc>>, Box<dyn std::error::Error>> {
@@ -365,14 +367,16 @@ impl<'mc> BukkitRunnable<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::scheduler::BukkitRunnable<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("org/bukkit/scheduler/BukkitRunnable")?;
-        let res = jni.new_object(cls, "()V", &[])?;
+        let cls = jni.find_class("org/bukkit/scheduler/BukkitRunnable");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, "()V", &[]);
+        let res = jni.translate_error_no_gen(res)?;
         crate::scheduler::BukkitRunnable::from_raw(&jni, res)
     }
-    /// Attempts to cancel this task.
-    ///
+    //
+
     pub fn cancel(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -380,33 +384,20 @@ impl<'mc> BukkitRunnable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Returns true if this task has been cancelled.
-    ///
+    //
+
     pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isCancelled", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
-    /// Schedules this in the Bukkit scheduler to run on next tick.
-    ///
-    /// <b>Asynchronous tasks should never access any API in Bukkit. Great care should be taken to assure the thread-safety of asynchronous tasks.</b>
-    /// <p>Schedules this in the Bukkit scheduler to run asynchronously.</p>
-    ///
-    /// Schedules this to run after the specified number of server ticks.
-    ///
-    /// <b>Asynchronous tasks should never access any API in Bukkit. Great care should be taken to assure the thread-safety of asynchronous tasks.</b>
-    /// <p>Schedules this to run asynchronously after the specified number of server ticks.</p>
-    ///
-    /// Schedules this to repeatedly run until cancelled, starting after the specified number of server ticks.
-    ///
-    /// <b>Asynchronous tasks should never access any API in Bukkit. Great care should be taken to assure the thread-safety of asynchronous tasks.</b>
-    /// <p>Schedules this to repeatedly run asynchronously until cancelled, starting after the specified number of server ticks.</p>
-    ///
+    //
+
     pub fn run_task(
         &mut self,
-        arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<crate::scheduler::BukkitTask<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -420,12 +411,11 @@ impl<'mc> BukkitRunnable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// <b>Asynchronous tasks should never access any API in Bukkit. Great care should be taken to assure the thread-safety of asynchronous tasks.</b>
-    /// <p>Schedules this in the Bukkit scheduler to run asynchronously.</p>
-    ///
+    //
+
     pub fn run_task_asynchronously(
         &mut self,
-        arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<crate::scheduler::BukkitTask<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -439,14 +429,11 @@ impl<'mc> BukkitRunnable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Schedules this to run after the specified number of server ticks.
-    ///
-    /// <b>Asynchronous tasks should never access any API in Bukkit. Great care should be taken to assure the thread-safety of asynchronous tasks.</b>
-    /// <p>Schedules this to run asynchronously after the specified number of server ticks.</p>
-    ///
+    //
+
     pub fn run_task_later(
         &mut self,
-        arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: i64,
     ) -> Result<crate::scheduler::BukkitTask<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
@@ -465,12 +452,11 @@ impl<'mc> BukkitRunnable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// <b>Asynchronous tasks should never access any API in Bukkit. Great care should be taken to assure the thread-safety of asynchronous tasks.</b>
-    /// <p>Schedules this to run asynchronously after the specified number of server ticks.</p>
-    ///
+    //
+
     pub fn run_task_later_asynchronously(
         &mut self,
-        arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: i64,
     ) -> Result<crate::scheduler::BukkitTask<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
@@ -489,14 +475,11 @@ impl<'mc> BukkitRunnable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Schedules this to repeatedly run until cancelled, starting after the specified number of server ticks.
-    ///
-    /// <b>Asynchronous tasks should never access any API in Bukkit. Great care should be taken to assure the thread-safety of asynchronous tasks.</b>
-    /// <p>Schedules this to repeatedly run asynchronously until cancelled, starting after the specified number of server ticks.</p>
-    ///
+    //
+
     pub fn run_task_timer(
         &mut self,
-        arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: i64,
         arg2: i64,
     ) -> Result<crate::scheduler::BukkitTask<'mc>, Box<dyn std::error::Error>> {
@@ -518,12 +501,11 @@ impl<'mc> BukkitRunnable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// <b>Asynchronous tasks should never access any API in Bukkit. Great care should be taken to assure the thread-safety of asynchronous tasks.</b>
-    /// <p>Schedules this to repeatedly run asynchronously until cancelled, starting after the specified number of server ticks.</p>
-    ///
+    //
+
     pub fn run_task_timer_asynchronously(
         &mut self,
-        arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: i64,
         arg2: i64,
     ) -> Result<crate::scheduler::BukkitTask<'mc>, Box<dyn std::error::Error>> {
@@ -545,23 +527,30 @@ impl<'mc> BukkitRunnable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Gets the task id for this runnable.
-    ///
+    //
+
     pub fn task_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getTaskId", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -574,6 +563,7 @@ impl<'mc> BukkitRunnable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -587,8 +577,9 @@ impl<'mc> BukkitRunnable<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -601,14 +592,16 @@ impl<'mc> BukkitRunnable<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -617,6 +610,7 @@ impl<'mc> BukkitRunnable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -625,6 +619,7 @@ impl<'mc> BukkitRunnable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -633,21 +628,8 @@ impl<'mc> BukkitRunnable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Schedules this in the Bukkit scheduler to run on next tick.
-    ///
-    /// <b>Asynchronous tasks should never access any API in Bukkit. Great care should be taken to assure the thread-safety of asynchronous tasks.</b>
-    /// <p>Schedules this in the Bukkit scheduler to run asynchronously.</p>
-    ///
-    /// Schedules this to run after the specified number of server ticks.
-    ///
-    /// <b>Asynchronous tasks should never access any API in Bukkit. Great care should be taken to assure the thread-safety of asynchronous tasks.</b>
-    /// <p>Schedules this to run asynchronously after the specified number of server ticks.</p>
-    ///
-    /// Schedules this to repeatedly run until cancelled, starting after the specified number of server ticks.
-    ///
-    /// <b>Asynchronous tasks should never access any API in Bukkit. Great care should be taken to assure the thread-safety of asynchronous tasks.</b>
-    /// <p>Schedules this to repeatedly run asynchronously until cancelled, starting after the specified number of server ticks.</p>
-    ///
+    //
+
     pub fn run(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()

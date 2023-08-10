@@ -823,11 +823,77 @@ impl<'mc> SharedJNIEnv<'mc> {
         self.jni.borrow_mut().ensure_local_capacity(capacity)
     }
 
-    pub fn translate_error(
+    pub fn translate_error<T>(
         &self,
-        res: Result<jni::objects::JValueGen<jni::objects::JObject<'mc>>, jni::errors::Error>,
-    ) -> Result<jni::objects::JValueGen<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>>
+        res: Result<jni::objects::JValueGen<T>, jni::errors::Error>,
+    ) -> Result<jni::objects::JValueGen<T>, Box<dyn std::error::Error>>
+    where
+        T: Into<jni::objects::JObject<'mc>>,
     {
+        let mut jni = self.jni.borrow_mut();
+        match res {
+            Ok(res) => Ok(res),
+            Err(err) => {
+                let exp = jni.exception_occurred()?;
+                if !exp.is_null() {
+                    jni.exception_clear()?;
+                    let _message = String::new();
+                    let obj = jni.call_method(&exp, "getMessage", "()Ljava/lang/String;", &[])?;
+                    let mut message = format!(
+                        "{}",
+                        jni.get_string(unsafe {
+                            &jni::objects::JString::from_raw(obj.as_jni().l)
+                        })?
+                        .to_string_lossy()
+                        .to_string()
+                    );
+                    // Is there a cause?
+                    let cause = jni
+                        .call_method(&exp, "getCause", "()Ljava/lang/Throwable;", &[])?
+                        .l()
+                        .unwrap();
+                    if !&cause.is_null() {
+                        message += "\ncaused by: ";
+                        let cause_obj =
+                            jni.call_method(&cause, "getMessage", "()Ljava/lang/String;", &[])?;
+                        message += format!(
+                            "{}",
+                            jni.get_string(unsafe {
+                                &jni::objects::JString::from_raw(cause_obj.as_jni().l)
+                            })?
+                            .to_string_lossy()
+                            .to_string()
+                        )
+                        .as_str();
+                    };
+                    return Err(eyre::eyre!(message).into());
+                } else {
+                    Err(err.into())
+                }
+            }
+        }
+    }
+
+    pub fn translate_error_with_class(
+        &self,
+        res: Result<jni::objects::JClass<'mc>, jni::errors::Error>,
+    ) -> Result<jni::objects::JClass, Box<dyn std::error::Error>> {
+        match res {
+            Ok(res) => match self.translate_error_no_gen(Ok(res.into())) {
+                Ok(res) => Ok(res.into()),
+                Err(err) => Err(err),
+            },
+            Err(err) => match self.translate_error_no_gen(Err(err)) {
+                Ok(res) => Ok(res.into()),
+                Err(err) => Err(err),
+            },
+        }
+    }
+
+    pub fn translate_error_no_gen(
+        &self,
+        res: Result<jni::objects::JObject<'mc>, jni::errors::Error>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut jni = self.jni.borrow_mut();
         match res {
             Ok(res) => Ok(res),

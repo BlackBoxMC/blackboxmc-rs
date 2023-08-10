@@ -27,15 +27,16 @@ impl<'mc> MetadataStore<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// Adds a metadata value to an object.
+    //
+
     pub fn set_metadata(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-        arg1: impl Into<&'mc String>,
-        arg2: impl Into<&'mc crate::metadata::MetadataValue<'mc>>,
+        arg1: impl Into<String>,
+        arg2: impl Into<crate::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
+        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
         let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -50,14 +51,15 @@ impl<'mc> MetadataStore<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Returns all metadata values attached to an object. If multiple plugins have attached metadata, each will value will be included.
+    //
+
     pub fn get_metadata(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-        arg1: impl Into<&'mc String>,
+        arg1: impl Into<String>,
     ) -> Result<Vec<crate::metadata::MetadataValue<'mc>>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
+        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getMetadata",
@@ -80,14 +82,15 @@ impl<'mc> MetadataStore<'mc> {
         }
         Ok(new_vec)
     }
-    /// Tests to see if a metadata attribute has been set on an object.
+    //
+
     pub fn has_metadata(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-        arg1: impl Into<&'mc String>,
+        arg1: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
+        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasMetadata",
@@ -98,17 +101,18 @@ impl<'mc> MetadataStore<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
-    /// Removes a metadata item owned by a plugin from a subject.
+    //
+
     pub fn remove_metadata(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-        arg1: impl Into<&'mc String>,
-        arg2: impl Into<&'mc crate::plugin::Plugin<'mc>>,
+        arg1: impl Into<String>,
+        arg2: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
+        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
         let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -123,10 +127,11 @@ impl<'mc> MetadataStore<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Invalidates all metadata in the metadata store that originates from the given plugin. Doing this will force each invalidated metadata item to be recalculated the next time it is accessed.
+    //
+
     pub fn invalidate_all(
         &mut self,
-        arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -184,15 +189,8 @@ impl<'mc> MetadataValue<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// Attempts to convert the value of this metadata item into an int.
-    pub fn as_int(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "asInt", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-    /// Attempts to convert the value of this metadata item into a string.
+    //
+
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -204,7 +202,17 @@ impl<'mc> MetadataValue<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    /// Returns the <a title="interface in org.bukkit.plugin" href="../plugin/Plugin.html"><code>Plugin</code></a> that created this metadata item.
+    //
+
+    pub fn as_int(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "asInt", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    //
+
     pub fn owning_plugin(
         &mut self,
     ) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
@@ -219,7 +227,8 @@ impl<'mc> MetadataValue<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// Invalidates this metadata item, forcing it to recompute when next accessed.
+    //
+
     pub fn invalidate(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -227,61 +236,68 @@ impl<'mc> MetadataValue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Attempts to convert the value of this metadata item into a float.
+    //
+
     pub fn as_float(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "asFloat", "()F", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.f().unwrap())
+        Ok(res.f()?)
     }
-    /// Attempts to convert the value of this metadata item into a double.
+    //
+
     pub fn as_double(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "asDouble", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
-    /// Attempts to convert the value of this metadata item into a long.
+    //
+
     pub fn as_long(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "asLong", "()J", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
+        Ok(res.j()?)
     }
-    /// Attempts to convert the value of this metadata item into a short.
+    //
+
     pub fn as_short(&mut self) -> Result<i16, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "asShort", "()S", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.s().unwrap())
+        Ok(res.s()?)
     }
-    /// Attempts to convert the value of this metadata item into a byte.
+    //
+
     pub fn as_byte(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "asByte", "()B", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.b().unwrap())
+        Ok(res.b()?)
     }
-    /// Attempts to convert the value of this metadata item into a boolean.
+    //
+
     pub fn as_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "asBoolean", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
-    /// Fetches the value of this metadata item.
+    //
+
     pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "value", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
 }
 impl<'mc> JNIRaw<'mc> for MetadataValue<'mc> {
@@ -319,13 +335,14 @@ impl<'mc> Metadatable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// Sets a metadata value in the implementing object's metadata store.
+    //
+
     pub fn set_metadata(
         &mut self,
-        arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc crate::metadata::MetadataValue<'mc>>,
+        arg0: impl Into<String>,
+        arg1: impl Into<crate::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -339,12 +356,13 @@ impl<'mc> Metadatable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Returns a list of previously set metadata values from the implementing object's metadata store.
+    //
+
     pub fn get_metadata(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<Vec<crate::metadata::MetadataValue<'mc>>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getMetadata",
@@ -364,12 +382,13 @@ impl<'mc> Metadatable<'mc> {
         }
         Ok(new_vec)
     }
-    /// Tests to see whether the implementing object contains the given metadata value in its metadata store.
+    //
+
     pub fn has_metadata(
         &mut self,
-        arg0: impl Into<&'mc String>,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasMetadata",
@@ -377,15 +396,16 @@ impl<'mc> Metadatable<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
-    /// Removes the given metadata value from the implementing object's metadata store.
+    //
+
     pub fn remove_metadata(
         &mut self,
-        arg0: impl Into<&'mc String>,
-        arg1: impl Into<&'mc crate::plugin::Plugin<'mc>>,
+        arg0: impl Into<String>,
+        arg1: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into()).unwrap());
+        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
         let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -445,23 +465,24 @@ impl<'mc> MetadataStoreBase<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::metadata::MetadataStoreBase<'mc>, Box<dyn std::error::Error>> {
-        let cls = &jni.find_class("org/bukkit/metadata/MetadataStoreBase")?;
-        let res = jni.new_object(cls, "()V", &[])?;
+        let cls = jni.find_class("org/bukkit/metadata/MetadataStoreBase");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, "()V", &[]);
+        let res = jni.translate_error_no_gen(res)?;
         crate::metadata::MetadataStoreBase::from_raw(&jni, res)
     }
-    /// Adds a metadata value to an object. Each metadata value is owned by a specific <a title="interface in org.bukkit.plugin" href="../plugin/Plugin.html"><code>Plugin</code></a>. If a plugin has already added a metadata value to an object, that value will be replaced with the value of <code> newMetadataValue</code>. Multiple plugins can set independent values for the same <code>metadataKey</code> without conflict.
-    /// <p>Implementation note: I considered using a <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/locks/ReadWriteLock.html" title="class or interface in java.util.concurrent.locks" class="external-link"><code>ReadWriteLock</code></a> for controlling access to <code>metadataMap</code>, but decided that the added overhead wasn't worth the finer grained access control.</p>
-    /// <p>Bukkit is almost entirely single threaded so locking overhead shouldn't pose a problem.</p>
+    //
+
     pub fn set_metadata(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-        arg1: impl Into<&'mc String>,
-        arg2: impl Into<&'mc crate::metadata::MetadataValue<'mc>>,
+        arg1: impl Into<String>,
+        arg2: impl Into<crate::metadata::MetadataValue<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
+        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
         let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -476,14 +497,15 @@ impl<'mc> MetadataStoreBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Returns all metadata values attached to an object. If multiple have attached metadata, each will value will be included.
+    //
+
     pub fn get_metadata(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-        arg1: impl Into<&'mc String>,
+        arg1: impl Into<String>,
     ) -> Result<Vec<crate::metadata::MetadataValue<'mc>>, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
+        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getMetadata",
@@ -503,14 +525,15 @@ impl<'mc> MetadataStoreBase<'mc> {
         }
         Ok(new_vec)
     }
-    /// Tests to see if a metadata attribute has been set on an object.
+    //
+
     pub fn has_metadata(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-        arg1: impl Into<&'mc String>,
+        arg1: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
+        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasMetadata",
@@ -521,17 +544,18 @@ impl<'mc> MetadataStoreBase<'mc> {
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
-    /// Removes a metadata item owned by a plugin from a subject.
+    //
+
     pub fn remove_metadata(
         &mut self,
         arg0: jni::objects::JObject<'mc>,
-        arg1: impl Into<&'mc String>,
-        arg2: impl Into<&'mc crate::plugin::Plugin<'mc>>,
+        arg1: impl Into<String>,
+        arg2: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = arg0;
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into()).unwrap());
+        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
         let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -546,10 +570,11 @@ impl<'mc> MetadataStoreBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// Invalidates all metadata in the metadata store that originates from the given plugin. Doing this will force each invalidated metadata item to be recalculated the next time it is accessed.
+    //
+
     pub fn invalidate_all(
         &mut self,
-        arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let res = self.jni_ref().call_method(
@@ -561,14 +586,21 @@ impl<'mc> MetadataStoreBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -581,6 +613,7 @@ impl<'mc> MetadataStoreBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -594,8 +627,9 @@ impl<'mc> MetadataStoreBase<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -608,14 +642,16 @@ impl<'mc> MetadataStoreBase<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -624,6 +660,7 @@ impl<'mc> MetadataStoreBase<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -632,6 +669,7 @@ impl<'mc> MetadataStoreBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -642,16 +680,39 @@ impl<'mc> MetadataStoreBase<'mc> {
     }
 }
 /// The LazyMetadataValue class implements a type of metadata that is not computed until another plugin asks for it.
-/// <p>By making metadata values lazy, no computation is done by the providing plugin until absolutely necessary (if ever). Additionally, LazyMetadataValue objects cache their values internally unless overridden by a <a title="enum in org.bukkit.metadata" href="LazyMetadataValue.CacheStrategy.html"><code>LazyMetadataValue.CacheStrategy</code></a> or invalidated at the individual or plugin level. Once invalidated, the LazyMetadataValue will recompute its value when asked.</p>
+/// <p>By making metadata values lazy, no computation is done by the providing plugin until absolutely necessary (if ever). Additionally, LazyMetadataValue objects cache their values internally unless overridden by a <a href="LazyMetadataValue.CacheStrategy.html" title="enum in org.bukkit.metadata"><code>LazyMetadataValue.CacheStrategy</code></a> or invalidated at the individual or plugin level. Once invalidated, the LazyMetadataValue will recompute its value when asked.</p>
 pub struct LazyMetadataValue<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
+pub enum LazyMetadataValueCacheStrategyEnum {
+    CacheAfterFirstEval,
+    NeverCache,
+    CacheEternally,
+}
+impl std::fmt::Display for LazyMetadataValueCacheStrategyEnum {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            LazyMetadataValueCacheStrategyEnum::CacheAfterFirstEval => {
+                f.write_str("CACHE_AFTER_FIRST_EVAL")
+            }
+            LazyMetadataValueCacheStrategyEnum::NeverCache => f.write_str("NEVER_CACHE"),
+            LazyMetadataValueCacheStrategyEnum::CacheEternally => f.write_str("CACHE_ETERNALLY"),
+        }
+    }
+}
 pub struct LazyMetadataValueCacheStrategy<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
+    pub LazyMetadataValueCacheStrategyEnum,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for LazyMetadataValueCacheStrategy<'mc> {
+impl<'mc> std::ops::Deref for LazyMetadataValueCacheStrategy<'mc> {
+    type Target = LazyMetadataValueCacheStrategyEnum;
+    fn deref(&self) -> &Self::Target {
+        return &self.2;
+    }
+}
+impl<'mc> JNIRaw<'mc> for LazyMetadataValueCacheStrategy<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -664,6 +725,7 @@ impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
     pub fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
+        e: LazyMetadataValueCacheStrategyEnum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -672,7 +734,7 @@ impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
             .into());
         }
         let (valid, name) =
-            env.validate_name(&obj, "org/bukkit/metadata/LazyMetadataValueCacheStrategy")?;
+            env.validate_name(&obj, "org/bukkit/metadata/LazyMetadataValue$CacheStrategy")?;
         if !valid {
             Err(eyre::eyre!(
                 "Invalid argument passed. Expected a LazyMetadataValueCacheStrategy object, got {}",
@@ -680,145 +742,57 @@ impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
             )
             .into())
         } else {
-            Ok(Self(env.clone(), obj))
+            Ok(Self(env.clone(), obj, e))
         }
     }
-    pub fn value_of_with_string(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<jni::objects::JClass<'mc>>,
-        arg1: std::option::Option<impl Into<&'mc String>>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let val_1 = arg0.unwrap();
-        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.unwrap().into()).unwrap());
-        let cls = &jni.find_class("java/lang/Enum")?;
+    pub const CACHE_AFTER_FIRST_EVAL: LazyMetadataValueCacheStrategyEnum =
+        LazyMetadataValueCacheStrategyEnum::CacheAfterFirstEval;
+    pub const NEVER_CACHE: LazyMetadataValueCacheStrategyEnum =
+        LazyMetadataValueCacheStrategyEnum::NeverCache;
+    pub const CACHE_ETERNALLY: LazyMetadataValueCacheStrategyEnum =
+        LazyMetadataValueCacheStrategyEnum::CacheEternally;
+    pub fn from_string(str: String) -> std::option::Option<LazyMetadataValueCacheStrategyEnum> {
+        match str.as_str() {
+            "CACHE_AFTER_FIRST_EVAL" => {
+                Some(LazyMetadataValueCacheStrategyEnum::CacheAfterFirstEval)
+            }
+            "NEVER_CACHE" => Some(LazyMetadataValueCacheStrategyEnum::NeverCache),
+            "CACHE_ETERNALLY" => Some(LazyMetadataValueCacheStrategyEnum::CacheEternally),
+            _ => None,
+        }
+    }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<LazyMetadataValueCacheStrategy<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/metadata/LazyMetadataValue$CacheStrategy");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "valueOf",
-            "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        )?;
-        let obj = res.l()?;
-        Self::from_raw(&jni, obj)
-    }
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "name", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    pub fn equals(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            "(Ljava/lang/Object;)Z",
+            "(Ljava/lang/String;)Lorg/bukkit/metadata/LazyMetadataValue$CacheStrategy;",
             &[jni::objects::JValueGen::from(&val_1)],
         );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
-    }
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
-            .to_string())
+            .to_string();
+        LazyMetadataValueCacheStrategy::from_raw(
+            &jni,
+            raw_obj,
+            LazyMetadataValueCacheStrategy::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
     }
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-    pub fn describe_constable(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "describeConstable",
-            "()Ljava/util/Optional;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaOptional::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    pub fn declaring_class(
-        &mut self,
-    ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDeclaringClass",
-            "()Ljava/lang/Class;",
-            &[],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-    pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "ordinal", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-    pub fn wait(
-        &mut self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "wait",
-            "(JI)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
-    }
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
+
+    //
 }
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for LazyMetadataValue<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
@@ -850,8 +824,8 @@ impl<'mc> LazyMetadataValue<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="MetadataValue.html#invalidate()">MetadataValue</a></code></span>
-    /// Invalidates this metadata item, forcing it to recompute when next accessed.
+    //
+
     pub fn invalidate(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -859,23 +833,16 @@ impl<'mc> LazyMetadataValue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="MetadataValue.html#value()">MetadataValue</a></code></span>
-    /// Fetches the value of this metadata item.
+    //
+
     pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "value", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
-
-    pub fn as_int(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "asInt", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
+    //
 
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -888,6 +855,16 @@ impl<'mc> LazyMetadataValue<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
+
+    pub fn as_int(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "asInt", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    //
 
     pub fn owning_plugin(
         &mut self,
@@ -903,62 +880,75 @@ impl<'mc> LazyMetadataValue<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn as_float(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "asFloat", "()F", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.f().unwrap())
+        Ok(res.f()?)
     }
+    //
 
     pub fn as_double(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "asDouble", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn as_long(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "asLong", "()J", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
+        Ok(res.j()?)
     }
+    //
 
     pub fn as_short(&mut self) -> Result<i16, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "asShort", "()S", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.s().unwrap())
+        Ok(res.s()?)
     }
+    //
 
     pub fn as_byte(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "asByte", "()B", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.b().unwrap())
+        Ok(res.b()?)
     }
+    //
 
     pub fn as_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "asBoolean", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -971,6 +961,7 @@ impl<'mc> LazyMetadataValue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -984,8 +975,9 @@ impl<'mc> LazyMetadataValue<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -998,14 +990,16 @@ impl<'mc> LazyMetadataValue<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -1014,6 +1008,7 @@ impl<'mc> LazyMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1022,6 +1017,7 @@ impl<'mc> LazyMetadataValue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1033,7 +1029,8 @@ impl<'mc> LazyMetadataValue<'mc> {
 }
 impl<'mc> Into<crate::metadata::MetadataValueAdapter<'mc>> for LazyMetadataValue<'mc> {
     fn into(self) -> crate::metadata::MetadataValueAdapter<'mc> {
-        crate::metadata::MetadataValueAdapter::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::metadata::MetadataValueAdapter::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting LazyMetadataValue into crate::metadata::MetadataValueAdapter")
     }
 }
 /// A FixedMetadataValue is a special case metadata item that contains the same value forever after initialization. Invalidating a FixedMetadataValue has no effect.
@@ -1073,13 +1070,14 @@ impl<'mc> FixedMetadataValue<'mc> {
         }
     }
     pub fn new(
-        jni: blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<&'mc crate::plugin::Plugin<'mc>>,
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<crate::metadata::FixedMetadataValue<'mc>, Box<dyn std::error::Error>> {
         let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
         let val_2 = arg1;
-        let cls = &jni.find_class("org/bukkit/metadata/FixedMetadataValue")?;
+        let cls = jni.find_class("org/bukkit/metadata/FixedMetadataValue");
+        let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
             "(Lorg/bukkit/plugin/Plugin;Ljava/lang/Object;)V",
@@ -1087,11 +1085,12 @@ impl<'mc> FixedMetadataValue<'mc> {
                 jni::objects::JValueGen::from(&val_1),
                 jni::objects::JValueGen::from(&val_2),
             ],
-        )?;
+        );
+        let res = jni.translate_error_no_gen(res)?;
         crate::metadata::FixedMetadataValue::from_raw(&jni, res)
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="MetadataValue.html#invalidate()">MetadataValue</a></code></span>
-    /// Invalidates this metadata item, forcing it to recompute when next accessed.
+    //
+
     pub fn invalidate(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
@@ -1099,23 +1098,16 @@ impl<'mc> FixedMetadataValue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="MetadataValue.html#value()">MetadataValue</a></code></span>
-    /// Fetches the value of this metadata item.
+    //
+
     pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "value", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
-
-    pub fn as_int(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "asInt", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
+    //
 
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -1128,6 +1120,16 @@ impl<'mc> FixedMetadataValue<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
+
+    pub fn as_int(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "asInt", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    //
 
     pub fn owning_plugin(
         &mut self,
@@ -1143,62 +1145,75 @@ impl<'mc> FixedMetadataValue<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
 
     pub fn as_float(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "asFloat", "()F", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.f().unwrap())
+        Ok(res.f()?)
     }
+    //
 
     pub fn as_double(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "asDouble", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
+    //
 
     pub fn as_long(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "asLong", "()J", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
+        Ok(res.j()?)
     }
+    //
 
     pub fn as_short(&mut self) -> Result<i16, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "asShort", "()S", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.s().unwrap())
+        Ok(res.s()?)
     }
+    //
 
     pub fn as_byte(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "asByte", "()B", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.b().unwrap())
+        Ok(res.b()?)
     }
+    //
 
     pub fn as_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "asBoolean", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -1211,6 +1226,7 @@ impl<'mc> FixedMetadataValue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -1224,8 +1240,9 @@ impl<'mc> FixedMetadataValue<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -1238,14 +1255,16 @@ impl<'mc> FixedMetadataValue<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -1254,6 +1273,7 @@ impl<'mc> FixedMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1262,6 +1282,7 @@ impl<'mc> FixedMetadataValue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1273,7 +1294,8 @@ impl<'mc> FixedMetadataValue<'mc> {
 }
 impl<'mc> Into<crate::metadata::LazyMetadataValue<'mc>> for FixedMetadataValue<'mc> {
     fn into(self) -> crate::metadata::LazyMetadataValue<'mc> {
-        crate::metadata::LazyMetadataValue::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::metadata::LazyMetadataValue::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting FixedMetadataValue into crate::metadata::LazyMetadataValue")
     }
 }
 /// Optional base class for facilitating MetadataValue implementations.
@@ -1312,17 +1334,8 @@ impl<'mc> MetadataValueAdapter<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="MetadataValue.html#asInt()">MetadataValue</a></code></span>
-    /// Attempts to convert the value of this metadata item into an int.
-    pub fn as_int(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "asInt", "()I", &[]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
-    }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="MetadataValue.html#asString()">MetadataValue</a></code></span>
-    /// Attempts to convert the value of this metadata item into a string.
+    //
+
     pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
@@ -1334,8 +1347,17 @@ impl<'mc> MetadataValueAdapter<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="MetadataValue.html#getOwningPlugin()">MetadataValue</a></code></span>
-    /// Returns the <a href="../plugin/Plugin.html" title="interface in org.bukkit.plugin"><code>Plugin</code></a> that created this metadata item.
+    //
+
+    pub fn as_int(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "asInt", "()I", &[]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    //
+
     pub fn owning_plugin(
         &mut self,
     ) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
@@ -1350,68 +1372,75 @@ impl<'mc> MetadataValueAdapter<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="MetadataValue.html#asFloat()">MetadataValue</a></code></span>
-    /// Attempts to convert the value of this metadata item into a float.
+    //
+
     pub fn as_float(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "asFloat", "()F", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.f().unwrap())
+        Ok(res.f()?)
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="MetadataValue.html#asDouble()">MetadataValue</a></code></span>
-    /// Attempts to convert the value of this metadata item into a double.
+    //
+
     pub fn as_double(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "asDouble", "()D", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d().unwrap())
+        Ok(res.d()?)
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="MetadataValue.html#asLong()">MetadataValue</a></code></span>
-    /// Attempts to convert the value of this metadata item into a long.
+    //
+
     pub fn as_long(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "asLong", "()J", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j().unwrap())
+        Ok(res.j()?)
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="MetadataValue.html#asShort()">MetadataValue</a></code></span>
-    /// Attempts to convert the value of this metadata item into a short.
+    //
+
     pub fn as_short(&mut self) -> Result<i16, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "asShort", "()S", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.s().unwrap())
+        Ok(res.s()?)
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="MetadataValue.html#asByte()">MetadataValue</a></code></span>
-    /// Attempts to convert the value of this metadata item into a byte.
+    //
+
     pub fn as_byte(&mut self) -> Result<i8, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "asByte", "()B", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.b().unwrap())
+        Ok(res.b()?)
     }
-    /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="MetadataValue.html#asBoolean()">MetadataValue</a></code></span>
-    /// Attempts to convert the value of this metadata item into a boolean.
+    //
+
     pub fn as_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "asBoolean", "()Z", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn wait(
         &mut self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(arg0.unwrap().into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.unwrap().into());
+        let val_1 = jni::objects::JValueGen::Long(
+            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
+        let val_2 = jni::objects::JValueGen::Int(
+            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
+                .into(),
+        );
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "wait",
@@ -1424,6 +1453,7 @@ impl<'mc> MetadataValueAdapter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn equals(
         &mut self,
@@ -1437,8 +1467,9 @@ impl<'mc> MetadataValueAdapter<'mc> {
             &[jni::objects::JValueGen::from(&val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z().unwrap())
+        Ok(res.z()?)
     }
+    //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let res =
@@ -1451,14 +1482,16 @@ impl<'mc> MetadataValueAdapter<'mc> {
             .to_string_lossy()
             .to_string())
     }
+    //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hashCode", "()I", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i().unwrap())
+        Ok(res.i()?)
     }
+    //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let res =
@@ -1467,6 +1500,7 @@ impl<'mc> MetadataValueAdapter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
+    //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1475,6 +1509,7 @@ impl<'mc> MetadataValueAdapter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1483,6 +1518,7 @@ impl<'mc> MetadataValueAdapter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn invalidate(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         let res = self
@@ -1491,17 +1527,115 @@ impl<'mc> MetadataValueAdapter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //
 
     pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "value", "()Ljava/lang/Object;", &[]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l().unwrap())
+        Ok(res.l()?)
     }
 }
 impl<'mc> Into<crate::metadata::MetadataValue<'mc>> for MetadataValueAdapter<'mc> {
     fn into(self) -> crate::metadata::MetadataValue<'mc> {
-        crate::metadata::MetadataValue::from_raw(&self.jni_ref(), self.1).unwrap()
+        crate::metadata::MetadataValue::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting MetadataValueAdapter into crate::metadata::MetadataValue")
+    }
+}
+pub enum CacheStrategyEnum {
+    CacheAfterFirstEval,
+    NeverCache,
+    CacheEternally,
+}
+impl std::fmt::Display for CacheStrategyEnum {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            CacheStrategyEnum::CacheAfterFirstEval => f.write_str("CACHE_AFTER_FIRST_EVAL"),
+            CacheStrategyEnum::NeverCache => f.write_str("NEVER_CACHE"),
+            CacheStrategyEnum::CacheEternally => f.write_str("CACHE_ETERNALLY"),
+        }
+    }
+}
+pub struct CacheStrategy<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+    pub CacheStrategyEnum,
+);
+impl<'mc> std::ops::Deref for CacheStrategy<'mc> {
+    type Target = CacheStrategyEnum;
+    fn deref(&self) -> &Self::Target {
+        return &self.2;
+    }
+}
+impl<'mc> JNIRaw<'mc> for CacheStrategy<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+impl<'mc> CacheStrategy<'mc> {
+    pub fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+        e: CacheStrategyEnum,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate CacheStrategy from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/metadata/CacheStrategy")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a CacheStrategy object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj, e))
+        }
+    }
+    pub const CACHE_AFTER_FIRST_EVAL: CacheStrategyEnum = CacheStrategyEnum::CacheAfterFirstEval;
+    pub const NEVER_CACHE: CacheStrategyEnum = CacheStrategyEnum::NeverCache;
+    pub const CACHE_ETERNALLY: CacheStrategyEnum = CacheStrategyEnum::CacheEternally;
+    pub fn from_string(str: String) -> std::option::Option<CacheStrategyEnum> {
+        match str.as_str() {
+            "CACHE_AFTER_FIRST_EVAL" => Some(CacheStrategyEnum::CacheAfterFirstEval),
+            "NEVER_CACHE" => Some(CacheStrategyEnum::NeverCache),
+            "CACHE_ETERNALLY" => Some(CacheStrategyEnum::CacheEternally),
+            _ => None,
+        }
+    }
+
+    pub fn value_of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<CacheStrategy<'mc>, Box<dyn std::error::Error>> {
+        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
+        let cls = jni.find_class("org/bukkit/metadata/CacheStrategy");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "valueOf",
+            "(Ljava/lang/String;)Lorg/bukkit/metadata/CacheStrategy;",
+            &[jni::objects::JValueGen::from(&val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        let raw_obj = obj;
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.translate_error(variant)?;
+        let variant_str = jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        CacheStrategy::from_raw(
+            &jni,
+            raw_obj,
+            CacheStrategy::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
     }
 }
