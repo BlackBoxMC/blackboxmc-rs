@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 #[derive(PartialEq, Eq)]
@@ -36,6 +38,7 @@ impl<'mc> std::ops::Deref for BarStyle<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for BarStyle<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -45,11 +48,15 @@ impl<'mc> JNIRaw<'mc> for BarStyle<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> BarStyle<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for BarStyle<'mc> {
+    type Enum = BarStyleEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: BarStyleEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate BarStyle from null object.").into());
@@ -65,6 +72,9 @@ impl<'mc> BarStyle<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> BarStyle<'mc> {
     pub const SOLID: BarStyleEnum = BarStyleEnum::Solid;
     pub const SEGMENTED_6: BarStyleEnum = BarStyleEnum::Segmented6;
     pub const SEGMENTED_10: BarStyleEnum = BarStyleEnum::Segmented10;
@@ -150,6 +160,7 @@ impl<'mc> std::ops::Deref for BarColor<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for BarColor<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -159,11 +170,15 @@ impl<'mc> JNIRaw<'mc> for BarColor<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> BarColor<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for BarColor<'mc> {
+    type Enum = BarColorEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: BarColorEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate BarColor from null object.").into());
@@ -179,6 +194,9 @@ impl<'mc> BarColor<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> BarColor<'mc> {
     pub const PINK: BarColorEnum = BarColorEnum::Pink;
     pub const BLUE: BarColorEnum = BarColorEnum::Blue;
     pub const RED: BarColorEnum = BarColorEnum::Red;
@@ -260,6 +278,7 @@ impl<'mc> std::ops::Deref for BarFlag<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for BarFlag<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -269,11 +288,15 @@ impl<'mc> JNIRaw<'mc> for BarFlag<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> BarFlag<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for BarFlag<'mc> {
+    type Enum = BarFlagEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: BarFlagEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate BarFlag from null object.").into());
@@ -289,6 +312,9 @@ impl<'mc> BarFlag<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> BarFlag<'mc> {
     pub const DARKEN_SKY: BarFlagEnum = BarFlagEnum::DarkenSky;
     pub const PLAY_BOSS_MUSIC: BarFlagEnum = BarFlagEnum::PlayBossMusic;
     pub const CREATE_FOG: BarFlagEnum = BarFlagEnum::CreateFog;
@@ -370,6 +396,7 @@ impl<'mc> std::ops::Deref for RespawnPhase<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for RespawnPhase<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -379,11 +406,15 @@ impl<'mc> JNIRaw<'mc> for RespawnPhase<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> RespawnPhase<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for RespawnPhase<'mc> {
+    type Enum = RespawnPhaseEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: RespawnPhaseEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate RespawnPhase from null object.").into());
@@ -399,6 +430,9 @@ impl<'mc> RespawnPhase<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> RespawnPhase<'mc> {
     pub const START: RespawnPhaseEnum = RespawnPhaseEnum::Start;
     pub const PREPARING_TO_SUMMON_PILLARS: RespawnPhaseEnum =
         RespawnPhaseEnum::PreparingToSummonPillars;
@@ -455,8 +489,19 @@ pub struct KeyedBossBar<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> KeyedBossBar<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for KeyedBossBar<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for KeyedBossBar<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -474,6 +519,9 @@ impl<'mc> KeyedBossBar<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> KeyedBossBar<'mc> {
     //
 
     pub fn set_color(
@@ -796,15 +844,6 @@ impl<'mc> KeyedBossBar<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for KeyedBossBar<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::boss::BossBar<'mc>> for KeyedBossBar<'mc> {
     fn into(self) -> crate::boss::BossBar<'mc> {
         crate::boss::BossBar::from_raw(&self.jni_ref(), self.1)
@@ -824,8 +863,19 @@ pub struct BossBar<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> BossBar<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for BossBar<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for BossBar<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -843,6 +893,9 @@ impl<'mc> BossBar<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> BossBar<'mc> {
     //
 
     pub fn set_color(
@@ -1155,7 +1208,15 @@ impl<'mc> BossBar<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for BossBar<'mc> {
+/// Represents a dragon battle state for a world with an end environment.
+///
+/// This is a representation of an abstract class.
+pub struct DragonBattle<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for DragonBattle<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1164,15 +1225,9 @@ impl<'mc> JNIRaw<'mc> for BossBar<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// Represents a dragon battle state for a world with an end environment.
-///
-/// This is a representation of an abstract class.
-pub struct DragonBattle<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> DragonBattle<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for DragonBattle<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1190,6 +1245,9 @@ impl<'mc> DragonBattle<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> DragonBattle<'mc> {
     //
 
     pub fn boss_bar(&self) -> Result<crate::boss::BossBar<'mc>, Box<dyn std::error::Error>> {
@@ -1317,15 +1375,6 @@ impl<'mc> DragonBattle<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for DragonBattle<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// Represents a phase in the dragon respawn process.
 #[derive(PartialEq, Eq)]
 pub enum DragonBattleRespawnPhaseEnum {
@@ -1366,6 +1415,7 @@ impl<'mc> std::ops::Deref for DragonBattleRespawnPhase<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for DragonBattleRespawnPhase<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -1375,11 +1425,15 @@ impl<'mc> JNIRaw<'mc> for DragonBattleRespawnPhase<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> DragonBattleRespawnPhase<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for DragonBattleRespawnPhase<'mc> {
+    type Enum = DragonBattleRespawnPhaseEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: DragonBattleRespawnPhaseEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -1398,6 +1452,9 @@ impl<'mc> DragonBattleRespawnPhase<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> DragonBattleRespawnPhase<'mc> {
     pub const START: DragonBattleRespawnPhaseEnum = DragonBattleRespawnPhaseEnum::Start;
     pub const PREPARING_TO_SUMMON_PILLARS: DragonBattleRespawnPhaseEnum =
         DragonBattleRespawnPhaseEnum::PreparingToSummonPillars;

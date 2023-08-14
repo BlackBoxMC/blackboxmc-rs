@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Represent a StructureType of a <a href="Structure.html" title="class in org.bukkit.generator.structure"><code>Structure</code></a>. Listed structure types are present in the default server. Depending on the server there might be additional structure types present (for example structure types added by data packs), which can be received via <a href="../../Registry.html#STRUCTURE_TYPE"><code>Registry.STRUCTURE_TYPE</code></a>.
@@ -6,7 +8,8 @@ pub struct StructureType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for StructureType<'mc> {
+
+impl<'mc> JNIRaw<'mc> for StructureType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15,8 +18,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for StructureType<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> StructureType<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for StructureType<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -35,6 +39,9 @@ impl<'mc> StructureType<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> StructureType<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::generator::structure::StructureType<'mc>, Box<dyn std::error::Error>> {
@@ -177,7 +184,8 @@ pub struct Structure<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for Structure<'mc> {
+
+impl<'mc> JNIRaw<'mc> for Structure<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -186,8 +194,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for Structure<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Structure<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for Structure<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -205,6 +214,9 @@ impl<'mc> Structure<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Structure<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::generator::structure::Structure<'mc>, Box<dyn std::error::Error>> {

@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Each entry here represents a particular plugin's awareness. These can be checked by using <a href="PluginDescriptionFile.html#getAwareness()"><code>PluginDescriptionFile.getAwareness()</code></a>.<a class="external-link" title="class or interface in java.util" href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html#contains-java.lang.Object-"><code>contains(flag)</code></a>.
@@ -29,6 +31,7 @@ impl<'mc> std::ops::Deref for PluginAwarenessFlags<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for PluginAwarenessFlags<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -38,11 +41,15 @@ impl<'mc> JNIRaw<'mc> for PluginAwarenessFlags<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PluginAwarenessFlags<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for PluginAwarenessFlags<'mc> {
+    type Enum = PluginAwarenessFlagsEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: PluginAwarenessFlagsEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -60,6 +67,9 @@ impl<'mc> PluginAwarenessFlags<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> PluginAwarenessFlags<'mc> {
     pub const UTF8: PluginAwarenessFlagsEnum = PluginAwarenessFlagsEnum::Utf8;
     pub fn from_string(str: String) -> std::option::Option<PluginAwarenessFlagsEnum> {
         match str.as_str() {
@@ -275,7 +285,8 @@ pub struct PluginDescriptionFile<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PluginDescriptionFile<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PluginDescriptionFile<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -284,8 +295,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PluginDescriptionFile<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PluginDescriptionFile<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PluginDescriptionFile<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -306,6 +318,9 @@ impl<'mc> PluginDescriptionFile<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PluginDescriptionFile<'mc> {
     pub fn new_with_reader(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -903,6 +918,7 @@ impl<'mc> std::ops::Deref for PluginLoadOrder<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for PluginLoadOrder<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -912,11 +928,15 @@ impl<'mc> JNIRaw<'mc> for PluginLoadOrder<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PluginLoadOrder<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for PluginLoadOrder<'mc> {
+    type Enum = PluginLoadOrderEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: PluginLoadOrderEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -934,6 +954,9 @@ impl<'mc> PluginLoadOrder<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> PluginLoadOrder<'mc> {
     pub const STARTUP: PluginLoadOrderEnum = PluginLoadOrderEnum::Startup;
     pub const POSTWORLD: PluginLoadOrderEnum = PluginLoadOrderEnum::Postworld;
     pub fn from_string(str: String) -> std::option::Option<PluginLoadOrderEnum> {
@@ -979,7 +1002,8 @@ pub struct RegisteredServiceProvider<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for RegisteredServiceProvider<'mc> {
+
+impl<'mc> JNIRaw<'mc> for RegisteredServiceProvider<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -988,8 +1012,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for RegisteredServiceProvider<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> RegisteredServiceProvider<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for RegisteredServiceProvider<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1011,6 +1036,9 @@ impl<'mc> RegisteredServiceProvider<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> RegisteredServiceProvider<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JClass<'mc>,
@@ -1248,6 +1276,7 @@ impl<'mc> std::ops::Deref for Flags<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for Flags<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -1257,11 +1286,15 @@ impl<'mc> JNIRaw<'mc> for Flags<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Flags<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for Flags<'mc> {
+    type Enum = FlagsEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: FlagsEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Flags from null object.").into());
@@ -1277,6 +1310,9 @@ impl<'mc> Flags<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> Flags<'mc> {
     pub const UTF8: FlagsEnum = FlagsEnum::Utf8;
     pub fn from_string(str: String) -> std::option::Option<FlagsEnum> {
         match str.as_str() {
@@ -1320,7 +1356,8 @@ pub struct ServicePriority<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ServicePriority<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ServicePriority<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1329,8 +1366,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ServicePriority<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ServicePriority<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ServicePriority<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1350,6 +1388,9 @@ impl<'mc> ServicePriority<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ServicePriority<'mc> {
     //
 }
 /// Represents a concept that a plugin is aware of.
@@ -1360,8 +1401,19 @@ pub struct PluginAwareness<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> PluginAwareness<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for PluginAwareness<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for PluginAwareness<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1382,7 +1434,17 @@ impl<'mc> PluginAwareness<'mc> {
         }
     }
 }
-impl<'mc> JNIRaw<'mc> for PluginAwareness<'mc> {
+
+impl<'mc> PluginAwareness<'mc> {}
+/// Handles all plugin management from the Server
+///
+/// This is a representation of an abstract class.
+pub struct PluginManager<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for PluginManager<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1391,15 +1453,9 @@ impl<'mc> JNIRaw<'mc> for PluginAwareness<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// Handles all plugin management from the Server
-///
-/// This is a representation of an abstract class.
-pub struct PluginManager<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> PluginManager<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PluginManager<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1417,6 +1473,9 @@ impl<'mc> PluginManager<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PluginManager<'mc> {
     //
 
     pub fn get_permission(
@@ -1923,22 +1982,14 @@ impl<'mc> PluginManager<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for PluginManager<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// Represents a base <a title="interface in org.bukkit.plugin" href="Plugin.html"><code>Plugin</code></a>
 /// <p>Extend this class if your plugin is not a <a href="java/JavaPlugin.html" title="class in org.bukkit.plugin.java"><code>JavaPlugin</code></a></p>
 pub struct PluginBase<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PluginBase<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PluginBase<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1947,18 +1998,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PluginBase<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PluginBase<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "PluginBase", name, lib_name) }?;
-        Self::from_raw(env, obj)
-    }
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PluginBase<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1975,6 +2017,19 @@ impl<'mc> PluginBase<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+}
+
+impl<'mc> PluginBase<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "PluginBase", name, lib_name) }?;
+        Self::from_raw(env, obj)
     }
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2479,8 +2534,19 @@ pub struct EventExecutor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> EventExecutor<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for EventExecutor<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for EventExecutor<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2498,6 +2564,9 @@ impl<'mc> EventExecutor<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> EventExecutor<'mc> {
     //
 
     pub fn execute(
@@ -2525,7 +2594,15 @@ impl<'mc> EventExecutor<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for EventExecutor<'mc> {
+/// Manages services and service providers. Services are an interface specifying a list of methods that a provider must implement. Providers are implementations of these services. A provider can be queried from the services manager in order to use a service (if one is available). If multiple plugins register a service, then the service with the highest priority takes precedence.
+///
+/// This is a representation of an abstract class.
+pub struct ServicesManager<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for ServicesManager<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2534,15 +2611,9 @@ impl<'mc> JNIRaw<'mc> for EventExecutor<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// Manages services and service providers. Services are an interface specifying a list of methods that a provider must implement. Providers are implementations of these services. A provider can be queried from the services manager in order to use a service (if one is available). If multiple plugins register a service, then the service with the highest priority takes precedence.
-///
-/// This is a representation of an abstract class.
-pub struct ServicesManager<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> ServicesManager<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ServicesManager<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2562,6 +2633,9 @@ impl<'mc> ServicesManager<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ServicesManager<'mc> {
     //
 
     pub fn unregister_with_object(
@@ -2748,15 +2822,6 @@ impl<'mc> ServicesManager<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for ServicesManager<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 #[derive(PartialEq, Eq)]
 pub enum FlagsFlagsEnum {
     //['since', '']
@@ -2788,6 +2853,7 @@ impl<'mc> std::ops::Deref for FlagsFlags<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for FlagsFlags<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -2797,11 +2863,15 @@ impl<'mc> JNIRaw<'mc> for FlagsFlags<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> FlagsFlags<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for FlagsFlags<'mc> {
+    type Enum = FlagsFlagsEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: FlagsFlagsEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate FlagsFlags from null object.").into());
@@ -2817,6 +2887,9 @@ impl<'mc> FlagsFlags<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> FlagsFlags<'mc> {
     pub const UTF8: FlagsFlagsEnum = FlagsFlagsEnum::Utf8;
     pub fn from_string(str: String) -> std::option::Option<FlagsFlagsEnum> {
         match str.as_str() {
@@ -2860,7 +2933,8 @@ pub struct TimedRegisteredListener<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for TimedRegisteredListener<'mc> {
+
+impl<'mc> JNIRaw<'mc> for TimedRegisteredListener<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2869,8 +2943,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for TimedRegisteredListener<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> TimedRegisteredListener<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for TimedRegisteredListener<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2891,6 +2966,9 @@ impl<'mc> TimedRegisteredListener<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> TimedRegisteredListener<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::event::Listener<'mc>>,
@@ -3184,18 +3262,19 @@ pub struct PluginLoader<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> PluginLoader<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "PluginLoader", name, lib_name) }?;
-        Self::from_raw(env, obj)
+
+impl<'mc> JNIRaw<'mc> for PluginLoader<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
-    pub fn from_raw(
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for PluginLoader<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3212,6 +3291,19 @@ impl<'mc> PluginLoader<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+}
+
+impl<'mc> PluginLoader<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "PluginLoader", name, lib_name) }?;
+        Self::from_raw(env, obj)
     }
     //
 
@@ -3321,21 +3413,13 @@ impl<'mc> PluginLoader<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for PluginLoader<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// Stores relevant information for plugin listeners
 pub struct RegisteredListener<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for RegisteredListener<'mc> {
+
+impl<'mc> JNIRaw<'mc> for RegisteredListener<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -3344,8 +3428,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for RegisteredListener<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> RegisteredListener<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for RegisteredListener<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3365,6 +3450,9 @@ impl<'mc> RegisteredListener<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> RegisteredListener<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::event::Listener<'mc>>,
@@ -3602,6 +3690,38 @@ pub struct Plugin<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
+
+impl<'mc> JNIRaw<'mc> for Plugin<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for Plugin<'mc> {
+    fn from_raw(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        if obj.is_null() {
+            return Err(eyre::eyre!("Tried to instantiate Plugin from null object.").into());
+        }
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/plugin/Plugin")?;
+        if !valid {
+            Err(eyre::eyre!(
+                "Invalid argument passed. Expected a Plugin object, got {}",
+                name
+            )
+            .into())
+        } else {
+            Ok(Self(env.clone(), obj))
+        }
+    }
+}
+
 impl<'mc> Plugin<'mc> {
     pub fn from_extendable(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3647,24 +3767,6 @@ impl<'mc> Plugin<'mc> {
         );
         let obj = self.jni_ref().translate_error(obj)?;
         Ok(jni::objects::JObject::from_raw(*obj.l()?))
-    }
-    pub fn from_raw(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        obj: jni::objects::JObject<'mc>,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate Plugin from null object.").into());
-        }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/plugin/Plugin")?;
-        if !valid {
-            Err(eyre::eyre!(
-                "Invalid argument passed. Expected a Plugin object, got {}",
-                name
-            )
-            .into())
-        } else {
-            Ok(Self(env.clone(), obj))
-        }
     }
     //
 
@@ -4037,15 +4139,6 @@ impl<'mc> Plugin<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
-    }
-}
-impl<'mc> JNIRaw<'mc> for Plugin<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
 impl<'mc> Into<crate::command::TabExecutor<'mc>> for Plugin<'mc> {

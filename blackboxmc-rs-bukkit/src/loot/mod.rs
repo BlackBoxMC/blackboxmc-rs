@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// LootTables are technical files that represent what items should be in naturally generated containers, what items should be dropped when killing a mob, or what items can be fished. See the <a href="https://minecraft.gamepedia.com/Loot_table"> Minecraft Wiki</a> for more information.
@@ -8,8 +10,19 @@ pub struct LootTable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> LootTable<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for LootTable<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for LootTable<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -27,6 +40,9 @@ impl<'mc> LootTable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> LootTable<'mc> {
     //
 
     pub fn populate_loot(
@@ -105,15 +121,6 @@ impl<'mc> LootTable<'mc> {
         crate::NamespacedKey::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-}
-impl<'mc> JNIRaw<'mc> for LootTable<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
 impl<'mc> Into<crate::Keyed<'mc>> for LootTable<'mc> {
@@ -483,6 +490,7 @@ impl<'mc> std::ops::Deref for LootTablesLootTables<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for LootTablesLootTables<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -492,11 +500,15 @@ impl<'mc> JNIRaw<'mc> for LootTablesLootTables<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> LootTablesLootTables<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for LootTablesLootTables<'mc> {
+    type Enum = LootTablesLootTablesEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: LootTablesLootTablesEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -514,6 +526,9 @@ impl<'mc> LootTablesLootTables<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> LootTablesLootTables<'mc> {
     pub const EMPTY: LootTablesLootTablesEnum = LootTablesLootTablesEnum::Empty;
     pub const ABANDONED_MINESHAFT: LootTablesLootTablesEnum =
         LootTablesLootTablesEnum::AbandonedMineshaft;
@@ -932,8 +947,19 @@ pub struct Lootable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> Lootable<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for Lootable<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for Lootable<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -951,6 +977,9 @@ impl<'mc> Lootable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Lootable<'mc> {
     //
 
     pub fn seed(&self) -> Result<i64, Box<dyn std::error::Error>> {
@@ -1006,15 +1035,6 @@ impl<'mc> Lootable<'mc> {
         crate::loot::LootTable::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-}
-impl<'mc> JNIRaw<'mc> for Lootable<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
 #[derive(PartialEq, Eq)]
@@ -1368,6 +1388,7 @@ impl<'mc> std::ops::Deref for LootTables<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for LootTables<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -1377,11 +1398,15 @@ impl<'mc> JNIRaw<'mc> for LootTables<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> LootTables<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for LootTables<'mc> {
+    type Enum = LootTablesEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: LootTablesEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate LootTables from null object.").into());
@@ -1397,6 +1422,9 @@ impl<'mc> LootTables<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> LootTables<'mc> {
     pub const EMPTY: LootTablesEnum = LootTablesEnum::Empty;
     pub const ABANDONED_MINESHAFT: LootTablesEnum = LootTablesEnum::AbandonedMineshaft;
     pub const BURIED_TREASURE: LootTablesEnum = LootTablesEnum::BuriedTreasure;
@@ -1768,7 +1796,8 @@ pub struct LootContextBuilder<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for LootContextBuilder<'mc> {
+
+impl<'mc> JNIRaw<'mc> for LootContextBuilder<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1777,8 +1806,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for LootContextBuilder<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> LootContextBuilder<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for LootContextBuilder<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1798,6 +1828,9 @@ impl<'mc> LootContextBuilder<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> LootContextBuilder<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::Location<'mc>>,
@@ -2018,7 +2051,7 @@ impl<'mc> std::string::ToString for LootContextBuilder<'mc> {
     }
 }
 
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for LootContext<'mc> {
+impl<'mc> JNIRaw<'mc> for LootContext<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2027,8 +2060,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for LootContext<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> LootContext<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for LootContext<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2046,6 +2080,9 @@ impl<'mc> LootContext<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> LootContext<'mc> {
     //
 
     pub fn killer(&self) -> Result<crate::entity::HumanEntity<'mc>, Box<dyn std::error::Error>> {

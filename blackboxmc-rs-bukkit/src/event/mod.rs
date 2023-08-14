@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// A list of event handlers, stored per-event. Based on lahwran's fevents.
@@ -6,7 +8,8 @@ pub struct HandlerList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for HandlerList<'mc> {
+
+impl<'mc> JNIRaw<'mc> for HandlerList<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15,8 +18,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for HandlerList<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> HandlerList<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for HandlerList<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -34,6 +38,9 @@ impl<'mc> HandlerList<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> HandlerList<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -302,8 +309,19 @@ pub struct Listener<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> Listener<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for Listener<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for Listener<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -322,7 +340,17 @@ impl<'mc> Listener<'mc> {
         }
     }
 }
-impl<'mc> JNIRaw<'mc> for Listener<'mc> {
+
+impl<'mc> Listener<'mc> {}
+/// A type characterizing events that may be cancelled by a plugin or the server.
+///
+/// This is a representation of an abstract class.
+pub struct Cancellable<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for Cancellable<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -331,15 +359,9 @@ impl<'mc> JNIRaw<'mc> for Listener<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// A type characterizing events that may be cancelled by a plugin or the server.
-///
-/// This is a representation of an abstract class.
-pub struct Cancellable<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> Cancellable<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for Cancellable<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -357,6 +379,9 @@ impl<'mc> Cancellable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Cancellable<'mc> {
     //
 
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -384,7 +409,15 @@ impl<'mc> Cancellable<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for Cancellable<'mc> {
+/// An annotation to mark methods as being event handler methods
+///
+/// This is a representation of an abstract class.
+pub struct EventHandler<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for EventHandler<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -393,15 +426,9 @@ impl<'mc> JNIRaw<'mc> for Cancellable<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// An annotation to mark methods as being event handler methods
-///
-/// This is a representation of an abstract class.
-pub struct EventHandler<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> EventHandler<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for EventHandler<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -419,6 +446,9 @@ impl<'mc> EventHandler<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> EventHandler<'mc> {
     //
 
     pub fn ignore_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -517,15 +547,6 @@ impl<'mc> std::string::ToString for EventHandler<'mc> {
     }
 }
 
-impl<'mc> JNIRaw<'mc> for EventHandler<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// Represents an event. All events require a static method named getHandlerList() which returns the same <a title="class in org.bukkit.event" href="HandlerList.html"><code>HandlerList</code></a> as <a href="#getHandlers()"><code>getHandlers()</code></a>.
 pub struct Event<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -562,6 +583,7 @@ impl<'mc> std::ops::Deref for EventResult<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for EventResult<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -571,11 +593,15 @@ impl<'mc> JNIRaw<'mc> for EventResult<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> EventResult<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for EventResult<'mc> {
+    type Enum = EventResultEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: EventResultEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate EventResult from null object.").into());
@@ -591,6 +617,9 @@ impl<'mc> EventResult<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> EventResult<'mc> {
     pub const DENY: EventResultEnum = EventResultEnum::Deny;
     pub const DEFAULT: EventResultEnum = EventResultEnum::Default;
     pub const ALLOW: EventResultEnum = EventResultEnum::Allow;
@@ -635,7 +664,8 @@ impl<'mc> EventResult<'mc> {
 
     //
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for Event<'mc> {
+
+impl<'mc> JNIRaw<'mc> for Event<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -644,8 +674,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for Event<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Event<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for Event<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -663,6 +694,9 @@ impl<'mc> Event<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Event<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<bool>,
@@ -864,6 +898,7 @@ impl<'mc> std::ops::Deref for EventPriority<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for EventPriority<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -873,11 +908,15 @@ impl<'mc> JNIRaw<'mc> for EventPriority<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> EventPriority<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for EventPriority<'mc> {
+    type Enum = EventPriorityEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: EventPriorityEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate EventPriority from null object.").into());
@@ -893,6 +932,9 @@ impl<'mc> EventPriority<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> EventPriority<'mc> {
     pub const LOWEST: EventPriorityEnum = EventPriorityEnum::Lowest;
     pub const LOW: EventPriorityEnum = EventPriorityEnum::Low;
     pub const NORMAL: EventPriorityEnum = EventPriorityEnum::Normal;
@@ -972,6 +1014,7 @@ impl<'mc> std::ops::Deref for SpigotResult<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for SpigotResult<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -981,11 +1024,15 @@ impl<'mc> JNIRaw<'mc> for SpigotResult<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> SpigotResult<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for SpigotResult<'mc> {
+    type Enum = SpigotResultEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: SpigotResultEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate SpigotResult from null object.").into());
@@ -1001,6 +1048,9 @@ impl<'mc> SpigotResult<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> SpigotResult<'mc> {
     pub const DENY: SpigotResultEnum = SpigotResultEnum::Deny;
     pub const DEFAULT: SpigotResultEnum = SpigotResultEnum::Default;
     pub const ALLOW: SpigotResultEnum = SpigotResultEnum::Allow;

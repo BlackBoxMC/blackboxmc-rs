@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Used to impose a custom total ordering on help topics.
@@ -11,7 +13,8 @@ pub struct HelpTopicComparatorTopicNameComparator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for HelpTopicComparatorTopicNameComparator<'mc> {
+
+impl<'mc> JNIRaw<'mc> for HelpTopicComparatorTopicNameComparator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -20,8 +23,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for HelpTopicComparatorTopicNameCompar
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for HelpTopicComparatorTopicNameComparator<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -37,14 +41,17 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
         )?;
         if !valid {
             Err(eyre::eyre!(
-        "Invalid argument passed. Expected a HelpTopicComparatorTopicNameComparator object, got {}",
-        name
-    )
-            .into())
+                    "Invalid argument passed. Expected a HelpTopicComparatorTopicNameComparator object, got {}",
+                    name
+                )
+                .into())
         } else {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
     //
 
     pub fn compare_with_string(
@@ -202,7 +209,8 @@ impl<'mc> Into<blackboxmc_java::JavaComparator<'mc>>
         blackboxmc_java::JavaComparator::from_raw(&self.jni_ref(), self.1).expect("Error converting HelpTopicComparatorTopicNameComparator into blackboxmc_java::JavaComparator")
     }
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for HelpTopicComparator<'mc> {
+
+impl<'mc> JNIRaw<'mc> for HelpTopicComparator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -211,8 +219,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for HelpTopicComparator<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> HelpTopicComparator<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for HelpTopicComparator<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -232,6 +241,9 @@ impl<'mc> HelpTopicComparator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> HelpTopicComparator<'mc> {
     //
 
     pub fn topic_name_comparator_instance(
@@ -421,18 +433,19 @@ pub struct HelpTopicFactory<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> HelpTopicFactory<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "HelpTopicFactory", name, lib_name) }?;
-        Self::from_raw(env, obj)
+
+impl<'mc> JNIRaw<'mc> for HelpTopicFactory<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
-    pub fn from_raw(
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for HelpTopicFactory<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -451,6 +464,19 @@ impl<'mc> HelpTopicFactory<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+}
+
+impl<'mc> HelpTopicFactory<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "HelpTopicFactory", name, lib_name) }?;
+        Self::from_raw(env, obj)
     }
     //
 
@@ -474,15 +500,6 @@ impl<'mc> HelpTopicFactory<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for HelpTopicFactory<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// HelpTopic implementations are displayed to the user when the user uses the /help command.
 /// <p>Custom implementations of this class can work at two levels. A simple implementation only needs to set the value of <code>name</code>, <code> shortText</code>, and <code>fullText</code> in the constructor. This base class will take care of the rest.</p>
 /// <p>Complex implementations can be created by overriding the behavior of all the methods in this class.</p>
@@ -490,7 +507,8 @@ pub struct HelpTopic<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for HelpTopic<'mc> {
+
+impl<'mc> JNIRaw<'mc> for HelpTopic<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -499,18 +517,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for HelpTopic<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> HelpTopic<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "HelpTopic", name, lib_name) }?;
-        Self::from_raw(env, obj)
-    }
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for HelpTopic<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -527,6 +536,19 @@ impl<'mc> HelpTopic<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+}
+
+impl<'mc> HelpTopic<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "HelpTopic", name, lib_name) }?;
+        Self::from_raw(env, obj)
     }
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -772,8 +794,19 @@ pub struct HelpMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> HelpMap<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for HelpMap<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for HelpMap<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -791,6 +824,9 @@ impl<'mc> HelpMap<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> HelpMap<'mc> {
     //
 
     pub fn get_help_topic(
@@ -910,22 +946,14 @@ impl<'mc> HelpMap<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for HelpMap<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// This help topic generates a list of other help topics. This class is useful for adding your own index help topics. To enforce a particular order, use a sorted collection.
 /// <p>If a preamble is provided to the constructor, that text will be displayed before the first item in the index.</p>
 pub struct IndexHelpTopic<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for IndexHelpTopic<'mc> {
+
+impl<'mc> JNIRaw<'mc> for IndexHelpTopic<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -934,8 +962,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for IndexHelpTopic<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> IndexHelpTopic<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for IndexHelpTopic<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -955,6 +984,9 @@ impl<'mc> IndexHelpTopic<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> IndexHelpTopic<'mc> {
     //
 
     pub fn can_see(
@@ -1187,7 +1219,8 @@ pub struct GenericCommandHelpTopic<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for GenericCommandHelpTopic<'mc> {
+
+impl<'mc> JNIRaw<'mc> for GenericCommandHelpTopic<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1196,8 +1229,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for GenericCommandHelpTopic<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> GenericCommandHelpTopic<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for GenericCommandHelpTopic<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1218,6 +1252,9 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> GenericCommandHelpTopic<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::command::Command<'mc>>,

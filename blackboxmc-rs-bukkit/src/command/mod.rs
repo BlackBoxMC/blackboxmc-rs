@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 
@@ -6,7 +8,8 @@ pub struct CommandSenderSpigot<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for CommandSenderSpigot<'mc> {
+
+impl<'mc> JNIRaw<'mc> for CommandSenderSpigot<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15,8 +18,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for CommandSenderSpigot<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> CommandSenderSpigot<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for CommandSenderSpigot<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -36,6 +40,9 @@ impl<'mc> CommandSenderSpigot<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> CommandSenderSpigot<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
@@ -201,8 +208,19 @@ pub struct RemoteConsoleCommandSender<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> RemoteConsoleCommandSender<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for RemoteConsoleCommandSender<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for RemoteConsoleCommandSender<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -224,6 +242,9 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> RemoteConsoleCommandSender<'mc> {
     //
 
     pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
@@ -465,15 +486,6 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for RemoteConsoleCommandSender<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::command::CommandSender<'mc>> for RemoteConsoleCommandSender<'mc> {
     fn into(self) -> crate::command::CommandSender<'mc> {
         crate::command::CommandSender::from_raw(&self.jni_ref(), self.1).expect(
@@ -486,7 +498,8 @@ pub struct SimpleCommandMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for SimpleCommandMap<'mc> {
+
+impl<'mc> JNIRaw<'mc> for SimpleCommandMap<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -495,8 +508,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for SimpleCommandMap<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> SimpleCommandMap<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for SimpleCommandMap<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -516,6 +530,9 @@ impl<'mc> SimpleCommandMap<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> SimpleCommandMap<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::Server<'mc>>,
@@ -555,7 +572,7 @@ impl<'mc> SimpleCommandMap<'mc> {
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Lorg/bukkit/command/crate::command::Command)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -878,7 +895,8 @@ pub struct FormattedCommandAlias<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for FormattedCommandAlias<'mc> {
+
+impl<'mc> JNIRaw<'mc> for FormattedCommandAlias<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -887,8 +905,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for FormattedCommandAlias<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> FormattedCommandAlias<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for FormattedCommandAlias<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -909,6 +928,9 @@ impl<'mc> FormattedCommandAlias<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> FormattedCommandAlias<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
@@ -1129,7 +1151,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1503,18 +1525,19 @@ pub struct TabCompleter<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> TabCompleter<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "TabCompleter", name, lib_name) }?;
-        Self::from_raw(env, obj)
+
+impl<'mc> JNIRaw<'mc> for TabCompleter<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
-    pub fn from_raw(
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for TabCompleter<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1531,6 +1554,19 @@ impl<'mc> TabCompleter<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+}
+
+impl<'mc> TabCompleter<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "TabCompleter", name, lib_name) }?;
+        Self::from_raw(env, obj)
     }
     //
 
@@ -1577,7 +1613,15 @@ impl<'mc> TabCompleter<'mc> {
         Ok(new_vec)
     }
 }
-impl<'mc> JNIRaw<'mc> for TabCompleter<'mc> {
+/// Represents a class which contains a single method for executing commands
+///
+/// This is a representation of an abstract class.
+pub struct CommandExecutor<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for CommandExecutor<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1586,25 +1630,9 @@ impl<'mc> JNIRaw<'mc> for TabCompleter<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// Represents a class which contains a single method for executing commands
-///
-/// This is a representation of an abstract class.
-pub struct CommandExecutor<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> CommandExecutor<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "CommandExecutor", name, lib_name) }?;
-        Self::from_raw(env, obj)
-    }
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for CommandExecutor<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1623,6 +1651,19 @@ impl<'mc> CommandExecutor<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+}
+
+impl<'mc> CommandExecutor<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "CommandExecutor", name, lib_name) }?;
+        Self::from_raw(env, obj)
     }
     //
 
@@ -1657,7 +1698,15 @@ impl<'mc> CommandExecutor<'mc> {
         Ok(res.z()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for CommandExecutor<'mc> {
+
+///
+/// This is a representation of an abstract class.
+pub struct ConsoleCommandSender<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for ConsoleCommandSender<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1667,14 +1716,8 @@ impl<'mc> JNIRaw<'mc> for CommandExecutor<'mc> {
     }
 }
 
-///
-/// This is a representation of an abstract class.
-pub struct ConsoleCommandSender<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> ConsoleCommandSender<'mc> {
-    pub fn from_raw(
+impl<'mc> JNIInstantiatable<'mc> for ConsoleCommandSender<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1694,6 +1737,9 @@ impl<'mc> ConsoleCommandSender<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ConsoleCommandSender<'mc> {
     //
 
     pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
@@ -2046,15 +2092,6 @@ impl<'mc> ConsoleCommandSender<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for ConsoleCommandSender<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::command::CommandSender<'mc>> for ConsoleCommandSender<'mc> {
     fn into(self) -> crate::command::CommandSender<'mc> {
         crate::command::CommandSender::from_raw(&self.jni_ref(), self.1)
@@ -2074,8 +2111,19 @@ pub struct PluginIdentifiableCommand<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> PluginIdentifiableCommand<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for PluginIdentifiableCommand<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for PluginIdentifiableCommand<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2097,6 +2145,9 @@ impl<'mc> PluginIdentifiableCommand<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PluginIdentifiableCommand<'mc> {
     //
 
     pub fn plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
@@ -2110,21 +2161,13 @@ impl<'mc> PluginIdentifiableCommand<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for PluginIdentifiableCommand<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// Represents a Command, which executes various tasks upon user input
 pub struct Command<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for Command<'mc> {
+
+impl<'mc> JNIRaw<'mc> for Command<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2133,8 +2176,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for Command<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Command<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for Command<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2152,6 +2196,9 @@ impl<'mc> Command<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Command<'mc> {
     //
 
     pub fn permission(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2324,7 +2371,7 @@ impl<'mc> Command<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -2719,7 +2766,8 @@ pub struct MultipleCommandAlias<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for MultipleCommandAlias<'mc> {
+
+impl<'mc> JNIRaw<'mc> for MultipleCommandAlias<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2728,8 +2776,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for MultipleCommandAlias<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> MultipleCommandAlias<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for MultipleCommandAlias<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2749,6 +2798,9 @@ impl<'mc> MultipleCommandAlias<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> MultipleCommandAlias<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
@@ -2971,7 +3023,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -3343,7 +3395,8 @@ pub struct PluginCommandYamlParser<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PluginCommandYamlParser<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PluginCommandYamlParser<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -3352,8 +3405,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PluginCommandYamlParser<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PluginCommandYamlParser<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PluginCommandYamlParser<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3375,6 +3429,9 @@ impl<'mc> PluginCommandYamlParser<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PluginCommandYamlParser<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::command::PluginCommandYamlParser<'mc>, Box<dyn std::error::Error>> {
@@ -3528,8 +3585,19 @@ pub struct ProxiedCommandSender<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> ProxiedCommandSender<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for ProxiedCommandSender<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for ProxiedCommandSender<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3549,6 +3617,9 @@ impl<'mc> ProxiedCommandSender<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ProxiedCommandSender<'mc> {
     //
 
     pub fn caller(&self) -> Result<crate::command::CommandSender<'mc>, Box<dyn std::error::Error>> {
@@ -3814,15 +3885,6 @@ impl<'mc> ProxiedCommandSender<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for ProxiedCommandSender<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::command::CommandSender<'mc>> for ProxiedCommandSender<'mc> {
     fn into(self) -> crate::command::CommandSender<'mc> {
         crate::command::CommandSender::from_raw(&self.jni_ref(), self.1)
@@ -3836,18 +3898,19 @@ pub struct TabExecutor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> TabExecutor<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "TabExecutor", name, lib_name) }?;
-        Self::from_raw(env, obj)
+
+impl<'mc> JNIRaw<'mc> for TabExecutor<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
-    pub fn from_raw(
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for TabExecutor<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3864,6 +3927,19 @@ impl<'mc> TabExecutor<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+}
+
+impl<'mc> TabExecutor<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "TabExecutor", name, lib_name) }?;
+        Self::from_raw(env, obj)
     }
     //
 
@@ -3942,15 +4018,6 @@ impl<'mc> TabExecutor<'mc> {
         Ok(res.z()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for TabExecutor<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::command::TabCompleter<'mc>> for TabExecutor<'mc> {
     fn into(self) -> crate::command::TabCompleter<'mc> {
         crate::command::TabCompleter::from_raw(&self.jni_ref(), self.1)
@@ -3970,8 +4037,19 @@ pub struct CommandSender<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> CommandSender<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for CommandSender<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for CommandSender<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3989,6 +4067,9 @@ impl<'mc> CommandSender<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> CommandSender<'mc> {
     //
 
     pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
@@ -4230,15 +4311,6 @@ impl<'mc> CommandSender<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for CommandSender<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::permissions::Permissible<'mc>> for CommandSender<'mc> {
     fn into(self) -> crate::permissions::Permissible<'mc> {
         crate::permissions::Permissible::from_raw(&self.jni_ref(), self.1)
@@ -4252,8 +4324,19 @@ pub struct CommandMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> CommandMap<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for CommandMap<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for CommandMap<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -4271,6 +4354,9 @@ impl<'mc> CommandMap<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> CommandMap<'mc> {
     //
 
     pub fn register_all(
@@ -4292,7 +4378,7 @@ impl<'mc> CommandMap<'mc> {
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Lorg/bukkit/command/crate::command::Command)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -4451,21 +4537,13 @@ impl<'mc> CommandMap<'mc> {
         Ok(res.z()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for CommandMap<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// Represents a <a href="Command.html" title="class in org.bukkit.command"><code>Command</code></a> belonging to a plugin
 pub struct PluginCommand<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PluginCommand<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PluginCommand<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -4474,8 +4552,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PluginCommand<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PluginCommand<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PluginCommand<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -4493,6 +4572,9 @@ impl<'mc> PluginCommand<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PluginCommand<'mc> {
     //
 
     pub fn tab_complete_with_command_sender(
@@ -4787,7 +4869,7 @@ impl<'mc> PluginCommand<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -5152,8 +5234,19 @@ pub struct BlockCommandSender<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> BlockCommandSender<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for BlockCommandSender<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for BlockCommandSender<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -5173,6 +5266,9 @@ impl<'mc> BlockCommandSender<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> BlockCommandSender<'mc> {
     //
 
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
@@ -5424,15 +5520,6 @@ impl<'mc> BlockCommandSender<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> JNIRaw<'mc> for BlockCommandSender<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
 impl<'mc> Into<crate::command::CommandSender<'mc>> for BlockCommandSender<'mc> {

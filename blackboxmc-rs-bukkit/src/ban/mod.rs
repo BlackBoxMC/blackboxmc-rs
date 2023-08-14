@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// A <a href="../BanList.html" title="interface in org.bukkit"><code>BanList</code></a> targeting player profile bans.
@@ -8,8 +10,19 @@ pub struct ProfileBanList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> ProfileBanList<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for ProfileBanList<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for ProfileBanList<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -29,6 +42,9 @@ impl<'mc> ProfileBanList<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ProfileBanList<'mc> {
     //
 
     pub fn add_ban_with_player_profile(
@@ -238,15 +254,6 @@ impl<'mc> ProfileBanList<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for ProfileBanList<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::BanList<'mc>> for ProfileBanList<'mc> {
     fn into(self) -> crate::BanList<'mc> {
         crate::BanList::from_raw(&self.jni_ref(), self.1)
@@ -260,8 +267,19 @@ pub struct IpBanList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> IpBanList<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for IpBanList<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for IpBanList<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -279,6 +297,9 @@ impl<'mc> IpBanList<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> IpBanList<'mc> {
     //
 
     pub fn get_ban_entry_with_string(
@@ -408,15 +429,6 @@ impl<'mc> IpBanList<'mc> {
         blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-}
-impl<'mc> JNIRaw<'mc> for IpBanList<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
 impl<'mc> Into<crate::BanList<'mc>> for IpBanList<'mc> {

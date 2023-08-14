@@ -1,3 +1,4 @@
+use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::SharedJNIEnv;
 use jni::{objects::JObject, JNIEnv};
 

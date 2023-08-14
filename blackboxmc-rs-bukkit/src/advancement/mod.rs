@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// The individual status of an advancement for a player. This class is not reference safe as the underlying advancement may be reloaded.
@@ -8,8 +10,19 @@ pub struct AdvancementProgress<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> AdvancementProgress<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for AdvancementProgress<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for AdvancementProgress<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -30,6 +43,9 @@ impl<'mc> AdvancementProgress<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> AdvancementProgress<'mc> {
     //
 
     pub fn is_done(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -164,15 +180,6 @@ impl<'mc> AdvancementProgress<'mc> {
         Ok(new_vec)
     }
 }
-impl<'mc> JNIRaw<'mc> for AdvancementProgress<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 #[derive(PartialEq, Eq)]
 pub enum AdvancementDisplayTypeEnum {
     Task,
@@ -204,6 +211,7 @@ impl<'mc> std::ops::Deref for AdvancementDisplayType<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for AdvancementDisplayType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -213,11 +221,15 @@ impl<'mc> JNIRaw<'mc> for AdvancementDisplayType<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> AdvancementDisplayType<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for AdvancementDisplayType<'mc> {
+    type Enum = AdvancementDisplayTypeEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: AdvancementDisplayTypeEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -237,6 +249,9 @@ impl<'mc> AdvancementDisplayType<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> AdvancementDisplayType<'mc> {
     pub const TASK: AdvancementDisplayTypeEnum = AdvancementDisplayTypeEnum::Task;
     pub const CHALLENGE: AdvancementDisplayTypeEnum = AdvancementDisplayTypeEnum::Challenge;
     pub const GOAL: AdvancementDisplayTypeEnum = AdvancementDisplayTypeEnum::Goal;
@@ -286,8 +301,19 @@ pub struct AdvancementDisplay<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> AdvancementDisplay<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for AdvancementDisplay<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for AdvancementDisplay<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -307,6 +333,9 @@ impl<'mc> AdvancementDisplay<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> AdvancementDisplay<'mc> {
     //
 
     pub fn x(&self) -> Result<f32, Box<dyn std::error::Error>> {
@@ -428,7 +457,15 @@ impl<'mc> AdvancementDisplay<'mc> {
         )
     }
 }
-impl<'mc> JNIRaw<'mc> for AdvancementDisplay<'mc> {
+/// Represents an advancement that may be awarded to a player. This class is not reference safe as the underlying advancement may be reloaded.
+///
+/// This is a representation of an abstract class.
+pub struct Advancement<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for Advancement<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -437,15 +474,9 @@ impl<'mc> JNIRaw<'mc> for AdvancementDisplay<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// Represents an advancement that may be awarded to a player. This class is not reference safe as the underlying advancement may be reloaded.
-///
-/// This is a representation of an abstract class.
-pub struct Advancement<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> Advancement<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for Advancement<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -463,6 +494,9 @@ impl<'mc> Advancement<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Advancement<'mc> {
     //
 
     pub fn criteria(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
@@ -510,15 +544,6 @@ impl<'mc> Advancement<'mc> {
         crate::NamespacedKey::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-}
-impl<'mc> JNIRaw<'mc> for Advancement<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
 impl<'mc> Into<crate::Keyed<'mc>> for Advancement<'mc> {

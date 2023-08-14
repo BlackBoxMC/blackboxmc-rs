@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Called when a vehicle updates
@@ -6,7 +8,8 @@ pub struct VehicleUpdateEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for VehicleUpdateEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for VehicleUpdateEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15,8 +18,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for VehicleUpdateEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> VehicleUpdateEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for VehicleUpdateEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -37,6 +41,9 @@ impl<'mc> VehicleUpdateEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> VehicleUpdateEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Vehicle<'mc>>,
@@ -236,7 +243,8 @@ pub struct VehicleEnterEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for VehicleEnterEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for VehicleEnterEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -245,8 +253,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for VehicleEnterEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> VehicleEnterEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for VehicleEnterEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -267,6 +276,9 @@ impl<'mc> VehicleEnterEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> VehicleEnterEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Vehicle<'mc>>,
@@ -518,7 +530,8 @@ pub struct VehicleEntityCollisionEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for VehicleEntityCollisionEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for VehicleEntityCollisionEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -527,8 +540,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for VehicleEntityCollisionEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> VehicleEntityCollisionEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for VehicleEntityCollisionEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -550,6 +564,9 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> VehicleEntityCollisionEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Vehicle<'mc>>,
@@ -862,7 +879,8 @@ pub struct VehicleExitEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for VehicleExitEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for VehicleExitEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -871,8 +889,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for VehicleExitEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> VehicleExitEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for VehicleExitEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -892,6 +911,9 @@ impl<'mc> VehicleExitEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> VehicleExitEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Vehicle<'mc>>,
@@ -1143,7 +1165,8 @@ pub struct VehicleCollisionEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for VehicleCollisionEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for VehicleCollisionEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1152,8 +1175,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for VehicleCollisionEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> VehicleCollisionEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for VehicleCollisionEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1175,6 +1199,9 @@ impl<'mc> VehicleCollisionEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> VehicleCollisionEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Vehicle<'mc>>,
@@ -1362,7 +1389,8 @@ pub struct VehicleBlockCollisionEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for VehicleBlockCollisionEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for VehicleBlockCollisionEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1371,8 +1399,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for VehicleBlockCollisionEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> VehicleBlockCollisionEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for VehicleBlockCollisionEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1394,6 +1423,9 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> VehicleBlockCollisionEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Vehicle<'mc>>,
@@ -1614,7 +1646,8 @@ pub struct VehicleCreateEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for VehicleCreateEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for VehicleCreateEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1623,8 +1656,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for VehicleCreateEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> VehicleCreateEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for VehicleCreateEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1645,6 +1679,9 @@ impl<'mc> VehicleCreateEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> VehicleCreateEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Vehicle<'mc>>,
@@ -1877,7 +1914,8 @@ pub struct VehicleMoveEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for VehicleMoveEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for VehicleMoveEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1886,8 +1924,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for VehicleMoveEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> VehicleMoveEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for VehicleMoveEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1907,6 +1946,9 @@ impl<'mc> VehicleMoveEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> VehicleMoveEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Vehicle<'mc>>,
@@ -2144,7 +2186,8 @@ pub struct VehicleDestroyEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for VehicleDestroyEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for VehicleDestroyEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2153,8 +2196,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for VehicleDestroyEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> VehicleDestroyEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for VehicleDestroyEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2175,6 +2219,9 @@ impl<'mc> VehicleDestroyEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> VehicleDestroyEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Vehicle<'mc>>,
@@ -2426,7 +2473,8 @@ pub struct VehicleDamageEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for VehicleDamageEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for VehicleDamageEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2435,8 +2483,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for VehicleDamageEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> VehicleDamageEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for VehicleDamageEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2457,6 +2506,9 @@ impl<'mc> VehicleDamageEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> VehicleDamageEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Vehicle<'mc>>,
@@ -2736,7 +2788,8 @@ pub struct VehicleEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for VehicleEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for VehicleEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2745,8 +2798,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for VehicleEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> VehicleEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for VehicleEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2764,6 +2818,9 @@ impl<'mc> VehicleEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> VehicleEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Vehicle<'mc>>,

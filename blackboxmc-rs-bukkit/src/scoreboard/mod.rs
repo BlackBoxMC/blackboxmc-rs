@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Criteria names which trigger an objective to be modified by actions in-game
@@ -6,7 +8,8 @@ pub struct Criterias<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for Criterias<'mc> {
+
+impl<'mc> JNIRaw<'mc> for Criterias<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15,8 +18,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for Criterias<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Criterias<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for Criterias<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -34,6 +38,9 @@ impl<'mc> Criterias<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Criterias<'mc> {
     //
 
     pub fn wait(
@@ -177,6 +184,7 @@ impl<'mc> std::ops::Deref for TeamOptionStatus<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for TeamOptionStatus<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -186,11 +194,15 @@ impl<'mc> JNIRaw<'mc> for TeamOptionStatus<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> TeamOptionStatus<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for TeamOptionStatus<'mc> {
+    type Enum = TeamOptionStatusEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: TeamOptionStatusEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -208,6 +220,9 @@ impl<'mc> TeamOptionStatus<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> TeamOptionStatus<'mc> {
     pub const ALWAYS: TeamOptionStatusEnum = TeamOptionStatusEnum::Always;
     pub const NEVER: TeamOptionStatusEnum = TeamOptionStatusEnum::Never;
     pub const FOR_OTHER_TEAMS: TeamOptionStatusEnum = TeamOptionStatusEnum::ForOtherTeams;
@@ -262,8 +277,19 @@ pub struct Criteria<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> Criteria<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for Criteria<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for Criteria<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -281,6 +307,9 @@ impl<'mc> Criteria<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Criteria<'mc> {
     //
 
     pub fn default_render_type(
@@ -389,15 +418,6 @@ impl<'mc> Criteria<'mc> {
         Ok(res.z()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for Criteria<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 #[derive(PartialEq, Eq)]
 pub enum NameTagVisibilityEnum {
     Always,
@@ -431,6 +451,7 @@ impl<'mc> std::ops::Deref for NameTagVisibility<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for NameTagVisibility<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -440,11 +461,15 @@ impl<'mc> JNIRaw<'mc> for NameTagVisibility<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> NameTagVisibility<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for NameTagVisibility<'mc> {
+    type Enum = NameTagVisibilityEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: NameTagVisibilityEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -462,6 +487,9 @@ impl<'mc> NameTagVisibility<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> NameTagVisibility<'mc> {
     pub const ALWAYS: NameTagVisibilityEnum = NameTagVisibilityEnum::Always;
     pub const NEVER: NameTagVisibilityEnum = NameTagVisibilityEnum::Never;
     pub const HIDE_FOR_OTHER_TEAMS: NameTagVisibilityEnum =
@@ -536,6 +564,7 @@ impl<'mc> std::ops::Deref for RenderType<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for RenderType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -545,11 +574,15 @@ impl<'mc> JNIRaw<'mc> for RenderType<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> RenderType<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for RenderType<'mc> {
+    type Enum = RenderTypeEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: RenderTypeEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate RenderType from null object.").into());
@@ -565,6 +598,9 @@ impl<'mc> RenderType<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> RenderType<'mc> {
     pub const INTEGER: RenderTypeEnum = RenderTypeEnum::Integer;
     pub const HEARTS: RenderTypeEnum = RenderTypeEnum::Hearts;
     pub fn from_string(str: String) -> std::option::Option<RenderTypeEnum> {
@@ -612,8 +648,19 @@ pub struct Objective<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> Objective<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for Objective<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for Objective<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -631,6 +678,9 @@ impl<'mc> Objective<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Objective<'mc> {
     //
 
     pub fn unregister(&self) -> Result<(), Box<dyn std::error::Error>> {
@@ -860,7 +910,15 @@ impl<'mc> Objective<'mc> {
             .to_string())
     }
 }
-impl<'mc> JNIRaw<'mc> for Objective<'mc> {
+/// A score entry for an <a href="#getEntry()"><code>entry</code></a> on an <a href="#getObjective()"><code>objective</code></a>. Changing this will not affect any other objective or scoreboard.
+///
+/// This is a representation of an abstract class.
+pub struct Score<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for Score<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -869,15 +927,9 @@ impl<'mc> JNIRaw<'mc> for Objective<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// A score entry for an <a href="#getEntry()"><code>entry</code></a> on an <a href="#getObjective()"><code>objective</code></a>. Changing this will not affect any other objective or scoreboard.
-///
-/// This is a representation of an abstract class.
-pub struct Score<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> Score<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for Score<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -895,6 +947,9 @@ impl<'mc> Score<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Score<'mc> {
     //
 
     pub fn entry(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -985,7 +1040,15 @@ impl<'mc> Score<'mc> {
         Ok(res.z()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for Score<'mc> {
+/// A scoreboard
+///
+/// This is a representation of an abstract class.
+pub struct Scoreboard<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for Scoreboard<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -994,15 +1057,9 @@ impl<'mc> JNIRaw<'mc> for Score<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// A scoreboard
-///
-/// This is a representation of an abstract class.
-pub struct Scoreboard<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> Scoreboard<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for Scoreboard<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1020,6 +1077,9 @@ impl<'mc> Scoreboard<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Scoreboard<'mc> {
     //
 
     pub fn players(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -1314,15 +1374,6 @@ impl<'mc> Scoreboard<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for Scoreboard<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 #[derive(PartialEq, Eq)]
 pub enum DisplaySlotEnum {
     BelowName,
@@ -1386,6 +1437,7 @@ impl<'mc> std::ops::Deref for DisplaySlot<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for DisplaySlot<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -1395,11 +1447,15 @@ impl<'mc> JNIRaw<'mc> for DisplaySlot<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> DisplaySlot<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for DisplaySlot<'mc> {
+    type Enum = DisplaySlotEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: DisplaySlotEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate DisplaySlot from null object.").into());
@@ -1415,6 +1471,9 @@ impl<'mc> DisplaySlot<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> DisplaySlot<'mc> {
     pub const BELOW_NAME: DisplaySlotEnum = DisplaySlotEnum::BelowName;
     pub const PLAYER_LIST: DisplaySlotEnum = DisplaySlotEnum::PlayerList;
     pub const SIDEBAR: DisplaySlotEnum = DisplaySlotEnum::Sidebar;
@@ -1496,8 +1555,19 @@ pub struct Team<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> Team<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for Team<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for Team<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1515,6 +1585,9 @@ impl<'mc> Team<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Team<'mc> {
     //
 
     pub fn remove_entry(
@@ -1994,7 +2067,15 @@ impl<'mc> Team<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for Team<'mc> {
+/// Manager of Scoreboards
+///
+/// This is a representation of an abstract class.
+pub struct ScoreboardManager<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for ScoreboardManager<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2003,15 +2084,9 @@ impl<'mc> JNIRaw<'mc> for Team<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// Manager of Scoreboards
-///
-/// This is a representation of an abstract class.
-pub struct ScoreboardManager<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> ScoreboardManager<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ScoreboardManager<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2031,6 +2106,9 @@ impl<'mc> ScoreboardManager<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ScoreboardManager<'mc> {
     //
 
     pub fn main_scoreboard(
@@ -2066,15 +2144,6 @@ impl<'mc> ScoreboardManager<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for ScoreboardManager<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 #[derive(PartialEq, Eq)]
 pub enum OptionEnum {
     NameTagVisibility,
@@ -2106,6 +2175,7 @@ impl<'mc> std::ops::Deref for Option<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for Option<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -2115,11 +2185,15 @@ impl<'mc> JNIRaw<'mc> for Option<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Option<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for Option<'mc> {
+    type Enum = OptionEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: OptionEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Option from null object.").into());
@@ -2135,6 +2209,9 @@ impl<'mc> Option<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> Option<'mc> {
     pub const NAME_TAG_VISIBILITY: OptionEnum = OptionEnum::NameTagVisibility;
     pub const DEATH_MESSAGE_VISIBILITY: OptionEnum = OptionEnum::DeathMessageVisibility;
     pub const COLLISION_RULE: OptionEnum = OptionEnum::CollisionRule;
@@ -2210,6 +2287,7 @@ impl<'mc> std::ops::Deref for OptionStatus<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for OptionStatus<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -2219,11 +2297,15 @@ impl<'mc> JNIRaw<'mc> for OptionStatus<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> OptionStatus<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for OptionStatus<'mc> {
+    type Enum = OptionStatusEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: OptionStatusEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate OptionStatus from null object.").into());
@@ -2239,6 +2321,9 @@ impl<'mc> OptionStatus<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> OptionStatus<'mc> {
     pub const ALWAYS: OptionStatusEnum = OptionStatusEnum::Always;
     pub const NEVER: OptionStatusEnum = OptionStatusEnum::Never;
     pub const FOR_OTHER_TEAMS: OptionStatusEnum = OptionStatusEnum::ForOtherTeams;
@@ -2315,6 +2400,7 @@ impl<'mc> std::ops::Deref for TeamOption<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for TeamOption<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -2324,11 +2410,15 @@ impl<'mc> JNIRaw<'mc> for TeamOption<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> TeamOption<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for TeamOption<'mc> {
+    type Enum = TeamOptionEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: TeamOptionEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate TeamOption from null object.").into());
@@ -2344,6 +2434,9 @@ impl<'mc> TeamOption<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> TeamOption<'mc> {
     pub const NAME_TAG_VISIBILITY: TeamOptionEnum = TeamOptionEnum::NameTagVisibility;
     pub const DEATH_MESSAGE_VISIBILITY: TeamOptionEnum = TeamOptionEnum::DeathMessageVisibility;
     pub const COLLISION_RULE: TeamOptionEnum = TeamOptionEnum::CollisionRule;

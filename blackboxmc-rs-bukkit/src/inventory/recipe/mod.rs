@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 #[derive(PartialEq, Eq)]
@@ -32,6 +34,7 @@ impl<'mc> std::ops::Deref for CookingBookCategory<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for CookingBookCategory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -41,11 +44,15 @@ impl<'mc> JNIRaw<'mc> for CookingBookCategory<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> CookingBookCategory<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for CookingBookCategory<'mc> {
+    type Enum = CookingBookCategoryEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: CookingBookCategoryEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -64,6 +71,9 @@ impl<'mc> CookingBookCategory<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> CookingBookCategory<'mc> {
     pub const FOOD: CookingBookCategoryEnum = CookingBookCategoryEnum::Food;
     pub const BLOCKS: CookingBookCategoryEnum = CookingBookCategoryEnum::Blocks;
     pub const MISC: CookingBookCategoryEnum = CookingBookCategoryEnum::Misc;
@@ -139,6 +149,7 @@ impl<'mc> std::ops::Deref for CraftingBookCategory<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for CraftingBookCategory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -148,11 +159,15 @@ impl<'mc> JNIRaw<'mc> for CraftingBookCategory<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> CraftingBookCategory<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for CraftingBookCategory<'mc> {
+    type Enum = CraftingBookCategoryEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: CraftingBookCategoryEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -171,6 +186,9 @@ impl<'mc> CraftingBookCategory<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> CraftingBookCategory<'mc> {
     pub const BUILDING: CraftingBookCategoryEnum = CraftingBookCategoryEnum::Building;
     pub const REDSTONE: CraftingBookCategoryEnum = CraftingBookCategoryEnum::Redstone;
     pub const EQUIPMENT: CraftingBookCategoryEnum = CraftingBookCategoryEnum::Equipment;

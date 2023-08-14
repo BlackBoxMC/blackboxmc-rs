@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Called when an ItemStack is successfully enchanted (currently at enchantment table)
@@ -6,7 +8,8 @@ pub struct EnchantItemEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for EnchantItemEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for EnchantItemEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15,8 +18,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for EnchantItemEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> EnchantItemEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for EnchantItemEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -37,6 +41,9 @@ impl<'mc> EnchantItemEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> EnchantItemEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -454,7 +461,8 @@ pub struct PrepareItemEnchantEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PrepareItemEnchantEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PrepareItemEnchantEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -463,8 +471,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PrepareItemEnchantEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PrepareItemEnchantEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PrepareItemEnchantEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -486,6 +495,9 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PrepareItemEnchantEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,

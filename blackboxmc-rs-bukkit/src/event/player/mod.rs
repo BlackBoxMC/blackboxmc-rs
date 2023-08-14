@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Called when a player toggles their flying state
@@ -6,7 +8,8 @@ pub struct PlayerToggleFlightEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerToggleFlightEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerToggleFlightEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15,8 +18,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerToggleFlightEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerToggleFlightEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerToggleFlightEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -38,6 +42,9 @@ impl<'mc> PlayerToggleFlightEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerToggleFlightEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -327,6 +334,7 @@ impl<'mc> std::ops::Deref for PlayerFishEventState<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for PlayerFishEventState<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -336,11 +344,15 @@ impl<'mc> JNIRaw<'mc> for PlayerFishEventState<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerFishEventState<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for PlayerFishEventState<'mc> {
+    type Enum = PlayerFishEventStateEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: PlayerFishEventStateEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -359,6 +371,9 @@ impl<'mc> PlayerFishEventState<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> PlayerFishEventState<'mc> {
     pub const FISHING: PlayerFishEventStateEnum = PlayerFishEventStateEnum::Fishing;
     pub const CAUGHT_FISH: PlayerFishEventStateEnum = PlayerFishEventStateEnum::CaughtFish;
     pub const CAUGHT_ENTITY: PlayerFishEventStateEnum = PlayerFishEventStateEnum::CaughtEntity;
@@ -411,7 +426,8 @@ impl<'mc> PlayerFishEventState<'mc> {
 
     //
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerFishEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerFishEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -420,8 +436,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerFishEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerFishEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerFishEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -441,6 +458,9 @@ impl<'mc> PlayerFishEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerFishEvent<'mc> {
     pub fn new_with_player(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -803,7 +823,8 @@ pub struct PlayerShearEntityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerShearEntityEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerShearEntityEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -812,8 +833,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerShearEntityEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerShearEntityEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerShearEntityEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -835,6 +857,9 @@ impl<'mc> PlayerShearEntityEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerShearEntityEvent<'mc> {
     pub fn new_with_player(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -1142,7 +1167,8 @@ pub struct PlayerInteractEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerInteractEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerInteractEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1151,8 +1177,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerInteractEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerInteractEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerInteractEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1173,6 +1200,9 @@ impl<'mc> PlayerInteractEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerInteractEvent<'mc> {
     pub fn new_with_player(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -1711,7 +1741,8 @@ pub struct AsyncPlayerChatPreviewEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for AsyncPlayerChatPreviewEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for AsyncPlayerChatPreviewEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1720,8 +1751,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for AsyncPlayerChatPreviewEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> AsyncPlayerChatPreviewEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for AsyncPlayerChatPreviewEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1743,6 +1775,9 @@ impl<'mc> AsyncPlayerChatPreviewEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> AsyncPlayerChatPreviewEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: bool,
@@ -2060,7 +2095,8 @@ pub struct PlayerAnimationEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerAnimationEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerAnimationEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2069,8 +2105,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerAnimationEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerAnimationEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerAnimationEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2091,6 +2128,9 @@ impl<'mc> PlayerAnimationEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerAnimationEvent<'mc> {
     pub fn new_with_player(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::entity::Player<'mc>>>,
@@ -2363,7 +2403,8 @@ pub struct PlayerBucketEntityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerBucketEntityEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerBucketEntityEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2372,8 +2413,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerBucketEntityEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerBucketEntityEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerBucketEntityEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2395,6 +2437,9 @@ impl<'mc> PlayerBucketEntityEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerBucketEntityEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -2720,7 +2765,8 @@ pub struct PlayerPortalEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerPortalEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerPortalEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2729,8 +2775,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerPortalEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerPortalEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerPortalEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2750,6 +2797,9 @@ impl<'mc> PlayerPortalEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerPortalEvent<'mc> {
     pub fn new_with_player(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -3192,7 +3242,8 @@ pub struct PlayerDropItemEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerDropItemEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerDropItemEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -3201,8 +3252,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerDropItemEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerDropItemEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerDropItemEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3223,6 +3275,9 @@ impl<'mc> PlayerDropItemEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerDropItemEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -3511,6 +3566,7 @@ impl<'mc> std::ops::Deref for PlayerResourcePackStatusEventStatus<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for PlayerResourcePackStatusEventStatus<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -3520,11 +3576,15 @@ impl<'mc> JNIRaw<'mc> for PlayerResourcePackStatusEventStatus<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerResourcePackStatusEventStatus<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for PlayerResourcePackStatusEventStatus<'mc> {
+    type Enum = PlayerResourcePackStatusEventStatusEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: PlayerResourcePackStatusEventStatusEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -3538,14 +3598,17 @@ impl<'mc> PlayerResourcePackStatusEventStatus<'mc> {
         )?;
         if !valid {
             Err(eyre::eyre!(
-        "Invalid argument passed. Expected a PlayerResourcePackStatusEventStatus object, got {}",
-        name
-    )
-            .into())
+                    "Invalid argument passed. Expected a PlayerResourcePackStatusEventStatus object, got {}",
+                    name
+                )
+                .into())
         } else {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> PlayerResourcePackStatusEventStatus<'mc> {
     pub const SUCCESSFULLY_LOADED: PlayerResourcePackStatusEventStatusEnum =
         PlayerResourcePackStatusEventStatusEnum::SuccessfullyLoaded;
     pub const DECLINED: PlayerResourcePackStatusEventStatusEnum =
@@ -3600,7 +3663,8 @@ impl<'mc> PlayerResourcePackStatusEventStatus<'mc> {
 
     //
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerResourcePackStatusEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerResourcePackStatusEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -3609,8 +3673,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerResourcePackStatusEvent<'mc>
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerResourcePackStatusEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerResourcePackStatusEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3634,6 +3699,9 @@ impl<'mc> PlayerResourcePackStatusEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerResourcePackStatusEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -3904,6 +3972,7 @@ impl<'mc> std::ops::Deref for PlayerExpCooldownChangeEventChangeReason<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for PlayerExpCooldownChangeEventChangeReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -3913,11 +3982,15 @@ impl<'mc> JNIRaw<'mc> for PlayerExpCooldownChangeEventChangeReason<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerExpCooldownChangeEventChangeReason<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for PlayerExpCooldownChangeEventChangeReason<'mc> {
+    type Enum = PlayerExpCooldownChangeEventChangeReasonEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: PlayerExpCooldownChangeEventChangeReasonEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -3931,14 +4004,17 @@ impl<'mc> PlayerExpCooldownChangeEventChangeReason<'mc> {
         )?;
         if !valid {
             Err(eyre::eyre!(
-        "Invalid argument passed. Expected a PlayerExpCooldownChangeEventChangeReason object, got {}",
-        name
-    )
-    .into())
+                    "Invalid argument passed. Expected a PlayerExpCooldownChangeEventChangeReason object, got {}",
+                    name
+                )
+                .into())
         } else {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> PlayerExpCooldownChangeEventChangeReason<'mc> {
     pub const PICKUP_ORB: PlayerExpCooldownChangeEventChangeReasonEnum =
         PlayerExpCooldownChangeEventChangeReasonEnum::PickupOrb;
     pub const PLUGIN: PlayerExpCooldownChangeEventChangeReasonEnum =
@@ -3986,7 +4062,8 @@ impl<'mc> PlayerExpCooldownChangeEventChangeReason<'mc> {
 
     //
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerExpCooldownChangeEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerExpCooldownChangeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -3995,8 +4072,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerExpCooldownChangeEvent<'mc> 
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerExpCooldownChangeEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerExpCooldownChangeEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -4018,6 +4096,9 @@ impl<'mc> PlayerExpCooldownChangeEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerExpCooldownChangeEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -4290,7 +4371,8 @@ pub struct PlayerUnregisterChannelEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerUnregisterChannelEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerUnregisterChannelEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -4299,8 +4381,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerUnregisterChannelEvent<'mc> 
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerUnregisterChannelEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerUnregisterChannelEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -4322,6 +4405,9 @@ impl<'mc> PlayerUnregisterChannelEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerUnregisterChannelEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -4547,7 +4633,8 @@ pub struct PlayerToggleSneakEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerToggleSneakEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerToggleSneakEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -4556,8 +4643,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerToggleSneakEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerToggleSneakEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerToggleSneakEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -4579,6 +4667,9 @@ impl<'mc> PlayerToggleSneakEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerToggleSneakEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -4828,7 +4919,8 @@ pub struct PlayerArmorStandManipulateEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerArmorStandManipulateEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerArmorStandManipulateEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -4837,8 +4929,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerArmorStandManipulateEvent<'m
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerArmorStandManipulateEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerArmorStandManipulateEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -4854,14 +4947,17 @@ impl<'mc> PlayerArmorStandManipulateEvent<'mc> {
         )?;
         if !valid {
             Err(eyre::eyre!(
-        "Invalid argument passed. Expected a PlayerArmorStandManipulateEvent object, got {}",
-        name
-    )
-            .into())
+                    "Invalid argument passed. Expected a PlayerArmorStandManipulateEvent object, got {}",
+                    name
+                )
+                .into())
         } else {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerArmorStandManipulateEvent<'mc> {
     pub fn new_with_player(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -5222,7 +5318,8 @@ pub struct PlayerInteractEntityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerInteractEntityEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerInteractEntityEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -5231,8 +5328,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerInteractEntityEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerInteractEntityEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerInteractEntityEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -5254,6 +5352,9 @@ impl<'mc> PlayerInteractEntityEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerInteractEntityEvent<'mc> {
     pub fn new_with_player(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -5541,7 +5642,8 @@ pub struct PlayerBucketFillEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerBucketFillEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerBucketFillEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -5550,8 +5652,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerBucketFillEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerBucketFillEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerBucketFillEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -5573,6 +5676,9 @@ impl<'mc> PlayerBucketFillEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerBucketFillEvent<'mc> {
     pub fn new_with_player(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -5972,7 +6078,8 @@ pub struct PlayerItemConsumeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerItemConsumeEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerItemConsumeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -5981,8 +6088,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerItemConsumeEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerItemConsumeEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerItemConsumeEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -6004,6 +6112,9 @@ impl<'mc> PlayerItemConsumeEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerItemConsumeEvent<'mc> {
     pub fn new_with_player(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -6309,7 +6420,8 @@ pub struct PlayerEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -6318,8 +6430,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -6337,6 +6450,9 @@ impl<'mc> PlayerEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -6570,6 +6686,7 @@ impl<'mc> std::ops::Deref for PlayerTeleportEventTeleportCause<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for PlayerTeleportEventTeleportCause<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -6579,11 +6696,15 @@ impl<'mc> JNIRaw<'mc> for PlayerTeleportEventTeleportCause<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerTeleportEventTeleportCause<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for PlayerTeleportEventTeleportCause<'mc> {
+    type Enum = PlayerTeleportEventTeleportCauseEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: PlayerTeleportEventTeleportCauseEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -6597,14 +6718,17 @@ impl<'mc> PlayerTeleportEventTeleportCause<'mc> {
         )?;
         if !valid {
             Err(eyre::eyre!(
-        "Invalid argument passed. Expected a PlayerTeleportEventTeleportCause object, got {}",
-        name
-    )
-            .into())
+                    "Invalid argument passed. Expected a PlayerTeleportEventTeleportCause object, got {}",
+                    name
+                )
+                .into())
         } else {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> PlayerTeleportEventTeleportCause<'mc> {
     pub const ENDER_PEARL: PlayerTeleportEventTeleportCauseEnum =
         PlayerTeleportEventTeleportCauseEnum::EnderPearl;
     pub const COMMAND: PlayerTeleportEventTeleportCauseEnum =
@@ -6676,7 +6800,8 @@ impl<'mc> PlayerTeleportEventTeleportCause<'mc> {
 
     //
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerTeleportEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerTeleportEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -6685,8 +6810,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerTeleportEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerTeleportEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerTeleportEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -6707,6 +6833,9 @@ impl<'mc> PlayerTeleportEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerTeleportEvent<'mc> {
     pub fn new_with_player(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -7048,7 +7177,8 @@ pub struct PlayerQuitEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerQuitEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerQuitEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -7057,8 +7187,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerQuitEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerQuitEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerQuitEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -7078,6 +7209,9 @@ impl<'mc> PlayerQuitEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerQuitEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -7317,7 +7451,8 @@ pub struct PlayerMoveEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerMoveEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerMoveEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -7326,8 +7461,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerMoveEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerMoveEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerMoveEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -7347,6 +7483,9 @@ impl<'mc> PlayerMoveEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerMoveEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -7654,7 +7793,8 @@ pub struct PlayerEditBookEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerEditBookEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerEditBookEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -7663,8 +7803,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerEditBookEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerEditBookEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerEditBookEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -7685,6 +7826,9 @@ impl<'mc> PlayerEditBookEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerEditBookEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -8064,6 +8208,7 @@ impl<'mc> std::ops::Deref for TeleportCause<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for TeleportCause<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -8073,11 +8218,15 @@ impl<'mc> JNIRaw<'mc> for TeleportCause<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> TeleportCause<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for TeleportCause<'mc> {
+    type Enum = TeleportCauseEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: TeleportCauseEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate TeleportCause from null object.").into());
@@ -8093,6 +8242,9 @@ impl<'mc> TeleportCause<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> TeleportCause<'mc> {
     pub const ENDER_PEARL: TeleportCauseEnum = TeleportCauseEnum::EnderPearl;
     pub const COMMAND: TeleportCauseEnum = TeleportCauseEnum::Command;
     pub const PLUGIN: TeleportCauseEnum = TeleportCauseEnum::Plugin;
@@ -8156,7 +8308,8 @@ pub struct PlayerJoinEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerJoinEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerJoinEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -8165,8 +8318,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerJoinEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerJoinEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerJoinEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -8186,6 +8340,9 @@ impl<'mc> PlayerJoinEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerJoinEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -8458,6 +8615,7 @@ impl<'mc> std::ops::Deref for PlayerSignOpenEventCause<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for PlayerSignOpenEventCause<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -8467,11 +8625,15 @@ impl<'mc> JNIRaw<'mc> for PlayerSignOpenEventCause<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerSignOpenEventCause<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for PlayerSignOpenEventCause<'mc> {
+    type Enum = PlayerSignOpenEventCauseEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: PlayerSignOpenEventCauseEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -8491,6 +8653,9 @@ impl<'mc> PlayerSignOpenEventCause<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> PlayerSignOpenEventCause<'mc> {
     pub const INTERACT: PlayerSignOpenEventCauseEnum = PlayerSignOpenEventCauseEnum::Interact;
     pub const PLACE: PlayerSignOpenEventCauseEnum = PlayerSignOpenEventCauseEnum::Place;
     pub const PLUGIN: PlayerSignOpenEventCauseEnum = PlayerSignOpenEventCauseEnum::Plugin;
@@ -8537,7 +8702,8 @@ impl<'mc> PlayerSignOpenEventCause<'mc> {
 
     //
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerSignOpenEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerSignOpenEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -8546,8 +8712,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerSignOpenEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerSignOpenEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerSignOpenEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -8568,6 +8735,9 @@ impl<'mc> PlayerSignOpenEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerSignOpenEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -8914,6 +9084,7 @@ impl<'mc> std::ops::Deref for State<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for State<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -8923,11 +9094,15 @@ impl<'mc> JNIRaw<'mc> for State<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> State<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for State<'mc> {
+    type Enum = StateEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: StateEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate State from null object.").into());
@@ -8943,6 +9118,9 @@ impl<'mc> State<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> State<'mc> {
     pub const FISHING: StateEnum = StateEnum::Fishing;
     pub const CAUGHT_FISH: StateEnum = StateEnum::CaughtFish;
     pub const CAUGHT_ENTITY: StateEnum = StateEnum::CaughtEntity;
@@ -8998,7 +9176,8 @@ pub struct PlayerItemHeldEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerItemHeldEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerItemHeldEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -9007,8 +9186,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerItemHeldEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerItemHeldEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerItemHeldEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -9029,6 +9209,9 @@ impl<'mc> PlayerItemHeldEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerItemHeldEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -9289,7 +9472,8 @@ pub struct PlayerLevelChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerLevelChangeEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerLevelChangeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -9298,8 +9482,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerLevelChangeEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerLevelChangeEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerLevelChangeEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -9321,6 +9506,9 @@ impl<'mc> PlayerLevelChangeEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerLevelChangeEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -9590,6 +9778,7 @@ impl<'mc> std::ops::Deref for PlayerBedEnterEventBedEnterResult<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for PlayerBedEnterEventBedEnterResult<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -9599,11 +9788,15 @@ impl<'mc> JNIRaw<'mc> for PlayerBedEnterEventBedEnterResult<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerBedEnterEventBedEnterResult<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for PlayerBedEnterEventBedEnterResult<'mc> {
+    type Enum = PlayerBedEnterEventBedEnterResultEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: PlayerBedEnterEventBedEnterResultEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -9617,14 +9810,17 @@ impl<'mc> PlayerBedEnterEventBedEnterResult<'mc> {
         )?;
         if !valid {
             Err(eyre::eyre!(
-        "Invalid argument passed. Expected a PlayerBedEnterEventBedEnterResult object, got {}",
-        name
-    )
-            .into())
+                    "Invalid argument passed. Expected a PlayerBedEnterEventBedEnterResult object, got {}",
+                    name
+                )
+                .into())
         } else {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> PlayerBedEnterEventBedEnterResult<'mc> {
     pub const OK: PlayerBedEnterEventBedEnterResultEnum = PlayerBedEnterEventBedEnterResultEnum::Ok;
     pub const NOT_POSSIBLE_HERE: PlayerBedEnterEventBedEnterResultEnum =
         PlayerBedEnterEventBedEnterResultEnum::NotPossibleHere;
@@ -9680,7 +9876,8 @@ impl<'mc> PlayerBedEnterEventBedEnterResult<'mc> {
 
     //
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerBedEnterEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerBedEnterEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -9689,8 +9886,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerBedEnterEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerBedEnterEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerBedEnterEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -9711,6 +9909,9 @@ impl<'mc> PlayerBedEnterEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerBedEnterEvent<'mc> {
     pub fn new_with_player(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -10050,7 +10251,8 @@ pub struct PlayerBucketEmptyEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerBucketEmptyEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerBucketEmptyEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -10059,8 +10261,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerBucketEmptyEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerBucketEmptyEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerBucketEmptyEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -10082,6 +10285,9 @@ impl<'mc> PlayerBucketEmptyEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerBucketEmptyEvent<'mc> {
     pub fn new_with_player(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -10477,7 +10683,8 @@ pub struct PlayerBedLeaveEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerBedLeaveEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerBedLeaveEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -10486,8 +10693,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerBedLeaveEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerBedLeaveEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerBedLeaveEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -10508,6 +10716,9 @@ impl<'mc> PlayerBedLeaveEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerBedLeaveEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -10796,7 +11007,8 @@ pub struct PlayerSwapHandItemsEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerSwapHandItemsEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerSwapHandItemsEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -10805,8 +11017,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerSwapHandItemsEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerSwapHandItemsEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerSwapHandItemsEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -10828,6 +11041,9 @@ impl<'mc> PlayerSwapHandItemsEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerSwapHandItemsEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -11177,6 +11393,7 @@ impl<'mc> std::ops::Deref for PlayerSpawnChangeEventCause<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for PlayerSpawnChangeEventCause<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -11186,11 +11403,15 @@ impl<'mc> JNIRaw<'mc> for PlayerSpawnChangeEventCause<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerSpawnChangeEventCause<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for PlayerSpawnChangeEventCause<'mc> {
+    type Enum = PlayerSpawnChangeEventCauseEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: PlayerSpawnChangeEventCauseEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -11210,6 +11431,9 @@ impl<'mc> PlayerSpawnChangeEventCause<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> PlayerSpawnChangeEventCause<'mc> {
     pub const COMMAND: PlayerSpawnChangeEventCauseEnum = PlayerSpawnChangeEventCauseEnum::Command;
     pub const BED: PlayerSpawnChangeEventCauseEnum = PlayerSpawnChangeEventCauseEnum::Bed;
     pub const RESPAWN_ANCHOR: PlayerSpawnChangeEventCauseEnum =
@@ -11261,7 +11485,8 @@ impl<'mc> PlayerSpawnChangeEventCause<'mc> {
 
     //
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerSpawnChangeEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerSpawnChangeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -11270,8 +11495,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerSpawnChangeEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerSpawnChangeEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerSpawnChangeEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -11293,6 +11519,9 @@ impl<'mc> PlayerSpawnChangeEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerSpawnChangeEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -11629,7 +11858,8 @@ pub struct PlayerRiptideEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerRiptideEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerRiptideEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -11638,8 +11868,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerRiptideEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerRiptideEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerRiptideEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -11660,6 +11891,9 @@ impl<'mc> PlayerRiptideEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerRiptideEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -11880,7 +12114,8 @@ pub struct PlayerCommandSendEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerCommandSendEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerCommandSendEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -11889,8 +12124,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerCommandSendEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerCommandSendEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerCommandSendEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -11912,6 +12148,9 @@ impl<'mc> PlayerCommandSendEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerCommandSendEvent<'mc> {
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -12116,7 +12355,8 @@ pub struct PlayerChatTabCompleteEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerChatTabCompleteEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerChatTabCompleteEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -12125,8 +12365,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerChatTabCompleteEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerChatTabCompleteEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerChatTabCompleteEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -12148,6 +12389,9 @@ impl<'mc> PlayerChatTabCompleteEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerChatTabCompleteEvent<'mc> {
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -12383,7 +12627,8 @@ pub struct PlayerVelocityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerVelocityEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerVelocityEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -12392,8 +12637,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerVelocityEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerVelocityEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerVelocityEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -12414,6 +12660,9 @@ impl<'mc> PlayerVelocityEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerVelocityEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -12684,7 +12933,8 @@ pub struct PlayerToggleSprintEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerToggleSprintEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerToggleSprintEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -12693,8 +12943,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerToggleSprintEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerToggleSprintEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerToggleSprintEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -12716,6 +12967,9 @@ impl<'mc> PlayerToggleSprintEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerToggleSprintEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -12990,6 +13244,7 @@ impl<'mc> std::ops::Deref for PlayerAnimationType<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for PlayerAnimationType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -12999,11 +13254,15 @@ impl<'mc> JNIRaw<'mc> for PlayerAnimationType<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerAnimationType<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for PlayerAnimationType<'mc> {
+    type Enum = PlayerAnimationTypeEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: PlayerAnimationTypeEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -13022,6 +13281,9 @@ impl<'mc> PlayerAnimationType<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> PlayerAnimationType<'mc> {
     pub const ARM_SWING: PlayerAnimationTypeEnum = PlayerAnimationTypeEnum::ArmSwing;
     pub const OFF_ARM_SWING: PlayerAnimationTypeEnum = PlayerAnimationTypeEnum::OffArmSwing;
     pub fn from_string(str: String) -> std::option::Option<PlayerAnimationTypeEnum> {
@@ -13067,7 +13329,8 @@ pub struct PlayerBucketEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerBucketEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerBucketEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -13076,8 +13339,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerBucketEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerBucketEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerBucketEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -13097,6 +13361,9 @@ impl<'mc> PlayerBucketEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerBucketEvent<'mc> {
     pub fn new_with_player(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -13517,6 +13784,7 @@ impl<'mc> std::ops::Deref for PlayerRespawnEventRespawnReason<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for PlayerRespawnEventRespawnReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -13526,11 +13794,15 @@ impl<'mc> JNIRaw<'mc> for PlayerRespawnEventRespawnReason<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerRespawnEventRespawnReason<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for PlayerRespawnEventRespawnReason<'mc> {
+    type Enum = PlayerRespawnEventRespawnReasonEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: PlayerRespawnEventRespawnReasonEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -13544,14 +13816,17 @@ impl<'mc> PlayerRespawnEventRespawnReason<'mc> {
         )?;
         if !valid {
             Err(eyre::eyre!(
-        "Invalid argument passed. Expected a PlayerRespawnEventRespawnReason object, got {}",
-        name
-    )
-            .into())
+                    "Invalid argument passed. Expected a PlayerRespawnEventRespawnReason object, got {}",
+                    name
+                )
+                .into())
         } else {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> PlayerRespawnEventRespawnReason<'mc> {
     pub const DEATH: PlayerRespawnEventRespawnReasonEnum =
         PlayerRespawnEventRespawnReasonEnum::Death;
     pub const END_PORTAL: PlayerRespawnEventRespawnReasonEnum =
@@ -13599,7 +13874,8 @@ impl<'mc> PlayerRespawnEventRespawnReason<'mc> {
 
     //
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerRespawnEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerRespawnEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -13608,8 +13884,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerRespawnEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerRespawnEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerRespawnEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -13630,6 +13907,9 @@ impl<'mc> PlayerRespawnEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerRespawnEvent<'mc> {
     pub fn new_with_player(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -13946,7 +14226,8 @@ pub struct PlayerUnleashEntityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerUnleashEntityEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerUnleashEntityEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -13955,8 +14236,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerUnleashEntityEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerUnleashEntityEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerUnleashEntityEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -13978,6 +14260,9 @@ impl<'mc> PlayerUnleashEntityEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerUnleashEntityEvent<'mc> {
     pub fn new_with_entity(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Entity<'mc>>,
@@ -14320,7 +14605,8 @@ pub struct PlayerPickupArrowEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerPickupArrowEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerPickupArrowEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -14329,8 +14615,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerPickupArrowEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerPickupArrowEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerPickupArrowEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -14352,6 +14639,9 @@ impl<'mc> PlayerPickupArrowEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerPickupArrowEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -14621,7 +14911,8 @@ pub struct PlayerKickEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerKickEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerKickEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -14630,8 +14921,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerKickEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerKickEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerKickEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -14651,6 +14943,9 @@ impl<'mc> PlayerKickEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerKickEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -14958,7 +15253,8 @@ pub struct PlayerGameModeChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerGameModeChangeEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerGameModeChangeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -14967,8 +15263,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerGameModeChangeEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerGameModeChangeEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerGameModeChangeEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -14990,6 +15287,9 @@ impl<'mc> PlayerGameModeChangeEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerGameModeChangeEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -15256,7 +15556,8 @@ pub struct PlayerTakeLecternBookEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerTakeLecternBookEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerTakeLecternBookEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15265,8 +15566,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerTakeLecternBookEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerTakeLecternBookEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerTakeLecternBookEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -15288,6 +15590,9 @@ impl<'mc> PlayerTakeLecternBookEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerTakeLecternBookEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -15553,7 +15858,8 @@ pub struct PlayerRegisterChannelEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerRegisterChannelEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerRegisterChannelEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15562,8 +15868,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerRegisterChannelEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerRegisterChannelEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerRegisterChannelEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -15585,6 +15892,9 @@ impl<'mc> PlayerRegisterChannelEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerRegisterChannelEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -15806,7 +16116,8 @@ pub struct PlayerStatisticIncrementEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerStatisticIncrementEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerStatisticIncrementEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15815,8 +16126,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerStatisticIncrementEvent<'mc>
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerStatisticIncrementEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerStatisticIncrementEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -15840,6 +16152,9 @@ impl<'mc> PlayerStatisticIncrementEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerStatisticIncrementEvent<'mc> {
     pub fn new_with_player(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -16203,7 +16518,8 @@ pub struct PlayerInteractAtEntityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerInteractAtEntityEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerInteractAtEntityEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -16212,8 +16528,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerInteractAtEntityEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerInteractAtEntityEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerInteractAtEntityEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -16235,6 +16552,9 @@ impl<'mc> PlayerInteractAtEntityEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerInteractAtEntityEvent<'mc> {
     pub fn new_with_player(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -16540,7 +16860,8 @@ pub struct PlayerItemMendEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerItemMendEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerItemMendEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -16549,8 +16870,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerItemMendEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerItemMendEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerItemMendEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -16571,6 +16893,9 @@ impl<'mc> PlayerItemMendEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerItemMendEvent<'mc> {
     pub fn new_with_player(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -16908,7 +17233,8 @@ pub struct PlayerLocaleChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerLocaleChangeEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerLocaleChangeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -16917,8 +17243,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerLocaleChangeEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerLocaleChangeEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerLocaleChangeEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -16940,6 +17267,9 @@ impl<'mc> PlayerLocaleChangeEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerLocaleChangeEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -17162,7 +17492,8 @@ pub struct PlayerChangedMainHandEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerChangedMainHandEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerChangedMainHandEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -17171,8 +17502,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerChangedMainHandEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerChangedMainHandEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerChangedMainHandEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -17194,6 +17526,9 @@ impl<'mc> PlayerChangedMainHandEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerChangedMainHandEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -17464,6 +17799,7 @@ impl<'mc> std::ops::Deref for PlayerLoginEventResult<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for PlayerLoginEventResult<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -17473,11 +17809,15 @@ impl<'mc> JNIRaw<'mc> for PlayerLoginEventResult<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerLoginEventResult<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for PlayerLoginEventResult<'mc> {
+    type Enum = PlayerLoginEventResultEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: PlayerLoginEventResultEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -17497,6 +17837,9 @@ impl<'mc> PlayerLoginEventResult<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> PlayerLoginEventResult<'mc> {
     pub const ALLOWED: PlayerLoginEventResultEnum = PlayerLoginEventResultEnum::Allowed;
     pub const KICK_FULL: PlayerLoginEventResultEnum = PlayerLoginEventResultEnum::KickFull;
     pub const KICK_BANNED: PlayerLoginEventResultEnum = PlayerLoginEventResultEnum::KickBanned;
@@ -17546,7 +17889,8 @@ impl<'mc> PlayerLoginEventResult<'mc> {
 
     //
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerLoginEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerLoginEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -17555,8 +17899,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerLoginEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerLoginEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerLoginEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -17576,6 +17921,9 @@ impl<'mc> PlayerLoginEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerLoginEvent<'mc> {
     pub fn new_with_player(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -17959,7 +18307,8 @@ pub struct PlayerAdvancementDoneEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerAdvancementDoneEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerAdvancementDoneEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -17968,8 +18317,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerAdvancementDoneEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerAdvancementDoneEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerAdvancementDoneEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -17991,6 +18341,9 @@ impl<'mc> PlayerAdvancementDoneEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerAdvancementDoneEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -18248,6 +18601,7 @@ impl<'mc> std::ops::Deref for PlayerPreLoginEventResult<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for PlayerPreLoginEventResult<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -18257,11 +18611,15 @@ impl<'mc> JNIRaw<'mc> for PlayerPreLoginEventResult<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerPreLoginEventResult<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for PlayerPreLoginEventResult<'mc> {
+    type Enum = PlayerPreLoginEventResultEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: PlayerPreLoginEventResultEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -18281,6 +18639,9 @@ impl<'mc> PlayerPreLoginEventResult<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> PlayerPreLoginEventResult<'mc> {
     pub const ALLOWED: PlayerPreLoginEventResultEnum = PlayerPreLoginEventResultEnum::Allowed;
     pub const KICK_FULL: PlayerPreLoginEventResultEnum = PlayerPreLoginEventResultEnum::KickFull;
     pub const KICK_BANNED: PlayerPreLoginEventResultEnum =
@@ -18331,7 +18692,8 @@ impl<'mc> PlayerPreLoginEventResult<'mc> {
 
     //
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerPreLoginEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerPreLoginEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -18340,8 +18702,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerPreLoginEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerPreLoginEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerPreLoginEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -18362,6 +18725,9 @@ impl<'mc> PlayerPreLoginEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerPreLoginEvent<'mc> {
     pub fn new_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
@@ -18717,7 +19083,8 @@ pub struct PlayerExpChangeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerExpChangeEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerExpChangeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -18726,8 +19093,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerExpChangeEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerExpChangeEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerExpChangeEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -18748,6 +19116,9 @@ impl<'mc> PlayerExpChangeEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerExpChangeEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -18978,7 +19349,8 @@ pub struct PlayerItemBreakEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerItemBreakEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerItemBreakEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -18987,8 +19359,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerItemBreakEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerItemBreakEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerItemBreakEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -19009,6 +19382,9 @@ impl<'mc> PlayerItemBreakEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerItemBreakEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -19229,7 +19605,8 @@ pub struct PlayerRecipeBookClickEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerRecipeBookClickEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerRecipeBookClickEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -19238,8 +19615,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerRecipeBookClickEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerRecipeBookClickEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerRecipeBookClickEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -19261,6 +19639,9 @@ impl<'mc> PlayerRecipeBookClickEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerRecipeBookClickEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -19546,7 +19927,8 @@ pub struct PlayerChatEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerChatEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerChatEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -19555,8 +19937,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerChatEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerChatEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerChatEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -19576,6 +19959,9 @@ impl<'mc> PlayerChatEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerChatEvent<'mc> {
     pub fn new_with_player(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -19924,7 +20310,8 @@ pub struct PlayerChannelEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerChannelEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerChannelEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -19933,8 +20320,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerChannelEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerChannelEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerChannelEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -19955,6 +20343,9 @@ impl<'mc> PlayerChannelEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerChannelEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -20179,7 +20570,8 @@ pub struct PlayerShowEntityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerShowEntityEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerShowEntityEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -20188,8 +20580,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerShowEntityEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerShowEntityEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerShowEntityEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -20211,6 +20604,9 @@ impl<'mc> PlayerShowEntityEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerShowEntityEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -20433,7 +20829,8 @@ pub struct PlayerHarvestBlockEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerHarvestBlockEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerHarvestBlockEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -20442,8 +20839,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerHarvestBlockEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerHarvestBlockEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerHarvestBlockEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -20465,6 +20863,9 @@ impl<'mc> PlayerHarvestBlockEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerHarvestBlockEvent<'mc> {
     pub fn new_with_player(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -20502,7 +20903,7 @@ impl<'mc> PlayerHarvestBlockEvent<'mc> {
                 jni.call_method(
                     &raw_val_4,
                     "add",
-                    "(Ljava/Lang/Object)V",
+                    "(Lorg/bukkit/inventory/crate::inventory::ItemStack)V",
                     vec![jni::objects::JValueGen::from(map_val_0)],
                 )?;
             }
@@ -20793,7 +21194,8 @@ pub struct PlayerItemDamageEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerItemDamageEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerItemDamageEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -20802,8 +21204,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerItemDamageEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerItemDamageEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerItemDamageEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -20825,6 +21228,9 @@ impl<'mc> PlayerItemDamageEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerItemDamageEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -21117,7 +21523,8 @@ pub struct PlayerCommandPreprocessEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerCommandPreprocessEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerCommandPreprocessEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -21126,8 +21533,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerCommandPreprocessEvent<'mc> 
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerCommandPreprocessEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerCommandPreprocessEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -21149,6 +21557,9 @@ impl<'mc> PlayerCommandPreprocessEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerCommandPreprocessEvent<'mc> {
     pub fn new_with_player(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -21489,6 +21900,7 @@ impl<'mc> std::ops::Deref for RespawnReason<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for RespawnReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -21498,11 +21910,15 @@ impl<'mc> JNIRaw<'mc> for RespawnReason<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> RespawnReason<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for RespawnReason<'mc> {
+    type Enum = RespawnReasonEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: RespawnReasonEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate RespawnReason from null object.").into());
@@ -21518,6 +21934,9 @@ impl<'mc> RespawnReason<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> RespawnReason<'mc> {
     pub const DEATH: RespawnReasonEnum = RespawnReasonEnum::Death;
     pub const END_PORTAL: RespawnReasonEnum = RespawnReasonEnum::EndPortal;
     pub const PLUGIN: RespawnReasonEnum = RespawnReasonEnum::Plugin;
@@ -21565,7 +21984,8 @@ pub struct PlayerBucketFishEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerBucketFishEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerBucketFishEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -21574,8 +21994,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerBucketFishEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerBucketFishEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerBucketFishEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -21597,6 +22018,9 @@ impl<'mc> PlayerBucketFishEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerBucketFishEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -21940,7 +22364,8 @@ pub struct PlayerChangedWorldEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerChangedWorldEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerChangedWorldEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -21949,8 +22374,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerChangedWorldEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerChangedWorldEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerChangedWorldEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -21972,6 +22398,9 @@ impl<'mc> PlayerChangedWorldEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerChangedWorldEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -22192,7 +22621,8 @@ pub struct PlayerRecipeDiscoverEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerRecipeDiscoverEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerRecipeDiscoverEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -22201,8 +22631,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerRecipeDiscoverEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerRecipeDiscoverEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerRecipeDiscoverEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -22224,6 +22655,9 @@ impl<'mc> PlayerRecipeDiscoverEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerRecipeDiscoverEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -22513,6 +22947,7 @@ impl<'mc> std::ops::Deref for AsyncPlayerPreLoginEventResult<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for AsyncPlayerPreLoginEventResult<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -22522,11 +22957,15 @@ impl<'mc> JNIRaw<'mc> for AsyncPlayerPreLoginEventResult<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> AsyncPlayerPreLoginEventResult<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for AsyncPlayerPreLoginEventResult<'mc> {
+    type Enum = AsyncPlayerPreLoginEventResultEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: AsyncPlayerPreLoginEventResultEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -22548,6 +22987,9 @@ impl<'mc> AsyncPlayerPreLoginEventResult<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> AsyncPlayerPreLoginEventResult<'mc> {
     pub const ALLOWED: AsyncPlayerPreLoginEventResultEnum =
         AsyncPlayerPreLoginEventResultEnum::Allowed;
     pub const KICK_FULL: AsyncPlayerPreLoginEventResultEnum =
@@ -22601,7 +23043,8 @@ impl<'mc> AsyncPlayerPreLoginEventResult<'mc> {
 
     //
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for AsyncPlayerPreLoginEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for AsyncPlayerPreLoginEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -22610,8 +23053,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for AsyncPlayerPreLoginEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> AsyncPlayerPreLoginEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for AsyncPlayerPreLoginEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -22633,6 +23077,9 @@ impl<'mc> AsyncPlayerPreLoginEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> AsyncPlayerPreLoginEvent<'mc> {
     pub fn new_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
@@ -23036,7 +23483,8 @@ pub struct PlayerEggThrowEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerEggThrowEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerEggThrowEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -23045,8 +23493,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerEggThrowEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerEggThrowEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerEggThrowEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -23067,6 +23516,9 @@ impl<'mc> PlayerEggThrowEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerEggThrowEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -23401,7 +23853,8 @@ pub struct PlayerHideEntityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerHideEntityEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerHideEntityEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -23410,8 +23863,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerHideEntityEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerHideEntityEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerHideEntityEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -23433,6 +23887,9 @@ impl<'mc> PlayerHideEntityEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerHideEntityEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -23651,7 +24108,8 @@ pub struct PlayerPickupItemEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerPickupItemEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerPickupItemEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -23660,8 +24118,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerPickupItemEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerPickupItemEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerPickupItemEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -23683,6 +24142,9 @@ impl<'mc> PlayerPickupItemEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerPickupItemEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -23951,7 +24413,8 @@ pub struct AsyncPlayerChatEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for AsyncPlayerChatEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for AsyncPlayerChatEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -23960,8 +24423,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for AsyncPlayerChatEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> AsyncPlayerChatEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for AsyncPlayerChatEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -23982,6 +24446,9 @@ impl<'mc> AsyncPlayerChatEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> AsyncPlayerChatEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: bool,
@@ -24334,6 +24801,7 @@ impl<'mc> std::ops::Deref for BedEnterResult<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for BedEnterResult<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -24343,11 +24811,15 @@ impl<'mc> JNIRaw<'mc> for BedEnterResult<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> BedEnterResult<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for BedEnterResult<'mc> {
+    type Enum = BedEnterResultEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: BedEnterResultEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -24365,6 +24837,9 @@ impl<'mc> BedEnterResult<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> BedEnterResult<'mc> {
     pub const OK: BedEnterResultEnum = BedEnterResultEnum::Ok;
     pub const NOT_POSSIBLE_HERE: BedEnterResultEnum = BedEnterResultEnum::NotPossibleHere;
     pub const NOT_POSSIBLE_NOW: BedEnterResultEnum = BedEnterResultEnum::NotPossibleNow;

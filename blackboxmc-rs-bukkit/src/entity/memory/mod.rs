@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Represents a key used for accessing memory values of a <a title="interface in org.bukkit.entity" href="../LivingEntity.html"><code>LivingEntity</code></a>.
@@ -6,7 +8,8 @@ pub struct MemoryKey<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for MemoryKey<'mc> {
+
+impl<'mc> JNIRaw<'mc> for MemoryKey<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15,8 +18,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for MemoryKey<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> MemoryKey<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for MemoryKey<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -34,6 +38,9 @@ impl<'mc> MemoryKey<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> MemoryKey<'mc> {
     //
 
     pub fn get_by_key(

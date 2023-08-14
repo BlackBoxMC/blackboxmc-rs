@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 #[derive(PartialEq, Eq)]
@@ -30,6 +32,7 @@ impl<'mc> std::ops::Deref for Side<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for Side<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -39,11 +42,15 @@ impl<'mc> JNIRaw<'mc> for Side<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Side<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for Side<'mc> {
+    type Enum = SideEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: SideEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Side from null object.").into());
@@ -59,6 +66,9 @@ impl<'mc> Side<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> Side<'mc> {
     pub const FRONT: SideEnum = SideEnum::Front;
     pub const BACK: SideEnum = SideEnum::Back;
     pub fn from_string(str: String) -> std::option::Option<SideEnum> {
@@ -106,8 +116,19 @@ pub struct SignSide<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> SignSide<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for SignSide<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for SignSide<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -125,6 +146,9 @@ impl<'mc> SignSide<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> SignSide<'mc> {
     //
 
     pub fn is_glowing_text(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -244,15 +268,6 @@ impl<'mc> SignSide<'mc> {
             crate::DyeColor::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
-    }
-}
-impl<'mc> JNIRaw<'mc> for SignSide<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
 impl<'mc> Into<crate::material::Colorable<'mc>> for SignSide<'mc> {

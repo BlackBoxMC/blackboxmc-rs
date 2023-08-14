@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 #[derive(PartialEq, Eq)]
@@ -30,6 +32,7 @@ impl<'mc> std::ops::Deref for PluginChannelDirection<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for PluginChannelDirection<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -39,11 +42,15 @@ impl<'mc> JNIRaw<'mc> for PluginChannelDirection<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PluginChannelDirection<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for PluginChannelDirection<'mc> {
+    type Enum = PluginChannelDirectionEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: PluginChannelDirectionEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -63,6 +70,9 @@ impl<'mc> PluginChannelDirection<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> PluginChannelDirection<'mc> {
     pub const INCOMING: PluginChannelDirectionEnum = PluginChannelDirectionEnum::Incoming;
     pub const OUTGOING: PluginChannelDirectionEnum = PluginChannelDirectionEnum::Outgoing;
     pub fn from_string(str: String) -> std::option::Option<PluginChannelDirectionEnum> {
@@ -110,8 +120,19 @@ pub struct PluginMessageListener<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> PluginMessageListener<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for PluginMessageListener<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for PluginMessageListener<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -133,6 +154,9 @@ impl<'mc> PluginMessageListener<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PluginMessageListener<'mc> {
     //
 
     pub fn on_plugin_message_received(
@@ -161,21 +185,13 @@ impl<'mc> PluginMessageListener<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for PluginMessageListener<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// Contains information about a <a title="interface in org.bukkit.plugin" href="../Plugin.html"><code>Plugin</code></a>s registration to a plugin channel.
 pub struct PluginMessageListenerRegistration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PluginMessageListenerRegistration<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PluginMessageListenerRegistration<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -184,8 +200,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PluginMessageListenerRegistration<
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PluginMessageListenerRegistration<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PluginMessageListenerRegistration<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -201,14 +218,17 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
         )?;
         if !valid {
             Err(eyre::eyre!(
-        "Invalid argument passed. Expected a PluginMessageListenerRegistration object, got {}",
-        name
-    )
-            .into())
+                    "Invalid argument passed. Expected a PluginMessageListenerRegistration object, got {}",
+                    name
+                )
+                .into())
         } else {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PluginMessageListenerRegistration<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::plugin::messaging::Messenger<'mc>>,
@@ -417,8 +437,19 @@ pub struct Messenger<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> Messenger<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for Messenger<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for Messenger<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -436,6 +467,9 @@ impl<'mc> Messenger<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Messenger<'mc> {
     //
 
     pub fn is_reserved_channel(
@@ -786,21 +820,13 @@ impl<'mc> Messenger<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for Messenger<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// Standard implementation to <a href="Messenger.html" title="interface in org.bukkit.plugin.messaging"><code>Messenger</code></a>
 pub struct StandardMessenger<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for StandardMessenger<'mc> {
+
+impl<'mc> JNIRaw<'mc> for StandardMessenger<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -809,8 +835,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for StandardMessenger<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> StandardMessenger<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for StandardMessenger<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -831,6 +858,9 @@ impl<'mc> StandardMessenger<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> StandardMessenger<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::plugin::messaging::StandardMessenger<'mc>, Box<dyn std::error::Error>> {
@@ -1399,8 +1429,19 @@ pub struct PluginMessageRecipient<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> PluginMessageRecipient<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for PluginMessageRecipient<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for PluginMessageRecipient<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1422,6 +1463,9 @@ impl<'mc> PluginMessageRecipient<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PluginMessageRecipient<'mc> {
     //
 
     pub fn send_plugin_message(
@@ -1465,14 +1509,5 @@ impl<'mc> PluginMessageRecipient<'mc> {
         blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-}
-impl<'mc> JNIRaw<'mc> for PluginMessageRecipient<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }

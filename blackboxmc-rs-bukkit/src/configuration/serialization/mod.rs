@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Utility class for storing and retrieving classes for <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a>.
@@ -6,7 +8,8 @@ pub struct ConfigurationSerialization<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ConfigurationSerialization<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ConfigurationSerialization<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15,8 +18,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ConfigurationSerialization<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ConfigurationSerialization<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ConfigurationSerialization<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -40,6 +44,9 @@ impl<'mc> ConfigurationSerialization<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ConfigurationSerialization<'mc> {
     //
 
     pub fn deserialize(
@@ -315,18 +322,19 @@ pub struct ConfigurationSerializable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> ConfigurationSerializable<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "ConfigSerializable", name, lib_name) }?;
-        Self::from_raw(env, obj)
+
+impl<'mc> JNIRaw<'mc> for ConfigurationSerializable<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
-    pub fn from_raw(
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for ConfigurationSerializable<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -350,6 +358,19 @@ impl<'mc> ConfigurationSerializable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ConfigurationSerializable<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "ConfigSerializable", name, lib_name) }?;
+        Self::from_raw(env, obj)
+    }
     //
 
     pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -363,15 +384,6 @@ impl<'mc> ConfigurationSerializable<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for ConfigurationSerializable<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// Represents an "alias" that a <a href="ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a> may be stored as. If this is not present on a <a title="interface in org.bukkit.configuration.serialization" href="ConfigurationSerializable.html"><code>ConfigurationSerializable</code></a> class, it will use the fully qualified name of the class.
 /// <p>This value will be stored in the configuration so that the configuration deserialization can determine what type it is.</p>
 /// <p>Using this annotation on any other class than a <a href="ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a> will have no effect.</p>
@@ -381,8 +393,19 @@ pub struct SerializableAs<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> SerializableAs<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for SerializableAs<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for SerializableAs<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -405,6 +428,9 @@ impl<'mc> SerializableAs<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> SerializableAs<'mc> {
     //
 
     pub fn value(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -482,7 +508,15 @@ impl<'mc> std::string::ToString for SerializableAs<'mc> {
     }
 }
 
-impl<'mc> JNIRaw<'mc> for SerializableAs<'mc> {
+/// Applies to a <a href="ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a> that will delegate all deserialization to another <a title="interface in org.bukkit.configuration.serialization" href="ConfigurationSerializable.html"><code>ConfigurationSerializable</code></a>.
+///
+/// This is a representation of an abstract class.
+pub struct DelegateDeserialization<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for DelegateDeserialization<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -491,15 +525,9 @@ impl<'mc> JNIRaw<'mc> for SerializableAs<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// Applies to a <a href="ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a> that will delegate all deserialization to another <a title="interface in org.bukkit.configuration.serialization" href="ConfigurationSerializable.html"><code>ConfigurationSerializable</code></a>.
-///
-/// This is a representation of an abstract class.
-pub struct DelegateDeserialization<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> DelegateDeserialization<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for DelegateDeserialization<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -523,6 +551,9 @@ impl<'mc> DelegateDeserialization<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> DelegateDeserialization<'mc> {
     //
 
     pub fn value(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -593,15 +624,5 @@ impl<'mc> std::string::ToString for DelegateDeserialization<'mc> {
             Ok(a) => a.clone(),
             Err(err) => format!("Error calling DelegateDeserialization.toString: {}", err),
         }
-    }
-}
-
-impl<'mc> JNIRaw<'mc> for DelegateDeserialization<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }

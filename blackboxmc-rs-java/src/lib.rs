@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Resizable-array implementation of the <tt>List</tt> interface. Implements all optional list operations, and permits all elements, including <tt>null</tt>. In addition to implementing the <tt>List</tt> interface, this class provides methods to manipulate the size of the array that is used internally to store the list. (This class is roughly equivalent to <tt>Vector</tt>, except that it is unsynchronized.)
@@ -14,7 +16,8 @@ pub struct JavaArrayList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaArrayList<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaArrayList<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -23,8 +26,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaArrayList<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaArrayList<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaArrayList<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -42,6 +46,9 @@ impl<'mc> JavaArrayList<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaArrayList<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
@@ -50,7 +57,8 @@ impl<'mc> JavaArrayList<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 =
+                jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![a.into()])?);
             args.push(val_1);
         }
         sig += ")V";
@@ -71,7 +79,11 @@ impl<'mc> JavaArrayList<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
@@ -96,7 +108,11 @@ impl<'mc> JavaArrayList<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         sig += ")Ljava/lang/Object;";
@@ -110,7 +126,11 @@ impl<'mc> JavaArrayList<'mc> {
 
     pub fn get(&self, arg0: i32) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/Object;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "get",
@@ -246,8 +266,16 @@ impl<'mc> JavaArrayList<'mc> {
         arg1: i32,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(II)Ljava/util/List;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
+        let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg1.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "subList",
@@ -310,7 +338,11 @@ impl<'mc> JavaArrayList<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
@@ -333,7 +365,11 @@ impl<'mc> JavaArrayList<'mc> {
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(ILjava/lang/Object;)Ljava/lang/Object;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let val_2 = jni::objects::JValueGen::Object(arg1);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -368,7 +404,11 @@ impl<'mc> JavaArrayList<'mc> {
 
     pub fn ensure_capacity(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "ensureCapacity",
@@ -463,7 +503,11 @@ impl<'mc> JavaArrayList<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         sig += ")Ljava/util/ListIterator;";
@@ -516,12 +560,20 @@ impl<'mc> JavaArrayList<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -609,7 +661,8 @@ pub struct JavaAbstractMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaAbstractMap<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaAbstractMap<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -618,8 +671,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaAbstractMap<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaAbstractMap<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaAbstractMap<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -639,6 +693,9 @@ impl<'mc> JavaAbstractMap<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaAbstractMap<'mc> {
     //
 
     pub fn remove_with_object(
@@ -868,12 +925,20 @@ impl<'mc> JavaAbstractMap<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -1143,7 +1208,8 @@ pub struct JavaTreeSet<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaTreeSet<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaTreeSet<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1152,8 +1218,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaTreeSet<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaTreeSet<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaTreeSet<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1171,6 +1238,9 @@ impl<'mc> JavaTreeSet<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaTreeSet<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -1223,8 +1293,11 @@ impl<'mc> JavaTreeSet<'mc> {
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 1
-            let val_2 = jni::objects::JValueGen::Bool(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "boolean",
+                "(Z)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         if let Some(a) = arg2 {
@@ -1234,8 +1307,11 @@ impl<'mc> JavaTreeSet<'mc> {
         }
         if let Some(a) = arg3 {
             sig += "Z";
-            // 1
-            let val_4 = jni::objects::JValueGen::Bool(a.into());
+            let val_4 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "boolean",
+                "(Z)V",
+                vec![a.into()],
+            )?);
             args.push(val_4);
         }
         sig += ")Ljava/util/NavigableSet;";
@@ -1261,8 +1337,11 @@ impl<'mc> JavaTreeSet<'mc> {
         }
         if let Some(a) = arg1 {
             sig += "Z";
-            // 0
-            let val_2 = jni::objects::JValueGen::Bool(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "boolean",
+                "(Z)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")Ljava/util/NavigableSet;";
@@ -1288,8 +1367,11 @@ impl<'mc> JavaTreeSet<'mc> {
         }
         if let Some(a) = arg1 {
             sig += "Z";
-            // 0
-            let val_2 = jni::objects::JValueGen::Bool(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "boolean",
+                "(Z)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")Ljava/util/NavigableSet;";
@@ -1676,12 +1758,20 @@ impl<'mc> JavaTreeSet<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -1802,7 +1892,8 @@ pub struct JavaVector<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaVector<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaVector<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1811,8 +1902,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaVector<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaVector<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaVector<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1830,6 +1922,9 @@ impl<'mc> JavaVector<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaVector<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -1856,11 +1951,13 @@ impl<'mc> JavaVector<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 =
+            jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![arg0.into()])?);
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 =
+                jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![a.into()])?);
             args.push(val_2);
         }
         sig += ")V";
@@ -1874,7 +1971,11 @@ impl<'mc> JavaVector<'mc> {
 
     pub fn set_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setSize",
@@ -1901,7 +2002,11 @@ impl<'mc> JavaVector<'mc> {
 
     pub fn remove_element_at(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeElementAt",
@@ -1937,7 +2042,11 @@ impl<'mc> JavaVector<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;I)V");
         let val_1 = jni::objects::JValueGen::Object(arg0);
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg1.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "insertElementAt",
@@ -1992,7 +2101,11 @@ impl<'mc> JavaVector<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;I)V");
         let val_1 = jni::objects::JValueGen::Object(arg0);
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg1.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setElementAt",
@@ -2033,7 +2146,11 @@ impl<'mc> JavaVector<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
@@ -2072,7 +2189,11 @@ impl<'mc> JavaVector<'mc> {
 
     pub fn get(&self, arg0: i32) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/Object;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "get",
@@ -2150,7 +2271,11 @@ impl<'mc> JavaVector<'mc> {
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")I";
@@ -2186,7 +2311,11 @@ impl<'mc> JavaVector<'mc> {
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")I";
@@ -2241,8 +2370,16 @@ impl<'mc> JavaVector<'mc> {
         arg1: i32,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(II)Ljava/util/List;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
+        let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg1.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "subList",
@@ -2315,7 +2452,11 @@ impl<'mc> JavaVector<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
@@ -2338,7 +2479,11 @@ impl<'mc> JavaVector<'mc> {
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(ILjava/lang/Object;)Ljava/lang/Object;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let val_2 = jni::objects::JValueGen::Object(arg1);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2383,7 +2528,11 @@ impl<'mc> JavaVector<'mc> {
 
     pub fn ensure_capacity(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "ensureCapacity",
@@ -2410,7 +2559,11 @@ impl<'mc> JavaVector<'mc> {
         arg0: i32,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/Object;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "elementAt",
@@ -2495,7 +2648,11 @@ impl<'mc> JavaVector<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         sig += ")Ljava/util/ListIterator;";
@@ -2533,12 +2690,20 @@ impl<'mc> JavaVector<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -2632,8 +2797,19 @@ pub struct JavaRandomAccess<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> JavaRandomAccess<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for JavaRandomAccess<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for JavaRandomAccess<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2654,15 +2830,8 @@ impl<'mc> JavaRandomAccess<'mc> {
         }
     }
 }
-impl<'mc> JNIRaw<'mc> for JavaRandomAccess<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
 
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
+impl<'mc> JavaRandomAccess<'mc> {}
 /// An object that maps keys to values. A map cannot contain duplicate keys; each key can map to at most one value.
 /// <p>This interface takes the place of the <tt>Dictionary</tt> class, which was a totally abstract class rather than an interface.</p>
 /// <p>The <tt>Map</tt> interface provides three <i>collection views</i>, which allow a map's contents to be viewed as a set of keys, collection of values, or set of key-value mappings. The <i>order</i> of a map is defined as the order in which the iterators on the map's collection views return their elements. Some map implementations, like the <tt>TreeMap</tt> class, make specific guarantees as to their order; others, like the <tt>HashMap</tt> class, do not.</p>
@@ -2679,8 +2848,19 @@ pub struct JavaMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> JavaMap<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for JavaMap<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for JavaMap<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2698,6 +2878,9 @@ impl<'mc> JavaMap<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaMap<'mc> {
     //
 
     pub fn remove_with_object(
@@ -3294,15 +3477,6 @@ impl<'mc> JavaMap<'mc> {
         Ok(res.l()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for JavaMap<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// Hash table based implementation of the <tt>Map</tt> interface, with <em>weak keys</em>. An entry in a <tt>WeakHashMap</tt> will automatically be removed when its key is no longer in ordinary use. More precisely, the presence of a mapping for a given key will not prevent the key from being discarded by the garbage collector, that is, made finalizable, finalized, and then reclaimed. When a key has been discarded its entry is effectively removed from the map, so this class behaves somewhat differently from other <tt>Map</tt> implementations.
 /// <p>Both null values and the null key are supported. This class has performance characteristics similar to those of the <tt>HashMap</tt> class, and has the same efficiency parameters of <em>initial capacity</em> and <em>load factor</em>.</p>
 /// <p>Like most collection classes, this class is not synchronized. A synchronized <tt>WeakHashMap</tt> may be constructed using the <a href="../../java/util/Collections.html#synchronizedMap-java.util.Map-"><code>Collections.synchronizedMap</code></a> method.</p>
@@ -3317,7 +3491,8 @@ pub struct JavaWeakHashMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaWeakHashMap<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaWeakHashMap<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -3326,8 +3501,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaWeakHashMap<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaWeakHashMap<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaWeakHashMap<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3347,6 +3523,9 @@ impl<'mc> JavaWeakHashMap<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaWeakHashMap<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
@@ -3355,7 +3534,8 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 =
+                jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![a.into()])?);
             args.push(val_1);
         }
         sig += ")V";
@@ -3373,11 +3553,13 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 =
+            jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![arg0.into()])?);
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "F";
-            let val_2 = jni::objects::JValueGen::Float(a.into());
+            let val_2 =
+                jni::objects::JValueGen::Object(jni.new_object("float", "(F)V", vec![a.into()])?);
             args.push(val_2);
         }
         sig += ")V";
@@ -3650,12 +3832,20 @@ impl<'mc> JavaWeakHashMap<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -3891,8 +4081,19 @@ pub struct JavaSet<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> JavaSet<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for JavaSet<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for JavaSet<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3910,6 +4111,9 @@ impl<'mc> JavaSet<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaSet<'mc> {
     //
 
     pub fn add(
@@ -4255,15 +4459,6 @@ impl<'mc> JavaSet<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for JavaSet<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaSet<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -4283,7 +4478,8 @@ pub struct JavaBase64<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaBase64<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaBase64<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -4292,8 +4488,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaBase64<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaBase64<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaBase64<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -4311,6 +4508,9 @@ impl<'mc> JavaBase64<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaBase64<'mc> {
     //
 
     pub fn encoder(
@@ -4343,7 +4543,8 @@ impl<'mc> JavaBase64<'mc> {
         arg1: Vec<i8>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(IB)Ljava/util/Base64$Encoder;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 =
+            jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![arg0.into()])?);
         let cls = jni.find_class("java/util/Base64$Encoder");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -4402,12 +4603,20 @@ impl<'mc> JavaBase64<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -4510,7 +4719,8 @@ pub struct JavaAbstractCollection<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaAbstractCollection<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaAbstractCollection<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -4519,8 +4729,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaAbstractCollection<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaAbstractCollection<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaAbstractCollection<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -4541,6 +4752,9 @@ impl<'mc> JavaAbstractCollection<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaAbstractCollection<'mc> {
     //
 
     pub fn add(
@@ -4728,12 +4942,20 @@ impl<'mc> JavaAbstractCollection<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -4889,7 +5111,8 @@ pub struct JavaAbstractQueue<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaAbstractQueue<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaAbstractQueue<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -4898,8 +5121,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaAbstractQueue<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaAbstractQueue<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaAbstractQueue<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -4919,6 +5143,9 @@ impl<'mc> JavaAbstractQueue<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaAbstractQueue<'mc> {
     //
 
     pub fn add(
@@ -5119,12 +5346,20 @@ impl<'mc> JavaAbstractQueue<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -5315,7 +5550,8 @@ pub struct JavaAbstractMapSimpleEntry<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaAbstractMapSimpleEntry<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaAbstractMapSimpleEntry<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -5324,8 +5560,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaAbstractMapSimpleEntry<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaAbstractMapSimpleEntry<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -5346,6 +5583,9 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
     pub fn new_with_mapentry(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -5460,12 +5700,20 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -5528,8 +5776,19 @@ pub struct JavaObserver<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> JavaObserver<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for JavaObserver<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for JavaObserver<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -5547,6 +5806,9 @@ impl<'mc> JavaObserver<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaObserver<'mc> {
     //
 
     pub fn update(
@@ -5570,7 +5832,15 @@ impl<'mc> JavaObserver<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for JavaObserver<'mc> {
+/// A tagging interface that all event listener interfaces must extend.
+///
+/// This is a representation of an abstract class.
+pub struct JavaEventListener<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for JavaEventListener<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -5579,15 +5849,9 @@ impl<'mc> JNIRaw<'mc> for JavaObserver<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// A tagging interface that all event listener interfaces must extend.
-///
-/// This is a representation of an abstract class.
-pub struct JavaEventListener<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> JavaEventListener<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaEventListener<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -5608,15 +5872,8 @@ impl<'mc> JavaEventListener<'mc> {
         }
     }
 }
-impl<'mc> JNIRaw<'mc> for JavaEventListener<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
 
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
+impl<'mc> JavaEventListener<'mc> {}
 /// A collection designed for holding elements prior to processing. Besides basic <a href="../../java/util/Collection.html" title="interface in java.util"><code>Collection</code></a> operations, queues provide additional insertion, extraction, and inspection operations. Each of these methods exists in two forms: one throws an exception if the operation fails, the other returns a special value (either <code>null</code> or <code>false</code>, depending on the operation). The latter form of the insert operation is designed specifically for use with capacity-restricted <code>Queue</code> implementations; in most implementations, insert operations cannot fail.
 /// <table border="" cellpadding="3" cellspacing="1">
 /// <caption>
@@ -5659,8 +5916,19 @@ pub struct JavaQueue<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> JavaQueue<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for JavaQueue<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for JavaQueue<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -5678,6 +5946,9 @@ impl<'mc> JavaQueue<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaQueue<'mc> {
     //
 
     pub fn offer(
@@ -5983,15 +6254,6 @@ impl<'mc> JavaQueue<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for JavaQueue<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaQueue<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -6009,8 +6271,19 @@ pub struct JavaEnumeration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> JavaEnumeration<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for JavaEnumeration<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for JavaEnumeration<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -6030,6 +6303,9 @@ impl<'mc> JavaEnumeration<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaEnumeration<'mc> {
     //
 
     pub fn as_iterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -6061,15 +6337,6 @@ impl<'mc> JavaEnumeration<'mc> {
         Ok(res.l()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for JavaEnumeration<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// This class implements a hash table, which maps keys to values. Any non-<code>null</code> object can be used as a key or as a value.
 /// <p>To successfully store and retrieve objects from a hashtable, the objects used as keys must implement the <code>hashCode</code> method and the <code>equals</code> method.</p>
 /// <p>An instance of <code>Hashtable</code> has two parameters that affect its performance: <i>initial capacity</i> and <i>load factor</i>. The <i>capacity</i> is the number of <i>buckets</i> in the hash table, and the <i>initial capacity</i> is simply the capacity at the time the hash table is created. Note that the hash table is <i>open</i>: in the case of a "hash collision", a single bucket stores multiple entries, which must be searched sequentially. The <i>load factor</i> is a measure of how full the hash table is allowed to get before its capacity is automatically increased. The initial capacity and load factor parameters are merely hints to the implementation. The exact details as to when and whether the rehash method is invoked are implementation-dependent.</p>
@@ -6096,7 +6363,8 @@ pub struct JavaHashtable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaHashtable<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaHashtable<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -6105,8 +6373,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaHashtable<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaHashtable<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaHashtable<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -6124,6 +6393,9 @@ impl<'mc> JavaHashtable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaHashtable<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
@@ -6132,7 +6404,8 @@ impl<'mc> JavaHashtable<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 =
+                jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![a.into()])?);
             args.push(val_1);
         }
         sig += ")V";
@@ -6150,11 +6423,13 @@ impl<'mc> JavaHashtable<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 =
+            jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![arg0.into()])?);
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "F";
-            let val_2 = jni::objects::JValueGen::Float(a.into());
+            let val_2 =
+                jni::objects::JValueGen::Object(jni.new_object("float", "(F)V", vec![a.into()])?);
             args.push(val_2);
         }
         sig += ")V";
@@ -6642,12 +6917,20 @@ impl<'mc> JavaHashtable<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -6711,7 +6994,8 @@ pub struct JavaAbstractSet<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaAbstractSet<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaAbstractSet<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -6720,8 +7004,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaAbstractSet<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaAbstractSet<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaAbstractSet<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -6741,6 +7026,9 @@ impl<'mc> JavaAbstractSet<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaAbstractSet<'mc> {
     //
 
     pub fn equals(
@@ -6955,12 +7243,20 @@ impl<'mc> JavaAbstractSet<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -7089,7 +7385,8 @@ pub struct JavaOptionalInt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaOptionalInt<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaOptionalInt<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -7098,8 +7395,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaOptionalInt<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaOptionalInt<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaOptionalInt<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -7119,6 +7417,9 @@ impl<'mc> JavaOptionalInt<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaOptionalInt<'mc> {
     //
 
     pub fn if_present_or_else(
@@ -7254,7 +7555,8 @@ impl<'mc> JavaOptionalInt<'mc> {
         arg0: i32,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/util/OptionalInt;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 =
+            jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![arg0.into()])?);
         let cls = jni.find_class("java/util/OptionalInt");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -7292,7 +7594,11 @@ impl<'mc> JavaOptionalInt<'mc> {
 
     pub fn or_else(&self, arg0: i32) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(I)I");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "orElse",
@@ -7333,12 +7639,20 @@ impl<'mc> JavaOptionalInt<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -7402,7 +7716,8 @@ pub struct JavaTreeMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaTreeMap<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaTreeMap<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -7411,8 +7726,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaTreeMap<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaTreeMap<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaTreeMap<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -7430,6 +7746,9 @@ impl<'mc> JavaTreeMap<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaTreeMap<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -7519,8 +7838,11 @@ impl<'mc> JavaTreeMap<'mc> {
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 1
-            let val_2 = jni::objects::JValueGen::Bool(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "boolean",
+                "(Z)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         if let Some(a) = arg2 {
@@ -7530,8 +7852,11 @@ impl<'mc> JavaTreeMap<'mc> {
         }
         if let Some(a) = arg3 {
             sig += "Z";
-            // 1
-            let val_4 = jni::objects::JValueGen::Bool(a.into());
+            let val_4 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "boolean",
+                "(Z)V",
+                vec![a.into()],
+            )?);
             args.push(val_4);
         }
         sig += ")Ljava/util/NavigableMap;";
@@ -7557,8 +7882,11 @@ impl<'mc> JavaTreeMap<'mc> {
         }
         if let Some(a) = arg1 {
             sig += "Z";
-            // 0
-            let val_2 = jni::objects::JValueGen::Bool(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "boolean",
+                "(Z)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")Ljava/util/NavigableMap;";
@@ -7584,8 +7912,11 @@ impl<'mc> JavaTreeMap<'mc> {
         }
         if let Some(a) = arg1 {
             sig += "Z";
-            // 0
-            let val_2 = jni::objects::JValueGen::Bool(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "boolean",
+                "(Z)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")Ljava/util/NavigableMap;";
@@ -8224,12 +8555,20 @@ impl<'mc> JavaTreeMap<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -8422,8 +8761,19 @@ pub struct JavaDeque<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> JavaDeque<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for JavaDeque<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for JavaDeque<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -8441,6 +8791,9 @@ impl<'mc> JavaDeque<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaDeque<'mc> {
     //
 
     pub fn push(&self, arg0: jni::objects::JObject<'mc>) -> Result<(), Box<dyn std::error::Error>> {
@@ -8967,15 +9320,6 @@ impl<'mc> JavaDeque<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for JavaDeque<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaDeque<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -8991,8 +9335,19 @@ pub struct JavaFormattable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> JavaFormattable<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for JavaFormattable<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for JavaFormattable<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -9012,6 +9367,9 @@ impl<'mc> JavaFormattable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaFormattable<'mc> {
     //
 
     pub fn format_to(
@@ -9023,9 +9381,21 @@ impl<'mc> JavaFormattable<'mc> {
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Formatter;III)V");
         let val_1 = jni::objects::JValueGen::Object(arg0);
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
+        let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg1.into()],
+        )?);
+        let val_3 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg2.into()],
+        )?);
+        let val_4 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg3.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "formatTo",
@@ -9041,15 +9411,6 @@ impl<'mc> JavaFormattable<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for JavaFormattable<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// A container object which may or may not contain a <code>double</code> value. If a value is present, <code>isPresent()</code> will return <code>true</code> and <code>getAsDouble()</code> will return the value.
 /// <p>Additional methods that depend on the presence or absence of a contained value are provided, such as <a href="../../java/util/OptionalDouble.html#orElse-double-"><code>orElse()</code></a> (return a default value if value not present) and <a href="../../java/util/OptionalDouble.html#ifPresent-java.util.function.DoubleConsumer-"><code>ifPresent()</code></a> (execute a block of code if the value is present).</p>
 /// <p>This is a <a href="../lang/doc-files/ValueBased.html">value-based</a> class; use of identity-sensitive operations (including reference equality (<code>==</code>), identity hash code, or synchronization) on instances of <code>OptionalDouble</code> may have unpredictable results and should be avoided.</p>
@@ -9057,7 +9418,8 @@ pub struct JavaOptionalDouble<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaOptionalDouble<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaOptionalDouble<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -9066,8 +9428,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaOptionalDouble<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaOptionalDouble<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaOptionalDouble<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -9087,6 +9450,9 @@ impl<'mc> JavaOptionalDouble<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaOptionalDouble<'mc> {
     //
 
     pub fn if_present_or_else(
@@ -9222,7 +9588,8 @@ impl<'mc> JavaOptionalDouble<'mc> {
         arg0: f64,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(D)Ljava/util/OptionalDouble;");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 =
+            jni::objects::JValueGen::Object(jni.new_object("double", "(D)V", vec![arg0.into()])?);
         let cls = jni.find_class("java/util/OptionalDouble");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -9260,7 +9627,11 @@ impl<'mc> JavaOptionalDouble<'mc> {
 
     pub fn or_else(&self, arg0: f64) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("(D)D");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "double",
+            "(D)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "orElse",
@@ -9301,12 +9672,20 @@ impl<'mc> JavaOptionalDouble<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -9364,7 +9743,8 @@ pub struct JavaOptionalLong<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaOptionalLong<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaOptionalLong<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -9373,8 +9753,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaOptionalLong<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaOptionalLong<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaOptionalLong<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -9394,6 +9775,9 @@ impl<'mc> JavaOptionalLong<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaOptionalLong<'mc> {
     //
 
     pub fn if_present_or_else(
@@ -9529,7 +9913,8 @@ impl<'mc> JavaOptionalLong<'mc> {
         arg0: i64,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(J)Ljava/util/OptionalLong;");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 =
+            jni::objects::JValueGen::Object(jni.new_object("long", "(J)V", vec![arg0.into()])?);
         let cls = jni.find_class("java/util/OptionalLong");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -9567,7 +9952,11 @@ impl<'mc> JavaOptionalLong<'mc> {
 
     pub fn or_else(&self, arg0: i64) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(J)J");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "long",
+            "(J)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "orElse",
@@ -9608,12 +9997,20 @@ impl<'mc> JavaOptionalLong<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -9682,7 +10079,8 @@ pub struct JavaLinkedHashSet<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaLinkedHashSet<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaLinkedHashSet<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -9691,8 +10089,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaLinkedHashSet<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaLinkedHashSet<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaLinkedHashSet<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -9712,6 +10111,9 @@ impl<'mc> JavaLinkedHashSet<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaLinkedHashSet<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
@@ -9720,7 +10122,8 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 =
+                jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![a.into()])?);
             args.push(val_1);
         }
         sig += ")V";
@@ -9738,11 +10141,13 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 =
+            jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![arg0.into()])?);
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "F";
-            let val_2 = jni::objects::JValueGen::Float(a.into());
+            let val_2 =
+                jni::objects::JValueGen::Object(jni.new_object("float", "(F)V", vec![a.into()])?);
             args.push(val_2);
         }
         sig += ")V";
@@ -9986,12 +10391,20 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -10117,7 +10530,8 @@ pub struct JavaHashMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaHashMap<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaHashMap<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -10126,8 +10540,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaHashMap<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaHashMap<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaHashMap<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -10145,6 +10560,9 @@ impl<'mc> JavaHashMap<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaHashMap<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
@@ -10153,7 +10571,8 @@ impl<'mc> JavaHashMap<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 =
+                jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![a.into()])?);
             args.push(val_1);
         }
         sig += ")V";
@@ -10171,11 +10590,13 @@ impl<'mc> JavaHashMap<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 =
+            jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![arg0.into()])?);
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "F";
-            let val_2 = jni::objects::JValueGen::Float(a.into());
+            let val_2 =
+                jni::objects::JValueGen::Object(jni.new_object("float", "(F)V", vec![a.into()])?);
             args.push(val_2);
         }
         sig += ")V";
@@ -10626,12 +11047,20 @@ impl<'mc> JavaHashMap<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -10704,7 +11133,8 @@ pub struct JavaIdentityHashMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaIdentityHashMap<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaIdentityHashMap<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -10713,8 +11143,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaIdentityHashMap<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaIdentityHashMap<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaIdentityHashMap<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -10734,6 +11165,9 @@ impl<'mc> JavaIdentityHashMap<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaIdentityHashMap<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
@@ -10742,7 +11176,8 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 =
+                jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![a.into()])?);
             args.push(val_1);
         }
         sig += ")V";
@@ -11025,12 +11460,20 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -11275,7 +11718,8 @@ pub struct JavaLinkedHashMap<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaLinkedHashMap<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaLinkedHashMap<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -11284,8 +11728,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaLinkedHashMap<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaLinkedHashMap<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaLinkedHashMap<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -11305,6 +11750,9 @@ impl<'mc> JavaLinkedHashMap<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaLinkedHashMap<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -11332,17 +11780,22 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 =
+            jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![arg0.into()])?);
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "F";
-            let val_2 = jni::objects::JValueGen::Float(a.into());
+            let val_2 =
+                jni::objects::JValueGen::Object(jni.new_object("float", "(F)V", vec![a.into()])?);
             args.push(val_2);
         }
         if let Some(a) = arg2 {
             sig += "Z";
-            // 1
-            let val_3 = jni::objects::JValueGen::Bool(a.into());
+            let val_3 = jni::objects::JValueGen::Object(jni.new_object(
+                "boolean",
+                "(Z)V",
+                vec![a.into()],
+            )?);
             args.push(val_3);
         }
         sig += ")V";
@@ -11793,12 +12246,20 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -11864,7 +12325,8 @@ pub struct JavaAbstractSequentialList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaAbstractSequentialList<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaAbstractSequentialList<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -11873,8 +12335,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaAbstractSequentialList<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaAbstractSequentialList<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaAbstractSequentialList<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -11895,6 +12358,9 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaAbstractSequentialList<'mc> {
     //
 
     pub fn add_with_object(
@@ -11906,7 +12372,11 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
@@ -11945,7 +12415,11 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
 
     pub fn get(&self, arg0: i32) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/Object;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "get",
@@ -11976,7 +12450,11 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
@@ -11999,7 +12477,11 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(ILjava/lang/Object;)Ljava/lang/Object;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let val_2 = jni::objects::JValueGen::Object(arg1);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12023,7 +12505,11 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         sig += ")Ljava/util/ListIterator;";
@@ -12112,8 +12598,16 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         arg1: i32,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(II)Ljava/util/List;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
+        let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg1.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "subList",
@@ -12242,12 +12736,20 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -12419,8 +12921,19 @@ pub struct JavaComparator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> JavaComparator<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for JavaComparator<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for JavaComparator<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -12440,6 +12953,9 @@ impl<'mc> JavaComparator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaComparator<'mc> {
     //
 
     pub fn equals(
@@ -12730,15 +13246,6 @@ impl<'mc> JavaComparator<'mc> {
         Ok(res.l()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for JavaComparator<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// An instance of this class is used to generate a stream of pseudorandom numbers. The class uses a 48-bit seed, which is modified using a linear congruential formula. (See Donald Knuth, <i>The Art of Computer Programming, Volume 2</i>, Section 3.2.1.)
 /// <p>If two instances of <code>Random</code> are created with the same seed, and the same sequence of method calls is made for each, they will generate and return identical sequences of numbers. In order to guarantee this property, particular algorithms are specified for the class <code>Random</code>. Java implementations must use all the algorithms shown here for the class <code>Random</code>, for the sake of absolute portability of Java code. However, subclasses of class <code>Random</code> are permitted to use other algorithms, so long as they adhere to the general contracts for all the methods.</p>
 /// <p>The algorithms implemented by class <code>Random</code> use a <code>protected</code> utility method that on each invocation can supply up to 32 pseudorandomly generated bits.</p>
@@ -12749,7 +13256,8 @@ pub struct JavaRandom<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaRandom<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaRandom<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -12758,8 +13266,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaRandom<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaRandom<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaRandom<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -12777,6 +13286,9 @@ impl<'mc> JavaRandom<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaRandom<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i64>,
@@ -12785,7 +13297,8 @@ impl<'mc> JavaRandom<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 =
+                jni::objects::JValueGen::Object(jni.new_object("long", "(J)V", vec![a.into()])?);
             args.push(val_1);
         }
         sig += ")V";
@@ -12816,12 +13329,20 @@ impl<'mc> JavaRandom<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "J";
-            let val_2 = jni::objects::JValueGen::Long(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")J";
@@ -12842,12 +13363,20 @@ impl<'mc> JavaRandom<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "F";
-            let val_1 = jni::objects::JValueGen::Float(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "float",
+                "(F)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "F";
-            let val_2 = jni::objects::JValueGen::Float(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "float",
+                "(F)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")F";
@@ -12868,12 +13397,20 @@ impl<'mc> JavaRandom<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")Ljava/util/stream/IntStream;";
@@ -12894,14 +13431,26 @@ impl<'mc> JavaRandom<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "J";
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "long",
+            "(J)V",
+            vec![arg0.into()],
+        )?);
         args.push(val_1);
         sig += "I";
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg1.into()],
+        )?);
         args.push(val_2);
         if let Some(a) = arg2 {
             sig += "I";
-            let val_3 = jni::objects::JValueGen::Int(a.into());
+            let val_3 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_3);
         }
         sig += ")Ljava/util/stream/IntStream;";
@@ -12923,17 +13472,29 @@ impl<'mc> JavaRandom<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "J";
-            let val_2 = jni::objects::JValueGen::Long(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         if let Some(a) = arg2 {
             sig += "J";
-            let val_3 = jni::objects::JValueGen::Long(a.into());
+            let val_3 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_3);
         }
         sig += ")Ljava/util/stream/LongStream;";
@@ -12954,12 +13515,20 @@ impl<'mc> JavaRandom<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "D";
-            let val_1 = jni::objects::JValueGen::Double(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "double",
+                "(D)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "D";
-            let val_2 = jni::objects::JValueGen::Double(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "double",
+                "(D)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")Ljava/util/stream/DoubleStream;";
@@ -12980,14 +13549,26 @@ impl<'mc> JavaRandom<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "J";
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "long",
+            "(J)V",
+            vec![arg0.into()],
+        )?);
         args.push(val_1);
         sig += "D";
-        let val_2 = jni::objects::JValueGen::Double(arg1.into());
+        let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "double",
+            "(D)V",
+            vec![arg1.into()],
+        )?);
         args.push(val_2);
         if let Some(a) = arg2 {
             sig += "D";
-            let val_3 = jni::objects::JValueGen::Double(a.into());
+            let val_3 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "double",
+                "(D)V",
+                vec![a.into()],
+            )?);
             args.push(val_3);
         }
         sig += ")Ljava/util/stream/DoubleStream;";
@@ -13001,7 +13582,11 @@ impl<'mc> JavaRandom<'mc> {
 
     pub fn set_seed(&self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(J)V");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "long",
+            "(J)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setSeed",
@@ -13032,12 +13617,20 @@ impl<'mc> JavaRandom<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "D";
-            let val_1 = jni::objects::JValueGen::Double(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "double",
+                "(D)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "D";
-            let val_2 = jni::objects::JValueGen::Double(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "double",
+                "(D)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")D";
@@ -13058,12 +13651,20 @@ impl<'mc> JavaRandom<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "D";
-            let val_1 = jni::objects::JValueGen::Double(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "double",
+                "(D)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "D";
-            let val_2 = jni::objects::JValueGen::Double(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "double",
+                "(D)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")D";
@@ -13084,12 +13685,20 @@ impl<'mc> JavaRandom<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")I";
@@ -13110,12 +13719,20 @@ impl<'mc> JavaRandom<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -13249,8 +13866,19 @@ pub struct JavaList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> JavaList<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for JavaList<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for JavaList<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -13268,6 +13896,9 @@ impl<'mc> JavaList<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaList<'mc> {
     //
 
     pub fn add_with_object(
@@ -13279,7 +13910,11 @@ impl<'mc> JavaList<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
@@ -13304,7 +13939,11 @@ impl<'mc> JavaList<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         sig += ")Ljava/lang/Object;";
@@ -13318,7 +13957,11 @@ impl<'mc> JavaList<'mc> {
 
     pub fn get(&self, arg0: i32) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/Object;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "get",
@@ -13463,8 +14106,16 @@ impl<'mc> JavaList<'mc> {
         arg1: i32,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(II)Ljava/util/List;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
+        let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg1.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "subList",
@@ -13598,7 +14249,11 @@ impl<'mc> JavaList<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
@@ -13621,7 +14276,11 @@ impl<'mc> JavaList<'mc> {
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(ILjava/lang/Object;)Ljava/lang/Object;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let val_2 = jni::objects::JValueGen::Object(arg1);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13693,7 +14352,11 @@ impl<'mc> JavaList<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         sig += ")Ljava/util/ListIterator;";
@@ -13777,15 +14440,6 @@ impl<'mc> JavaList<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for JavaList<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaList<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -13810,7 +14464,8 @@ pub struct JavaUUID<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaUUID<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaUUID<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -13819,8 +14474,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaUUID<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaUUID<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaUUID<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -13838,14 +14494,19 @@ impl<'mc> JavaUUID<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaUUID<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i64,
         arg1: i64,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(JJ)V");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let val_2 = jni::objects::JValueGen::Long(arg1.into());
+        let val_1 =
+            jni::objects::JValueGen::Object(jni.new_object("long", "(J)V", vec![arg0.into()])?);
+        let val_2 =
+            jni::objects::JValueGen::Object(jni.new_object("long", "(J)V", vec![arg1.into()])?);
         let cls = jni.find_class("java/util/UUID");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
@@ -14054,12 +14715,20 @@ impl<'mc> JavaUUID<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -14121,7 +14790,8 @@ pub struct JavaHashSet<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaHashSet<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaHashSet<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -14130,8 +14800,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaHashSet<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaHashSet<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaHashSet<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -14149,6 +14820,9 @@ impl<'mc> JavaHashSet<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaHashSet<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -14175,11 +14849,13 @@ impl<'mc> JavaHashSet<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 =
+            jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![arg0.into()])?);
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "F";
-            let val_2 = jni::objects::JValueGen::Float(a.into());
+            let val_2 =
+                jni::objects::JValueGen::Object(jni.new_object("float", "(F)V", vec![a.into()])?);
             args.push(val_2);
         }
         sig += ")V";
@@ -14423,12 +15099,20 @@ impl<'mc> JavaHashSet<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -14551,7 +15235,8 @@ pub struct JavaAbstractList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaAbstractList<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaAbstractList<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -14560,8 +15245,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaAbstractList<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaAbstractList<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaAbstractList<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -14581,6 +15267,9 @@ impl<'mc> JavaAbstractList<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaAbstractList<'mc> {
     //
 
     pub fn add_with_object(
@@ -14592,7 +15281,11 @@ impl<'mc> JavaAbstractList<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
@@ -14631,7 +15324,11 @@ impl<'mc> JavaAbstractList<'mc> {
 
     pub fn get(&self, arg0: i32) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/Object;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "get",
@@ -14720,8 +15417,16 @@ impl<'mc> JavaAbstractList<'mc> {
         arg1: i32,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(II)Ljava/util/List;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
+        let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg1.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "subList",
@@ -14755,7 +15460,11 @@ impl<'mc> JavaAbstractList<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
@@ -14778,7 +15487,11 @@ impl<'mc> JavaAbstractList<'mc> {
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(ILjava/lang/Object;)Ljava/lang/Object;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let val_2 = jni::objects::JValueGen::Object(arg1);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14802,7 +15515,11 @@ impl<'mc> JavaAbstractList<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         sig += ")Ljava/util/ListIterator;";
@@ -14928,12 +15645,20 @@ impl<'mc> JavaAbstractList<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -15093,7 +15818,8 @@ pub struct JavaOptional<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaOptional<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaOptional<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15102,8 +15828,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaOptional<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaOptional<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaOptional<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -15121,6 +15848,9 @@ impl<'mc> JavaOptional<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaOptional<'mc> {
     //
 
     pub fn if_present_or_else(
@@ -15425,12 +16155,20 @@ impl<'mc> JavaOptional<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -15492,8 +16230,19 @@ pub struct JavaListIterator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> JavaListIterator<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for JavaListIterator<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for JavaListIterator<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -15513,6 +16262,9 @@ impl<'mc> JavaListIterator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaListIterator<'mc> {
     //
 
     pub fn add(&self, arg0: jni::objects::JObject<'mc>) -> Result<(), Box<dyn std::error::Error>> {
@@ -15629,15 +16381,6 @@ impl<'mc> JavaListIterator<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for JavaListIterator<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaListIterator<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -15654,7 +16397,8 @@ pub struct JavaLinkedList<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaLinkedList<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaLinkedList<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15663,8 +16407,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaLinkedList<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaLinkedList<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaLinkedList<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -15684,6 +16429,9 @@ impl<'mc> JavaLinkedList<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaLinkedList<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -15951,7 +16699,11 @@ impl<'mc> JavaLinkedList<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
@@ -15990,7 +16742,11 @@ impl<'mc> JavaLinkedList<'mc> {
 
     pub fn get(&self, arg0: i32) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/Object;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "get",
@@ -16104,7 +16860,11 @@ impl<'mc> JavaLinkedList<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
@@ -16127,7 +16887,11 @@ impl<'mc> JavaLinkedList<'mc> {
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(ILjava/lang/Object;)Ljava/lang/Object;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let val_2 = jni::objects::JValueGen::Object(arg1);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16181,7 +16945,11 @@ impl<'mc> JavaLinkedList<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         sig += ")Ljava/util/ListIterator;";
@@ -16236,8 +17004,16 @@ impl<'mc> JavaLinkedList<'mc> {
         arg1: i32,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(II)Ljava/util/List;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
+        let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg1.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "subList",
@@ -16337,12 +17113,20 @@ impl<'mc> JavaLinkedList<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -16500,8 +17284,19 @@ pub struct JavaCollection<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> JavaCollection<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for JavaCollection<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for JavaCollection<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -16521,6 +17316,9 @@ impl<'mc> JavaCollection<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaCollection<'mc> {
     //
 
     pub fn add(
@@ -16776,7 +17574,15 @@ impl<'mc> JavaCollection<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for JavaCollection<'mc> {
+/// An Iterator specialized for <code>int</code> values.
+///
+/// This is a representation of an abstract class.
+pub struct JavaPrimitiveIteratorOfInt<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for JavaPrimitiveIteratorOfInt<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -16785,15 +17591,9 @@ impl<'mc> JNIRaw<'mc> for JavaCollection<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// An Iterator specialized for <code>int</code> values.
-///
-/// This is a representation of an abstract class.
-pub struct JavaPrimitiveIteratorOfInt<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaPrimitiveIteratorOfInt<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -16814,6 +17614,9 @@ impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
     //
 
     pub fn next_int(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -16897,7 +17700,15 @@ impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
         Ok(res.z()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for JavaPrimitiveIteratorOfInt<'mc> {
+/// An Iterator specialized for <code>long</code> values.
+///
+/// This is a representation of an abstract class.
+pub struct JavaPrimitiveIteratorOfLong<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for JavaPrimitiveIteratorOfLong<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -16906,15 +17717,9 @@ impl<'mc> JNIRaw<'mc> for JavaPrimitiveIteratorOfInt<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// An Iterator specialized for <code>long</code> values.
-///
-/// This is a representation of an abstract class.
-pub struct JavaPrimitiveIteratorOfLong<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaPrimitiveIteratorOfLong<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -16935,6 +17740,9 @@ impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
     //
 
     pub fn next_long(&self) -> Result<i64, Box<dyn std::error::Error>> {
@@ -17018,15 +17826,6 @@ impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
         Ok(res.z()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for JavaPrimitiveIteratorOfLong<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// An iterator over a collection. <code>Iterator</code> takes the place of <a href="../../java/util/Enumeration.html" title="interface in java.util"><code>Enumeration</code></a> in the Java Collections Framework. Iterators differ from enumerations in two ways:
 /// <ul>
 /// <li>Iterators allow the caller to remove elements from the underlying collection during the iteration with well-defined semantics.</li>
@@ -17039,8 +17838,19 @@ pub struct JavaIterator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> JavaIterator<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for JavaIterator<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for JavaIterator<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -17058,6 +17868,9 @@ impl<'mc> JavaIterator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaIterator<'mc> {
     //
 
     pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
@@ -17106,15 +17919,6 @@ impl<'mc> JavaIterator<'mc> {
         Ok(res.l()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for JavaIterator<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// A base type for primitive specializations of <code>Iterator</code>. Specialized subtypes are provided for <a href="../../java/util/PrimitiveIterator.OfInt.html" title="interface in java.util"><code>int</code></a>, <a title="interface in java.util" href="../../java/util/PrimitiveIterator.OfLong.html"><code>long</code></a>, and <a title="interface in java.util" href="../../java/util/PrimitiveIterator.OfDouble.html"><code>double</code></a> values.
 /// <p>The specialized subtype default implementations of <a href="../../java/util/Iterator.html#next--"><code>Iterator.next()</code></a> and <a href="../../java/util/Iterator.html#forEachRemaining-java.util.function.Consumer-"><code>Iterator.forEachRemaining(java.util.function.Consumer)</code></a> box primitive values to instances of their corresponding wrapper class. Such boxing may offset any advantages gained when using the primitive specializations. To avoid boxing, the corresponding primitive-based methods should be used. For example, <a href="../../java/util/PrimitiveIterator.OfInt.html#nextInt--"><code>PrimitiveIterator.OfInt.nextInt()</code></a> and <a href="../../java/util/PrimitiveIterator.OfInt.html#forEachRemaining-java.util.function.IntConsumer-"><code>PrimitiveIterator.OfInt.forEachRemaining(java.util.function.IntConsumer)</code></a> should be used in preference to <a href="../../java/util/PrimitiveIterator.OfInt.html#next--"><code>PrimitiveIterator.OfInt.next()</code></a> and <a href="../../java/util/PrimitiveIterator.OfInt.html#forEachRemaining-java.util.function.Consumer-"><code>PrimitiveIterator.OfInt.forEachRemaining(java.util.function.Consumer)</code></a>.</p>
 /// <p>Iteration of primitive values using boxing-based methods <a href="../../java/util/Iterator.html#next--"><code>next()</code></a> and <a href="../../java/util/Iterator.html#forEachRemaining-java.util.function.Consumer-"><code>forEachRemaining()</code></a>, does not affect the order in which the values, transformed to boxed values, are encountered.</p>
@@ -17124,8 +17928,19 @@ pub struct JavaPrimitiveIterator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> JavaPrimitiveIterator<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for JavaPrimitiveIterator<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for JavaPrimitiveIterator<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -17146,6 +17961,9 @@ impl<'mc> JavaPrimitiveIterator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaPrimitiveIterator<'mc> {
     //
 
     pub fn for_each_remaining_with_object(
@@ -17197,15 +18015,6 @@ impl<'mc> JavaPrimitiveIterator<'mc> {
         Ok(res.l()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for JavaPrimitiveIterator<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaPrimitiveIterator<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -17218,8 +18027,19 @@ pub struct JavaMapEntry<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> JavaMapEntry<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for JavaMapEntry<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for JavaMapEntry<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -17237,6 +18057,9 @@ impl<'mc> JavaMapEntry<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaMapEntry<'mc> {
     //
 
     pub fn comparing_by_key(
@@ -17361,15 +18184,6 @@ impl<'mc> JavaMapEntry<'mc> {
         Ok(res.l()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for JavaMapEntry<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// A specialized <a href="../../java/util/Set.html" title="interface in java.util"><code>Set</code></a> implementation for use with enum types. All of the elements in an enum set must come from a single enum type that is specified, explicitly or implicitly, when the set is created. Enum sets are represented internally as bit vectors. This representation is extremely compact and efficient. The space and time performance of this class should be good enough to allow its use as a high-quality, typesafe alternative to traditional <tt>int</tt>-based "bit flags." Even bulk operations (such as <tt>containsAll</tt> and <tt>retainAll</tt>) should run very quickly if their argument is also an enum set.
 /// <p>The iterator returned by the <tt>iterator</tt> method traverses the elements in their <i>natural order</i> (the order in which the enum constants are declared). The returned iterator is <i>weakly consistent</i>: it will never throw <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a> and it may or may not show the effects of any modifications to the set that occur while the iteration is in progress.</p>
 /// <p>Null elements are not permitted. Attempts to insert a null element will throw <a href="../../java/lang/NullPointerException.html" title="class in java.lang"><code>NullPointerException</code></a>. Attempts to test for the presence of a null element or to remove one will, however, function properly.</p>
@@ -17382,7 +18196,8 @@ pub struct JavaEnumSet<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaEnumSet<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaEnumSet<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -17391,8 +18206,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaEnumSet<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaEnumSet<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaEnumSet<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -17410,6 +18226,9 @@ impl<'mc> JavaEnumSet<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaEnumSet<'mc> {
     //
 
     pub fn all_of(
@@ -17773,12 +18592,20 @@ impl<'mc> JavaEnumSet<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -17927,7 +18754,8 @@ pub struct JavaDate<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaDate<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaDate<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -17936,8 +18764,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaDate<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaDate<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaDate<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -17955,6 +18784,9 @@ impl<'mc> JavaDate<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaDate<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i64>,
@@ -17963,7 +18795,8 @@ impl<'mc> JavaDate<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 =
+                jni::objects::JValueGen::Object(jni.new_object("long", "(J)V", vec![a.into()])?);
             args.push(val_1);
         }
         sig += ")V";
@@ -17990,23 +18823,29 @@ impl<'mc> JavaDate<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 =
+            jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![arg0.into()])?);
         args.push(val_1);
         sig += "I";
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_2 =
+            jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![arg1.into()])?);
         args.push(val_2);
         sig += "I";
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
+        let val_3 =
+            jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![arg2.into()])?);
         args.push(val_3);
         sig += "I";
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
+        let val_4 =
+            jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![arg3.into()])?);
         args.push(val_4);
         sig += "I";
-        let val_5 = jni::objects::JValueGen::Int(arg4.into());
+        let val_5 =
+            jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![arg4.into()])?);
         args.push(val_5);
         if let Some(a) = arg5 {
             sig += "I";
-            let val_6 = jni::objects::JValueGen::Int(a.into());
+            let val_6 =
+                jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![a.into()])?);
             args.push(val_6);
         }
         sig += ")V";
@@ -18020,7 +18859,11 @@ impl<'mc> JavaDate<'mc> {
 
     pub fn set_time(&self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(J)V");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "long",
+            "(J)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setTime",
@@ -18082,12 +18925,18 @@ impl<'mc> JavaDate<'mc> {
         arg5: i32,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(IIIIII)J");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
-        let val_5 = jni::objects::JValueGen::Int(arg4.into());
-        let val_6 = jni::objects::JValueGen::Int(arg5.into());
+        let val_1 =
+            jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![arg0.into()])?);
+        let val_2 =
+            jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![arg1.into()])?);
+        let val_3 =
+            jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![arg2.into()])?);
+        let val_4 =
+            jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![arg3.into()])?);
+        let val_5 =
+            jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![arg4.into()])?);
+        let val_6 =
+            jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![arg5.into()])?);
         let cls = jni.find_class("long");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
@@ -18120,7 +18969,11 @@ impl<'mc> JavaDate<'mc> {
 
     pub fn set_date(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setDate",
@@ -18144,7 +18997,11 @@ impl<'mc> JavaDate<'mc> {
 
     pub fn set_month(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setMonth",
@@ -18168,7 +19025,11 @@ impl<'mc> JavaDate<'mc> {
 
     pub fn set_hours(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setHours",
@@ -18192,7 +19053,11 @@ impl<'mc> JavaDate<'mc> {
 
     pub fn set_minutes(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setMinutes",
@@ -18206,7 +19071,11 @@ impl<'mc> JavaDate<'mc> {
 
     pub fn set_seconds(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setSeconds",
@@ -18220,7 +19089,11 @@ impl<'mc> JavaDate<'mc> {
 
     pub fn set_year(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setYear",
@@ -18438,12 +19311,20 @@ impl<'mc> JavaDate<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -18504,7 +19385,8 @@ pub struct JavaArrayDeque<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaArrayDeque<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaArrayDeque<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -18513,8 +19395,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaArrayDeque<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaArrayDeque<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaArrayDeque<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -18534,6 +19417,9 @@ impl<'mc> JavaArrayDeque<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaArrayDeque<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
@@ -18542,7 +19428,8 @@ impl<'mc> JavaArrayDeque<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            let val_1 =
+                jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![a.into()])?);
             args.push(val_1);
         }
         sig += ")V";
@@ -19066,12 +19953,20 @@ impl<'mc> JavaArrayDeque<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -19183,8 +20078,19 @@ pub struct JavaPrimitiveIteratorOfDouble<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for JavaPrimitiveIteratorOfDouble<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for JavaPrimitiveIteratorOfDouble<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -19205,6 +20111,9 @@ impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
     //
 
     pub fn next_double(&self) -> Result<f64, Box<dyn std::error::Error>> {
@@ -19286,15 +20195,6 @@ impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
             .call_method(&self.jni_object(), "hasNext", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
-    }
-}
-impl<'mc> JNIRaw<'mc> for JavaPrimitiveIteratorOfDouble<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
 pub mod logging;

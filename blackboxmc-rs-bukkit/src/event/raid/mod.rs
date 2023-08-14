@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Represents events related to raids.
@@ -6,7 +8,8 @@ pub struct RaidEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for RaidEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for RaidEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15,8 +18,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for RaidEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> RaidEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for RaidEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -34,6 +38,9 @@ impl<'mc> RaidEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> RaidEvent<'mc> {
     //
 
     pub fn raid(&self) -> Result<crate::Raid<'mc>, Box<dyn std::error::Error>> {
@@ -214,7 +221,8 @@ pub struct RaidSpawnWaveEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for RaidSpawnWaveEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for RaidSpawnWaveEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -223,8 +231,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for RaidSpawnWaveEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> RaidSpawnWaveEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for RaidSpawnWaveEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -244,6 +253,9 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> RaidSpawnWaveEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::Raid<'mc>>,
@@ -271,7 +283,7 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
             jni.call_method(
                 &raw_val_4,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Lorg/bukkit/entity/crate::entity::Raider)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -513,7 +525,8 @@ pub struct RaidTriggerEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for RaidTriggerEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for RaidTriggerEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -522,8 +535,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for RaidTriggerEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> RaidTriggerEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for RaidTriggerEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -543,6 +557,9 @@ impl<'mc> RaidTriggerEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> RaidTriggerEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::Raid<'mc>>,
@@ -811,7 +828,8 @@ pub struct RaidFinishEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for RaidFinishEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for RaidFinishEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -820,8 +838,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for RaidFinishEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> RaidFinishEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for RaidFinishEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -841,6 +860,9 @@ impl<'mc> RaidFinishEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> RaidFinishEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::Raid<'mc>>,
@@ -862,7 +884,7 @@ impl<'mc> RaidFinishEvent<'mc> {
             jni.call_method(
                 &raw_val_3,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Lorg/bukkit/entity/crate::entity::Player)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1126,6 +1148,7 @@ impl<'mc> std::ops::Deref for RaidStopEventReason<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for RaidStopEventReason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -1135,11 +1158,15 @@ impl<'mc> JNIRaw<'mc> for RaidStopEventReason<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> RaidStopEventReason<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for RaidStopEventReason<'mc> {
+    type Enum = RaidStopEventReasonEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: RaidStopEventReasonEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -1158,6 +1185,9 @@ impl<'mc> RaidStopEventReason<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> RaidStopEventReason<'mc> {
     pub const PEACE: RaidStopEventReasonEnum = RaidStopEventReasonEnum::Peace;
     pub const TIMEOUT: RaidStopEventReasonEnum = RaidStopEventReasonEnum::Timeout;
     pub const FINISHED: RaidStopEventReasonEnum = RaidStopEventReasonEnum::Finished;
@@ -1206,7 +1236,8 @@ impl<'mc> RaidStopEventReason<'mc> {
 
     //
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for RaidStopEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for RaidStopEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1215,8 +1246,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for RaidStopEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> RaidStopEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for RaidStopEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1234,6 +1266,9 @@ impl<'mc> RaidStopEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> RaidStopEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::Raid<'mc>>,
@@ -1516,6 +1551,7 @@ impl<'mc> std::ops::Deref for Reason<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for Reason<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -1525,11 +1561,15 @@ impl<'mc> JNIRaw<'mc> for Reason<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Reason<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for Reason<'mc> {
+    type Enum = ReasonEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: ReasonEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Reason from null object.").into());
@@ -1545,6 +1585,9 @@ impl<'mc> Reason<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> Reason<'mc> {
     pub const PEACE: ReasonEnum = ReasonEnum::Peace;
     pub const TIMEOUT: ReasonEnum = ReasonEnum::Timeout;
     pub const FINISHED: ReasonEnum = ReasonEnum::Finished;

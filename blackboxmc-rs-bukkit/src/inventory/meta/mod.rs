@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Represents the generation (or level of copying) of a written book
@@ -35,6 +37,7 @@ impl<'mc> std::ops::Deref for BookMetaGeneration<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for BookMetaGeneration<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -44,11 +47,15 @@ impl<'mc> JNIRaw<'mc> for BookMetaGeneration<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> BookMetaGeneration<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for BookMetaGeneration<'mc> {
+    type Enum = BookMetaGenerationEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: BookMetaGenerationEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -67,6 +74,9 @@ impl<'mc> BookMetaGeneration<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> BookMetaGeneration<'mc> {
     pub const ORIGINAL: BookMetaGenerationEnum = BookMetaGenerationEnum::Original;
     pub const COPY_OF_ORIGINAL: BookMetaGenerationEnum = BookMetaGenerationEnum::CopyOfOriginal;
     pub const COPY_OF_COPY: BookMetaGenerationEnum = BookMetaGenerationEnum::CopyOfCopy;
@@ -120,8 +130,19 @@ pub struct BlockDataMeta<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> BlockDataMeta<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for BlockDataMeta<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for BlockDataMeta<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -139,6 +160,9 @@ impl<'mc> BlockDataMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> BlockDataMeta<'mc> {
     //
 
     pub fn get_block_data(
@@ -341,7 +365,7 @@ impl<'mc> BlockDataMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -384,8 +408,12 @@ impl<'mc> BlockDataMeta<'mc> {
     //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomModelData",
@@ -783,15 +811,6 @@ impl<'mc> BlockDataMeta<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for BlockDataMeta<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for BlockDataMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
@@ -806,8 +825,19 @@ pub struct ArmorMeta<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> ArmorMeta<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for ArmorMeta<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for ArmorMeta<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -825,6 +855,9 @@ impl<'mc> ArmorMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ArmorMeta<'mc> {
     //
 
     pub fn has_trim(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1036,7 +1069,7 @@ impl<'mc> ArmorMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1079,8 +1112,12 @@ impl<'mc> ArmorMeta<'mc> {
     //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomModelData",
@@ -1466,15 +1503,6 @@ impl<'mc> ArmorMeta<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for ArmorMeta<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for ArmorMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
@@ -1488,8 +1516,19 @@ pub struct AxolotlBucketMeta<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> AxolotlBucketMeta<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for AxolotlBucketMeta<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for AxolotlBucketMeta<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1510,6 +1549,9 @@ impl<'mc> AxolotlBucketMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> AxolotlBucketMeta<'mc> {
     //
 
     pub fn variant(
@@ -1734,7 +1776,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1777,8 +1819,12 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomModelData",
@@ -2164,15 +2210,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for AxolotlBucketMeta<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for AxolotlBucketMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
@@ -2186,8 +2223,19 @@ pub struct SkullMeta<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> SkullMeta<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for SkullMeta<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for SkullMeta<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2205,6 +2253,9 @@ impl<'mc> SkullMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> SkullMeta<'mc> {
     //
 
     pub fn owner(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2513,7 +2564,7 @@ impl<'mc> SkullMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -2556,8 +2607,12 @@ impl<'mc> SkullMeta<'mc> {
     //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomModelData",
@@ -2943,15 +2998,6 @@ impl<'mc> SkullMeta<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for SkullMeta<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for SkullMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
@@ -2965,8 +3011,19 @@ pub struct CompassMeta<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> CompassMeta<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for CompassMeta<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for CompassMeta<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2984,6 +3041,9 @@ impl<'mc> CompassMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> CompassMeta<'mc> {
     //
 
     pub fn has_lodestone(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3218,7 +3278,7 @@ impl<'mc> CompassMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -3261,8 +3321,12 @@ impl<'mc> CompassMeta<'mc> {
     //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomModelData",
@@ -3648,15 +3712,6 @@ impl<'mc> CompassMeta<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for CompassMeta<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for CompassMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
@@ -3670,8 +3725,19 @@ pub struct SuspiciousStewMeta<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> SuspiciousStewMeta<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for SuspiciousStewMeta<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for SuspiciousStewMeta<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3692,6 +3758,9 @@ impl<'mc> SuspiciousStewMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> SuspiciousStewMeta<'mc> {
     //
 
     pub fn has_custom_effects(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3971,7 +4040,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -4014,8 +4083,12 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomModelData",
@@ -4401,15 +4474,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for SuspiciousStewMeta<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for SuspiciousStewMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
@@ -4423,8 +4487,19 @@ pub struct CrossbowMeta<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> CrossbowMeta<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for CrossbowMeta<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for CrossbowMeta<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -4442,6 +4517,9 @@ impl<'mc> CrossbowMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> CrossbowMeta<'mc> {
     //
 
     pub fn has_charged_projectiles(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4494,7 +4572,7 @@ impl<'mc> CrossbowMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Lorg/bukkit/inventory/crate::inventory::ItemStack)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -4679,7 +4757,7 @@ impl<'mc> CrossbowMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -4722,8 +4800,12 @@ impl<'mc> CrossbowMeta<'mc> {
     //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomModelData",
@@ -5121,15 +5203,6 @@ impl<'mc> CrossbowMeta<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for CrossbowMeta<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for CrossbowMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
@@ -5144,8 +5217,19 @@ pub struct ItemMeta<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> ItemMeta<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for ItemMeta<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for ItemMeta<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -5163,6 +5247,9 @@ impl<'mc> ItemMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ItemMeta<'mc> {
     //
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -5315,7 +5402,7 @@ impl<'mc> ItemMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -5358,8 +5445,12 @@ impl<'mc> ItemMeta<'mc> {
     //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomModelData",
@@ -5764,15 +5855,6 @@ impl<'mc> ItemMeta<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for ItemMeta<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'mc>>
     for ItemMeta<'mc>
 {
@@ -5793,8 +5875,19 @@ pub struct Repairable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> Repairable<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for Repairable<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for Repairable<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -5812,6 +5905,9 @@ impl<'mc> Repairable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Repairable<'mc> {
     //
 
     pub fn repair_cost(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -6015,7 +6111,7 @@ impl<'mc> Repairable<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -6058,8 +6154,12 @@ impl<'mc> Repairable<'mc> {
     //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomModelData",
@@ -6445,15 +6545,6 @@ impl<'mc> Repairable<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for Repairable<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for Repairable<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
@@ -6467,8 +6558,19 @@ pub struct BannerMeta<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> BannerMeta<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for BannerMeta<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for BannerMeta<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -6486,6 +6588,9 @@ impl<'mc> BannerMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> BannerMeta<'mc> {
     //
 
     pub fn base_color(&self) -> Result<crate::DyeColor<'mc>, Box<dyn std::error::Error>> {
@@ -6569,7 +6674,7 @@ impl<'mc> BannerMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Lorg/bukkit/block/banner/crate::block::banner::Pattern)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -6831,7 +6936,7 @@ impl<'mc> BannerMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -6874,8 +6979,12 @@ impl<'mc> BannerMeta<'mc> {
     //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomModelData",
@@ -7273,15 +7382,6 @@ impl<'mc> BannerMeta<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for BannerMeta<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for BannerMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
@@ -7295,8 +7395,19 @@ pub struct BundleMeta<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> BundleMeta<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for BundleMeta<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for BundleMeta<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -7314,6 +7425,9 @@ impl<'mc> BundleMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> BundleMeta<'mc> {
     //
 
     pub fn add_item(
@@ -7379,7 +7493,7 @@ impl<'mc> BundleMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Lorg/bukkit/inventory/crate::inventory::ItemStack)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -7545,7 +7659,7 @@ impl<'mc> BundleMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -7588,8 +7702,12 @@ impl<'mc> BundleMeta<'mc> {
     //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomModelData",
@@ -7987,15 +8105,6 @@ impl<'mc> BundleMeta<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for BundleMeta<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for BundleMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
@@ -8009,8 +8118,19 @@ pub struct ColorableArmorMeta<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> ColorableArmorMeta<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for ColorableArmorMeta<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for ColorableArmorMeta<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -8031,6 +8151,9 @@ impl<'mc> ColorableArmorMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ColorableArmorMeta<'mc> {
     //
 
     pub fn clone(
@@ -8242,7 +8365,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -8285,8 +8408,12 @@ impl<'mc> ColorableArmorMeta<'mc> {
     //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomModelData",
@@ -8703,15 +8830,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for ColorableArmorMeta<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::inventory::meta::ArmorMeta<'mc>> for ColorableArmorMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ArmorMeta<'mc> {
         crate::inventory::meta::ArmorMeta::from_raw(&self.jni_ref(), self.1)
@@ -8732,8 +8850,19 @@ pub struct SpawnEggMeta<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> SpawnEggMeta<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for SpawnEggMeta<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for SpawnEggMeta<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -8751,6 +8880,9 @@ impl<'mc> SpawnEggMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> SpawnEggMeta<'mc> {
     //
 
     pub fn spawned_type(
@@ -8965,7 +9097,7 @@ impl<'mc> SpawnEggMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -9008,8 +9140,12 @@ impl<'mc> SpawnEggMeta<'mc> {
     //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomModelData",
@@ -9395,15 +9531,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for SpawnEggMeta<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for SpawnEggMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
@@ -9417,8 +9544,19 @@ pub struct Damageable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> Damageable<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for Damageable<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for Damageable<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -9436,6 +9574,9 @@ impl<'mc> Damageable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Damageable<'mc> {
     //
 
     /// Sets the damage
@@ -9639,7 +9780,7 @@ impl<'mc> Damageable<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -9682,8 +9823,12 @@ impl<'mc> Damageable<'mc> {
     //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomModelData",
@@ -10069,15 +10214,6 @@ impl<'mc> Damageable<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for Damageable<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for Damageable<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
@@ -10091,8 +10227,19 @@ pub struct FireworkMeta<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> FireworkMeta<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for FireworkMeta<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for FireworkMeta<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -10110,6 +10257,9 @@ impl<'mc> FireworkMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> FireworkMeta<'mc> {
     //
 
     pub fn effects(&self) -> Result<Vec<crate::FireworkEffect<'mc>>, Box<dyn std::error::Error>> {
@@ -10384,7 +10534,7 @@ impl<'mc> FireworkMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -10427,8 +10577,12 @@ impl<'mc> FireworkMeta<'mc> {
     //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomModelData",
@@ -10814,15 +10968,6 @@ impl<'mc> FireworkMeta<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for FireworkMeta<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for FireworkMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
@@ -10836,8 +10981,19 @@ pub struct PotionMeta<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> PotionMeta<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for PotionMeta<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for PotionMeta<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -10855,6 +11011,9 @@ impl<'mc> PotionMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn set_color(
@@ -11230,7 +11389,7 @@ impl<'mc> PotionMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -11273,8 +11432,12 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomModelData",
@@ -11660,15 +11823,6 @@ impl<'mc> PotionMeta<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for PotionMeta<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for PotionMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
@@ -11682,8 +11836,19 @@ pub struct BlockStateMeta<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> BlockStateMeta<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for BlockStateMeta<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for BlockStateMeta<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -11703,6 +11868,9 @@ impl<'mc> BlockStateMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> BlockStateMeta<'mc> {
     //
 
     pub fn block_state(&self) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
@@ -11896,7 +12064,7 @@ impl<'mc> BlockStateMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -11939,8 +12107,12 @@ impl<'mc> BlockStateMeta<'mc> {
     //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomModelData",
@@ -12338,15 +12510,6 @@ impl<'mc> BlockStateMeta<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for BlockStateMeta<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for BlockStateMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
@@ -12386,6 +12549,7 @@ impl<'mc> std::ops::Deref for Generation<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for Generation<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -12395,11 +12559,15 @@ impl<'mc> JNIRaw<'mc> for Generation<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Generation<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for Generation<'mc> {
+    type Enum = GenerationEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: GenerationEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Generation from null object.").into());
@@ -12415,6 +12583,9 @@ impl<'mc> Generation<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> Generation<'mc> {
     pub const ORIGINAL: GenerationEnum = GenerationEnum::Original;
     pub const COPY_OF_ORIGINAL: GenerationEnum = GenerationEnum::CopyOfOriginal;
     pub const COPY_OF_COPY: GenerationEnum = GenerationEnum::CopyOfCopy;
@@ -12466,8 +12637,19 @@ pub struct EnchantmentStorageMeta<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> EnchantmentStorageMeta<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for EnchantmentStorageMeta<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for EnchantmentStorageMeta<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -12489,6 +12671,9 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> EnchantmentStorageMeta<'mc> {
     //
 
     pub fn has_stored_enchant(
@@ -12792,7 +12977,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -12835,8 +13020,12 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomModelData",
@@ -13222,15 +13411,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for EnchantmentStorageMeta<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for EnchantmentStorageMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
@@ -13244,8 +13424,19 @@ pub struct KnowledgeBookMeta<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> KnowledgeBookMeta<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for KnowledgeBookMeta<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for KnowledgeBookMeta<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -13266,6 +13457,9 @@ impl<'mc> KnowledgeBookMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> KnowledgeBookMeta<'mc> {
     //
 
     pub fn recipes(&self) -> Result<Vec<crate::NamespacedKey<'mc>>, Box<dyn std::error::Error>> {
@@ -13300,7 +13494,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Lorg/bukkit/crate::NamespacedKey)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -13501,7 +13695,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -13544,8 +13738,12 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomModelData",
@@ -13931,15 +14129,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for KnowledgeBookMeta<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for KnowledgeBookMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
@@ -13953,8 +14142,19 @@ pub struct MapMeta<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> MapMeta<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for MapMeta<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for MapMeta<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -13972,6 +14172,9 @@ impl<'mc> MapMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> MapMeta<'mc> {
     //
 
     pub fn set_color(
@@ -14333,7 +14536,7 @@ impl<'mc> MapMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -14376,8 +14579,12 @@ impl<'mc> MapMeta<'mc> {
     //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomModelData",
@@ -14763,15 +14970,6 @@ impl<'mc> MapMeta<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for MapMeta<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for MapMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
@@ -14783,7 +14981,8 @@ pub struct BookMetaSpigot<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for BookMetaSpigot<'mc> {
+
+impl<'mc> JNIRaw<'mc> for BookMetaSpigot<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -14792,8 +14991,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for BookMetaSpigot<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> BookMetaSpigot<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for BookMetaSpigot<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -14813,6 +15013,9 @@ impl<'mc> BookMetaSpigot<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> BookMetaSpigot<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::inventory::meta::BookMetaSpigot<'mc>, Box<dyn std::error::Error>> {
@@ -14885,12 +15088,7 @@ impl<'mc> BookMetaSpigot<'mc> {
                 let map_val_0 = jni::objects::JValueGen::Object(unsafe {
                     jni::objects::JObject::from_raw(v.into().jni_object().clone())
                 });
-                self.jni_ref().call_method(
-                    &raw_val_1,
-                    "add",
-                    "(Ljava/Lang/Object)V",
-                    vec![jni::objects::JValueGen::from(map_val_0)],
-                )?;
+                self.jni_ref().call_method(&raw_val_1,"add","(Lnet/md_5/bungee/api/chat/blackboxmc_bungee::bungee::api::chat::BaseComponent)V",vec![jni::objects::JValueGen::from(map_val_0)])?;
             }
             let val_1 = jni::objects::JValueGen::Object(raw_val_1);
             args.push(val_1);
@@ -15031,8 +15229,19 @@ pub struct LeatherArmorMeta<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> LeatherArmorMeta<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for LeatherArmorMeta<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for LeatherArmorMeta<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -15053,6 +15262,9 @@ impl<'mc> LeatherArmorMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> LeatherArmorMeta<'mc> {
     //
 
     pub fn set_color(
@@ -15252,7 +15464,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -15295,8 +15507,12 @@ impl<'mc> LeatherArmorMeta<'mc> {
     //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomModelData",
@@ -15682,15 +15898,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for LeatherArmorMeta<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for LeatherArmorMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
@@ -15704,8 +15911,19 @@ pub struct FireworkEffectMeta<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> FireworkEffectMeta<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for FireworkEffectMeta<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for FireworkEffectMeta<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -15726,6 +15944,9 @@ impl<'mc> FireworkEffectMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> FireworkEffectMeta<'mc> {
     //
 
     pub fn set_effect(
@@ -15935,7 +16156,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -15978,8 +16199,12 @@ impl<'mc> FireworkEffectMeta<'mc> {
     //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomModelData",
@@ -16365,15 +16590,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for FireworkEffectMeta<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for FireworkEffectMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
@@ -16387,8 +16603,19 @@ pub struct TropicalFishBucketMeta<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> TropicalFishBucketMeta<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for TropicalFishBucketMeta<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for TropicalFishBucketMeta<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -16410,6 +16637,9 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> TropicalFishBucketMeta<'mc> {
     //
 
     pub fn pattern(
@@ -16718,7 +16948,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -16761,8 +16991,12 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomModelData",
@@ -17148,15 +17382,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for TropicalFishBucketMeta<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for TropicalFishBucketMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
@@ -17170,8 +17395,19 @@ pub struct BookMeta<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> BookMeta<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for BookMeta<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for BookMeta<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -17189,6 +17425,9 @@ impl<'mc> BookMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> BookMeta<'mc> {
     //
 
     pub fn spigot(
@@ -17618,7 +17857,7 @@ impl<'mc> BookMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -17661,8 +17900,12 @@ impl<'mc> BookMeta<'mc> {
     //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomModelData",
@@ -18048,15 +18291,6 @@ impl<'mc> BookMeta<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for BookMeta<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for BookMeta<'mc> {
     fn into(self) -> crate::inventory::meta::ItemMeta<'mc> {
         crate::inventory::meta::ItemMeta::from_raw(&self.jni_ref(), self.1)
@@ -18070,8 +18304,19 @@ pub struct MusicInstrumentMeta<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> MusicInstrumentMeta<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for MusicInstrumentMeta<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for MusicInstrumentMeta<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -18092,6 +18337,9 @@ impl<'mc> MusicInstrumentMeta<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> MusicInstrumentMeta<'mc> {
     //
 
     pub fn instrument(&self) -> Result<crate::MusicInstrument<'mc>, Box<dyn std::error::Error>> {
@@ -18291,7 +18539,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -18334,8 +18582,12 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let sig = String::from("(Ljava/lang/Integer;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Integer",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCustomModelData",
@@ -18719,15 +18971,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-}
-impl<'mc> JNIRaw<'mc> for MusicInstrumentMeta<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
 impl<'mc> Into<crate::inventory::meta::ItemMeta<'mc>> for MusicInstrumentMeta<'mc> {

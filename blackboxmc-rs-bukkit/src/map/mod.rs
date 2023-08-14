@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Represents all the map cursors on a <a href="MapCanvas.html" title="interface in org.bukkit.map"><code>MapCanvas</code></a>. Like MapCanvas, a MapCursorCollection is linked to a specific <a title="class in org.bukkit.map" href="MapRenderer.html"><code>MapRenderer</code></a>.
@@ -6,7 +8,8 @@ pub struct MapCursorCollection<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for MapCursorCollection<'mc> {
+
+impl<'mc> JNIRaw<'mc> for MapCursorCollection<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15,8 +18,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for MapCursorCollection<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> MapCursorCollection<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for MapCursorCollection<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -36,6 +40,9 @@ impl<'mc> MapCursorCollection<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> MapCursorCollection<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::map::MapCursorCollection<'mc>, Box<dyn std::error::Error>> {
@@ -320,6 +327,7 @@ impl<'mc> std::ops::Deref for MapViewScale<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for MapViewScale<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -329,11 +337,15 @@ impl<'mc> JNIRaw<'mc> for MapViewScale<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> MapViewScale<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for MapViewScale<'mc> {
+    type Enum = MapViewScaleEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: MapViewScaleEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate MapViewScale from null object.").into());
@@ -349,6 +361,9 @@ impl<'mc> MapViewScale<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> MapViewScale<'mc> {
     pub const CLOSEST: MapViewScaleEnum = MapViewScaleEnum::Closest;
     pub const CLOSE: MapViewScaleEnum = MapViewScaleEnum::Close;
     pub const NORMAL: MapViewScaleEnum = MapViewScaleEnum::Normal;
@@ -443,6 +458,7 @@ impl<'mc> std::ops::Deref for Scale<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for Scale<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -452,11 +468,15 @@ impl<'mc> JNIRaw<'mc> for Scale<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Scale<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for Scale<'mc> {
+    type Enum = ScaleEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: ScaleEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Scale from null object.").into());
@@ -472,6 +492,9 @@ impl<'mc> Scale<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> Scale<'mc> {
     pub const CLOSEST: ScaleEnum = ScaleEnum::Closest;
     pub const CLOSE: ScaleEnum = ScaleEnum::Close;
     pub const NORMAL: ScaleEnum = ScaleEnum::Normal;
@@ -523,7 +546,8 @@ pub struct MinecraftFont<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for MinecraftFont<'mc> {
+
+impl<'mc> JNIRaw<'mc> for MinecraftFont<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -532,8 +556,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for MinecraftFont<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> MinecraftFont<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for MinecraftFont<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -551,6 +576,9 @@ impl<'mc> MinecraftFont<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> MinecraftFont<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::map::MinecraftFont<'mc>, Box<dyn std::error::Error>> {
@@ -849,6 +877,7 @@ impl<'mc> std::ops::Deref for MapCursorType<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for MapCursorType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -858,11 +887,15 @@ impl<'mc> JNIRaw<'mc> for MapCursorType<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> MapCursorType<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for MapCursorType<'mc> {
+    type Enum = MapCursorTypeEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: MapCursorTypeEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate MapCursorType from null object.").into());
@@ -878,6 +911,9 @@ impl<'mc> MapCursorType<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> MapCursorType<'mc> {
     pub const WHITE_POINTER: MapCursorTypeEnum = MapCursorTypeEnum::WhitePointer;
     pub const GREEN_POINTER: MapCursorTypeEnum = MapCursorTypeEnum::GreenPointer;
     pub const RED_POINTER: MapCursorTypeEnum = MapCursorTypeEnum::RedPointer;
@@ -1019,7 +1055,8 @@ impl<'mc> MapCursorType<'mc> {
         Ok(res.b()?)
     }
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for MapCursor<'mc> {
+
+impl<'mc> JNIRaw<'mc> for MapCursor<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1028,8 +1065,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for MapCursor<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> MapCursor<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for MapCursor<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1047,6 +1085,9 @@ impl<'mc> MapCursor<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> MapCursor<'mc> {
     pub fn new_with_byte(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i8,
@@ -1411,7 +1452,8 @@ pub struct MapFontCharacterSprite<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for MapFontCharacterSprite<'mc> {
+
+impl<'mc> JNIRaw<'mc> for MapFontCharacterSprite<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1420,8 +1462,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for MapFontCharacterSprite<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> MapFontCharacterSprite<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for MapFontCharacterSprite<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1442,6 +1485,9 @@ impl<'mc> MapFontCharacterSprite<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> MapFontCharacterSprite<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
@@ -1619,8 +1665,19 @@ pub struct MapCanvas<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> MapCanvas<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for MapCanvas<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for MapCanvas<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1638,6 +1695,9 @@ impl<'mc> MapCanvas<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> MapCanvas<'mc> {
     //
 
     pub fn map_view(&self) -> Result<crate::map::MapView<'mc>, Box<dyn std::error::Error>> {
@@ -1926,21 +1986,13 @@ impl<'mc> MapCanvas<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for MapCanvas<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// Represents a renderer for a map.
 pub struct MapRenderer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for MapRenderer<'mc> {
+
+impl<'mc> JNIRaw<'mc> for MapRenderer<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1949,18 +2001,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for MapRenderer<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> MapRenderer<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "MapRenderer", name, lib_name) }?;
-        Self::from_raw(env, obj)
-    }
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for MapRenderer<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1977,6 +2020,19 @@ impl<'mc> MapRenderer<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+}
+
+impl<'mc> MapRenderer<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "MapRenderer", name, lib_name) }?;
+        Self::from_raw(env, obj)
     }
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2175,8 +2231,19 @@ pub struct MapView<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> MapView<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for MapView<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for MapView<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2194,6 +2261,9 @@ impl<'mc> MapView<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> MapView<'mc> {
     //
 
     pub fn set_scale(
@@ -2481,21 +2551,13 @@ impl<'mc> MapView<'mc> {
         Ok(res.i()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for MapView<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// Represents a bitmap font drawable to a map.
 pub struct MapFont<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for MapFont<'mc> {
+
+impl<'mc> JNIRaw<'mc> for MapFont<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2504,8 +2566,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for MapFont<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> MapFont<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for MapFont<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2523,6 +2586,9 @@ impl<'mc> MapFont<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> MapFont<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::map::MapFont<'mc>, Box<dyn std::error::Error>> {
@@ -2744,8 +2810,19 @@ pub struct MapPaletteMapColorCache<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> MapPaletteMapColorCache<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for MapPaletteMapColorCache<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for MapPaletteMapColorCache<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2766,6 +2843,9 @@ impl<'mc> MapPaletteMapColorCache<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> MapPaletteMapColorCache<'mc> {
     //
 
     pub fn is_cached(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2777,7 +2857,8 @@ impl<'mc> MapPaletteMapColorCache<'mc> {
         Ok(res.z()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for MapPaletteMapColorCache<'mc> {
+
+impl<'mc> JNIRaw<'mc> for MapPalette<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2786,17 +2867,9 @@ impl<'mc> JNIRaw<'mc> for MapPaletteMapColorCache<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for MapPalette<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
 
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
-impl<'mc> MapPalette<'mc> {
-    pub fn from_raw(
+impl<'mc> JNIInstantiatable<'mc> for MapPalette<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2814,6 +2887,9 @@ impl<'mc> MapPalette<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> MapPalette<'mc> {
     //@Deprecated
 
     #[deprecated]

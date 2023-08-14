@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Represent a variation of a structure. Most structures, like the ones generated with structure blocks, only have a single variant.
@@ -8,8 +10,19 @@ pub struct Palette<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> Palette<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for Palette<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for Palette<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -27,6 +40,9 @@ impl<'mc> Palette<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Palette<'mc> {
     //
 
     pub fn blocks(&self) -> Result<Vec<crate::block::BlockState<'mc>>, Box<dyn std::error::Error>> {
@@ -55,7 +71,15 @@ impl<'mc> Palette<'mc> {
         Ok(res.i()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for Palette<'mc> {
+
+///
+/// This is a representation of an abstract class.
+pub struct StructureManager<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for StructureManager<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -65,14 +89,8 @@ impl<'mc> JNIRaw<'mc> for Palette<'mc> {
     }
 }
 
-///
-/// This is a representation of an abstract class.
-pub struct StructureManager<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> StructureManager<'mc> {
-    pub fn from_raw(
+impl<'mc> JNIInstantiatable<'mc> for StructureManager<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -92,6 +110,9 @@ impl<'mc> StructureManager<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> StructureManager<'mc> {
     //
 
     pub fn get_structure(
@@ -368,15 +389,6 @@ impl<'mc> StructureManager<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for StructureManager<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// Represents a structure.
 /// <p>A structure is a mutable template of captured blocks and entities that can be copied back into the world. The <a href="StructureManager.html" title="interface in org.bukkit.structure"><code>StructureManager</code></a>, retrieved via <a href="../Server.html#getStructureManager()"><code>Server.getStructureManager()</code></a>, allows you to create new structures, load existing structures, and save structures.</p>
 /// <p>In order for a structure to be usable by structure blocks, it needs to be null <a href="StructureManager.html#registerStructure(org.bukkit.NamespacedKey,org.bukkit.structure.Structure)"><code>registered</code></a> with the <a href="StructureManager.html" title="interface in org.bukkit.structure"><code>StructureManager</code></a>, or located in the primary world folder, a DataPack, or the server's own default resources, so that the StructureManager can find it.</p>
@@ -386,8 +398,19 @@ pub struct Structure<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> Structure<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for Structure<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for Structure<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -405,6 +428,9 @@ impl<'mc> Structure<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Structure<'mc> {
     //
 
     pub fn entities(&self) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
@@ -583,15 +609,6 @@ impl<'mc> Structure<'mc> {
         crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-}
-impl<'mc> JNIRaw<'mc> for Structure<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
 impl<'mc> Into<crate::persistence::PersistentDataHolder<'mc>> for Structure<'mc> {

@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Utils for casting number types to other number types
@@ -6,7 +8,8 @@ pub struct NumberConversions<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for NumberConversions<'mc> {
+
+impl<'mc> JNIRaw<'mc> for NumberConversions<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15,8 +18,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for NumberConversions<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> NumberConversions<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for NumberConversions<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -36,6 +40,9 @@ impl<'mc> NumberConversions<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> NumberConversions<'mc> {
     //
 
     pub fn round(
@@ -386,7 +393,8 @@ pub struct BlockIterator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for BlockIterator<'mc> {
+
+impl<'mc> JNIRaw<'mc> for BlockIterator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -395,8 +403,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for BlockIterator<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> BlockIterator<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for BlockIterator<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -414,6 +423,9 @@ impl<'mc> BlockIterator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> BlockIterator<'mc> {
     pub fn new_with_location(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::World<'mc>>,
@@ -636,7 +648,8 @@ pub struct Transformation<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for Transformation<'mc> {
+
+impl<'mc> JNIRaw<'mc> for Transformation<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -645,8 +658,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for Transformation<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Transformation<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for Transformation<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -666,6 +680,9 @@ impl<'mc> Transformation<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Transformation<'mc> {
     pub fn new_with_vector3f(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
@@ -854,7 +871,8 @@ pub struct RayTraceResult<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for RayTraceResult<'mc> {
+
+impl<'mc> JNIRaw<'mc> for RayTraceResult<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -863,8 +881,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for RayTraceResult<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> RayTraceResult<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for RayTraceResult<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -884,6 +903,9 @@ impl<'mc> RayTraceResult<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> RayTraceResult<'mc> {
     pub fn new_with_vector(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::util::Vector<'mc>>,
@@ -1095,8 +1117,19 @@ pub struct CachedServerIcon<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> CachedServerIcon<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for CachedServerIcon<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for CachedServerIcon<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1117,21 +1150,15 @@ impl<'mc> CachedServerIcon<'mc> {
         }
     }
 }
-impl<'mc> JNIRaw<'mc> for CachedServerIcon<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
 
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
+impl<'mc> CachedServerIcon<'mc> {}
 
 pub struct ChatPaginatorChatPage<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ChatPaginatorChatPage<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ChatPaginatorChatPage<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1140,8 +1167,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ChatPaginatorChatPage<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ChatPaginatorChatPage<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ChatPaginatorChatPage<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1162,6 +1190,9 @@ impl<'mc> ChatPaginatorChatPage<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ChatPaginatorChatPage<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: Vec<impl Into<String>>,
@@ -1322,8 +1353,19 @@ pub struct VoxelShape<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> VoxelShape<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for VoxelShape<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for VoxelShape<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1341,6 +1383,9 @@ impl<'mc> VoxelShape<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> VoxelShape<'mc> {
     //
 
     pub fn overlaps(
@@ -1383,7 +1428,15 @@ impl<'mc> VoxelShape<'mc> {
         Ok(new_vec)
     }
 }
-impl<'mc> JNIRaw<'mc> for VoxelShape<'mc> {
+/// Represents an operation that accepts a single input argument and returns no result.
+///
+/// This is a representation of an abstract class.
+pub struct Consumer<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for Consumer<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1392,25 +1445,9 @@ impl<'mc> JNIRaw<'mc> for VoxelShape<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// Represents an operation that accepts a single input argument and returns no result.
-///
-/// This is a representation of an abstract class.
-pub struct Consumer<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> Consumer<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "Consumer", name, lib_name) }?;
-        Self::from_raw(env, obj)
-    }
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for Consumer<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1427,6 +1464,19 @@ impl<'mc> Consumer<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+}
+
+impl<'mc> Consumer<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "Consumer", name, lib_name) }?;
+        Self::from_raw(env, obj)
     }
     //
 
@@ -1446,7 +1496,15 @@ impl<'mc> Consumer<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for Consumer<'mc> {
+/// Holds the result of searching for a structure.
+///
+/// This is a representation of an abstract class.
+pub struct StructureSearchResult<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for StructureSearchResult<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1455,15 +1513,9 @@ impl<'mc> JNIRaw<'mc> for Consumer<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// Holds the result of searching for a structure.
-///
-/// This is a representation of an abstract class.
-pub struct StructureSearchResult<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> StructureSearchResult<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for StructureSearchResult<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1484,6 +1536,9 @@ impl<'mc> StructureSearchResult<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> StructureSearchResult<'mc> {
     //
 
     pub fn structure(
@@ -1511,15 +1566,6 @@ impl<'mc> StructureSearchResult<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for StructureSearchResult<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// A mutable axis aligned bounding box (AABB).
 /// <p>This basically represents a rectangular box (specified by minimum and maximum corners) that can for example be used to describe the position and extents of an object (such as an entity, block, or rectangular region) in 3D space. Its edges and faces are parallel to the axes of the cartesian coordinate system.</p>
 /// <p>The bounding box may be degenerate (one or more sides having the length 0).</p>
@@ -1528,7 +1574,8 @@ pub struct BoundingBox<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for BoundingBox<'mc> {
+
+impl<'mc> JNIRaw<'mc> for BoundingBox<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1537,8 +1584,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for BoundingBox<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> BoundingBox<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for BoundingBox<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1556,6 +1604,9 @@ impl<'mc> BoundingBox<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> BoundingBox<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<f64>,
@@ -2419,7 +2470,8 @@ pub struct BlockVector<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for BlockVector<'mc> {
+
+impl<'mc> JNIRaw<'mc> for BlockVector<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2428,8 +2480,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for BlockVector<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> BlockVector<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for BlockVector<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2447,6 +2500,9 @@ impl<'mc> BlockVector<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> BlockVector<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<f64>,
@@ -3602,7 +3658,8 @@ pub struct EulerAngle<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for EulerAngle<'mc> {
+
+impl<'mc> JNIRaw<'mc> for EulerAngle<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -3611,8 +3668,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for EulerAngle<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> EulerAngle<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for EulerAngle<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3630,6 +3688,9 @@ impl<'mc> EulerAngle<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> EulerAngle<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: f64,
@@ -3913,7 +3974,8 @@ pub struct StringUtil<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for StringUtil<'mc> {
+
+impl<'mc> JNIRaw<'mc> for StringUtil<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -3922,8 +3984,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for StringUtil<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> StringUtil<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for StringUtil<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3941,6 +4004,9 @@ impl<'mc> StringUtil<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> StringUtil<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::util::StringUtil<'mc>, Box<dyn std::error::Error>> {
@@ -4093,7 +4159,8 @@ pub struct ChatPaginator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ChatPaginator<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ChatPaginator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -4102,8 +4169,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ChatPaginator<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ChatPaginator<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ChatPaginator<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -4121,6 +4189,9 @@ impl<'mc> ChatPaginator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ChatPaginator<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::util::ChatPaginator<'mc>, Box<dyn std::error::Error>> {
@@ -4286,7 +4357,8 @@ pub struct Vector<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for Vector<'mc> {
+
+impl<'mc> JNIRaw<'mc> for Vector<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -4295,8 +4367,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for Vector<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Vector<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for Vector<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -4314,6 +4387,9 @@ impl<'mc> Vector<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Vector<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<f64>,
@@ -5486,7 +5562,8 @@ pub struct FileUtil<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for FileUtil<'mc> {
+
+impl<'mc> JNIRaw<'mc> for FileUtil<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -5495,8 +5572,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for FileUtil<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> FileUtil<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for FileUtil<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -5514,6 +5592,9 @@ impl<'mc> FileUtil<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> FileUtil<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::util::FileUtil<'mc>, Box<dyn std::error::Error>> {

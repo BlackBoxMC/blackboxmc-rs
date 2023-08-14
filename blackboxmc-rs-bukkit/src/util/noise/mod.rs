@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Generates simplex-based noise.
@@ -7,7 +9,8 @@ pub struct SimplexNoiseGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for SimplexNoiseGenerator<'mc> {
+
+impl<'mc> JNIRaw<'mc> for SimplexNoiseGenerator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -16,8 +19,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for SimplexNoiseGenerator<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> SimplexNoiseGenerator<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for SimplexNoiseGenerator<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -39,6 +43,9 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> SimplexNoiseGenerator<'mc> {
     pub fn new_with_world(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i64>,
@@ -319,7 +326,8 @@ pub struct PerlinNoiseGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PerlinNoiseGenerator<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PerlinNoiseGenerator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -328,8 +336,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PerlinNoiseGenerator<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PerlinNoiseGenerator<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PerlinNoiseGenerator<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -350,6 +359,9 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PerlinNoiseGenerator<'mc> {
     pub fn new_with_world(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<blackboxmc_java::JavaRandom<'mc>>>,
@@ -628,7 +640,8 @@ pub struct SimplexOctaveGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for SimplexOctaveGenerator<'mc> {
+
+impl<'mc> JNIRaw<'mc> for SimplexOctaveGenerator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -637,8 +650,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for SimplexOctaveGenerator<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> SimplexOctaveGenerator<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for SimplexOctaveGenerator<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -660,6 +674,9 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> SimplexOctaveGenerator<'mc> {
     pub fn new_with_world(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i64,
@@ -989,7 +1006,8 @@ pub struct OctaveGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for OctaveGenerator<'mc> {
+
+impl<'mc> JNIRaw<'mc> for OctaveGenerator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -998,8 +1016,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for OctaveGenerator<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> OctaveGenerator<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for OctaveGenerator<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1019,6 +1038,9 @@ impl<'mc> OctaveGenerator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> OctaveGenerator<'mc> {
     //
 
     /// Sets the scale used for all coordinates passed to this generator.
@@ -1268,7 +1290,8 @@ pub struct PerlinOctaveGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PerlinOctaveGenerator<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PerlinOctaveGenerator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1277,8 +1300,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PerlinOctaveGenerator<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PerlinOctaveGenerator<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PerlinOctaveGenerator<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1300,6 +1324,9 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PerlinOctaveGenerator<'mc> {
     pub fn new_with_world(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<blackboxmc_java::JavaRandom<'mc>>,
@@ -1596,7 +1623,8 @@ pub struct NoiseGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for NoiseGenerator<'mc> {
+
+impl<'mc> JNIRaw<'mc> for NoiseGenerator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1605,18 +1633,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for NoiseGenerator<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> NoiseGenerator<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "NoiseGenerator", name, lib_name) }?;
-        Self::from_raw(env, obj)
-    }
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for NoiseGenerator<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1635,6 +1654,19 @@ impl<'mc> NoiseGenerator<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+}
+
+impl<'mc> NoiseGenerator<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "NoiseGenerator", name, lib_name) }?;
+        Self::from_raw(env, obj)
     }
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,

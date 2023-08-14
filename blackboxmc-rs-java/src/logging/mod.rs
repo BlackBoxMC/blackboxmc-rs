@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// ErrorManager objects can be attached to Handlers to process any error that occurs on a Handler during Logging.
@@ -7,7 +9,8 @@ pub struct JavaErrorManager<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaErrorManager<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaErrorManager<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -16,8 +19,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaErrorManager<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaErrorManager<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaErrorManager<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -37,6 +41,9 @@ impl<'mc> JavaErrorManager<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaErrorManager<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -60,7 +67,11 @@ impl<'mc> JavaErrorManager<'mc> {
             self.jni_ref().new_string(arg0.into())?,
         ));
         let val_2 = jni::objects::JValueGen::Object(arg1);
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
+        let val_3 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg2.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "error",
@@ -85,12 +96,20 @@ impl<'mc> JavaErrorManager<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -190,7 +209,8 @@ pub struct JavaXMLFormatter<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaXMLFormatter<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaXMLFormatter<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -199,8 +219,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaXMLFormatter<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaXMLFormatter<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaXMLFormatter<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -220,6 +241,9 @@ impl<'mc> JavaXMLFormatter<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaXMLFormatter<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -325,12 +349,20 @@ impl<'mc> JavaXMLFormatter<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -435,7 +467,8 @@ pub struct JavaFormatter<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaFormatter<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaFormatter<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -444,8 +477,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaFormatter<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaFormatter<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaFormatter<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -463,6 +497,9 @@ impl<'mc> JavaFormatter<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaFormatter<'mc> {
     //
 
     pub fn get_head(
@@ -558,12 +595,20 @@ impl<'mc> JavaFormatter<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -682,7 +727,8 @@ pub struct JavaSocketHandler<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaSocketHandler<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaSocketHandler<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -691,8 +737,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaSocketHandler<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaSocketHandler<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaSocketHandler<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -712,6 +759,9 @@ impl<'mc> JavaSocketHandler<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaSocketHandler<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<String>>,
@@ -728,7 +778,8 @@ impl<'mc> JavaSocketHandler<'mc> {
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 =
+                jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![a.into()])?);
             args.push(val_2);
         }
         sig += ")V";
@@ -941,12 +992,20 @@ impl<'mc> JavaSocketHandler<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -1050,7 +1109,8 @@ pub struct JavaSimpleFormatter<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaSimpleFormatter<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaSimpleFormatter<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1059,8 +1119,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaSimpleFormatter<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaSimpleFormatter<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaSimpleFormatter<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1080,6 +1141,9 @@ impl<'mc> JavaSimpleFormatter<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaSimpleFormatter<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -1185,12 +1249,20 @@ impl<'mc> JavaSimpleFormatter<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -1295,7 +1367,8 @@ pub struct JavaHandler<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaHandler<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaHandler<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1304,8 +1377,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaHandler<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaHandler<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaHandler<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1323,6 +1397,9 @@ impl<'mc> JavaHandler<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaHandler<'mc> {
     //
 
     pub fn set_filter(
@@ -1526,12 +1603,20 @@ impl<'mc> JavaHandler<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -1655,7 +1740,8 @@ pub struct JavaMemoryHandler<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaMemoryHandler<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaMemoryHandler<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1664,8 +1750,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaMemoryHandler<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaMemoryHandler<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaMemoryHandler<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1685,6 +1772,9 @@ impl<'mc> JavaMemoryHandler<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaMemoryHandler<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -1700,7 +1790,8 @@ impl<'mc> JavaMemoryHandler<'mc> {
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 =
+                jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![a.into()])?);
             args.push(val_2);
         }
         if let Some(a) = arg2 {
@@ -1955,12 +2046,20 @@ impl<'mc> JavaMemoryHandler<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -2108,7 +2207,8 @@ pub struct JavaLogger<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaLogger<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaLogger<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2117,8 +2217,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaLogger<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaLogger<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaLogger<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2136,6 +2237,9 @@ impl<'mc> JavaLogger<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaLogger<'mc> {
     //
 
     pub fn warning_with_supplier(
@@ -2353,8 +2457,11 @@ impl<'mc> JavaLogger<'mc> {
 
     pub fn set_use_parent_handlers(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setUseParentHandlers",
@@ -2808,12 +2915,20 @@ impl<'mc> JavaLogger<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -2929,7 +3044,8 @@ pub struct JavaConsoleHandler<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaConsoleHandler<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaConsoleHandler<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2938,8 +3054,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaConsoleHandler<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaConsoleHandler<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaConsoleHandler<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2959,6 +3076,9 @@ impl<'mc> JavaConsoleHandler<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaConsoleHandler<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -3172,12 +3292,20 @@ impl<'mc> JavaConsoleHandler<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -3282,7 +3410,8 @@ pub struct JavaLoggingPermission<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaLoggingPermission<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaLoggingPermission<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -3291,8 +3420,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaLoggingPermission<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaLoggingPermission<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaLoggingPermission<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3313,6 +3443,9 @@ impl<'mc> JavaLoggingPermission<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaLoggingPermission<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
@@ -3468,12 +3601,20 @@ impl<'mc> JavaLoggingPermission<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -3532,8 +3673,19 @@ pub struct JavaFilter<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> JavaFilter<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for JavaFilter<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for JavaFilter<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3551,6 +3703,9 @@ impl<'mc> JavaFilter<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaFilter<'mc> {
     //
 
     pub fn is_loggable(
@@ -3569,15 +3724,6 @@ impl<'mc> JavaFilter<'mc> {
         Ok(res.z()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for JavaFilter<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// LogRecord objects are used to pass logging requests between the logging framework and individual log Handlers.
 /// <p>When a LogRecord is passed into the logging framework it logically belongs to the framework and should no longer be used or updated by the client application.</p>
 /// <p>Note that if the client application has not specified an explicit source method name and source class name, then the LogRecord class will infer them automatically when they are first accessed (due to a call on getSourceMethodName or getSourceClassName) by analyzing the call stack. Therefore, if a logging Handler wants to pass off a LogRecord to another thread, or to transmit it over RMI, and if it wishes to subsequently obtain method name or class name information it should call one of getSourceClassName or getSourceMethodName to force the values to be filled in.</p>
@@ -3591,7 +3737,8 @@ pub struct JavaLogRecord<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaLogRecord<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaLogRecord<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -3600,8 +3747,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaLogRecord<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaLogRecord<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaLogRecord<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3619,6 +3767,9 @@ impl<'mc> JavaLogRecord<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaLogRecord<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
@@ -3858,7 +4009,11 @@ impl<'mc> JavaLogRecord<'mc> {
 
     pub fn set_sequence_number(&self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(J)V");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "long",
+            "(J)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setSequenceNumber",
@@ -3916,7 +4071,11 @@ impl<'mc> JavaLogRecord<'mc> {
 
     pub fn set_thread_id(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "int",
+            "(I)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setThreadID",
@@ -3943,7 +4102,11 @@ impl<'mc> JavaLogRecord<'mc> {
         arg0: i64,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(J)Ljava/util/logging/LogRecord;");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "long",
+            "(J)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setLongThreadID",
@@ -3977,7 +4140,11 @@ impl<'mc> JavaLogRecord<'mc> {
 
     pub fn set_millis(&self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(J)V");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "long",
+            "(J)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setMillis",
@@ -4054,12 +4221,20 @@ impl<'mc> JavaLogRecord<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -4177,7 +4352,8 @@ pub struct JavaStreamHandler<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaStreamHandler<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaStreamHandler<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -4186,8 +4362,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaStreamHandler<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaStreamHandler<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaStreamHandler<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -4207,6 +4384,9 @@ impl<'mc> JavaStreamHandler<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaStreamHandler<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
@@ -4434,12 +4614,20 @@ impl<'mc> JavaStreamHandler<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";
@@ -4554,7 +4742,8 @@ pub struct JavaLevel<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaLevel<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaLevel<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -4563,8 +4752,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaLevel<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaLevel<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaLevel<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -4582,6 +4772,9 @@ impl<'mc> JavaLevel<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaLevel<'mc> {
     //
 
     pub fn resource_bundle_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -4714,12 +4907,20 @@ impl<'mc> JavaLevel<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";

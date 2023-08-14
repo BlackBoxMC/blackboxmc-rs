@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 #[derive(PartialEq, Eq)]
@@ -34,6 +36,7 @@ impl<'mc> std::ops::Deref for StructureRotation<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for StructureRotation<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -43,11 +46,15 @@ impl<'mc> JNIRaw<'mc> for StructureRotation<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> StructureRotation<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for StructureRotation<'mc> {
+    type Enum = StructureRotationEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: StructureRotationEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -66,6 +73,9 @@ impl<'mc> StructureRotation<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> StructureRotation<'mc> {
     pub const NONE: StructureRotationEnum = StructureRotationEnum::None;
     pub const CLOCKWISE_90: StructureRotationEnum = StructureRotationEnum::Clockwise90;
     pub const CLOCKWISE_180: StructureRotationEnum = StructureRotationEnum::Clockwise180;
@@ -144,6 +154,7 @@ impl<'mc> std::ops::Deref for UsageMode<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for UsageMode<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -153,11 +164,15 @@ impl<'mc> JNIRaw<'mc> for UsageMode<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> UsageMode<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for UsageMode<'mc> {
+    type Enum = UsageModeEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: UsageModeEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate UsageMode from null object.").into());
@@ -173,6 +188,9 @@ impl<'mc> UsageMode<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> UsageMode<'mc> {
     pub const SAVE: UsageModeEnum = UsageModeEnum::Save;
     pub const LOAD: UsageModeEnum = UsageModeEnum::Load;
     pub const CORNER: UsageModeEnum = UsageModeEnum::Corner;
@@ -248,6 +266,7 @@ impl<'mc> std::ops::Deref for Mirror<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for Mirror<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -257,11 +276,15 @@ impl<'mc> JNIRaw<'mc> for Mirror<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Mirror<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for Mirror<'mc> {
+    type Enum = MirrorEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: MirrorEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Mirror from null object.").into());
@@ -277,6 +300,9 @@ impl<'mc> Mirror<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> Mirror<'mc> {
     pub const NONE: MirrorEnum = MirrorEnum::None;
     pub const LEFT_RIGHT: MirrorEnum = MirrorEnum::LeftRight;
     pub const FRONT_BACK: MirrorEnum = MirrorEnum::FrontBack;

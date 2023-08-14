@@ -236,28 +236,26 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
     else:
         match(type["type_name_alone"].replace("Java","")):
             case "bool" | "i8" | "char" | "f64" | "f32" | "i32" | "i64" | "i16" | "u16":
-                v = java_type_from_rust(type["type_name_alone"])
-                class_name = v["class_name"]
-                if class_name != "":
-                    match(type["type_name_alone"]):
-                        case "bool":
-                            res.append("// "+str(options_start_at-1)+"\nlet "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Bool("+new_arg+".into());")
-                        case "i8":
-                            res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Byte("+new_arg+".into());")
-                        case "char" | "u16":
-                            res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Char("+new_arg+".into());")
-                        case "f64":
-                            res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Double("+new_arg+".into());")
-                        case "f32":
-                            res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Float("+new_arg+".into());")
-                        case "i32":
-                            res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Int("+new_arg+".into());")
-                        case "i64":
-                            res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Long("+new_arg+".into());")
-                        case "i16":
-                            res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Short("+new_arg+".into());")
-                else:
-                    return None
+                v = java_type_from_rust(type)
+                match(type["type_name_original"]):
+                    case "boolean":
+                        res.append("// "+str(options_start_at-1)+"\nlet "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Bool("+new_arg+".into());")
+                    case "byte":
+                        res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Byte("+new_arg+".into());")
+                    case "char":
+                        res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Char("+new_arg+".into());")
+                    case "double":
+                        res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Double("+new_arg+".into());")
+                    case "float":
+                        res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Float("+new_arg+".into());")
+                    case "int":
+                        res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Int("+new_arg+".into());")
+                    case "long":
+                        res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Long("+new_arg+".into());")
+                    case "short":
+                        res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Short("+new_arg+".into());")
+                    case _:
+                        res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object("+prefix+".new_object(\""+type["type_name_original"].replace(".","/").replace("Java","")+"\", \""+v["function_signature"]+"\", vec!["+new_arg+".into()])?);")
             case "String":
                 res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object(jni::objects::JObject::from("+prefix+".new_string("+new_arg+".into())?));")
             case "jni::objects::JObject":
@@ -273,7 +271,7 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
                             "for v in "+new_arg+"{"
                         ]
 
-                        t1 = java_type_from_rust(type["generics"][0]["type_name_resolved"])["class_name"]
+                        t1 = java_type_from_rust(type["generics"][0])["class_name"]
 
                         co = code_format({
                             "type_name_resolved": type["generics"][0]["type_name_resolved"],
@@ -705,33 +703,33 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
     }
 
 def java_type_from_rust(type):
-    match(type):
+    match(type["type_name_alone"]):
         case "bool":
-            class_name = "java/lang/Boolean"
+            class_name = "boolean"
             function_signature = "(Z)V"
         case "byte":
-            class_name = "java/lang/Byte"
+            class_name = "byte"
             function_signature = "(B)V"
         case "u16":
-            class_name = "java/lang/Character"
+            class_name = "char"
             function_signature = "(C)V"
         case "i16":
-            class_name = "java/lang/Short"
+            class_name = "short"
             function_signature = "(S)V"
         case "i32":
-            class_name = "java/lang/Integer"
+            class_name = "int"
             function_signature = "(I)V"
         case "i64":
-            class_name = "java/lang/Long"
+            class_name = "long"
             function_signature = "(J)V"
         case "f32":
-            class_name = "java/lang/Float"
+            class_name = "float"
             function_signature = "(F)V"
         case "f64":
-            class_name = "java/lang/Double"
+            class_name = "double"
             function_signature = "(D)V"
         case _:
-            class_name = "java/Lang/Object"
+            class_name = (type["package_name"].replace(".","/"))+"/"+type["type_name_alone"]
             function_signature = "(Ljava/Lang/Object)V"
     return {
         "class_name": class_name,
@@ -740,21 +738,21 @@ def java_type_from_rust(type):
 
 def java_letter_from_rust(type):
     match(type.replace("Java","")):
-        case "java.lang.Boolean" | "boolean":
+        case "boolean":
             return "Z"
-        case "java.lang.Byte" | "byte":
+        case "byte":
             return "B"
-        case "java.lang.Character" | "char":
+        case "char":
             return "C"
-        case "java.lang.Short" | "short":
+        case "short":
             return "S"
-        case "java.lang.Integer" | "int":
+        case "int":
             return "I"
-        case "java.lang.Long" | "long":
+        case "long":
             return "J"
-        case "java.lang.Float" | "float":
+        case "float":
             return "F"
-        case "java.lang.Double" | "double":
+        case "double":
             return "D"
         case "void":
             return "V"
@@ -783,33 +781,67 @@ def gen_to_string_func(name, static):
         """
 
 
-def gen_from_raw_func(name, is_enum, mod_path, full_name):
+def gen_jniraw_impl(name, is_enum, mod_path, full_name):
     impl_signature = []
-    impl_signature.append("pub fn from_raw(env: &blackboxmc_general::SharedJNIEnv<'mc>, obj: jni::objects::JObject<'mc>")
+    impl_signature.append("""
+    impl<'mc> JNIRaw<'mc> for """+name+"""<'mc> {
+        fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+            self.0.clone()
+        }
+        
+        fn jni_object(&self) -> jni::objects::JObject<'mc> {
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        }
+    }
+    """)
+                          
     if is_enum:
-        impl_signature.append(", e: "+name+"Enum")
-    impl_signature.append(") -> Result<Self, Box<dyn std::error::Error>> {")
-    impl_signature.append(
-                "if obj.is_null() {\n"+
-                "    return Err(eyre::eyre!(\n"+
-                "        \"Tried to instantiate "+name+" from null object.\")\n"+
-                "    .into());\n"+
-                "}\n"+
-                "let (valid, name) = env.validate_name(&obj, \""+full_name.replace(".","/")+"\")?;\n"+
-                "if !valid {\n"+
-                "    Err(eyre::eyre!(\n"+
-                "        \"Invalid argument passed. Expected a "+name+" object, got {}\",\n"+
-                "        name\n"+
-                "    )\n"+
-                "    .into())\n"+
-                "} else {\n"+
-                "    Ok(Self(env.clone(), obj")
+        impl_signature.append("""
+    impl<'mc> JNIInstantiatableEnum<'mc> for """+name+"""<'mc> {
+        type Enum = """+name+"""Enum;
+        """)
+    else:
+        impl_signature.append("""
+    impl<'mc> JNIInstantiatable<'mc> for """+name+"""<'mc> {
+        """)
+
+    impl_signature.append("""
+        fn from_raw(
+            env: &blackboxmc_general::SharedJNIEnv<'mc>,
+            obj: jni::objects::JObject<'mc>,
+    """)
     if is_enum:
-        impl_signature.append(", e")
-    impl_signature.append("))\n"+
-                "}"
-        )
-    impl_signature.append("}")
+        impl_signature.append("""
+            e: Self::Enum,
+        """)
+
+    impl_signature.append("""
+        ) -> Result<Self, Box<dyn std::error::Error>> {
+            if obj.is_null() {
+                return Err(eyre::eyre!(
+                    \"Tried to instantiate """+name+""" from null object.\")
+                .into());
+            }
+            let (valid, name) = env.validate_name(&obj, \""""+full_name.replace(".","/")+"""\")?;
+            if !valid {
+                Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a """+name+""" object, got {}",
+                    name
+                )
+                .into())
+            } else {
+    """)
+    if is_enum:
+        impl_signature.append("Ok(Self(env.clone(), obj, e))")
+    else:
+        impl_signature.append("Ok(Self(env.clone(), obj))")
+    impl_signature.append("""
+            }
+        }
+    }
+    """)
+                
+        
     for impl in impl_signature:
         file_cache[mod_path].append(impl)
 
@@ -1224,7 +1256,7 @@ def parse_classes(library, val, classes):
         parsed_classes[mod_path] = [full_name]
 
     if mod_path not in file_cache:
-        file_cache[mod_path] = ["#![allow(deprecated)]\nuse blackboxmc_general::JNIRaw;\nuse color_eyre::eyre::Result;"]
+        file_cache[mod_path] = ["#![allow(deprecated)]\nuse blackboxmc_general::JNIRaw;\nuse blackboxmc_general::JNIInstantiatable;\nuse blackboxmc_general::JNIInstantiatableEnum;\nuse color_eyre::eyre::Result;"]
 
     if (name == ""):
         return
@@ -1289,24 +1321,15 @@ def parse_classes(library, val, classes):
         file_cache[mod_path].append("       return &self.2;")
         file_cache[mod_path].append("   }")
         file_cache[mod_path].append("}")
-        file_cache[mod_path].append("impl<'mc> JNIRaw<'mc> for "+name+"<'mc> {")
-        file_cache[mod_path].append("    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {")
-        file_cache[mod_path].append("        self.0.clone()")
-        file_cache[mod_path].append("    }")
-        file_cache[mod_path].append("    ")
-        file_cache[mod_path].append("    fn jni_object(&self) -> jni::objects::JObject<'mc> {")
-        file_cache[mod_path].append("        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }")
-        file_cache[mod_path].append("    }")
-        file_cache[mod_path].append("}")
+        
 
         if "classes" in val:
             for cl in val["classes"]:
                 parse_classes(library, cl, classes)
 
+        gen_jniraw_impl(name, True, mod_path, full_name)
 
         file_cache[mod_path].append("impl<'mc> "+name+"<'mc> {")
-
-        gen_from_raw_func(name, True, mod_path, full_name)
 
         has_to_string = False
         has_to_string_is_static = False
@@ -1327,10 +1350,11 @@ def parse_classes(library, val, classes):
         file_cache[mod_path].append(
             "pub struct "+name+"<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);"
         )
+
+        gen_jniraw_impl(name, False, mod_path, full_name)
+
         file_cache[mod_path].append(
             "impl<'mc> "+name+"<'mc> {")
-
-        gen_from_raw_func(name, False, mod_path, full_name)
 
         has_to_string = False
         has_to_string_is_static = False
@@ -1345,15 +1369,6 @@ def parse_classes(library, val, classes):
         if has_to_string:
             file_cache[mod_path].append(gen_to_string_func(name,has_to_string_is_static))
 
-        file_cache[mod_path].append("impl<'mc> JNIRaw<'mc> for "+name+"<'mc> {")
-        file_cache[mod_path].append("    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {")
-        file_cache[mod_path].append("        self.0.clone()")
-        file_cache[mod_path].append("    }")
-        file_cache[mod_path].append("    ")
-        file_cache[mod_path].append("    fn jni_object(&self) -> jni::objects::JObject<'mc> {")
-        file_cache[mod_path].append("        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }")
-        file_cache[mod_path].append("    }")
-        file_cache[mod_path].append("}")
         #if "interfaces" in val:
         #    for inter in val["interfaces"]:
         #        print(inter["name"])
@@ -1366,19 +1381,9 @@ def parse_classes(library, val, classes):
             for cl in val["classes"]:
                 parse_classes(library,cl, classes)
 
-        file_cache[mod_path].append("impl<'mc> blackboxmc_general::JNIRaw<'mc> for "+name+"<'mc> {")
-        file_cache[mod_path].append("    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {")
-        file_cache[mod_path].append("        self.0.clone()")
-        file_cache[mod_path].append("    }")
-        file_cache[mod_path].append("    ")
-        file_cache[mod_path].append("    fn jni_object(&self) -> jni::objects::JObject<'mc> {")
-        file_cache[mod_path].append("        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }")
-        file_cache[mod_path].append("    }")
-        file_cache[mod_path].append("}")
-
+        gen_jniraw_impl(name, False, mod_path, full_name)
+        
         file_cache[mod_path].append("impl<'mc> "+name+"<'mc> {")
-
-        gen_from_raw_func(name, False, mod_path, full_name)
 
         if "constructors" in val:
             grp = parse_methods(library, name,val["constructors"],mod_path,False,False,False,[],True,full_name)

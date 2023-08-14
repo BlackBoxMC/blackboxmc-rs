@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 #[derive(PartialEq, Eq)]
@@ -52,6 +54,7 @@ impl<'mc> std::ops::Deref for MushroomBlockTexture<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for MushroomBlockTexture<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -61,11 +64,15 @@ impl<'mc> JNIRaw<'mc> for MushroomBlockTexture<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> MushroomBlockTexture<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for MushroomBlockTexture<'mc> {
+    type Enum = MushroomBlockTextureEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: MushroomBlockTextureEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -84,6 +91,9 @@ impl<'mc> MushroomBlockTexture<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> MushroomBlockTexture<'mc> {
     pub const ALL_PORES: MushroomBlockTextureEnum = MushroomBlockTextureEnum::AllPores;
     pub const CAP_NORTH_WEST: MushroomBlockTextureEnum = MushroomBlockTextureEnum::CapNorthWest;
     pub const CAP_NORTH: MushroomBlockTextureEnum = MushroomBlockTextureEnum::CapNorth;

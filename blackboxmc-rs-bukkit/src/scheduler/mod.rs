@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Represents a task being executed by the scheduler
@@ -8,8 +10,19 @@ pub struct BukkitTask<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> BukkitTask<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for BukkitTask<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for BukkitTask<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -27,6 +40,9 @@ impl<'mc> BukkitTask<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> BukkitTask<'mc> {
     //
 
     pub fn cancel(&self) -> Result<(), Box<dyn std::error::Error>> {
@@ -80,15 +96,6 @@ impl<'mc> BukkitTask<'mc> {
         Ok(res.i()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for BukkitTask<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// Represents a worker thread for the scheduler. This gives information about the Thread object for the task, owner of the task and the taskId.
 /// <p>Workers are used to execute async tasks.</p>
 ///
@@ -97,8 +104,19 @@ pub struct BukkitWorker<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> BukkitWorker<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for BukkitWorker<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for BukkitWorker<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -116,6 +134,9 @@ impl<'mc> BukkitWorker<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> BukkitWorker<'mc> {
     //
 
     pub fn owner(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
@@ -139,7 +160,15 @@ impl<'mc> BukkitWorker<'mc> {
         Ok(res.i()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for BukkitWorker<'mc> {
+
+///
+/// This is a representation of an abstract class.
+pub struct BukkitScheduler<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for BukkitScheduler<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -149,14 +178,8 @@ impl<'mc> JNIRaw<'mc> for BukkitWorker<'mc> {
     }
 }
 
-///
-/// This is a representation of an abstract class.
-pub struct BukkitScheduler<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> BukkitScheduler<'mc> {
-    pub fn from_raw(
+impl<'mc> JNIInstantiatable<'mc> for BukkitScheduler<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -176,6 +199,9 @@ impl<'mc> BukkitScheduler<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> BukkitScheduler<'mc> {
     //
 
     /// Check if the task queued to be run later.
@@ -326,21 +352,13 @@ impl<'mc> BukkitScheduler<'mc> {
         Ok(new_vec)
     }
 }
-impl<'mc> JNIRaw<'mc> for BukkitScheduler<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// This class is provided as an easy way to handle scheduling tasks.
 pub struct BukkitRunnable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for BukkitRunnable<'mc> {
+
+impl<'mc> JNIRaw<'mc> for BukkitRunnable<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -349,18 +367,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for BukkitRunnable<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> BukkitRunnable<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "BukkitRunnable", name, lib_name) }?;
-        Self::from_raw(env, obj)
-    }
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for BukkitRunnable<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -379,6 +388,19 @@ impl<'mc> BukkitRunnable<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+}
+
+impl<'mc> BukkitRunnable<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "BukkitRunnable", name, lib_name) }?;
+        Self::from_raw(env, obj)
     }
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,

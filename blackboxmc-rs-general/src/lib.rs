@@ -1015,7 +1015,33 @@ impl<'mc> Clone for SharedJNIEnv<'mc> {
     }
 }
 
+/// Trait for any object that can be deconstructed into its JNI reference and JNI object
 pub trait JNIRaw<'mc> {
     fn jni_ref(&self) -> crate::SharedJNIEnv<'mc>;
     fn jni_object(&self) -> jni::objects::JObject<'mc>;
+}
+
+/// Trait for any object that can be instantiated from a JNI reference or JNI object.
+/// Enums do not implement this trait because not all of their from_raw functions can have the
+/// same function signature; see JNIInstantiatableEnum
+pub trait JNIInstantiatable<'mc> {
+    fn from_raw(
+        env: &SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+    ) -> Result<Self, Box<dyn std::error::Error>>
+    where
+        Self: Sized;
+}
+
+/// Trait for any enum that can be instantiated from a JNI reference or JNI object.
+pub trait JNIInstantiatableEnum<'mc> {
+    type Enum;
+
+    fn from_raw(
+        env: &SharedJNIEnv<'mc>,
+        obj: jni::objects::JObject<'mc>,
+        e: Self::Enum,
+    ) -> Result<Self, Box<dyn std::error::Error>>
+    where
+        Self: Sized;
 }

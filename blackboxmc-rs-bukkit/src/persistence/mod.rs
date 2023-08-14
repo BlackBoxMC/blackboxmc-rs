@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// The <a href="PersistentDataHolder.html" title="interface in org.bukkit.persistence"><code>PersistentDataHolder</code></a> interface defines an object that can store custom persistent meta data on it.
@@ -8,8 +10,19 @@ pub struct PersistentDataHolder<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> PersistentDataHolder<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for PersistentDataHolder<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for PersistentDataHolder<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -30,6 +43,9 @@ impl<'mc> PersistentDataHolder<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PersistentDataHolder<'mc> {
     //
 
     pub fn persistent_data_container(
@@ -48,22 +64,14 @@ impl<'mc> PersistentDataHolder<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for PersistentDataHolder<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// A default implementation that simply exists to pass on the retrieved or inserted value to the next layer.
 /// <p>This implementation does not add any kind of logic, but is used to provide default implementations for the primitive types.</p>
 pub struct PersistentDataTypePrimitivePersistentDataType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PersistentDataTypePrimitivePersistentDataType<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PersistentDataTypePrimitivePersistentDataType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -72,15 +80,16 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PersistentDataTypePrimitivePersist
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PersistentDataTypePrimitivePersistentDataType<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
-        "Tried to instantiate PersistentDataTypePrimitivePersistentDataType from null object.")
-            .into());
+                    "Tried to instantiate PersistentDataTypePrimitivePersistentDataType from null object.")
+                .into());
         }
         let (valid, name) = env.validate_name(
             &obj,
@@ -88,14 +97,17 @@ impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
         )?;
         if !valid {
             Err(eyre::eyre!(
-        "Invalid argument passed. Expected a PersistentDataTypePrimitivePersistentDataType object, got {}",
-        name
-    )
-    .into())
+                    "Invalid argument passed. Expected a PersistentDataTypePrimitivePersistentDataType object, got {}",
+                    name
+                )
+                .into())
         } else {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
     //
 
     pub fn primitive_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -286,8 +298,19 @@ pub struct PersistentDataAdapterContext<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> PersistentDataAdapterContext<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for PersistentDataAdapterContext<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for PersistentDataAdapterContext<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -309,6 +332,9 @@ impl<'mc> PersistentDataAdapterContext<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PersistentDataAdapterContext<'mc> {
     //
 
     pub fn new_persistent_data_container(
@@ -325,15 +351,6 @@ impl<'mc> PersistentDataAdapterContext<'mc> {
         crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-}
-impl<'mc> JNIRaw<'mc> for PersistentDataAdapterContext<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
 /// This class represents an enum with a generic content type. It defines the types a custom tag can have.
@@ -369,18 +386,19 @@ pub struct PersistentDataType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> PersistentDataType<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "PersistentDataType", name, lib_name) }?;
-        Self::from_raw(env, obj)
+
+impl<'mc> JNIRaw<'mc> for PersistentDataType<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
-    pub fn from_raw(
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for PersistentDataType<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -399,6 +417,19 @@ impl<'mc> PersistentDataType<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+}
+
+impl<'mc> PersistentDataType<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "PersistentDataType", name, lib_name) }?;
+        Self::from_raw(env, obj)
     }
     //
 
@@ -472,15 +503,6 @@ impl<'mc> PersistentDataType<'mc> {
         Ok(res.l()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for PersistentDataType<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// A convenience implementation to convert between Byte and Boolean as there is no native implementation for booleans.
 ///
 /// Any byte value not equal to 0 is considered to be true.
@@ -488,7 +510,8 @@ pub struct PersistentDataTypeBooleanPersistentDataType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PersistentDataTypeBooleanPersistentDataType<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PersistentDataTypeBooleanPersistentDataType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -497,15 +520,16 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PersistentDataTypeBooleanPersisten
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PersistentDataTypeBooleanPersistentDataType<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
-        "Tried to instantiate PersistentDataTypeBooleanPersistentDataType from null object.")
-            .into());
+                    "Tried to instantiate PersistentDataTypeBooleanPersistentDataType from null object.")
+                .into());
         }
         let (valid, name) = env.validate_name(
             &obj,
@@ -513,14 +537,17 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
         )?;
         if !valid {
             Err(eyre::eyre!(
-        "Invalid argument passed. Expected a PersistentDataTypeBooleanPersistentDataType object, got {}",
-        name
-    )
-    .into())
+                    "Invalid argument passed. Expected a PersistentDataTypeBooleanPersistentDataType object, got {}",
+                    name
+                )
+                .into())
         } else {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<
@@ -567,9 +594,12 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
     ) -> Result<i8, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Z";
-        // 1
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        sig += "Ljava/lang/Boolean;";
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/persistence/PersistentDataAdapterContext;";
@@ -578,7 +608,7 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
             });
             args.push(val_2);
         }
-        sig += ")B";
+        sig += ")Ljava/lang/Byte;";
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "toPrimitive", sig.as_str(), args);
@@ -730,8 +760,19 @@ pub struct PersistentDataContainer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> PersistentDataContainer<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for PersistentDataContainer<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for PersistentDataContainer<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -753,6 +794,9 @@ impl<'mc> PersistentDataContainer<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PersistentDataContainer<'mc> {
     //
 
     pub fn has(
@@ -923,14 +967,5 @@ impl<'mc> PersistentDataContainer<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
-    }
-}
-impl<'mc> JNIRaw<'mc> for PersistentDataContainer<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }

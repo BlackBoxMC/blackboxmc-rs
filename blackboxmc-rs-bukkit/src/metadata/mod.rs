@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 
@@ -8,8 +10,19 @@ pub struct MetadataStore<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> MetadataStore<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for MetadataStore<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for MetadataStore<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -27,6 +40,9 @@ impl<'mc> MetadataStore<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> MetadataStore<'mc> {
     //
 
     pub fn set_metadata(
@@ -165,7 +181,15 @@ impl<'mc> MetadataStore<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for MetadataStore<'mc> {
+
+///
+/// This is a representation of an abstract class.
+pub struct MetadataValue<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for MetadataValue<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -175,24 +199,8 @@ impl<'mc> JNIRaw<'mc> for MetadataStore<'mc> {
     }
 }
 
-///
-/// This is a representation of an abstract class.
-pub struct MetadataValue<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> MetadataValue<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "MetadataValue", name, lib_name) }?;
-        Self::from_raw(env, obj)
-    }
-    pub fn from_raw(
+impl<'mc> JNIInstantiatable<'mc> for MetadataValue<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -209,6 +217,19 @@ impl<'mc> MetadataValue<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+}
+
+impl<'mc> MetadataValue<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "MetadataValue", name, lib_name) }?;
+        Self::from_raw(env, obj)
     }
     //
 
@@ -327,7 +348,15 @@ impl<'mc> MetadataValue<'mc> {
         Ok(res.l()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for MetadataValue<'mc> {
+/// This interface is implemented by all objects that can provide metadata about themselves.
+///
+/// This is a representation of an abstract class.
+pub struct Metadatable<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for Metadatable<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -336,15 +365,9 @@ impl<'mc> JNIRaw<'mc> for MetadataValue<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// This interface is implemented by all objects that can provide metadata about themselves.
-///
-/// This is a representation of an abstract class.
-pub struct Metadatable<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> Metadatable<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for Metadatable<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -362,6 +385,9 @@ impl<'mc> Metadatable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Metadatable<'mc> {
     //
 
     pub fn set_metadata(
@@ -463,21 +489,13 @@ impl<'mc> Metadatable<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for Metadatable<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 
 pub struct MetadataStoreBase<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for MetadataStoreBase<'mc> {
+
+impl<'mc> JNIRaw<'mc> for MetadataStoreBase<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -486,8 +504,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for MetadataStoreBase<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> MetadataStoreBase<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for MetadataStoreBase<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -507,6 +526,9 @@ impl<'mc> MetadataStoreBase<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> MetadataStoreBase<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::metadata::MetadataStoreBase<'mc>, Box<dyn std::error::Error>> {
@@ -799,6 +821,7 @@ impl<'mc> std::ops::Deref for LazyMetadataValueCacheStrategy<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for LazyMetadataValueCacheStrategy<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -808,11 +831,15 @@ impl<'mc> JNIRaw<'mc> for LazyMetadataValueCacheStrategy<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for LazyMetadataValueCacheStrategy<'mc> {
+    type Enum = LazyMetadataValueCacheStrategyEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: LazyMetadataValueCacheStrategyEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -832,6 +859,9 @@ impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
     pub const CACHE_AFTER_FIRST_EVAL: LazyMetadataValueCacheStrategyEnum =
         LazyMetadataValueCacheStrategyEnum::CacheAfterFirstEval;
     pub const NEVER_CACHE: LazyMetadataValueCacheStrategyEnum =
@@ -881,7 +911,8 @@ impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
 
     //
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for LazyMetadataValue<'mc> {
+
+impl<'mc> JNIRaw<'mc> for LazyMetadataValue<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -890,8 +921,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for LazyMetadataValue<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> LazyMetadataValue<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for LazyMetadataValue<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -911,6 +943,9 @@ impl<'mc> LazyMetadataValue<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> LazyMetadataValue<'mc> {
     //
 
     pub fn invalidate(&self) -> Result<(), Box<dyn std::error::Error>> {
@@ -1148,7 +1183,8 @@ pub struct FixedMetadataValue<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for FixedMetadataValue<'mc> {
+
+impl<'mc> JNIRaw<'mc> for FixedMetadataValue<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1157,8 +1193,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for FixedMetadataValue<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> FixedMetadataValue<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for FixedMetadataValue<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1178,6 +1215,9 @@ impl<'mc> FixedMetadataValue<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> FixedMetadataValue<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
@@ -1438,7 +1478,8 @@ pub struct MetadataValueAdapter<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for MetadataValueAdapter<'mc> {
+
+impl<'mc> JNIRaw<'mc> for MetadataValueAdapter<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1447,8 +1488,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for MetadataValueAdapter<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> MetadataValueAdapter<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for MetadataValueAdapter<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1468,6 +1510,9 @@ impl<'mc> MetadataValueAdapter<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> MetadataValueAdapter<'mc> {
     //
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1730,6 +1775,7 @@ impl<'mc> std::ops::Deref for CacheStrategy<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for CacheStrategy<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -1739,11 +1785,15 @@ impl<'mc> JNIRaw<'mc> for CacheStrategy<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> CacheStrategy<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for CacheStrategy<'mc> {
+    type Enum = CacheStrategyEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: CacheStrategyEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate CacheStrategy from null object.").into());
@@ -1759,6 +1809,9 @@ impl<'mc> CacheStrategy<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> CacheStrategy<'mc> {
     pub const CACHE_AFTER_FIRST_EVAL: CacheStrategyEnum = CacheStrategyEnum::CacheAfterFirstEval;
     pub const NEVER_CACHE: CacheStrategyEnum = CacheStrategyEnum::NeverCache;
     pub const CACHE_ETERNALLY: CacheStrategyEnum = CacheStrategyEnum::CacheEternally;

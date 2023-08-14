@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 #[derive(PartialEq, Eq)]
@@ -108,6 +110,7 @@ impl<'mc> std::ops::Deref for PatternType<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for PatternType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -117,11 +120,15 @@ impl<'mc> JNIRaw<'mc> for PatternType<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PatternType<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for PatternType<'mc> {
+    type Enum = PatternTypeEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: PatternTypeEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate PatternType from null object.").into());
@@ -137,6 +144,9 @@ impl<'mc> PatternType<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> PatternType<'mc> {
     pub const BASE: PatternTypeEnum = PatternTypeEnum::Base;
     pub const SQUARE_BOTTOM_LEFT: PatternTypeEnum = PatternTypeEnum::SquareBottomLeft;
     pub const SQUARE_BOTTOM_RIGHT: PatternTypeEnum = PatternTypeEnum::SquareBottomRight;
@@ -260,7 +270,8 @@ pub struct Pattern<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for Pattern<'mc> {
+
+impl<'mc> JNIRaw<'mc> for Pattern<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -269,8 +280,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for Pattern<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Pattern<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for Pattern<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -288,6 +300,9 @@ impl<'mc> Pattern<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Pattern<'mc> {
     pub fn new_with_map(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::DyeColor<'mc>>>,

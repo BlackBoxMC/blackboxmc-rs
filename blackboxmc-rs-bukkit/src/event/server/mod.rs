@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// This event is called when a command is received over RCON. See the javadocs of <a href="ServerCommandEvent.html" title="class in org.bukkit.event.server"><code>ServerCommandEvent</code></a> for more information.
@@ -6,7 +8,8 @@ pub struct RemoteServerCommandEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for RemoteServerCommandEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for RemoteServerCommandEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15,8 +18,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for RemoteServerCommandEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> RemoteServerCommandEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for RemoteServerCommandEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -38,6 +42,9 @@ impl<'mc> RemoteServerCommandEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> RemoteServerCommandEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
@@ -299,7 +306,8 @@ pub struct PluginEnableEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PluginEnableEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PluginEnableEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -308,8 +316,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PluginEnableEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PluginEnableEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PluginEnableEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -329,6 +338,9 @@ impl<'mc> PluginEnableEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PluginEnableEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
@@ -542,7 +554,8 @@ pub struct ServerCommandEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ServerCommandEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ServerCommandEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -551,8 +564,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ServerCommandEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ServerCommandEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ServerCommandEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -573,6 +587,9 @@ impl<'mc> ServerCommandEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ServerCommandEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
@@ -843,7 +860,8 @@ pub struct ServiceUnregisterEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ServiceUnregisterEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ServiceUnregisterEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -852,8 +870,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ServiceUnregisterEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ServiceUnregisterEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ServiceUnregisterEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -875,6 +894,9 @@ impl<'mc> ServiceUnregisterEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ServiceUnregisterEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::plugin::RegisteredServiceProvider<'mc>>,
@@ -1077,7 +1099,8 @@ pub struct BroadcastMessageEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for BroadcastMessageEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for BroadcastMessageEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1086,8 +1109,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for BroadcastMessageEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> BroadcastMessageEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for BroadcastMessageEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1109,6 +1133,9 @@ impl<'mc> BroadcastMessageEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> BroadcastMessageEvent<'mc> {
     pub fn new_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: bool,
@@ -1386,7 +1413,8 @@ pub struct ServerEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ServerEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ServerEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1395,8 +1423,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ServerEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ServerEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ServerEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1414,6 +1443,9 @@ impl<'mc> ServerEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ServerEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<bool>,
@@ -1591,7 +1623,8 @@ pub struct TabCompleteEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for TabCompleteEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for TabCompleteEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1600,8 +1633,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for TabCompleteEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> TabCompleteEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for TabCompleteEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1621,6 +1655,9 @@ impl<'mc> TabCompleteEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> TabCompleteEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
@@ -1643,7 +1680,7 @@ impl<'mc> TabCompleteEvent<'mc> {
             jni.call_method(
                 &raw_val_3,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1779,7 +1816,7 @@ impl<'mc> TabCompleteEvent<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1943,7 +1980,8 @@ pub struct PluginDisableEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PluginDisableEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PluginDisableEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1952,8 +1990,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PluginDisableEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PluginDisableEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PluginDisableEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1974,6 +2013,9 @@ impl<'mc> PluginDisableEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PluginDisableEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
@@ -2173,7 +2215,8 @@ pub struct MapInitializeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for MapInitializeEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for MapInitializeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2182,8 +2225,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for MapInitializeEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> MapInitializeEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for MapInitializeEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2204,6 +2248,9 @@ impl<'mc> MapInitializeEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> MapInitializeEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::map::MapView<'mc>>,
@@ -2403,7 +2450,8 @@ pub struct ServiceEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ServiceEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ServiceEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2412,8 +2460,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ServiceEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ServiceEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ServiceEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2431,6 +2480,9 @@ impl<'mc> ServiceEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ServiceEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::plugin::RegisteredServiceProvider<'mc>>,
@@ -2648,6 +2700,7 @@ impl<'mc> std::ops::Deref for ServerLoadEventLoadType<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for ServerLoadEventLoadType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -2657,11 +2710,15 @@ impl<'mc> JNIRaw<'mc> for ServerLoadEventLoadType<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ServerLoadEventLoadType<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for ServerLoadEventLoadType<'mc> {
+    type Enum = ServerLoadEventLoadTypeEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: ServerLoadEventLoadTypeEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -2681,6 +2738,9 @@ impl<'mc> ServerLoadEventLoadType<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> ServerLoadEventLoadType<'mc> {
     pub const STARTUP: ServerLoadEventLoadTypeEnum = ServerLoadEventLoadTypeEnum::Startup;
     pub const RELOAD: ServerLoadEventLoadTypeEnum = ServerLoadEventLoadTypeEnum::Reload;
     pub fn from_string(str: String) -> std::option::Option<ServerLoadEventLoadTypeEnum> {
@@ -2723,7 +2783,8 @@ impl<'mc> ServerLoadEventLoadType<'mc> {
 
     //
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ServerLoadEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ServerLoadEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2732,8 +2793,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ServerLoadEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ServerLoadEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ServerLoadEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2753,6 +2815,9 @@ impl<'mc> ServerLoadEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ServerLoadEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::event::server::ServerLoadEventLoadType<'mc>>,
@@ -2969,7 +3034,8 @@ pub struct ServiceRegisterEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ServiceRegisterEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ServiceRegisterEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2978,8 +3044,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ServiceRegisterEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ServiceRegisterEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ServiceRegisterEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3000,6 +3067,9 @@ impl<'mc> ServiceRegisterEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ServiceRegisterEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::plugin::RegisteredServiceProvider<'mc>>,
@@ -3225,6 +3295,7 @@ impl<'mc> std::ops::Deref for LoadType<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for LoadType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -3234,11 +3305,15 @@ impl<'mc> JNIRaw<'mc> for LoadType<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> LoadType<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for LoadType<'mc> {
+    type Enum = LoadTypeEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: LoadTypeEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate LoadType from null object.").into());
@@ -3254,6 +3329,9 @@ impl<'mc> LoadType<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> LoadType<'mc> {
     pub const STARTUP: LoadTypeEnum = LoadTypeEnum::Startup;
     pub const RELOAD: LoadTypeEnum = LoadTypeEnum::Reload;
     pub fn from_string(str: String) -> std::option::Option<LoadTypeEnum> {
@@ -3299,7 +3377,8 @@ pub struct PluginEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PluginEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PluginEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -3308,8 +3387,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PluginEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PluginEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PluginEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3327,6 +3407,9 @@ impl<'mc> PluginEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PluginEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
@@ -3515,7 +3598,8 @@ pub struct ServerListPingEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ServerListPingEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ServerListPingEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -3524,8 +3608,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ServerListPingEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ServerListPingEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ServerListPingEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3546,6 +3631,9 @@ impl<'mc> ServerListPingEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ServerListPingEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,

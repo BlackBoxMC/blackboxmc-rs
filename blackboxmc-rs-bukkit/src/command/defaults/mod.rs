@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 
@@ -6,7 +8,8 @@ pub struct ReloadCommand<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ReloadCommand<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ReloadCommand<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15,8 +18,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ReloadCommand<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ReloadCommand<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ReloadCommand<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -34,6 +38,9 @@ impl<'mc> ReloadCommand<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ReloadCommand<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
@@ -253,7 +260,7 @@ impl<'mc> ReloadCommand<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -625,7 +632,8 @@ pub struct TimingsCommand<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for TimingsCommand<'mc> {
+
+impl<'mc> JNIRaw<'mc> for TimingsCommand<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -634,8 +642,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for TimingsCommand<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> TimingsCommand<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for TimingsCommand<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -656,6 +665,9 @@ impl<'mc> TimingsCommand<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> TimingsCommand<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
@@ -895,7 +907,7 @@ impl<'mc> TimingsCommand<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1267,7 +1279,8 @@ pub struct BukkitCommand<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for BukkitCommand<'mc> {
+
+impl<'mc> JNIRaw<'mc> for BukkitCommand<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1276,8 +1289,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for BukkitCommand<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> BukkitCommand<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for BukkitCommand<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1295,6 +1309,9 @@ impl<'mc> BukkitCommand<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> BukkitCommand<'mc> {
     //
 
     pub fn permission(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1467,7 +1484,7 @@ impl<'mc> BukkitCommand<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1868,7 +1885,8 @@ pub struct VersionCommand<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for VersionCommand<'mc> {
+
+impl<'mc> JNIRaw<'mc> for VersionCommand<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1877,8 +1895,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for VersionCommand<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> VersionCommand<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for VersionCommand<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1899,6 +1918,9 @@ impl<'mc> VersionCommand<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> VersionCommand<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
@@ -2118,7 +2140,7 @@ impl<'mc> VersionCommand<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -2490,7 +2512,8 @@ pub struct HelpCommand<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for HelpCommand<'mc> {
+
+impl<'mc> JNIRaw<'mc> for HelpCommand<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2499,8 +2522,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for HelpCommand<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> HelpCommand<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for HelpCommand<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2518,6 +2542,9 @@ impl<'mc> HelpCommand<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> HelpCommand<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::command::defaults::HelpCommand<'mc>, Box<dyn std::error::Error>> {
@@ -2729,7 +2756,7 @@ impl<'mc> HelpCommand<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -3101,7 +3128,8 @@ pub struct PluginsCommand<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PluginsCommand<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PluginsCommand<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -3110,8 +3138,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PluginsCommand<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PluginsCommand<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PluginsCommand<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3132,6 +3161,9 @@ impl<'mc> PluginsCommand<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PluginsCommand<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
@@ -3351,7 +3383,7 @@ impl<'mc> PluginsCommand<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }

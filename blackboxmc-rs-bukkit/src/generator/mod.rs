@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Data for a Chunk.
@@ -8,8 +10,19 @@ pub struct ChunkGeneratorChunkData<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> ChunkGeneratorChunkData<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for ChunkGeneratorChunkData<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for ChunkGeneratorChunkData<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -31,6 +44,9 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ChunkGeneratorChunkData<'mc> {
     //@Deprecated
 
     #[deprecated]
@@ -306,21 +322,13 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
         )
     }
 }
-impl<'mc> JNIRaw<'mc> for ChunkGeneratorChunkData<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// Class for providing biomes.
 pub struct BiomeProvider<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for BiomeProvider<'mc> {
+
+impl<'mc> JNIRaw<'mc> for BiomeProvider<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -329,18 +337,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for BiomeProvider<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> BiomeProvider<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "BiomeProvider", name, lib_name) }?;
-        Self::from_raw(env, obj)
-    }
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for BiomeProvider<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -357,6 +356,19 @@ impl<'mc> BiomeProvider<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+}
+
+impl<'mc> BiomeProvider<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "BiomeProvider", name, lib_name) }?;
+        Self::from_raw(env, obj)
     }
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -582,8 +594,19 @@ pub struct ChunkGeneratorBiomeGrid<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> ChunkGeneratorBiomeGrid<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for ChunkGeneratorBiomeGrid<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for ChunkGeneratorBiomeGrid<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -605,6 +628,9 @@ impl<'mc> ChunkGeneratorBiomeGrid<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ChunkGeneratorBiomeGrid<'mc> {
     //@NotNull
 
     /// <span class="deprecated-label">Deprecated.</span>
@@ -689,7 +715,15 @@ impl<'mc> ChunkGeneratorBiomeGrid<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for ChunkGeneratorBiomeGrid<'mc> {
+/// Represents the biome noise parameters which may be passed to a world generator.
+///
+/// This is a representation of an abstract class.
+pub struct BiomeParameterPoint<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for BiomeParameterPoint<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -698,15 +732,9 @@ impl<'mc> JNIRaw<'mc> for ChunkGeneratorBiomeGrid<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// Represents the biome noise parameters which may be passed to a world generator.
-///
-/// This is a representation of an abstract class.
-pub struct BiomeParameterPoint<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> BiomeParameterPoint<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for BiomeParameterPoint<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -726,6 +754,9 @@ impl<'mc> BiomeParameterPoint<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> BiomeParameterPoint<'mc> {
     //
 
     pub fn min_erosion(&self) -> Result<f64, Box<dyn std::error::Error>> {
@@ -922,15 +953,6 @@ impl<'mc> BiomeParameterPoint<'mc> {
         Ok(res.d()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for BiomeParameterPoint<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// A block populator is responsible for generating a small area of blocks.
 /// <p>For example, generating glowstone inside the nether or generating dungeons full of treasure</p>
 /// <p>A BlockPopulator can be used in combination with a custom <a href="ChunkGenerator.html" title="class in org.bukkit.generator"><code>ChunkGenerator</code></a> by returning it in the method <a href="ChunkGenerator.html#getDefaultPopulators(org.bukkit.World)"><code>ChunkGenerator.getDefaultPopulators(World)</code></a> or by adding it manually to the worlds populator list returned by <a href="../World.html#getPopulators()"><code>World.getPopulators()</code></a>.</p>
@@ -939,7 +961,8 @@ pub struct BlockPopulator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for BlockPopulator<'mc> {
+
+impl<'mc> JNIRaw<'mc> for BlockPopulator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -948,18 +971,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for BlockPopulator<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> BlockPopulator<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "BlockPopulator", name, lib_name) }?;
-        Self::from_raw(env, obj)
-    }
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for BlockPopulator<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -978,6 +992,19 @@ impl<'mc> BlockPopulator<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+}
+
+impl<'mc> BlockPopulator<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "BlockPopulator", name, lib_name) }?;
+        Self::from_raw(env, obj)
     }
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1151,8 +1178,19 @@ pub struct LimitedRegion<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> LimitedRegion<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for LimitedRegion<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for LimitedRegion<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1170,6 +1208,9 @@ impl<'mc> LimitedRegion<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> LimitedRegion<'mc> {
     //
 
     pub fn buffer(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -1739,15 +1780,6 @@ impl<'mc> LimitedRegion<'mc> {
         )
     }
 }
-impl<'mc> JNIRaw<'mc> for LimitedRegion<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::RegionAccessor<'mc>> for LimitedRegion<'mc> {
     fn into(self) -> crate::RegionAccessor<'mc> {
         crate::RegionAccessor::from_raw(&self.jni_ref(), self.1)
@@ -1761,8 +1793,19 @@ pub struct WorldInfo<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> WorldInfo<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for WorldInfo<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for WorldInfo<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1780,6 +1823,9 @@ impl<'mc> WorldInfo<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> WorldInfo<'mc> {
     //
 
     pub fn seed(&self) -> Result<i64, Box<dyn std::error::Error>> {
@@ -1862,15 +1908,6 @@ impl<'mc> WorldInfo<'mc> {
             .to_string())
     }
 }
-impl<'mc> JNIRaw<'mc> for WorldInfo<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// A chunk generator is responsible for the initial shaping of an entire chunk. For example, the nether chunk generator should shape netherrack and soulsand. A chunk is generated in multiple steps, those steps are always in the same order. Between those steps however an unlimited time may pass. This means, a chunk may generated until the surface step and continue with the bedrock step after one or multiple server restarts or even after multiple Minecraft versions. The order of generation is as follows
 /// <ol>
 /// <li><a href="#generateNoise(org.bukkit.generator.WorldInfo,java.util.Random,int,int,org.bukkit.generator.ChunkGenerator.ChunkData)"><code>generateNoise(WorldInfo, Random, int, int, ChunkData)</code></a></li>
@@ -1890,7 +1927,8 @@ pub struct ChunkGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ChunkGenerator<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ChunkGenerator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1899,18 +1937,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ChunkGenerator<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ChunkGenerator<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "ChunkGenerator", name, lib_name) }?;
-        Self::from_raw(env, obj)
-    }
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ChunkGenerator<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1929,6 +1958,19 @@ impl<'mc> ChunkGenerator<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+}
+
+impl<'mc> ChunkGenerator<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "ChunkGenerator", name, lib_name) }?;
+        Self::from_raw(env, obj)
     }
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,

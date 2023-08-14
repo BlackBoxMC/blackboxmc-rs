@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Triggered when a hanging entity is removed
@@ -41,6 +43,7 @@ impl<'mc> std::ops::Deref for HangingBreakEventRemoveCause<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for HangingBreakEventRemoveCause<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -50,11 +53,15 @@ impl<'mc> JNIRaw<'mc> for HangingBreakEventRemoveCause<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> HangingBreakEventRemoveCause<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for HangingBreakEventRemoveCause<'mc> {
+    type Enum = HangingBreakEventRemoveCauseEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: HangingBreakEventRemoveCauseEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -76,6 +83,9 @@ impl<'mc> HangingBreakEventRemoveCause<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> HangingBreakEventRemoveCause<'mc> {
     pub const ENTITY: HangingBreakEventRemoveCauseEnum = HangingBreakEventRemoveCauseEnum::Entity;
     pub const EXPLOSION: HangingBreakEventRemoveCauseEnum =
         HangingBreakEventRemoveCauseEnum::Explosion;
@@ -126,7 +136,8 @@ impl<'mc> HangingBreakEventRemoveCause<'mc> {
 
     //
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for HangingBreakEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for HangingBreakEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -135,8 +146,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for HangingBreakEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> HangingBreakEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for HangingBreakEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -157,6 +169,9 @@ impl<'mc> HangingBreakEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> HangingBreakEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Hanging<'mc>>,
@@ -424,7 +439,8 @@ pub struct HangingBreakByEntityEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for HangingBreakByEntityEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for HangingBreakByEntityEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -433,8 +449,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for HangingBreakByEntityEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> HangingBreakByEntityEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for HangingBreakByEntityEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -456,6 +473,9 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> HangingBreakByEntityEvent<'mc> {
     pub fn new_with_hanging(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Hanging<'mc>>,
@@ -768,6 +788,7 @@ impl<'mc> std::ops::Deref for RemoveCause<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for RemoveCause<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -777,11 +798,15 @@ impl<'mc> JNIRaw<'mc> for RemoveCause<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> RemoveCause<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for RemoveCause<'mc> {
+    type Enum = RemoveCauseEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: RemoveCauseEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate RemoveCause from null object.").into());
@@ -797,6 +822,9 @@ impl<'mc> RemoveCause<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> RemoveCause<'mc> {
     pub const ENTITY: RemoveCauseEnum = RemoveCauseEnum::Entity;
     pub const EXPLOSION: RemoveCauseEnum = RemoveCauseEnum::Explosion;
     pub const OBSTRUCTION: RemoveCauseEnum = RemoveCauseEnum::Obstruction;
@@ -848,7 +876,8 @@ pub struct HangingPlaceEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for HangingPlaceEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for HangingPlaceEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -857,8 +886,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for HangingPlaceEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> HangingPlaceEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for HangingPlaceEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -879,6 +909,9 @@ impl<'mc> HangingPlaceEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> HangingPlaceEvent<'mc> {
     pub fn new_with_hanging(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Hanging<'mc>>,
@@ -1233,7 +1266,8 @@ pub struct HangingEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for HangingEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for HangingEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1242,8 +1276,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for HangingEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> HangingEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for HangingEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1261,6 +1296,9 @@ impl<'mc> HangingEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> HangingEvent<'mc> {
     //
 
     pub fn entity(&self) -> Result<crate::entity::Hanging<'mc>, Box<dyn std::error::Error>> {

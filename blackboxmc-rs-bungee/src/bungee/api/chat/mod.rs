@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 
@@ -6,7 +8,8 @@ pub struct TextComponent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for TextComponent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for TextComponent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15,8 +18,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for TextComponent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> TextComponent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for TextComponent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -34,6 +38,9 @@ impl<'mc> TextComponent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> TextComponent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<String>>,
@@ -313,7 +320,7 @@ impl<'mc> TextComponent<'mc> {
     //
 
     pub fn is_bold_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isBoldRaw", sig.as_str(), vec![]);
@@ -333,7 +340,7 @@ impl<'mc> TextComponent<'mc> {
     //
 
     pub fn is_italic_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "isItalicRaw", sig.as_str(), vec![]);
@@ -353,7 +360,7 @@ impl<'mc> TextComponent<'mc> {
     //
 
     pub fn is_underlined_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "isUnderlinedRaw", sig.as_str(), vec![]);
@@ -373,7 +380,7 @@ impl<'mc> TextComponent<'mc> {
     //
 
     pub fn is_strikethrough_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isStrikethroughRaw",
@@ -396,7 +403,7 @@ impl<'mc> TextComponent<'mc> {
     //
 
     pub fn is_obfuscated_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "isObfuscatedRaw", sig.as_str(), vec![]);
@@ -454,9 +461,12 @@ impl<'mc> TextComponent<'mc> {
     //
 
     pub fn set_bold(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setBold",
@@ -469,9 +479,12 @@ impl<'mc> TextComponent<'mc> {
     //
 
     pub fn set_italic(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setItalic",
@@ -484,9 +497,12 @@ impl<'mc> TextComponent<'mc> {
     //
 
     pub fn set_underlined(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setUnderlined",
@@ -499,9 +515,12 @@ impl<'mc> TextComponent<'mc> {
     //
 
     pub fn set_strikethrough(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setStrikethrough",
@@ -514,9 +533,12 @@ impl<'mc> TextComponent<'mc> {
     //
 
     pub fn set_obfuscated(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setObfuscated",
@@ -671,7 +693,7 @@ impl<'mc> TextComponent<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Lnet/md_5/bungee/api/chat/crate::bungee::api::chat::BaseComponent)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -853,6 +875,7 @@ impl<'mc> std::ops::Deref for FormatRetention<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for FormatRetention<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -862,11 +885,15 @@ impl<'mc> JNIRaw<'mc> for FormatRetention<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> FormatRetention<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for FormatRetention<'mc> {
+    type Enum = FormatRetentionEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: FormatRetentionEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -884,6 +911,9 @@ impl<'mc> FormatRetention<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> FormatRetention<'mc> {
     pub const NONE: FormatRetentionEnum = FormatRetentionEnum::None;
     pub const FORMATTING: FormatRetentionEnum = FormatRetentionEnum::Formatting;
     pub const EVENTS: FormatRetentionEnum = FormatRetentionEnum::Events;
@@ -966,6 +996,7 @@ impl<'mc> std::ops::Deref for HoverEventAction<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for HoverEventAction<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -975,11 +1006,15 @@ impl<'mc> JNIRaw<'mc> for HoverEventAction<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> HoverEventAction<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for HoverEventAction<'mc> {
+    type Enum = HoverEventActionEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: HoverEventActionEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -998,6 +1033,9 @@ impl<'mc> HoverEventAction<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> HoverEventAction<'mc> {
     pub const SHOW_TEXT: HoverEventActionEnum = HoverEventActionEnum::ShowText;
     pub const SHOW_ITEM: HoverEventActionEnum = HoverEventActionEnum::ShowItem;
     pub const SHOW_ENTITY: HoverEventActionEnum = HoverEventActionEnum::ShowEntity;
@@ -1044,7 +1082,8 @@ impl<'mc> HoverEventAction<'mc> {
 
     //
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for HoverEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for HoverEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1053,8 +1092,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for HoverEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> HoverEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for HoverEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1072,6 +1112,9 @@ impl<'mc> HoverEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> HoverEvent<'mc> {
     pub fn new_with_hover_eventaction(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bungee::api::chat::HoverEventAction<'mc>>,
@@ -1303,7 +1346,8 @@ pub struct BaseComponent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for BaseComponent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for BaseComponent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1312,8 +1356,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for BaseComponent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> BaseComponent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for BaseComponent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1331,6 +1376,9 @@ impl<'mc> BaseComponent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> BaseComponent<'mc> {
     //['since', '']
 
     //['forRemoval', 'false']
@@ -1495,7 +1543,7 @@ impl<'mc> BaseComponent<'mc> {
     //
 
     pub fn is_bold_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isBoldRaw", sig.as_str(), vec![]);
@@ -1515,7 +1563,7 @@ impl<'mc> BaseComponent<'mc> {
     //
 
     pub fn is_italic_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "isItalicRaw", sig.as_str(), vec![]);
@@ -1535,7 +1583,7 @@ impl<'mc> BaseComponent<'mc> {
     //
 
     pub fn is_underlined_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "isUnderlinedRaw", sig.as_str(), vec![]);
@@ -1555,7 +1603,7 @@ impl<'mc> BaseComponent<'mc> {
     //
 
     pub fn is_strikethrough_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isStrikethroughRaw",
@@ -1578,7 +1626,7 @@ impl<'mc> BaseComponent<'mc> {
     //
 
     pub fn is_obfuscated_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "isObfuscatedRaw", sig.as_str(), vec![]);
@@ -1636,9 +1684,12 @@ impl<'mc> BaseComponent<'mc> {
     //
 
     pub fn set_bold(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setBold",
@@ -1651,9 +1702,12 @@ impl<'mc> BaseComponent<'mc> {
     //
 
     pub fn set_italic(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setItalic",
@@ -1666,9 +1720,12 @@ impl<'mc> BaseComponent<'mc> {
     //
 
     pub fn set_underlined(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setUnderlined",
@@ -1681,9 +1738,12 @@ impl<'mc> BaseComponent<'mc> {
     //
 
     pub fn set_strikethrough(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setStrikethrough",
@@ -1696,9 +1756,12 @@ impl<'mc> BaseComponent<'mc> {
     //
 
     pub fn set_obfuscated(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setObfuscated",
@@ -1853,7 +1916,7 @@ impl<'mc> BaseComponent<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Lnet/md_5/bungee/api/chat/crate::bungee::api::chat::BaseComponent)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -2056,7 +2119,8 @@ pub struct SelectorComponent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for SelectorComponent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for SelectorComponent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2065,8 +2129,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for SelectorComponent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> SelectorComponent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for SelectorComponent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2087,6 +2152,9 @@ impl<'mc> SelectorComponent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> SelectorComponent<'mc> {
     pub fn new_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::bungee::api::chat::SelectorComponent<'mc>>>,
@@ -2344,7 +2412,7 @@ impl<'mc> SelectorComponent<'mc> {
     //
 
     pub fn is_bold_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isBoldRaw", sig.as_str(), vec![]);
@@ -2364,7 +2432,7 @@ impl<'mc> SelectorComponent<'mc> {
     //
 
     pub fn is_italic_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "isItalicRaw", sig.as_str(), vec![]);
@@ -2384,7 +2452,7 @@ impl<'mc> SelectorComponent<'mc> {
     //
 
     pub fn is_underlined_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "isUnderlinedRaw", sig.as_str(), vec![]);
@@ -2404,7 +2472,7 @@ impl<'mc> SelectorComponent<'mc> {
     //
 
     pub fn is_strikethrough_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isStrikethroughRaw",
@@ -2427,7 +2495,7 @@ impl<'mc> SelectorComponent<'mc> {
     //
 
     pub fn is_obfuscated_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "isObfuscatedRaw", sig.as_str(), vec![]);
@@ -2485,9 +2553,12 @@ impl<'mc> SelectorComponent<'mc> {
     //
 
     pub fn set_bold(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setBold",
@@ -2500,9 +2571,12 @@ impl<'mc> SelectorComponent<'mc> {
     //
 
     pub fn set_italic(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setItalic",
@@ -2515,9 +2589,12 @@ impl<'mc> SelectorComponent<'mc> {
     //
 
     pub fn set_underlined(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setUnderlined",
@@ -2530,9 +2607,12 @@ impl<'mc> SelectorComponent<'mc> {
     //
 
     pub fn set_strikethrough(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setStrikethrough",
@@ -2545,9 +2625,12 @@ impl<'mc> SelectorComponent<'mc> {
     //
 
     pub fn set_obfuscated(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setObfuscated",
@@ -2702,7 +2785,7 @@ impl<'mc> SelectorComponent<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Lnet/md_5/bungee/api/chat/crate::bungee::api::chat::BaseComponent)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -2857,7 +2940,8 @@ pub struct ScoreComponent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ScoreComponent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ScoreComponent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2866,8 +2950,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ScoreComponent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ScoreComponent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ScoreComponent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2887,6 +2972,9 @@ impl<'mc> ScoreComponent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ScoreComponent<'mc> {
     pub fn new_with_score_component(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<String>>,
@@ -3244,7 +3332,7 @@ impl<'mc> ScoreComponent<'mc> {
     //
 
     pub fn is_bold_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isBoldRaw", sig.as_str(), vec![]);
@@ -3264,7 +3352,7 @@ impl<'mc> ScoreComponent<'mc> {
     //
 
     pub fn is_italic_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "isItalicRaw", sig.as_str(), vec![]);
@@ -3284,7 +3372,7 @@ impl<'mc> ScoreComponent<'mc> {
     //
 
     pub fn is_underlined_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "isUnderlinedRaw", sig.as_str(), vec![]);
@@ -3304,7 +3392,7 @@ impl<'mc> ScoreComponent<'mc> {
     //
 
     pub fn is_strikethrough_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isStrikethroughRaw",
@@ -3327,7 +3415,7 @@ impl<'mc> ScoreComponent<'mc> {
     //
 
     pub fn is_obfuscated_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "isObfuscatedRaw", sig.as_str(), vec![]);
@@ -3385,9 +3473,12 @@ impl<'mc> ScoreComponent<'mc> {
     //
 
     pub fn set_bold(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setBold",
@@ -3400,9 +3491,12 @@ impl<'mc> ScoreComponent<'mc> {
     //
 
     pub fn set_italic(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setItalic",
@@ -3415,9 +3509,12 @@ impl<'mc> ScoreComponent<'mc> {
     //
 
     pub fn set_underlined(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setUnderlined",
@@ -3430,9 +3527,12 @@ impl<'mc> ScoreComponent<'mc> {
     //
 
     pub fn set_strikethrough(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setStrikethrough",
@@ -3445,9 +3545,12 @@ impl<'mc> ScoreComponent<'mc> {
     //
 
     pub fn set_obfuscated(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setObfuscated",
@@ -3602,7 +3705,7 @@ impl<'mc> ScoreComponent<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Lnet/md_5/bungee/api/chat/crate::bungee::api::chat::BaseComponent)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -3793,6 +3896,7 @@ impl<'mc> std::ops::Deref for ClickEventAction<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for ClickEventAction<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -3802,11 +3906,15 @@ impl<'mc> JNIRaw<'mc> for ClickEventAction<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ClickEventAction<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for ClickEventAction<'mc> {
+    type Enum = ClickEventActionEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: ClickEventActionEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -3825,6 +3933,9 @@ impl<'mc> ClickEventAction<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> ClickEventAction<'mc> {
     pub const OPEN_URL: ClickEventActionEnum = ClickEventActionEnum::OpenUrl;
     pub const OPEN_FILE: ClickEventActionEnum = ClickEventActionEnum::OpenFile;
     pub const RUN_COMMAND: ClickEventActionEnum = ClickEventActionEnum::RunCommand;
@@ -3875,7 +3986,8 @@ impl<'mc> ClickEventAction<'mc> {
 
     //
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ClickEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ClickEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -3884,8 +3996,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ClickEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ClickEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ClickEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3903,6 +4016,9 @@ impl<'mc> ClickEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ClickEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bungee::api::chat::ClickEventAction<'mc>>,
@@ -4084,8 +4200,19 @@ pub struct Keybinds<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> Keybinds<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for Keybinds<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for Keybinds<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -4104,21 +4231,15 @@ impl<'mc> Keybinds<'mc> {
         }
     }
 }
-impl<'mc> JNIRaw<'mc> for Keybinds<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
 
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
+impl<'mc> Keybinds<'mc> {}
 
 pub struct ItemTagSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ItemTagSerializer<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ItemTagSerializer<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -4127,8 +4248,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ItemTagSerializer<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ItemTagSerializer<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ItemTagSerializer<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -4149,6 +4271,9 @@ impl<'mc> ItemTagSerializer<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ItemTagSerializer<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::bungee::api::chat::ItemTagSerializer<'mc>, Box<dyn std::error::Error>> {
@@ -4336,7 +4461,8 @@ pub struct TranslatableComponent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for TranslatableComponent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for TranslatableComponent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -4345,8 +4471,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for TranslatableComponent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> TranslatableComponent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for TranslatableComponent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -4368,6 +4495,9 @@ impl<'mc> TranslatableComponent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> TranslatableComponent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<String>>,
@@ -4407,7 +4537,7 @@ impl<'mc> TranslatableComponent<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Lnet/md_5/bungee/api/chat/crate::bungee::api::chat::BaseComponent)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -4746,7 +4876,7 @@ impl<'mc> TranslatableComponent<'mc> {
     //
 
     pub fn is_bold_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isBoldRaw", sig.as_str(), vec![]);
@@ -4766,7 +4896,7 @@ impl<'mc> TranslatableComponent<'mc> {
     //
 
     pub fn is_italic_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "isItalicRaw", sig.as_str(), vec![]);
@@ -4786,7 +4916,7 @@ impl<'mc> TranslatableComponent<'mc> {
     //
 
     pub fn is_underlined_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "isUnderlinedRaw", sig.as_str(), vec![]);
@@ -4806,7 +4936,7 @@ impl<'mc> TranslatableComponent<'mc> {
     //
 
     pub fn is_strikethrough_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isStrikethroughRaw",
@@ -4829,7 +4959,7 @@ impl<'mc> TranslatableComponent<'mc> {
     //
 
     pub fn is_obfuscated_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "isObfuscatedRaw", sig.as_str(), vec![]);
@@ -4887,9 +5017,12 @@ impl<'mc> TranslatableComponent<'mc> {
     //
 
     pub fn set_bold(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setBold",
@@ -4902,9 +5035,12 @@ impl<'mc> TranslatableComponent<'mc> {
     //
 
     pub fn set_italic(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setItalic",
@@ -4917,9 +5053,12 @@ impl<'mc> TranslatableComponent<'mc> {
     //
 
     pub fn set_underlined(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setUnderlined",
@@ -4932,9 +5071,12 @@ impl<'mc> TranslatableComponent<'mc> {
     //
 
     pub fn set_strikethrough(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setStrikethrough",
@@ -4947,9 +5089,12 @@ impl<'mc> TranslatableComponent<'mc> {
     //
 
     pub fn set_obfuscated(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setObfuscated",
@@ -5104,7 +5249,7 @@ impl<'mc> TranslatableComponent<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Lnet/md_5/bungee/api/chat/crate::bungee::api::chat::BaseComponent)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -5261,8 +5406,19 @@ pub struct ComponentBuilderJoiner<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> ComponentBuilderJoiner<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for ComponentBuilderJoiner<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for ComponentBuilderJoiner<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -5284,6 +5440,9 @@ impl<'mc> ComponentBuilderJoiner<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ComponentBuilderJoiner<'mc> {
     //
 
     pub fn join(
@@ -5313,21 +5472,13 @@ impl<'mc> ComponentBuilderJoiner<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for ComponentBuilderJoiner<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 
 pub struct ItemTag<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ItemTag<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ItemTag<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -5336,8 +5487,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ItemTag<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ItemTag<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ItemTag<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -5355,6 +5507,9 @@ impl<'mc> ItemTag<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ItemTag<'mc> {
     //
 
     pub fn of_nbt(
@@ -5504,7 +5659,8 @@ pub struct KeybindComponent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for KeybindComponent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for KeybindComponent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -5513,8 +5669,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for KeybindComponent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> KeybindComponent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for KeybindComponent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -5534,6 +5691,9 @@ impl<'mc> KeybindComponent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> KeybindComponent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<String>>,
@@ -5791,7 +5951,7 @@ impl<'mc> KeybindComponent<'mc> {
     //
 
     pub fn is_bold_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "isBoldRaw", sig.as_str(), vec![]);
@@ -5811,7 +5971,7 @@ impl<'mc> KeybindComponent<'mc> {
     //
 
     pub fn is_italic_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "isItalicRaw", sig.as_str(), vec![]);
@@ -5831,7 +5991,7 @@ impl<'mc> KeybindComponent<'mc> {
     //
 
     pub fn is_underlined_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "isUnderlinedRaw", sig.as_str(), vec![]);
@@ -5851,7 +6011,7 @@ impl<'mc> KeybindComponent<'mc> {
     //
 
     pub fn is_strikethrough_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isStrikethroughRaw",
@@ -5874,7 +6034,7 @@ impl<'mc> KeybindComponent<'mc> {
     //
 
     pub fn is_obfuscated_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+        let sig = String::from("()Ljava/lang/Boolean;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "isObfuscatedRaw", sig.as_str(), vec![]);
@@ -5932,9 +6092,12 @@ impl<'mc> KeybindComponent<'mc> {
     //
 
     pub fn set_bold(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setBold",
@@ -5947,9 +6110,12 @@ impl<'mc> KeybindComponent<'mc> {
     //
 
     pub fn set_italic(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setItalic",
@@ -5962,9 +6128,12 @@ impl<'mc> KeybindComponent<'mc> {
     //
 
     pub fn set_underlined(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setUnderlined",
@@ -5977,9 +6146,12 @@ impl<'mc> KeybindComponent<'mc> {
     //
 
     pub fn set_strikethrough(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setStrikethrough",
@@ -5992,9 +6164,12 @@ impl<'mc> KeybindComponent<'mc> {
     //
 
     pub fn set_obfuscated(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Z)V");
-        // -2
-        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        let sig = String::from("(Ljava/lang/Boolean;)V");
+        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+            "java/lang/Boolean",
+            "(Z)V",
+            vec![arg0.into()],
+        )?);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setObfuscated",
@@ -6149,7 +6324,7 @@ impl<'mc> KeybindComponent<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Lnet/md_5/bungee/api/chat/crate::bungee::api::chat::BaseComponent)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -6337,6 +6512,7 @@ impl<'mc> std::ops::Deref for ComponentBuilderFormatRetention<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for ComponentBuilderFormatRetention<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -6346,11 +6522,15 @@ impl<'mc> JNIRaw<'mc> for ComponentBuilderFormatRetention<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ComponentBuilderFormatRetention<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for ComponentBuilderFormatRetention<'mc> {
+    type Enum = ComponentBuilderFormatRetentionEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: ComponentBuilderFormatRetentionEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -6364,14 +6544,17 @@ impl<'mc> ComponentBuilderFormatRetention<'mc> {
         )?;
         if !valid {
             Err(eyre::eyre!(
-        "Invalid argument passed. Expected a ComponentBuilderFormatRetention object, got {}",
-        name
-    )
-            .into())
+                    "Invalid argument passed. Expected a ComponentBuilderFormatRetention object, got {}",
+                    name
+                )
+                .into())
         } else {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> ComponentBuilderFormatRetention<'mc> {
     pub const NONE: ComponentBuilderFormatRetentionEnum = ComponentBuilderFormatRetentionEnum::None;
     pub const FORMATTING: ComponentBuilderFormatRetentionEnum =
         ComponentBuilderFormatRetentionEnum::Formatting;
@@ -6420,7 +6603,8 @@ impl<'mc> ComponentBuilderFormatRetention<'mc> {
 
     //
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ComponentBuilder<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ComponentBuilder<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -6429,8 +6613,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ComponentBuilder<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ComponentBuilder<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ComponentBuilder<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -6450,6 +6635,9 @@ impl<'mc> ComponentBuilder<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ComponentBuilder<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::bungee::api::chat::ComponentBuilder<'mc>>>,

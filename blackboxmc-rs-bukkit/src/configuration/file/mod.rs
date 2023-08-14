@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// This is a base class for all File based implementations of <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a>
@@ -6,7 +8,8 @@ pub struct FileConfiguration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for FileConfiguration<'mc> {
+
+impl<'mc> JNIRaw<'mc> for FileConfiguration<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15,8 +18,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for FileConfiguration<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> FileConfiguration<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for FileConfiguration<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -37,6 +41,9 @@ impl<'mc> FileConfiguration<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> FileConfiguration<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::configuration::Configuration<'mc>>>,
@@ -962,7 +969,7 @@ impl<'mc> FileConfiguration<'mc> {
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1000,7 +1007,7 @@ impl<'mc> FileConfiguration<'mc> {
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1440,7 +1447,8 @@ pub struct FileConfigurationOptions<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for FileConfigurationOptions<'mc> {
+
+impl<'mc> JNIRaw<'mc> for FileConfigurationOptions<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1449,8 +1457,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for FileConfigurationOptions<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> FileConfigurationOptions<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for FileConfigurationOptions<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1474,6 +1483,9 @@ impl<'mc> FileConfigurationOptions<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> FileConfigurationOptions<'mc> {
     //
 
     pub fn header(
@@ -1598,7 +1610,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1656,7 +1668,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
             self.jni_ref().call_method(
                 &raw_val_1,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1842,7 +1854,8 @@ pub struct YamlConfigurationOptions<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for YamlConfigurationOptions<'mc> {
+
+impl<'mc> JNIRaw<'mc> for YamlConfigurationOptions<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1851,8 +1864,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for YamlConfigurationOptions<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> YamlConfigurationOptions<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for YamlConfigurationOptions<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1876,6 +1890,9 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> YamlConfigurationOptions<'mc> {
     //@NotNull
 
     /// Sets how long a line can be, before it gets split.
@@ -2026,7 +2043,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
                 self.jni_ref().call_method(
                     &raw_val_1,
                     "add",
-                    "(Ljava/Lang/Object)V",
+                    "(Ljava/lang/String)V",
                     vec![jni::objects::JValueGen::from(map_val_0)],
                 )?;
             }
@@ -2254,7 +2271,8 @@ pub struct YamlConfiguration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for YamlConfiguration<'mc> {
+
+impl<'mc> JNIRaw<'mc> for YamlConfiguration<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2263,8 +2281,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for YamlConfiguration<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> YamlConfiguration<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for YamlConfiguration<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2285,6 +2304,9 @@ impl<'mc> YamlConfiguration<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> YamlConfiguration<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::configuration::file::YamlConfiguration<'mc>, Box<dyn std::error::Error>>
@@ -3222,7 +3244,7 @@ impl<'mc> YamlConfiguration<'mc> {
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -3260,7 +3282,7 @@ impl<'mc> YamlConfiguration<'mc> {
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }

@@ -1,37 +1,52 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use color_eyre::eyre::Result;
 
 pub struct Item<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for Item<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+
+    impl<'mc> JNIRaw<'mc> for Item<'mc> {
+        fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+            self.0.clone()
+        }
+        
+        fn jni_object(&self) -> jni::objects::JObject<'mc> {
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        }
     }
     
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+
+    impl<'mc> JNIInstantiatable<'mc> for Item<'mc> {
+        
+
+        fn from_raw(
+            env: &blackboxmc_general::SharedJNIEnv<'mc>,
+            obj: jni::objects::JObject<'mc>,
+    
+
+        ) -> Result<Self, Box<dyn std::error::Error>> {
+            if obj.is_null() {
+                return Err(eyre::eyre!(
+                    "Tried to instantiate Item from null object.")
+                .into());
+            }
+            let (valid, name) = env.validate_name(&obj, "net/md_5/bungee/api/chat/hover/content/Item")?;
+            if !valid {
+                Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a Item object, got {}",
+                    name
+                )
+                .into())
+            } else {
+    
+Ok(Self(env.clone(), obj))
+
+            }
+        }
     }
-}
+    
 impl<'mc> Item<'mc> {
-pub fn from_raw(env: &blackboxmc_general::SharedJNIEnv<'mc>, obj: jni::objects::JObject<'mc>
-) -> Result<Self, Box<dyn std::error::Error>> {
-if obj.is_null() {
-    return Err(eyre::eyre!(
-        "Tried to instantiate Item from null object.")
-    .into());
-}
-let (valid, name) = env.validate_name(&obj, "net/md_5/bungee/api/chat/hover/content/Item")?;
-if !valid {
-    Err(eyre::eyre!(
-        "Invalid argument passed. Expected a Item object, got {}",
-        name
-    )
-    .into())
-} else {
-    Ok(Self(env.clone(), obj
-))
-}
-}
 	pub fn new(jni: &blackboxmc_general::SharedJNIEnv<'mc>,arg0: impl Into<String>,arg1: i32,arg2: impl Into<crate::bungee::api::chat::ItemTag<'mc>>) 
 -> Result<crate::bungee::api::chat::hover::content::Item<'mc>, Box<dyn std::error::Error>>
 
@@ -275,35 +290,48 @@ crate::bungee::api::chat::hover::content::Content::from_raw(&self.jni_ref(), sel
 }
 
 pub struct Entity<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for Entity<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+
+    impl<'mc> JNIRaw<'mc> for Entity<'mc> {
+        fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+            self.0.clone()
+        }
+        
+        fn jni_object(&self) -> jni::objects::JObject<'mc> {
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        }
     }
     
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+
+    impl<'mc> JNIInstantiatable<'mc> for Entity<'mc> {
+        
+
+        fn from_raw(
+            env: &blackboxmc_general::SharedJNIEnv<'mc>,
+            obj: jni::objects::JObject<'mc>,
+    
+
+        ) -> Result<Self, Box<dyn std::error::Error>> {
+            if obj.is_null() {
+                return Err(eyre::eyre!(
+                    "Tried to instantiate Entity from null object.")
+                .into());
+            }
+            let (valid, name) = env.validate_name(&obj, "net/md_5/bungee/api/chat/hover/content/Entity")?;
+            if !valid {
+                Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a Entity object, got {}",
+                    name
+                )
+                .into())
+            } else {
+    
+Ok(Self(env.clone(), obj))
+
+            }
+        }
     }
-}
+    
 impl<'mc> Entity<'mc> {
-pub fn from_raw(env: &blackboxmc_general::SharedJNIEnv<'mc>, obj: jni::objects::JObject<'mc>
-) -> Result<Self, Box<dyn std::error::Error>> {
-if obj.is_null() {
-    return Err(eyre::eyre!(
-        "Tried to instantiate Entity from null object.")
-    .into());
-}
-let (valid, name) = env.validate_name(&obj, "net/md_5/bungee/api/chat/hover/content/Entity")?;
-if !valid {
-    Err(eyre::eyre!(
-        "Invalid argument passed. Expected a Entity object, got {}",
-        name
-    )
-    .into())
-} else {
-    Ok(Self(env.clone(), obj
-))
-}
-}
 	pub fn new(jni: &blackboxmc_general::SharedJNIEnv<'mc>,arg0: impl Into<String>,arg1: impl Into<String>,arg2: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>) 
 -> Result<crate::bungee::api::chat::hover::content::Entity<'mc>, Box<dyn std::error::Error>>
 
@@ -547,35 +575,48 @@ crate::bungee::api::chat::hover::content::Content::from_raw(&self.jni_ref(), sel
 }
 
 pub struct ItemSerializer<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ItemSerializer<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+
+    impl<'mc> JNIRaw<'mc> for ItemSerializer<'mc> {
+        fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+            self.0.clone()
+        }
+        
+        fn jni_object(&self) -> jni::objects::JObject<'mc> {
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        }
     }
     
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+
+    impl<'mc> JNIInstantiatable<'mc> for ItemSerializer<'mc> {
+        
+
+        fn from_raw(
+            env: &blackboxmc_general::SharedJNIEnv<'mc>,
+            obj: jni::objects::JObject<'mc>,
+    
+
+        ) -> Result<Self, Box<dyn std::error::Error>> {
+            if obj.is_null() {
+                return Err(eyre::eyre!(
+                    "Tried to instantiate ItemSerializer from null object.")
+                .into());
+            }
+            let (valid, name) = env.validate_name(&obj, "net/md_5/bungee/api/chat/hover/content/ItemSerializer")?;
+            if !valid {
+                Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a ItemSerializer object, got {}",
+                    name
+                )
+                .into())
+            } else {
+    
+Ok(Self(env.clone(), obj))
+
+            }
+        }
     }
-}
+    
 impl<'mc> ItemSerializer<'mc> {
-pub fn from_raw(env: &blackboxmc_general::SharedJNIEnv<'mc>, obj: jni::objects::JObject<'mc>
-) -> Result<Self, Box<dyn std::error::Error>> {
-if obj.is_null() {
-    return Err(eyre::eyre!(
-        "Tried to instantiate ItemSerializer from null object.")
-    .into());
-}
-let (valid, name) = env.validate_name(&obj, "net/md_5/bungee/api/chat/hover/content/ItemSerializer")?;
-if !valid {
-    Err(eyre::eyre!(
-        "Invalid argument passed. Expected a ItemSerializer object, got {}",
-        name
-    )
-    .into())
-} else {
-    Ok(Self(env.clone(), obj
-))
-}
-}
 	pub fn new(jni: &blackboxmc_general::SharedJNIEnv<'mc>) 
 -> Result<crate::bungee::api::chat::hover::content::ItemSerializer<'mc>, Box<dyn std::error::Error>>
 
@@ -760,35 +801,48 @@ self.1
 }
 
 pub struct TextSerializer<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for TextSerializer<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+
+    impl<'mc> JNIRaw<'mc> for TextSerializer<'mc> {
+        fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+            self.0.clone()
+        }
+        
+        fn jni_object(&self) -> jni::objects::JObject<'mc> {
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        }
     }
     
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+
+    impl<'mc> JNIInstantiatable<'mc> for TextSerializer<'mc> {
+        
+
+        fn from_raw(
+            env: &blackboxmc_general::SharedJNIEnv<'mc>,
+            obj: jni::objects::JObject<'mc>,
+    
+
+        ) -> Result<Self, Box<dyn std::error::Error>> {
+            if obj.is_null() {
+                return Err(eyre::eyre!(
+                    "Tried to instantiate TextSerializer from null object.")
+                .into());
+            }
+            let (valid, name) = env.validate_name(&obj, "net/md_5/bungee/api/chat/hover/content/TextSerializer")?;
+            if !valid {
+                Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a TextSerializer object, got {}",
+                    name
+                )
+                .into())
+            } else {
+    
+Ok(Self(env.clone(), obj))
+
+            }
+        }
     }
-}
+    
 impl<'mc> TextSerializer<'mc> {
-pub fn from_raw(env: &blackboxmc_general::SharedJNIEnv<'mc>, obj: jni::objects::JObject<'mc>
-) -> Result<Self, Box<dyn std::error::Error>> {
-if obj.is_null() {
-    return Err(eyre::eyre!(
-        "Tried to instantiate TextSerializer from null object.")
-    .into());
-}
-let (valid, name) = env.validate_name(&obj, "net/md_5/bungee/api/chat/hover/content/TextSerializer")?;
-if !valid {
-    Err(eyre::eyre!(
-        "Invalid argument passed. Expected a TextSerializer object, got {}",
-        name
-    )
-    .into())
-} else {
-    Ok(Self(env.clone(), obj
-))
-}
-}
 	pub fn new(jni: &blackboxmc_general::SharedJNIEnv<'mc>) 
 -> Result<crate::bungee::api::chat::hover::content::TextSerializer<'mc>, Box<dyn std::error::Error>>
 
@@ -973,35 +1027,48 @@ self.1
 }
 
 pub struct Content<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for Content<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+
+    impl<'mc> JNIRaw<'mc> for Content<'mc> {
+        fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+            self.0.clone()
+        }
+        
+        fn jni_object(&self) -> jni::objects::JObject<'mc> {
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        }
     }
     
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+
+    impl<'mc> JNIInstantiatable<'mc> for Content<'mc> {
+        
+
+        fn from_raw(
+            env: &blackboxmc_general::SharedJNIEnv<'mc>,
+            obj: jni::objects::JObject<'mc>,
+    
+
+        ) -> Result<Self, Box<dyn std::error::Error>> {
+            if obj.is_null() {
+                return Err(eyre::eyre!(
+                    "Tried to instantiate Content from null object.")
+                .into());
+            }
+            let (valid, name) = env.validate_name(&obj, "net/md_5/bungee/api/chat/hover/content/Content")?;
+            if !valid {
+                Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a Content object, got {}",
+                    name
+                )
+                .into())
+            } else {
+    
+Ok(Self(env.clone(), obj))
+
+            }
+        }
     }
-}
+    
 impl<'mc> Content<'mc> {
-pub fn from_raw(env: &blackboxmc_general::SharedJNIEnv<'mc>, obj: jni::objects::JObject<'mc>
-) -> Result<Self, Box<dyn std::error::Error>> {
-if obj.is_null() {
-    return Err(eyre::eyre!(
-        "Tried to instantiate Content from null object.")
-    .into());
-}
-let (valid, name) = env.validate_name(&obj, "net/md_5/bungee/api/chat/hover/content/Content")?;
-if !valid {
-    Err(eyre::eyre!(
-        "Invalid argument passed. Expected a Content object, got {}",
-        name
-    )
-    .into())
-} else {
-    Ok(Self(env.clone(), obj
-))
-}
-}
 	pub fn new(jni: &blackboxmc_general::SharedJNIEnv<'mc>) 
 -> Result<crate::bungee::api::chat::hover::content::Content<'mc>, Box<dyn std::error::Error>>
 
@@ -1157,35 +1224,48 @@ Ok(
         
 
 pub struct Text<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for Text<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+
+    impl<'mc> JNIRaw<'mc> for Text<'mc> {
+        fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+            self.0.clone()
+        }
+        
+        fn jni_object(&self) -> jni::objects::JObject<'mc> {
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        }
     }
     
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+
+    impl<'mc> JNIInstantiatable<'mc> for Text<'mc> {
+        
+
+        fn from_raw(
+            env: &blackboxmc_general::SharedJNIEnv<'mc>,
+            obj: jni::objects::JObject<'mc>,
+    
+
+        ) -> Result<Self, Box<dyn std::error::Error>> {
+            if obj.is_null() {
+                return Err(eyre::eyre!(
+                    "Tried to instantiate Text from null object.")
+                .into());
+            }
+            let (valid, name) = env.validate_name(&obj, "net/md_5/bungee/api/chat/hover/content/Text")?;
+            if !valid {
+                Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a Text object, got {}",
+                    name
+                )
+                .into())
+            } else {
+    
+Ok(Self(env.clone(), obj))
+
+            }
+        }
     }
-}
+    
 impl<'mc> Text<'mc> {
-pub fn from_raw(env: &blackboxmc_general::SharedJNIEnv<'mc>, obj: jni::objects::JObject<'mc>
-) -> Result<Self, Box<dyn std::error::Error>> {
-if obj.is_null() {
-    return Err(eyre::eyre!(
-        "Tried to instantiate Text from null object.")
-    .into());
-}
-let (valid, name) = env.validate_name(&obj, "net/md_5/bungee/api/chat/hover/content/Text")?;
-if !valid {
-    Err(eyre::eyre!(
-        "Invalid argument passed. Expected a Text object, got {}",
-        name
-    )
-    .into())
-} else {
-    Ok(Self(env.clone(), obj
-))
-}
-}
 	pub fn new_with_base_components(jni: &blackboxmc_general::SharedJNIEnv<'mc>,arg0: std::option::Option<impl Into<String>>) 
 -> Result<crate::bungee::api::chat::hover::content::Text<'mc>, Box<dyn std::error::Error>>
 
@@ -1367,35 +1447,48 @@ crate::bungee::api::chat::hover::content::Content::from_raw(&self.jni_ref(), sel
 }
 
 pub struct EntitySerializer<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for EntitySerializer<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
+
+    impl<'mc> JNIRaw<'mc> for EntitySerializer<'mc> {
+        fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+            self.0.clone()
+        }
+        
+        fn jni_object(&self) -> jni::objects::JObject<'mc> {
+            unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+        }
     }
     
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+
+    impl<'mc> JNIInstantiatable<'mc> for EntitySerializer<'mc> {
+        
+
+        fn from_raw(
+            env: &blackboxmc_general::SharedJNIEnv<'mc>,
+            obj: jni::objects::JObject<'mc>,
+    
+
+        ) -> Result<Self, Box<dyn std::error::Error>> {
+            if obj.is_null() {
+                return Err(eyre::eyre!(
+                    "Tried to instantiate EntitySerializer from null object.")
+                .into());
+            }
+            let (valid, name) = env.validate_name(&obj, "net/md_5/bungee/api/chat/hover/content/EntitySerializer")?;
+            if !valid {
+                Err(eyre::eyre!(
+                    "Invalid argument passed. Expected a EntitySerializer object, got {}",
+                    name
+                )
+                .into())
+            } else {
+    
+Ok(Self(env.clone(), obj))
+
+            }
+        }
     }
-}
+    
 impl<'mc> EntitySerializer<'mc> {
-pub fn from_raw(env: &blackboxmc_general::SharedJNIEnv<'mc>, obj: jni::objects::JObject<'mc>
-) -> Result<Self, Box<dyn std::error::Error>> {
-if obj.is_null() {
-    return Err(eyre::eyre!(
-        "Tried to instantiate EntitySerializer from null object.")
-    .into());
-}
-let (valid, name) = env.validate_name(&obj, "net/md_5/bungee/api/chat/hover/content/EntitySerializer")?;
-if !valid {
-    Err(eyre::eyre!(
-        "Invalid argument passed. Expected a EntitySerializer object, got {}",
-        name
-    )
-    .into())
-} else {
-    Ok(Self(env.clone(), obj
-))
-}
-}
 	pub fn new(jni: &blackboxmc_general::SharedJNIEnv<'mc>) 
 -> Result<crate::bungee::api::chat::hover::content::EntitySerializer<'mc>, Box<dyn std::error::Error>>
 

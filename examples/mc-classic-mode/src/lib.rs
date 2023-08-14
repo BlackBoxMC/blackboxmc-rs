@@ -1,3 +1,4 @@
+use blackboxmc_general::JNIInstantiatable;
 use std::{cell::OnceCell, error::Error, fmt::Display, ops::Deref, sync::Mutex, time::SystemTime};
 
 use blackboxmc_bukkit::{

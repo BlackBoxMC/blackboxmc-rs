@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 
@@ -6,7 +8,8 @@ pub struct PotionEffectTypeWrapper<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PotionEffectTypeWrapper<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PotionEffectTypeWrapper<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15,8 +18,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PotionEffectTypeWrapper<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PotionEffectTypeWrapper<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PotionEffectTypeWrapper<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -37,6 +41,9 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PotionEffectTypeWrapper<'mc> {
     //
 
     pub fn color(&self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
@@ -371,7 +378,8 @@ pub struct PotionData<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PotionData<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PotionData<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -380,8 +388,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PotionData<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PotionData<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PotionData<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -399,6 +408,9 @@ impl<'mc> PotionData<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PotionData<'mc> {
     pub fn new_with_potion_type(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::potion::PotionType<'mc>>>,
@@ -592,7 +604,8 @@ pub struct Potion<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for Potion<'mc> {
+
+impl<'mc> JNIRaw<'mc> for Potion<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -601,8 +614,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for Potion<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Potion<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for Potion<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -620,6 +634,9 @@ impl<'mc> Potion<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Potion<'mc> {
     //['since', '']
 
     //['forRemoval', 'false']
@@ -1090,7 +1107,8 @@ pub struct PotionEffect<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PotionEffect<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PotionEffect<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1099,8 +1117,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PotionEffect<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PotionEffect<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PotionEffect<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1118,6 +1137,9 @@ impl<'mc> PotionEffect<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PotionEffect<'mc> {
     pub fn new_with_map(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::potion::PotionEffectType<'mc>>>,
@@ -1450,7 +1472,8 @@ pub struct PotionEffectType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PotionEffectType<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PotionEffectType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1459,8 +1482,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PotionEffectType<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PotionEffectType<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PotionEffectType<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1480,6 +1504,9 @@ impl<'mc> PotionEffectType<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PotionEffectType<'mc> {
     //
 
     pub fn color(&self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
@@ -1810,8 +1837,19 @@ pub struct PotionBrewer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> PotionBrewer<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for PotionBrewer<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for PotionBrewer<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1829,6 +1867,9 @@ impl<'mc> PotionBrewer<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PotionBrewer<'mc> {
     //
 
     pub fn get_effects(
@@ -1931,15 +1972,6 @@ impl<'mc> PotionBrewer<'mc> {
         Ok(new_vec)
     }
 }
-impl<'mc> JNIRaw<'mc> for PotionBrewer<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 #[derive(PartialEq, Eq)]
 pub enum PotionTypeEnum {
     Uncraftable,
@@ -2007,6 +2039,7 @@ impl<'mc> std::ops::Deref for PotionType<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for PotionType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -2016,11 +2049,15 @@ impl<'mc> JNIRaw<'mc> for PotionType<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PotionType<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for PotionType<'mc> {
+    type Enum = PotionTypeEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: PotionTypeEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate PotionType from null object.").into());
@@ -2036,6 +2073,9 @@ impl<'mc> PotionType<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> PotionType<'mc> {
     pub const UNCRAFTABLE: PotionTypeEnum = PotionTypeEnum::Uncraftable;
     pub const WATER: PotionTypeEnum = PotionTypeEnum::Water;
     pub const MUNDANE: PotionTypeEnum = PotionTypeEnum::Mundane;

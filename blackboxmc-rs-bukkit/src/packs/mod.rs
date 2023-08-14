@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Show the compatibility of the data pack with the server.
@@ -33,6 +35,7 @@ impl<'mc> std::ops::Deref for DataPackCompatibility<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for DataPackCompatibility<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -42,11 +45,15 @@ impl<'mc> JNIRaw<'mc> for DataPackCompatibility<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> DataPackCompatibility<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for DataPackCompatibility<'mc> {
+    type Enum = DataPackCompatibilityEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: DataPackCompatibilityEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -65,6 +72,9 @@ impl<'mc> DataPackCompatibility<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> DataPackCompatibility<'mc> {
     pub const NEW: DataPackCompatibilityEnum = DataPackCompatibilityEnum::New;
     pub const OLD: DataPackCompatibilityEnum = DataPackCompatibilityEnum::Old;
     pub const COMPATIBLE: DataPackCompatibilityEnum = DataPackCompatibilityEnum::Compatible;
@@ -116,8 +126,19 @@ pub struct DataPack<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> DataPack<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for DataPack<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for DataPack<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -135,6 +156,9 @@ impl<'mc> DataPack<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> DataPack<'mc> {
     //
 
     pub fn source(&self) -> Result<crate::packs::DataPackSource<'mc>, Box<dyn std::error::Error>> {
@@ -278,15 +302,6 @@ impl<'mc> DataPack<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for DataPack<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::Keyed<'mc>> for DataPack<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
         crate::Keyed::from_raw(&self.jni_ref(), self.1)
@@ -300,8 +315,19 @@ pub struct DataPackManager<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> DataPackManager<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for DataPackManager<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for DataPackManager<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -321,6 +347,9 @@ impl<'mc> DataPackManager<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> DataPackManager<'mc> {
     //
 
     pub fn get_enabled_data_packs(
@@ -445,15 +474,6 @@ impl<'mc> DataPackManager<'mc> {
         Ok(res.z()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for DataPackManager<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// Represent the source of a data pack.
 #[derive(PartialEq, Eq)]
 pub enum DataPackSourceEnum {
@@ -490,6 +510,7 @@ impl<'mc> std::ops::Deref for DataPackSource<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for DataPackSource<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -499,11 +520,15 @@ impl<'mc> JNIRaw<'mc> for DataPackSource<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> DataPackSource<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for DataPackSource<'mc> {
+    type Enum = DataPackSourceEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: DataPackSourceEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -521,6 +546,9 @@ impl<'mc> DataPackSource<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> DataPackSource<'mc> {
     pub const DEFAULT: DataPackSourceEnum = DataPackSourceEnum::Default;
     pub const BUILT_IN: DataPackSourceEnum = DataPackSourceEnum::BuiltIn;
     pub const FEATURE: DataPackSourceEnum = DataPackSourceEnum::Feature;
@@ -600,6 +628,7 @@ impl<'mc> std::ops::Deref for Compatibility<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for Compatibility<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -609,11 +638,15 @@ impl<'mc> JNIRaw<'mc> for Compatibility<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Compatibility<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for Compatibility<'mc> {
+    type Enum = CompatibilityEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: CompatibilityEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Compatibility from null object.").into());
@@ -629,6 +662,9 @@ impl<'mc> Compatibility<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> Compatibility<'mc> {
     pub const NEW: CompatibilityEnum = CompatibilityEnum::New;
     pub const OLD: CompatibilityEnum = CompatibilityEnum::Old;
     pub const COMPATIBLE: CompatibilityEnum = CompatibilityEnum::Compatible;
@@ -706,6 +742,7 @@ impl<'mc> std::ops::Deref for Source<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for Source<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -715,11 +752,15 @@ impl<'mc> JNIRaw<'mc> for Source<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Source<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for Source<'mc> {
+    type Enum = SourceEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: SourceEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Source from null object.").into());
@@ -735,6 +776,9 @@ impl<'mc> Source<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> Source<'mc> {
     pub const DEFAULT: SourceEnum = SourceEnum::Default;
     pub const BUILT_IN: SourceEnum = SourceEnum::BuiltIn;
     pub const FEATURE: SourceEnum = SourceEnum::Feature;

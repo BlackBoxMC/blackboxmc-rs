@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// NumericPrompt is the base class for any prompt that requires a <a title="class or interface in java.lang" class="external-link" href="https://docs.oracle.com/javase/8/docs/api/java/lang/Number.html"><code>Number</code></a> response from the user.
@@ -6,7 +8,8 @@ pub struct NumericPrompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for NumericPrompt<'mc> {
+
+impl<'mc> JNIRaw<'mc> for NumericPrompt<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15,8 +18,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for NumericPrompt<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> NumericPrompt<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for NumericPrompt<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -34,6 +38,9 @@ impl<'mc> NumericPrompt<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> NumericPrompt<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::conversations::NumericPrompt<'mc>, Box<dyn std::error::Error>> {
@@ -237,18 +244,19 @@ pub struct ConversationPrefix<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> ConversationPrefix<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "ConversationPrefix", name, lib_name) }?;
-        Self::from_raw(env, obj)
+
+impl<'mc> JNIRaw<'mc> for ConversationPrefix<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
-    pub fn from_raw(
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for ConversationPrefix<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -268,6 +276,19 @@ impl<'mc> ConversationPrefix<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+}
+
+impl<'mc> ConversationPrefix<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "ConversationPrefix", name, lib_name) }?;
+        Self::from_raw(env, obj)
     }
     //
 
@@ -294,22 +315,14 @@ impl<'mc> ConversationPrefix<'mc> {
             .to_string())
     }
 }
-impl<'mc> JNIRaw<'mc> for ConversationPrefix<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// A ConversationFactory is responsible for creating a <a href="Conversation.html" title="class in org.bukkit.conversations"><code>Conversation</code></a> from a predefined template. A ConversationFactory is typically created when a plugin is instantiated and builds a Conversation each time a user initiates a conversation with the plugin. Each Conversation maintains its own state and calls back as needed into the plugin.
 /// <p>The ConversationFactory implements a fluid API, allowing parameters to be set as an extension to the constructor.</p>
 pub struct ConversationFactory<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ConversationFactory<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ConversationFactory<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -318,8 +331,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ConversationFactory<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ConversationFactory<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ConversationFactory<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -340,6 +354,9 @@ impl<'mc> ConversationFactory<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ConversationFactory<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
@@ -710,7 +727,8 @@ pub struct InactivityConversationCanceller<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for InactivityConversationCanceller<'mc> {
+
+impl<'mc> JNIRaw<'mc> for InactivityConversationCanceller<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -719,8 +737,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for InactivityConversationCanceller<'m
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> InactivityConversationCanceller<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for InactivityConversationCanceller<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -736,14 +755,17 @@ impl<'mc> InactivityConversationCanceller<'mc> {
         )?;
         if !valid {
             Err(eyre::eyre!(
-        "Invalid argument passed. Expected a InactivityConversationCanceller object, got {}",
-        name
-    )
-            .into())
+                    "Invalid argument passed. Expected a InactivityConversationCanceller object, got {}",
+                    name
+                )
+                .into())
         } else {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> InactivityConversationCanceller<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
@@ -952,7 +974,8 @@ pub struct ExactMatchConversationCanceller<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ExactMatchConversationCanceller<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ExactMatchConversationCanceller<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -961,8 +984,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ExactMatchConversationCanceller<'m
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ExactMatchConversationCanceller<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ExactMatchConversationCanceller<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -978,14 +1002,17 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
         )?;
         if !valid {
             Err(eyre::eyre!(
-        "Invalid argument passed. Expected a ExactMatchConversationCanceller object, got {}",
-        name
-    )
-            .into())
+                    "Invalid argument passed. Expected a ExactMatchConversationCanceller object, got {}",
+                    name
+                )
+                .into())
         } else {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ExactMatchConversationCanceller<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
@@ -1191,8 +1218,19 @@ pub struct Conversable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> Conversable<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for Conversable<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for Conversable<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1210,6 +1248,9 @@ impl<'mc> Conversable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Conversable<'mc> {
     //
 
     pub fn accept_conversation_input(
@@ -1322,15 +1363,6 @@ impl<'mc> Conversable<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for Conversable<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// The Conversation class is responsible for tracking the current state of a conversation, displaying prompts to the user, and dispatching the user's response to the appropriate place. Conversation objects are not typically instantiated directly. Instead a <a href="ConversationFactory.html" title="class in org.bukkit.conversations"><code>ConversationFactory</code></a> is used to construct identical conversations on demand.
 /// <p>Conversation flow consists of a directed graph of <a href="Prompt.html" title="interface in org.bukkit.conversations"><code>Prompt</code></a> objects. Each time a prompt gets input from the user, it must return the next prompt in the graph. Since each Prompt chooses the next Prompt, complex conversation trees can be implemented where the nature of the player's response directs the flow of the conversation.</p>
 /// <p>Each conversation has a <a href="ConversationPrefix.html" title="interface in org.bukkit.conversations"><code>ConversationPrefix</code></a> that prepends all output from the conversation to the player. The ConversationPrefix can be used to display the plugin name or conversation status as the conversation evolves.</p>
@@ -1371,6 +1403,7 @@ impl<'mc> std::ops::Deref for ConversationConversationState<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for ConversationConversationState<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -1380,11 +1413,15 @@ impl<'mc> JNIRaw<'mc> for ConversationConversationState<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ConversationConversationState<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for ConversationConversationState<'mc> {
+    type Enum = ConversationConversationStateEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: ConversationConversationStateEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -1406,6 +1443,9 @@ impl<'mc> ConversationConversationState<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> ConversationConversationState<'mc> {
     pub const UNSTARTED: ConversationConversationStateEnum =
         ConversationConversationStateEnum::Unstarted;
     pub const STARTED: ConversationConversationStateEnum =
@@ -1453,7 +1493,8 @@ impl<'mc> ConversationConversationState<'mc> {
 
     //
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for Conversation<'mc> {
+
+impl<'mc> JNIRaw<'mc> for Conversation<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1462,8 +1503,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for Conversation<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Conversation<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for Conversation<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1481,6 +1523,9 @@ impl<'mc> Conversation<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Conversation<'mc> {
     pub fn new_with_plugin(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
@@ -1866,8 +1911,19 @@ pub struct ConversationAbandonedListener<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> ConversationAbandonedListener<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for ConversationAbandonedListener<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for ConversationAbandonedListener<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1891,6 +1947,9 @@ impl<'mc> ConversationAbandonedListener<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ConversationAbandonedListener<'mc> {
     //
 
     pub fn conversation_abandoned(
@@ -1909,15 +1968,6 @@ impl<'mc> ConversationAbandonedListener<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> JNIRaw<'mc> for ConversationAbandonedListener<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
 impl<'mc> Into<blackboxmc_java::JavaEventListener<'mc>> for ConversationAbandonedListener<'mc> {
@@ -1956,6 +2006,7 @@ impl<'mc> std::ops::Deref for ConversationState<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for ConversationState<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -1965,11 +2016,15 @@ impl<'mc> JNIRaw<'mc> for ConversationState<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ConversationState<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for ConversationState<'mc> {
+    type Enum = ConversationStateEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: ConversationStateEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -1988,6 +2043,9 @@ impl<'mc> ConversationState<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> ConversationState<'mc> {
     pub const UNSTARTED: ConversationStateEnum = ConversationStateEnum::Unstarted;
     pub const STARTED: ConversationStateEnum = ConversationStateEnum::Started;
     pub const ABANDONED: ConversationStateEnum = ConversationStateEnum::Abandoned;
@@ -2035,7 +2093,8 @@ pub struct ValidatingPrompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ValidatingPrompt<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ValidatingPrompt<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2044,8 +2103,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ValidatingPrompt<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ValidatingPrompt<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ValidatingPrompt<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2065,6 +2125,9 @@ impl<'mc> ValidatingPrompt<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ValidatingPrompt<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::conversations::ValidatingPrompt<'mc>, Box<dyn std::error::Error>> {
@@ -2266,7 +2329,8 @@ pub struct RegexPrompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for RegexPrompt<'mc> {
+
+impl<'mc> JNIRaw<'mc> for RegexPrompt<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2275,8 +2339,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for RegexPrompt<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> RegexPrompt<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for RegexPrompt<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2294,6 +2359,9 @@ impl<'mc> RegexPrompt<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> RegexPrompt<'mc> {
     pub fn new_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<blackboxmc_java::regex::JavaPattern<'mc>>>,
@@ -2505,7 +2573,8 @@ pub struct ManuallyAbandonedConversationCanceller<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ManuallyAbandonedConversationCanceller<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ManuallyAbandonedConversationCanceller<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2514,8 +2583,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ManuallyAbandonedConversationCance
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ManuallyAbandonedConversationCanceller<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2531,14 +2601,17 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
         )?;
         if !valid {
             Err(eyre::eyre!(
-        "Invalid argument passed. Expected a ManuallyAbandonedConversationCanceller object, got {}",
-        name
-    )
-            .into())
+                    "Invalid argument passed. Expected a ManuallyAbandonedConversationCanceller object, got {}",
+                    name
+                )
+                .into())
         } else {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<
@@ -2734,7 +2807,8 @@ pub struct StringPrompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for StringPrompt<'mc> {
+
+impl<'mc> JNIRaw<'mc> for StringPrompt<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2743,8 +2817,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for StringPrompt<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> StringPrompt<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for StringPrompt<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2762,6 +2837,9 @@ impl<'mc> StringPrompt<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> StringPrompt<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::conversations::StringPrompt<'mc>, Box<dyn std::error::Error>> {
@@ -2963,7 +3041,8 @@ pub struct PluginNameConversationPrefix<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PluginNameConversationPrefix<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PluginNameConversationPrefix<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2972,8 +3051,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PluginNameConversationPrefix<'mc> 
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PluginNameConversationPrefix<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PluginNameConversationPrefix<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2997,6 +3077,9 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PluginNameConversationPrefix<'mc> {
     pub fn new_with_plugin(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
@@ -3184,19 +3267,19 @@ pub struct ConversationCanceller<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> ConversationCanceller<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj =
-            unsafe { plugin.new_extendable(address, "ConversationCanceller", name, lib_name) }?;
-        Self::from_raw(env, obj)
+
+impl<'mc> JNIRaw<'mc> for ConversationCanceller<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
-    pub fn from_raw(
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for ConversationCanceller<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3217,6 +3300,20 @@ impl<'mc> ConversationCanceller<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+}
+
+impl<'mc> ConversationCanceller<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj =
+            unsafe { plugin.new_extendable(address, "ConversationCanceller", name, lib_name) }?;
+        Self::from_raw(env, obj)
     }
     //
 
@@ -3281,21 +3378,13 @@ impl<'mc> ConversationCanceller<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for ConversationCanceller<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// FixedSetPrompt is the base class for any prompt that requires a fixed set response from the user.
 pub struct FixedSetPrompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for FixedSetPrompt<'mc> {
+
+impl<'mc> JNIRaw<'mc> for FixedSetPrompt<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -3304,8 +3393,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for FixedSetPrompt<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> FixedSetPrompt<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for FixedSetPrompt<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3325,6 +3415,9 @@ impl<'mc> FixedSetPrompt<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> FixedSetPrompt<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: Vec<impl Into<String>>,
@@ -3527,7 +3620,8 @@ pub struct NullConversationPrefix<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for NullConversationPrefix<'mc> {
+
+impl<'mc> JNIRaw<'mc> for NullConversationPrefix<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -3536,8 +3630,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for NullConversationPrefix<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> NullConversationPrefix<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for NullConversationPrefix<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3559,6 +3654,9 @@ impl<'mc> NullConversationPrefix<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> NullConversationPrefix<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::conversations::NullConversationPrefix<'mc>, Box<dyn std::error::Error>> {
@@ -3716,18 +3814,19 @@ pub struct Prompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> Prompt<'mc> {
-    pub fn from_extendable(
-        env: &blackboxmc_general::SharedJNIEnv<'mc>,
-        plugin: &'mc crate::plugin::Plugin,
-        address: i32,
-        lib_name: String,
-        name: String,
-    ) -> Result<Self, Box<dyn std::error::Error>> {
-        let obj = unsafe { plugin.new_extendable(address, "Prompt", name, lib_name) }?;
-        Self::from_raw(env, obj)
+
+impl<'mc> JNIRaw<'mc> for Prompt<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
     }
-    pub fn from_raw(
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for Prompt<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3744,6 +3843,19 @@ impl<'mc> Prompt<'mc> {
         } else {
             Ok(Self(env.clone(), obj))
         }
+    }
+}
+
+impl<'mc> Prompt<'mc> {
+    pub fn from_extendable(
+        env: &blackboxmc_general::SharedJNIEnv<'mc>,
+        plugin: &'mc crate::plugin::Plugin,
+        address: i32,
+        lib_name: String,
+        name: String,
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let obj = unsafe { plugin.new_extendable(address, "Prompt", name, lib_name) }?;
+        Self::from_raw(env, obj)
     }
     //
 
@@ -3817,21 +3929,13 @@ impl<'mc> Prompt<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for Prompt<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// ConversationAbandonedEvent contains information about an abandoned conversation.
 pub struct ConversationAbandonedEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ConversationAbandonedEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ConversationAbandonedEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -3840,8 +3944,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ConversationAbandonedEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ConversationAbandonedEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ConversationAbandonedEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3863,6 +3968,9 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ConversationAbandonedEvent<'mc> {
     pub fn new_with_conversation(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::conversations::Conversation<'mc>>>,
@@ -4054,7 +4162,8 @@ pub struct ConversationContext<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ConversationContext<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ConversationContext<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -4063,8 +4172,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ConversationContext<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ConversationContext<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ConversationContext<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -4085,6 +4195,9 @@ impl<'mc> ConversationContext<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ConversationContext<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
@@ -4313,7 +4426,8 @@ pub struct PlayerNamePrompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerNamePrompt<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PlayerNamePrompt<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -4322,8 +4436,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PlayerNamePrompt<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerNamePrompt<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerNamePrompt<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -4343,6 +4458,9 @@ impl<'mc> PlayerNamePrompt<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerNamePrompt<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
@@ -4552,7 +4670,8 @@ pub struct BooleanPrompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for BooleanPrompt<'mc> {
+
+impl<'mc> JNIRaw<'mc> for BooleanPrompt<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -4561,8 +4680,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for BooleanPrompt<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> BooleanPrompt<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for BooleanPrompt<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -4580,6 +4700,9 @@ impl<'mc> BooleanPrompt<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> BooleanPrompt<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::conversations::BooleanPrompt<'mc>, Box<dyn std::error::Error>> {
@@ -4781,7 +4904,8 @@ pub struct MessagePrompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for MessagePrompt<'mc> {
+
+impl<'mc> JNIRaw<'mc> for MessagePrompt<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -4790,8 +4914,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for MessagePrompt<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> MessagePrompt<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for MessagePrompt<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -4809,6 +4934,9 @@ impl<'mc> MessagePrompt<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> MessagePrompt<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::conversations::MessagePrompt<'mc>, Box<dyn std::error::Error>> {

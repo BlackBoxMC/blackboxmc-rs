@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 
@@ -6,7 +8,8 @@ pub struct SelectorComponentSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for SelectorComponentSerializer<'mc> {
+
+impl<'mc> JNIRaw<'mc> for SelectorComponentSerializer<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15,8 +18,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for SelectorComponentSerializer<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> SelectorComponentSerializer<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for SelectorComponentSerializer<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -38,6 +42,9 @@ impl<'mc> SelectorComponentSerializer<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> SelectorComponentSerializer<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::bungee::chat::SelectorComponentSerializer<'mc>, Box<dyn std::error::Error>>
@@ -236,7 +243,8 @@ pub struct TextComponentSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for TextComponentSerializer<'mc> {
+
+impl<'mc> JNIRaw<'mc> for TextComponentSerializer<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -245,8 +253,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for TextComponentSerializer<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> TextComponentSerializer<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for TextComponentSerializer<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -268,6 +277,9 @@ impl<'mc> TextComponentSerializer<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> TextComponentSerializer<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::bungee::chat::TextComponentSerializer<'mc>, Box<dyn std::error::Error>> {
@@ -460,7 +472,8 @@ pub struct BaseComponentSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for BaseComponentSerializer<'mc> {
+
+impl<'mc> JNIRaw<'mc> for BaseComponentSerializer<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -469,8 +482,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for BaseComponentSerializer<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> BaseComponentSerializer<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for BaseComponentSerializer<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -492,6 +506,9 @@ impl<'mc> BaseComponentSerializer<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> BaseComponentSerializer<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::bungee::chat::BaseComponentSerializer<'mc>, Box<dyn std::error::Error>> {
@@ -615,7 +632,8 @@ pub struct ScoreComponentSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ScoreComponentSerializer<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ScoreComponentSerializer<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -624,8 +642,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ScoreComponentSerializer<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ScoreComponentSerializer<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ScoreComponentSerializer<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -647,6 +666,9 @@ impl<'mc> ScoreComponentSerializer<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ScoreComponentSerializer<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::bungee::chat::ScoreComponentSerializer<'mc>, Box<dyn std::error::Error>>
@@ -842,7 +864,8 @@ pub struct TranslatableComponentSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for TranslatableComponentSerializer<'mc> {
+
+impl<'mc> JNIRaw<'mc> for TranslatableComponentSerializer<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -851,8 +874,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for TranslatableComponentSerializer<'m
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> TranslatableComponentSerializer<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for TranslatableComponentSerializer<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -866,14 +890,17 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
             env.validate_name(&obj, "net/md_5/bungee/chat/TranslatableComponentSerializer")?;
         if !valid {
             Err(eyre::eyre!(
-        "Invalid argument passed. Expected a TranslatableComponentSerializer object, got {}",
-        name
-    )
-            .into())
+                    "Invalid argument passed. Expected a TranslatableComponentSerializer object, got {}",
+                    name
+                )
+                .into())
         } else {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> TranslatableComponentSerializer<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::bungee::chat::TranslatableComponentSerializer<'mc>, Box<dyn std::error::Error>>
@@ -1073,7 +1100,8 @@ pub struct KeybindComponentSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for KeybindComponentSerializer<'mc> {
+
+impl<'mc> JNIRaw<'mc> for KeybindComponentSerializer<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1082,8 +1110,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for KeybindComponentSerializer<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> KeybindComponentSerializer<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for KeybindComponentSerializer<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1105,6 +1134,9 @@ impl<'mc> KeybindComponentSerializer<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> KeybindComponentSerializer<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::bungee::chat::KeybindComponentSerializer<'mc>, Box<dyn std::error::Error>>
@@ -1300,7 +1332,8 @@ pub struct TranslationRegistry<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for TranslationRegistry<'mc> {
+
+impl<'mc> JNIRaw<'mc> for TranslationRegistry<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1309,8 +1342,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for TranslationRegistry<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> TranslationRegistry<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for TranslationRegistry<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1330,6 +1364,9 @@ impl<'mc> TranslationRegistry<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> TranslationRegistry<'mc> {
     //
 
     pub fn translate(&self, arg0: impl Into<String>) -> Result<String, Box<dyn std::error::Error>> {
@@ -1463,7 +1500,8 @@ pub struct ComponentSerializer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ComponentSerializer<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ComponentSerializer<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1472,8 +1510,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ComponentSerializer<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ComponentSerializer<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ComponentSerializer<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1493,6 +1532,9 @@ impl<'mc> ComponentSerializer<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ComponentSerializer<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::bungee::chat::ComponentSerializer<'mc>, Box<dyn std::error::Error>> {

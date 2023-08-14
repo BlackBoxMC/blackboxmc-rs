@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Represents a valid source of a projectile.
@@ -8,8 +10,19 @@ pub struct ProjectileSource<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> ProjectileSource<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for ProjectileSource<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for ProjectileSource<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -29,6 +42,9 @@ impl<'mc> ProjectileSource<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ProjectileSource<'mc> {
     //
 
     pub fn launch_projectile_with_class(
@@ -60,7 +76,15 @@ impl<'mc> ProjectileSource<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for ProjectileSource<'mc> {
+
+///
+/// This is a representation of an abstract class.
+pub struct BlockProjectileSource<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for BlockProjectileSource<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -70,14 +94,8 @@ impl<'mc> JNIRaw<'mc> for ProjectileSource<'mc> {
     }
 }
 
-///
-/// This is a representation of an abstract class.
-pub struct BlockProjectileSource<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> BlockProjectileSource<'mc> {
-    pub fn from_raw(
+impl<'mc> JNIInstantiatable<'mc> for BlockProjectileSource<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -99,6 +117,9 @@ impl<'mc> BlockProjectileSource<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> BlockProjectileSource<'mc> {
     //
 
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
@@ -140,15 +161,6 @@ impl<'mc> BlockProjectileSource<'mc> {
         crate::entity::Projectile::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-}
-impl<'mc> JNIRaw<'mc> for BlockProjectileSource<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
 impl<'mc> Into<crate::projectiles::ProjectileSource<'mc>> for BlockProjectileSource<'mc> {

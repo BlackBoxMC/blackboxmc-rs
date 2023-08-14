@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Represents an object which may contain attributes.
@@ -8,8 +10,19 @@ pub struct Attributable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> Attributable<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for Attributable<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for Attributable<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -27,6 +40,9 @@ impl<'mc> Attributable<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Attributable<'mc> {
     //
 
     pub fn get_attribute(
@@ -49,15 +65,6 @@ impl<'mc> Attributable<'mc> {
         crate::attribute::AttributeInstance::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-}
-impl<'mc> JNIRaw<'mc> for Attributable<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
 #[derive(PartialEq, Eq)]
@@ -113,6 +120,7 @@ impl<'mc> std::ops::Deref for Attribute<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for Attribute<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -122,11 +130,15 @@ impl<'mc> JNIRaw<'mc> for Attribute<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Attribute<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for Attribute<'mc> {
+    type Enum = AttributeEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: AttributeEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Attribute from null object.").into());
@@ -142,6 +154,9 @@ impl<'mc> Attribute<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> Attribute<'mc> {
     pub const GENERIC_MAX_HEALTH: AttributeEnum = AttributeEnum::GenericMaxHealth;
     pub const GENERIC_FOLLOW_RANGE: AttributeEnum = AttributeEnum::GenericFollowRange;
     pub const GENERIC_KNOCKBACK_RESISTANCE: AttributeEnum =
@@ -212,8 +227,19 @@ pub struct AttributeInstance<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> AttributeInstance<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for AttributeInstance<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for AttributeInstance<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -233,6 +259,9 @@ impl<'mc> AttributeInstance<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> AttributeInstance<'mc> {
     //
 
     pub fn attribute(
@@ -366,15 +395,6 @@ impl<'mc> AttributeInstance<'mc> {
         Ok(res.d()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for AttributeInstance<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 #[derive(PartialEq, Eq)]
 pub enum OperationEnum {
     AddNumber,
@@ -406,6 +426,7 @@ impl<'mc> std::ops::Deref for Operation<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for Operation<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -415,11 +436,15 @@ impl<'mc> JNIRaw<'mc> for Operation<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Operation<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for Operation<'mc> {
+    type Enum = OperationEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: OperationEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate Operation from null object.").into());
@@ -435,6 +460,9 @@ impl<'mc> Operation<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> Operation<'mc> {
     pub const ADD_NUMBER: OperationEnum = OperationEnum::AddNumber;
     pub const ADD_SCALAR: OperationEnum = OperationEnum::AddScalar;
     pub const MULTIPLY_SCALAR_1: OperationEnum = OperationEnum::MultiplyScalar1;
@@ -513,6 +541,7 @@ impl<'mc> std::ops::Deref for AttributeModifierOperation<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for AttributeModifierOperation<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -522,11 +551,15 @@ impl<'mc> JNIRaw<'mc> for AttributeModifierOperation<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> AttributeModifierOperation<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for AttributeModifierOperation<'mc> {
+    type Enum = AttributeModifierOperationEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: AttributeModifierOperationEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -546,6 +579,9 @@ impl<'mc> AttributeModifierOperation<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> AttributeModifierOperation<'mc> {
     pub const ADD_NUMBER: AttributeModifierOperationEnum =
         AttributeModifierOperationEnum::AddNumber;
     pub const ADD_SCALAR: AttributeModifierOperationEnum =
@@ -593,7 +629,8 @@ impl<'mc> AttributeModifierOperation<'mc> {
 
     //
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for AttributeModifier<'mc> {
+
+impl<'mc> JNIRaw<'mc> for AttributeModifier<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -602,8 +639,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for AttributeModifier<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> AttributeModifier<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for AttributeModifier<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -623,6 +661,9 @@ impl<'mc> AttributeModifier<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> AttributeModifier<'mc> {
     pub fn new_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<blackboxmc_java::JavaUUID<'mc>>,
@@ -998,6 +1039,7 @@ impl<'mc> std::ops::Deref for AttributeAttribute<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for AttributeAttribute<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -1007,11 +1049,15 @@ impl<'mc> JNIRaw<'mc> for AttributeAttribute<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> AttributeAttribute<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for AttributeAttribute<'mc> {
+    type Enum = AttributeAttributeEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: AttributeAttributeEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -1029,6 +1075,9 @@ impl<'mc> AttributeAttribute<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> AttributeAttribute<'mc> {
     pub const GENERIC_MAX_HEALTH: AttributeAttributeEnum = AttributeAttributeEnum::GenericMaxHealth;
     pub const GENERIC_FOLLOW_RANGE: AttributeAttributeEnum =
         AttributeAttributeEnum::GenericFollowRange;

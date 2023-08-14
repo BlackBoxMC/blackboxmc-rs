@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Represents a player related inventory event
@@ -6,7 +8,8 @@ pub struct InventoryOpenEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for InventoryOpenEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for InventoryOpenEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15,8 +18,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for InventoryOpenEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> InventoryOpenEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for InventoryOpenEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -37,6 +41,9 @@ impl<'mc> InventoryOpenEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> InventoryOpenEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::inventory::InventoryView<'mc>>,
@@ -315,7 +322,8 @@ pub struct PrepareItemCraftEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PrepareItemCraftEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PrepareItemCraftEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -324,8 +332,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PrepareItemCraftEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PrepareItemCraftEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PrepareItemCraftEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -347,6 +356,9 @@ impl<'mc> PrepareItemCraftEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PrepareItemCraftEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::inventory::CraftingInventory<'mc>>,
@@ -618,7 +630,8 @@ pub struct PrepareAnvilEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PrepareAnvilEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PrepareAnvilEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -627,8 +640,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PrepareAnvilEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PrepareAnvilEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PrepareAnvilEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -649,6 +663,9 @@ impl<'mc> PrepareAnvilEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PrepareAnvilEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::inventory::InventoryView<'mc>>,
@@ -947,6 +964,7 @@ impl<'mc> std::ops::Deref for DragType<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for DragType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -956,11 +974,15 @@ impl<'mc> JNIRaw<'mc> for DragType<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> DragType<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for DragType<'mc> {
+    type Enum = DragTypeEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: DragTypeEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate DragType from null object.").into());
@@ -976,6 +998,9 @@ impl<'mc> DragType<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> DragType<'mc> {
     pub const SINGLE: DragTypeEnum = DragTypeEnum::Single;
     pub const EVEN: DragTypeEnum = DragTypeEnum::Even;
     pub fn from_string(str: String) -> std::option::Option<DragTypeEnum> {
@@ -1021,7 +1046,8 @@ pub struct BrewEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for BrewEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for BrewEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1030,8 +1056,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for BrewEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> BrewEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for BrewEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1049,6 +1076,9 @@ impl<'mc> BrewEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> BrewEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::block::Block<'mc>>,
@@ -1073,7 +1103,7 @@ impl<'mc> BrewEvent<'mc> {
             jni.call_method(
                 &raw_val_3,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Lorg/bukkit/inventory/crate::inventory::ItemStack)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1354,7 +1384,8 @@ pub struct InventoryMoveItemEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for InventoryMoveItemEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for InventoryMoveItemEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1363,8 +1394,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for InventoryMoveItemEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> InventoryMoveItemEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for InventoryMoveItemEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1386,6 +1418,9 @@ impl<'mc> InventoryMoveItemEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> InventoryMoveItemEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::inventory::Inventory<'mc>>,
@@ -1694,7 +1729,8 @@ pub struct FurnaceSmeltEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for FurnaceSmeltEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for FurnaceSmeltEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1703,8 +1739,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for FurnaceSmeltEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> FurnaceSmeltEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for FurnaceSmeltEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1725,6 +1762,9 @@ impl<'mc> FurnaceSmeltEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> FurnaceSmeltEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::block::Block<'mc>>,
@@ -2004,7 +2044,8 @@ pub struct SmithItemEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for SmithItemEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for SmithItemEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2013,8 +2054,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for SmithItemEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> SmithItemEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for SmithItemEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2034,6 +2076,9 @@ impl<'mc> SmithItemEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> SmithItemEvent<'mc> {
     pub fn new_with_inventory_view(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::inventory::InventoryView<'mc>>,
@@ -2653,6 +2698,7 @@ impl<'mc> std::ops::Deref for ClickType<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for ClickType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -2662,11 +2708,15 @@ impl<'mc> JNIRaw<'mc> for ClickType<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ClickType<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for ClickType<'mc> {
+    type Enum = ClickTypeEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: ClickTypeEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate ClickType from null object.").into());
@@ -2682,6 +2732,9 @@ impl<'mc> ClickType<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> ClickType<'mc> {
     pub const LEFT: ClickTypeEnum = ClickTypeEnum::Left;
     pub const SHIFT_LEFT: ClickTypeEnum = ClickTypeEnum::ShiftLeft;
     pub const RIGHT: ClickTypeEnum = ClickTypeEnum::Right;
@@ -2751,7 +2804,8 @@ pub struct BrewingStandFuelEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for BrewingStandFuelEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for BrewingStandFuelEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2760,8 +2814,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for BrewingStandFuelEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> BrewingStandFuelEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for BrewingStandFuelEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2783,6 +2838,9 @@ impl<'mc> BrewingStandFuelEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> BrewingStandFuelEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::block::Block<'mc>>,
@@ -3089,7 +3147,8 @@ pub struct PrepareGrindstoneEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PrepareGrindstoneEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PrepareGrindstoneEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -3098,8 +3157,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PrepareGrindstoneEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PrepareGrindstoneEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PrepareGrindstoneEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3121,6 +3181,9 @@ impl<'mc> PrepareGrindstoneEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PrepareGrindstoneEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::inventory::InventoryView<'mc>>,
@@ -3425,6 +3488,7 @@ impl<'mc> std::ops::Deref for HopperInventorySearchEventContainerType<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for HopperInventorySearchEventContainerType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -3434,11 +3498,15 @@ impl<'mc> JNIRaw<'mc> for HopperInventorySearchEventContainerType<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> HopperInventorySearchEventContainerType<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for HopperInventorySearchEventContainerType<'mc> {
+    type Enum = HopperInventorySearchEventContainerTypeEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: HopperInventorySearchEventContainerTypeEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -3452,14 +3520,17 @@ impl<'mc> HopperInventorySearchEventContainerType<'mc> {
         )?;
         if !valid {
             Err(eyre::eyre!(
-        "Invalid argument passed. Expected a HopperInventorySearchEventContainerType object, got {}",
-        name
-    )
-    .into())
+                    "Invalid argument passed. Expected a HopperInventorySearchEventContainerType object, got {}",
+                    name
+                )
+                .into())
         } else {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> HopperInventorySearchEventContainerType<'mc> {
     pub const SOURCE: HopperInventorySearchEventContainerTypeEnum =
         HopperInventorySearchEventContainerTypeEnum::Source;
     pub const DESTINATION: HopperInventorySearchEventContainerTypeEnum =
@@ -3507,7 +3578,8 @@ impl<'mc> HopperInventorySearchEventContainerType<'mc> {
 
     //
 }
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for HopperInventorySearchEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for HopperInventorySearchEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -3516,8 +3588,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for HopperInventorySearchEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> HopperInventorySearchEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for HopperInventorySearchEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3541,6 +3614,9 @@ impl<'mc> HopperInventorySearchEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> HopperInventorySearchEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::inventory::Inventory<'mc>>,
@@ -3840,7 +3916,8 @@ pub struct CraftItemEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for CraftItemEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for CraftItemEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -3849,8 +3926,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for CraftItemEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> CraftItemEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for CraftItemEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -3870,6 +3948,9 @@ impl<'mc> CraftItemEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> CraftItemEvent<'mc> {
     pub fn new_with_recipe(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::inventory::Recipe<'mc>>,
@@ -4459,7 +4540,8 @@ pub struct FurnaceStartSmeltEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for FurnaceStartSmeltEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for FurnaceStartSmeltEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -4468,8 +4550,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for FurnaceStartSmeltEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> FurnaceStartSmeltEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for FurnaceStartSmeltEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -4491,6 +4574,9 @@ impl<'mc> FurnaceStartSmeltEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> FurnaceStartSmeltEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::block::Block<'mc>>,
@@ -4756,7 +4842,8 @@ pub struct InventoryPickupItemEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for InventoryPickupItemEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for InventoryPickupItemEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -4765,8 +4852,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for InventoryPickupItemEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> InventoryPickupItemEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for InventoryPickupItemEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -4788,6 +4876,9 @@ impl<'mc> InventoryPickupItemEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> InventoryPickupItemEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::inventory::Inventory<'mc>>,
@@ -5042,7 +5133,8 @@ pub struct InventoryInteractEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for InventoryInteractEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for InventoryInteractEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -5051,8 +5143,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for InventoryInteractEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> InventoryInteractEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for InventoryInteractEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -5074,6 +5167,9 @@ impl<'mc> InventoryInteractEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> InventoryInteractEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::inventory::InventoryView<'mc>>,
@@ -5399,7 +5495,8 @@ pub struct InventoryEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for InventoryEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for InventoryEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -5408,8 +5505,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for InventoryEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> InventoryEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for InventoryEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -5429,6 +5527,9 @@ impl<'mc> InventoryEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> InventoryEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::inventory::InventoryView<'mc>>,
@@ -5661,7 +5762,8 @@ pub struct InventoryCreativeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for InventoryCreativeEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for InventoryCreativeEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -5670,8 +5772,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for InventoryCreativeEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> InventoryCreativeEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for InventoryCreativeEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -5693,6 +5796,9 @@ impl<'mc> InventoryCreativeEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> InventoryCreativeEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::inventory::InventoryView<'mc>>,
@@ -6246,7 +6352,8 @@ pub struct FurnaceExtractEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for FurnaceExtractEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for FurnaceExtractEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -6255,8 +6362,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for FurnaceExtractEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> FurnaceExtractEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for FurnaceExtractEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -6277,6 +6385,9 @@ impl<'mc> FurnaceExtractEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> FurnaceExtractEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
@@ -6649,15 +6760,6 @@ impl<'mc> std::ops::Deref for InventoryType<'mc> {
         return &self.2;
     }
 }
-impl<'mc> JNIRaw<'mc> for InventoryType<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 #[derive(PartialEq, Eq)]
 pub enum InventoryTypeSlotTypeEnum {
     Result,
@@ -6697,6 +6799,7 @@ impl<'mc> std::ops::Deref for InventoryTypeSlotType<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for InventoryTypeSlotType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -6706,11 +6809,15 @@ impl<'mc> JNIRaw<'mc> for InventoryTypeSlotType<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> InventoryTypeSlotType<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for InventoryTypeSlotType<'mc> {
+    type Enum = InventoryTypeSlotTypeEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: InventoryTypeSlotTypeEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -6730,6 +6837,9 @@ impl<'mc> InventoryTypeSlotType<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> InventoryTypeSlotType<'mc> {
     pub const RESULT: InventoryTypeSlotTypeEnum = InventoryTypeSlotTypeEnum::Result;
     pub const CRAFTING: InventoryTypeSlotTypeEnum = InventoryTypeSlotTypeEnum::Crafting;
     pub const ARMOR: InventoryTypeSlotTypeEnum = InventoryTypeSlotTypeEnum::Armor;
@@ -6782,11 +6892,25 @@ impl<'mc> InventoryTypeSlotType<'mc> {
 
     //
 }
-impl<'mc> InventoryType<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for InventoryType<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatableEnum<'mc> for InventoryType<'mc> {
+    type Enum = InventoryTypeEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: InventoryTypeEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate InventoryType from null object.").into());
@@ -6802,6 +6926,9 @@ impl<'mc> InventoryType<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> InventoryType<'mc> {
     pub const CHEST: InventoryTypeEnum = InventoryTypeEnum::Chest;
     pub const DISPENSER: InventoryTypeEnum = InventoryTypeEnum::Dispenser;
     pub const DROPPER: InventoryTypeEnum = InventoryTypeEnum::Dropper;
@@ -6925,6 +7052,7 @@ impl<'mc> std::ops::Deref for ContainerType<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for ContainerType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -6934,11 +7062,15 @@ impl<'mc> JNIRaw<'mc> for ContainerType<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ContainerType<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for ContainerType<'mc> {
+    type Enum = ContainerTypeEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: ContainerTypeEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate ContainerType from null object.").into());
@@ -6954,6 +7086,9 @@ impl<'mc> ContainerType<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> ContainerType<'mc> {
     pub const SOURCE: ContainerTypeEnum = ContainerTypeEnum::Source;
     pub const DESTINATION: ContainerTypeEnum = ContainerTypeEnum::Destination;
     pub fn from_string(str: String) -> std::option::Option<ContainerTypeEnum> {
@@ -6999,7 +7134,8 @@ pub struct PrepareSmithingEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PrepareSmithingEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PrepareSmithingEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -7008,8 +7144,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PrepareSmithingEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PrepareSmithingEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PrepareSmithingEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -7030,6 +7167,9 @@ impl<'mc> PrepareSmithingEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PrepareSmithingEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::inventory::InventoryView<'mc>>,
@@ -7306,7 +7446,8 @@ pub struct TradeSelectEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for TradeSelectEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for TradeSelectEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -7315,8 +7456,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for TradeSelectEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> TradeSelectEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for TradeSelectEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -7337,6 +7479,9 @@ impl<'mc> TradeSelectEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> TradeSelectEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::inventory::InventoryView<'mc>>,
@@ -7714,6 +7859,7 @@ impl<'mc> std::ops::Deref for SlotType<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for SlotType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -7723,11 +7869,15 @@ impl<'mc> JNIRaw<'mc> for SlotType<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> SlotType<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for SlotType<'mc> {
+    type Enum = SlotTypeEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: SlotTypeEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate SlotType from null object.").into());
@@ -7743,6 +7893,9 @@ impl<'mc> SlotType<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> SlotType<'mc> {
     pub const RESULT: SlotTypeEnum = SlotTypeEnum::Result;
     pub const CRAFTING: SlotTypeEnum = SlotTypeEnum::Crafting;
     pub const ARMOR: SlotTypeEnum = SlotTypeEnum::Armor;
@@ -7856,6 +8009,7 @@ impl<'mc> std::ops::Deref for InventoryAction<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for InventoryAction<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -7865,11 +8019,15 @@ impl<'mc> JNIRaw<'mc> for InventoryAction<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> InventoryAction<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for InventoryAction<'mc> {
+    type Enum = InventoryActionEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: InventoryActionEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -7888,6 +8046,9 @@ impl<'mc> InventoryAction<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> InventoryAction<'mc> {
     pub const NOTHING: InventoryActionEnum = InventoryActionEnum::Nothing;
     pub const PICKUP_ALL: InventoryActionEnum = InventoryActionEnum::PickupAll;
     pub const PICKUP_SOME: InventoryActionEnum = InventoryActionEnum::PickupSome;
@@ -7979,7 +8140,8 @@ pub struct InventoryClickEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for InventoryClickEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for InventoryClickEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -7988,8 +8150,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for InventoryClickEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> InventoryClickEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for InventoryClickEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -8010,6 +8173,9 @@ impl<'mc> InventoryClickEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> InventoryClickEvent<'mc> {
     pub fn new_with_inventory_view(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::inventory::InventoryView<'mc>>,
@@ -8589,7 +8755,8 @@ pub struct InventoryDragEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for InventoryDragEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for InventoryDragEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -8598,8 +8765,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for InventoryDragEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> InventoryDragEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for InventoryDragEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -8620,6 +8788,9 @@ impl<'mc> InventoryDragEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> InventoryDragEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::inventory::InventoryView<'mc>>,
@@ -9068,7 +9239,8 @@ pub struct FurnaceBurnEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for FurnaceBurnEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for FurnaceBurnEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -9077,8 +9249,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for FurnaceBurnEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> FurnaceBurnEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for FurnaceBurnEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -9099,6 +9272,9 @@ impl<'mc> FurnaceBurnEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> FurnaceBurnEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::block::Block<'mc>>,
@@ -9404,7 +9580,8 @@ pub struct InventoryCloseEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for InventoryCloseEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for InventoryCloseEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -9413,8 +9590,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for InventoryCloseEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> InventoryCloseEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for InventoryCloseEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -9435,6 +9613,9 @@ impl<'mc> InventoryCloseEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> InventoryCloseEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::inventory::InventoryView<'mc>>,
@@ -9680,7 +9861,8 @@ pub struct PrepareInventoryResultEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PrepareInventoryResultEvent<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PrepareInventoryResultEvent<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -9689,8 +9871,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PrepareInventoryResultEvent<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PrepareInventoryResultEvent<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PrepareInventoryResultEvent<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -9714,6 +9897,9 @@ impl<'mc> PrepareInventoryResultEvent<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PrepareInventoryResultEvent<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::inventory::InventoryView<'mc>>,

@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// This class represents an enum with a generic content type. It defines the types a custom item tag can have.
@@ -34,8 +36,19 @@ pub struct ItemTagType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> ItemTagType<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for ItemTagType<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for ItemTagType<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -54,6 +67,9 @@ impl<'mc> ItemTagType<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ItemTagType<'mc> {
     //
 
     pub fn primitive_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -126,7 +142,15 @@ impl<'mc> ItemTagType<'mc> {
         Ok(res.l()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for ItemTagType<'mc> {
+/// This interface represents the context in which the <a title="interface in org.bukkit.inventory.meta.tags" href="ItemTagType.html"><code>ItemTagType</code></a> can serialize and deserialize the passed values.
+///
+/// This is a representation of an abstract class.
+pub struct ItemTagAdapterContext<'mc>(
+    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
+    pub(crate) jni::objects::JObject<'mc>,
+);
+
+impl<'mc> JNIRaw<'mc> for ItemTagAdapterContext<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -135,15 +159,9 @@ impl<'mc> JNIRaw<'mc> for ItemTagType<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-/// This interface represents the context in which the <a title="interface in org.bukkit.inventory.meta.tags" href="ItemTagType.html"><code>ItemTagType</code></a> can serialize and deserialize the passed values.
-///
-/// This is a representation of an abstract class.
-pub struct ItemTagAdapterContext<'mc>(
-    pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
-    pub(crate) jni::objects::JObject<'mc>,
-);
-impl<'mc> ItemTagAdapterContext<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ItemTagAdapterContext<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -165,6 +183,9 @@ impl<'mc> ItemTagAdapterContext<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ItemTagAdapterContext<'mc> {
     //
 
     pub fn new_tag_container(
@@ -181,21 +202,13 @@ impl<'mc> ItemTagAdapterContext<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for ItemTagAdapterContext<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// A default implementation that simply exists to pass on the retrieved or inserted value to the next layer. This implementation does not add any kind of logic, but is used to provide default implementations for the primitive types.
 pub struct ItemTagTypePrimitiveTagType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ItemTagTypePrimitiveTagType<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ItemTagTypePrimitiveTagType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -204,8 +217,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ItemTagTypePrimitiveTagType<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ItemTagTypePrimitiveTagType<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -229,6 +243,9 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
     //
 
     pub fn primitive_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
@@ -419,8 +436,19 @@ pub struct CustomItemTagContainer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> CustomItemTagContainer<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for CustomItemTagContainer<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for CustomItemTagContainer<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -444,6 +472,9 @@ impl<'mc> CustomItemTagContainer<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> CustomItemTagContainer<'mc> {
     //
 
     pub fn adapter_context(
@@ -573,14 +604,5 @@ impl<'mc> CustomItemTagContainer<'mc> {
             .call_method(&self.jni_object(), "isEmpty", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
-    }
-}
-impl<'mc> JNIRaw<'mc> for CustomItemTagContainer<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }

@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// A compiled representation of a regular expression.
@@ -762,7 +764,8 @@ pub struct JavaPattern<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaPattern<'mc> {
+
+impl<'mc> JNIRaw<'mc> for JavaPattern<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -771,8 +774,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for JavaPattern<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> JavaPattern<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for JavaPattern<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -790,6 +794,9 @@ impl<'mc> JavaPattern<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> JavaPattern<'mc> {
     //
 
     pub fn pattern(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -939,7 +946,8 @@ impl<'mc> JavaPattern<'mc> {
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 =
+                jni::objects::JValueGen::Object(jni.new_object("int", "(I)V", vec![a.into()])?);
             args.push(val_2);
         }
         sig += ")Ljava/util/regex/Pattern;";
@@ -979,12 +987,20 @@ impl<'mc> JavaPattern<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Long(a.into());
+            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "long",
+                "(J)V",
+                vec![a.into()],
+            )?);
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
+            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
+                "int",
+                "(I)V",
+                vec![a.into()],
+            )?);
             args.push(val_2);
         }
         sig += ")V";

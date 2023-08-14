@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Various settings for controlling the input and output of a <a title="class in org.bukkit.configuration" href="MemoryConfiguration.html"><code>MemoryConfiguration</code></a>
@@ -6,7 +8,8 @@ pub struct MemoryConfigurationOptions<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for MemoryConfigurationOptions<'mc> {
+
+impl<'mc> JNIRaw<'mc> for MemoryConfigurationOptions<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15,8 +18,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for MemoryConfigurationOptions<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> MemoryConfigurationOptions<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for MemoryConfigurationOptions<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -38,6 +42,9 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> MemoryConfigurationOptions<'mc> {
     //@NotNull
 
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="ConfigurationOptions.html#pathSeparator(char)">ConfigurationOptions</a></code></span>
@@ -228,7 +235,8 @@ pub struct MemorySection<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for MemorySection<'mc> {
+
+impl<'mc> JNIRaw<'mc> for MemorySection<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -237,8 +245,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for MemorySection<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> MemorySection<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for MemorySection<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -256,6 +265,9 @@ impl<'mc> MemorySection<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> MemorySection<'mc> {
     //
 
     pub fn get_string_with_string(
@@ -987,7 +999,7 @@ impl<'mc> MemorySection<'mc> {
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1025,7 +1037,7 @@ impl<'mc> MemorySection<'mc> {
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -1481,8 +1493,19 @@ pub struct Configuration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> Configuration<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for Configuration<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for Configuration<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1500,6 +1523,9 @@ impl<'mc> Configuration<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Configuration<'mc> {
     //
 
     pub fn add_default(
@@ -2253,7 +2279,7 @@ impl<'mc> Configuration<'mc> {
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -2291,7 +2317,7 @@ impl<'mc> Configuration<'mc> {
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -2625,15 +2651,6 @@ impl<'mc> Configuration<'mc> {
         Ok(res.l()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for Configuration<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::configuration::ConfigurationSection<'mc>> for Configuration<'mc> {
     fn into(self) -> crate::configuration::ConfigurationSection<'mc> {
         crate::configuration::ConfigurationSection::from_raw(&self.jni_ref(), self.1).expect(
@@ -2646,7 +2663,8 @@ pub struct MemoryConfiguration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for MemoryConfiguration<'mc> {
+
+impl<'mc> JNIRaw<'mc> for MemoryConfiguration<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2655,8 +2673,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for MemoryConfiguration<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> MemoryConfiguration<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for MemoryConfiguration<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -2677,6 +2696,9 @@ impl<'mc> MemoryConfiguration<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> MemoryConfiguration<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::configuration::Configuration<'mc>>>,
@@ -3506,7 +3528,7 @@ impl<'mc> MemoryConfiguration<'mc> {
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -3544,7 +3566,7 @@ impl<'mc> MemoryConfiguration<'mc> {
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -3989,7 +4011,8 @@ pub struct ConfigurationOptions<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ConfigurationOptions<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ConfigurationOptions<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -3998,8 +4021,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ConfigurationOptions<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ConfigurationOptions<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ConfigurationOptions<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -4020,6 +4044,9 @@ impl<'mc> ConfigurationOptions<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ConfigurationOptions<'mc> {
     //@NotNull
 
     /// Sets the char that will be used to separate <a title="interface in org.bukkit.configuration" href="ConfigurationSection.html"><code>ConfigurationSection</code></a>s
@@ -4199,8 +4226,19 @@ pub struct ConfigurationSection<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> ConfigurationSection<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for ConfigurationSection<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for ConfigurationSection<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -4221,6 +4259,9 @@ impl<'mc> ConfigurationSection<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn get_string_with_string(
@@ -4911,7 +4952,7 @@ impl<'mc> ConfigurationSection<'mc> {
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -4949,7 +4990,7 @@ impl<'mc> ConfigurationSection<'mc> {
             self.jni_ref().call_method(
                 &raw_val_2,
                 "add",
-                "(Ljava/Lang/Object)V",
+                "(Ljava/lang/String)V",
                 vec![jni::objects::JValueGen::from(map_val_0)],
             )?;
         }
@@ -5281,15 +5322,6 @@ impl<'mc> ConfigurationSection<'mc> {
             .call_method(&self.jni_object(), "getObject", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
-    }
-}
-impl<'mc> JNIRaw<'mc> for ConfigurationSection<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
 pub mod file;

@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 #[derive(PartialEq, Eq)]
@@ -32,6 +34,7 @@ impl<'mc> std::ops::Deref for ChatMessageType<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for ChatMessageType<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -41,11 +44,15 @@ impl<'mc> JNIRaw<'mc> for ChatMessageType<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ChatMessageType<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for ChatMessageType<'mc> {
+    type Enum = ChatMessageTypeEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: ChatMessageTypeEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -63,6 +70,9 @@ impl<'mc> ChatMessageType<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> ChatMessageType<'mc> {
     pub const CHAT: ChatMessageTypeEnum = ChatMessageTypeEnum::Chat;
     pub const SYSTEM: ChatMessageTypeEnum = ChatMessageTypeEnum::System;
     pub const ACTION_BAR: ChatMessageTypeEnum = ChatMessageTypeEnum::ActionBar;
@@ -110,7 +120,8 @@ pub struct ChatColor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for ChatColor<'mc> {
+
+impl<'mc> JNIRaw<'mc> for ChatColor<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -119,8 +130,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for ChatColor<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> ChatColor<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for ChatColor<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -138,6 +150,9 @@ impl<'mc> ChatColor<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ChatColor<'mc> {
     //
 
     pub fn color(&self) -> Result<(u8, u8, u8), Box<dyn std::error::Error>> {

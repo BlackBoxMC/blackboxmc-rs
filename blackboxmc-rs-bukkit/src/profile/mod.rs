@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Provides access to the textures stored inside a <a href="PlayerProfile.html" title="interface in org.bukkit.profile"><code>PlayerProfile</code></a>.
@@ -9,8 +11,19 @@ pub struct PlayerTextures<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> PlayerTextures<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for PlayerTextures<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerTextures<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -30,6 +43,9 @@ impl<'mc> PlayerTextures<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerTextures<'mc> {
     //
 
     pub fn is_signed(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -163,15 +179,6 @@ impl<'mc> PlayerTextures<'mc> {
         Ok(res.z()?)
     }
 }
-impl<'mc> JNIRaw<'mc> for PlayerTextures<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// The different Minecraft skin models.
 #[derive(PartialEq, Eq)]
 pub enum PlayerTexturesSkinModelEnum {
@@ -202,6 +209,7 @@ impl<'mc> std::ops::Deref for PlayerTexturesSkinModel<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for PlayerTexturesSkinModel<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -211,11 +219,15 @@ impl<'mc> JNIRaw<'mc> for PlayerTexturesSkinModel<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PlayerTexturesSkinModel<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for PlayerTexturesSkinModel<'mc> {
+    type Enum = PlayerTexturesSkinModelEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: PlayerTexturesSkinModelEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!(
@@ -235,6 +247,9 @@ impl<'mc> PlayerTexturesSkinModel<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> PlayerTexturesSkinModel<'mc> {
     pub const CLASSIC: PlayerTexturesSkinModelEnum = PlayerTexturesSkinModelEnum::Classic;
     pub const SLIM: PlayerTexturesSkinModelEnum = PlayerTexturesSkinModelEnum::Slim;
     pub fn from_string(str: String) -> std::option::Option<PlayerTexturesSkinModelEnum> {
@@ -286,8 +301,19 @@ pub struct PlayerProfile<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> PlayerProfile<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for PlayerProfile<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for PlayerProfile<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -305,6 +331,9 @@ impl<'mc> PlayerProfile<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PlayerProfile<'mc> {
     //
 
     pub fn unique_id(&self) -> Result<blackboxmc_java::JavaUUID<'mc>, Box<dyn std::error::Error>> {
@@ -401,15 +430,6 @@ impl<'mc> PlayerProfile<'mc> {
         })
     }
 }
-impl<'mc> JNIRaw<'mc> for PlayerProfile<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'mc>>
     for PlayerProfile<'mc>
 {
@@ -446,6 +466,7 @@ impl<'mc> std::ops::Deref for SkinModel<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for SkinModel<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -455,11 +476,15 @@ impl<'mc> JNIRaw<'mc> for SkinModel<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> SkinModel<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for SkinModel<'mc> {
+    type Enum = SkinModelEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: SkinModelEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(eyre::eyre!("Tried to instantiate SkinModel from null object.").into());
@@ -475,6 +500,9 @@ impl<'mc> SkinModel<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> SkinModel<'mc> {
     pub const CLASSIC: SkinModelEnum = SkinModelEnum::Classic;
     pub const SLIM: SkinModelEnum = SkinModelEnum::Slim;
     pub fn from_string(str: String) -> std::option::Option<SkinModelEnum> {

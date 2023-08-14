@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// A simple wrapper for ease of selecting <a href="Enchantment.html" title="class in org.bukkit.enchantments"><code>Enchantment</code></a>s
@@ -6,7 +8,8 @@ pub struct EnchantmentWrapper<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for EnchantmentWrapper<'mc> {
+
+impl<'mc> JNIRaw<'mc> for EnchantmentWrapper<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -15,8 +18,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for EnchantmentWrapper<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> EnchantmentWrapper<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for EnchantmentWrapper<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -37,6 +41,9 @@ impl<'mc> EnchantmentWrapper<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> EnchantmentWrapper<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
@@ -411,7 +418,8 @@ pub struct EnchantmentOffer<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for EnchantmentOffer<'mc> {
+
+impl<'mc> JNIRaw<'mc> for EnchantmentOffer<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -420,8 +428,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for EnchantmentOffer<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> EnchantmentOffer<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for EnchantmentOffer<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -441,6 +450,9 @@ impl<'mc> EnchantmentOffer<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> EnchantmentOffer<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
@@ -718,6 +730,7 @@ impl<'mc> std::ops::Deref for EnchantmentTarget<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for EnchantmentTarget<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -727,11 +740,15 @@ impl<'mc> JNIRaw<'mc> for EnchantmentTarget<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> EnchantmentTarget<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for EnchantmentTarget<'mc> {
+    type Enum = EnchantmentTargetEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: EnchantmentTargetEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -749,6 +766,9 @@ impl<'mc> EnchantmentTarget<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> EnchantmentTarget<'mc> {
     pub const ALL: EnchantmentTargetEnum = EnchantmentTargetEnum::All;
     pub const ARMOR_HEAD: EnchantmentTargetEnum = EnchantmentTargetEnum::ArmorHead;
     pub const BREAKABLE: EnchantmentTargetEnum = EnchantmentTargetEnum::Breakable;
@@ -844,7 +864,8 @@ pub struct Enchantment<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for Enchantment<'mc> {
+
+impl<'mc> JNIRaw<'mc> for Enchantment<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -853,8 +874,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for Enchantment<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Enchantment<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for Enchantment<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -872,6 +894,9 @@ impl<'mc> Enchantment<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Enchantment<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::NamespacedKey<'mc>>,

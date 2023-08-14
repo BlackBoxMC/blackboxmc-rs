@@ -1,4 +1,6 @@
 #![allow(deprecated)]
+use blackboxmc_general::JNIInstantiatable;
+use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Represents an object that may become a server operator, such as a <a title="interface in org.bukkit.entity" href="../entity/Player.html"><code>Player</code></a>
@@ -8,8 +10,19 @@ pub struct ServerOperator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> ServerOperator<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for ServerOperator<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for ServerOperator<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -29,6 +42,9 @@ impl<'mc> ServerOperator<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> ServerOperator<'mc> {
     //
 
     pub fn is_op(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -56,21 +72,13 @@ impl<'mc> ServerOperator<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for ServerOperator<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 /// Base Permissible for use in any Permissible object via proxy or extension
 pub struct PermissibleBase<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PermissibleBase<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PermissibleBase<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -79,8 +87,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PermissibleBase<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PermissibleBase<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PermissibleBase<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -100,6 +109,9 @@ impl<'mc> PermissibleBase<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PermissibleBase<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::permissions::ServerOperator<'mc>>,
@@ -438,6 +450,7 @@ impl<'mc> std::ops::Deref for PermissionDefault<'mc> {
         return &self.2;
     }
 }
+
 impl<'mc> JNIRaw<'mc> for PermissionDefault<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -447,11 +460,15 @@ impl<'mc> JNIRaw<'mc> for PermissionDefault<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PermissionDefault<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatableEnum<'mc> for PermissionDefault<'mc> {
+    type Enum = PermissionDefaultEnum;
+
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
-        e: PermissionDefaultEnum,
+
+        e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
             return Err(
@@ -469,6 +486,9 @@ impl<'mc> PermissionDefault<'mc> {
             Ok(Self(env.clone(), obj, e))
         }
     }
+}
+
+impl<'mc> PermissionDefault<'mc> {
     pub const TRUE: PermissionDefaultEnum = PermissionDefaultEnum::VariantTrue;
     pub const FALSE: PermissionDefaultEnum = PermissionDefaultEnum::VariantFalse;
     pub const OP: PermissionDefaultEnum = PermissionDefaultEnum::Op;
@@ -520,8 +540,19 @@ pub struct Permissible<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> Permissible<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for Permissible<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for Permissible<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -539,6 +570,9 @@ impl<'mc> Permissible<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Permissible<'mc> {
     //
 
     pub fn is_permission_set_with_string(
@@ -697,15 +731,6 @@ impl<'mc> Permissible<'mc> {
         Ok(())
     }
 }
-impl<'mc> JNIRaw<'mc> for Permissible<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
-    }
-}
 impl<'mc> Into<crate::permissions::ServerOperator<'mc>> for Permissible<'mc> {
     fn into(self) -> crate::permissions::ServerOperator<'mc> {
         crate::permissions::ServerOperator::from_raw(&self.jni_ref(), self.1)
@@ -717,7 +742,8 @@ pub struct Permission<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for Permission<'mc> {
+
+impl<'mc> JNIRaw<'mc> for Permission<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -726,8 +752,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for Permission<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> Permission<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for Permission<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -745,6 +772,9 @@ impl<'mc> Permission<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> Permission<'mc> {
     pub fn new_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
@@ -981,7 +1011,7 @@ impl<'mc> Permission<'mc> {
                 jni.call_method(
                     &raw_val_4,
                     "add",
-                    "(Ljava/Lang/Object)V",
+                    "(Lorg/bukkit/permissions/crate::permissions::Permission)V",
                     vec![jni::objects::JValueGen::from(map_val_0)],
                 )?;
             }
@@ -1151,7 +1181,8 @@ pub struct PermissionAttachmentInfo<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PermissionAttachmentInfo<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PermissionAttachmentInfo<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1160,8 +1191,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PermissionAttachmentInfo<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PermissionAttachmentInfo<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PermissionAttachmentInfo<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1183,6 +1215,9 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PermissionAttachmentInfo<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::permissions::Permissible<'mc>>,
@@ -1383,7 +1418,8 @@ pub struct PermissionAttachment<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> blackboxmc_general::JNIRaw<'mc> for PermissionAttachment<'mc> {
+
+impl<'mc> JNIRaw<'mc> for PermissionAttachment<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -1392,8 +1428,9 @@ impl<'mc> blackboxmc_general::JNIRaw<'mc> for PermissionAttachment<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
-impl<'mc> PermissionAttachment<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIInstantiatable<'mc> for PermissionAttachment<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1414,6 +1451,9 @@ impl<'mc> PermissionAttachment<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PermissionAttachment<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
@@ -1689,8 +1729,19 @@ pub struct PermissionRemovedExecutor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
-impl<'mc> PermissionRemovedExecutor<'mc> {
-    pub fn from_raw(
+
+impl<'mc> JNIRaw<'mc> for PermissionRemovedExecutor<'mc> {
+    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
+        self.0.clone()
+    }
+
+    fn jni_object(&self) -> jni::objects::JObject<'mc> {
+        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
+    }
+}
+
+impl<'mc> JNIInstantiatable<'mc> for PermissionRemovedExecutor<'mc> {
+    fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
         obj: jni::objects::JObject<'mc>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -1712,6 +1763,9 @@ impl<'mc> PermissionRemovedExecutor<'mc> {
             Ok(Self(env.clone(), obj))
         }
     }
+}
+
+impl<'mc> PermissionRemovedExecutor<'mc> {
     //
 
     pub fn attachment_removed(
@@ -1730,14 +1784,5 @@ impl<'mc> PermissionRemovedExecutor<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-}
-impl<'mc> JNIRaw<'mc> for PermissionRemovedExecutor<'mc> {
-    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
-        self.0.clone()
-    }
-
-    fn jni_object(&self) -> jni::objects::JObject<'mc> {
-        unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
