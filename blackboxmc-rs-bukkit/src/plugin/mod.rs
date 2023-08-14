@@ -2,6 +2,7 @@
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Each entry here represents a particular plugin's awareness. These can be checked by using <a href="PluginDescriptionFile.html#getAwareness()"><code>PluginDescriptionFile.getAwareness()</code></a>.<a class="external-link" title="class or interface in java.util" href="https://docs.oracle.com/javase/8/docs/api/java/util/Set.html#contains-java.lang.Object-"><code>contains(flag)</code></a>.
+#[derive(PartialEq, Eq)]
 pub enum PluginAwarenessFlagsEnum {
     Utf8,
 }
@@ -73,12 +74,12 @@ impl<'mc> PluginAwarenessFlags<'mc> {
             cls,
             "valueOf",
             "(Ljava/lang/String;)Lorg/bukkit/plugin/PluginAwareness$Flags;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = jni.translate_error(variant)?;
         let variant_str = jni
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -304,14 +305,17 @@ impl<'mc> PluginDescriptionFile<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<crate::plugin::PluginDescriptionFile<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/io/InputStream;";
+            let val_1 = jni::objects::JValueGen::Object(a);
+            args.push(val_1);
+        }
+        sig += ")V";
         let cls = jni.find_class("org/bukkit/plugin/PluginDescriptionFile");
         let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            "(Ljava/io/InputStream;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
+        let res = jni.new_object(cls, sig.as_str(), args);
         let res = jni.translate_error_no_gen(res)?;
         crate::plugin::PluginDescriptionFile::from_raw(&jni, res)
     }
@@ -321,37 +325,39 @@ impl<'mc> PluginDescriptionFile<'mc> {
         arg1: impl Into<String>,
         arg2: std::option::Option<impl Into<String>>,
     ) -> Result<crate::plugin::PluginDescriptionFile<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.into())?);
-        let val_3 = jni::objects::JObject::from(
-            jni.new_string(
-                arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                    .into(),
-            )?,
-        );
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        if let Some(a) = arg2 {
+            sig += "Ljava/lang/String;";
+            let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                jni.new_string(a.into())?,
+            ));
+            args.push(val_3);
+        }
+        sig += ")V";
         let cls = jni.find_class("org/bukkit/plugin/PluginDescriptionFile");
         let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
-            ],
-        );
+        let res = jni.new_object(cls, sig.as_str(), args);
         let res = jni.translate_error_no_gen(res)?;
         crate::plugin::PluginDescriptionFile::from_raw(&jni, res)
     }
     //
 
     pub fn full_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getFullName",
-            "()Ljava/lang/String;",
-            &[],
-        );
+        let sig = String::from("()Ljava/lang/String;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getFullName", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -362,12 +368,10 @@ impl<'mc> PluginDescriptionFile<'mc> {
     //
 
     pub fn version(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getVersion",
-            "()Ljava/lang/String;",
-            &[],
-        );
+        let sig = String::from("()Ljava/lang/String;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getVersion", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -378,11 +382,12 @@ impl<'mc> PluginDescriptionFile<'mc> {
     //
 
     pub fn class_loader_of(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getClassLoaderOf",
-            "()Ljava/lang/String;",
-            &[],
+            sig.as_str(),
+            vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
@@ -394,12 +399,10 @@ impl<'mc> PluginDescriptionFile<'mc> {
     //
 
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDescription",
-            "()Ljava/lang/String;",
-            &[],
-        );
+        let sig = String::from("()Ljava/lang/String;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getDescription", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -410,12 +413,10 @@ impl<'mc> PluginDescriptionFile<'mc> {
     //
 
     pub fn prefix(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPrefix",
-            "()Ljava/lang/String;",
-            &[],
-        );
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getPrefix", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -426,12 +427,10 @@ impl<'mc> PluginDescriptionFile<'mc> {
     //
 
     pub fn provides(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getProvides",
-            "()Ljava/util/List;",
-            &[],
-        );
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getProvides", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
@@ -450,9 +449,10 @@ impl<'mc> PluginDescriptionFile<'mc> {
     //
 
     pub fn main(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getMain", "()Ljava/lang/String;", &[]);
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getMain", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -465,17 +465,15 @@ impl<'mc> PluginDescriptionFile<'mc> {
     pub fn load(
         &mut self,
     ) -> Result<crate::plugin::PluginLoadOrder<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLoad",
-            "()Lorg/bukkit/plugin/PluginLoadOrder;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/plugin/PluginLoadOrder;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getLoad", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
         let variant = self
             .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = self.jni_ref().translate_error(variant)?;
         let variant_str = self
             .0
@@ -492,9 +490,10 @@ impl<'mc> PluginDescriptionFile<'mc> {
     //
 
     pub fn authors(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
         let res =
             self.jni_ref()
-                .call_method(&self.jni_object(), "getAuthors", "()Ljava/util/List;", &[]);
+                .call_method(&self.jni_object(), "getAuthors", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
@@ -513,12 +512,10 @@ impl<'mc> PluginDescriptionFile<'mc> {
     //
 
     pub fn contributors(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getContributors",
-            "()Ljava/util/List;",
-            &[],
-        );
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getContributors", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
@@ -537,12 +534,10 @@ impl<'mc> PluginDescriptionFile<'mc> {
     //
 
     pub fn website(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getWebsite",
-            "()Ljava/lang/String;",
-            &[],
-        );
+        let sig = String::from("()Ljava/lang/String;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getWebsite", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -553,9 +548,10 @@ impl<'mc> PluginDescriptionFile<'mc> {
     //
 
     pub fn depend(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getDepend", "()Ljava/util/List;", &[]);
+        let sig = String::from("()Ljava/util/List;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getDepend", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
@@ -574,12 +570,10 @@ impl<'mc> PluginDescriptionFile<'mc> {
     //
 
     pub fn soft_depend(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getSoftDepend",
-            "()Ljava/util/List;",
-            &[],
-        );
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getSoftDepend", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
@@ -598,12 +592,10 @@ impl<'mc> PluginDescriptionFile<'mc> {
     //
 
     pub fn load_before(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLoadBefore",
-            "()Ljava/util/List;",
-            &[],
-        );
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getLoadBefore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
@@ -624,9 +616,10 @@ impl<'mc> PluginDescriptionFile<'mc> {
     pub fn commands(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
-                .call_method(&self.jni_object(), "getCommands", "()Ljava/util/Map;", &[]);
+                .call_method(&self.jni_object(), "getCommands", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -637,17 +630,18 @@ impl<'mc> PluginDescriptionFile<'mc> {
     pub fn permission_default(
         &mut self,
     ) -> Result<crate::permissions::PermissionDefault<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/permissions/PermissionDefault;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPermissionDefault",
-            "()Lorg/bukkit/permissions/PermissionDefault;",
-            &[],
+            sig.as_str(),
+            vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
         let variant = self
             .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = self.jni_ref().translate_error(variant)?;
         let variant_str = self
             .0
@@ -666,12 +660,10 @@ impl<'mc> PluginDescriptionFile<'mc> {
     pub fn awareness(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAwareness",
-            "()Ljava/util/Set;",
-            &[],
-        );
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getAwareness", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -680,12 +672,10 @@ impl<'mc> PluginDescriptionFile<'mc> {
     //
 
     pub fn apiversion(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAPIVersion",
-            "()Ljava/lang/String;",
-            &[],
-        );
+        let sig = String::from("()Ljava/lang/String;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getAPIVersion", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -696,12 +686,10 @@ impl<'mc> PluginDescriptionFile<'mc> {
     //
 
     pub fn libraries(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLibraries",
-            "()Ljava/util/List;",
-            &[],
-        );
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getLibraries", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
@@ -720,12 +708,10 @@ impl<'mc> PluginDescriptionFile<'mc> {
     //
 
     pub fn raw_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getRawName",
-            "()Ljava/lang/String;",
-            &[],
-        );
+        let sig = String::from("()Ljava/lang/String;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getRawName", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -736,9 +722,10 @@ impl<'mc> PluginDescriptionFile<'mc> {
     //
 
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -751,12 +738,10 @@ impl<'mc> PluginDescriptionFile<'mc> {
     pub fn permissions(
         &mut self,
     ) -> Result<Vec<crate::permissions::Permission<'mc>>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPermissions",
-            "()Ljava/util/List;",
-            &[],
-        );
+        let sig = String::from("()Ljava/util/List;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPermissions", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
@@ -773,12 +758,13 @@ impl<'mc> PluginDescriptionFile<'mc> {
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
+        let sig = String::from("(Ljava/io/Writer;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "save",
-            "(Ljava/io/Writer;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -790,23 +776,22 @@ impl<'mc> PluginDescriptionFile<'mc> {
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(
-            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                .into(),
-        );
-        let val_2 = jni::objects::JValueGen::Int(
-            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                .into(),
-        );
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "wait",
-            "(JI)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "J";
+            let val_1 = jni::objects::JValueGen::Long(a.into());
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -816,12 +801,13 @@ impl<'mc> PluginDescriptionFile<'mc> {
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
+        let sig = String::from("(Ljava/lang/Object;)Z");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
@@ -829,9 +815,10 @@ impl<'mc> PluginDescriptionFile<'mc> {
     //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -842,40 +829,45 @@ impl<'mc> PluginDescriptionFile<'mc> {
     //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
     //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let sig = String::from("()Ljava/lang/Class;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getClass", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[]);
+            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
+#[derive(PartialEq, Eq)]
 pub enum PluginLoadOrderEnum {
     Startup,
     Postworld,
@@ -951,12 +943,12 @@ impl<'mc> PluginLoadOrder<'mc> {
             cls,
             "valueOf",
             "(Ljava/lang/String;)Lorg/bukkit/plugin/PluginLoadOrder;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = jni.translate_error(variant)?;
         let variant_str = jni
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -1014,38 +1006,47 @@ impl<'mc> RegisteredServiceProvider<'mc> {
         arg2: impl Into<crate::plugin::ServicePriority<'mc>>,
         arg3: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<crate::plugin::RegisteredServiceProvider<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let val_2 = arg1;
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
-        let val_4 = unsafe { jni::objects::JObject::from_raw(arg3.into().jni_object().clone()) };
+        let sig = String::from("(Ljava/lang/Class;Ljava/lang/Object;Lorg/bukkit/plugin/ServicePriority;Lorg/bukkit/plugin/Plugin;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0.into());
+        let val_2 = jni::objects::JValueGen::Object(arg1);
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
+        });
+        let val_4 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg3.into().jni_object().clone())
+        });
         let cls = jni.find_class("org/bukkit/plugin/RegisteredServiceProvider");
         let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls,
-"(Ljava/lang/Class;Ljava/lang/Object;Lorg/bukkit/plugin/ServicePriority;Lorg/bukkit/plugin/Plugin;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)]);
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+                jni::objects::JValueGen::from(val_4),
+            ],
+        );
         let res = jni.translate_error_no_gen(res)?;
         crate::plugin::RegisteredServiceProvider::from_raw(&jni, res)
     }
     //
 
     pub fn provider(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getProvider",
-            "()Ljava/lang/Object;",
-            &[],
-        );
+        let sig = String::from("()Ljava/lang/Object;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getProvider", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
     //
 
     pub fn plugin(&mut self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPlugin",
-            "()Lorg/bukkit/plugin/Plugin;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getPlugin", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::plugin::Plugin::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1054,12 +1055,10 @@ impl<'mc> RegisteredServiceProvider<'mc> {
     //
 
     pub fn service(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getService",
-            "()Ljava/lang/Class;",
-            &[],
-        );
+        let sig = String::from("()Ljava/lang/Class;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getService", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
@@ -1069,13 +1068,17 @@ impl<'mc> RegisteredServiceProvider<'mc> {
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
-        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "compareTo",
-            "(Ljava/lang/Object;)I",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/lang/Object;";
+            let val_1 = jni::objects::JValueGen::Object(a);
+            args.push(val_1);
+        }
+        sig += ")I";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "compareTo", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
@@ -1084,12 +1087,10 @@ impl<'mc> RegisteredServiceProvider<'mc> {
     pub fn priority(
         &mut self,
     ) -> Result<crate::plugin::ServicePriority<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPriority",
-            "()Lorg/bukkit/plugin/ServicePriority;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/plugin/ServicePriority;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPriority", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::plugin::ServicePriority::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1102,23 +1103,22 @@ impl<'mc> RegisteredServiceProvider<'mc> {
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(
-            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                .into(),
-        );
-        let val_2 = jni::objects::JValueGen::Int(
-            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                .into(),
-        );
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "wait",
-            "(JI)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "J";
+            let val_1 = jni::objects::JValueGen::Long(a.into());
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -1128,12 +1128,13 @@ impl<'mc> RegisteredServiceProvider<'mc> {
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
+        let sig = String::from("(Ljava/lang/Object;)Z");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
@@ -1141,9 +1142,10 @@ impl<'mc> RegisteredServiceProvider<'mc> {
     //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -1154,40 +1156,45 @@ impl<'mc> RegisteredServiceProvider<'mc> {
     //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
     //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let sig = String::from("()Ljava/lang/Class;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getClass", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[]);
+            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
 }
+#[derive(PartialEq, Eq)]
 pub enum FlagsEnum {
     //['since', '']
 
@@ -1261,12 +1268,12 @@ impl<'mc> Flags<'mc> {
             cls,
             "valueOf",
             "(Ljava/lang/String;)Lorg/bukkit/plugin/Flags;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = jni.translate_error(variant)?;
         let variant_str = jni
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -1388,12 +1395,15 @@ impl<'mc> PluginManager<'mc> {
         &mut self,
         arg0: impl Into<String>,
     ) -> Result<crate::permissions::Permission<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let sig = String::from("(Ljava/lang/String;)Lorg/bukkit/permissions/Permission;");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPermission",
-            "(Ljava/lang/String;)Lorg/bukkit/permissions/Permission;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::permissions::Permission::from_raw(&self.jni_ref(), unsafe {
@@ -1406,12 +1416,15 @@ impl<'mc> PluginManager<'mc> {
         &mut self,
         arg0: impl Into<String>,
     ) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let sig = String::from("(Ljava/lang/String;)Lorg/bukkit/plugin/Plugin;");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPlugin",
-            "(Ljava/lang/String;)Lorg/bukkit/plugin/Plugin;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::plugin::Plugin::from_raw(&self.jni_ref(), unsafe {
@@ -1424,12 +1437,15 @@ impl<'mc> PluginManager<'mc> {
         &mut self,
         arg0: impl Into<crate::event::Event<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let sig = String::from("(Lorg/bukkit/event/Event;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "callEvent",
-            "(Lorg/bukkit/event/Event;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -1440,12 +1456,15 @@ impl<'mc> PluginManager<'mc> {
         &mut self,
         arg0: impl Into<String>,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let sig = String::from("(Ljava/lang/String;)Ljava/util/Set;");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPermissionSubscriptions",
-            "(Ljava/lang/String;)Ljava/util/Set;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
@@ -1458,12 +1477,15 @@ impl<'mc> PluginManager<'mc> {
         &mut self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let sig = String::from("(Lorg/bukkit/permissions/Permission;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "recalculatePermissionDefaults",
-            "(Lorg/bukkit/permissions/Permission;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -1474,12 +1496,15 @@ impl<'mc> PluginManager<'mc> {
         &mut self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let sig = String::from("(Lorg/bukkit/permissions/Permission;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addPermission",
-            "(Lorg/bukkit/permissions/Permission;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -1491,13 +1516,14 @@ impl<'mc> PluginManager<'mc> {
         &mut self,
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)Ljava/util/Set;");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDefaultPermissions",
-            "(Z)Ljava/util/Set;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
@@ -1511,16 +1537,19 @@ impl<'mc> PluginManager<'mc> {
         arg0: bool,
         arg1: impl Into<crate::permissions::Permissible<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(ZLorg/bukkit/permissions/Permissible;)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "subscribeToDefaultPerms",
-            "(ZLorg/bukkit/permissions/Permissible;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
             ],
         );
         self.jni_ref().translate_error(res)?;
@@ -1533,15 +1562,20 @@ impl<'mc> PluginManager<'mc> {
         arg0: impl Into<String>,
         arg1: impl Into<crate::permissions::Permissible<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let sig = String::from("(Ljava/lang/String;Lorg/bukkit/permissions/Permissible;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "subscribeToPermission",
-            "(Ljava/lang/String;Lorg/bukkit/permissions/Permissible;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
             ],
         );
         self.jni_ref().translate_error(res)?;
@@ -1554,15 +1588,20 @@ impl<'mc> PluginManager<'mc> {
         arg0: impl Into<String>,
         arg1: impl Into<crate::permissions::Permissible<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let sig = String::from("(Ljava/lang/String;Lorg/bukkit/permissions/Permissible;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "unsubscribeFromPermission",
-            "(Ljava/lang/String;Lorg/bukkit/permissions/Permissible;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
             ],
         );
         self.jni_ref().translate_error(res)?;
@@ -1575,16 +1614,19 @@ impl<'mc> PluginManager<'mc> {
         arg0: bool,
         arg1: impl Into<crate::permissions::Permissible<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(ZLorg/bukkit/permissions/Permissible;)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "unsubscribeFromDefaultPerms",
-            "(ZLorg/bukkit/permissions/Permissible;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
             ],
         );
         self.jni_ref().translate_error(res)?;
@@ -1596,12 +1638,13 @@ impl<'mc> PluginManager<'mc> {
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
+        let sig = String::from("(Ljava/io/File;)Lorg/bukkit/plugin/Plugin;");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "loadPlugin",
-            "(Ljava/io/File;)Lorg/bukkit/plugin/Plugin;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::plugin::Plugin::from_raw(&self.jni_ref(), unsafe {
@@ -1611,9 +1654,10 @@ impl<'mc> PluginManager<'mc> {
     //
 
     pub fn use_timings(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "useTimings", "()Z", &[]);
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "useTimings", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
@@ -1623,12 +1667,15 @@ impl<'mc> PluginManager<'mc> {
         &mut self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let sig = String::from("(Lorg/bukkit/plugin/Plugin;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "enablePlugin",
-            "(Lorg/bukkit/plugin/Plugin;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -1639,12 +1686,15 @@ impl<'mc> PluginManager<'mc> {
         &mut self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let sig = String::from("(Lorg/bukkit/plugin/Plugin;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "disablePlugin",
-            "(Lorg/bukkit/plugin/Plugin;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -1655,12 +1705,13 @@ impl<'mc> PluginManager<'mc> {
         &mut self,
         arg0: jni::objects::JClass<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
+        let sig = String::from("(Ljava/lang/Class;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "registerInterface",
-            "(Ljava/lang/Class;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -1673,18 +1724,19 @@ impl<'mc> PluginManager<'mc> {
         &mut self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(
-            self.jni_ref().new_string(
-                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                    .into(),
-            )?,
-        );
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isPluginEnabled",
-            "(Ljava/lang/String;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/lang/String;";
+            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_1);
+        }
+        sig += ")Z";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isPluginEnabled", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
@@ -1693,18 +1745,20 @@ impl<'mc> PluginManager<'mc> {
     //
 
     pub fn disable_plugins(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "disablePlugins", "()V", &[]);
+        let sig = String::from("()V");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "disablePlugins", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn clear_plugins(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "clearPlugins", "()V", &[]);
+        let sig = String::from("()V");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "clearPlugins", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -1715,15 +1769,20 @@ impl<'mc> PluginManager<'mc> {
         arg0: impl Into<crate::event::Listener<'mc>>,
         arg1: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let sig = String::from("(Lorg/bukkit/event/Listener;Lorg/bukkit/plugin/Plugin;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "registerEvents",
-            "(Lorg/bukkit/event/Listener;Lorg/bukkit/plugin/Plugin;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
             ],
         );
         self.jni_ref().translate_error(res)?;
@@ -1740,24 +1799,43 @@ impl<'mc> PluginManager<'mc> {
         arg4: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
         arg5: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
-        let val_4 = unsafe { jni::objects::JObject::from_raw(arg3.into().jni_object().clone()) };
-        let val_5 = unsafe {
-            jni::objects::JObject::from_raw(
-                arg4.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                    .into()
-                    .jni_object()
-                    .clone(),
-            )
-        };
-        // 4
-        let val_6 = jni::objects::JValueGen::Bool(
-            arg5.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                .into(),
-        );
-        let res = self.jni_ref().call_method(&self.jni_object(),"registerEvent","(Ljava/lang/Class;Lorg/bukkit/event/Listener;Lorg/bukkit/event/EventPriority;Lorg/bukkit/plugin/EventExecutor;Lorg/bukkit/plugin/Plugin;Z)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5),jni::objects::JValueGen::from(&val_6)]);
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/Class;";
+        let val_1 = jni::objects::JValueGen::Object(arg0.into());
+        args.push(val_1);
+        sig += "Lorg/bukkit/event/Listener;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
+        sig += "Lorg/bukkit/event/EventPriority;";
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
+        });
+        args.push(val_3);
+        sig += "Lorg/bukkit/plugin/EventExecutor;";
+        let val_4 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg3.into().jni_object().clone())
+        });
+        args.push(val_4);
+        if let Some(a) = arg4 {
+            sig += "Lorg/bukkit/plugin/Plugin;";
+            let val_5 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_5);
+        }
+        if let Some(a) = arg5 {
+            sig += "Z";
+            // 4
+            let val_6 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_6);
+        }
+        sig += ")V";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "registerEvent", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -1767,18 +1845,19 @@ impl<'mc> PluginManager<'mc> {
         &mut self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(
-            self.jni_ref().new_string(
-                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                    .into(),
-            )?,
-        );
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removePermission",
-            "(Ljava/lang/String;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/lang/String;";
+            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_1);
+        }
+        sig += ")V";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "removePermission", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -1789,13 +1868,14 @@ impl<'mc> PluginManager<'mc> {
         &mut self,
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)Ljava/util/Set;");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDefaultPermSubscriptions",
-            "(Z)Ljava/util/Set;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
@@ -1807,12 +1887,10 @@ impl<'mc> PluginManager<'mc> {
     pub fn permissions(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPermissions",
-            "()Ljava/util/Set;",
-            &[],
-        );
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPermissions", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1875,18 +1953,20 @@ impl<'mc> PluginBase<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::plugin::PluginBase<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let cls = jni.find_class("org/bukkit/plugin/PluginBase");
         let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, "()V", &[]);
+        let res = jni.new_object(cls, sig.as_str(), vec![]);
         let res = jni.translate_error_no_gen(res)?;
         crate::plugin::PluginBase::from_raw(&jni, res)
     }
     //
 
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -1900,12 +1980,13 @@ impl<'mc> PluginBase<'mc> {
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
+        let sig = String::from("(Ljava/lang/Object;)Z");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
@@ -1913,9 +1994,10 @@ impl<'mc> PluginBase<'mc> {
     //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
@@ -1926,32 +2008,32 @@ impl<'mc> PluginBase<'mc> {
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(
-            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                .into(),
-        );
-        let val_2 = jni::objects::JValueGen::Int(
-            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                .into(),
-        );
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "wait",
-            "(JI)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "J";
+            let val_1 = jni::objects::JValueGen::Long(a.into());
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -1962,39 +2044,40 @@ impl<'mc> PluginBase<'mc> {
     //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let sig = String::from("()Ljava/lang/Class;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getClass", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[]);
+            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn server(&mut self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getServer",
-            "()Lorg/bukkit/Server;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/Server;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getServer", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::Server::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2005,12 +2088,10 @@ impl<'mc> PluginBase<'mc> {
     pub fn description(
         &mut self,
     ) -> Result<crate::plugin::PluginDescriptionFile<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDescription",
-            "()Lorg/bukkit/plugin/PluginDescriptionFile;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/plugin/PluginDescriptionFile;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getDescription", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::plugin::PluginDescriptionFile::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2023,15 +2104,22 @@ impl<'mc> PluginBase<'mc> {
         arg0: impl Into<String>,
         arg1: impl Into<String>,
     ) -> Result<crate::generator::BiomeProvider<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
+        let sig = String::from(
+            "(Ljava/lang/String;Ljava/lang/String;)Lorg/bukkit/generator/BiomeProvider;",
+        );
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDefaultBiomeProvider",
-            "(Ljava/lang/String;Ljava/lang/String;)Lorg/bukkit/generator/BiomeProvider;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -2042,9 +2130,10 @@ impl<'mc> PluginBase<'mc> {
     //
 
     pub fn is_enabled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isEnabled", "()Z", &[]);
+            .call_method(&self.jni_object(), "isEnabled", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
@@ -2054,12 +2143,10 @@ impl<'mc> PluginBase<'mc> {
         &mut self,
     ) -> Result<crate::configuration::file::FileConfiguration<'mc>, Box<dyn std::error::Error>>
     {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getConfig",
-            "()Lorg/bukkit/configuration/file/FileConfiguration;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/configuration/file/FileConfiguration;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getConfig", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::configuration::file::FileConfiguration::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2070,30 +2157,33 @@ impl<'mc> PluginBase<'mc> {
     pub fn data_folder(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDataFolder",
-            "()Ljava/io/File;",
-            &[],
-        );
+        let sig = String::from("()Ljava/io/File;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getDataFolder", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
     //
 
     pub fn save_config(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "saveConfig", "()V", &[]);
+        let sig = String::from("()V");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "saveConfig", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn save_default_config(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "saveDefaultConfig", "()V", &[]);
+        let sig = String::from("()V");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "saveDefaultConfig",
+            sig.as_str(),
+            vec![],
+        );
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -2104,16 +2194,19 @@ impl<'mc> PluginBase<'mc> {
         arg0: impl Into<String>,
         arg1: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let sig = String::from("(Ljava/lang/String;Z)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
         // -2
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "saveResource",
-            "(Ljava/lang/String;Z)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
             ],
         );
         self.jni_ref().translate_error(res)?;
@@ -2122,9 +2215,10 @@ impl<'mc> PluginBase<'mc> {
     //
 
     pub fn reload_config(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "reloadConfig", "()V", &[]);
+        let sig = String::from("()V");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "reloadConfig", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -2133,12 +2227,10 @@ impl<'mc> PluginBase<'mc> {
     pub fn plugin_loader(
         &mut self,
     ) -> Result<crate::plugin::PluginLoader<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPluginLoader",
-            "()Lorg/bukkit/plugin/PluginLoader;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/plugin/PluginLoader;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPluginLoader", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::plugin::PluginLoader::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2147,49 +2239,54 @@ impl<'mc> PluginBase<'mc> {
     //
 
     pub fn on_disable(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "onDisable", "()V", &[]);
+            .call_method(&self.jni_object(), "onDisable", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn on_load(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "onLoad", "()V", &[]);
+            .call_method(&self.jni_object(), "onLoad", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn on_enable(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "onEnable", "()V", &[]);
+            .call_method(&self.jni_object(), "onEnable", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn is_naggable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isNaggable", "()Z", &[]);
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isNaggable", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
     //
 
     pub fn set_naggable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setNaggable",
-            "(Z)V",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -2201,15 +2298,22 @@ impl<'mc> PluginBase<'mc> {
         arg0: impl Into<String>,
         arg1: impl Into<String>,
     ) -> Result<crate::generator::ChunkGenerator<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
+        let sig = String::from(
+            "(Ljava/lang/String;Ljava/lang/String;)Lorg/bukkit/generator/ChunkGenerator;",
+        );
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDefaultWorldGenerator",
-            "(Ljava/lang/String;Ljava/lang/String;)Lorg/bukkit/generator/ChunkGenerator;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -2223,12 +2327,15 @@ impl<'mc> PluginBase<'mc> {
         &mut self,
         arg0: impl Into<String>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let sig = String::from("(Ljava/lang/String;)Ljava/io/InputStream;");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getResource",
-            "(Ljava/lang/String;)Ljava/io/InputStream;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
@@ -2238,12 +2345,10 @@ impl<'mc> PluginBase<'mc> {
     pub fn logger(
         &mut self,
     ) -> Result<blackboxmc_java::logging::JavaLogger<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLogger",
-            "()Ljava/util/logging/Logger;",
-            &[],
-        );
+        let sig = String::from("()Ljava/util/logging/Logger;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getLogger", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::logging::JavaLogger::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2258,10 +2363,26 @@ impl<'mc> PluginBase<'mc> {
         arg2: impl Into<String>,
         arg3: Vec<impl Into<String>>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = jni::objects::JObject::from(self.jni_ref().new_string(arg2.into())?);
-        let res = self.jni_ref().call_method(&self.jni_object(),"onTabComplete","(Lorg/bukkit/command/CommandSender;Lorg/bukkit/command/Command;Ljava/lang/String;Ljava/lang/String;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
+        let sig = String::from("(Lorg/bukkit/command/CommandSender;Lorg/bukkit/command/Command;Ljava/lang/String;Ljava/lang/String;)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg2.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "onTabComplete",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
@@ -2286,10 +2407,26 @@ impl<'mc> PluginBase<'mc> {
         arg2: impl Into<String>,
         arg3: Vec<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = jni::objects::JObject::from(self.jni_ref().new_string(arg2.into())?);
-        let res = self.jni_ref().call_method(&self.jni_object(),"onCommand","(Lorg/bukkit/command/CommandSender;Lorg/bukkit/command/Command;Ljava/lang/String;Ljava/lang/String;)Z",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
+        let sig = String::from("(Lorg/bukkit/command/CommandSender;Lorg/bukkit/command/Command;Ljava/lang/String;Ljava/lang/String;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg2.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "onCommand",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
@@ -2333,15 +2470,20 @@ impl<'mc> EventExecutor<'mc> {
         arg0: impl Into<crate::event::Listener<'mc>>,
         arg1: impl Into<crate::event::Event<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let sig = String::from("(Lorg/bukkit/event/Listener;Lorg/bukkit/event/Event;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "execute",
-            "(Lorg/bukkit/event/Listener;Lorg/bukkit/event/Event;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
             ],
         );
         self.jni_ref().translate_error(res)?;
@@ -2392,17 +2534,22 @@ impl<'mc> ServicesManager<'mc> {
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
-        let val_2 = arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "unregister",
-            "(Ljava/lang/Class;Ljava/lang/Object;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/lang/Class;";
+            let val_1 = jni::objects::JValueGen::Object(a.into());
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "Ljava/lang/Object;";
+            let val_2 = jni::objects::JValueGen::Object(a);
+            args.push(val_2);
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "unregister", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -2412,12 +2559,15 @@ impl<'mc> ServicesManager<'mc> {
         &mut self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let sig = String::from("(Lorg/bukkit/plugin/Plugin;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "unregisterAll",
-            "(Lorg/bukkit/plugin/Plugin;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -2428,12 +2578,13 @@ impl<'mc> ServicesManager<'mc> {
         &mut self,
         arg0: jni::objects::JClass<'mc>,
     ) -> Result<crate::plugin::RegisteredServiceProvider<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
+        let sig = String::from("(Ljava/lang/Class;)Lorg/bukkit/plugin/RegisteredServiceProvider;");
+        let val_1 = jni::objects::JValueGen::Object(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getRegistration",
-            "(Ljava/lang/Class;)Lorg/bukkit/plugin/RegisteredServiceProvider;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::plugin::RegisteredServiceProvider::from_raw(&self.jni_ref(), unsafe {
@@ -2447,20 +2598,19 @@ impl<'mc> ServicesManager<'mc> {
         arg0: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
     ) -> Result<Vec<crate::plugin::RegisteredServiceProvider<'mc>>, Box<dyn std::error::Error>>
     {
-        let val_1 = unsafe {
-            jni::objects::JObject::from_raw(
-                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                    .into()
-                    .jni_object()
-                    .clone(),
-            )
-        };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getRegistrations",
-            "(Lorg/bukkit/plugin/Plugin;)Ljava/util/List;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Lorg/bukkit/plugin/Plugin;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
+        sig += ")Ljava/util/List;";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getRegistrations", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
@@ -2479,11 +2629,12 @@ impl<'mc> ServicesManager<'mc> {
     pub fn known_services(
         &mut self,
     ) -> Result<Vec<jni::objects::JClass<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Collection;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getKnownServices",
-            "()Ljava/util/Collection;",
-            &[],
+            sig.as_str(),
+            vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
@@ -2501,12 +2652,13 @@ impl<'mc> ServicesManager<'mc> {
         &mut self,
         arg0: jni::objects::JClass<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
+        let sig = String::from("(Ljava/lang/Class;)Z");
+        let val_1 = jni::objects::JValueGen::Object(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isProvidedFor",
-            "(Ljava/lang/Class;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
@@ -2517,12 +2669,13 @@ impl<'mc> ServicesManager<'mc> {
         &mut self,
         arg0: jni::objects::JClass<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
+        let sig = String::from("(Ljava/lang/Class;)Ljava/lang/Object;");
+        let val_1 = jni::objects::JValueGen::Object(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "load",
-            "(Ljava/lang/Class;)Ljava/lang/Object;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
@@ -2536,11 +2689,26 @@ impl<'mc> ServicesManager<'mc> {
         arg2: impl Into<crate::plugin::Plugin<'mc>>,
         arg3: impl Into<crate::plugin::ServicePriority<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let val_2 = arg1;
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
-        let val_4 = unsafe { jni::objects::JObject::from_raw(arg3.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(&self.jni_object(),"register","(Ljava/lang/Class;Ljava/lang/Object;Lorg/bukkit/plugin/Plugin;Lorg/bukkit/plugin/ServicePriority;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)]);
+        let sig = String::from("(Ljava/lang/Class;Ljava/lang/Object;Lorg/bukkit/plugin/Plugin;Lorg/bukkit/plugin/ServicePriority;)V");
+        let val_1 = jni::objects::JValueGen::Object(arg0.into());
+        let val_2 = jni::objects::JValueGen::Object(arg1);
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
+        });
+        let val_4 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg3.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "register",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+                jni::objects::JValueGen::from(val_4),
+            ],
+        );
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -2554,6 +2722,7 @@ impl<'mc> JNIRaw<'mc> for ServicesManager<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+#[derive(PartialEq, Eq)]
 pub enum FlagsFlagsEnum {
     //['since', '']
 
@@ -2627,12 +2796,12 @@ impl<'mc> FlagsFlags<'mc> {
             cls,
             "valueOf",
             "(Ljava/lang/String;)Lorg/bukkit/plugin/Flags$Flags;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = jni.translate_error(variant)?;
         let variant_str = jni
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -2690,25 +2859,44 @@ impl<'mc> TimedRegisteredListener<'mc> {
         arg3: impl Into<crate::plugin::Plugin<'mc>>,
         arg4: bool,
     ) -> Result<crate::plugin::TimedRegisteredListener<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
-        let val_4 = unsafe { jni::objects::JObject::from_raw(arg3.into().jni_object().clone()) };
+        let sig = String::from("(Lorg/bukkit/event/Listener;Lorg/bukkit/plugin/EventExecutor;Lorg/bukkit/event/EventPriority;Lorg/bukkit/plugin/Plugin;Z)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
+        });
+        let val_4 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg3.into().jni_object().clone())
+        });
         // -2
         let val_5 = jni::objects::JValueGen::Bool(arg4.into());
         let cls = jni.find_class("org/bukkit/plugin/TimedRegisteredListener");
         let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls,
-"(Lorg/bukkit/event/Listener;Lorg/bukkit/plugin/EventExecutor;Lorg/bukkit/event/EventPriority;Lorg/bukkit/plugin/Plugin;Z)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)]);
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+                jni::objects::JValueGen::from(val_4),
+                jni::objects::JValueGen::from(val_5),
+            ],
+        );
         let res = jni.translate_error_no_gen(res)?;
         crate::plugin::TimedRegisteredListener::from_raw(&jni, res)
     }
     //
 
     pub fn count(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getCount", "()I", &[]);
+            .call_method(&self.jni_object(), "getCount", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
@@ -2718,12 +2906,15 @@ impl<'mc> TimedRegisteredListener<'mc> {
         &mut self,
         arg0: impl Into<crate::event::Event<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let sig = String::from("(Lorg/bukkit/event/Event;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "callEvent",
-            "(Lorg/bukkit/event/Event;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -2731,51 +2922,50 @@ impl<'mc> TimedRegisteredListener<'mc> {
     //
 
     pub fn total_time(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getTotalTime", "()J", &[]);
+        let sig = String::from("()J");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getTotalTime", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
     //
 
     pub fn event_class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getEventClass",
-            "()Ljava/lang/Class;",
-            &[],
-        );
+        let sig = String::from("()Ljava/lang/Class;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEventClass", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     //
 
     pub fn has_multiple(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hasMultiple", "()Z", &[]);
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "hasMultiple", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
     //
 
     pub fn reset(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "reset", "()V", &[]);
+            .call_method(&self.jni_object(), "reset", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn listener(&mut self) -> Result<crate::event::Listener<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getListener",
-            "()Lorg/bukkit/event/Listener;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/event/Listener;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getListener", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::event::Listener::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2784,12 +2974,10 @@ impl<'mc> TimedRegisteredListener<'mc> {
     //
 
     pub fn plugin(&mut self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPlugin",
-            "()Lorg/bukkit/plugin/Plugin;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getPlugin", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::plugin::Plugin::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2798,9 +2986,13 @@ impl<'mc> TimedRegisteredListener<'mc> {
     //
 
     pub fn is_ignoring_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isIgnoringCancelled", "()Z", &[]);
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isIgnoringCancelled",
+            sig.as_str(),
+            vec![],
+        );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
@@ -2809,17 +3001,15 @@ impl<'mc> TimedRegisteredListener<'mc> {
     pub fn priority(
         &mut self,
     ) -> Result<crate::event::EventPriority<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPriority",
-            "()Lorg/bukkit/event/EventPriority;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/event/EventPriority;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPriority", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
         let variant = self
             .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = self.jni_ref().translate_error(variant)?;
         let variant_str = self
             .0
@@ -2840,23 +3030,22 @@ impl<'mc> TimedRegisteredListener<'mc> {
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(
-            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                .into(),
-        );
-        let val_2 = jni::objects::JValueGen::Int(
-            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                .into(),
-        );
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "wait",
-            "(JI)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "J";
+            let val_1 = jni::objects::JValueGen::Long(a.into());
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -2866,12 +3055,13 @@ impl<'mc> TimedRegisteredListener<'mc> {
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
+        let sig = String::from("(Ljava/lang/Object;)Z");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
@@ -2879,9 +3069,10 @@ impl<'mc> TimedRegisteredListener<'mc> {
     //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -2892,36 +3083,40 @@ impl<'mc> TimedRegisteredListener<'mc> {
     //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
     //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let sig = String::from("()Ljava/lang/Class;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getClass", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[]);
+            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -2975,12 +3170,13 @@ impl<'mc> PluginLoader<'mc> {
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
+        let sig = String::from("(Ljava/io/File;)Lorg/bukkit/plugin/Plugin;");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "loadPlugin",
-            "(Ljava/io/File;)Lorg/bukkit/plugin/Plugin;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::plugin::Plugin::from_raw(&self.jni_ref(), unsafe {
@@ -2993,12 +3189,13 @@ impl<'mc> PluginLoader<'mc> {
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<crate::plugin::PluginDescriptionFile<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
+        let sig = String::from("(Ljava/io/File;)Lorg/bukkit/plugin/PluginDescriptionFile;");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPluginDescription",
-            "(Ljava/io/File;)Lorg/bukkit/plugin/PluginDescriptionFile;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::plugin::PluginDescriptionFile::from_raw(&self.jni_ref(), unsafe {
@@ -3014,15 +3211,21 @@ impl<'mc> PluginLoader<'mc> {
         arg0: impl Into<crate::event::Listener<'mc>>,
         arg1: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let sig =
+            String::from("(Lorg/bukkit/event/Listener;Lorg/bukkit/plugin/Plugin;)Ljava/util/Map;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "createRegisteredListeners",
-            "(Lorg/bukkit/event/Listener;Lorg/bukkit/plugin/Plugin;)Ljava/util/Map;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -3036,12 +3239,15 @@ impl<'mc> PluginLoader<'mc> {
         &mut self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let sig = String::from("(Lorg/bukkit/plugin/Plugin;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "enablePlugin",
-            "(Lorg/bukkit/plugin/Plugin;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -3052,12 +3258,15 @@ impl<'mc> PluginLoader<'mc> {
         &mut self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let sig = String::from("(Lorg/bukkit/plugin/Plugin;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "disablePlugin",
-            "(Lorg/bukkit/plugin/Plugin;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -3115,28 +3324,44 @@ impl<'mc> RegisteredListener<'mc> {
         arg3: impl Into<crate::plugin::Plugin<'mc>>,
         arg4: bool,
     ) -> Result<crate::plugin::RegisteredListener<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
-        let val_4 = unsafe { jni::objects::JObject::from_raw(arg3.into().jni_object().clone()) };
+        let sig = String::from("(Lorg/bukkit/event/Listener;Lorg/bukkit/plugin/EventExecutor;Lorg/bukkit/event/EventPriority;Lorg/bukkit/plugin/Plugin;Z)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
+        });
+        let val_4 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg3.into().jni_object().clone())
+        });
         // -2
         let val_5 = jni::objects::JValueGen::Bool(arg4.into());
         let cls = jni.find_class("org/bukkit/plugin/RegisteredListener");
         let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls,
-"(Lorg/bukkit/event/Listener;Lorg/bukkit/plugin/EventExecutor;Lorg/bukkit/event/EventPriority;Lorg/bukkit/plugin/Plugin;Z)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)]);
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+                jni::objects::JValueGen::from(val_4),
+                jni::objects::JValueGen::from(val_5),
+            ],
+        );
         let res = jni.translate_error_no_gen(res)?;
         crate::plugin::RegisteredListener::from_raw(&jni, res)
     }
     //
 
     pub fn listener(&mut self) -> Result<crate::event::Listener<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getListener",
-            "()Lorg/bukkit/event/Listener;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/event/Listener;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getListener", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::event::Listener::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3145,12 +3370,10 @@ impl<'mc> RegisteredListener<'mc> {
     //
 
     pub fn plugin(&mut self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPlugin",
-            "()Lorg/bukkit/plugin/Plugin;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getPlugin", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::plugin::Plugin::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3162,12 +3385,15 @@ impl<'mc> RegisteredListener<'mc> {
         &mut self,
         arg0: impl Into<crate::event::Event<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let sig = String::from("(Lorg/bukkit/event/Event;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "callEvent",
-            "(Lorg/bukkit/event/Event;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -3175,9 +3401,13 @@ impl<'mc> RegisteredListener<'mc> {
     //
 
     pub fn is_ignoring_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isIgnoringCancelled", "()Z", &[]);
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "isIgnoringCancelled",
+            sig.as_str(),
+            vec![],
+        );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
@@ -3186,17 +3416,15 @@ impl<'mc> RegisteredListener<'mc> {
     pub fn priority(
         &mut self,
     ) -> Result<crate::event::EventPriority<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPriority",
-            "()Lorg/bukkit/event/EventPriority;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/event/EventPriority;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPriority", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
         let variant = self
             .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = self.jni_ref().translate_error(variant)?;
         let variant_str = self
             .0
@@ -3217,23 +3445,22 @@ impl<'mc> RegisteredListener<'mc> {
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(
-            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                .into(),
-        );
-        let val_2 = jni::objects::JValueGen::Int(
-            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                .into(),
-        );
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "wait",
-            "(JI)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "J";
+            let val_1 = jni::objects::JValueGen::Long(a.into());
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -3243,12 +3470,13 @@ impl<'mc> RegisteredListener<'mc> {
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
+        let sig = String::from("(Ljava/lang/Object;)Z");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
@@ -3256,9 +3484,10 @@ impl<'mc> RegisteredListener<'mc> {
     //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -3269,36 +3498,40 @@ impl<'mc> RegisteredListener<'mc> {
     //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
     //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let sig = String::from("()Ljava/lang/Class;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getClass", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[]);
+            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -3341,15 +3574,15 @@ impl<'mc> Plugin<'mc> {
             &self.1,
             "newExtendable",
             "(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;",
-            &[
+            vec![
                 jni::objects::JValueGen::Int(address),
-                jni::objects::JValueGen::from(&jni::objects::JObject::from(
+                jni::objects::JValueGen::from(jni::objects::JObject::from(
                     self.jni_ref().new_string(class_name).unwrap(),
                 )),
-                jni::objects::JValueGen::from(&jni::objects::JObject::from(
+                jni::objects::JValueGen::from(jni::objects::JObject::from(
                     self.jni_ref().new_string(name).unwrap(),
                 )),
-                jni::objects::JValueGen::from(&jni::objects::JObject::from(
+                jni::objects::JValueGen::from(jni::objects::JObject::from(
                     self.jni_ref().new_string(lib_name).unwrap(),
                 )),
             ],
@@ -3378,12 +3611,10 @@ impl<'mc> Plugin<'mc> {
     //
 
     pub fn server(&mut self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getServer",
-            "()Lorg/bukkit/Server;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/Server;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getServer", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::Server::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3394,12 +3625,10 @@ impl<'mc> Plugin<'mc> {
     pub fn description(
         &mut self,
     ) -> Result<crate::plugin::PluginDescriptionFile<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDescription",
-            "()Lorg/bukkit/plugin/PluginDescriptionFile;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/plugin/PluginDescriptionFile;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getDescription", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::plugin::PluginDescriptionFile::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3412,15 +3641,22 @@ impl<'mc> Plugin<'mc> {
         arg0: impl Into<String>,
         arg1: impl Into<String>,
     ) -> Result<crate::generator::BiomeProvider<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
+        let sig = String::from(
+            "(Ljava/lang/String;Ljava/lang/String;)Lorg/bukkit/generator/BiomeProvider;",
+        );
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDefaultBiomeProvider",
-            "(Ljava/lang/String;Ljava/lang/String;)Lorg/bukkit/generator/BiomeProvider;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -3431,9 +3667,10 @@ impl<'mc> Plugin<'mc> {
     //
 
     pub fn is_enabled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isEnabled", "()Z", &[]);
+            .call_method(&self.jni_object(), "isEnabled", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
@@ -3443,12 +3680,10 @@ impl<'mc> Plugin<'mc> {
         &mut self,
     ) -> Result<crate::configuration::file::FileConfiguration<'mc>, Box<dyn std::error::Error>>
     {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getConfig",
-            "()Lorg/bukkit/configuration/file/FileConfiguration;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/configuration/file/FileConfiguration;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getConfig", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::configuration::file::FileConfiguration::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3459,30 +3694,33 @@ impl<'mc> Plugin<'mc> {
     pub fn data_folder(
         &mut self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDataFolder",
-            "()Ljava/io/File;",
-            &[],
-        );
+        let sig = String::from("()Ljava/io/File;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getDataFolder", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
     //
 
     pub fn save_config(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "saveConfig", "()V", &[]);
+        let sig = String::from("()V");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "saveConfig", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn save_default_config(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "saveDefaultConfig", "()V", &[]);
+        let sig = String::from("()V");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "saveDefaultConfig",
+            sig.as_str(),
+            vec![],
+        );
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -3493,16 +3731,19 @@ impl<'mc> Plugin<'mc> {
         arg0: impl Into<String>,
         arg1: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let sig = String::from("(Ljava/lang/String;Z)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
         // -2
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "saveResource",
-            "(Ljava/lang/String;Z)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
             ],
         );
         self.jni_ref().translate_error(res)?;
@@ -3511,9 +3752,10 @@ impl<'mc> Plugin<'mc> {
     //
 
     pub fn reload_config(&mut self) -> Result<(), Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "reloadConfig", "()V", &[]);
+        let sig = String::from("()V");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "reloadConfig", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -3522,12 +3764,10 @@ impl<'mc> Plugin<'mc> {
     pub fn plugin_loader(
         &mut self,
     ) -> Result<crate::plugin::PluginLoader<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPluginLoader",
-            "()Lorg/bukkit/plugin/PluginLoader;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/plugin/PluginLoader;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPluginLoader", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::plugin::PluginLoader::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3536,36 +3776,40 @@ impl<'mc> Plugin<'mc> {
     //
 
     pub fn on_disable(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "onDisable", "()V", &[]);
+            .call_method(&self.jni_object(), "onDisable", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn on_load(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "onLoad", "()V", &[]);
+            .call_method(&self.jni_object(), "onLoad", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn on_enable(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "onEnable", "()V", &[]);
+            .call_method(&self.jni_object(), "onEnable", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn is_naggable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isNaggable", "()Z", &[]);
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isNaggable", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
@@ -3573,13 +3817,14 @@ impl<'mc> Plugin<'mc> {
 
     /// Set naggable state
     pub fn set_naggable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setNaggable",
-            "(Z)V",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -3591,15 +3836,22 @@ impl<'mc> Plugin<'mc> {
         arg0: impl Into<String>,
         arg1: impl Into<String>,
     ) -> Result<crate::generator::ChunkGenerator<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
+        let sig = String::from(
+            "(Ljava/lang/String;Ljava/lang/String;)Lorg/bukkit/generator/ChunkGenerator;",
+        );
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDefaultWorldGenerator",
-            "(Ljava/lang/String;Ljava/lang/String;)Lorg/bukkit/generator/ChunkGenerator;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -3610,9 +3862,10 @@ impl<'mc> Plugin<'mc> {
     //
 
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -3626,12 +3879,15 @@ impl<'mc> Plugin<'mc> {
         &mut self,
         arg0: impl Into<String>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let sig = String::from("(Ljava/lang/String;)Ljava/io/InputStream;");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getResource",
-            "(Ljava/lang/String;)Ljava/io/InputStream;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
@@ -3641,12 +3897,10 @@ impl<'mc> Plugin<'mc> {
     pub fn logger(
         &mut self,
     ) -> Result<blackboxmc_java::logging::JavaLogger<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLogger",
-            "()Ljava/util/logging/Logger;",
-            &[],
-        );
+        let sig = String::from("()Ljava/util/logging/Logger;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getLogger", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::logging::JavaLogger::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -3661,10 +3915,26 @@ impl<'mc> Plugin<'mc> {
         arg2: impl Into<String>,
         arg3: Vec<impl Into<String>>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = jni::objects::JObject::from(self.jni_ref().new_string(arg2.into())?);
-        let res = self.jni_ref().call_method(&self.jni_object(),"onTabComplete","(Lorg/bukkit/command/CommandSender;Lorg/bukkit/command/Command;Ljava/lang/String;Ljava/lang/String;)Ljava/util/List;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
+        let sig = String::from("(Lorg/bukkit/command/CommandSender;Lorg/bukkit/command/Command;Ljava/lang/String;Ljava/lang/String;)Ljava/util/List;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg2.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "onTabComplete",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
@@ -3689,10 +3959,26 @@ impl<'mc> Plugin<'mc> {
         arg2: impl Into<String>,
         arg3: Vec<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = jni::objects::JObject::from(self.jni_ref().new_string(arg2.into())?);
-        let res = self.jni_ref().call_method(&self.jni_object(),"onCommand","(Lorg/bukkit/command/CommandSender;Lorg/bukkit/command/Command;Ljava/lang/String;Ljava/lang/String;)Z",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
+        let sig = String::from("(Lorg/bukkit/command/CommandSender;Lorg/bukkit/command/Command;Ljava/lang/String;Ljava/lang/String;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg2.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "onCommand",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }

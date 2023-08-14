@@ -36,24 +36,24 @@ impl<'mc> ProjectileSource<'mc> {
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
     ) -> Result<crate::entity::Projectile<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
-        let val_2 = unsafe {
-            jni::objects::JObject::from_raw(
-                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                    .into()
-                    .jni_object()
-                    .clone(),
-            )
-        };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "launchProjectile",
-            "(Ljava/lang/Class;Lorg/bukkit/util/Vector;)Lorg/bukkit/entity/Projectile;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/lang/Class;";
+            let val_1 = jni::objects::JValueGen::Object(a.into());
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/util/Vector;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Lorg/bukkit/entity/Projectile;";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "launchProjectile", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         crate::entity::Projectile::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -102,12 +102,10 @@ impl<'mc> BlockProjectileSource<'mc> {
     //
 
     pub fn block(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getBlock",
-            "()Lorg/bukkit/block/Block;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/block/Block;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getBlock", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::block::Block::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -120,24 +118,24 @@ impl<'mc> BlockProjectileSource<'mc> {
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
     ) -> Result<crate::entity::Projectile<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
-        let val_2 = unsafe {
-            jni::objects::JObject::from_raw(
-                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                    .into()
-                    .jni_object()
-                    .clone(),
-            )
-        };
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "launchProjectile",
-            "(Ljava/lang/Class;Lorg/bukkit/util/Vector;)Lorg/bukkit/entity/Projectile;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/lang/Class;";
+            let val_1 = jni::objects::JValueGen::Object(a.into());
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/util/Vector;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Lorg/bukkit/entity/Projectile;";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "launchProjectile", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         crate::entity::Projectile::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())

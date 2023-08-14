@@ -34,15 +34,21 @@ impl<'mc> LootTable<'mc> {
         arg0: impl Into<blackboxmc_java::JavaRandom<'mc>>,
         arg1: impl Into<crate::loot::LootContext<'mc>>,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let sig =
+            String::from("(Ljava/util/Random;Lorg/bukkit/loot/LootContext;)Ljava/util/Collection;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "populateLoot",
-            "(Ljava/util/Random;Lorg/bukkit/loot/LootContext;)Ljava/util/Collection;",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -63,17 +69,26 @@ impl<'mc> LootTable<'mc> {
         arg1: impl Into<blackboxmc_java::JavaRandom<'mc>>,
         arg2: impl Into<crate::loot::LootContext<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
+        let sig = String::from(
+            "(Lorg/bukkit/inventory/Inventory;Ljava/util/Random;Lorg/bukkit/loot/LootContext;)V",
+        );
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "fillInventory",
-            "(Lorg/bukkit/inventory/Inventory;Ljava/util/Random;Lorg/bukkit/loot/LootContext;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-                jni::objects::JValueGen::from(&val_3),
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
             ],
         );
         self.jni_ref().translate_error(res)?;
@@ -82,12 +97,10 @@ impl<'mc> LootTable<'mc> {
     //
 
     pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getKey",
-            "()Lorg/bukkit/NamespacedKey;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/NamespacedKey;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getKey", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::NamespacedKey::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -109,6 +122,7 @@ impl<'mc> Into<crate::Keyed<'mc>> for LootTable<'mc> {
             .expect("Error converting LootTable into crate::Keyed")
     }
 }
+#[derive(PartialEq, Eq)]
 pub enum LootTablesLootTablesEnum {
     Empty,
     AbandonedMineshaft,
@@ -883,12 +897,12 @@ impl<'mc> LootTablesLootTables<'mc> {
             cls,
             "valueOf",
             "(Ljava/lang/String;)Lorg/bukkit/loot/LootTables$LootTables;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = jni.translate_error(variant)?;
         let variant_str = jni
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -935,9 +949,10 @@ impl<'mc> Lootable<'mc> {
     //
 
     pub fn seed(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
+        let sig = String::from("()J");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getSeed", "()J", &[]);
+            .call_method(&self.jni_object(), "getSeed", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
@@ -945,12 +960,13 @@ impl<'mc> Lootable<'mc> {
 
     /// Set the seed used when this Loot Table generates loot.
     pub fn set_seed(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(J)V");
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setSeed",
-            "(J)V",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -961,12 +977,15 @@ impl<'mc> Lootable<'mc> {
         &mut self,
         arg0: impl Into<crate::loot::LootTable<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let sig = String::from("(Lorg/bukkit/loot/LootTable;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setLootTable",
-            "(Lorg/bukkit/loot/LootTable;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -976,12 +995,10 @@ impl<'mc> Lootable<'mc> {
     pub fn loot_table(
         &mut self,
     ) -> Result<crate::loot::LootTable<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLootTable",
-            "()Lorg/bukkit/loot/LootTable;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/loot/LootTable;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getLootTable", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::loot::LootTable::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -997,6 +1014,7 @@ impl<'mc> JNIRaw<'mc> for Lootable<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+#[derive(PartialEq, Eq)]
 pub enum LootTablesEnum {
     Empty,
     AbandonedMineshaft,
@@ -1714,12 +1732,12 @@ impl<'mc> LootTables<'mc> {
             cls,
             "valueOf",
             "(Ljava/lang/String;)Lorg/bukkit/loot/LootTables;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = jni.translate_error(variant)?;
         let variant_str = jni
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -1776,13 +1794,16 @@ impl<'mc> LootContextBuilder<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<crate::loot::LootContextBuilder<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let sig = String::from("(Lorg/bukkit/Location;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         let cls = jni.find_class("org/bukkit/loot/LootContext$Builder");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.new_object(
             cls,
-            "(Lorg/bukkit/Location;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error_no_gen(res)?;
         crate::loot::LootContextBuilder::from_raw(&jni, res)
@@ -1790,12 +1811,10 @@ impl<'mc> LootContextBuilder<'mc> {
     //
 
     pub fn build(&mut self) -> Result<crate::loot::LootContext<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "build",
-            "()Lorg/bukkit/loot/LootContext;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/loot/LootContext;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "build", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::loot::LootContext::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -1807,12 +1826,13 @@ impl<'mc> LootContextBuilder<'mc> {
         &mut self,
         arg0: f32,
     ) -> Result<crate::loot::LootContextBuilder<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(F)Lorg/bukkit/loot/LootContext$Builder;");
         let val_1 = jni::objects::JValueGen::Float(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "luck",
-            "(F)Lorg/bukkit/loot/LootContext$Builder;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::loot::LootContextBuilder::from_raw(&self.jni_ref(), unsafe {
@@ -1825,12 +1845,16 @@ impl<'mc> LootContextBuilder<'mc> {
         &mut self,
         arg0: impl Into<crate::entity::HumanEntity<'mc>>,
     ) -> Result<crate::loot::LootContextBuilder<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let sig =
+            String::from("(Lorg/bukkit/entity/HumanEntity;)Lorg/bukkit/loot/LootContext$Builder;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "killer",
-            "(Lorg/bukkit/entity/HumanEntity;)Lorg/bukkit/loot/LootContext$Builder;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::loot::LootContextBuilder::from_raw(&self.jni_ref(), unsafe {
@@ -1843,12 +1867,13 @@ impl<'mc> LootContextBuilder<'mc> {
         &mut self,
         arg0: i32,
     ) -> Result<crate::loot::LootContextBuilder<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(I)Lorg/bukkit/loot/LootContext$Builder;");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "lootingModifier",
-            "(I)Lorg/bukkit/loot/LootContext$Builder;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::loot::LootContextBuilder::from_raw(&self.jni_ref(), unsafe {
@@ -1861,12 +1886,15 @@ impl<'mc> LootContextBuilder<'mc> {
         &mut self,
         arg0: impl Into<crate::entity::Entity<'mc>>,
     ) -> Result<crate::loot::LootContextBuilder<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let sig = String::from("(Lorg/bukkit/entity/Entity;)Lorg/bukkit/loot/LootContext$Builder;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "lootedEntity",
-            "(Lorg/bukkit/entity/Entity;)Lorg/bukkit/loot/LootContext$Builder;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::loot::LootContextBuilder::from_raw(&self.jni_ref(), unsafe {
@@ -1880,23 +1908,22 @@ impl<'mc> LootContextBuilder<'mc> {
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(
-            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                .into(),
-        );
-        let val_2 = jni::objects::JValueGen::Int(
-            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                .into(),
-        );
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "wait",
-            "(JI)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "J";
+            let val_1 = jni::objects::JValueGen::Long(a.into());
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -1906,12 +1933,13 @@ impl<'mc> LootContextBuilder<'mc> {
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
+        let sig = String::from("(Ljava/lang/Object;)Z");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
@@ -1919,9 +1947,10 @@ impl<'mc> LootContextBuilder<'mc> {
     //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -1932,36 +1961,40 @@ impl<'mc> LootContextBuilder<'mc> {
     //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
     //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let sig = String::from("()Ljava/lang/Class;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getClass", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[]);
+            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -1999,12 +2032,10 @@ impl<'mc> LootContext<'mc> {
     pub fn killer(
         &mut self,
     ) -> Result<crate::entity::HumanEntity<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getKiller",
-            "()Lorg/bukkit/entity/HumanEntity;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/entity/HumanEntity;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getKiller", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::entity::HumanEntity::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2013,18 +2044,23 @@ impl<'mc> LootContext<'mc> {
     //
 
     pub fn luck(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+        let sig = String::from("()F");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getLuck", "()F", &[]);
+            .call_method(&self.jni_object(), "getLuck", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
     //
 
     pub fn looting_modifier(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getLootingModifier", "()I", &[]);
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLootingModifier",
+            sig.as_str(),
+            vec![],
+        );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
@@ -2033,12 +2069,10 @@ impl<'mc> LootContext<'mc> {
     pub fn looted_entity(
         &mut self,
     ) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLootedEntity",
-            "()Lorg/bukkit/entity/Entity;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/entity/Entity;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getLootedEntity", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::entity::Entity::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2047,12 +2081,10 @@ impl<'mc> LootContext<'mc> {
     //
 
     pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getLocation",
-            "()Lorg/bukkit/Location;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/Location;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getLocation", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::Location::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -2065,23 +2097,22 @@ impl<'mc> LootContext<'mc> {
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(
-            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                .into(),
-        );
-        let val_2 = jni::objects::JValueGen::Int(
-            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                .into(),
-        );
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "wait",
-            "(JI)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "J";
+            let val_1 = jni::objects::JValueGen::Long(a.into());
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -2091,12 +2122,13 @@ impl<'mc> LootContext<'mc> {
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
+        let sig = String::from("(Ljava/lang/Object;)Z");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
@@ -2104,9 +2136,10 @@ impl<'mc> LootContext<'mc> {
     //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -2117,36 +2150,40 @@ impl<'mc> LootContext<'mc> {
     //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
     //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let sig = String::from("()Ljava/lang/Class;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getClass", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[]);
+            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }

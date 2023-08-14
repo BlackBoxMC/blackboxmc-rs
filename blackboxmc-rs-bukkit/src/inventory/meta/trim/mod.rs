@@ -39,12 +39,23 @@ impl<'mc> ArmorTrim<'mc> {
         arg0: impl Into<crate::inventory::meta::trim::TrimMaterial<'mc>>,
         arg1: impl Into<crate::inventory::meta::trim::TrimPattern<'mc>>,
     ) -> Result<crate::inventory::meta::trim::ArmorTrim<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let sig = String::from("(Lorg/bukkit/inventory/meta/trim/TrimMaterial;Lorg/bukkit/inventory/meta/trim/TrimPattern;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
         let cls = jni.find_class("org/bukkit/inventory/meta/trim/ArmorTrim");
         let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls,
-"(Lorg/bukkit/inventory/meta/trim/TrimMaterial;Lorg/bukkit/inventory/meta/trim/TrimPattern;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)]);
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
         let res = jni.translate_error_no_gen(res)?;
         crate::inventory::meta::trim::ArmorTrim::from_raw(&jni, res)
     }
@@ -53,12 +64,10 @@ impl<'mc> ArmorTrim<'mc> {
     pub fn material(
         &mut self,
     ) -> Result<crate::inventory::meta::trim::TrimMaterial<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getMaterial",
-            "()Lorg/bukkit/inventory/meta/trim/TrimMaterial;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/inventory/meta/trim/TrimMaterial;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::inventory::meta::trim::TrimMaterial::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -69,12 +78,10 @@ impl<'mc> ArmorTrim<'mc> {
     pub fn pattern(
         &mut self,
     ) -> Result<crate::inventory::meta::trim::TrimPattern<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getPattern",
-            "()Lorg/bukkit/inventory/meta/trim/TrimPattern;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/inventory/meta/trim/TrimPattern;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPattern", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::inventory::meta::trim::TrimPattern::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -86,12 +93,13 @@ impl<'mc> ArmorTrim<'mc> {
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
+        let sig = String::from("(Ljava/lang/Object;)Z");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
@@ -99,9 +107,10 @@ impl<'mc> ArmorTrim<'mc> {
     //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
@@ -112,32 +121,32 @@ impl<'mc> ArmorTrim<'mc> {
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(
-            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                .into(),
-        );
-        let val_2 = jni::objects::JValueGen::Int(
-            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                .into(),
-        );
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "wait",
-            "(JI)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "J";
+            let val_1 = jni::objects::JValueGen::Long(a.into());
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -148,27 +157,30 @@ impl<'mc> ArmorTrim<'mc> {
     //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let sig = String::from("()Ljava/lang/Class;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getClass", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[]);
+            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -203,12 +215,10 @@ impl<'mc> TrimMaterial<'mc> {
     //
 
     pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getKey",
-            "()Lorg/bukkit/NamespacedKey;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/NamespacedKey;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getKey", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::NamespacedKey::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -260,12 +270,10 @@ impl<'mc> TrimPattern<'mc> {
     //
 
     pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getKey",
-            "()Lorg/bukkit/NamespacedKey;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/NamespacedKey;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getKey", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::NamespacedKey::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())

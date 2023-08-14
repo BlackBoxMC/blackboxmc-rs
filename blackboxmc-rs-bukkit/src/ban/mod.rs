@@ -38,16 +38,32 @@ impl<'mc> ProfileBanList<'mc> {
         arg2: impl Into<blackboxmc_java::JavaDate<'mc>>,
         arg3: std::option::Option<impl Into<String>>,
     ) -> Result<crate::BanEntry<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
-        let val_4 = jni::objects::JObject::from(
-            self.jni_ref().new_string(
-                arg3.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                    .into(),
-            )?,
-        );
-        let res = self.jni_ref().call_method(&self.jni_object(),"addBan","(Ljava/lang/Object;Ljava/lang/String;Ljava/util/Date;Ljava/lang/String;)Lorg/bukkit/BanEntry;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)]);
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/Object;";
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        sig += "Ljava/util/Date;";
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
+        });
+        args.push(val_3);
+        if let Some(a) = arg3 {
+            sig += "Ljava/lang/String;";
+            let val_4 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_4);
+        }
+        sig += ")Lorg/bukkit/BanEntry;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "addBan", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         crate::BanEntry::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -62,16 +78,30 @@ impl<'mc> ProfileBanList<'mc> {
         arg2: jni::objects::JObject<'mc>,
         arg3: std::option::Option<impl Into<String>>,
     ) -> Result<crate::BanEntry<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
-        let val_3 = arg2;
-        let val_4 = jni::objects::JObject::from(
-            self.jni_ref().new_string(
-                arg3.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                    .into(),
-            )?,
-        );
-        let res = self.jni_ref().call_method(&self.jni_object(),"addBan","(Ljava/lang/Object;Ljava/lang/String;Ljava/time/Duration;Ljava/lang/String;)Lorg/bukkit/BanEntry;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)]);
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/Object;";
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        sig += "Ljava/time/Duration;";
+        let val_3 = jni::objects::JValueGen::Object(arg2);
+        args.push(val_3);
+        if let Some(a) = arg3 {
+            sig += "Ljava/lang/String;";
+            let val_4 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_4);
+        }
+        sig += ")Lorg/bukkit/BanEntry;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "addBan", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         crate::BanEntry::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -86,16 +116,34 @@ impl<'mc> ProfileBanList<'mc> {
         arg2: impl Into<blackboxmc_java::JavaDate<'mc>>,
         arg3: std::option::Option<impl Into<String>>,
     ) -> Result<crate::BanEntry<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
-        let val_4 = jni::objects::JObject::from(
-            self.jni_ref().new_string(
-                arg3.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                    .into(),
-            )?,
-        );
-        let res = self.jni_ref().call_method(&self.jni_object(),"addBan","(Ljava/lang/String;Ljava/lang/String;Ljava/util/Date;Ljava/lang/String;)Lorg/bukkit/BanEntry;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)]);
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        sig += "Ljava/util/Date;";
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
+        });
+        args.push(val_3);
+        if let Some(a) = arg3 {
+            sig += "Ljava/lang/String;";
+            let val_4 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_4);
+        }
+        sig += ")Lorg/bukkit/BanEntry;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "addBan", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         crate::BanEntry::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -107,13 +155,17 @@ impl<'mc> ProfileBanList<'mc> {
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<crate::BanEntry<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getBanEntry",
-            "(Ljava/lang/Object;)Lorg/bukkit/BanEntry;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/lang/Object;";
+            let val_1 = jni::objects::JValueGen::Object(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/BanEntry;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getBanEntry", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         crate::BanEntry::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -124,12 +176,10 @@ impl<'mc> ProfileBanList<'mc> {
     pub fn ban_entries(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getBanEntries",
-            "()Ljava/util/Set;",
-            &[],
-        );
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getBanEntries", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -141,13 +191,17 @@ impl<'mc> ProfileBanList<'mc> {
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isBanned",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/lang/Object;";
+            let val_1 = jni::objects::JValueGen::Object(a);
+            args.push(val_1);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isBanned", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
@@ -157,27 +211,29 @@ impl<'mc> ProfileBanList<'mc> {
         &mut self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(
-            self.jni_ref().new_string(
-                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                    .into(),
-            )?,
-        );
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "pardon",
-            "(Ljava/lang/String;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/lang/String;";
+            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_1);
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "pardon", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn entries(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
-                .call_method(&self.jni_object(), "getEntries", "()Ljava/util/Set;", &[]);
+                .call_method(&self.jni_object(), "getEntries", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -231,13 +287,17 @@ impl<'mc> IpBanList<'mc> {
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<crate::BanEntry<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getBanEntry",
-            "(Ljava/lang/Object;)Lorg/bukkit/BanEntry;",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/lang/Object;";
+            let val_1 = jni::objects::JValueGen::Object(a);
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/BanEntry;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getBanEntry", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         crate::BanEntry::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -252,16 +312,34 @@ impl<'mc> IpBanList<'mc> {
         arg2: impl Into<blackboxmc_java::JavaDate<'mc>>,
         arg3: std::option::Option<impl Into<String>>,
     ) -> Result<crate::BanEntry<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
-        let val_3 = unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone()) };
-        let val_4 = jni::objects::JObject::from(
-            self.jni_ref().new_string(
-                arg3.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                    .into(),
-            )?,
-        );
-        let res = self.jni_ref().call_method(&self.jni_object(),"addBan","(Ljava/lang/String;Ljava/lang/String;Ljava/util/Date;Ljava/lang/String;)Lorg/bukkit/BanEntry;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)]);
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        sig += "Ljava/util/Date;";
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
+        });
+        args.push(val_3);
+        if let Some(a) = arg3 {
+            sig += "Ljava/lang/String;";
+            let val_4 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_4);
+        }
+        sig += ")Lorg/bukkit/BanEntry;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "addBan", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         crate::BanEntry::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -272,12 +350,10 @@ impl<'mc> IpBanList<'mc> {
     pub fn ban_entries(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getBanEntries",
-            "()Ljava/util/Set;",
-            &[],
-        );
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getBanEntries", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -289,13 +365,17 @@ impl<'mc> IpBanList<'mc> {
         &mut self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?;
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "isBanned",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/lang/Object;";
+            let val_1 = jni::objects::JValueGen::Object(a);
+            args.push(val_1);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isBanned", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
@@ -305,27 +385,29 @@ impl<'mc> IpBanList<'mc> {
         &mut self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(
-            self.jni_ref().new_string(
-                arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                    .into(),
-            )?,
-        );
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "pardon",
-            "(Ljava/lang/String;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
-        );
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/lang/String;";
+            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_1);
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "pardon", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn entries(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
-                .call_method(&self.jni_object(), "getEntries", "()Ljava/util/Set;", &[]);
+                .call_method(&self.jni_object(), "getEntries", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())

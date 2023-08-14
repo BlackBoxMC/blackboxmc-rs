@@ -59,11 +59,12 @@ impl<'mc> ItemTagType<'mc> {
     pub fn primitive_type(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/Class;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPrimitiveType",
-            "()Ljava/lang/Class;",
-            &[],
+            sig.as_str(),
+            vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
@@ -73,12 +74,10 @@ impl<'mc> ItemTagType<'mc> {
     pub fn complex_type(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getComplexType",
-            "()Ljava/lang/Class;",
-            &[],
-        );
+        let sig = String::from("()Ljava/lang/Class;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getComplexType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
@@ -89,9 +88,20 @@ impl<'mc> ItemTagType<'mc> {
         arg0: jni::objects::JObject<'mc>,
         arg1: impl Into<crate::inventory::meta::tags::ItemTagAdapterContext<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(&self.jni_object(),"toPrimitive","(Ljava/lang/Object;Lorg/bukkit/inventory/meta/tags/ItemTagAdapterContext;)Ljava/lang/Object;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)]);
+        let sig = String::from("(Ljava/lang/Object;Lorg/bukkit/inventory/meta/tags/ItemTagAdapterContext;)Ljava/lang/Object;");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "toPrimitive",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
@@ -102,9 +112,20 @@ impl<'mc> ItemTagType<'mc> {
         arg0: jni::objects::JObject<'mc>,
         arg1: impl Into<crate::inventory::meta::tags::ItemTagAdapterContext<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(&self.jni_object(),"fromPrimitive","(Ljava/lang/Object;Lorg/bukkit/inventory/meta/tags/ItemTagAdapterContext;)Ljava/lang/Object;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)]);
+        let sig = String::from("(Ljava/lang/Object;Lorg/bukkit/inventory/meta/tags/ItemTagAdapterContext;)Ljava/lang/Object;");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "fromPrimitive",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
@@ -154,12 +175,10 @@ impl<'mc> ItemTagAdapterContext<'mc> {
         &mut self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "newTagContainer",
-            "()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "newTagContainer", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::inventory::meta::tags::CustomItemTagContainer::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -219,11 +238,12 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
     pub fn primitive_type(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/Class;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getPrimitiveType",
-            "()Ljava/lang/Class;",
-            &[],
+            sig.as_str(),
+            vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
@@ -233,12 +253,10 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
     pub fn complex_type(
         &mut self,
     ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getComplexType",
-            "()Ljava/lang/Class;",
-            &[],
-        );
+        let sig = String::from("()Ljava/lang/Class;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getComplexType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
@@ -249,9 +267,20 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
         arg0: jni::objects::JObject<'mc>,
         arg1: impl Into<crate::inventory::meta::tags::ItemTagAdapterContext<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(&self.jni_object(),"toPrimitive","(Ljava/lang/Object;Lorg/bukkit/inventory/meta/tags/ItemTagAdapterContext;)Ljava/lang/Object;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)]);
+        let sig = String::from("(Ljava/lang/Object;Lorg/bukkit/inventory/meta/tags/ItemTagAdapterContext;)Ljava/lang/Object;");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "toPrimitive",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
@@ -262,9 +291,20 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
         arg0: jni::objects::JObject<'mc>,
         arg1: impl Into<crate::inventory::meta::tags::ItemTagAdapterContext<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(&self.jni_object(),"fromPrimitive","(Ljava/lang/Object;Lorg/bukkit/inventory/meta/tags/ItemTagAdapterContext;)Ljava/lang/Object;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)]);
+        let sig = String::from("(Ljava/lang/Object;Lorg/bukkit/inventory/meta/tags/ItemTagAdapterContext;)Ljava/lang/Object;");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "fromPrimitive",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
@@ -275,23 +315,22 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(
-            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                .into(),
-        );
-        let val_2 = jni::objects::JValueGen::Int(
-            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                .into(),
-        );
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "wait",
-            "(JI)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "J";
+            let val_1 = jni::objects::JValueGen::Long(a.into());
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -301,12 +340,13 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
+        let sig = String::from("(Ljava/lang/Object;)Z");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
@@ -314,9 +354,10 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
     //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -327,36 +368,40 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
     //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
     //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let sig = String::from("()Ljava/lang/Class;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getClass", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[]);
+            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -399,11 +444,12 @@ impl<'mc> CustomItemTagContainer<'mc> {
         &mut self,
     ) -> Result<crate::inventory::meta::tags::ItemTagAdapterContext<'mc>, Box<dyn std::error::Error>>
     {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/tags/ItemTagAdapterContext;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAdapterContext",
-            "()Lorg/bukkit/inventory/meta/tags/ItemTagAdapterContext;",
-            &[],
+            sig.as_str(),
+            vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::inventory::meta::tags::ItemTagAdapterContext::from_raw(&self.jni_ref(), unsafe {
@@ -418,10 +464,24 @@ impl<'mc> CustomItemTagContainer<'mc> {
         arg1: impl Into<crate::inventory::meta::tags::ItemTagType<'mc>>,
         arg2: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let val_3 = arg2;
-        let res = self.jni_ref().call_method(&self.jni_object(),"setCustomTag","(Lorg/bukkit/NamespacedKey;Lorg/bukkit/inventory/meta/tags/ItemTagType;Ljava/lang/Object;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3)]);
+        let sig = String::from("(Lorg/bukkit/NamespacedKey;Lorg/bukkit/inventory/meta/tags/ItemTagType;Ljava/lang/Object;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        let val_3 = jni::objects::JValueGen::Object(arg2);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setCustomTag",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -432,15 +492,22 @@ impl<'mc> CustomItemTagContainer<'mc> {
         arg0: impl Into<crate::NamespacedKey<'mc>>,
         arg1: impl Into<crate::inventory::meta::tags::ItemTagType<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
+        let sig = String::from(
+            "(Lorg/bukkit/NamespacedKey;Lorg/bukkit/inventory/meta/tags/ItemTagType;)Z",
+        );
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "hasCustomTag",
-            "(Lorg/bukkit/NamespacedKey;Lorg/bukkit/inventory/meta/tags/ItemTagType;)Z",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
             ],
         );
         let res = self.jni_ref().translate_error(res)?;
@@ -453,9 +520,22 @@ impl<'mc> CustomItemTagContainer<'mc> {
         arg0: impl Into<crate::NamespacedKey<'mc>>,
         arg1: impl Into<crate::inventory::meta::tags::ItemTagType<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe { jni::objects::JObject::from_raw(arg1.into().jni_object().clone()) };
-        let res = self.jni_ref().call_method(&self.jni_object(),"getCustomTag","(Lorg/bukkit/NamespacedKey;Lorg/bukkit/inventory/meta/tags/ItemTagType;)Ljava/lang/Object;",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2)]);
+        let sig = String::from("(Lorg/bukkit/NamespacedKey;Lorg/bukkit/inventory/meta/tags/ItemTagType;)Ljava/lang/Object;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCustomTag",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
@@ -465,12 +545,15 @@ impl<'mc> CustomItemTagContainer<'mc> {
         &mut self,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let sig = String::from("(Lorg/bukkit/NamespacedKey;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeCustomTag",
-            "(Lorg/bukkit/NamespacedKey;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -478,9 +561,10 @@ impl<'mc> CustomItemTagContainer<'mc> {
     //
 
     pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isEmpty", "()Z", &[]);
+            .call_method(&self.jni_object(), "isEmpty", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }

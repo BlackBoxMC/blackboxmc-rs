@@ -1,6 +1,7 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
+#[derive(PartialEq, Eq)]
 pub enum StructureRotationEnum {
     None,
     Clockwise90,
@@ -86,12 +87,12 @@ impl<'mc> StructureRotation<'mc> {
             cls,
             "valueOf",
             "(Ljava/lang/String;)Lorg/bukkit/block/structure/StructureRotation;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = jni.translate_error(variant)?;
         let variant_str = jni
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -105,6 +106,7 @@ impl<'mc> StructureRotation<'mc> {
         )
     }
 }
+#[derive(PartialEq, Eq)]
 pub enum UsageModeEnum {
     Save,
     Load,
@@ -186,12 +188,12 @@ impl<'mc> UsageMode<'mc> {
             cls,
             "valueOf",
             "(Ljava/lang/String;)Lorg/bukkit/block/structure/UsageMode;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = jni.translate_error(variant)?;
         let variant_str = jni
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -205,6 +207,7 @@ impl<'mc> UsageMode<'mc> {
         )
     }
 }
+#[derive(PartialEq, Eq)]
 pub enum MirrorEnum {
     None,
     LeftRight,
@@ -282,12 +285,12 @@ impl<'mc> Mirror<'mc> {
             cls,
             "valueOf",
             "(Ljava/lang/String;)Lorg/bukkit/block/structure/Mirror;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = jni.translate_error(variant)?;
         let variant_str = jni
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?

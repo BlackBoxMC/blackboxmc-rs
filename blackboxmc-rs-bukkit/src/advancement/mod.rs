@@ -33,9 +33,10 @@ impl<'mc> AdvancementProgress<'mc> {
     //
 
     pub fn is_done(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isDone", "()Z", &[]);
+            .call_method(&self.jni_object(), "isDone", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
@@ -44,12 +45,10 @@ impl<'mc> AdvancementProgress<'mc> {
     pub fn advancement(
         &mut self,
     ) -> Result<crate::advancement::Advancement<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAdvancement",
-            "()Lorg/bukkit/advancement/Advancement;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/advancement/Advancement;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getAdvancement", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::advancement::Advancement::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -61,12 +60,15 @@ impl<'mc> AdvancementProgress<'mc> {
         &mut self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let sig = String::from("(Ljava/lang/String;)Z");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "awardCriteria",
-            "(Ljava/lang/String;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
@@ -77,12 +79,15 @@ impl<'mc> AdvancementProgress<'mc> {
         &mut self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let sig = String::from("(Ljava/lang/String;)Z");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "revokeCriteria",
-            "(Ljava/lang/String;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
@@ -93,12 +98,15 @@ impl<'mc> AdvancementProgress<'mc> {
         &mut self,
         arg0: impl Into<String>,
     ) -> Result<blackboxmc_java::JavaDate<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?);
+        let sig = String::from("(Ljava/lang/String;)Ljava/util/Date;");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDateAwarded",
-            "(Ljava/lang/String;)Ljava/util/Date;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaDate::from_raw(&self.jni_ref(), unsafe {
@@ -108,11 +116,12 @@ impl<'mc> AdvancementProgress<'mc> {
     //
 
     pub fn remaining_criteria(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Collection;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getRemainingCriteria",
-            "()Ljava/util/Collection;",
-            &[],
+            sig.as_str(),
+            vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
@@ -132,11 +141,12 @@ impl<'mc> AdvancementProgress<'mc> {
     //
 
     pub fn awarded_criteria(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Collection;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAwardedCriteria",
-            "()Ljava/util/Collection;",
-            &[],
+            sig.as_str(),
+            vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
@@ -163,6 +173,7 @@ impl<'mc> JNIRaw<'mc> for AdvancementProgress<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+#[derive(PartialEq, Eq)]
 pub enum AdvancementDisplayTypeEnum {
     Task,
     Challenge,
@@ -244,12 +255,12 @@ impl<'mc> AdvancementDisplayType<'mc> {
             cls,
             "valueOf",
             "(Ljava/lang/String;)Lorg/bukkit/advancement/AdvancementDisplayType;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = jni.translate_error(variant)?;
         let variant_str = jni
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -294,30 +305,30 @@ impl<'mc> AdvancementDisplay<'mc> {
     //
 
     pub fn x(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+        let sig = String::from("()F");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getX", "()F", &[]);
+            .call_method(&self.jni_object(), "getX", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
     //
 
     pub fn y(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+        let sig = String::from("()F");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getY", "()F", &[]);
+            .call_method(&self.jni_object(), "getY", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
     //
 
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDescription",
-            "()Ljava/lang/String;",
-            &[],
-        );
+        let sig = String::from("()Ljava/lang/String;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getDescription", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -328,9 +339,10 @@ impl<'mc> AdvancementDisplay<'mc> {
     //
 
     pub fn title(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getTitle", "()Ljava/lang/String;", &[]);
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getTitle", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -341,12 +353,10 @@ impl<'mc> AdvancementDisplay<'mc> {
     //
 
     pub fn icon(&mut self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getIcon",
-            "()Lorg/bukkit/inventory/ItemStack;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getIcon", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -355,27 +365,33 @@ impl<'mc> AdvancementDisplay<'mc> {
     //
 
     pub fn should_show_toast(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "shouldShowToast", "()Z", &[]);
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "shouldShowToast", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
     //
 
     pub fn should_announce_chat(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "shouldAnnounceChat", "()Z", &[]);
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "shouldAnnounceChat",
+            sig.as_str(),
+            vec![],
+        );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
     //
 
     pub fn is_hidden(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isHidden", "()Z", &[]);
+            .call_method(&self.jni_object(), "isHidden", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
@@ -384,17 +400,15 @@ impl<'mc> AdvancementDisplay<'mc> {
     pub fn get_type(
         &mut self,
     ) -> Result<crate::advancement::AdvancementDisplayType<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getType",
-            "()Lorg/bukkit/advancement/AdvancementDisplayType;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/advancement/AdvancementDisplayType;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .jni_ref()
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant =
+            self.jni_ref()
+                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = self.jni_ref().translate_error(variant)?;
         let variant_str = self
             .jni_ref()
@@ -447,12 +461,10 @@ impl<'mc> Advancement<'mc> {
     //
 
     pub fn criteria(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getCriteria",
-            "()Ljava/util/Collection;",
-            &[],
-        );
+        let sig = String::from("()Ljava/util/Collection;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getCriteria", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let mut col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
@@ -473,12 +485,10 @@ impl<'mc> Advancement<'mc> {
     pub fn display(
         &mut self,
     ) -> Result<crate::advancement::AdvancementDisplay<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDisplay",
-            "()Lorg/bukkit/advancement/AdvancementDisplay;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/advancement/AdvancementDisplay;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getDisplay", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::advancement::AdvancementDisplay::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -487,12 +497,10 @@ impl<'mc> Advancement<'mc> {
     //
 
     pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getKey",
-            "()Lorg/bukkit/NamespacedKey;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/NamespacedKey;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getKey", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::NamespacedKey::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())

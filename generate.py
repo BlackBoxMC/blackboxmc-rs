@@ -198,18 +198,30 @@ def argument_name_format(objects):
     name = parts[len(parts) - 1].replace("[]", "s").replace("$", "")
     return re.sub(r"([a-z])([A-Z])", r"\1_\2", name).lower()
 
-def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", options_start_at=-1):
+def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", options_start_at=-1, no_sig=False):
     if arg == "":
         if "type_name_lhand" in type:
             arg = type["type_name_lhand"]
         else:
             arg = "arg"+str(n)
 
-    if options_start_at > -1:
-        if n >= options_start_at:
-            arg += ".ok_or(eyre::eyre!(\"None arguments aren't actually supported yet\"))?"
-
     ty = type["type_name_resolved"].replace("&dyn ","")
+    
+    res = []
+
+    do_option = n >= options_start_at and options_start_at != -1
+    
+    
+    let = java_letter_from_rust(type["type_name_original"])
+    if do_option:
+        res.append("if let Some(a) = "+arg+" {")
+        if not no_sig:
+            res.append("sig += \""+let+"\";")
+        new_arg = "a"
+    else:
+        new_arg = arg
+        if options_start_at != -1:
+            res.append("sig += \""+let+"\";")
 
     if(ty.startswith("crate") or ty.startswith("blackbox")): # for internal types...
         if "JavaEnum" in ty:
@@ -220,51 +232,45 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
         if type["type_name_resolved"].startswith("&dyn"):
             fcall = ".jni_object().clone()"
 
-        return ["let "+var_prefix+"_"+str(n)+" = unsafe { jni::objects::JObject::from_raw("+arg+fcall+")};"]
+        res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from_raw("+new_arg+fcall+")});")
     else:
         match(type["type_name_alone"].replace("Java","")):
             case "bool" | "i8" | "char" | "f64" | "f32" | "i32" | "i64" | "i16" | "u16":
                 v = java_type_from_rust(type["type_name_alone"])
                 class_name = v["class_name"]
-                function_signature = v["function_signature"]
                 if class_name != "":
                     match(type["type_name_alone"]):
                         case "bool":
-                            return ["// "+str(options_start_at-1)+"\nlet "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Bool("+arg+".into());"]
+                            res.append("// "+str(options_start_at-1)+"\nlet "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Bool("+new_arg+".into());")
                         case "i8":
-                            return ["let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Byte("+arg+".into());"]
+                            res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Byte("+new_arg+".into());")
                         case "char" | "u16":
-                            return ["let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Char("+arg+".into());"]
+                            res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Char("+new_arg+".into());")
                         case "f64":
-                            return ["let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Double("+arg+".into());"]
+                            res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Double("+new_arg+".into());")
                         case "f32":
-                            return ["let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Float("+arg+".into());"]
+                            res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Float("+new_arg+".into());")
                         case "i32":
-                            return ["let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Int("+arg+".into());"]
+                            res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Int("+new_arg+".into());")
                         case "i64":
-                            return ["let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Long("+arg+".into());"]
+                            res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Long("+new_arg+".into());")
                         case "i16":
-                            return ["let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Short("+arg+".into());"]
+                            res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Short("+new_arg+".into());")
                 else:
                     return None
-            case "u128":
-                return [
-                    "let upper = ("+arg+" >> 64) as u64 as i64;",
-	                "let lower = "+arg+" as u64 as i64;",
-	                "let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object("+prefix+".new_object(\"java/util/UUID\", \"(JJ)V\", &[upper.into(), lower.into()])?);"
-                ]
             case "String":
-                return ["let "+var_prefix+"_"+str(n)+" = jni::objects::JObject::from("+prefix+".new_string("+arg+".into())?);"]
-            case "jni::objects::JObject" | "jni::objects::JClass":
-                # nothing to do
-                return ["let "+var_prefix+"_"+str(n)+" = "+arg+";"]
+                res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object(jni::objects::JObject::from("+prefix+".new_string("+new_arg+".into())?));")
+            case "jni::objects::JObject":
+                res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object("+new_arg+");")
+            case "jni::objects::JClass":
+                res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object("+new_arg+".into());")
             case "Vec":
                 match type["type_name_original"]:
                     # TODO: convert this to use the new java.util bindings instad.
                     case "java.util.List":
                         c = [
-                            "let raw_"+var_prefix+"_"+str(n)+" = "+prefix+".new_object(\"java/util/ArrayList\", \"()V\", &[])?;",
-                            "for v in "+arg+"{"
+                            "let raw_"+var_prefix+"_"+str(n)+" = "+prefix+".new_object(\"java/util/ArrayList\", \"()V\", vec![])?;",
+                            "for v in "+new_arg+"{"
                         ]
 
                         t1 = java_type_from_rust(type["generics"][0]["type_name_resolved"])["class_name"]
@@ -280,7 +286,7 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
                             "package_name": type["package_name"],
                             "options_start_at": options_start_at,
                             "usage_unsafe": False,
-                        }, prefix, 0, "map_val", "v", options_start_at)
+                        }, prefix, 0, "map_val", "v", options_start_at, no_sig=True)
                         if co is None:
                             return None
                         c.append("\n\t\t".join(co))
@@ -290,7 +296,7 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
                                 "&raw_"+var_prefix+"_"+str(n)+","+
                                 "\"add\","
                                 "\"(L"+t1+")V\","+
-                                "&[jni::objects::JValueGen::from(&map_val_0)]"
+                                "vec![jni::objects::JValueGen::from(map_val_0)]"
                             ")?;"
                         )
 
@@ -298,7 +304,7 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
 
                         c.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Object(raw_"+var_prefix+"_"+str(n)+");")
 
-                        return c
+                        res += c
 
                     case _:
                         print("Unhandled map type:\t\t"+type["type_name_original"],"\t\t",type["type_name_original"])
@@ -306,6 +312,14 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
             case _:
                 print("Untranslated argument:\t\t"+type["type_name_alone"],"\t\t",type["type_name_original"])
                 return None
+            
+    if options_start_at != -1:
+        if not no_sig:
+            res.append("args.push("+var_prefix+"_"+str(n)+");")
+    if do_option:
+        res.append("}")
+
+    return res
 
 def return_format_one_liner(val, var_name):
     match val:
@@ -325,16 +339,18 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
     else:
         end_line = "?"
     code = []
+    if options_start_at != -1:
+        arr = "args"
+    else:
+        arr = "vec!["+",".join(types)+"]"
     if static:
-        code.append("let cls = jni.find_class(\""+return_group["type_name_original"].replace(".","/")+"\"); let cls = jni.translate_error_with_class(cls)"+end_line+";")
+        code.append("let cls = jni.find_class(\""+return_group["type_name_original"].replace(".","/").replace("Java","")+"\"); let cls = jni.translate_error_with_class(cls)"+end_line+";")
         if is_constructor:
             code.append("let res = "+prefix+".new_object(cls,")
         else:
             code.append("let res = "+prefix+".call_static_method(cls,\""+method["original_name"]+"\",")
 
-        code.append("\""+java_call_signature_format(func_signature, return_group["type_name_original"],is_constructor)+"\",&["+
-                    ",".join(types)+
-                    "]);")
+        code.append("sig.as_str(),"+arr+");")
         
         if is_constructor:
             code.append("let res = jni.translate_error_no_gen(res)"+end_line+";")
@@ -344,10 +360,7 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
         code.append(
             "let res = "+prefix+".call_method("+
                     "&"+obj_call+","+
-                    "\""+method["original_name"]+"\",\""+
-                    java_call_signature_format(func_signature, return_group["type_name_original"])+"\",&["+
-                    ",".join(types)+
-                    "]);")
+                    "\""+method["original_name"]+"\",sig.as_str(),"+arr+");")
         if return_group["type_name_resolved"] != "()":
             code.append("let res = ")
         code.append(prefix+".translate_error(res)?;")
@@ -382,8 +395,6 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
             if nullable:
                 code.append(")")
             code.append(")")
-        case "u128":
-            return None # not yet
         case "String":
             code.append("Ok(")
             if nullable:
@@ -413,13 +424,13 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
             code.append(")")
         case "(u8, u8, u8)":
             code.append("let r = "+prefix+
-                        "            .call_method(unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }, \"getRed\", \"(V)I\", &[]);"+
+                        "            .call_method(unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }, \"getRed\", \"(V)I\", vec![]);"+
                         "            ;let r = "+prefix+".translate_error(r)?.i()? as u8;"+
                         "let g = "+prefix+
-                        "            .call_method(unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }, \"getGreen\", \"(V)I\", &[])"+
+                        "            .call_method(unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }, \"getGreen\", \"(V)I\", vec![])"+
                         "            ; let g = "+prefix+".translate_error(g)?.i()? as u8;"+
                         "let b = "+prefix+
-                        "            .call_method(unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }, \"getBlue\", \"(V)I\", &[])"+
+                        "            .call_method(unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }, \"getBlue\", \"(V)I\", vec![])"+
                         "            ; let b = "+prefix+".translate_error(b)?.i()? as u8;"+
                         "Ok(")
                         
@@ -447,7 +458,7 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
                                 "for i in 0..=size {"+
                                 "let obj = list.get(i)"+end_line+";")
                     if return_group["generics"][0]["type_name_original"] in enums:
-                        code.append("let variant = "+val_1+".call_method(list.get(i)"+end_line+", \"toString\", \"()Ljava/lang/String;\", &[]); let variant = "+prefix+".translate_error(variant)"+end_line+";"+
+                        code.append("let variant = "+val_1+".call_method(list.get(i)"+end_line+", \"toString\", \"()Ljava/lang/String;\", vec![]); let variant = "+prefix+".translate_error(variant)"+end_line+";"+
                                     "let variant_str = "+val_1+""+
                                     "    .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })"+end_line+
                                     "    .to_string_lossy()"+
@@ -496,7 +507,7 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
                 code.append("let obj = res.l()"+end_line+";")
 
             if return_group["type_name_original"] in enums:
-                code.append("let raw_obj = "+val_2+";let variant = "+val_1+".call_method(&raw_obj, \"toString\", \"()Ljava/lang/String;\", &[]); let variant = "+prefix+".translate_error(variant)"+end_line+";"+
+                code.append("let raw_obj = "+val_2+";let variant = "+val_1+".call_method(&raw_obj, \"toString\", \"()Ljava/lang/String;\", vec![]); let variant = "+prefix+".translate_error(variant)"+end_line+";"+
                             "let variant_str = "+val_1+""+
                             "    .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })"+end_line+
                             "    .to_string_lossy()"+
@@ -612,8 +623,6 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
             type_name_resolved = "f64"
         case "java.lang.String":
             type_name_resolved = "String"
-        case "java.util.UUID":
-            type_name_resolved = "u128"
         case "java.lang.Class":
             type_name_resolved = "jni::objects::JClass"
         case "java.awt.Color":
@@ -810,12 +819,12 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
                     cls,
                     "valueOf",
                     "(Ljava/lang/String;)L"""+full_name.replace(".","/")+""";",
-                    &[jni::objects::JValueGen::from(&val_1)],
+                    vec![jni::objects::JValueGen::from(val_1)],
                 );
                 let res = jni.translate_error(res)?;
                 let obj = res.l()?;
                 let raw_obj = obj;
-                let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+                let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
                 let variant = jni.translate_error(variant)?;
                 let variant_str = jni
                     .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -944,6 +953,8 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         method = new_methods[k]
 
         name = k
+        if name == "of":
+            continue
         types = method["method"]["parameters"]
 
         if "options_start_at" in method["method"]:
@@ -1013,22 +1024,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         # lets parse the types into java.
         n = 0
         types = []
-        for type in func_signature:
-            if(type["type_name_lhand"] == "") or (type["is_array"]) or in_excluded_classes(type["type_name_original"]):
-                n += 1
-                continue
-            else:
-                ty = code_format(type, prefix, n, class_name=og_name, options_start_at=options_start_at)
-                if ty is None:
-                    should_continue = False
-                    break
-                for t in ty:
-                    code.append(t)
-            types.append("jni::objects::JValueGen::from(&val_"+str(n)+")")
-            n += 1
-        if(not should_continue):
-            continue
-
+        
         if is_constructor:
             return_group = java_type_to_rust("", method["method"]["name"], method, i, True, library, True)
         else:
@@ -1036,6 +1032,35 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
 
         if return_group is None:
             continue
+
+        if options_start_at != -1:
+            code.append("let mut args = Vec::new();")
+            code.append("let mut sig = String::from(\"(\");")
+        else:
+            code.append("let sig = String::from(\""+java_call_signature_format(func_signature, return_group["type_name_original"],is_constructor)+"\");")
+        for type in func_signature:
+            if(type["type_name_lhand"] == "") or (type["is_array"]) or in_excluded_classes(type["type_name_original"]):
+                n += 1
+                continue
+            else:
+                ty = code_format(type, prefix, n, class_name=og_name, options_start_at=options_start_at, no_sig=False)
+                if ty is None:
+                    should_continue = False
+                    break
+                for t in ty:
+                    code.append(t)
+            types.append("jni::objects::JValueGen::from(val_"+str(n)+")")
+            n += 1
+        
+        if options_start_at != -1:
+            if not is_constructor:
+                code.append("sig += \")"+java_letter_from_rust(return_group["type_name_original"])+"\";")
+            else:
+                code.append("sig += \")V\";")
+        if(not should_continue):
+            continue
+
+        
 
         if("?" in return_group["type_name_resolved"]):
             continue
@@ -1180,7 +1205,7 @@ def parse_classes(library, val, classes):
             if "fields" in val:
                 val["values"] += list(filter(lambda f: not "$" in f, val["fields"]))
         file_cache[mod_path].append(
-            "pub enum "+name+"Enum {")
+            "#[derive(PartialEq, Eq)]\npub enum "+name+"Enum {")
 
         for v in val["values"]:
             val_proper = snake_case_to_camel_case(v)

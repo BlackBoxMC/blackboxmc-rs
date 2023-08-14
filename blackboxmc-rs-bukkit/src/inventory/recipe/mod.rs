@@ -1,6 +1,7 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
+#[derive(PartialEq, Eq)]
 pub enum CookingBookCategoryEnum {
     Food,
     Blocks,
@@ -81,12 +82,12 @@ impl<'mc> CookingBookCategory<'mc> {
             cls,
             "valueOf",
             "(Ljava/lang/String;)Lorg/bukkit/inventory/recipe/CookingBookCategory;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = jni.translate_error(variant)?;
         let variant_str = jni
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -100,6 +101,7 @@ impl<'mc> CookingBookCategory<'mc> {
         )
     }
 }
+#[derive(PartialEq, Eq)]
 pub enum CraftingBookCategoryEnum {
     Building,
     Redstone,
@@ -184,12 +186,12 @@ impl<'mc> CraftingBookCategory<'mc> {
             cls,
             "valueOf",
             "(Ljava/lang/String;)Lorg/bukkit/inventory/recipe/CraftingBookCategory;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = jni.translate_error(variant)?;
         let variant_str = jni
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?

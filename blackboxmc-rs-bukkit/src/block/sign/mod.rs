@@ -1,6 +1,7 @@
 #![allow(deprecated)]
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
+#[derive(PartialEq, Eq)]
 pub enum SideEnum {
     Front,
     Back,
@@ -74,12 +75,12 @@ impl<'mc> Side<'mc> {
             cls,
             "valueOf",
             "(Ljava/lang/String;)Lorg/bukkit/block/sign/Side;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = jni.translate_error(variant)?;
         let variant_str = jni
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -122,9 +123,10 @@ impl<'mc> SignSide<'mc> {
     //
 
     pub fn is_glowing_text(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isGlowingText", "()Z", &[]);
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isGlowingText", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
@@ -138,12 +140,13 @@ impl<'mc> SignSide<'mc> {
     /// Gets the line of text at the specified index on this side of the sign.
     /// <p>For example, getLine(0) will return the first line of text.</p>
     pub fn get_line(&mut self, arg0: i32) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("(I)Ljava/lang/String;");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getLine",
-            "(I)Ljava/lang/String;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
@@ -159,15 +162,18 @@ impl<'mc> SignSide<'mc> {
         arg0: i32,
         arg1: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(ILjava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JObject::from(self.jni_ref().new_string(arg1.into())?);
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setLine",
-            "(ILjava/lang/String;)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
             ],
         );
         self.jni_ref().translate_error(res)?;
@@ -178,13 +184,14 @@ impl<'mc> SignSide<'mc> {
     #[deprecated]
     /// Sets whether this side of the sign has glowing text.
     pub fn set_glowing_text(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setGlowingText",
-            "(Z)V",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -195,12 +202,15 @@ impl<'mc> SignSide<'mc> {
         &mut self,
         arg0: impl Into<crate::DyeColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let sig = String::from("(Lorg/bukkit/DyeColor;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setColor",
-            "(Lorg/bukkit/DyeColor;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -208,17 +218,15 @@ impl<'mc> SignSide<'mc> {
     //
 
     pub fn color(&mut self) -> Result<crate::DyeColor<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getColor",
-            "()Lorg/bukkit/DyeColor;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/DyeColor;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getColor", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .jni_ref()
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant =
+            self.jni_ref()
+                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = self.jni_ref().translate_error(variant)?;
         let variant_str = self
             .jni_ref()

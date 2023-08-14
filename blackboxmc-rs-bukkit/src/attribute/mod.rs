@@ -33,12 +33,17 @@ impl<'mc> Attributable<'mc> {
         &mut self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<crate::attribute::AttributeInstance<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let sig = String::from(
+            "(Lorg/bukkit/attribute/Attribute;)Lorg/bukkit/attribute/AttributeInstance;",
+        );
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getAttribute",
-            "(Lorg/bukkit/attribute/Attribute;)Lorg/bukkit/attribute/AttributeInstance;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::attribute::AttributeInstance::from_raw(&self.jni_ref(), unsafe {
@@ -55,6 +60,7 @@ impl<'mc> JNIRaw<'mc> for Attributable<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+#[derive(PartialEq, Eq)]
 pub enum AttributeEnum {
     GenericMaxHealth,
     GenericFollowRange,
@@ -175,12 +181,12 @@ impl<'mc> Attribute<'mc> {
             cls,
             "valueOf",
             "(Ljava/lang/String;)Lorg/bukkit/attribute/Attribute;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = jni.translate_error(variant)?;
         let variant_str = jni
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -227,17 +233,15 @@ impl<'mc> AttributeInstance<'mc> {
     pub fn attribute(
         &mut self,
     ) -> Result<crate::attribute::Attribute<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAttribute",
-            "()Lorg/bukkit/attribute/Attribute;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/attribute/Attribute;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getAttribute", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .jni_ref()
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant =
+            self.jni_ref()
+                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = self.jni_ref().translate_error(variant)?;
         let variant_str = self
             .jni_ref()
@@ -254,9 +258,10 @@ impl<'mc> AttributeInstance<'mc> {
     //
 
     pub fn base_value(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getBaseValue", "()D", &[]);
+        let sig = String::from("()D");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getBaseValue", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
@@ -264,12 +269,13 @@ impl<'mc> AttributeInstance<'mc> {
 
     /// Set the base value of this instance.
     pub fn set_base_value(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(D)V");
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setBaseValue",
-            "(D)V",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -280,12 +286,15 @@ impl<'mc> AttributeInstance<'mc> {
         &mut self,
         arg0: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let sig = String::from("(Lorg/bukkit/attribute/AttributeModifier;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "addModifier",
-            "(Lorg/bukkit/attribute/AttributeModifier;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -296,12 +305,15 @@ impl<'mc> AttributeInstance<'mc> {
         &mut self,
         arg0: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let sig = String::from("(Lorg/bukkit/attribute/AttributeModifier;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeModifier",
-            "(Lorg/bukkit/attribute/AttributeModifier;)V",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
@@ -311,12 +323,10 @@ impl<'mc> AttributeInstance<'mc> {
     pub fn modifiers(
         &mut self,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getModifiers",
-            "()Ljava/util/Collection;",
-            &[],
-        );
+        let sig = String::from("()Ljava/util/Collection;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getModifiers", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let mut col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
@@ -333,18 +343,20 @@ impl<'mc> AttributeInstance<'mc> {
     //
 
     pub fn value(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getValue", "()D", &[]);
+            .call_method(&self.jni_object(), "getValue", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
     //
 
     pub fn default_value(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getDefaultValue", "()D", &[]);
+        let sig = String::from("()D");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getDefaultValue", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
@@ -358,6 +370,7 @@ impl<'mc> JNIRaw<'mc> for AttributeInstance<'mc> {
         unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
     }
 }
+#[derive(PartialEq, Eq)]
 pub enum OperationEnum {
     AddNumber,
     AddScalar,
@@ -435,12 +448,12 @@ impl<'mc> Operation<'mc> {
             cls,
             "valueOf",
             "(Ljava/lang/String;)Lorg/bukkit/attribute/Operation;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = jni.translate_error(variant)?;
         let variant_str = jni
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -459,6 +472,7 @@ pub struct AttributeModifier<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
 );
+#[derive(PartialEq, Eq)]
 pub enum AttributeModifierOperationEnum {
     AddNumber,
     AddScalar,
@@ -543,12 +557,12 @@ impl<'mc> AttributeModifierOperation<'mc> {
             cls,
             "valueOf",
             "(Ljava/lang/String;)Lorg/bukkit/attribute/AttributeModifier$Operation;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = jni.translate_error(variant)?;
         let variant_str = jni
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -596,81 +610,107 @@ impl<'mc> AttributeModifier<'mc> {
     }
     pub fn new_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: u128,
+        arg0: impl Into<blackboxmc_java::JavaUUID<'mc>>,
         arg1: impl Into<String>,
         arg2: std::option::Option<f64>,
         arg3: std::option::Option<impl Into<crate::attribute::AttributeModifierOperation<'mc>>>,
     ) -> Result<crate::attribute::AttributeModifier<'mc>, Box<dyn std::error::Error>> {
-        let upper = (arg0 >> 64) as u64 as i64;
-        let lower = arg0 as u64 as i64;
-        let val_1 = jni::objects::JValueGen::Object(jni.new_object(
-            "java/util/UUID",
-            "(JJ)V",
-            &[upper.into(), lower.into()],
-        )?);
-        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.into())?);
-        let val_3 = jni::objects::JValueGen::Double(
-            arg2.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                .into(),
-        );
-        let val_4 = unsafe {
-            jni::objects::JObject::from_raw(
-                arg3.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                    .into()
-                    .jni_object()
-                    .clone(),
-            )
-        };
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/UUID;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        if let Some(a) = arg2 {
+            sig += "D";
+            let val_3 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_3);
+        }
+        if let Some(a) = arg3 {
+            sig += "Lorg/bukkit/attribute/AttributeModifier$Operation;";
+            let val_4 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_4);
+        }
+        sig += ")V";
         let cls = jni.find_class("org/bukkit/attribute/AttributeModifier");
         let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls,
-"(Ljava/util/UUID;Ljava/lang/String;DLorg/bukkit/attribute/AttributeModifier$Operation;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4)]);
+        let res = jni.new_object(cls, sig.as_str(), args);
         let res = jni.translate_error_no_gen(res)?;
         crate::attribute::AttributeModifier::from_raw(&jni, res)
     }
     pub fn new_with_uuid(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: u128,
+        arg0: impl Into<blackboxmc_java::JavaUUID<'mc>>,
         arg1: impl Into<String>,
         arg2: f64,
         arg3: impl Into<crate::attribute::AttributeModifierOperation<'mc>>,
         arg4: std::option::Option<impl Into<crate::inventory::EquipmentSlot<'mc>>>,
     ) -> Result<crate::attribute::AttributeModifier<'mc>, Box<dyn std::error::Error>> {
-        let upper = (arg0 >> 64) as u64 as i64;
-        let lower = arg0 as u64 as i64;
-        let val_1 = jni::objects::JValueGen::Object(jni.new_object(
-            "java/util/UUID",
-            "(JJ)V",
-            &[upper.into(), lower.into()],
-        )?);
-        let val_2 = jni::objects::JObject::from(jni.new_string(arg1.into())?);
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/UUID;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        sig += "D";
         let val_3 = jni::objects::JValueGen::Double(arg2.into());
-        let val_4 = unsafe { jni::objects::JObject::from_raw(arg3.into().jni_object().clone()) };
-        let val_5 = unsafe {
-            jni::objects::JObject::from_raw(
-                arg4.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                    .into()
-                    .jni_object()
-                    .clone(),
-            )
-        };
+        args.push(val_3);
+        sig += "Lorg/bukkit/attribute/AttributeModifier$Operation;";
+        let val_4 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg3.into().jni_object().clone())
+        });
+        args.push(val_4);
+        if let Some(a) = arg4 {
+            sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+            let val_5 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_5);
+        }
+        sig += ")V";
         let cls = jni.find_class("org/bukkit/attribute/AttributeModifier");
         let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls,
-"(Ljava/util/UUID;Ljava/lang/String;DLorg/bukkit/attribute/AttributeModifier$Operation;Lorg/bukkit/inventory/EquipmentSlot;)V",&[jni::objects::JValueGen::from(&val_1),jni::objects::JValueGen::from(&val_2),jni::objects::JValueGen::from(&val_3),jni::objects::JValueGen::from(&val_4),jni::objects::JValueGen::from(&val_5)]);
+        let res = jni.new_object(cls, sig.as_str(), args);
         let res = jni.translate_error_no_gen(res)?;
         crate::attribute::AttributeModifier::from_raw(&jni, res)
     }
     //
 
+    pub fn unique_id(
+        &mut self,
+    ) -> Result<blackboxmc_java::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/UUID;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getUniqueId", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaUUID::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     //
 
     pub fn serialize(
         &mut self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "serialize", "()Ljava/util/Map;", &[]);
+        let sig = String::from("()Ljava/util/Map;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -682,14 +722,17 @@ impl<'mc> AttributeModifier<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<blackboxmc_java::JavaMap<'mc>>,
     ) -> Result<crate::attribute::AttributeModifier<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let sig = String::from("(Ljava/util/Map;)Lorg/bukkit/attribute/AttributeModifier;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         let cls = jni.find_class("org/bukkit/attribute/AttributeModifier");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "deserialize",
-            "(Ljava/util/Map;)Lorg/bukkit/attribute/AttributeModifier;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
@@ -698,9 +741,10 @@ impl<'mc> AttributeModifier<'mc> {
     //
 
     pub fn amount(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getAmount", "()D", &[]);
+            .call_method(&self.jni_object(), "getAmount", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
@@ -709,17 +753,15 @@ impl<'mc> AttributeModifier<'mc> {
     pub fn operation(
         &mut self,
     ) -> Result<crate::attribute::AttributeModifierOperation<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getOperation",
-            "()Lorg/bukkit/attribute/AttributeModifier$Operation;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/attribute/AttributeModifier$Operation;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getOperation", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
         let variant = self
             .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = self.jni_ref().translate_error(variant)?;
         let variant_str = self
             .0
@@ -736,9 +778,10 @@ impl<'mc> AttributeModifier<'mc> {
     //
 
     pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getName", "()Ljava/lang/String;", &[]);
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -752,12 +795,13 @@ impl<'mc> AttributeModifier<'mc> {
         &mut self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = arg0;
+        let sig = String::from("(Ljava/lang/Object;)Z");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "equals",
-            "(Ljava/lang/Object;)Z",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
@@ -765,9 +809,10 @@ impl<'mc> AttributeModifier<'mc> {
     //
 
     pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "toString", "()Ljava/lang/String;", &[]);
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -778,9 +823,10 @@ impl<'mc> AttributeModifier<'mc> {
     //
 
     pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", "()I", &[]);
+            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
@@ -789,17 +835,15 @@ impl<'mc> AttributeModifier<'mc> {
     pub fn slot(
         &mut self,
     ) -> Result<crate::inventory::EquipmentSlot<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getSlot",
-            "()Lorg/bukkit/inventory/EquipmentSlot;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/inventory/EquipmentSlot;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getSlot", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
         let variant = self
             .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = self.jni_ref().translate_error(variant)?;
         let variant_str = self
             .0
@@ -820,50 +864,52 @@ impl<'mc> AttributeModifier<'mc> {
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        let val_1 = jni::objects::JValueGen::Long(
-            arg0.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                .into(),
-        );
-        let val_2 = jni::objects::JValueGen::Int(
-            arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                .into(),
-        );
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "wait",
-            "(JI)V",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
-        );
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "J";
+            let val_1 = jni::objects::JValueGen::Long(a.into());
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "wait", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getClass", "()Ljava/lang/Class;", &[]);
+        let sig = String::from("()Ljava/lang/Class;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getClass", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
     //
 
     pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "notify", "()V", &[]);
+            .call_method(&self.jni_object(), "notify", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
     //
 
     pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "notifyAll", "()V", &[]);
+            .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -875,6 +921,7 @@ impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'m
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting AttributeModifier into crate::configuration::serialization::ConfigurationSerializable")
     }
 }
+#[derive(PartialEq, Eq)]
 pub enum AttributeAttributeEnum {
     GenericMaxHealth,
     GenericFollowRange,
@@ -1014,12 +1061,12 @@ impl<'mc> AttributeAttribute<'mc> {
             cls,
             "valueOf",
             "(Ljava/lang/String;)Lorg/bukkit/attribute/Attribute$Attribute;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = jni.translate_error(variant)?;
         let variant_str = jni
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?

@@ -18,15 +18,15 @@ pub unsafe fn new_extendable(
         &self.1,
         "newExtendable",
         "(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;",
-        &[
+        vec![
             jni::objects::JValueGen::Int(address),
-            jni::objects::JValueGen::from(&jni::objects::JObject::from(
+            jni::objects::JValueGen::from(jni::objects::JObject::from(
                 self.jni_ref().new_string(class_name).unwrap(),
             )),
-            jni::objects::JValueGen::from(&jni::objects::JObject::from(
+            jni::objects::JValueGen::from(jni::objects::JObject::from(
                 self.jni_ref().new_string(name).unwrap(),
             )),
-            jni::objects::JValueGen::from(&jni::objects::JObject::from(
+            jni::objects::JValueGen::from(jni::objects::JObject::from(
                 self.jni_ref().new_string(lib_name).unwrap(),
             )),
         ],

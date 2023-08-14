@@ -2,6 +2,7 @@
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// Show the compatibility of the data pack with the server.
+#[derive(PartialEq, Eq)]
 pub enum DataPackCompatibilityEnum {
     New,
     Old,
@@ -82,12 +83,12 @@ impl<'mc> DataPackCompatibility<'mc> {
             cls,
             "valueOf",
             "(Ljava/lang/String;)Lorg/bukkit/packs/DataPack$Compatibility;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = jni.translate_error(variant)?;
         let variant_str = jni
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -134,17 +135,15 @@ impl<'mc> DataPack<'mc> {
     pub fn source(
         &mut self,
     ) -> Result<crate::packs::DataPackSource<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getSource",
-            "()Lorg/bukkit/packs/DataPack$Source;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/packs/DataPack$Source;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getSource", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .jni_ref()
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant =
+            self.jni_ref()
+                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = self.jni_ref().translate_error(variant)?;
         let variant_str = self
             .jni_ref()
@@ -161,12 +160,10 @@ impl<'mc> DataPack<'mc> {
     //
 
     pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDescription",
-            "()Ljava/lang/String;",
-            &[],
-        );
+        let sig = String::from("()Ljava/lang/String;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getDescription", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -179,11 +176,12 @@ impl<'mc> DataPack<'mc> {
     pub fn requested_features(
         &mut self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getRequestedFeatures",
-            "()Ljava/util/Set;",
-            &[],
+            sig.as_str(),
+            vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
@@ -193,9 +191,10 @@ impl<'mc> DataPack<'mc> {
     //
 
     pub fn title(&mut self) -> Result<String, Box<dyn std::error::Error>> {
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getTitle", "()Ljava/lang/String;", &[]);
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getTitle", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
@@ -206,27 +205,30 @@ impl<'mc> DataPack<'mc> {
     //
 
     pub fn pack_format(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getPackFormat", "()I", &[]);
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPackFormat", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
     //
 
     pub fn is_enabled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "isEnabled", "()Z", &[]);
+            .call_method(&self.jni_object(), "isEnabled", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
     //
 
     pub fn is_required(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isRequired", "()Z", &[]);
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isRequired", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
@@ -235,17 +237,18 @@ impl<'mc> DataPack<'mc> {
     pub fn compatibility(
         &mut self,
     ) -> Result<crate::packs::DataPackCompatibility<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/packs/DataPack$Compatibility;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getCompatibility",
-            "()Lorg/bukkit/packs/DataPack$Compatibility;",
-            &[],
+            sig.as_str(),
+            vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .jni_ref()
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant =
+            self.jni_ref()
+                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = self.jni_ref().translate_error(variant)?;
         let variant_str = self
             .jni_ref()
@@ -262,12 +265,10 @@ impl<'mc> DataPack<'mc> {
     //
 
     pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getKey",
-            "()Lorg/bukkit/NamespacedKey;",
-            &[],
-        );
+        let sig = String::from("()Lorg/bukkit/NamespacedKey;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getKey", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::NamespacedKey::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -323,12 +324,15 @@ impl<'mc> DataPackManager<'mc> {
         &mut self,
         arg0: impl Into<crate::World<'mc>>,
     ) -> Result<Vec<crate::packs::DataPack<'mc>>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let sig = String::from("(Lorg/bukkit/World;)Ljava/util/Collection;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getEnabledDataPacks",
-            "(Lorg/bukkit/World;)Ljava/util/Collection;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
@@ -345,12 +349,10 @@ impl<'mc> DataPackManager<'mc> {
     pub fn data_packs(
         &mut self,
     ) -> Result<Vec<crate::packs::DataPack<'mc>>, Box<dyn std::error::Error>> {
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getDataPacks",
-            "()Ljava/util/Collection;",
-            &[],
-        );
+        let sig = String::from("()Ljava/util/Collection;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getDataPacks", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let mut col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
@@ -367,12 +369,15 @@ impl<'mc> DataPackManager<'mc> {
         &mut self,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
     ) -> Result<crate::packs::DataPack<'mc>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let sig = String::from("(Lorg/bukkit/NamespacedKey;)Lorg/bukkit/packs/DataPack;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDataPack",
-            "(Lorg/bukkit/NamespacedKey;)Lorg/bukkit/packs/DataPack;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::packs::DataPack::from_raw(&self.jni_ref(), unsafe {
@@ -385,12 +390,15 @@ impl<'mc> DataPackManager<'mc> {
         &mut self,
         arg0: impl Into<crate::World<'mc>>,
     ) -> Result<Vec<crate::packs::DataPack<'mc>>, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
+        let sig = String::from("(Lorg/bukkit/World;)Ljava/util/Collection;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getDisabledDataPacks",
-            "(Lorg/bukkit/World;)Ljava/util/Collection;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
@@ -409,23 +417,26 @@ impl<'mc> DataPackManager<'mc> {
         arg0: impl Into<crate::entity::EntityType<'mc>>,
         arg1: std::option::Option<impl Into<crate::World<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let val_1 = unsafe { jni::objects::JObject::from_raw(arg0.into().jni_object().clone()) };
-        let val_2 = unsafe {
-            jni::objects::JObject::from_raw(
-                arg1.ok_or(eyre::eyre!("None arguments aren't actually supported yet"))?
-                    .into()
-                    .jni_object()
-                    .clone(),
-            )
-        };
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/EntityType;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/World;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "isEnabledByFeature",
-            "(Lorg/bukkit/entity/EntityType;Lorg/bukkit/World;)Z",
-            &[
-                jni::objects::JValueGen::from(&val_1),
-                jni::objects::JValueGen::from(&val_2),
-            ],
+            sig.as_str(),
+            args,
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
@@ -441,6 +452,7 @@ impl<'mc> JNIRaw<'mc> for DataPackManager<'mc> {
     }
 }
 /// Represent the source of a data pack.
+#[derive(PartialEq, Eq)]
 pub enum DataPackSourceEnum {
     Default,
     BuiltIn,
@@ -528,12 +540,12 @@ impl<'mc> DataPackSource<'mc> {
             cls,
             "valueOf",
             "(Ljava/lang/String;)Lorg/bukkit/packs/DataPack$Source;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = jni.translate_error(variant)?;
         let variant_str = jni
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -549,6 +561,7 @@ impl<'mc> DataPackSource<'mc> {
 
     //
 }
+#[derive(PartialEq, Eq)]
 pub enum CompatibilityEnum {
     New,
     Old,
@@ -626,12 +639,12 @@ impl<'mc> Compatibility<'mc> {
             cls,
             "valueOf",
             "(Ljava/lang/String;)Lorg/bukkit/packs/Compatibility;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = jni.translate_error(variant)?;
         let variant_str = jni
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
@@ -645,6 +658,7 @@ impl<'mc> Compatibility<'mc> {
         )
     }
 }
+#[derive(PartialEq, Eq)]
 pub enum SourceEnum {
     Default,
     BuiltIn,
@@ -730,12 +744,12 @@ impl<'mc> Source<'mc> {
             cls,
             "valueOf",
             "(Ljava/lang/String;)Lorg/bukkit/packs/Source;",
-            &[jni::objects::JValueGen::from(&val_1)],
+            vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         let raw_obj = obj;
-        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", &[]);
+        let variant = jni.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
         let variant = jni.translate_error(variant)?;
         let variant_str = jni
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?

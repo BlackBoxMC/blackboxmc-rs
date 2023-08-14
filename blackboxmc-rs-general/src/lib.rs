@@ -10,6 +10,49 @@ use jni::{
 };
 use std::cell::RefCell;
 
+// this is very bad oh god
+macro_rules! bad_vector_translation {
+    ($jni:tt, $method_name:tt, $arr:tt, $($args:expr),+) => {{
+        match ($arr.len()) {
+            0 => bad_vector_translation_call!($jni,$method_name,$arr,$($args),+),
+            1 => bad_vector_translation_call!($jni,$method_name,$arr,$($args),+ => 0),
+            2 => bad_vector_translation_call!($jni,$method_name,$arr,$($args),+ => 0,1),
+            3 => bad_vector_translation_call!($jni,$method_name,$arr,$($args),+ => 0,1,2),
+            4 => bad_vector_translation_call!($jni,$method_name,$arr,$($args),+ => 0,1,2,3),
+            5 => bad_vector_translation_call!($jni,$method_name,$arr,$($args),+ => 0,1,2,3,4),
+            6 => bad_vector_translation_call!($jni,$method_name,$arr,$($args),+ => 0,1,2,3,4,5),
+            7 => bad_vector_translation_call!($jni,$method_name,$arr,$($args),+ => 0,1,2,3,4,5,6),
+            8 => bad_vector_translation_call!($jni,$method_name,$arr,$($args),+ => 0,1,2,3,4,5,6,7),
+            9 => bad_vector_translation_call!($jni,$method_name,$arr,$($args),+ => 0,1,2,3,4,5,6,7,8),
+            10 => bad_vector_translation_call!($jni,$method_name,$arr,$($args),+ => 0,1,2,3,4,5,6,7,8,9),
+            11 => bad_vector_translation_call!($jni,$method_name,$arr,$($args),+ => 0,1,2,3,4,5,6,7,8,9,10),
+            12 => bad_vector_translation_call!($jni,$method_name,$arr,$($args),+ => 0,1,2,3,4,5,6,7,8,9,10,11),
+            13 => bad_vector_translation_call!($jni,$method_name,$arr,$($args),+ => 0,1,2,3,4,5,6,7,8,9,10,11,12),
+            14 => bad_vector_translation_call!($jni,$method_name,$arr,$($args),+ => 0,1,2,3,4,5,6,7,8,9,10,11,12,13),
+            15 => bad_vector_translation_call!($jni,$method_name,$arr,$($args),+ => 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14),
+            16 => bad_vector_translation_call!($jni,$method_name,$arr,$($args),+ => 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15),
+            17 => bad_vector_translation_call!($jni,$method_name,$arr,$($args),+ => 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16),
+            18 => bad_vector_translation_call!($jni,$method_name,$arr,$($args),+ => 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17),
+            19 => bad_vector_translation_call!($jni,$method_name,$arr,$($args),+ => 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18),
+            20 => bad_vector_translation_call!($jni,$method_name,$arr,$($args),+ => 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19),
+            _ => todo!()
+        }
+    }};
+}
+
+macro_rules! bad_vector_translation_call {
+    ($jni:tt, $method_name:tt, $arr:tt, $($args:expr),+) => {{
+        $jni.$method_name($($args),+, &[])
+    }};
+    ($jni:tt, $method_name:tt, $arr:tt, $($args:expr),+ => $($nums:expr),+) => {{
+        $jni.$method_name($($args),+, &[
+            $(
+                (&$arr[$nums]).into()
+            ),+,
+            ])
+    }};
+}
+
 /// Wrapper struct for [JNIEnv](jni::JNIEnv) that has interior mutability and several other helper functions.
 pub struct SharedJNIEnv<'mc> {
     jni: RefCell<jni::JNIEnv<'mc>>,
@@ -229,42 +272,43 @@ impl<'mc> SharedJNIEnv<'mc> {
         obj: O,
         name: S,
         sig: T,
-        args: &[JValue<'_, '_>],
+        args: Vec<JValueGen<JObject<'mc>>>,
     ) -> Result<JValueOwned<'mc>, jni::errors::Error>
     where
         O: AsRef<JObject<'other_local>>,
         S: Into<JNIString>,
         T: Into<JNIString> + AsRef<str>,
     {
-        self.jni.borrow_mut().call_method(obj, name, sig, args)
+        let mut jni = self.jni.borrow_mut();
+        bad_vector_translation!(jni, call_method, args, obj, name, sig)
     }
     pub fn call_static_method<'other_local, T, U, V>(
         &self,
         class: T,
         name: U,
         sig: V,
-        args: &[JValue<'_, '_>],
+        args: Vec<JValueGen<JObject<'mc>>>,
     ) -> Result<JValueOwned<'mc>, jni::errors::Error>
     where
         T: Desc<'mc, JClass<'other_local>>,
         U: Into<JNIString>,
         V: Into<JNIString> + AsRef<str>,
     {
-        self.jni
-            .borrow_mut()
-            .call_static_method(class, name, sig, args)
+        let mut jni = self.jni.borrow_mut();
+        bad_vector_translation!(jni, call_static_method, args, class, name, sig)
     }
     pub fn new_object<'other_local, T, U>(
         &self,
         class: T,
         ctor_sig: U,
-        ctor_args: &[JValue<'_, '_>],
+        ctor_args: Vec<JValueGen<JObject<'mc>>>,
     ) -> Result<JObject<'mc>, jni::errors::Error>
     where
         T: Desc<'mc, JClass<'other_local>>,
         U: Into<JNIString> + AsRef<str>,
     {
-        self.jni.borrow_mut().new_object(class, ctor_sig, ctor_args)
+        let mut jni = self.jni.borrow_mut();
+        bad_vector_translation!(jni, new_object, ctor_args, class, ctor_sig)
     }
     pub unsafe fn new_object_unchecked<'other_local, T>(
         &self,
@@ -948,7 +992,7 @@ impl<'mc> SharedJNIEnv<'mc> {
     {
         let cls1 = self.find_class(expected_class)?;
         if !self.is_instance_of(&obj, &cls1)? {
-            let name_raw = self.call_method(&cls1, "getName", "()Ljava/lang/String;", &[]);
+            let name_raw = self.call_method(&cls1, "getName", "()Ljava/lang/String;", vec![]);
             let name_raw = self.translate_error(name_raw)?;
             let oh = name_raw.l()?.into();
             let what = self.get_string(&oh)?;
