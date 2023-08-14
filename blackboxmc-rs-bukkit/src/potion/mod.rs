@@ -411,7 +411,7 @@ impl<'mc> JNIInstantiatable<'mc> for PotionData<'mc> {
 }
 
 impl<'mc> PotionData<'mc> {
-    pub fn new_with_potion_type(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::potion::PotionType<'mc>>>,
         arg1: std::option::Option<bool>,
@@ -642,7 +642,7 @@ impl<'mc> Potion<'mc> {
     //['forRemoval', 'false']
 
     #[deprecated]
-    pub fn new_with_potion_type(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::potion::PotionType<'mc>>>,
         arg1: std::option::Option<i32>,
@@ -975,7 +975,7 @@ impl<'mc> Potion<'mc> {
     }
     //
 
-    pub fn apply_with_item_stack(
+    pub fn apply(
         &self,
         arg0: std::option::Option<impl Into<crate::entity::LivingEntity<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {

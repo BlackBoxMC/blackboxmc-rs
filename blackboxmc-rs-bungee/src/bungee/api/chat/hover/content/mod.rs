@@ -630,7 +630,7 @@ crate::bungee::api::chat::hover::content::ItemSerializer::from_raw(&jni,res
 //
 
 
-	pub fn serialize_with_item(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: std::option::Option<jni::objects::JObject<'mc>>) 
+	pub fn serialize(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: std::option::Option<jni::objects::JObject<'mc>>) 
 -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -654,7 +654,7 @@ Ok(res.l()?)}
 //
 
 
-	pub fn deserialize_with_json_element(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: std::option::Option<jni::objects::JObject<'mc>>) 
+	pub fn deserialize(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: std::option::Option<jni::objects::JObject<'mc>>) 
 -> Result<crate::bungee::api::chat::hover::content::Item<'mc>, Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -856,7 +856,7 @@ crate::bungee::api::chat::hover::content::TextSerializer::from_raw(&jni,res
 //
 
 
-	pub fn serialize_with_text(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: std::option::Option<jni::objects::JObject<'mc>>) 
+	pub fn serialize(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: std::option::Option<jni::objects::JObject<'mc>>) 
 -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -880,7 +880,7 @@ Ok(res.l()?)}
 //
 
 
-	pub fn deserialize_with_json_element(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: std::option::Option<jni::objects::JObject<'mc>>) 
+	pub fn deserialize(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: std::option::Option<jni::objects::JObject<'mc>>) 
 -> Result<crate::bungee::api::chat::hover::content::Text<'mc>, Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -1266,7 +1266,7 @@ Ok(Self(env.clone(), obj))
     }
     
 impl<'mc> Text<'mc> {
-	pub fn new_with_base_components(jni: &blackboxmc_general::SharedJNIEnv<'mc>,arg0: std::option::Option<impl Into<String>>) 
+	pub fn new(jni: &blackboxmc_general::SharedJNIEnv<'mc>,arg0: std::option::Option<impl Into<String>>) 
 -> Result<crate::bungee::api::chat::hover::content::Text<'mc>, Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -1502,7 +1502,7 @@ crate::bungee::api::chat::hover::content::EntitySerializer::from_raw(&jni,res
 //
 
 
-	pub fn serialize_with_entity(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: std::option::Option<jni::objects::JObject<'mc>>) 
+	pub fn serialize(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: std::option::Option<jni::objects::JObject<'mc>>) 
 -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -1526,7 +1526,7 @@ Ok(res.l()?)}
 //
 
 
-	pub fn deserialize_with_json_element(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: std::option::Option<jni::objects::JObject<'mc>>) 
+	pub fn deserialize(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: std::option::Option<jni::objects::JObject<'mc>>) 
 -> Result<crate::bungee::api::chat::hover::content::Entity<'mc>, Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();

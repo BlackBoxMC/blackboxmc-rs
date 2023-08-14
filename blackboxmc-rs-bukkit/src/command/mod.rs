@@ -330,7 +330,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
     }
     //
 
-    pub fn is_permission_set_with_string(
+    pub fn is_permission_set(
         &self,
         arg0: std::option::Option<impl Into<crate::permissions::Permission<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -352,7 +352,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
     }
     //
 
-    pub fn has_permission_with_permission(
+    pub fn has_permission(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -374,7 +374,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
     }
     //
 
-    pub fn add_attachment_with_plugin(
+    pub fn add_attachment(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<String>,
@@ -622,7 +622,7 @@ impl<'mc> SimpleCommandMap<'mc> {
     }
     //
 
-    pub fn tab_complete_with_command_sender(
+    pub fn tab_complete(
         &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -741,7 +741,7 @@ impl<'mc> SimpleCommandMap<'mc> {
     }
     //
 
-    pub fn register_with_string(
+    pub fn register(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<String>>,
@@ -1047,7 +1047,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
     }
     //
 
-    pub fn tab_complete_with_command_sender(
+    pub fn tab_complete(
         &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: impl Into<String>,
@@ -1311,7 +1311,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
     }
     //
 
-    pub fn broadcast_command_message_with_command_sender(
+    pub fn broadcast_command_message(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -1825,7 +1825,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
     }
     //
 
-    pub fn is_permission_set_with_string(
+    pub fn is_permission_set(
         &self,
         arg0: std::option::Option<impl Into<crate::permissions::Permission<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1847,7 +1847,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
     }
     //
 
-    pub fn has_permission_with_permission(
+    pub fn has_permission(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1869,7 +1869,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
     }
     //
 
-    pub fn add_attachment_with_plugin(
+    pub fn add_attachment(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<String>,
@@ -2020,7 +2020,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
     }
     //
 
-    pub fn abandon_conversation_with_conversation(
+    pub fn abandon_conversation(
         &self,
         arg0: std::option::Option<impl Into<crate::conversations::Conversation<'mc>>>,
         arg1: std::option::Option<impl Into<crate::conversations::ConversationAbandonedEvent<'mc>>>,
@@ -2063,7 +2063,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
     }
     //
 
-    pub fn send_raw_message_with_string(
+    pub fn send_raw_message(
         &self,
         arg0: std::option::Option<impl Into<blackboxmc_java::JavaUUID<'mc>>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -2267,7 +2267,7 @@ impl<'mc> Command<'mc> {
     }
     //
 
-    pub fn tab_complete_with_command_sender(
+    pub fn tab_complete(
         &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: impl Into<String>,
@@ -2531,7 +2531,7 @@ impl<'mc> Command<'mc> {
     }
     //
 
-    pub fn broadcast_command_message_with_command_sender(
+    pub fn broadcast_command_message(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -2919,7 +2919,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
     }
     //
 
-    pub fn tab_complete_with_command_sender(
+    pub fn tab_complete(
         &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: impl Into<String>,
@@ -3183,7 +3183,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
     }
     //
 
-    pub fn broadcast_command_message_with_command_sender(
+    pub fn broadcast_command_message(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -3729,7 +3729,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
     }
     //
 
-    pub fn is_permission_set_with_string(
+    pub fn is_permission_set(
         &self,
         arg0: std::option::Option<impl Into<crate::permissions::Permission<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3751,7 +3751,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
     }
     //
 
-    pub fn has_permission_with_permission(
+    pub fn has_permission(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3773,7 +3773,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
     }
     //
 
-    pub fn add_attachment_with_plugin(
+    pub fn add_attachment(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<String>,
@@ -4155,7 +4155,7 @@ impl<'mc> CommandSender<'mc> {
     }
     //
 
-    pub fn is_permission_set_with_string(
+    pub fn is_permission_set(
         &self,
         arg0: std::option::Option<impl Into<crate::permissions::Permission<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4177,7 +4177,7 @@ impl<'mc> CommandSender<'mc> {
     }
     //
 
-    pub fn has_permission_with_permission(
+    pub fn has_permission(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4199,7 +4199,7 @@ impl<'mc> CommandSender<'mc> {
     }
     //
 
-    pub fn add_attachment_with_plugin(
+    pub fn add_attachment(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<String>,
@@ -4428,7 +4428,7 @@ impl<'mc> CommandMap<'mc> {
     }
     //
 
-    pub fn tab_complete_with_command_sender(
+    pub fn tab_complete(
         &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -4502,7 +4502,7 @@ impl<'mc> CommandMap<'mc> {
     }
     //
 
-    pub fn register_with_string(
+    pub fn register(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<String>>,
@@ -4577,7 +4577,7 @@ impl<'mc> JNIInstantiatable<'mc> for PluginCommand<'mc> {
 impl<'mc> PluginCommand<'mc> {
     //
 
-    pub fn tab_complete_with_command_sender(
+    pub fn tab_complete(
         &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: impl Into<String>,
@@ -5029,7 +5029,7 @@ impl<'mc> PluginCommand<'mc> {
     }
     //
 
-    pub fn broadcast_command_message_with_command_sender(
+    pub fn broadcast_command_message(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -5366,7 +5366,7 @@ impl<'mc> BlockCommandSender<'mc> {
     }
     //
 
-    pub fn is_permission_set_with_string(
+    pub fn is_permission_set(
         &self,
         arg0: std::option::Option<impl Into<crate::permissions::Permission<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5388,7 +5388,7 @@ impl<'mc> BlockCommandSender<'mc> {
     }
     //
 
-    pub fn has_permission_with_permission(
+    pub fn has_permission(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5410,7 +5410,7 @@ impl<'mc> BlockCommandSender<'mc> {
     }
     //
 
-    pub fn add_attachment_with_plugin(
+    pub fn add_attachment(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<String>,

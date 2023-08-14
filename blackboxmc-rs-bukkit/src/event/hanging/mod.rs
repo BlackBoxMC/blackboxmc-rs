@@ -476,7 +476,7 @@ impl<'mc> JNIInstantiatable<'mc> for HangingBreakByEntityEvent<'mc> {
 }
 
 impl<'mc> HangingBreakByEntityEvent<'mc> {
-    pub fn new_with_hanging(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Hanging<'mc>>,
         arg1: std::option::Option<impl Into<crate::entity::Entity<'mc>>>,
@@ -912,7 +912,7 @@ impl<'mc> JNIInstantiatable<'mc> for HangingPlaceEvent<'mc> {
 }
 
 impl<'mc> HangingPlaceEvent<'mc> {
-    pub fn new_with_hanging(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Hanging<'mc>>,
         arg1: impl Into<crate::entity::Player<'mc>>,

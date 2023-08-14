@@ -948,7 +948,7 @@ impl<'mc> JNIInstantiatable<'mc> for PortalCreateEvent<'mc> {
 }
 
 impl<'mc> PortalCreateEvent<'mc> {
-    pub fn new_with_list(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: Vec<impl Into<crate::block::BlockState<'mc>>>,
         arg1: impl Into<crate::World<'mc>>,
@@ -2972,7 +2972,7 @@ impl<'mc> JNIInstantiatable<'mc> for ChunkUnloadEvent<'mc> {
 }
 
 impl<'mc> ChunkUnloadEvent<'mc> {
-    pub fn new_with_chunk(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::Chunk<'mc>>>,
         arg1: std::option::Option<bool>,
@@ -4161,7 +4161,7 @@ impl<'mc> JNIInstantiatable<'mc> for WorldEvent<'mc> {
 }
 
 impl<'mc> WorldEvent<'mc> {
-    pub fn new_with_world(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::World<'mc>>>,
         arg1: std::option::Option<bool>,

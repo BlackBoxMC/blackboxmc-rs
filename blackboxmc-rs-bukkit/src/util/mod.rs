@@ -102,7 +102,7 @@ impl<'mc> NumberConversions<'mc> {
     }
     //
 
-    pub fn check_finite_with_float(
+    pub fn check_finite(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: f64,
         arg1: std::option::Option<impl Into<String>>,
@@ -261,7 +261,7 @@ impl<'mc> NumberConversions<'mc> {
     }
     //
 
-    pub fn is_finite_with_double(
+    pub fn is_finite(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<f32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -683,7 +683,7 @@ impl<'mc> JNIInstantiatable<'mc> for Transformation<'mc> {
 }
 
 impl<'mc> Transformation<'mc> {
-    pub fn new_with_vector3f(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -906,7 +906,7 @@ impl<'mc> JNIInstantiatable<'mc> for RayTraceResult<'mc> {
 }
 
 impl<'mc> RayTraceResult<'mc> {
-    pub fn new_with_vector(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::util::Vector<'mc>>,
         arg1: impl Into<crate::block::Block<'mc>>,
@@ -1918,7 +1918,7 @@ impl<'mc> BoundingBox<'mc> {
 
     /// Expands this bounding box in the specified direction.
     /// <p>Negative values will expand the bounding box in the negative direction, positive values will expand it in the positive direction. The magnitudes of the direction components determine the corresponding amounts of expansion.</p>
-    pub fn expand_directional_with_vector(
+    pub fn expand_directional(
         &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
@@ -1973,7 +1973,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn overlaps_with_bounding_box(
+    pub fn overlaps(
         &self,
         arg0: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
@@ -2561,7 +2561,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn deserialize_with_map(
+    pub fn deserialize(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
@@ -3246,7 +3246,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn to_location_with_world(
+    pub fn to_location(
         &self,
         arg0: std::option::Option<impl Into<crate::World<'mc>>>,
         arg1: std::option::Option<f32>,
@@ -4204,7 +4204,7 @@ impl<'mc> ChatPaginator<'mc> {
     }
     //
 
-    pub fn paginate_with_string(
+    pub fn paginate(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
         arg1: std::option::Option<i32>,
@@ -5107,7 +5107,7 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn to_location_with_world(
+    pub fn to_location(
         &self,
         arg0: std::option::Option<impl Into<crate::World<'mc>>>,
         arg1: std::option::Option<f32>,

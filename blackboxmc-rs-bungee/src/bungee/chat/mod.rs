@@ -58,7 +58,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
     }
     //
 
-    pub fn serialize_with_selector_component(
+    pub fn serialize(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -86,7 +86,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
     }
     //
 
-    pub fn deserialize_with_json_element(
+    pub fn deserialize(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -292,7 +292,7 @@ impl<'mc> TextComponentSerializer<'mc> {
     }
     //
 
-    pub fn serialize_with_text_component(
+    pub fn serialize(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -320,7 +320,7 @@ impl<'mc> TextComponentSerializer<'mc> {
     }
     //
 
-    pub fn deserialize_with_json_element(
+    pub fn deserialize(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -682,7 +682,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
     }
     //
 
-    pub fn serialize_with_score_component(
+    pub fn serialize(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -710,7 +710,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
     }
     //
 
-    pub fn deserialize_with_json_element(
+    pub fn deserialize(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -914,7 +914,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
     }
     //
 
-    pub fn serialize_with_translatable_component(
+    pub fn serialize(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -942,7 +942,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
     }
     //
 
-    pub fn deserialize_with_json_element(
+    pub fn deserialize(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -1150,7 +1150,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
     }
     //
 
-    pub fn serialize_with_keybind_component(
+    pub fn serialize(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -1178,7 +1178,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
     }
     //
 
-    pub fn deserialize_with_json_element(
+    pub fn deserialize(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -1549,7 +1549,7 @@ impl<'mc> ComponentSerializer<'mc> {
 
     //
 
-    pub fn deserialize_with_json_element(
+    pub fn deserialize(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,

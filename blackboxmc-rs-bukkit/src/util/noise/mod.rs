@@ -86,7 +86,7 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
     }
     //
 
-    pub fn noise_with_double(
+    pub fn noise(
         &self,
         arg0: f64,
         arg1: f64,
@@ -131,7 +131,7 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
     }
     //
 
-    pub fn get_noise_with_double(
+    pub fn get_noise(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: f64,
         arg1: f64,
@@ -402,7 +402,7 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
     }
     //
 
-    pub fn noise_with_double(
+    pub fn noise(
         &self,
         arg0: f64,
         arg1: f64,
@@ -448,7 +448,7 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
     //
 
     /// Generates noise for the 3D coordinates using the specified number of octaves and parameters
-    pub fn get_noise_with_double(
+    pub fn get_noise(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: f64,
         arg1: f64,
@@ -743,7 +743,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
     //
 
     /// Generates noise for the 3D coordinates using the specified number of octaves and parameters
-    pub fn noise_with_double(
+    pub fn noise(
         &self,
         arg0: f64,
         arg1: f64,
@@ -1137,7 +1137,7 @@ impl<'mc> OctaveGenerator<'mc> {
     //
 
     /// Generates noise for the 3D coordinates using the specified number of octaves and parameters
-    pub fn noise_with_double(
+    pub fn noise(
         &self,
         arg0: f64,
         arg1: f64,
@@ -1463,7 +1463,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
 
     //
 
-    pub fn noise_with_double(
+    pub fn noise(
         &self,
         arg0: f64,
         arg1: f64,
@@ -1681,7 +1681,7 @@ impl<'mc> NoiseGenerator<'mc> {
     //
 
     /// Generates noise for the 3D coordinates using the specified number of octaves and parameters
-    pub fn noise_with_double(
+    pub fn noise(
         &self,
         arg0: f64,
         arg1: f64,

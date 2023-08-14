@@ -2202,7 +2202,7 @@ impl<'mc> JNIInstantiatable<'mc> for SimpleAttachableMaterialData<'mc> {
 }
 
 impl<'mc> SimpleAttachableMaterialData<'mc> {
-    pub fn new_with_material(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
         arg1: std::option::Option<impl Into<crate::block::BlockFace<'mc>>>,
@@ -4541,7 +4541,7 @@ impl<'mc> PistonBaseMaterial<'mc> {
     //['forRemoval', 'false']
 
     #[deprecated]
-    pub fn new_with_material(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
         arg1: std::option::Option<i8>,
@@ -7423,7 +7423,7 @@ impl<'mc> PistonExtensionMaterial<'mc> {
     //['forRemoval', 'false']
 
     #[deprecated]
-    pub fn new_with_material(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
         arg1: std::option::Option<i8>,
@@ -8177,7 +8177,7 @@ impl<'mc> DirectionalContainer<'mc> {
     //['forRemoval', 'false']
 
     #[deprecated]
-    pub fn new_with_material(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
         arg1: std::option::Option<i8>,
@@ -8831,7 +8831,7 @@ impl<'mc> MaterialData<'mc> {
     //['forRemoval', 'false']
 
     #[deprecated]
-    pub fn new_with_material(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
         arg1: std::option::Option<i8>,
@@ -9765,7 +9765,7 @@ impl<'mc> TexturedMaterial<'mc> {
     //['forRemoval', 'false']
 
     #[deprecated]
-    pub fn new_with_material(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
         arg1: std::option::Option<i8>,
@@ -13409,7 +13409,7 @@ impl<'mc> Stairs<'mc> {
     //['forRemoval', 'false']
 
     #[deprecated]
-    pub fn new_with_material(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
         arg1: std::option::Option<i8>,
@@ -14485,7 +14485,7 @@ impl<'mc> FurnaceAndDispenser<'mc> {
     //['forRemoval', 'false']
 
     #[deprecated]
-    pub fn new_with_material(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
         arg1: std::option::Option<i8>,
@@ -16808,7 +16808,7 @@ impl<'mc> JNIInstantiatable<'mc> for Mushroom<'mc> {
 }
 
 impl<'mc> Mushroom<'mc> {
-    pub fn new_with_material(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<impl Into<crate::block::BlockFace<'mc>>>,
@@ -18712,7 +18712,7 @@ impl<'mc> ExtendedRails<'mc> {
     //['forRemoval', 'false']
 
     #[deprecated]
-    pub fn new_with_material(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
         arg1: std::option::Option<i8>,

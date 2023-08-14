@@ -837,7 +837,7 @@ impl<'mc> EnchantmentTarget<'mc> {
 
     //
 
-    pub fn includes_with_item_stack(
+    pub fn includes(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {

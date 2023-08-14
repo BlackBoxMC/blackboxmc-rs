@@ -61,7 +61,7 @@ impl<'mc> ReloadCommand<'mc> {
     }
     //
 
-    pub fn tab_complete_with_command_sender(
+    pub fn tab_complete(
         &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: impl Into<String>,
@@ -420,7 +420,7 @@ impl<'mc> ReloadCommand<'mc> {
     }
     //
 
-    pub fn broadcast_command_message_with_command_sender(
+    pub fn broadcast_command_message(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -688,7 +688,7 @@ impl<'mc> TimingsCommand<'mc> {
     }
     //
 
-    pub fn tab_complete_with_command_sender(
+    pub fn tab_complete(
         &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: impl Into<String>,
@@ -1067,7 +1067,7 @@ impl<'mc> TimingsCommand<'mc> {
     }
     //
 
-    pub fn broadcast_command_message_with_command_sender(
+    pub fn broadcast_command_message(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -1380,7 +1380,7 @@ impl<'mc> BukkitCommand<'mc> {
     }
     //
 
-    pub fn tab_complete_with_command_sender(
+    pub fn tab_complete(
         &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: impl Into<String>,
@@ -1644,7 +1644,7 @@ impl<'mc> BukkitCommand<'mc> {
     }
     //
 
-    pub fn broadcast_command_message_with_command_sender(
+    pub fn broadcast_command_message(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -1941,7 +1941,7 @@ impl<'mc> VersionCommand<'mc> {
     }
     //
 
-    pub fn tab_complete_with_command_sender(
+    pub fn tab_complete(
         &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: impl Into<String>,
@@ -2300,7 +2300,7 @@ impl<'mc> VersionCommand<'mc> {
     }
     //
 
-    pub fn broadcast_command_message_with_command_sender(
+    pub fn broadcast_command_message(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -2557,7 +2557,7 @@ impl<'mc> HelpCommand<'mc> {
     }
     //
 
-    pub fn tab_complete_with_command_sender(
+    pub fn tab_complete(
         &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: impl Into<String>,
@@ -2916,7 +2916,7 @@ impl<'mc> HelpCommand<'mc> {
     }
     //
 
-    pub fn broadcast_command_message_with_command_sender(
+    pub fn broadcast_command_message(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -3184,7 +3184,7 @@ impl<'mc> PluginsCommand<'mc> {
     }
     //
 
-    pub fn tab_complete_with_command_sender(
+    pub fn tab_complete(
         &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: impl Into<String>,
@@ -3543,7 +3543,7 @@ impl<'mc> PluginsCommand<'mc> {
     }
     //
 
-    pub fn broadcast_command_message_with_command_sender(
+    pub fn broadcast_command_message(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: std::option::Option<impl Into<String>>,

@@ -306,7 +306,7 @@ impl<'mc> StructureManager<'mc> {
     }
     //
 
-    pub fn delete_structure_with_namespaced_key(
+    pub fn delete_structure(
         &self,
         arg0: std::option::Option<impl Into<crate::NamespacedKey<'mc>>>,
         arg1: std::option::Option<bool>,
@@ -489,7 +489,7 @@ impl<'mc> Structure<'mc> {
     }
     //
 
-    pub fn place_with_location(
+    pub fn place(
         &self,
         arg0: impl Into<crate::RegionAccessor<'mc>>,
         arg1: impl Into<crate::util::BlockVector<'mc>>,
@@ -550,7 +550,7 @@ impl<'mc> Structure<'mc> {
     }
     //
 
-    pub fn fill_with_location(
+    pub fn fill(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: impl Into<crate::util::BlockVector<'mc>>,

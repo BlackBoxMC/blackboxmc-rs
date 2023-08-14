@@ -2079,7 +2079,7 @@ impl<'mc> JNIInstantiatable<'mc> for SmithItemEvent<'mc> {
 }
 
 impl<'mc> SmithItemEvent<'mc> {
-    pub fn new_with_inventory_view(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::inventory::InventoryView<'mc>>,
         arg1: impl Into<crate::event::inventory::InventoryTypeSlotType<'mc>>,
@@ -3951,7 +3951,7 @@ impl<'mc> JNIInstantiatable<'mc> for CraftItemEvent<'mc> {
 }
 
 impl<'mc> CraftItemEvent<'mc> {
-    pub fn new_with_recipe(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::inventory::Recipe<'mc>>,
         arg1: impl Into<crate::inventory::InventoryView<'mc>>,
@@ -8176,7 +8176,7 @@ impl<'mc> JNIInstantiatable<'mc> for InventoryClickEvent<'mc> {
 }
 
 impl<'mc> InventoryClickEvent<'mc> {
-    pub fn new_with_inventory_view(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::inventory::InventoryView<'mc>>,
         arg1: impl Into<crate::event::inventory::InventoryTypeSlotType<'mc>>,

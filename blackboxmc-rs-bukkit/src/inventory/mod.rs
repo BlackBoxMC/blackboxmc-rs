@@ -70,7 +70,7 @@ impl<'mc> CartographyInventory<'mc> {
     }
     //
 
-    pub fn all_with_item_stack(
+    pub fn all(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
@@ -272,7 +272,7 @@ impl<'mc> CartographyInventory<'mc> {
     }
     //
 
-    pub fn remove_with_item_stack(
+    pub fn remove(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -343,7 +343,7 @@ impl<'mc> CartographyInventory<'mc> {
     }
     //
 
-    pub fn contains_with_item_stack(
+    pub fn contains(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
@@ -369,7 +369,7 @@ impl<'mc> CartographyInventory<'mc> {
     }
     //
 
-    pub fn first_with_item_stack(
+    pub fn first(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -538,7 +538,7 @@ impl<'mc> JNIInstantiatable<'mc> for StonecuttingRecipe<'mc> {
 }
 
 impl<'mc> StonecuttingRecipe<'mc> {
-    pub fn new_with_namespaced_key(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
@@ -939,7 +939,7 @@ impl<'mc> FurnaceRecipe<'mc> {
     }
     //
 
-    pub fn set_input_with_material(
+    pub fn set_input(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
@@ -967,7 +967,7 @@ impl<'mc> FurnaceRecipe<'mc> {
     }
     //
 
-    pub fn set_input_choice_with_recipe_choice(
+    pub fn set_input_choice(
         &self,
         arg0: std::option::Option<impl Into<crate::inventory::RecipeChoice<'mc>>>,
     ) -> Result<crate::inventory::FurnaceRecipe<'mc>, Box<dyn std::error::Error>> {
@@ -1408,7 +1408,7 @@ impl<'mc> HorseInventory<'mc> {
     }
     //
 
-    pub fn all_with_item_stack(
+    pub fn all(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
@@ -1610,7 +1610,7 @@ impl<'mc> HorseInventory<'mc> {
     }
     //
 
-    pub fn remove_with_item_stack(
+    pub fn remove(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1681,7 +1681,7 @@ impl<'mc> HorseInventory<'mc> {
     }
     //
 
-    pub fn contains_with_item_stack(
+    pub fn contains(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
@@ -1707,7 +1707,7 @@ impl<'mc> HorseInventory<'mc> {
     }
     //
 
-    pub fn first_with_item_stack(
+    pub fn first(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -1969,7 +1969,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     }
     //
 
-    pub fn all_with_item_stack(
+    pub fn all(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
@@ -2157,7 +2157,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     }
     //
 
-    pub fn remove_with_item_stack(
+    pub fn remove(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2228,7 +2228,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     }
     //
 
-    pub fn contains_with_item_stack(
+    pub fn contains(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
@@ -2254,7 +2254,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     }
     //
 
-    pub fn first_with_item_stack(
+    pub fn first(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -2517,7 +2517,7 @@ impl<'mc> JukeboxInventory<'mc> {
     }
     //
 
-    pub fn all_with_item_stack(
+    pub fn all(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
@@ -2705,7 +2705,7 @@ impl<'mc> JukeboxInventory<'mc> {
     }
     //
 
-    pub fn remove_with_item_stack(
+    pub fn remove(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2776,7 +2776,7 @@ impl<'mc> JukeboxInventory<'mc> {
     }
     //
 
-    pub fn contains_with_item_stack(
+    pub fn contains(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
@@ -2802,7 +2802,7 @@ impl<'mc> JukeboxInventory<'mc> {
     }
     //
 
-    pub fn first_with_item_stack(
+    pub fn first(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -4140,7 +4140,7 @@ impl<'mc> JNIInstantiatable<'mc> for CampfireRecipe<'mc> {
 }
 
 impl<'mc> CampfireRecipe<'mc> {
-    pub fn new_with_namespaced_key(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
@@ -4558,7 +4558,7 @@ impl<'mc> ItemStack<'mc> {
     //['forRemoval', 'false']
 
     #[deprecated]
-    pub fn new_with_material(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: i32,
@@ -5329,7 +5329,7 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
     }
     //
 
-    pub fn test_with_object(
+    pub fn test(
         &self,
         arg0: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5722,7 +5722,7 @@ impl<'mc> Inventory<'mc> {
     }
     //
 
-    pub fn all_with_item_stack(
+    pub fn all(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
@@ -5932,7 +5932,7 @@ impl<'mc> Inventory<'mc> {
     }
     //
 
-    pub fn remove_with_item_stack(
+    pub fn remove(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -6005,7 +6005,7 @@ impl<'mc> Inventory<'mc> {
     }
     //
 
-    pub fn contains_with_item_stack(
+    pub fn contains(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
@@ -6031,7 +6031,7 @@ impl<'mc> Inventory<'mc> {
     }
     //
 
-    pub fn first_with_item_stack(
+    pub fn first(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -6277,7 +6277,7 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
     }
     //
 
-    pub fn test_with_object(
+    pub fn test(
         &self,
         arg0: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6447,7 +6447,7 @@ impl<'mc> LecternInventory<'mc> {
     }
     //
 
-    pub fn all_with_item_stack(
+    pub fn all(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
@@ -6635,7 +6635,7 @@ impl<'mc> LecternInventory<'mc> {
     }
     //
 
-    pub fn remove_with_item_stack(
+    pub fn remove(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -6706,7 +6706,7 @@ impl<'mc> LecternInventory<'mc> {
     }
     //
 
-    pub fn contains_with_item_stack(
+    pub fn contains(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
@@ -6732,7 +6732,7 @@ impl<'mc> LecternInventory<'mc> {
     }
     //
 
-    pub fn first_with_item_stack(
+    pub fn first(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -6955,7 +6955,7 @@ impl<'mc> BrewerInventory<'mc> {
     }
     //
 
-    pub fn all_with_item_stack(
+    pub fn all(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
@@ -7143,7 +7143,7 @@ impl<'mc> BrewerInventory<'mc> {
     }
     //
 
-    pub fn remove_with_item_stack(
+    pub fn remove(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -7214,7 +7214,7 @@ impl<'mc> BrewerInventory<'mc> {
     }
     //
 
-    pub fn contains_with_item_stack(
+    pub fn contains(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
@@ -7240,7 +7240,7 @@ impl<'mc> BrewerInventory<'mc> {
     }
     //
 
-    pub fn first_with_item_stack(
+    pub fn first(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -7381,7 +7381,7 @@ impl<'mc> LoomInventory<'mc> {
     }
     //
 
-    pub fn all_with_item_stack(
+    pub fn all(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
@@ -7583,7 +7583,7 @@ impl<'mc> LoomInventory<'mc> {
     }
     //
 
-    pub fn remove_with_item_stack(
+    pub fn remove(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -7654,7 +7654,7 @@ impl<'mc> LoomInventory<'mc> {
     }
     //
 
-    pub fn contains_with_item_stack(
+    pub fn contains(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
@@ -7680,7 +7680,7 @@ impl<'mc> LoomInventory<'mc> {
     }
     //
 
-    pub fn first_with_item_stack(
+    pub fn first(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -7794,7 +7794,7 @@ impl<'mc> JNIInstantiatable<'mc> for ShapedRecipe<'mc> {
 }
 
 impl<'mc> ShapedRecipe<'mc> {
-    pub fn new_with_item_stack(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::NamespacedKey<'mc>>>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
@@ -7841,7 +7841,7 @@ impl<'mc> ShapedRecipe<'mc> {
     }
     //
 
-    pub fn set_ingredient_with_char(
+    pub fn set_ingredient(
         &self,
         arg0: u16,
         arg1: std::option::Option<impl Into<crate::Material<'mc>>>,
@@ -8736,7 +8736,7 @@ impl<'mc> ItemFactory<'mc> {
     }
     //
 
-    pub fn as_meta_for_with_item_meta(
+    pub fn as_meta_for(
         &self,
         arg0: impl Into<crate::inventory::meta::ItemMeta<'mc>>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
@@ -8766,7 +8766,7 @@ impl<'mc> ItemFactory<'mc> {
     }
     //
 
-    pub fn is_applicable_with_item_meta(
+    pub fn is_applicable(
         &self,
         arg0: impl Into<crate::inventory::meta::ItemMeta<'mc>>,
         arg1: std::option::Option<impl Into<crate::Material<'mc>>>,
@@ -9000,7 +9000,7 @@ impl<'mc> EntityEquipment<'mc> {
     }
     //
 
-    pub fn set_item_with_equipment_slot(
+    pub fn set_item(
         &self,
         arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
@@ -9092,7 +9092,7 @@ impl<'mc> EntityEquipment<'mc> {
     }
     //
 
-    pub fn set_boots_with_item_stack(
+    pub fn set_boots(
         &self,
         arg0: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
         arg1: std::option::Option<bool>,
@@ -9133,7 +9133,7 @@ impl<'mc> EntityEquipment<'mc> {
     }
     //
 
-    pub fn set_leggings_with_item_stack(
+    pub fn set_leggings(
         &self,
         arg0: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
         arg1: std::option::Option<bool>,
@@ -9176,7 +9176,7 @@ impl<'mc> EntityEquipment<'mc> {
     }
     //
 
-    pub fn set_chestplate_with_item_stack(
+    pub fn set_chestplate(
         &self,
         arg0: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
         arg1: std::option::Option<bool>,
@@ -9217,7 +9217,7 @@ impl<'mc> EntityEquipment<'mc> {
     }
     //
 
-    pub fn set_helmet_with_item_stack(
+    pub fn set_helmet(
         &self,
         arg0: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
         arg1: std::option::Option<bool>,
@@ -9263,7 +9263,7 @@ impl<'mc> EntityEquipment<'mc> {
     }
     //
 
-    pub fn set_item_in_main_hand_with_item_stack(
+    pub fn set_item_in_main_hand(
         &self,
         arg0: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
         arg1: std::option::Option<bool>,
@@ -9309,7 +9309,7 @@ impl<'mc> EntityEquipment<'mc> {
     }
     //
 
-    pub fn set_item_in_off_hand_with_item_stack(
+    pub fn set_item_in_off_hand(
         &self,
         arg0: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
         arg1: std::option::Option<bool>,
@@ -9685,7 +9685,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     }
     //
 
-    pub fn all_with_item_stack(
+    pub fn all(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
@@ -9873,7 +9873,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     }
     //
 
-    pub fn remove_with_item_stack(
+    pub fn remove(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -9944,7 +9944,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     }
     //
 
-    pub fn contains_with_item_stack(
+    pub fn contains(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
@@ -9970,7 +9970,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     }
     //
 
-    pub fn first_with_item_stack(
+    pub fn first(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -10086,7 +10086,7 @@ impl<'mc> JNIInstantiatable<'mc> for ShapelessRecipe<'mc> {
 }
 
 impl<'mc> ShapelessRecipe<'mc> {
-    pub fn new_with_item_stack(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::NamespacedKey<'mc>>>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
@@ -10706,7 +10706,7 @@ impl<'mc> AnvilInventory<'mc> {
     }
     //
 
-    pub fn all_with_item_stack(
+    pub fn all(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
@@ -10908,7 +10908,7 @@ impl<'mc> AnvilInventory<'mc> {
     }
     //
 
-    pub fn remove_with_item_stack(
+    pub fn remove(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -10979,7 +10979,7 @@ impl<'mc> AnvilInventory<'mc> {
     }
     //
 
-    pub fn contains_with_item_stack(
+    pub fn contains(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
@@ -11005,7 +11005,7 @@ impl<'mc> AnvilInventory<'mc> {
     }
     //
 
-    pub fn first_with_item_stack(
+    pub fn first(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -11151,7 +11151,7 @@ impl<'mc> RecipeChoice<'mc> {
     }
     //
 
-    pub fn test_with_object(
+    pub fn test(
         &self,
         arg0: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11478,7 +11478,7 @@ impl<'mc> EnchantingInventory<'mc> {
     }
     //
 
-    pub fn set_item_with_item_stack(
+    pub fn set_item(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
@@ -11539,7 +11539,7 @@ impl<'mc> EnchantingInventory<'mc> {
     }
     //
 
-    pub fn all_with_item_stack(
+    pub fn all(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
@@ -11717,7 +11717,7 @@ impl<'mc> EnchantingInventory<'mc> {
     }
     //
 
-    pub fn remove_with_item_stack(
+    pub fn remove(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -11788,7 +11788,7 @@ impl<'mc> EnchantingInventory<'mc> {
     }
     //
 
-    pub fn contains_with_item_stack(
+    pub fn contains(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
@@ -11814,7 +11814,7 @@ impl<'mc> EnchantingInventory<'mc> {
     }
     //
 
-    pub fn first_with_item_stack(
+    pub fn first(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -11930,7 +11930,7 @@ impl<'mc> JNIInstantiatable<'mc> for BlastingRecipe<'mc> {
 }
 
 impl<'mc> BlastingRecipe<'mc> {
-    pub fn new_with_namespaced_key(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
@@ -12342,7 +12342,7 @@ impl<'mc> JNIInstantiatable<'mc> for SmokingRecipe<'mc> {
 }
 
 impl<'mc> SmokingRecipe<'mc> {
-    pub fn new_with_namespaced_key(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
@@ -12841,7 +12841,7 @@ impl<'mc> CraftingInventory<'mc> {
     }
     //
 
-    pub fn all_with_item_stack(
+    pub fn all(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
@@ -13043,7 +13043,7 @@ impl<'mc> CraftingInventory<'mc> {
     }
     //
 
-    pub fn remove_with_item_stack(
+    pub fn remove(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -13114,7 +13114,7 @@ impl<'mc> CraftingInventory<'mc> {
     }
     //
 
-    pub fn contains_with_item_stack(
+    pub fn contains(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
@@ -13140,7 +13140,7 @@ impl<'mc> CraftingInventory<'mc> {
     }
     //
 
-    pub fn first_with_item_stack(
+    pub fn first(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -13264,7 +13264,7 @@ impl<'mc> JNIInstantiatable<'mc> for MerchantRecipe<'mc> {
 }
 
 impl<'mc> MerchantRecipe<'mc> {
-    pub fn new_with_item_stack(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
         arg1: std::option::Option<i32>,
@@ -13867,7 +13867,7 @@ impl<'mc> MerchantInventory<'mc> {
     }
     //
 
-    pub fn all_with_item_stack(
+    pub fn all(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
@@ -14069,7 +14069,7 @@ impl<'mc> MerchantInventory<'mc> {
     }
     //
 
-    pub fn remove_with_item_stack(
+    pub fn remove(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -14140,7 +14140,7 @@ impl<'mc> MerchantInventory<'mc> {
     }
     //
 
-    pub fn contains_with_item_stack(
+    pub fn contains(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
@@ -14166,7 +14166,7 @@ impl<'mc> MerchantInventory<'mc> {
     }
     //
 
-    pub fn first_with_item_stack(
+    pub fn first(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -14371,7 +14371,7 @@ impl<'mc> LlamaInventory<'mc> {
     }
     //
 
-    pub fn all_with_item_stack(
+    pub fn all(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
@@ -14573,7 +14573,7 @@ impl<'mc> LlamaInventory<'mc> {
     }
     //
 
-    pub fn remove_with_item_stack(
+    pub fn remove(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -14644,7 +14644,7 @@ impl<'mc> LlamaInventory<'mc> {
     }
     //
 
-    pub fn contains_with_item_stack(
+    pub fn contains(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
@@ -14670,7 +14670,7 @@ impl<'mc> LlamaInventory<'mc> {
     }
     //
 
-    pub fn first_with_item_stack(
+    pub fn first(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -14813,7 +14813,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     }
     //
 
-    pub fn all_with_item_stack(
+    pub fn all(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
@@ -15015,7 +15015,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     }
     //
 
-    pub fn remove_with_item_stack(
+    pub fn remove(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -15086,7 +15086,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     }
     //
 
-    pub fn contains_with_item_stack(
+    pub fn contains(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
@@ -15112,7 +15112,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     }
     //
 
-    pub fn first_with_item_stack(
+    pub fn first(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -15226,7 +15226,7 @@ impl<'mc> JNIInstantiatable<'mc> for CookingRecipe<'mc> {
 }
 
 impl<'mc> CookingRecipe<'mc> {
-    pub fn new_with_namespaced_key(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
@@ -15675,7 +15675,7 @@ impl<'mc> StonecutterInventory<'mc> {
     }
     //
 
-    pub fn all_with_item_stack(
+    pub fn all(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
@@ -15877,7 +15877,7 @@ impl<'mc> StonecutterInventory<'mc> {
     }
     //
 
-    pub fn remove_with_item_stack(
+    pub fn remove(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -15948,7 +15948,7 @@ impl<'mc> StonecutterInventory<'mc> {
     }
     //
 
-    pub fn contains_with_item_stack(
+    pub fn contains(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
@@ -15974,7 +15974,7 @@ impl<'mc> StonecutterInventory<'mc> {
     }
     //
 
-    pub fn first_with_item_stack(
+    pub fn first(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -16296,7 +16296,7 @@ impl<'mc> SmithingInventory<'mc> {
     }
     //
 
-    pub fn all_with_item_stack(
+    pub fn all(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
@@ -16498,7 +16498,7 @@ impl<'mc> SmithingInventory<'mc> {
     }
     //
 
-    pub fn remove_with_item_stack(
+    pub fn remove(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -16569,7 +16569,7 @@ impl<'mc> SmithingInventory<'mc> {
     }
     //
 
-    pub fn contains_with_item_stack(
+    pub fn contains(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
@@ -16595,7 +16595,7 @@ impl<'mc> SmithingInventory<'mc> {
     }
     //
 
-    pub fn first_with_item_stack(
+    pub fn first(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -16715,7 +16715,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerInventory<'mc> {
 impl<'mc> PlayerInventory<'mc> {
     //@Nullable
 
-    pub fn get_item_with_equipment_slot(
+    pub fn get_item(
         &self,
         arg0: std::option::Option<i32>,
     ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
@@ -16741,7 +16741,7 @@ impl<'mc> PlayerInventory<'mc> {
     }
     //
 
-    pub fn set_item_with_equipment_slot(
+    pub fn set_item(
         &self,
         arg0: i32,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
@@ -17074,7 +17074,7 @@ impl<'mc> PlayerInventory<'mc> {
     }
     //
 
-    pub fn all_with_item_stack(
+    pub fn all(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
@@ -17238,7 +17238,7 @@ impl<'mc> PlayerInventory<'mc> {
     }
     //
 
-    pub fn remove_with_item_stack(
+    pub fn remove(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -17309,7 +17309,7 @@ impl<'mc> PlayerInventory<'mc> {
     }
     //
 
-    pub fn contains_with_item_stack(
+    pub fn contains(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
@@ -17335,7 +17335,7 @@ impl<'mc> PlayerInventory<'mc> {
     }
     //
 
-    pub fn first_with_item_stack(
+    pub fn first(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -17587,7 +17587,7 @@ impl<'mc> FurnaceInventory<'mc> {
     }
     //
 
-    pub fn all_with_item_stack(
+    pub fn all(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
@@ -17775,7 +17775,7 @@ impl<'mc> FurnaceInventory<'mc> {
     }
     //
 
-    pub fn remove_with_item_stack(
+    pub fn remove(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -17846,7 +17846,7 @@ impl<'mc> FurnaceInventory<'mc> {
     }
     //
 
-    pub fn contains_with_item_stack(
+    pub fn contains(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
@@ -17872,7 +17872,7 @@ impl<'mc> FurnaceInventory<'mc> {
     }
     //
 
-    pub fn first_with_item_stack(
+    pub fn first(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -18048,7 +18048,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     }
     //
 
-    pub fn all_with_item_stack(
+    pub fn all(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
@@ -18250,7 +18250,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     }
     //
 
-    pub fn remove_with_item_stack(
+    pub fn remove(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -18321,7 +18321,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     }
     //
 
-    pub fn contains_with_item_stack(
+    pub fn contains(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
@@ -18347,7 +18347,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     }
     //
 
-    pub fn first_with_item_stack(
+    pub fn first(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -18490,7 +18490,7 @@ impl<'mc> BeaconInventory<'mc> {
     }
     //
 
-    pub fn set_item_with_item_stack(
+    pub fn set_item(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
@@ -18518,7 +18518,7 @@ impl<'mc> BeaconInventory<'mc> {
     }
     //
 
-    pub fn all_with_item_stack(
+    pub fn all(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
@@ -18696,7 +18696,7 @@ impl<'mc> BeaconInventory<'mc> {
     }
     //
 
-    pub fn remove_with_item_stack(
+    pub fn remove(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -18767,7 +18767,7 @@ impl<'mc> BeaconInventory<'mc> {
     }
     //
 
-    pub fn contains_with_item_stack(
+    pub fn contains(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
@@ -18793,7 +18793,7 @@ impl<'mc> BeaconInventory<'mc> {
     }
     //
 
-    pub fn first_with_item_stack(
+    pub fn first(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {

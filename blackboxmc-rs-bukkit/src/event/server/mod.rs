@@ -1136,7 +1136,7 @@ impl<'mc> JNIInstantiatable<'mc> for BroadcastMessageEvent<'mc> {
 }
 
 impl<'mc> BroadcastMessageEvent<'mc> {
-    pub fn new_with_string(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: bool,
         arg1: std::option::Option<impl Into<String>>,

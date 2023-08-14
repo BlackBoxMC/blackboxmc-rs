@@ -992,7 +992,10 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             for group_name in method_map:
                 methods = method_map[group_name]
                 if group_name != "":
-                    new_name = name+"_with_"+group_name.replace("$","").replace("[]","s")
+                    if len(method_map) > 1:
+                        new_name = name+"_with_"+group_name.replace("$","").replace("[]","s")
+                    else:
+                        new_name = name
                 else:
                     new_name = name
                 new_methods[new_name] = {}

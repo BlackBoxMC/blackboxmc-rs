@@ -98,7 +98,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
     }
     //
 
-    pub fn register_class_with_class(
+    pub fn register_class(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -126,7 +126,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
     }
     //
 
-    pub fn unregister_class_with_class(
+    pub fn unregister_class(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -148,7 +148,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
     }
     //
 
-    pub fn deserialize_object_with_map(
+    pub fn deserialize_object(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,

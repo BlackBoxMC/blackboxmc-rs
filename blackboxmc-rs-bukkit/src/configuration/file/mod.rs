@@ -140,7 +140,7 @@ impl<'mc> FileConfiguration<'mc> {
     }
     //
 
-    pub fn save_with_file(
+    pub fn save(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -217,7 +217,7 @@ impl<'mc> FileConfiguration<'mc> {
     }
     //
 
-    pub fn add_defaults_with_configuration(
+    pub fn add_defaults(
         &self,
         arg0: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -272,7 +272,7 @@ impl<'mc> FileConfiguration<'mc> {
     }
     //
 
-    pub fn get_string_with_string(
+    pub fn get_string(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -326,7 +326,7 @@ impl<'mc> FileConfiguration<'mc> {
     }
     //
 
-    pub fn get_color_with_string(
+    pub fn get_color(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::Color<'mc>>>,
@@ -358,7 +358,7 @@ impl<'mc> FileConfiguration<'mc> {
     }
     //
 
-    pub fn get_item_stack_with_string(
+    pub fn get_item_stack(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
@@ -390,7 +390,7 @@ impl<'mc> FileConfiguration<'mc> {
     }
     //
 
-    pub fn get_offline_player_with_string(
+    pub fn get_offline_player(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
@@ -442,7 +442,7 @@ impl<'mc> FileConfiguration<'mc> {
     }
     //
 
-    pub fn create_path_with_configuration_section(
+    pub fn create_path(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::configuration::ConfigurationSection<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -553,7 +553,7 @@ impl<'mc> FileConfiguration<'mc> {
     }
     //
 
-    pub fn create_section_with_string(
+    pub fn create_section(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
@@ -728,7 +728,7 @@ impl<'mc> FileConfiguration<'mc> {
 
     //
 
-    pub fn get_serializable_with_string(
+    pub fn get_serializable(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
@@ -770,7 +770,7 @@ impl<'mc> FileConfiguration<'mc> {
     }
     //
 
-    pub fn get_vector_with_string(
+    pub fn get_vector(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
@@ -1040,7 +1040,7 @@ impl<'mc> FileConfiguration<'mc> {
     }
     //
 
-    pub fn get_with_string(
+    pub fn get(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -1083,7 +1083,7 @@ impl<'mc> FileConfiguration<'mc> {
     }
     //
 
-    pub fn get_boolean_with_string(
+    pub fn get_boolean(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<bool>,
@@ -1112,7 +1112,7 @@ impl<'mc> FileConfiguration<'mc> {
     }
     //
 
-    pub fn get_int_with_string(
+    pub fn get_int(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i32>,
@@ -1140,7 +1140,7 @@ impl<'mc> FileConfiguration<'mc> {
     }
     //
 
-    pub fn get_long_with_string(
+    pub fn get_long(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i64>,
@@ -1168,7 +1168,7 @@ impl<'mc> FileConfiguration<'mc> {
     }
     //
 
-    pub fn get_double_with_string(
+    pub fn get_double(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<f64>,
@@ -1196,7 +1196,7 @@ impl<'mc> FileConfiguration<'mc> {
     }
     //
 
-    pub fn contains_with_string(
+    pub fn contains(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<bool>,
@@ -1225,7 +1225,7 @@ impl<'mc> FileConfiguration<'mc> {
     }
     //
 
-    pub fn get_location_with_string(
+    pub fn get_location(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::Location<'mc>>>,
@@ -1311,7 +1311,7 @@ impl<'mc> FileConfiguration<'mc> {
     }
     //
 
-    pub fn get_object_with_string(
+    pub fn get_object(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
@@ -2024,7 +2024,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
     }
     //
 
-    pub fn set_header_with_list(
+    pub fn set_header(
         &self,
         arg0: std::option::Option<Vec<impl Into<String>>>,
     ) -> Result<crate::configuration::file::YamlConfigurationOptions<'mc>, Box<dyn std::error::Error>>
@@ -2320,7 +2320,7 @@ impl<'mc> YamlConfiguration<'mc> {
     }
     //
 
-    pub fn load_configuration_with_file(
+    pub fn load_configuration(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<crate::configuration::file::YamlConfiguration<'mc>, Box<dyn std::error::Error>>
@@ -2432,7 +2432,7 @@ impl<'mc> YamlConfiguration<'mc> {
     }
     //
 
-    pub fn save_with_file(
+    pub fn save(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2492,7 +2492,7 @@ impl<'mc> YamlConfiguration<'mc> {
     }
     //
 
-    pub fn add_defaults_with_configuration(
+    pub fn add_defaults(
         &self,
         arg0: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2547,7 +2547,7 @@ impl<'mc> YamlConfiguration<'mc> {
     }
     //
 
-    pub fn get_string_with_string(
+    pub fn get_string(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -2601,7 +2601,7 @@ impl<'mc> YamlConfiguration<'mc> {
     }
     //
 
-    pub fn get_color_with_string(
+    pub fn get_color(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::Color<'mc>>>,
@@ -2633,7 +2633,7 @@ impl<'mc> YamlConfiguration<'mc> {
     }
     //
 
-    pub fn get_item_stack_with_string(
+    pub fn get_item_stack(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
@@ -2665,7 +2665,7 @@ impl<'mc> YamlConfiguration<'mc> {
     }
     //
 
-    pub fn get_offline_player_with_string(
+    pub fn get_offline_player(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
@@ -2717,7 +2717,7 @@ impl<'mc> YamlConfiguration<'mc> {
     }
     //
 
-    pub fn create_path_with_configuration_section(
+    pub fn create_path(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::configuration::ConfigurationSection<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -2828,7 +2828,7 @@ impl<'mc> YamlConfiguration<'mc> {
     }
     //
 
-    pub fn create_section_with_string(
+    pub fn create_section(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
@@ -3003,7 +3003,7 @@ impl<'mc> YamlConfiguration<'mc> {
 
     //
 
-    pub fn get_serializable_with_string(
+    pub fn get_serializable(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
@@ -3045,7 +3045,7 @@ impl<'mc> YamlConfiguration<'mc> {
     }
     //
 
-    pub fn get_vector_with_string(
+    pub fn get_vector(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
@@ -3315,7 +3315,7 @@ impl<'mc> YamlConfiguration<'mc> {
     }
     //
 
-    pub fn get_with_string(
+    pub fn get(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -3358,7 +3358,7 @@ impl<'mc> YamlConfiguration<'mc> {
     }
     //
 
-    pub fn get_boolean_with_string(
+    pub fn get_boolean(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<bool>,
@@ -3387,7 +3387,7 @@ impl<'mc> YamlConfiguration<'mc> {
     }
     //
 
-    pub fn get_int_with_string(
+    pub fn get_int(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i32>,
@@ -3415,7 +3415,7 @@ impl<'mc> YamlConfiguration<'mc> {
     }
     //
 
-    pub fn get_long_with_string(
+    pub fn get_long(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i64>,
@@ -3443,7 +3443,7 @@ impl<'mc> YamlConfiguration<'mc> {
     }
     //
 
-    pub fn get_double_with_string(
+    pub fn get_double(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<f64>,
@@ -3471,7 +3471,7 @@ impl<'mc> YamlConfiguration<'mc> {
     }
     //
 
-    pub fn contains_with_string(
+    pub fn contains(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<bool>,
@@ -3500,7 +3500,7 @@ impl<'mc> YamlConfiguration<'mc> {
     }
     //
 
-    pub fn get_location_with_string(
+    pub fn get_location(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::Location<'mc>>>,
@@ -3586,7 +3586,7 @@ impl<'mc> YamlConfiguration<'mc> {
     }
     //
 
-    pub fn get_object_with_string(
+    pub fn get_object(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,

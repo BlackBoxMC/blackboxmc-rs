@@ -1291,7 +1291,7 @@ impl<'mc> Conversable<'mc> {
     }
     //
 
-    pub fn abandon_conversation_with_conversation(
+    pub fn abandon_conversation(
         &self,
         arg0: std::option::Option<impl Into<crate::conversations::Conversation<'mc>>>,
         arg1: std::option::Option<impl Into<crate::conversations::ConversationAbandonedEvent<'mc>>>,
@@ -1334,7 +1334,7 @@ impl<'mc> Conversable<'mc> {
     }
     //
 
-    pub fn send_raw_message_with_string(
+    pub fn send_raw_message(
         &self,
         arg0: std::option::Option<impl Into<blackboxmc_java::JavaUUID<'mc>>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -1526,7 +1526,7 @@ impl<'mc> JNIInstantiatable<'mc> for Conversation<'mc> {
 }
 
 impl<'mc> Conversation<'mc> {
-    pub fn new_with_plugin(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<crate::conversations::Conversable<'mc>>,
@@ -2362,7 +2362,7 @@ impl<'mc> JNIInstantiatable<'mc> for RegexPrompt<'mc> {
 }
 
 impl<'mc> RegexPrompt<'mc> {
-    pub fn new_with_string(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<blackboxmc_java::regex::JavaPattern<'mc>>>,
     ) -> Result<crate::conversations::RegexPrompt<'mc>, Box<dyn std::error::Error>> {
@@ -3080,7 +3080,7 @@ impl<'mc> JNIInstantiatable<'mc> for PluginNameConversationPrefix<'mc> {
 }
 
 impl<'mc> PluginNameConversationPrefix<'mc> {
-    pub fn new_with_plugin(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -3971,7 +3971,7 @@ impl<'mc> JNIInstantiatable<'mc> for ConversationAbandonedEvent<'mc> {
 }
 
 impl<'mc> ConversationAbandonedEvent<'mc> {
-    pub fn new_with_conversation(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::conversations::Conversation<'mc>>>,
         arg1: std::option::Option<impl Into<crate::conversations::ConversationCanceller<'mc>>>,

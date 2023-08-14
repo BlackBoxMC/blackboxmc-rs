@@ -930,7 +930,7 @@ impl<'mc> JavaPattern<'mc> {
     }
     //
 
-    pub fn compile_with_string(
+    pub fn compile(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i32>,

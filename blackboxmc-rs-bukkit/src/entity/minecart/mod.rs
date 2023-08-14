@@ -590,7 +590,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
     }
     //
 
-    pub fn teleport_with_location(
+    pub fn teleport(
         &self,
         arg0: impl Into<crate::entity::Entity<'mc>>,
         arg1: std::option::Option<
@@ -1611,7 +1611,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
     }
     //
 
-    pub fn is_permission_set_with_string(
+    pub fn is_permission_set(
         &self,
         arg0: std::option::Option<impl Into<crate::permissions::Permission<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1633,7 +1633,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
     }
     //
 
-    pub fn has_permission_with_permission(
+    pub fn has_permission(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1655,7 +1655,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
     }
     //
 
-    pub fn add_attachment_with_plugin(
+    pub fn add_attachment(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<String>,
@@ -2369,7 +2369,7 @@ impl<'mc> HopperMinecart<'mc> {
     }
     //
 
-    pub fn teleport_with_location(
+    pub fn teleport(
         &self,
         arg0: impl Into<crate::entity::Entity<'mc>>,
         arg1: std::option::Option<
@@ -3390,7 +3390,7 @@ impl<'mc> HopperMinecart<'mc> {
     }
     //
 
-    pub fn is_permission_set_with_string(
+    pub fn is_permission_set(
         &self,
         arg0: std::option::Option<impl Into<crate::permissions::Permission<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3412,7 +3412,7 @@ impl<'mc> HopperMinecart<'mc> {
     }
     //
 
-    pub fn has_permission_with_permission(
+    pub fn has_permission(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3434,7 +3434,7 @@ impl<'mc> HopperMinecart<'mc> {
     }
     //
 
-    pub fn add_attachment_with_plugin(
+    pub fn add_attachment(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<String>,
@@ -4204,7 +4204,7 @@ impl<'mc> StorageMinecart<'mc> {
     }
     //
 
-    pub fn teleport_with_location(
+    pub fn teleport(
         &self,
         arg0: impl Into<crate::entity::Entity<'mc>>,
         arg1: std::option::Option<
@@ -5225,7 +5225,7 @@ impl<'mc> StorageMinecart<'mc> {
     }
     //
 
-    pub fn is_permission_set_with_string(
+    pub fn is_permission_set(
         &self,
         arg0: std::option::Option<impl Into<crate::permissions::Permission<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5247,7 +5247,7 @@ impl<'mc> StorageMinecart<'mc> {
     }
     //
 
-    pub fn has_permission_with_permission(
+    pub fn has_permission(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5269,7 +5269,7 @@ impl<'mc> StorageMinecart<'mc> {
     }
     //
 
-    pub fn add_attachment_with_plugin(
+    pub fn add_attachment(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<String>,
@@ -6039,7 +6039,7 @@ impl<'mc> SpawnerMinecart<'mc> {
     }
     //
 
-    pub fn teleport_with_location(
+    pub fn teleport(
         &self,
         arg0: impl Into<crate::entity::Entity<'mc>>,
         arg1: std::option::Option<
@@ -7060,7 +7060,7 @@ impl<'mc> SpawnerMinecart<'mc> {
     }
     //
 
-    pub fn is_permission_set_with_string(
+    pub fn is_permission_set(
         &self,
         arg0: std::option::Option<impl Into<crate::permissions::Permission<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7082,7 +7082,7 @@ impl<'mc> SpawnerMinecart<'mc> {
     }
     //
 
-    pub fn has_permission_with_permission(
+    pub fn has_permission(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7104,7 +7104,7 @@ impl<'mc> SpawnerMinecart<'mc> {
     }
     //
 
-    pub fn add_attachment_with_plugin(
+    pub fn add_attachment(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<String>,
@@ -7818,7 +7818,7 @@ impl<'mc> PoweredMinecart<'mc> {
     }
     //
 
-    pub fn teleport_with_location(
+    pub fn teleport(
         &self,
         arg0: impl Into<crate::entity::Entity<'mc>>,
         arg1: std::option::Option<
@@ -8839,7 +8839,7 @@ impl<'mc> PoweredMinecart<'mc> {
     }
     //
 
-    pub fn is_permission_set_with_string(
+    pub fn is_permission_set(
         &self,
         arg0: std::option::Option<impl Into<crate::permissions::Permission<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8861,7 +8861,7 @@ impl<'mc> PoweredMinecart<'mc> {
     }
     //
 
-    pub fn has_permission_with_permission(
+    pub fn has_permission(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8883,7 +8883,7 @@ impl<'mc> PoweredMinecart<'mc> {
     }
     //
 
-    pub fn add_attachment_with_plugin(
+    pub fn add_attachment(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<String>,
@@ -9572,7 +9572,7 @@ impl<'mc> RideableMinecart<'mc> {
     }
     //
 
-    pub fn teleport_with_location(
+    pub fn teleport(
         &self,
         arg0: impl Into<crate::entity::Entity<'mc>>,
         arg1: std::option::Option<
@@ -10593,7 +10593,7 @@ impl<'mc> RideableMinecart<'mc> {
     }
     //
 
-    pub fn is_permission_set_with_string(
+    pub fn is_permission_set(
         &self,
         arg0: std::option::Option<impl Into<crate::permissions::Permission<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10615,7 +10615,7 @@ impl<'mc> RideableMinecart<'mc> {
     }
     //
 
-    pub fn has_permission_with_permission(
+    pub fn has_permission(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10637,7 +10637,7 @@ impl<'mc> RideableMinecart<'mc> {
     }
     //
 
-    pub fn add_attachment_with_plugin(
+    pub fn add_attachment(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<String>,
@@ -11372,7 +11372,7 @@ impl<'mc> CommandMinecart<'mc> {
     }
     //
 
-    pub fn teleport_with_location(
+    pub fn teleport(
         &self,
         arg0: impl Into<crate::entity::Entity<'mc>>,
         arg1: std::option::Option<
@@ -12393,7 +12393,7 @@ impl<'mc> CommandMinecart<'mc> {
     }
     //
 
-    pub fn is_permission_set_with_string(
+    pub fn is_permission_set(
         &self,
         arg0: std::option::Option<impl Into<crate::permissions::Permission<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12415,7 +12415,7 @@ impl<'mc> CommandMinecart<'mc> {
     }
     //
 
-    pub fn has_permission_with_permission(
+    pub fn has_permission(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12437,7 +12437,7 @@ impl<'mc> CommandMinecart<'mc> {
     }
     //
 
-    pub fn add_attachment_with_plugin(
+    pub fn add_attachment(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<String>,

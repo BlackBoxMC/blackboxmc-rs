@@ -10332,7 +10332,7 @@ impl<'mc> Block<'mc> {
     }
     //
 
-    pub fn set_type_with_material(
+    pub fn set_type(
         &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
         arg1: std::option::Option<bool>,
@@ -10500,7 +10500,7 @@ impl<'mc> Block<'mc> {
     }
     //
 
-    pub fn set_block_data_with_block_data(
+    pub fn set_block_data(
         &self,
         arg0: std::option::Option<impl Into<crate::block::data::BlockData<'mc>>>,
         arg1: std::option::Option<bool>,
@@ -10644,7 +10644,7 @@ impl<'mc> Block<'mc> {
     //@NotNull
 
     /// Gets the block at the given offsets
-    pub fn get_relative_with_block_face(
+    pub fn get_relative(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
@@ -10843,7 +10843,7 @@ impl<'mc> Block<'mc> {
     }
     //
 
-    pub fn get_drops_with_item_stack(
+    pub fn get_drops(
         &self,
         arg0: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
         arg1: std::option::Option<impl Into<crate::entity::Entity<'mc>>>,
@@ -16309,7 +16309,7 @@ impl<'mc> Structure<'mc> {
     }
     //
 
-    pub fn set_metadata_with_string(
+    pub fn set_metadata(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::metadata::MetadataValue<'mc>>>,
@@ -16435,7 +16435,7 @@ impl<'mc> Structure<'mc> {
     }
     //
 
-    pub fn set_author_with_living_entity(
+    pub fn set_author(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {

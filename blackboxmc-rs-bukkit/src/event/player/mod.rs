@@ -461,7 +461,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerFishEvent<'mc> {
 }
 
 impl<'mc> PlayerFishEvent<'mc> {
-    pub fn new_with_player(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
         arg1: impl Into<crate::entity::Entity<'mc>>,
@@ -860,7 +860,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerShearEntityEvent<'mc> {
 }
 
 impl<'mc> PlayerShearEntityEvent<'mc> {
-    pub fn new_with_player(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
         arg1: std::option::Option<impl Into<crate::entity::Entity<'mc>>>,
@@ -1203,7 +1203,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerInteractEvent<'mc> {
 }
 
 impl<'mc> PlayerInteractEvent<'mc> {
-    pub fn new_with_player(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
         arg1: impl Into<crate::event::block::Action<'mc>>,
@@ -2131,7 +2131,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerAnimationEvent<'mc> {
 }
 
 impl<'mc> PlayerAnimationEvent<'mc> {
-    pub fn new_with_player(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::entity::Player<'mc>>>,
         arg1: std::option::Option<impl Into<crate::event::player::PlayerAnimationType<'mc>>>,
@@ -2800,7 +2800,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerPortalEvent<'mc> {
 }
 
 impl<'mc> PlayerPortalEvent<'mc> {
-    pub fn new_with_player(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
         arg1: impl Into<crate::Location<'mc>>,
@@ -4958,7 +4958,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerArmorStandManipulateEvent<'mc> {
 }
 
 impl<'mc> PlayerArmorStandManipulateEvent<'mc> {
-    pub fn new_with_player(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
         arg1: impl Into<crate::entity::ArmorStand<'mc>>,
@@ -5355,7 +5355,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerInteractEntityEvent<'mc> {
 }
 
 impl<'mc> PlayerInteractEntityEvent<'mc> {
-    pub fn new_with_player(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
         arg1: std::option::Option<impl Into<crate::entity::Entity<'mc>>>,
@@ -5679,7 +5679,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerBucketFillEvent<'mc> {
 }
 
 impl<'mc> PlayerBucketFillEvent<'mc> {
-    pub fn new_with_player(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
         arg1: impl Into<crate::block::Block<'mc>>,
@@ -6115,7 +6115,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerItemConsumeEvent<'mc> {
 }
 
 impl<'mc> PlayerItemConsumeEvent<'mc> {
-    pub fn new_with_player(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
@@ -6836,7 +6836,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerTeleportEvent<'mc> {
 }
 
 impl<'mc> PlayerTeleportEvent<'mc> {
-    pub fn new_with_player(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
         arg1: impl Into<crate::Location<'mc>>,
@@ -9912,7 +9912,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerBedEnterEvent<'mc> {
 }
 
 impl<'mc> PlayerBedEnterEvent<'mc> {
-    pub fn new_with_player(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
         arg1: std::option::Option<impl Into<crate::block::Block<'mc>>>,
@@ -10288,7 +10288,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerBucketEmptyEvent<'mc> {
 }
 
 impl<'mc> PlayerBucketEmptyEvent<'mc> {
-    pub fn new_with_player(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
         arg1: impl Into<crate::block::Block<'mc>>,
@@ -13364,7 +13364,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerBucketEvent<'mc> {
 }
 
 impl<'mc> PlayerBucketEvent<'mc> {
-    pub fn new_with_player(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
         arg1: impl Into<crate::block::Block<'mc>>,
@@ -13910,7 +13910,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerRespawnEvent<'mc> {
 }
 
 impl<'mc> PlayerRespawnEvent<'mc> {
-    pub fn new_with_player(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
         arg1: impl Into<crate::Location<'mc>>,
@@ -14263,7 +14263,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerUnleashEntityEvent<'mc> {
 }
 
 impl<'mc> PlayerUnleashEntityEvent<'mc> {
-    pub fn new_with_entity(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Entity<'mc>>,
         arg1: std::option::Option<impl Into<crate::entity::Player<'mc>>>,
@@ -16155,7 +16155,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerStatisticIncrementEvent<'mc> {
 }
 
 impl<'mc> PlayerStatisticIncrementEvent<'mc> {
-    pub fn new_with_player(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
         arg1: impl Into<crate::Statistic<'mc>>,
@@ -16555,7 +16555,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerInteractAtEntityEvent<'mc> {
 }
 
 impl<'mc> PlayerInteractAtEntityEvent<'mc> {
-    pub fn new_with_player(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
         arg1: impl Into<crate::entity::Entity<'mc>>,
@@ -16896,7 +16896,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerItemMendEvent<'mc> {
 }
 
 impl<'mc> PlayerItemMendEvent<'mc> {
-    pub fn new_with_player(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
@@ -17924,7 +17924,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerLoginEvent<'mc> {
 }
 
 impl<'mc> PlayerLoginEvent<'mc> {
-    pub fn new_with_player(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
         arg1: impl Into<String>,
@@ -18728,7 +18728,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerPreLoginEvent<'mc> {
 }
 
 impl<'mc> PlayerPreLoginEvent<'mc> {
-    pub fn new_with_string(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -19962,7 +19962,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerChatEvent<'mc> {
 }
 
 impl<'mc> PlayerChatEvent<'mc> {
-    pub fn new_with_player(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -20866,7 +20866,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerHarvestBlockEvent<'mc> {
 }
 
 impl<'mc> PlayerHarvestBlockEvent<'mc> {
-    pub fn new_with_player(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
         arg1: impl Into<crate::block::Block<'mc>>,
@@ -21560,7 +21560,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerCommandPreprocessEvent<'mc> {
 }
 
 impl<'mc> PlayerCommandPreprocessEvent<'mc> {
-    pub fn new_with_player(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -23080,7 +23080,7 @@ impl<'mc> JNIInstantiatable<'mc> for AsyncPlayerPreLoginEvent<'mc> {
 }
 
 impl<'mc> AsyncPlayerPreLoginEvent<'mc> {
-    pub fn new_with_string(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -23293,7 +23293,7 @@ impl<'mc> AsyncPlayerPreLoginEvent<'mc> {
     }
     //
 
-    pub fn disallow_with_async_player_pre_login_eventresult(
+    pub fn disallow(
         &self,
         arg0: impl Into<crate::event::player::PlayerPreLoginEventResult<'mc>>,
         arg1: std::option::Option<impl Into<String>>,

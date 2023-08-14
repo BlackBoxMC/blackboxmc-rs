@@ -2242,7 +2242,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaLogger<'mc> {
 impl<'mc> JavaLogger<'mc> {
     //
 
-    pub fn warning_with_supplier(
+    pub fn warning(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2264,7 +2264,7 @@ impl<'mc> JavaLogger<'mc> {
     }
     //
 
-    pub fn config_with_string(
+    pub fn config(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2379,7 +2379,7 @@ impl<'mc> JavaLogger<'mc> {
     }
     //
 
-    pub fn logp_with_level(
+    pub fn logp(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: impl Into<String>,
@@ -2500,7 +2500,7 @@ impl<'mc> JavaLogger<'mc> {
     }
     //
 
-    pub fn logrb_with_level(
+    pub fn logrb(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: impl Into<String>,
@@ -2541,7 +2541,7 @@ impl<'mc> JavaLogger<'mc> {
     }
     //
 
-    pub fn entering_with_string(
+    pub fn entering(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<String>>,
@@ -2575,7 +2575,7 @@ impl<'mc> JavaLogger<'mc> {
     }
     //
 
-    pub fn exiting_with_string(
+    pub fn exiting(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<String>>,
@@ -2638,7 +2638,7 @@ impl<'mc> JavaLogger<'mc> {
     }
     //
 
-    pub fn severe_with_supplier(
+    pub fn severe(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2660,7 +2660,7 @@ impl<'mc> JavaLogger<'mc> {
     }
     //
 
-    pub fn fine_with_supplier(
+    pub fn fine(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2682,7 +2682,7 @@ impl<'mc> JavaLogger<'mc> {
     }
     //
 
-    pub fn finer_with_string(
+    pub fn finer(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2702,7 +2702,7 @@ impl<'mc> JavaLogger<'mc> {
     }
     //
 
-    pub fn finest_with_string(
+    pub fn finest(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2829,7 +2829,7 @@ impl<'mc> JavaLogger<'mc> {
     }
     //
 
-    pub fn info_with_string(
+    pub fn info(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2859,7 +2859,7 @@ impl<'mc> JavaLogger<'mc> {
     }
     //
 
-    pub fn get_logger_with_string(
+    pub fn get_logger(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<String>>,

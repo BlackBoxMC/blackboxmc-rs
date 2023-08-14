@@ -132,7 +132,7 @@ impl<'mc> PermissibleBase<'mc> {
     }
     //
 
-    pub fn is_permission_set_with_string(
+    pub fn is_permission_set(
         &self,
         arg0: std::option::Option<impl Into<crate::permissions::Permission<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -154,7 +154,7 @@ impl<'mc> PermissibleBase<'mc> {
     }
     //
 
-    pub fn has_permission_with_string(
+    pub fn has_permission(
         &self,
         arg0: std::option::Option<impl Into<crate::permissions::Permission<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -176,7 +176,7 @@ impl<'mc> PermissibleBase<'mc> {
     }
     //
 
-    pub fn add_attachment_with_plugin(
+    pub fn add_attachment(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<String>,
@@ -575,7 +575,7 @@ impl<'mc> JNIInstantiatable<'mc> for Permissible<'mc> {
 impl<'mc> Permissible<'mc> {
     //
 
-    pub fn is_permission_set_with_string(
+    pub fn is_permission_set(
         &self,
         arg0: std::option::Option<impl Into<crate::permissions::Permission<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -597,7 +597,7 @@ impl<'mc> Permissible<'mc> {
     }
     //
 
-    pub fn has_permission_with_permission(
+    pub fn has_permission(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -619,7 +619,7 @@ impl<'mc> Permissible<'mc> {
     }
     //
 
-    pub fn add_attachment_with_plugin(
+    pub fn add_attachment(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<String>,
@@ -775,7 +775,7 @@ impl<'mc> JNIInstantiatable<'mc> for Permission<'mc> {
 }
 
 impl<'mc> Permission<'mc> {
-    pub fn new_with_string(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
         arg1: impl Into<String>,
@@ -906,7 +906,7 @@ impl<'mc> Permission<'mc> {
     }
     //
 
-    pub fn add_parent_with_string(
+    pub fn add_parent(
         &self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
         arg1: std::option::Option<bool>,
@@ -973,7 +973,7 @@ impl<'mc> Permission<'mc> {
     }
     //
 
-    pub fn load_permission_with_string(
+    pub fn load_permission(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
@@ -1481,7 +1481,7 @@ impl<'mc> PermissionAttachment<'mc> {
     }
     //
 
-    pub fn set_permission_with_permission(
+    pub fn set_permission(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<bool>,
@@ -1571,7 +1571,7 @@ impl<'mc> PermissionAttachment<'mc> {
     }
     //
 
-    pub fn unset_permission_with_permission(
+    pub fn unset_permission(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {

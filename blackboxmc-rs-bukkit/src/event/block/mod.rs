@@ -3144,7 +3144,7 @@ impl<'mc> JNIInstantiatable<'mc> for BlockCanBuildEvent<'mc> {
 }
 
 impl<'mc> BlockCanBuildEvent<'mc> {
-    pub fn new_with_block(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::block::Block<'mc>>,
         arg1: impl Into<crate::entity::Player<'mc>>,
@@ -5095,7 +5095,7 @@ impl<'mc> JNIInstantiatable<'mc> for BlockPistonExtendEvent<'mc> {
 }
 
 impl<'mc> BlockPistonExtendEvent<'mc> {
-    pub fn new_with_block(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::block::Block<'mc>>,
         arg1: Vec<impl Into<crate::block::Block<'mc>>>,
@@ -7869,7 +7869,7 @@ impl<'mc> JNIInstantiatable<'mc> for BlockPlaceEvent<'mc> {
 }
 
 impl<'mc> BlockPlaceEvent<'mc> {
-    pub fn new_with_block(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::block::Block<'mc>>,
         arg1: impl Into<crate::block::BlockState<'mc>>,
@@ -8299,7 +8299,7 @@ impl<'mc> JNIInstantiatable<'mc> for BlockPhysicsEvent<'mc> {
 }
 
 impl<'mc> BlockPhysicsEvent<'mc> {
-    pub fn new_with_block(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::block::Block<'mc>>,
         arg1: std::option::Option<impl Into<crate::block::data::BlockData<'mc>>>,
@@ -9491,7 +9491,7 @@ impl<'mc> JNIInstantiatable<'mc> for SignChangeEvent<'mc> {
 }
 
 impl<'mc> SignChangeEvent<'mc> {
-    pub fn new_with_block(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::block::Block<'mc>>,
         arg1: impl Into<crate::entity::Player<'mc>>,
@@ -10127,7 +10127,7 @@ impl<'mc> JNIInstantiatable<'mc> for BlockFromToEvent<'mc> {
 }
 
 impl<'mc> BlockFromToEvent<'mc> {
-    pub fn new_with_block(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::block::Block<'mc>>,
         arg1: std::option::Option<impl Into<crate::block::Block<'mc>>>,
@@ -11056,7 +11056,7 @@ impl<'mc> JNIInstantiatable<'mc> for BlockBurnEvent<'mc> {
 }
 
 impl<'mc> BlockBurnEvent<'mc> {
-    pub fn new_with_block(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::block::Block<'mc>>>,
         arg1: std::option::Option<impl Into<crate::block::Block<'mc>>>,
@@ -13406,7 +13406,7 @@ impl<'mc> JNIInstantiatable<'mc> for BlockIgniteEvent<'mc> {
 }
 
 impl<'mc> BlockIgniteEvent<'mc> {
-    pub fn new_with_block(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::block::Block<'mc>>,
         arg1: impl Into<crate::event::block::BlockIgniteEventIgniteCause<'mc>>,

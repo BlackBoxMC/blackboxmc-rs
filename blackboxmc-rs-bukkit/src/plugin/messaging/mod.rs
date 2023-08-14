@@ -517,7 +517,7 @@ impl<'mc> Messenger<'mc> {
     }
     //
 
-    pub fn unregister_outgoing_plugin_channel_with_plugin(
+    pub fn unregister_outgoing_plugin_channel(
         &self,
         arg0: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -587,7 +587,7 @@ impl<'mc> Messenger<'mc> {
     }
     //
 
-    pub fn unregister_incoming_plugin_channel_with_plugin(
+    pub fn unregister_incoming_plugin_channel(
         &self,
         arg0: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -942,7 +942,7 @@ impl<'mc> StandardMessenger<'mc> {
     }
     //
 
-    pub fn unregister_outgoing_plugin_channel_with_plugin(
+    pub fn unregister_outgoing_plugin_channel(
         &self,
         arg0: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -1012,7 +1012,7 @@ impl<'mc> StandardMessenger<'mc> {
     }
     //
 
-    pub fn unregister_incoming_plugin_channel_with_plugin(
+    pub fn unregister_incoming_plugin_channel(
         &self,
         arg0: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
         arg1: std::option::Option<impl Into<String>>,

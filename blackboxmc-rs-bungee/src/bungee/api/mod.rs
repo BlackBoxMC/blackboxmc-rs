@@ -319,7 +319,7 @@ impl<'mc> ChatColor<'mc> {
     }
     //
 
-    pub fn of_with_color(
+    pub fn of(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<crate::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {

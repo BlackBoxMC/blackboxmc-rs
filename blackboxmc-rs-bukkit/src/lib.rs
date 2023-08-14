@@ -281,7 +281,7 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn get_world_with_string(
+    pub fn get_world(
         &self,
         arg0: std::option::Option<impl Into<blackboxmc_java::JavaUUID<'mc>>>,
     ) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -962,7 +962,7 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn get_player_with_string(
+    pub fn get_player(
         &self,
         arg0: std::option::Option<impl Into<blackboxmc_java::JavaUUID<'mc>>>,
     ) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
@@ -1102,7 +1102,7 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn unload_world_with_world(
+    pub fn unload_world(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<bool>,
@@ -1146,7 +1146,7 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn create_explorer_map_with_world(
+    pub fn create_explorer_map(
         &self,
         arg0: impl Into<crate::World<'mc>>,
         arg1: impl Into<crate::Location<'mc>>,
@@ -1524,7 +1524,7 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn get_offline_player_with_uuid(
+    pub fn get_offline_player(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
@@ -1548,7 +1548,7 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn create_player_profile_with_uuid(
+    pub fn create_player_profile(
         &self,
         arg0: impl Into<blackboxmc_java::JavaUUID<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -1593,7 +1593,7 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn ban_ip_with_string(
+    pub fn ban_ip(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1613,7 +1613,7 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn unban_ip_with_string(
+    pub fn unban_ip(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1775,7 +1775,7 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn create_inventory_with_inventory_holder(
+    pub fn create_inventory(
         &self,
         arg0: impl Into<crate::inventory::InventoryHolder<'mc>>,
         arg1: impl Into<crate::event::inventory::InventoryType<'mc>>,
@@ -2080,7 +2080,7 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn load_server_icon_with_buffered_image(
+    pub fn load_server_icon(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<crate::util::CachedServerIcon<'mc>, Box<dyn std::error::Error>> {
@@ -2128,7 +2128,7 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn create_boss_bar_with_string(
+    pub fn create_boss_bar(
         &self,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
         arg1: impl Into<String>,
@@ -2263,7 +2263,7 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn create_block_data_with_material(
+    pub fn create_block_data(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -2573,7 +2573,7 @@ impl<'mc> ServerSpigot<'mc> {
     }
     //
 
-    pub fn broadcast_with_base_components(
+    pub fn broadcast(
         &self,
         arg0: std::option::Option<
             impl Into<blackboxmc_bungee::bungee::api::chat::BaseComponent<'mc>>,
@@ -3278,7 +3278,7 @@ impl<'mc> UnsafeValues<'mc> {
     }
     //
 
-    pub fn get_translation_key_with_item_stack(
+    pub fn get_translation_key(
         &self,
         arg0: std::option::Option<impl Into<crate::entity::EntityType<'mc>>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -3799,7 +3799,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn play_effect_with_location(
+    pub fn play_effect(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: impl Into<crate::Effect<'mc>>,
@@ -3906,7 +3906,7 @@ impl<'mc> World<'mc> {
     //@NotNull
 
     /// Gets the <a title="interface in org.bukkit.block" href="block/Block.html"><code>Block</code></a> at the given coordinates
-    pub fn get_block_at_with_location(
+    pub fn get_block_at(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
@@ -3940,7 +3940,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn ray_trace_blocks_with_location(
+    pub fn ray_trace_blocks(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: impl Into<crate::util::Vector<'mc>>,
@@ -4201,7 +4201,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn get_entities_by_class_with_class(
+    pub fn get_entities_by_class(
         &self,
         arg0: std::option::Option<Vec<jni::objects::JClass<'mc>>>,
     ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
@@ -4556,7 +4556,7 @@ impl<'mc> World<'mc> {
     /// Gets the temperature for the given block coordinates.
     /// <p>It is safe to run this method when the block does not exist, it will not create the block.</p>
     /// <p>This method will return the raw temperature without adjusting for block height effects.</p>
-    pub fn get_temperature_with_int(
+    pub fn get_temperature(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -4588,7 +4588,7 @@ impl<'mc> World<'mc> {
 
     /// Gets the humidity for the given block coordinates.
     /// <p>It is safe to run this method when the block does not exist, it will not create the block.</p>
-    pub fn get_humidity_with_int(
+    pub fn get_humidity(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -4618,7 +4618,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn drop_item_with_location(
+    pub fn drop_item(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
@@ -4673,7 +4673,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn drop_item_naturally_with_location(
+    pub fn drop_item_naturally(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
@@ -4723,7 +4723,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn spawn_particle_with_particle(
+    pub fn spawn_particle(
         &self,
         arg0: impl Into<crate::Particle<'mc>>,
         arg1: f64,
@@ -4870,7 +4870,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn get_game_rule_value_with_game_rule(
+    pub fn get_game_rule_value(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -4940,7 +4940,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn get_highest_block_at_with_location(
+    pub fn get_highest_block_at(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -4975,7 +4975,7 @@ impl<'mc> World<'mc> {
     //
 
     /// Checks if the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates is loaded
-    pub fn is_chunk_loaded_with_chunk(
+    pub fn is_chunk_loaded(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
@@ -5348,7 +5348,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn spawn_arrow_with_location(
+    pub fn spawn_arrow(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: impl Into<crate::util::Vector<'mc>>,
@@ -5838,7 +5838,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn spawn_falling_block_with_location(
+    pub fn spawn_falling_block(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: impl Into<crate::Material<'mc>>,
@@ -6633,7 +6633,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn locate_nearest_structure_with_location(
+    pub fn locate_nearest_structure(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: impl Into<crate::StructureType<'mc>>,
@@ -6759,7 +6759,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn set_type_with_location(
+    pub fn set_type(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -6797,7 +6797,7 @@ impl<'mc> World<'mc> {
     }
     //@NotNull
 
-    pub fn get_block_data_with_location(
+    pub fn get_block_data(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
@@ -6831,7 +6831,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn set_block_data_with_location(
+    pub fn set_block_data(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -6931,7 +6931,7 @@ impl<'mc> World<'mc> {
     }
     //@NotNull
 
-    pub fn get_block_state_with_location(
+    pub fn get_block_state(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
@@ -6965,7 +6965,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn spawn_entity_with_location(
+    pub fn spawn_entity(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: std::option::Option<impl Into<crate::entity::EntityType<'mc>>>,
@@ -7002,7 +7002,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn spawn_with_location(
+    pub fn spawn(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
@@ -7047,7 +7047,7 @@ impl<'mc> World<'mc> {
 
     //@NotNull
 
-    pub fn get_type_with_location(
+    pub fn get_type(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
@@ -9646,7 +9646,7 @@ impl<'mc> OfflinePlayer<'mc> {
     }
     //
 
-    pub fn ban_with_string(
+    pub fn ban(
         &self,
         arg0: impl Into<String>,
         arg1: jni::objects::JObject<'mc>,
@@ -9736,7 +9736,7 @@ impl<'mc> OfflinePlayer<'mc> {
     }
     //
 
-    pub fn increment_statistic_with_statistic(
+    pub fn increment_statistic(
         &self,
         arg0: impl Into<crate::Statistic<'mc>>,
         arg1: impl Into<crate::entity::EntityType<'mc>>,
@@ -9771,7 +9771,7 @@ impl<'mc> OfflinePlayer<'mc> {
     }
     //
 
-    pub fn decrement_statistic_with_statistic(
+    pub fn decrement_statistic(
         &self,
         arg0: impl Into<crate::Statistic<'mc>>,
         arg1: impl Into<crate::Material<'mc>>,
@@ -9806,7 +9806,7 @@ impl<'mc> OfflinePlayer<'mc> {
     }
     //
 
-    pub fn set_statistic_with_statistic(
+    pub fn set_statistic(
         &self,
         arg0: impl Into<crate::Statistic<'mc>>,
         arg1: impl Into<crate::Material<'mc>>,
@@ -9838,7 +9838,7 @@ impl<'mc> OfflinePlayer<'mc> {
     }
     //
 
-    pub fn get_statistic_with_statistic(
+    pub fn get_statistic(
         &self,
         arg0: std::option::Option<impl Into<crate::Statistic<'mc>>>,
         arg1: std::option::Option<impl Into<crate::entity::EntityType<'mc>>>,
@@ -10765,7 +10765,7 @@ impl<'mc> Color<'mc> {
     //@NotNull
 
     /// Creates a new Color object from a red, green, and blue
-    pub fn from_rgb_with_int(
+    pub fn from_rgb(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
@@ -10799,7 +10799,7 @@ impl<'mc> Color<'mc> {
     //@NotNull
 
     /// Creates a new Color object from an alpha, red, green, and blue
-    pub fn from_argb_with_int(
+    pub fn from_argb(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
@@ -10839,7 +10839,7 @@ impl<'mc> Color<'mc> {
     //@NotNull
 
     /// Creates a new Color object from a blue, green, and red
-    pub fn from_bgr_with_int(
+    pub fn from_bgr(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
@@ -18346,7 +18346,7 @@ impl<'mc> Chunk<'mc> {
     }
     //
 
-    pub fn contains_with_biome(
+    pub fn contains(
         &self,
         arg0: std::option::Option<impl Into<crate::block::data::BlockData<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -18712,7 +18712,7 @@ impl<'mc> JNIInstantiatable<'mc> for VibrationDestinationBlockDestination<'mc> {
 }
 
 impl<'mc> VibrationDestinationBlockDestination<'mc> {
-    pub fn new_with_location(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::block::Block<'mc>>>,
     ) -> Result<crate::VibrationDestinationBlockDestination<'mc>, Box<dyn std::error::Error>> {
@@ -19396,7 +19396,7 @@ impl<'mc> JNIInstantiatable<'mc> for Note<'mc> {
 }
 
 impl<'mc> Note<'mc> {
-    pub fn new_with_int(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<impl Into<crate::NoteTone<'mc>>>,
@@ -20749,7 +20749,7 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    pub fn get_world_with_uuid(
+    pub fn get_world(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -21448,7 +21448,7 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    pub fn get_player_with_string(
+    pub fn get_player(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<blackboxmc_java::JavaUUID<'mc>>>,
     ) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
@@ -21588,7 +21588,7 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    pub fn unload_world_with_world(
+    pub fn unload_world(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
         arg1: std::option::Option<bool>,
@@ -21628,7 +21628,7 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    pub fn create_explorer_map_with_world(
+    pub fn create_explorer_map(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::World<'mc>>,
         arg1: impl Into<crate::Location<'mc>>,
@@ -22029,7 +22029,7 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    pub fn get_offline_player_with_uuid(
+    pub fn get_offline_player(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
@@ -22117,7 +22117,7 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    pub fn ban_ip_with_inet_address(
+    pub fn ban_ip(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -22139,7 +22139,7 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    pub fn unban_ip_with_inet_address(
+    pub fn unban_ip(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -22296,7 +22296,7 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    pub fn create_inventory_with_inventory_holder(
+    pub fn create_inventory(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::inventory::InventoryHolder<'mc>>,
         arg1: i32,
@@ -22597,7 +22597,7 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    pub fn load_server_icon_with_file(
+    pub fn load_server_icon(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<crate::util::CachedServerIcon<'mc>, Box<dyn std::error::Error>> {
@@ -22651,7 +22651,7 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    pub fn create_boss_bar_with_string(
+    pub fn create_boss_bar(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
         arg1: impl Into<String>,
@@ -22784,7 +22784,7 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    pub fn create_block_data_with_material(
+    pub fn create_block_data(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -23144,7 +23144,7 @@ impl<'mc> ChatColor<'mc> {
     //@Nullable
 
     /// Gets the color represented by the specified color code
-    pub fn get_by_char_with_string(
+    pub fn get_by_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<u16>,
     ) -> Result<Option<crate::ChatColor<'mc>>, Box<dyn std::error::Error>> {
@@ -23357,7 +23357,7 @@ impl<'mc> JNIInstantiatable<'mc> for BanList<'mc> {
 impl<'mc> BanList<'mc> {
     //
 
-    pub fn get_ban_entry_with_string(
+    pub fn get_ban_entry(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<crate::BanEntry<'mc>, Box<dyn std::error::Error>> {
@@ -23379,7 +23379,7 @@ impl<'mc> BanList<'mc> {
     }
     //
 
-    pub fn add_ban_with_object(
+    pub fn add_ban(
         &self,
         arg0: impl Into<String>,
         arg1: impl Into<String>,
@@ -23433,7 +23433,7 @@ impl<'mc> BanList<'mc> {
     }
     //
 
-    pub fn is_banned_with_string(
+    pub fn is_banned(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -23453,7 +23453,7 @@ impl<'mc> BanList<'mc> {
     }
     //
 
-    pub fn pardon_with_object(
+    pub fn pardon(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -24175,7 +24175,7 @@ impl<'mc> WorldCreator<'mc> {
     }
     //
 
-    pub fn copy_with_world_creator(
+    pub fn copy(
         &self,
         arg0: std::option::Option<impl Into<crate::World<'mc>>>,
     ) -> Result<crate::WorldCreator<'mc>, Box<dyn std::error::Error>> {
@@ -25145,7 +25145,7 @@ impl<'mc> ChunkSnapshot<'mc> {
     //@NotNull
 
     /// Get biome at given coordinates
-    pub fn get_biome_with_int(
+    pub fn get_biome(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -25298,7 +25298,7 @@ impl<'mc> ChunkSnapshot<'mc> {
     //
 
     /// Get raw biome temperature at given coordinates
-    pub fn get_raw_biome_temperature_with_int(
+    pub fn get_raw_biome_temperature(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -25346,7 +25346,7 @@ impl<'mc> ChunkSnapshot<'mc> {
     }
     //
 
-    pub fn contains_with_biome(
+    pub fn contains(
         &self,
         arg0: std::option::Option<impl Into<crate::block::data::BlockData<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -34342,7 +34342,7 @@ impl<'mc> JNIInstantiatable<'mc> for NamespacedKey<'mc> {
 }
 
 impl<'mc> NamespacedKey<'mc> {
-    pub fn new_with_string(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -34419,7 +34419,7 @@ impl<'mc> NamespacedKey<'mc> {
     }
     //
 
-    pub fn from_string_with_string(
+    pub fn from_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
@@ -34615,7 +34615,7 @@ impl<'mc> JNIInstantiatable<'mc> for RegionAccessor<'mc> {
 impl<'mc> RegionAccessor<'mc> {
     //
 
-    pub fn set_type_with_location(
+    pub fn set_type(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -34654,7 +34654,7 @@ impl<'mc> RegionAccessor<'mc> {
     //@NotNull
 
     /// Gets the <a title="interface in org.bukkit.block.data" href="block/data/BlockData.html"><code>BlockData</code></a> at the given coordinates.
-    pub fn get_block_data_with_location(
+    pub fn get_block_data(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
@@ -34688,7 +34688,7 @@ impl<'mc> RegionAccessor<'mc> {
     }
     //
 
-    pub fn set_block_data_with_location(
+    pub fn set_block_data(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -34790,7 +34790,7 @@ impl<'mc> RegionAccessor<'mc> {
     //@NotNull
 
     /// Gets the <a title="enum in org.bukkit.block" href="block/Biome.html"><code>Biome</code></a> at the given coordinates.
-    pub fn get_biome_with_location(
+    pub fn get_biome(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
@@ -34837,7 +34837,7 @@ impl<'mc> RegionAccessor<'mc> {
     }
     //
 
-    pub fn set_biome_with_location(
+    pub fn set_biome(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -34876,7 +34876,7 @@ impl<'mc> RegionAccessor<'mc> {
     //@NotNull
 
     /// Gets the <a title="interface in org.bukkit.block" href="block/BlockState.html"><code>BlockState</code></a> at the given coordinates.
-    pub fn get_block_state_with_location(
+    pub fn get_block_state(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
@@ -34910,7 +34910,7 @@ impl<'mc> RegionAccessor<'mc> {
     }
     //
 
-    pub fn spawn_entity_with_location(
+    pub fn spawn_entity(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: std::option::Option<impl Into<crate::entity::EntityType<'mc>>>,
@@ -35033,7 +35033,7 @@ impl<'mc> RegionAccessor<'mc> {
     }
     //
 
-    pub fn spawn_with_location(
+    pub fn spawn(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
@@ -35079,7 +35079,7 @@ impl<'mc> RegionAccessor<'mc> {
     //@NotNull
 
     /// Gets the type of the block at the given coordinates.
-    pub fn get_type_with_location(
+    pub fn get_type(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
@@ -35286,7 +35286,7 @@ impl<'mc> WorldBorder<'mc> {
     //
 
     /// Sets the new border center.
-    pub fn set_center_with_location(
+    pub fn set_center(
         &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
@@ -36274,7 +36274,7 @@ impl<'mc> JNIInstantiatable<'mc> for RegistrySimpleRegistry<'mc> {
 impl<'mc> RegistrySimpleRegistry<'mc> {
     //
 
-    pub fn get_with_namespaced_key(
+    pub fn get(
         &self,
         arg0: std::option::Option<impl Into<crate::NamespacedKey<'mc>>>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -58361,7 +58361,7 @@ impl<'mc> JNIInstantiatable<'mc> for Location<'mc> {
 }
 
 impl<'mc> Location<'mc> {
-    pub fn new_with_world(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::World<'mc>>,
         arg1: f64,

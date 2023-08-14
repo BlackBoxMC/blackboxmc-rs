@@ -54,7 +54,7 @@ impl<'mc> JNIInstantiatable<'mc> for HelpTopicComparatorTopicNameComparator<'mc>
 impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
     //
 
-    pub fn compare_with_string(
+    pub fn compare(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -273,7 +273,7 @@ impl<'mc> HelpTopicComparator<'mc> {
     }
     //
 
-    pub fn compare_with_help_topic(
+    pub fn compare(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,

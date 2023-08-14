@@ -444,7 +444,7 @@ impl<'mc> DataPackManager<'mc> {
     }
     //
 
-    pub fn is_enabled_by_feature_with_material(
+    pub fn is_enabled_by_feature(
         &self,
         arg0: impl Into<crate::entity::EntityType<'mc>>,
         arg1: std::option::Option<impl Into<crate::World<'mc>>>,

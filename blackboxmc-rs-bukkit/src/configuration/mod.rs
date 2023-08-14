@@ -270,7 +270,7 @@ impl<'mc> JNIInstantiatable<'mc> for MemorySection<'mc> {
 impl<'mc> MemorySection<'mc> {
     //
 
-    pub fn get_string_with_string(
+    pub fn get_string(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -328,7 +328,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn get_color_with_string(
+    pub fn get_color(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::Color<'mc>>>,
@@ -360,7 +360,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn get_item_stack_with_string(
+    pub fn get_item_stack(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
@@ -392,7 +392,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn get_offline_player_with_string(
+    pub fn get_offline_player(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
@@ -448,7 +448,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn create_path_with_configuration_section(
+    pub fn create_path(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::configuration::ConfigurationSection<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -583,7 +583,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn create_section_with_string(
+    pub fn create_section(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
@@ -758,7 +758,7 @@ impl<'mc> MemorySection<'mc> {
 
     //
 
-    pub fn get_serializable_with_string(
+    pub fn get_serializable(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
@@ -800,7 +800,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn get_vector_with_string(
+    pub fn get_vector(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
@@ -1070,7 +1070,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn get_with_string(
+    pub fn get(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -1113,7 +1113,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn get_boolean_with_string(
+    pub fn get_boolean(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<bool>,
@@ -1142,7 +1142,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn get_int_with_string(
+    pub fn get_int(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i32>,
@@ -1170,7 +1170,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn get_long_with_string(
+    pub fn get_long(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i64>,
@@ -1198,7 +1198,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn get_double_with_string(
+    pub fn get_double(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<f64>,
@@ -1226,7 +1226,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn contains_with_string(
+    pub fn contains(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<bool>,
@@ -1255,7 +1255,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn get_location_with_string(
+    pub fn get_location(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::Location<'mc>>>,
@@ -1355,7 +1355,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn get_object_with_string(
+    pub fn get_object(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
@@ -1566,7 +1566,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn add_defaults_with_map(
+    pub fn add_defaults(
         &self,
         arg0: std::option::Option<impl Into<crate::configuration::Configuration<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1621,7 +1621,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn get_string_with_string(
+    pub fn get_string(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -1675,7 +1675,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn get_color_with_string(
+    pub fn get_color(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::Color<'mc>>>,
@@ -1707,7 +1707,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn get_item_stack_with_string(
+    pub fn get_item_stack(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
@@ -1739,7 +1739,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn get_offline_player_with_string(
+    pub fn get_offline_player(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
@@ -1863,7 +1863,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn create_section_with_string(
+    pub fn create_section(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
@@ -2038,7 +2038,7 @@ impl<'mc> Configuration<'mc> {
 
     //
 
-    pub fn get_serializable_with_string(
+    pub fn get_serializable(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
@@ -2080,7 +2080,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn get_vector_with_string(
+    pub fn get_vector(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
@@ -2350,7 +2350,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn get_with_string(
+    pub fn get(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -2378,7 +2378,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn get_boolean_with_string(
+    pub fn get_boolean(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<bool>,
@@ -2407,7 +2407,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn get_int_with_string(
+    pub fn get_int(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i32>,
@@ -2435,7 +2435,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn get_long_with_string(
+    pub fn get_long(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i64>,
@@ -2463,7 +2463,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn get_double_with_string(
+    pub fn get_double(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<f64>,
@@ -2491,7 +2491,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn contains_with_string(
+    pub fn contains(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<bool>,
@@ -2520,7 +2520,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn get_location_with_string(
+    pub fn get_location(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::Location<'mc>>>,
@@ -2620,7 +2620,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn get_object_with_string(
+    pub fn get_object(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
@@ -2759,7 +2759,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn add_defaults_with_configuration(
+    pub fn add_defaults(
         &self,
         arg0: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2831,7 +2831,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn get_string_with_string(
+    pub fn get_string(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -2885,7 +2885,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn get_color_with_string(
+    pub fn get_color(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::Color<'mc>>>,
@@ -2917,7 +2917,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn get_item_stack_with_string(
+    pub fn get_item_stack(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
@@ -2949,7 +2949,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn get_offline_player_with_string(
+    pub fn get_offline_player(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
@@ -3001,7 +3001,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn create_path_with_configuration_section(
+    pub fn create_path(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::configuration::ConfigurationSection<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -3112,7 +3112,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn create_section_with_string(
+    pub fn create_section(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
@@ -3287,7 +3287,7 @@ impl<'mc> MemoryConfiguration<'mc> {
 
     //
 
-    pub fn get_serializable_with_string(
+    pub fn get_serializable(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
@@ -3329,7 +3329,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn get_vector_with_string(
+    pub fn get_vector(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
@@ -3599,7 +3599,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn get_with_string(
+    pub fn get(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -3642,7 +3642,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn get_boolean_with_string(
+    pub fn get_boolean(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<bool>,
@@ -3671,7 +3671,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn get_int_with_string(
+    pub fn get_int(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i32>,
@@ -3699,7 +3699,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn get_long_with_string(
+    pub fn get_long(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i64>,
@@ -3727,7 +3727,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn get_double_with_string(
+    pub fn get_double(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<f64>,
@@ -3755,7 +3755,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn contains_with_string(
+    pub fn contains(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<bool>,
@@ -3784,7 +3784,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn get_location_with_string(
+    pub fn get_location(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::Location<'mc>>>,
@@ -3870,7 +3870,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn get_object_with_string(
+    pub fn get_object(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
@@ -4264,7 +4264,7 @@ impl<'mc> JNIInstantiatable<'mc> for ConfigurationSection<'mc> {
 impl<'mc> ConfigurationSection<'mc> {
     //
 
-    pub fn get_string_with_string(
+    pub fn get_string(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -4321,7 +4321,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn get_color_with_string(
+    pub fn get_color(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::Color<'mc>>>,
@@ -4353,7 +4353,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn get_item_stack_with_string(
+    pub fn get_item_stack(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
@@ -4385,7 +4385,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn get_offline_player_with_string(
+    pub fn get_offline_player(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
@@ -4536,7 +4536,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn create_section_with_string(
+    pub fn create_section(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
@@ -4711,7 +4711,7 @@ impl<'mc> ConfigurationSection<'mc> {
 
     //
 
-    pub fn get_serializable_with_string(
+    pub fn get_serializable(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
@@ -4753,7 +4753,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn get_vector_with_string(
+    pub fn get_vector(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
@@ -5023,7 +5023,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn get_with_string(
+    pub fn get(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -5051,7 +5051,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn get_boolean_with_string(
+    pub fn get_boolean(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<bool>,
@@ -5080,7 +5080,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn get_int_with_string(
+    pub fn get_int(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i32>,
@@ -5108,7 +5108,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn get_long_with_string(
+    pub fn get_long(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i64>,
@@ -5136,7 +5136,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn get_double_with_string(
+    pub fn get_double(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<f64>,
@@ -5164,7 +5164,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn contains_with_string(
+    pub fn contains(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<bool>,
@@ -5193,7 +5193,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn get_location_with_string(
+    pub fn get_location(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::Location<'mc>>>,
@@ -5293,7 +5293,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn get_object_with_string(
+    pub fn get_object(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,

@@ -587,7 +587,7 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
     }
     //
 
-    pub fn to_primitive_with_object(
+    pub fn to_primitive(
         &self,
         arg0: bool,
         arg1: std::option::Option<impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>>,
@@ -617,7 +617,7 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
     }
     //
 
-    pub fn from_primitive_with_byte(
+    pub fn from_primitive(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>>,

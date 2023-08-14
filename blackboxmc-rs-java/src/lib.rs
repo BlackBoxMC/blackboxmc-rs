@@ -70,7 +70,7 @@ impl<'mc> JavaArrayList<'mc> {
     }
     //
 
-    pub fn add_with_object(
+    pub fn add(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -100,7 +100,7 @@ impl<'mc> JavaArrayList<'mc> {
     }
     //
 
-    pub fn remove_with_object(
+    pub fn remove(
         &self,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -329,7 +329,7 @@ impl<'mc> JavaArrayList<'mc> {
     }
     //
 
-    pub fn add_all_with_collection(
+    pub fn add_all(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -698,7 +698,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaAbstractMap<'mc> {
 impl<'mc> JavaAbstractMap<'mc> {
     //
 
-    pub fn remove_with_object(
+    pub fn remove(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -980,7 +980,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     }
     //
 
-    pub fn replace_with_object(
+    pub fn replace(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -1279,7 +1279,7 @@ impl<'mc> JavaTreeSet<'mc> {
     }
     //
 
-    pub fn sub_set_with_object(
+    pub fn sub_set(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<bool>,
@@ -1323,7 +1323,7 @@ impl<'mc> JavaTreeSet<'mc> {
     }
     //
 
-    pub fn head_set_with_object(
+    pub fn head_set(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<bool>,
@@ -1353,7 +1353,7 @@ impl<'mc> JavaTreeSet<'mc> {
     }
     //
 
-    pub fn tail_set_with_object(
+    pub fn tail_set(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<bool>,
@@ -2137,7 +2137,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn add_with_object(
+    pub fn add(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -2167,7 +2167,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn remove_with_int(
+    pub fn remove(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2257,7 +2257,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn index_of_with_object(
+    pub fn index_of(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<i32>,
@@ -2297,7 +2297,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn last_index_of_with_object(
+    pub fn last_index_of(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<i32>,
@@ -2443,7 +2443,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn add_all_with_collection(
+    pub fn add_all(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -2883,7 +2883,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaMap<'mc> {
 impl<'mc> JavaMap<'mc> {
     //
 
-    pub fn remove_with_object(
+    pub fn remove(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -3024,7 +3024,7 @@ impl<'mc> JavaMap<'mc> {
     }
     //
 
-    pub fn replace_with_object(
+    pub fn replace(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -3571,7 +3571,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     }
     //
 
-    pub fn remove_with_object(
+    pub fn remove(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -3887,7 +3887,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     }
     //
 
-    pub fn replace_with_object(
+    pub fn replace(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -5586,7 +5586,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaAbstractMapSimpleEntry<'mc> {
 }
 
 impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
-    pub fn new_with_mapentry(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -6441,7 +6441,7 @@ impl<'mc> JavaHashtable<'mc> {
     }
     //
 
-    pub fn remove_with_object(
+    pub fn remove(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -6588,7 +6588,7 @@ impl<'mc> JavaHashtable<'mc> {
     }
     //
 
-    pub fn replace_with_object(
+    pub fn replace(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -7824,7 +7824,7 @@ impl<'mc> JavaTreeMap<'mc> {
     }
     //
 
-    pub fn sub_map_with_object(
+    pub fn sub_map(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<bool>,
@@ -7868,7 +7868,7 @@ impl<'mc> JavaTreeMap<'mc> {
     }
     //
 
-    pub fn head_map_with_object(
+    pub fn head_map(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<bool>,
@@ -7898,7 +7898,7 @@ impl<'mc> JavaTreeMap<'mc> {
     }
     //
 
-    pub fn tail_map_with_object(
+    pub fn tail_map(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<bool>,
@@ -8128,7 +8128,7 @@ impl<'mc> JavaTreeMap<'mc> {
     }
     //
 
-    pub fn remove_with_object(
+    pub fn remove(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -8223,7 +8223,7 @@ impl<'mc> JavaTreeMap<'mc> {
     }
     //
 
-    pub fn replace_with_object(
+    pub fn replace(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -10608,7 +10608,7 @@ impl<'mc> JavaHashMap<'mc> {
     }
     //
 
-    pub fn remove_with_object(
+    pub fn remove(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -10713,7 +10713,7 @@ impl<'mc> JavaHashMap<'mc> {
     }
     //
 
-    pub fn replace_with_object(
+    pub fn replace(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -11189,7 +11189,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     }
     //
 
-    pub fn remove_with_object(
+    pub fn remove(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -11515,7 +11515,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     }
     //
 
-    pub fn replace_with_object(
+    pub fn replace(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -11937,7 +11937,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     }
     //
 
-    pub fn remove_with_object(
+    pub fn remove(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -12005,7 +12005,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     }
     //
 
-    pub fn replace_with_object(
+    pub fn replace(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -12363,7 +12363,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaAbstractSequentialList<'mc> {
 impl<'mc> JavaAbstractSequentialList<'mc> {
     //
 
-    pub fn add_with_object(
+    pub fn add(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -12393,7 +12393,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     }
     //
 
-    pub fn remove_with_int(
+    pub fn remove(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12441,7 +12441,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     }
     //
 
-    pub fn add_all_with_collection(
+    pub fn add_all(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -13009,7 +13009,7 @@ impl<'mc> JavaComparator<'mc> {
     }
     //
 
-    pub fn comparing_with_function(
+    pub fn comparing(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -13901,7 +13901,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaList<'mc> {
 impl<'mc> JavaList<'mc> {
     //
 
-    pub fn add_with_object(
+    pub fn add(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -13931,7 +13931,7 @@ impl<'mc> JavaList<'mc> {
     }
     //
 
-    pub fn remove_with_object(
+    pub fn remove(
         &self,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -14240,7 +14240,7 @@ impl<'mc> JavaList<'mc> {
     }
     //
 
-    pub fn add_all_with_collection(
+    pub fn add_all(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -14666,7 +14666,7 @@ impl<'mc> JavaUUID<'mc> {
     }
     //
 
-    pub fn compare_to_with_object(
+    pub fn compare_to(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -15272,7 +15272,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaAbstractList<'mc> {
 impl<'mc> JavaAbstractList<'mc> {
     //
 
-    pub fn add_with_object(
+    pub fn add(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -15302,7 +15302,7 @@ impl<'mc> JavaAbstractList<'mc> {
     }
     //
 
-    pub fn remove_with_int(
+    pub fn remove(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -15451,7 +15451,7 @@ impl<'mc> JavaAbstractList<'mc> {
     }
     //
 
-    pub fn add_all_with_collection(
+    pub fn add_all(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -16690,7 +16690,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn add_with_object(
+    pub fn add(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -16851,7 +16851,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn add_all_with_collection(
+    pub fn add_all(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -17966,7 +17966,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaPrimitiveIterator<'mc> {
 impl<'mc> JavaPrimitiveIterator<'mc> {
     //
 
-    pub fn for_each_remaining_with_object(
+    pub fn for_each_remaining(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -18305,7 +18305,7 @@ impl<'mc> JavaEnumSet<'mc> {
     }
     //
 
-    pub fn copy_of_with_collection(
+    pub fn copy_of(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -18325,7 +18325,7 @@ impl<'mc> JavaEnumSet<'mc> {
     }
     //
 
-    pub fn of_with_enum(
+    pub fn of(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -19263,7 +19263,7 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn compare_to_with_date(
+    pub fn compare_to(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {

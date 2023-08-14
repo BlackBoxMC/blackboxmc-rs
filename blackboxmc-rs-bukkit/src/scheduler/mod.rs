@@ -220,7 +220,7 @@ impl<'mc> BukkitScheduler<'mc> {
     }
     //
 
-    pub fn schedule_sync_delayed_task_with_plugin(
+    pub fn schedule_sync_delayed_task(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<crate::scheduler::BukkitRunnable<'mc>>,

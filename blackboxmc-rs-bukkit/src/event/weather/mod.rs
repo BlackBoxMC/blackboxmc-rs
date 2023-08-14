@@ -176,7 +176,7 @@ impl<'mc> JNIInstantiatable<'mc> for LightningStrikeEvent<'mc> {
 }
 
 impl<'mc> LightningStrikeEvent<'mc> {
-    pub fn new_with_world(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::World<'mc>>,
         arg1: std::option::Option<impl Into<crate::entity::LightningStrike<'mc>>>,

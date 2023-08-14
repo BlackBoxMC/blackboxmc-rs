@@ -151,7 +151,7 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
     }
     //
 
-    pub fn set_block_with_int(
+    pub fn set_block(
         &self,
         arg0: i32,
         arg1: i32,
@@ -185,7 +185,7 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
     }
     //
 
-    pub fn set_region_with_int(
+    pub fn set_region(
         &self,
         arg0: i32,
         arg1: i32,
@@ -382,7 +382,7 @@ impl<'mc> BiomeProvider<'mc> {
     }
     //
 
-    pub fn get_biome_with_world_info(
+    pub fn get_biome(
         &self,
         arg0: impl Into<crate::generator::WorldInfo<'mc>>,
         arg1: i32,
@@ -635,7 +635,7 @@ impl<'mc> ChunkGeneratorBiomeGrid<'mc> {
 
     /// <span class="deprecated-label">Deprecated.</span>
     /// Get biome at x, z within chunk being generated
-    pub fn get_biome_with_int(
+    pub fn get_biome(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -680,7 +680,7 @@ impl<'mc> ChunkGeneratorBiomeGrid<'mc> {
     }
     //
 
-    pub fn set_biome_with_int(
+    pub fn set_biome(
         &self,
         arg0: i32,
         arg1: i32,
@@ -1018,7 +1018,7 @@ impl<'mc> BlockPopulator<'mc> {
     }
     //
 
-    pub fn populate_with_world(
+    pub fn populate(
         &self,
         arg0: impl Into<crate::generator::WorldInfo<'mc>>,
         arg1: impl Into<blackboxmc_java::JavaRandom<'mc>>,
@@ -1224,7 +1224,7 @@ impl<'mc> LimitedRegion<'mc> {
     //
 
     /// Checks if the given coordinates are in the region.
-    pub fn is_in_region_with_location(
+    pub fn is_in_region(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
@@ -1275,7 +1275,7 @@ impl<'mc> LimitedRegion<'mc> {
     }
     //
 
-    pub fn set_type_with_location(
+    pub fn set_type(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -1313,7 +1313,7 @@ impl<'mc> LimitedRegion<'mc> {
     }
     //@NotNull
 
-    pub fn get_block_data_with_location(
+    pub fn get_block_data(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
@@ -1347,7 +1347,7 @@ impl<'mc> LimitedRegion<'mc> {
     }
     //
 
-    pub fn set_block_data_with_location(
+    pub fn set_block_data(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -1447,7 +1447,7 @@ impl<'mc> LimitedRegion<'mc> {
     }
     //@NotNull
 
-    pub fn get_biome_with_location(
+    pub fn get_biome(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
@@ -1494,7 +1494,7 @@ impl<'mc> LimitedRegion<'mc> {
     }
     //
 
-    pub fn set_biome_with_location(
+    pub fn set_biome(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -1532,7 +1532,7 @@ impl<'mc> LimitedRegion<'mc> {
     }
     //@NotNull
 
-    pub fn get_block_state_with_location(
+    pub fn get_block_state(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
@@ -1566,7 +1566,7 @@ impl<'mc> LimitedRegion<'mc> {
     }
     //
 
-    pub fn spawn_entity_with_location(
+    pub fn spawn_entity(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: std::option::Option<impl Into<crate::entity::EntityType<'mc>>>,
@@ -1689,7 +1689,7 @@ impl<'mc> LimitedRegion<'mc> {
     }
     //
 
-    pub fn spawn_with_location(
+    pub fn spawn(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
@@ -1734,7 +1734,7 @@ impl<'mc> LimitedRegion<'mc> {
 
     //@NotNull
 
-    pub fn get_type_with_location(
+    pub fn get_type(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,

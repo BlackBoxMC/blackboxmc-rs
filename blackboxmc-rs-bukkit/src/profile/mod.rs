@@ -68,7 +68,7 @@ impl<'mc> PlayerTextures<'mc> {
     }
     //
 
-    pub fn set_skin_with_url(
+    pub fn set_skin(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<impl Into<crate::profile::PlayerTexturesSkinModel<'mc>>>,

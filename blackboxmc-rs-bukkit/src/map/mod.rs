@@ -1088,7 +1088,7 @@ impl<'mc> JNIInstantiatable<'mc> for MapCursor<'mc> {
 }
 
 impl<'mc> MapCursor<'mc> {
-    pub fn new_with_byte(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i8,
         arg1: i8,
@@ -2950,7 +2950,7 @@ impl<'mc> MapPalette<'mc> {
     /// Magic value
     ///
     /// Get the index of the closest matching color in the palette to the given color.
-    pub fn match_color_with_color(
+    pub fn match_color(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,

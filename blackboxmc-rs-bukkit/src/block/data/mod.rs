@@ -99,7 +99,7 @@ impl<'mc> Hatchable<'mc> {
     }
     //
 
-    pub fn is_supported_with_block(
+    pub fn is_supported(
         &self,
         arg0: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -494,7 +494,7 @@ impl<'mc> Lightable<'mc> {
     }
     //
 
-    pub fn is_supported_with_block(
+    pub fn is_supported(
         &self,
         arg0: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -914,7 +914,7 @@ impl<'mc> FaceAttachable<'mc> {
     }
     //
 
-    pub fn is_supported_with_block(
+    pub fn is_supported(
         &self,
         arg0: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1430,7 +1430,7 @@ impl<'mc> Ageable<'mc> {
     }
     //
 
-    pub fn is_supported_with_block(
+    pub fn is_supported(
         &self,
         arg0: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1825,7 +1825,7 @@ impl<'mc> Openable<'mc> {
     }
     //
 
-    pub fn is_supported_with_block(
+    pub fn is_supported(
         &self,
         arg0: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2277,7 +2277,7 @@ impl<'mc> Rail<'mc> {
     }
     //
 
-    pub fn is_supported_with_block(
+    pub fn is_supported(
         &self,
         arg0: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2646,7 +2646,7 @@ impl<'mc> BlockData<'mc> {
     }
     //
 
-    pub fn is_supported_with_block(
+    pub fn is_supported(
         &self,
         arg0: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3067,7 +3067,7 @@ impl<'mc> Orientable<'mc> {
     }
     //
 
-    pub fn is_supported_with_block(
+    pub fn is_supported(
         &self,
         arg0: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3462,7 +3462,7 @@ impl<'mc> Powerable<'mc> {
     }
     //
 
-    pub fn is_supported_with_block(
+    pub fn is_supported(
         &self,
         arg0: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3987,7 +3987,7 @@ impl<'mc> Levelled<'mc> {
     }
     //
 
-    pub fn is_supported_with_block(
+    pub fn is_supported(
         &self,
         arg0: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4430,7 +4430,7 @@ impl<'mc> MultipleFacing<'mc> {
     }
     //
 
-    pub fn is_supported_with_block(
+    pub fn is_supported(
         &self,
         arg0: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4966,7 +4966,7 @@ impl<'mc> Snowable<'mc> {
     }
     //
 
-    pub fn is_supported_with_block(
+    pub fn is_supported(
         &self,
         arg0: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5393,7 +5393,7 @@ impl<'mc> Directional<'mc> {
     }
     //
 
-    pub fn is_supported_with_block(
+    pub fn is_supported(
         &self,
         arg0: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5912,7 +5912,7 @@ impl<'mc> Rotatable<'mc> {
     }
     //
 
-    pub fn is_supported_with_block(
+    pub fn is_supported(
         &self,
         arg0: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6307,7 +6307,7 @@ impl<'mc> Hangable<'mc> {
     }
     //
 
-    pub fn is_supported_with_block(
+    pub fn is_supported(
         &self,
         arg0: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6702,7 +6702,7 @@ impl<'mc> Waterlogged<'mc> {
     }
     //
 
-    pub fn is_supported_with_block(
+    pub fn is_supported(
         &self,
         arg0: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7110,7 +7110,7 @@ impl<'mc> AnaloguePowerable<'mc> {
     }
     //
 
-    pub fn is_supported_with_block(
+    pub fn is_supported(
         &self,
         arg0: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7517,7 +7517,7 @@ impl<'mc> Brushable<'mc> {
     }
     //
 
-    pub fn is_supported_with_block(
+    pub fn is_supported(
         &self,
         arg0: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7914,7 +7914,7 @@ impl<'mc> Attachable<'mc> {
     }
     //
 
-    pub fn is_supported_with_block(
+    pub fn is_supported(
         &self,
         arg0: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8331,7 +8331,7 @@ impl<'mc> Bisected<'mc> {
     }
     //
 
-    pub fn is_supported_with_block(
+    pub fn is_supported(
         &self,
         arg0: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {

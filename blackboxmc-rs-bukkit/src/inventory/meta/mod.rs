@@ -706,7 +706,7 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     //
 
-    pub fn remove_attribute_modifier_with_attribute(
+    pub fn remove_attribute_modifier(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
@@ -1410,7 +1410,7 @@ impl<'mc> ArmorMeta<'mc> {
     }
     //
 
-    pub fn remove_attribute_modifier_with_attribute(
+    pub fn remove_attribute_modifier(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
@@ -2117,7 +2117,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     //
 
-    pub fn remove_attribute_modifier_with_attribute(
+    pub fn remove_attribute_modifier(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
@@ -2905,7 +2905,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     //
 
-    pub fn remove_attribute_modifier_with_attribute(
+    pub fn remove_attribute_modifier(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
@@ -3619,7 +3619,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     //
 
-    pub fn remove_attribute_modifier_with_attribute(
+    pub fn remove_attribute_modifier(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
@@ -4381,7 +4381,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     //
 
-    pub fn remove_attribute_modifier_with_attribute(
+    pub fn remove_attribute_modifier(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
@@ -5098,7 +5098,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     //
 
-    pub fn remove_attribute_modifier_with_attribute(
+    pub fn remove_attribute_modifier(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
@@ -5744,7 +5744,7 @@ impl<'mc> ItemMeta<'mc> {
     }
     //
 
-    pub fn remove_attribute_modifier_with_attribute(
+    pub fn remove_attribute_modifier(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
@@ -6452,7 +6452,7 @@ impl<'mc> Repairable<'mc> {
     }
     //
 
-    pub fn remove_attribute_modifier_with_attribute(
+    pub fn remove_attribute_modifier(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
@@ -7277,7 +7277,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     //
 
-    pub fn remove_attribute_modifier_with_attribute(
+    pub fn remove_attribute_modifier(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
@@ -8000,7 +8000,7 @@ impl<'mc> BundleMeta<'mc> {
     }
     //
 
-    pub fn remove_attribute_modifier_with_attribute(
+    pub fn remove_attribute_modifier(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
@@ -8706,7 +8706,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     //
 
-    pub fn remove_attribute_modifier_with_attribute(
+    pub fn remove_attribute_modifier(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
@@ -9438,7 +9438,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     //
 
-    pub fn remove_attribute_modifier_with_attribute(
+    pub fn remove_attribute_modifier(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
@@ -10121,7 +10121,7 @@ impl<'mc> Damageable<'mc> {
     }
     //
 
-    pub fn remove_attribute_modifier_with_attribute(
+    pub fn remove_attribute_modifier(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
@@ -10875,7 +10875,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     //
 
-    pub fn remove_attribute_modifier_with_attribute(
+    pub fn remove_attribute_modifier(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
@@ -11730,7 +11730,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     //
 
-    pub fn remove_attribute_modifier_with_attribute(
+    pub fn remove_attribute_modifier(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
@@ -12405,7 +12405,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     //
 
-    pub fn remove_attribute_modifier_with_attribute(
+    pub fn remove_attribute_modifier(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
@@ -13318,7 +13318,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     //
 
-    pub fn remove_attribute_modifier_with_attribute(
+    pub fn remove_attribute_modifier(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
@@ -14036,7 +14036,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     //
 
-    pub fn remove_attribute_modifier_with_attribute(
+    pub fn remove_attribute_modifier(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
@@ -14877,7 +14877,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn remove_attribute_modifier_with_attribute(
+    pub fn remove_attribute_modifier(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
@@ -15071,7 +15071,7 @@ impl<'mc> BookMetaSpigot<'mc> {
     }
     //
 
-    pub fn set_pages_with_base_componentss(
+    pub fn set_pages(
         &self,
         arg0: std::option::Option<
             Vec<impl Into<blackboxmc_bungee::bungee::api::chat::BaseComponent<'mc>>>,
@@ -15805,7 +15805,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     //
 
-    pub fn remove_attribute_modifier_with_attribute(
+    pub fn remove_attribute_modifier(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
@@ -16497,7 +16497,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     //
 
-    pub fn remove_attribute_modifier_with_attribute(
+    pub fn remove_attribute_modifier(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
@@ -17289,7 +17289,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     //
 
-    pub fn remove_attribute_modifier_with_attribute(
+    pub fn remove_attribute_modifier(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
@@ -17554,7 +17554,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn set_pages_with_list(
+    pub fn set_pages(
         &self,
         arg0: std::option::Option<Vec<impl Into<String>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -18198,7 +18198,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn remove_attribute_modifier_with_attribute(
+    pub fn remove_attribute_modifier(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
@@ -18880,7 +18880,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     //
 
-    pub fn remove_attribute_modifier_with_attribute(
+    pub fn remove_attribute_modifier(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,

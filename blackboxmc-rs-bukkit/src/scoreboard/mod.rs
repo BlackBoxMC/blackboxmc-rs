@@ -342,7 +342,7 @@ impl<'mc> Criteria<'mc> {
     }
     //
 
-    pub fn statistic_with_statistic(
+    pub fn statistic(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::Statistic<'mc>>>,
         arg1: std::option::Option<impl Into<crate::entity::EntityType<'mc>>>,
@@ -754,7 +754,7 @@ impl<'mc> Objective<'mc> {
     }
     //
 
-    pub fn get_score_with_offline_player(
+    pub fn get_score(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<crate::scoreboard::Score<'mc>, Box<dyn std::error::Error>> {
@@ -1094,7 +1094,7 @@ impl<'mc> Scoreboard<'mc> {
     }
     //
 
-    pub fn register_new_objective_with_string(
+    pub fn register_new_objective(
         &self,
         arg0: impl Into<String>,
         arg1: impl Into<String>,
@@ -1139,7 +1139,7 @@ impl<'mc> Scoreboard<'mc> {
     }
     //
 
-    pub fn get_objective_with_display_slot(
+    pub fn get_objective(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<crate::scoreboard::Objective<'mc>, Box<dyn std::error::Error>> {
@@ -1163,7 +1163,7 @@ impl<'mc> Scoreboard<'mc> {
     }
     //
 
-    pub fn get_objectives_by_criteria_with_string(
+    pub fn get_objectives_by_criteria(
         &self,
         arg0: std::option::Option<impl Into<crate::scoreboard::Criteria<'mc>>>,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -1202,7 +1202,7 @@ impl<'mc> Scoreboard<'mc> {
     }
     //
 
-    pub fn get_scores_with_string(
+    pub fn get_scores(
         &self,
         arg0: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -1226,7 +1226,7 @@ impl<'mc> Scoreboard<'mc> {
     }
     //
 
-    pub fn reset_scores_with_offline_player(
+    pub fn reset_scores(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {

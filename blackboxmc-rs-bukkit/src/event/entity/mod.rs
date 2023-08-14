@@ -529,7 +529,7 @@ impl<'mc> JNIInstantiatable<'mc> for EntityPortalEvent<'mc> {
 }
 
 impl<'mc> EntityPortalEvent<'mc> {
-    pub fn new_with_entity(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Entity<'mc>>,
         arg1: impl Into<crate::Location<'mc>>,
@@ -1246,7 +1246,7 @@ impl<'mc> JNIInstantiatable<'mc> for EntityDamageByBlockEvent<'mc> {
 }
 
 impl<'mc> EntityDamageByBlockEvent<'mc> {
-    pub fn new_with_block(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::block::Block<'mc>>,
         arg1: impl Into<crate::entity::Entity<'mc>>,
@@ -1329,7 +1329,7 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
     }
     //
 
-    pub fn set_damage_with_double(
+    pub fn set_damage(
         &self,
         arg0: std::option::Option<
             impl Into<crate::event::entity::EntityDamageEventDamageModifier<'mc>>,
@@ -3242,7 +3242,7 @@ impl<'mc> JNIInstantiatable<'mc> for ExplosionPrimeEvent<'mc> {
 }
 
 impl<'mc> ExplosionPrimeEvent<'mc> {
-    pub fn new_with_explosive(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::entity::Entity<'mc>>>,
         arg1: std::option::Option<f32>,
@@ -4236,7 +4236,7 @@ impl<'mc> ItemSpawnEvent<'mc> {
     //['forRemoval', 'false']
 
     #[deprecated]
-    pub fn new_with_item(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::entity::Item<'mc>>>,
         arg1: std::option::Option<impl Into<crate::Location<'mc>>>,
@@ -5513,7 +5513,7 @@ impl<'mc> JNIInstantiatable<'mc> for FoodLevelChangeEvent<'mc> {
 }
 
 impl<'mc> FoodLevelChangeEvent<'mc> {
-    pub fn new_with_human_entity(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::HumanEntity<'mc>>,
         arg1: std::option::Option<i32>,
@@ -6677,7 +6677,7 @@ impl<'mc> JNIInstantiatable<'mc> for EntityResurrectEvent<'mc> {
 }
 
 impl<'mc> EntityResurrectEvent<'mc> {
-    pub fn new_with_living_entity(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::entity::LivingEntity<'mc>>>,
         arg1: std::option::Option<impl Into<crate::inventory::EquipmentSlot<'mc>>>,
@@ -9106,7 +9106,7 @@ impl<'mc> JNIInstantiatable<'mc> for SheepDyeWoolEvent<'mc> {
 }
 
 impl<'mc> SheepDyeWoolEvent<'mc> {
-    pub fn new_with_sheep(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Sheep<'mc>>,
         arg1: std::option::Option<impl Into<crate::DyeColor<'mc>>>,
@@ -9771,7 +9771,7 @@ impl<'mc> JNIInstantiatable<'mc> for EntityDamageByEntityEvent<'mc> {
 }
 
 impl<'mc> EntityDamageByEntityEvent<'mc> {
-    pub fn new_with_entity(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Entity<'mc>>,
         arg1: impl Into<crate::entity::Entity<'mc>>,
@@ -9854,7 +9854,7 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
     }
     //
 
-    pub fn set_damage_with_double(
+    pub fn set_damage(
         &self,
         arg0: std::option::Option<
             impl Into<crate::event::entity::EntityDamageEventDamageModifier<'mc>>,
@@ -14110,7 +14110,7 @@ impl<'mc> JNIInstantiatable<'mc> for EntityPlaceEvent<'mc> {
 }
 
 impl<'mc> EntityPlaceEvent<'mc> {
-    pub fn new_with_entity(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Entity<'mc>>,
         arg1: impl Into<crate::entity::Player<'mc>>,
@@ -16451,7 +16451,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerDeathEvent<'mc> {
 }
 
 impl<'mc> PlayerDeathEvent<'mc> {
-    pub fn new_with_player(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Player<'mc>>,
         arg1: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
@@ -18689,7 +18689,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerLeashEntityEvent<'mc> {
 }
 
 impl<'mc> PlayerLeashEntityEvent<'mc> {
-    pub fn new_with_entity(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Entity<'mc>>,
         arg1: impl Into<crate::entity::Entity<'mc>>,
@@ -21067,7 +21067,7 @@ impl<'mc> JNIInstantiatable<'mc> for EntityDamageEvent<'mc> {
 }
 
 impl<'mc> EntityDamageEvent<'mc> {
-    pub fn new_with_entity(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Entity<'mc>>,
         arg1: impl Into<crate::event::entity::EntityDamageEventDamageCause<'mc>>,
@@ -21131,7 +21131,7 @@ impl<'mc> EntityDamageEvent<'mc> {
     }
     //
 
-    pub fn set_damage_with_double(
+    pub fn set_damage(
         &self,
         arg0: std::option::Option<
             impl Into<crate::event::entity::EntityDamageEventDamageModifier<'mc>>,
@@ -21508,7 +21508,7 @@ impl<'mc> JNIInstantiatable<'mc> for EntityDeathEvent<'mc> {
 }
 
 impl<'mc> EntityDeathEvent<'mc> {
-    pub fn new_with_living_entity(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::LivingEntity<'mc>>,
         arg1: std::option::Option<Vec<impl Into<crate::inventory::ItemStack<'mc>>>>,
@@ -22843,7 +22843,7 @@ impl<'mc> JNIInstantiatable<'mc> for CreeperPowerEvent<'mc> {
 }
 
 impl<'mc> CreeperPowerEvent<'mc> {
-    pub fn new_with_creeper(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Creeper<'mc>>,
         arg1: std::option::Option<impl Into<crate::entity::LightningStrike<'mc>>>,
@@ -23909,7 +23909,7 @@ impl<'mc> JNIInstantiatable<'mc> for ProjectileHitEvent<'mc> {
 }
 
 impl<'mc> ProjectileHitEvent<'mc> {
-    pub fn new_with_projectile(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Projectile<'mc>>,
         arg1: impl Into<crate::entity::Entity<'mc>>,

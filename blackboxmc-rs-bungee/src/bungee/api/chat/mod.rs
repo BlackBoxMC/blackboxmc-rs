@@ -173,7 +173,7 @@ impl<'mc> TextComponent<'mc> {
     }
     //
 
-    pub fn copy_formatting_with_base_component(
+    pub fn copy_formatting(
         &self,
         arg0: std::option::Option<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
         arg1: std::option::Option<
@@ -412,7 +412,7 @@ impl<'mc> TextComponent<'mc> {
     }
     //
 
-    pub fn add_extra_with_string(
+    pub fn add_extra(
         &self,
         arg0: std::option::Option<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1115,7 +1115,7 @@ impl<'mc> JNIInstantiatable<'mc> for HoverEvent<'mc> {
 }
 
 impl<'mc> HoverEvent<'mc> {
-    pub fn new_with_hover_eventaction(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bungee::api::chat::HoverEventAction<'mc>>,
         arg1: std::option::Option<
@@ -1396,7 +1396,7 @@ impl<'mc> BaseComponent<'mc> {
     }
     //
 
-    pub fn copy_formatting_with_base_component(
+    pub fn copy_formatting(
         &self,
         arg0: std::option::Option<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
         arg1: std::option::Option<
@@ -1635,7 +1635,7 @@ impl<'mc> BaseComponent<'mc> {
     }
     //
 
-    pub fn add_extra_with_string(
+    pub fn add_extra(
         &self,
         arg0: std::option::Option<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2155,7 +2155,7 @@ impl<'mc> JNIInstantiatable<'mc> for SelectorComponent<'mc> {
 }
 
 impl<'mc> SelectorComponent<'mc> {
-    pub fn new_with_string(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::bungee::api::chat::SelectorComponent<'mc>>>,
     ) -> Result<crate::bungee::api::chat::SelectorComponent<'mc>, Box<dyn std::error::Error>> {
@@ -2265,7 +2265,7 @@ impl<'mc> SelectorComponent<'mc> {
     }
     //
 
-    pub fn copy_formatting_with_base_component(
+    pub fn copy_formatting(
         &self,
         arg0: std::option::Option<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
         arg1: std::option::Option<
@@ -2504,7 +2504,7 @@ impl<'mc> SelectorComponent<'mc> {
     }
     //
 
-    pub fn add_extra_with_string(
+    pub fn add_extra(
         &self,
         arg0: std::option::Option<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3185,7 +3185,7 @@ impl<'mc> ScoreComponent<'mc> {
     }
     //
 
-    pub fn copy_formatting_with_base_component(
+    pub fn copy_formatting(
         &self,
         arg0: std::option::Option<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
         arg1: std::option::Option<
@@ -3424,7 +3424,7 @@ impl<'mc> ScoreComponent<'mc> {
     }
     //
 
-    pub fn add_extra_with_string(
+    pub fn add_extra(
         &self,
         arg0: std::option::Option<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4286,7 +4286,7 @@ impl<'mc> ItemTagSerializer<'mc> {
     }
     //
 
-    pub fn serialize_with_item_tag(
+    pub fn serialize(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -4314,7 +4314,7 @@ impl<'mc> ItemTagSerializer<'mc> {
     }
     //
 
-    pub fn deserialize_with_json_element(
+    pub fn deserialize(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -4553,7 +4553,7 @@ impl<'mc> TranslatableComponent<'mc> {
     }
     //
 
-    pub fn add_with_with_base_component(
+    pub fn add_with(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4729,7 +4729,7 @@ impl<'mc> TranslatableComponent<'mc> {
     }
     //
 
-    pub fn copy_formatting_with_base_component(
+    pub fn copy_formatting(
         &self,
         arg0: std::option::Option<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
         arg1: std::option::Option<
@@ -4968,7 +4968,7 @@ impl<'mc> TranslatableComponent<'mc> {
     }
     //
 
-    pub fn add_extra_with_string(
+    pub fn add_extra(
         &self,
         arg0: std::option::Option<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -5804,7 +5804,7 @@ impl<'mc> KeybindComponent<'mc> {
     }
     //
 
-    pub fn copy_formatting_with_base_component(
+    pub fn copy_formatting(
         &self,
         arg0: std::option::Option<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
         arg1: std::option::Option<
@@ -6043,7 +6043,7 @@ impl<'mc> KeybindComponent<'mc> {
     }
     //
 
-    pub fn add_extra_with_string(
+    pub fn add_extra(
         &self,
         arg0: std::option::Option<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -7066,7 +7066,7 @@ impl<'mc> ComponentBuilder<'mc> {
     }
     //
 
-    pub fn event_with_hover_event(
+    pub fn event(
         &self,
         arg0: std::option::Option<impl Into<crate::bungee::api::chat::ClickEvent<'mc>>>,
     ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {

@@ -1104,7 +1104,7 @@ impl<'mc> RegisteredServiceProvider<'mc> {
     }
     //
 
-    pub fn compare_to_with_registered_service_provider(
+    pub fn compare_to(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -1807,7 +1807,7 @@ impl<'mc> PluginManager<'mc> {
 
     //
 
-    pub fn is_plugin_enabled_with_plugin(
+    pub fn is_plugin_enabled(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1877,7 +1877,7 @@ impl<'mc> PluginManager<'mc> {
     }
     //
 
-    pub fn register_event_with_class(
+    pub fn register_event(
         &self,
         arg0: jni::objects::JClass<'mc>,
         arg1: impl Into<crate::event::Listener<'mc>>,
@@ -1928,7 +1928,7 @@ impl<'mc> PluginManager<'mc> {
     }
     //
 
-    pub fn remove_permission_with_permission(
+    pub fn remove_permission(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2638,7 +2638,7 @@ impl<'mc> JNIInstantiatable<'mc> for ServicesManager<'mc> {
 impl<'mc> ServicesManager<'mc> {
     //
 
-    pub fn unregister_with_object(
+    pub fn unregister(
         &self,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -2702,7 +2702,7 @@ impl<'mc> ServicesManager<'mc> {
     }
     //
 
-    pub fn get_registrations_with_class(
+    pub fn get_registrations(
         &self,
         arg0: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
     ) -> Result<Vec<crate::plugin::RegisteredServiceProvider<'mc>>, Box<dyn std::error::Error>>

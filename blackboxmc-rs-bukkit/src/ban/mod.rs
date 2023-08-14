@@ -167,7 +167,7 @@ impl<'mc> ProfileBanList<'mc> {
     }
     //
 
-    pub fn get_ban_entry_with_string(
+    pub fn get_ban_entry(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<crate::BanEntry<'mc>, Box<dyn std::error::Error>> {
@@ -201,7 +201,7 @@ impl<'mc> ProfileBanList<'mc> {
     }
     //
 
-    pub fn is_banned_with_string(
+    pub fn is_banned(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -221,7 +221,7 @@ impl<'mc> ProfileBanList<'mc> {
     }
     //
 
-    pub fn pardon_with_object(
+    pub fn pardon(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -302,7 +302,7 @@ impl<'mc> JNIInstantiatable<'mc> for IpBanList<'mc> {
 impl<'mc> IpBanList<'mc> {
     //
 
-    pub fn get_ban_entry_with_string(
+    pub fn get_ban_entry(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<crate::BanEntry<'mc>, Box<dyn std::error::Error>> {
@@ -324,7 +324,7 @@ impl<'mc> IpBanList<'mc> {
     }
     //
 
-    pub fn add_ban_with_object(
+    pub fn add_ban(
         &self,
         arg0: impl Into<String>,
         arg1: impl Into<String>,
@@ -378,7 +378,7 @@ impl<'mc> IpBanList<'mc> {
     }
     //
 
-    pub fn is_banned_with_string(
+    pub fn is_banned(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -398,7 +398,7 @@ impl<'mc> IpBanList<'mc> {
     }
     //
 
-    pub fn pardon_with_object(
+    pub fn pardon(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
