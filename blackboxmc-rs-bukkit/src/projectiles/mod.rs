@@ -32,7 +32,7 @@ impl<'mc> ProjectileSource<'mc> {
     //
 
     pub fn launch_projectile_with_class(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
     ) -> Result<crate::entity::Projectile<'mc>, Box<dyn std::error::Error>> {
@@ -101,7 +101,7 @@ impl<'mc> BlockProjectileSource<'mc> {
     }
     //
 
-    pub fn block(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
+    pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/Block;");
         let res = self
             .jni_ref()
@@ -114,7 +114,7 @@ impl<'mc> BlockProjectileSource<'mc> {
     //
 
     pub fn launch_projectile_with_class(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JClass<'mc>>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
     ) -> Result<crate::entity::Projectile<'mc>, Box<dyn std::error::Error>> {

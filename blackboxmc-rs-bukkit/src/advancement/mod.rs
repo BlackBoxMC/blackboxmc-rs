@@ -32,7 +32,7 @@ impl<'mc> AdvancementProgress<'mc> {
     }
     //
 
-    pub fn is_done(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_done(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -43,7 +43,7 @@ impl<'mc> AdvancementProgress<'mc> {
     //
 
     pub fn advancement(
-        &mut self,
+        &self,
     ) -> Result<crate::advancement::Advancement<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/advancement/Advancement;");
         let res =
@@ -57,7 +57,7 @@ impl<'mc> AdvancementProgress<'mc> {
     //
 
     pub fn award_criteria(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -76,7 +76,7 @@ impl<'mc> AdvancementProgress<'mc> {
     //
 
     pub fn revoke_criteria(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -95,7 +95,7 @@ impl<'mc> AdvancementProgress<'mc> {
     //
 
     pub fn get_date_awarded(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<blackboxmc_java::JavaDate<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Ljava/util/Date;");
@@ -115,7 +115,7 @@ impl<'mc> AdvancementProgress<'mc> {
     }
     //
 
-    pub fn remaining_criteria(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn remaining_criteria(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Collection;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -140,7 +140,7 @@ impl<'mc> AdvancementProgress<'mc> {
     }
     //
 
-    pub fn awarded_criteria(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn awarded_criteria(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Collection;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -186,6 +186,11 @@ impl std::fmt::Display for AdvancementDisplayTypeEnum {
             AdvancementDisplayTypeEnum::Challenge => f.write_str("CHALLENGE"),
             AdvancementDisplayTypeEnum::Goal => f.write_str("GOAL"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for AdvancementDisplayType<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct AdvancementDisplayType<'mc>(
@@ -304,7 +309,7 @@ impl<'mc> AdvancementDisplay<'mc> {
     }
     //
 
-    pub fn x(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+    pub fn x(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
         let res = self
             .jni_ref()
@@ -314,7 +319,7 @@ impl<'mc> AdvancementDisplay<'mc> {
     }
     //
 
-    pub fn y(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+    pub fn y(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
         let res = self
             .jni_ref()
@@ -324,7 +329,7 @@ impl<'mc> AdvancementDisplay<'mc> {
     }
     //
 
-    pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn description(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -338,7 +343,7 @@ impl<'mc> AdvancementDisplay<'mc> {
     }
     //
 
-    pub fn title(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn title(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -352,7 +357,7 @@ impl<'mc> AdvancementDisplay<'mc> {
     }
     //
 
-    pub fn icon(&mut self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn icon(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -364,7 +369,7 @@ impl<'mc> AdvancementDisplay<'mc> {
     }
     //
 
-    pub fn should_show_toast(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn should_show_toast(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -374,7 +379,7 @@ impl<'mc> AdvancementDisplay<'mc> {
     }
     //
 
-    pub fn should_announce_chat(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn should_announce_chat(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -387,7 +392,7 @@ impl<'mc> AdvancementDisplay<'mc> {
     }
     //
 
-    pub fn is_hidden(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_hidden(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -398,7 +403,7 @@ impl<'mc> AdvancementDisplay<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::advancement::AdvancementDisplayType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/advancement/AdvancementDisplayType;");
         let res = self
@@ -460,7 +465,7 @@ impl<'mc> Advancement<'mc> {
     }
     //
 
-    pub fn criteria(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn criteria(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Collection;");
         let res =
             self.jni_ref()
@@ -483,7 +488,7 @@ impl<'mc> Advancement<'mc> {
     //
 
     pub fn display(
-        &mut self,
+        &self,
     ) -> Result<crate::advancement::AdvancementDisplay<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/advancement/AdvancementDisplay;");
         let res =
@@ -496,7 +501,7 @@ impl<'mc> Advancement<'mc> {
     }
     //
 
-    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self
             .jni_ref()

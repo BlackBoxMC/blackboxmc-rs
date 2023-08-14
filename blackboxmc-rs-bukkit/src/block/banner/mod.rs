@@ -92,6 +92,11 @@ impl std::fmt::Display for PatternTypeEnum {
         }
     }
 }
+impl<'mc> std::fmt::Display for PatternType<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
+    }
+}
 pub struct PatternType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -313,9 +318,7 @@ impl<'mc> Pattern<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -327,7 +330,7 @@ impl<'mc> Pattern<'mc> {
     }
     //
 
-    pub fn color(&mut self) -> Result<crate::DyeColor<'mc>, Box<dyn std::error::Error>> {
+    pub fn color(&self) -> Result<crate::DyeColor<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/DyeColor;");
         let res = self
             .jni_ref()
@@ -353,7 +356,7 @@ impl<'mc> Pattern<'mc> {
     //
 
     pub fn pattern(
-        &mut self,
+        &self,
     ) -> Result<crate::block::banner::PatternType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/banner/PatternType;");
         let res =
@@ -380,7 +383,7 @@ impl<'mc> Pattern<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -396,7 +399,7 @@ impl<'mc> Pattern<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -407,7 +410,7 @@ impl<'mc> Pattern<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -433,7 +436,7 @@ impl<'mc> Pattern<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -447,7 +450,7 @@ impl<'mc> Pattern<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -457,7 +460,7 @@ impl<'mc> Pattern<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -467,7 +470,7 @@ impl<'mc> Pattern<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()

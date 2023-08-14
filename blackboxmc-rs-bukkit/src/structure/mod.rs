@@ -29,9 +29,7 @@ impl<'mc> Palette<'mc> {
     }
     //
 
-    pub fn blocks(
-        &mut self,
-    ) -> Result<Vec<crate::block::BlockState<'mc>>, Box<dyn std::error::Error>> {
+    pub fn blocks(&self) -> Result<Vec<crate::block::BlockState<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -48,7 +46,7 @@ impl<'mc> Palette<'mc> {
     }
     //
 
-    pub fn block_count(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn block_count(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -97,7 +95,7 @@ impl<'mc> StructureManager<'mc> {
     //
 
     pub fn get_structure(
-        &mut self,
+        &self,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
     ) -> Result<crate::structure::Structure<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/NamespacedKey;)Lorg/bukkit/structure/Structure;");
@@ -117,9 +115,7 @@ impl<'mc> StructureManager<'mc> {
     }
     //
 
-    pub fn structures(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn structures(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -132,7 +128,7 @@ impl<'mc> StructureManager<'mc> {
     //
 
     pub fn register_structure(
-        &mut self,
+        &self,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
         arg1: impl Into<crate::structure::Structure<'mc>>,
     ) -> Result<crate::structure::Structure<'mc>, Box<dyn std::error::Error>> {
@@ -160,7 +156,7 @@ impl<'mc> StructureManager<'mc> {
     //
 
     pub fn unregister_structure(
-        &mut self,
+        &self,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
     ) -> Result<crate::structure::Structure<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/NamespacedKey;)Lorg/bukkit/structure/Structure;");
@@ -181,7 +177,7 @@ impl<'mc> StructureManager<'mc> {
     //
 
     pub fn load_structure_with_input_stream(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<crate::structure::Structure<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -203,7 +199,7 @@ impl<'mc> StructureManager<'mc> {
     //
 
     pub fn load_structure_with_namespaced_key(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::NamespacedKey<'mc>>>,
         arg1: std::option::Option<bool>,
     ) -> Result<crate::structure::Structure<'mc>, Box<dyn std::error::Error>> {
@@ -234,7 +230,7 @@ impl<'mc> StructureManager<'mc> {
     //
 
     pub fn save_structure_with_namespaced_key(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<impl Into<crate::structure::Structure<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -262,7 +258,7 @@ impl<'mc> StructureManager<'mc> {
     //
 
     pub fn save_structure_with_output_stream(
-        &mut self,
+        &self,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
         arg1: std::option::Option<impl Into<crate::structure::Structure<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -290,7 +286,7 @@ impl<'mc> StructureManager<'mc> {
     //
 
     pub fn delete_structure_with_namespaced_key(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::NamespacedKey<'mc>>>,
         arg1: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -319,7 +315,7 @@ impl<'mc> StructureManager<'mc> {
     //
 
     pub fn get_structure_file(
-        &mut self,
+        &self,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/NamespacedKey;)Ljava/io/File;");
@@ -338,7 +334,7 @@ impl<'mc> StructureManager<'mc> {
     //
 
     pub fn create_structure(
-        &mut self,
+        &self,
     ) -> Result<crate::structure::Structure<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/structure/Structure;");
         let res =
@@ -352,7 +348,7 @@ impl<'mc> StructureManager<'mc> {
     //
 
     pub fn copy(
-        &mut self,
+        &self,
         arg0: impl Into<crate::structure::Structure<'mc>>,
     ) -> Result<crate::structure::Structure<'mc>, Box<dyn std::error::Error>> {
         let sig =
@@ -411,9 +407,7 @@ impl<'mc> Structure<'mc> {
     }
     //
 
-    pub fn entities(
-        &mut self,
-    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+    pub fn entities(&self) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
             self.jni_ref()
@@ -430,7 +424,7 @@ impl<'mc> Structure<'mc> {
     }
     //
 
-    pub fn entity_count(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn entity_count(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -441,7 +435,7 @@ impl<'mc> Structure<'mc> {
     //
 
     pub fn palettes(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::structure::Palette<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -459,7 +453,7 @@ impl<'mc> Structure<'mc> {
     }
     //
 
-    pub fn palette_count(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn palette_count(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -470,7 +464,7 @@ impl<'mc> Structure<'mc> {
     //
 
     pub fn place_with_location(
-        &mut self,
+        &self,
         arg0: impl Into<crate::RegionAccessor<'mc>>,
         arg1: impl Into<crate::util::BlockVector<'mc>>,
         arg2: bool,
@@ -531,7 +525,7 @@ impl<'mc> Structure<'mc> {
     //
 
     pub fn fill_with_location(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: impl Into<crate::util::BlockVector<'mc>>,
         arg2: std::option::Option<bool>,
@@ -563,7 +557,7 @@ impl<'mc> Structure<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<crate::util::BlockVector<'mc>, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<crate::util::BlockVector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/BlockVector;");
         let res = self
             .jni_ref()
@@ -576,7 +570,7 @@ impl<'mc> Structure<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(

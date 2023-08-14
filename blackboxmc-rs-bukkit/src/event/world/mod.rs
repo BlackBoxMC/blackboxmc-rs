@@ -56,7 +56,7 @@ impl<'mc> WorldUnloadEvent<'mc> {
     }
     //
 
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -66,9 +66,7 @@ impl<'mc> WorldUnloadEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -82,7 +80,7 @@ impl<'mc> WorldUnloadEvent<'mc> {
 
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
-    pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -110,7 +108,7 @@ impl<'mc> WorldUnloadEvent<'mc> {
     }
     //
 
-    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
             .jni_ref()
@@ -122,7 +120,7 @@ impl<'mc> WorldUnloadEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -136,7 +134,7 @@ impl<'mc> WorldUnloadEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -147,7 +145,7 @@ impl<'mc> WorldUnloadEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -173,7 +171,7 @@ impl<'mc> WorldUnloadEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -190,7 +188,7 @@ impl<'mc> WorldUnloadEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -204,7 +202,7 @@ impl<'mc> WorldUnloadEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -214,7 +212,7 @@ impl<'mc> WorldUnloadEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -224,7 +222,7 @@ impl<'mc> WorldUnloadEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -234,7 +232,7 @@ impl<'mc> WorldUnloadEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -327,9 +325,7 @@ impl<'mc> SpawnChangeEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -354,9 +350,7 @@ impl<'mc> SpawnChangeEvent<'mc> {
     }
     //
 
-    pub fn previous_location(
-        &mut self,
-    ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn previous_location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -371,7 +365,7 @@ impl<'mc> SpawnChangeEvent<'mc> {
     }
     //
 
-    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
             .jni_ref()
@@ -383,7 +377,7 @@ impl<'mc> SpawnChangeEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -397,7 +391,7 @@ impl<'mc> SpawnChangeEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -408,7 +402,7 @@ impl<'mc> SpawnChangeEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -434,7 +428,7 @@ impl<'mc> SpawnChangeEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -451,7 +445,7 @@ impl<'mc> SpawnChangeEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -465,7 +459,7 @@ impl<'mc> SpawnChangeEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -475,7 +469,7 @@ impl<'mc> SpawnChangeEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -485,7 +479,7 @@ impl<'mc> SpawnChangeEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -495,7 +489,7 @@ impl<'mc> SpawnChangeEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -581,9 +575,7 @@ impl<'mc> ChunkLoadEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -608,7 +600,7 @@ impl<'mc> ChunkLoadEvent<'mc> {
     }
     //
 
-    pub fn is_new_chunk(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_new_chunk(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -618,7 +610,7 @@ impl<'mc> ChunkLoadEvent<'mc> {
     }
     //
 
-    pub fn chunk(&mut self) -> Result<crate::Chunk<'mc>, Box<dyn std::error::Error>> {
+    pub fn chunk(&self) -> Result<crate::Chunk<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Chunk;");
         let res = self
             .jni_ref()
@@ -630,7 +622,7 @@ impl<'mc> ChunkLoadEvent<'mc> {
     }
     //
 
-    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
             .jni_ref()
@@ -642,7 +634,7 @@ impl<'mc> ChunkLoadEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -656,7 +648,7 @@ impl<'mc> ChunkLoadEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -667,7 +659,7 @@ impl<'mc> ChunkLoadEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -693,7 +685,7 @@ impl<'mc> ChunkLoadEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -710,7 +702,7 @@ impl<'mc> ChunkLoadEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -724,7 +716,7 @@ impl<'mc> ChunkLoadEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -734,7 +726,7 @@ impl<'mc> ChunkLoadEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -744,7 +736,7 @@ impl<'mc> ChunkLoadEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -754,7 +746,7 @@ impl<'mc> ChunkLoadEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -797,6 +789,11 @@ impl std::fmt::Display for PortalCreateEventCreateReasonEnum {
             PortalCreateEventCreateReasonEnum::NetherPair => f.write_str("NETHER_PAIR"),
             PortalCreateEventCreateReasonEnum::EndPlatform => f.write_str("END_PLATFORM"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for PortalCreateEventCreateReason<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct PortalCreateEventCreateReason<'mc>(
@@ -976,7 +973,7 @@ impl<'mc> PortalCreateEvent<'mc> {
     //
 
     pub fn reason(
-        &mut self,
+        &self,
     ) -> Result<crate::event::world::PortalCreateEventCreateReason<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/event/world/PortalCreateEvent$CreateReason;");
@@ -1003,7 +1000,7 @@ impl<'mc> PortalCreateEvent<'mc> {
     }
     //
 
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1013,9 +1010,7 @@ impl<'mc> PortalCreateEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -1027,7 +1022,7 @@ impl<'mc> PortalCreateEvent<'mc> {
     }
     //
 
-    pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res = self
             .jni_ref()
@@ -1039,9 +1034,7 @@ impl<'mc> PortalCreateEvent<'mc> {
     }
     //
 
-    pub fn blocks(
-        &mut self,
-    ) -> Result<Vec<crate::block::BlockState<'mc>>, Box<dyn std::error::Error>> {
+    pub fn blocks(&self) -> Result<Vec<crate::block::BlockState<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -1060,7 +1053,7 @@ impl<'mc> PortalCreateEvent<'mc> {
 
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
-    pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -1088,7 +1081,7 @@ impl<'mc> PortalCreateEvent<'mc> {
     }
     //
 
-    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
             .jni_ref()
@@ -1100,7 +1093,7 @@ impl<'mc> PortalCreateEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -1114,7 +1107,7 @@ impl<'mc> PortalCreateEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1125,7 +1118,7 @@ impl<'mc> PortalCreateEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1151,7 +1144,7 @@ impl<'mc> PortalCreateEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1168,7 +1161,7 @@ impl<'mc> PortalCreateEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1182,7 +1175,7 @@ impl<'mc> PortalCreateEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1192,7 +1185,7 @@ impl<'mc> PortalCreateEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1202,7 +1195,7 @@ impl<'mc> PortalCreateEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1212,7 +1205,7 @@ impl<'mc> PortalCreateEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1256,6 +1249,11 @@ impl std::fmt::Display for CreateReasonEnum {
             CreateReasonEnum::NetherPair => f.write_str("NETHER_PAIR"),
             CreateReasonEnum::EndPlatform => f.write_str("END_PLATFORM"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for CreateReason<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct CreateReason<'mc>(
@@ -1397,9 +1395,7 @@ impl<'mc> WorldInitEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -1424,7 +1420,7 @@ impl<'mc> WorldInitEvent<'mc> {
     }
     //
 
-    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
             .jni_ref()
@@ -1436,7 +1432,7 @@ impl<'mc> WorldInitEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -1450,7 +1446,7 @@ impl<'mc> WorldInitEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1461,7 +1457,7 @@ impl<'mc> WorldInitEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1487,7 +1483,7 @@ impl<'mc> WorldInitEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1504,7 +1500,7 @@ impl<'mc> WorldInitEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1518,7 +1514,7 @@ impl<'mc> WorldInitEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1528,7 +1524,7 @@ impl<'mc> WorldInitEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1538,7 +1534,7 @@ impl<'mc> WorldInitEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1548,7 +1544,7 @@ impl<'mc> WorldInitEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1586,6 +1582,11 @@ impl std::fmt::Display for SkipReasonEnum {
             SkipReasonEnum::Custom => f.write_str("CUSTOM"),
             SkipReasonEnum::NightSkip => f.write_str("NIGHT_SKIP"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for SkipReason<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct SkipReason<'mc>(
@@ -1766,7 +1767,7 @@ impl<'mc> LootGenerateEvent<'mc> {
     }
     //
 
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1776,9 +1777,7 @@ impl<'mc> LootGenerateEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -1790,9 +1789,7 @@ impl<'mc> LootGenerateEvent<'mc> {
     }
     //
 
-    pub fn loot_table(
-        &mut self,
-    ) -> Result<crate::loot::LootTable<'mc>, Box<dyn std::error::Error>> {
+    pub fn loot_table(&self) -> Result<crate::loot::LootTable<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/loot/LootTable;");
         let res =
             self.jni_ref()
@@ -1804,7 +1801,7 @@ impl<'mc> LootGenerateEvent<'mc> {
     }
     //
 
-    pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res = self
             .jni_ref()
@@ -1818,7 +1815,7 @@ impl<'mc> LootGenerateEvent<'mc> {
 
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
-    pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -1847,7 +1844,7 @@ impl<'mc> LootGenerateEvent<'mc> {
     //
 
     pub fn inventory_holder(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::InventoryHolder<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/InventoryHolder;");
         let res = self.jni_ref().call_method(
@@ -1864,7 +1861,7 @@ impl<'mc> LootGenerateEvent<'mc> {
     //
 
     pub fn loot_context(
-        &mut self,
+        &self,
     ) -> Result<crate::loot::LootContext<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/loot/LootContext;");
         let res =
@@ -1878,7 +1875,7 @@ impl<'mc> LootGenerateEvent<'mc> {
     //
 
     pub fn loot(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
@@ -1896,7 +1893,7 @@ impl<'mc> LootGenerateEvent<'mc> {
     }
     //
 
-    pub fn is_plugin(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_plugin(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -1906,7 +1903,7 @@ impl<'mc> LootGenerateEvent<'mc> {
     }
     //
 
-    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
             .jni_ref()
@@ -1918,7 +1915,7 @@ impl<'mc> LootGenerateEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -1932,7 +1929,7 @@ impl<'mc> LootGenerateEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1943,7 +1940,7 @@ impl<'mc> LootGenerateEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1969,7 +1966,7 @@ impl<'mc> LootGenerateEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1986,7 +1983,7 @@ impl<'mc> LootGenerateEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2000,7 +1997,7 @@ impl<'mc> LootGenerateEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2010,7 +2007,7 @@ impl<'mc> LootGenerateEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -2020,7 +2017,7 @@ impl<'mc> LootGenerateEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2030,7 +2027,7 @@ impl<'mc> LootGenerateEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2116,9 +2113,7 @@ impl<'mc> WorldLoadEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -2143,7 +2138,7 @@ impl<'mc> WorldLoadEvent<'mc> {
     }
     //
 
-    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
             .jni_ref()
@@ -2155,7 +2150,7 @@ impl<'mc> WorldLoadEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -2169,7 +2164,7 @@ impl<'mc> WorldLoadEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -2180,7 +2175,7 @@ impl<'mc> WorldLoadEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2206,7 +2201,7 @@ impl<'mc> WorldLoadEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -2223,7 +2218,7 @@ impl<'mc> WorldLoadEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2237,7 +2232,7 @@ impl<'mc> WorldLoadEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2247,7 +2242,7 @@ impl<'mc> WorldLoadEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -2257,7 +2252,7 @@ impl<'mc> WorldLoadEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2267,7 +2262,7 @@ impl<'mc> WorldLoadEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2368,7 +2363,7 @@ impl<'mc> AsyncStructureSpawnEvent<'mc> {
     }
     //
 
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -2378,9 +2373,7 @@ impl<'mc> AsyncStructureSpawnEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -2393,7 +2386,7 @@ impl<'mc> AsyncStructureSpawnEvent<'mc> {
     //
 
     pub fn bounding_box(
-        &mut self,
+        &self,
     ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/BoundingBox;");
         let res =
@@ -2407,7 +2400,7 @@ impl<'mc> AsyncStructureSpawnEvent<'mc> {
     //
 
     pub fn structure(
-        &mut self,
+        &self,
     ) -> Result<crate::generator::structure::Structure<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/generator/structure/Structure;");
         let res =
@@ -2422,7 +2415,7 @@ impl<'mc> AsyncStructureSpawnEvent<'mc> {
 
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
-    pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -2450,7 +2443,7 @@ impl<'mc> AsyncStructureSpawnEvent<'mc> {
     }
     //
 
-    pub fn chunk_x(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn chunk_x(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2460,7 +2453,7 @@ impl<'mc> AsyncStructureSpawnEvent<'mc> {
     }
     //
 
-    pub fn chunk_z(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn chunk_z(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2470,7 +2463,7 @@ impl<'mc> AsyncStructureSpawnEvent<'mc> {
     }
     //
 
-    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
             .jni_ref()
@@ -2482,7 +2475,7 @@ impl<'mc> AsyncStructureSpawnEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -2496,7 +2489,7 @@ impl<'mc> AsyncStructureSpawnEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -2507,7 +2500,7 @@ impl<'mc> AsyncStructureSpawnEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2533,7 +2526,7 @@ impl<'mc> AsyncStructureSpawnEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -2550,7 +2543,7 @@ impl<'mc> AsyncStructureSpawnEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2564,7 +2557,7 @@ impl<'mc> AsyncStructureSpawnEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2574,7 +2567,7 @@ impl<'mc> AsyncStructureSpawnEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -2584,7 +2577,7 @@ impl<'mc> AsyncStructureSpawnEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2594,7 +2587,7 @@ impl<'mc> AsyncStructureSpawnEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2682,9 +2675,7 @@ impl<'mc> ChunkPopulateEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -2709,7 +2700,7 @@ impl<'mc> ChunkPopulateEvent<'mc> {
     }
     //
 
-    pub fn chunk(&mut self) -> Result<crate::Chunk<'mc>, Box<dyn std::error::Error>> {
+    pub fn chunk(&self) -> Result<crate::Chunk<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Chunk;");
         let res = self
             .jni_ref()
@@ -2721,7 +2712,7 @@ impl<'mc> ChunkPopulateEvent<'mc> {
     }
     //
 
-    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
             .jni_ref()
@@ -2733,7 +2724,7 @@ impl<'mc> ChunkPopulateEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -2747,7 +2738,7 @@ impl<'mc> ChunkPopulateEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -2758,7 +2749,7 @@ impl<'mc> ChunkPopulateEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2784,7 +2775,7 @@ impl<'mc> ChunkPopulateEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -2801,7 +2792,7 @@ impl<'mc> ChunkPopulateEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2815,7 +2806,7 @@ impl<'mc> ChunkPopulateEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2825,7 +2816,7 @@ impl<'mc> ChunkPopulateEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -2835,7 +2826,7 @@ impl<'mc> ChunkPopulateEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2845,7 +2836,7 @@ impl<'mc> ChunkPopulateEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2934,9 +2925,7 @@ impl<'mc> ChunkUnloadEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -2961,7 +2950,7 @@ impl<'mc> ChunkUnloadEvent<'mc> {
     }
     //
 
-    pub fn is_save_chunk(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_save_chunk(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -2972,7 +2961,7 @@ impl<'mc> ChunkUnloadEvent<'mc> {
     //
 
     /// Set whether this chunk will be saved to disk.
-    pub fn set_save_chunk(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_save_chunk(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -2987,7 +2976,7 @@ impl<'mc> ChunkUnloadEvent<'mc> {
     }
     //
 
-    pub fn chunk(&mut self) -> Result<crate::Chunk<'mc>, Box<dyn std::error::Error>> {
+    pub fn chunk(&self) -> Result<crate::Chunk<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Chunk;");
         let res = self
             .jni_ref()
@@ -2999,7 +2988,7 @@ impl<'mc> ChunkUnloadEvent<'mc> {
     }
     //
 
-    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
             .jni_ref()
@@ -3011,7 +3000,7 @@ impl<'mc> ChunkUnloadEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -3025,7 +3014,7 @@ impl<'mc> ChunkUnloadEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -3036,7 +3025,7 @@ impl<'mc> ChunkUnloadEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3062,7 +3051,7 @@ impl<'mc> ChunkUnloadEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -3079,7 +3068,7 @@ impl<'mc> ChunkUnloadEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3093,7 +3082,7 @@ impl<'mc> ChunkUnloadEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -3103,7 +3092,7 @@ impl<'mc> ChunkUnloadEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -3113,7 +3102,7 @@ impl<'mc> ChunkUnloadEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3123,7 +3112,7 @@ impl<'mc> ChunkUnloadEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3221,9 +3210,7 @@ impl<'mc> EntitiesUnloadEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -3235,9 +3222,7 @@ impl<'mc> EntitiesUnloadEvent<'mc> {
     }
     //
 
-    pub fn entities(
-        &mut self,
-    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+    pub fn entities(&self) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
             self.jni_ref()
@@ -3267,7 +3252,7 @@ impl<'mc> EntitiesUnloadEvent<'mc> {
     }
     //
 
-    pub fn chunk(&mut self) -> Result<crate::Chunk<'mc>, Box<dyn std::error::Error>> {
+    pub fn chunk(&self) -> Result<crate::Chunk<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Chunk;");
         let res = self
             .jni_ref()
@@ -3279,7 +3264,7 @@ impl<'mc> EntitiesUnloadEvent<'mc> {
     }
     //
 
-    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
             .jni_ref()
@@ -3291,7 +3276,7 @@ impl<'mc> EntitiesUnloadEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -3305,7 +3290,7 @@ impl<'mc> EntitiesUnloadEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -3316,7 +3301,7 @@ impl<'mc> EntitiesUnloadEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3342,7 +3327,7 @@ impl<'mc> EntitiesUnloadEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -3359,7 +3344,7 @@ impl<'mc> EntitiesUnloadEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3373,7 +3358,7 @@ impl<'mc> EntitiesUnloadEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -3383,7 +3368,7 @@ impl<'mc> EntitiesUnloadEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -3393,7 +3378,7 @@ impl<'mc> EntitiesUnloadEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3403,7 +3388,7 @@ impl<'mc> EntitiesUnloadEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3500,9 +3485,7 @@ impl<'mc> EntitiesLoadEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -3514,9 +3497,7 @@ impl<'mc> EntitiesLoadEvent<'mc> {
     }
     //
 
-    pub fn entities(
-        &mut self,
-    ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
+    pub fn entities(&self) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
             self.jni_ref()
@@ -3546,7 +3527,7 @@ impl<'mc> EntitiesLoadEvent<'mc> {
     }
     //
 
-    pub fn chunk(&mut self) -> Result<crate::Chunk<'mc>, Box<dyn std::error::Error>> {
+    pub fn chunk(&self) -> Result<crate::Chunk<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Chunk;");
         let res = self
             .jni_ref()
@@ -3558,7 +3539,7 @@ impl<'mc> EntitiesLoadEvent<'mc> {
     }
     //
 
-    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
             .jni_ref()
@@ -3570,7 +3551,7 @@ impl<'mc> EntitiesLoadEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -3584,7 +3565,7 @@ impl<'mc> EntitiesLoadEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -3595,7 +3576,7 @@ impl<'mc> EntitiesLoadEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3621,7 +3602,7 @@ impl<'mc> EntitiesLoadEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -3638,7 +3619,7 @@ impl<'mc> EntitiesLoadEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3652,7 +3633,7 @@ impl<'mc> EntitiesLoadEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -3662,7 +3643,7 @@ impl<'mc> EntitiesLoadEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -3672,7 +3653,7 @@ impl<'mc> EntitiesLoadEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3682,7 +3663,7 @@ impl<'mc> EntitiesLoadEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3783,7 +3764,7 @@ impl<'mc> GenericGameEvent<'mc> {
     }
     //
 
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -3793,9 +3774,7 @@ impl<'mc> GenericGameEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -3807,7 +3786,7 @@ impl<'mc> GenericGameEvent<'mc> {
     }
     //
 
-    pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res = self
             .jni_ref()
@@ -3819,7 +3798,7 @@ impl<'mc> GenericGameEvent<'mc> {
     }
     //
 
-    pub fn radius(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn radius(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -3830,7 +3809,7 @@ impl<'mc> GenericGameEvent<'mc> {
     //
 
     /// Set the radius to which the event should be broadcast.
-    pub fn set_radius(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_radius(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -3844,7 +3823,7 @@ impl<'mc> GenericGameEvent<'mc> {
     }
     //
 
-    pub fn event(&mut self) -> Result<crate::GameEvent<'mc>, Box<dyn std::error::Error>> {
+    pub fn event(&self) -> Result<crate::GameEvent<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/GameEvent;");
         let res = self
             .jni_ref()
@@ -3858,7 +3837,7 @@ impl<'mc> GenericGameEvent<'mc> {
 
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
-    pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -3886,7 +3865,7 @@ impl<'mc> GenericGameEvent<'mc> {
     }
     //
 
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -3898,7 +3877,7 @@ impl<'mc> GenericGameEvent<'mc> {
     }
     //
 
-    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
             .jni_ref()
@@ -3910,7 +3889,7 @@ impl<'mc> GenericGameEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -3924,7 +3903,7 @@ impl<'mc> GenericGameEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -3935,7 +3914,7 @@ impl<'mc> GenericGameEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3961,7 +3940,7 @@ impl<'mc> GenericGameEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -3978,7 +3957,7 @@ impl<'mc> GenericGameEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3992,7 +3971,7 @@ impl<'mc> GenericGameEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4002,7 +3981,7 @@ impl<'mc> GenericGameEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -4012,7 +3991,7 @@ impl<'mc> GenericGameEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4022,7 +4001,7 @@ impl<'mc> GenericGameEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4115,7 +4094,7 @@ impl<'mc> WorldEvent<'mc> {
     }
     //
 
-    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
             .jni_ref()
@@ -4127,9 +4106,7 @@ impl<'mc> WorldEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -4141,7 +4118,7 @@ impl<'mc> WorldEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -4155,7 +4132,7 @@ impl<'mc> WorldEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -4166,7 +4143,7 @@ impl<'mc> WorldEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4192,7 +4169,7 @@ impl<'mc> WorldEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -4209,7 +4186,7 @@ impl<'mc> WorldEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4223,7 +4200,7 @@ impl<'mc> WorldEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4233,7 +4210,7 @@ impl<'mc> WorldEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -4243,7 +4220,7 @@ impl<'mc> WorldEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4253,7 +4230,7 @@ impl<'mc> WorldEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4313,7 +4290,7 @@ impl<'mc> ChunkEvent<'mc> {
     }
     //
 
-    pub fn chunk(&mut self) -> Result<crate::Chunk<'mc>, Box<dyn std::error::Error>> {
+    pub fn chunk(&self) -> Result<crate::Chunk<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Chunk;");
         let res = self
             .jni_ref()
@@ -4325,7 +4302,7 @@ impl<'mc> ChunkEvent<'mc> {
     }
     //
 
-    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
             .jni_ref()
@@ -4337,9 +4314,7 @@ impl<'mc> ChunkEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -4351,7 +4326,7 @@ impl<'mc> ChunkEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -4365,7 +4340,7 @@ impl<'mc> ChunkEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -4376,7 +4351,7 @@ impl<'mc> ChunkEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4402,7 +4377,7 @@ impl<'mc> ChunkEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -4419,7 +4394,7 @@ impl<'mc> ChunkEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4433,7 +4408,7 @@ impl<'mc> ChunkEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4443,7 +4418,7 @@ impl<'mc> ChunkEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -4453,7 +4428,7 @@ impl<'mc> ChunkEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4463,7 +4438,7 @@ impl<'mc> ChunkEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4574,7 +4549,7 @@ impl<'mc> StructureGrowEvent<'mc> {
     }
     //
 
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -4584,9 +4559,7 @@ impl<'mc> StructureGrowEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -4598,7 +4571,7 @@ impl<'mc> StructureGrowEvent<'mc> {
     }
     //
 
-    pub fn player(&mut self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
+    pub fn player(&self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Player;");
         let res = self
             .jni_ref()
@@ -4610,9 +4583,7 @@ impl<'mc> StructureGrowEvent<'mc> {
     }
     //
 
-    pub fn blocks(
-        &mut self,
-    ) -> Result<Vec<crate::block::BlockState<'mc>>, Box<dyn std::error::Error>> {
+    pub fn blocks(&self) -> Result<Vec<crate::block::BlockState<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -4631,7 +4602,7 @@ impl<'mc> StructureGrowEvent<'mc> {
 
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
-    pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -4659,7 +4630,7 @@ impl<'mc> StructureGrowEvent<'mc> {
     }
     //
 
-    pub fn species(&mut self) -> Result<crate::TreeType<'mc>, Box<dyn std::error::Error>> {
+    pub fn species(&self) -> Result<crate::TreeType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/TreeType;");
         let res =
             self.jni_ref()
@@ -4684,7 +4655,7 @@ impl<'mc> StructureGrowEvent<'mc> {
     }
     //
 
-    pub fn is_from_bonemeal(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_from_bonemeal(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -4694,7 +4665,7 @@ impl<'mc> StructureGrowEvent<'mc> {
     }
     //
 
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -4706,7 +4677,7 @@ impl<'mc> StructureGrowEvent<'mc> {
     }
     //
 
-    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
             .jni_ref()
@@ -4718,7 +4689,7 @@ impl<'mc> StructureGrowEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -4732,7 +4703,7 @@ impl<'mc> StructureGrowEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -4743,7 +4714,7 @@ impl<'mc> StructureGrowEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4769,7 +4740,7 @@ impl<'mc> StructureGrowEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -4786,7 +4757,7 @@ impl<'mc> StructureGrowEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4800,7 +4771,7 @@ impl<'mc> StructureGrowEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4810,7 +4781,7 @@ impl<'mc> StructureGrowEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -4820,7 +4791,7 @@ impl<'mc> StructureGrowEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4830,7 +4801,7 @@ impl<'mc> StructureGrowEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4880,6 +4851,11 @@ impl std::fmt::Display for TimeSkipEventSkipReasonEnum {
             TimeSkipEventSkipReasonEnum::Custom => f.write_str("CUSTOM"),
             TimeSkipEventSkipReasonEnum::NightSkip => f.write_str("NIGHT_SKIP"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for TimeSkipEventSkipReason<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct TimeSkipEventSkipReason<'mc>(
@@ -5029,7 +5005,7 @@ impl<'mc> TimeSkipEvent<'mc> {
     }
     //
 
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -5039,9 +5015,7 @@ impl<'mc> TimeSkipEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -5055,7 +5029,7 @@ impl<'mc> TimeSkipEvent<'mc> {
 
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
-    pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -5084,7 +5058,7 @@ impl<'mc> TimeSkipEvent<'mc> {
     //
 
     pub fn skip_reason(
-        &mut self,
+        &self,
     ) -> Result<crate::event::world::TimeSkipEventSkipReason<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/world/TimeSkipEvent$SkipReason;");
         let res =
@@ -5110,7 +5084,7 @@ impl<'mc> TimeSkipEvent<'mc> {
     }
     //
 
-    pub fn skip_amount(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
+    pub fn skip_amount(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
         let res =
             self.jni_ref()
@@ -5121,7 +5095,7 @@ impl<'mc> TimeSkipEvent<'mc> {
     //
 
     /// Sets the amount of time to skip.
-    pub fn set_skip_amount(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_skip_amount(&self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(J)V");
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let res = self.jni_ref().call_method(
@@ -5135,7 +5109,7 @@ impl<'mc> TimeSkipEvent<'mc> {
     }
     //
 
-    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
             .jni_ref()
@@ -5147,7 +5121,7 @@ impl<'mc> TimeSkipEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -5161,7 +5135,7 @@ impl<'mc> TimeSkipEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -5172,7 +5146,7 @@ impl<'mc> TimeSkipEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -5198,7 +5172,7 @@ impl<'mc> TimeSkipEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -5215,7 +5189,7 @@ impl<'mc> TimeSkipEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5229,7 +5203,7 @@ impl<'mc> TimeSkipEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -5239,7 +5213,7 @@ impl<'mc> TimeSkipEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -5249,7 +5223,7 @@ impl<'mc> TimeSkipEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -5259,7 +5233,7 @@ impl<'mc> TimeSkipEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -5345,9 +5319,7 @@ impl<'mc> WorldSaveEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -5372,7 +5344,7 @@ impl<'mc> WorldSaveEvent<'mc> {
     }
     //
 
-    pub fn world(&mut self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
+    pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
             .jni_ref()
@@ -5384,7 +5356,7 @@ impl<'mc> WorldSaveEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -5398,7 +5370,7 @@ impl<'mc> WorldSaveEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -5409,7 +5381,7 @@ impl<'mc> WorldSaveEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -5435,7 +5407,7 @@ impl<'mc> WorldSaveEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -5452,7 +5424,7 @@ impl<'mc> WorldSaveEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5466,7 +5438,7 @@ impl<'mc> WorldSaveEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -5476,7 +5448,7 @@ impl<'mc> WorldSaveEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -5486,7 +5458,7 @@ impl<'mc> WorldSaveEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -5496,7 +5468,7 @@ impl<'mc> WorldSaveEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()

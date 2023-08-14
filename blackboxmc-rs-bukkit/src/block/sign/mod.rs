@@ -14,6 +14,11 @@ impl std::fmt::Display for SideEnum {
         }
     }
 }
+impl<'mc> std::fmt::Display for Side<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
+    }
+}
 pub struct Side<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -122,7 +127,7 @@ impl<'mc> SignSide<'mc> {
     }
     //
 
-    pub fn is_glowing_text(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_glowing_text(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -139,7 +144,7 @@ impl<'mc> SignSide<'mc> {
 
     /// Gets the line of text at the specified index on this side of the sign.
     /// <p>For example, getLine(0) will return the first line of text.</p>
-    pub fn get_line(&mut self, arg0: i32) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn get_line(&self, arg0: i32) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/String;");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -158,7 +163,7 @@ impl<'mc> SignSide<'mc> {
     //
 
     pub fn set_line(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -183,7 +188,7 @@ impl<'mc> SignSide<'mc> {
 
     #[deprecated]
     /// Sets whether this side of the sign has glowing text.
-    pub fn set_glowing_text(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_glowing_text(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -199,7 +204,7 @@ impl<'mc> SignSide<'mc> {
     //
 
     pub fn set_color(
-        &mut self,
+        &self,
         arg0: impl Into<crate::DyeColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/DyeColor;)V");
@@ -217,7 +222,7 @@ impl<'mc> SignSide<'mc> {
     }
     //
 
-    pub fn color(&mut self) -> Result<crate::DyeColor<'mc>, Box<dyn std::error::Error>> {
+    pub fn color(&self) -> Result<crate::DyeColor<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/DyeColor;");
         let res = self
             .jni_ref()

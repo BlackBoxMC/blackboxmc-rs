@@ -20,6 +20,11 @@ impl std::fmt::Display for BarStyleEnum {
         }
     }
 }
+impl<'mc> std::fmt::Display for BarStyle<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
+    }
+}
 pub struct BarStyle<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -129,6 +134,11 @@ impl std::fmt::Display for BarColorEnum {
         }
     }
 }
+impl<'mc> std::fmt::Display for BarColor<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
+    }
+}
 pub struct BarColor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -234,6 +244,11 @@ impl std::fmt::Display for BarFlagEnum {
         }
     }
 }
+impl<'mc> std::fmt::Display for BarFlag<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
+    }
+}
 pub struct BarFlag<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -337,6 +352,11 @@ impl std::fmt::Display for RespawnPhaseEnum {
             RespawnPhaseEnum::End => f.write_str("END"),
             RespawnPhaseEnum::None => f.write_str("NONE"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for RespawnPhase<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct RespawnPhase<'mc>(
@@ -457,7 +477,7 @@ impl<'mc> KeyedBossBar<'mc> {
     //
 
     pub fn set_color(
-        &mut self,
+        &self,
         arg0: impl Into<crate::boss::BarColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/boss/BarColor;)V");
@@ -476,7 +496,7 @@ impl<'mc> KeyedBossBar<'mc> {
     //
 
     pub fn add_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::boss::BarFlag<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/boss/BarFlag;)V");
@@ -494,7 +514,7 @@ impl<'mc> KeyedBossBar<'mc> {
     }
     //
 
-    pub fn is_visible(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -504,7 +524,7 @@ impl<'mc> KeyedBossBar<'mc> {
     }
     //
 
-    pub fn set_visible(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -519,7 +539,7 @@ impl<'mc> KeyedBossBar<'mc> {
     }
     //
 
-    pub fn color(&mut self) -> Result<crate::boss::BarColor<'mc>, Box<dyn std::error::Error>> {
+    pub fn color(&self) -> Result<crate::boss::BarColor<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/boss/BarColor;");
         let res = self
             .jni_ref()
@@ -544,7 +564,7 @@ impl<'mc> KeyedBossBar<'mc> {
     }
     //
 
-    pub fn title(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn title(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -558,9 +578,7 @@ impl<'mc> KeyedBossBar<'mc> {
     }
     //
 
-    pub fn players(
-        &mut self,
-    ) -> Result<Vec<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
+    pub fn players(&self) -> Result<Vec<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
             self.jni_ref()
@@ -578,7 +596,7 @@ impl<'mc> KeyedBossBar<'mc> {
     //
 
     pub fn add_player(
-        &mut self,
+        &self,
         arg0: impl Into<crate::entity::Player<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/entity/Player;)V");
@@ -597,7 +615,7 @@ impl<'mc> KeyedBossBar<'mc> {
     //
 
     pub fn remove_player(
-        &mut self,
+        &self,
         arg0: impl Into<crate::entity::Player<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/entity/Player;)V");
@@ -615,7 +633,7 @@ impl<'mc> KeyedBossBar<'mc> {
     }
     //
 
-    pub fn set_title(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_title(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -631,7 +649,7 @@ impl<'mc> KeyedBossBar<'mc> {
     }
     //
 
-    pub fn style(&mut self) -> Result<crate::boss::BarStyle<'mc>, Box<dyn std::error::Error>> {
+    pub fn style(&self) -> Result<crate::boss::BarStyle<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/boss/BarStyle;");
         let res = self
             .jni_ref()
@@ -657,7 +675,7 @@ impl<'mc> KeyedBossBar<'mc> {
     //
 
     pub fn set_style(
-        &mut self,
+        &self,
         arg0: impl Into<crate::boss::BarStyle<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/boss/BarStyle;)V");
@@ -676,7 +694,7 @@ impl<'mc> KeyedBossBar<'mc> {
     //
 
     pub fn remove_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::boss::BarFlag<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/boss/BarFlag;)V");
@@ -695,7 +713,7 @@ impl<'mc> KeyedBossBar<'mc> {
     //
 
     pub fn has_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::boss::BarFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/boss/BarFlag;)Z");
@@ -713,7 +731,7 @@ impl<'mc> KeyedBossBar<'mc> {
     }
     //
 
-    pub fn set_progress(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_progress(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -727,7 +745,7 @@ impl<'mc> KeyedBossBar<'mc> {
     }
     //
 
-    pub fn progress(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn progress(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
             self.jni_ref()
@@ -737,7 +755,7 @@ impl<'mc> KeyedBossBar<'mc> {
     }
     //
 
-    pub fn show(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn show(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -747,7 +765,7 @@ impl<'mc> KeyedBossBar<'mc> {
     }
     //
 
-    pub fn hide(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn hide(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -757,7 +775,7 @@ impl<'mc> KeyedBossBar<'mc> {
     }
     //
 
-    pub fn remove_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn remove_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -767,7 +785,7 @@ impl<'mc> KeyedBossBar<'mc> {
     }
     //
 
-    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self
             .jni_ref()
@@ -828,7 +846,7 @@ impl<'mc> BossBar<'mc> {
     //
 
     pub fn set_color(
-        &mut self,
+        &self,
         arg0: impl Into<crate::boss::BarColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/boss/BarColor;)V");
@@ -847,7 +865,7 @@ impl<'mc> BossBar<'mc> {
     //
 
     pub fn add_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::boss::BarFlag<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/boss/BarFlag;)V");
@@ -865,7 +883,7 @@ impl<'mc> BossBar<'mc> {
     }
     //
 
-    pub fn is_visible(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -876,7 +894,7 @@ impl<'mc> BossBar<'mc> {
     //
 
     /// Set if the boss bar is displayed to attached players.
-    pub fn set_visible(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -891,7 +909,7 @@ impl<'mc> BossBar<'mc> {
     }
     //
 
-    pub fn color(&mut self) -> Result<crate::boss::BarColor<'mc>, Box<dyn std::error::Error>> {
+    pub fn color(&self) -> Result<crate::boss::BarColor<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/boss/BarColor;");
         let res = self
             .jni_ref()
@@ -916,7 +934,7 @@ impl<'mc> BossBar<'mc> {
     }
     //
 
-    pub fn title(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn title(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -930,9 +948,7 @@ impl<'mc> BossBar<'mc> {
     }
     //
 
-    pub fn players(
-        &mut self,
-    ) -> Result<Vec<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
+    pub fn players(&self) -> Result<Vec<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
             self.jni_ref()
@@ -950,7 +966,7 @@ impl<'mc> BossBar<'mc> {
     //
 
     pub fn add_player(
-        &mut self,
+        &self,
         arg0: impl Into<crate::entity::Player<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/entity/Player;)V");
@@ -969,7 +985,7 @@ impl<'mc> BossBar<'mc> {
     //
 
     pub fn remove_player(
-        &mut self,
+        &self,
         arg0: impl Into<crate::entity::Player<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/entity/Player;)V");
@@ -987,7 +1003,7 @@ impl<'mc> BossBar<'mc> {
     }
     //
 
-    pub fn set_title(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_title(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -1003,7 +1019,7 @@ impl<'mc> BossBar<'mc> {
     }
     //
 
-    pub fn style(&mut self) -> Result<crate::boss::BarStyle<'mc>, Box<dyn std::error::Error>> {
+    pub fn style(&self) -> Result<crate::boss::BarStyle<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/boss/BarStyle;");
         let res = self
             .jni_ref()
@@ -1029,7 +1045,7 @@ impl<'mc> BossBar<'mc> {
     //
 
     pub fn set_style(
-        &mut self,
+        &self,
         arg0: impl Into<crate::boss::BarStyle<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/boss/BarStyle;)V");
@@ -1048,7 +1064,7 @@ impl<'mc> BossBar<'mc> {
     //
 
     pub fn remove_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::boss::BarFlag<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/boss/BarFlag;)V");
@@ -1067,7 +1083,7 @@ impl<'mc> BossBar<'mc> {
     //
 
     pub fn has_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::boss::BarFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/boss/BarFlag;)Z");
@@ -1086,7 +1102,7 @@ impl<'mc> BossBar<'mc> {
     //
 
     /// Sets the progress of the bar. Values should be between 0.0 (empty) and 1.0 (full)
-    pub fn set_progress(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_progress(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -1100,7 +1116,7 @@ impl<'mc> BossBar<'mc> {
     }
     //
 
-    pub fn progress(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn progress(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
             self.jni_ref()
@@ -1110,7 +1126,7 @@ impl<'mc> BossBar<'mc> {
     }
     //
 
-    pub fn show(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn show(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1120,7 +1136,7 @@ impl<'mc> BossBar<'mc> {
     }
     //
 
-    pub fn hide(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn hide(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1130,7 +1146,7 @@ impl<'mc> BossBar<'mc> {
     }
     //
 
-    pub fn remove_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn remove_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1176,7 +1192,7 @@ impl<'mc> DragonBattle<'mc> {
     }
     //
 
-    pub fn boss_bar(&mut self) -> Result<crate::boss::BossBar<'mc>, Box<dyn std::error::Error>> {
+    pub fn boss_bar(&self) -> Result<crate::boss::BossBar<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/boss/BossBar;");
         let res =
             self.jni_ref()
@@ -1189,7 +1205,7 @@ impl<'mc> DragonBattle<'mc> {
     //
 
     pub fn ender_dragon(
-        &mut self,
+        &self,
     ) -> Result<crate::entity::EnderDragon<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/EnderDragon;");
         let res =
@@ -1202,9 +1218,7 @@ impl<'mc> DragonBattle<'mc> {
     }
     //
 
-    pub fn end_portal_location(
-        &mut self,
-    ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn end_portal_location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1220,7 +1234,7 @@ impl<'mc> DragonBattle<'mc> {
     //
 
     /// Generate the end portal.
-    pub fn generate_end_portal(&mut self, arg0: bool) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn generate_end_portal(&self, arg0: bool) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Z");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -1235,7 +1249,7 @@ impl<'mc> DragonBattle<'mc> {
     }
     //
 
-    pub fn has_been_previously_killed(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_been_previously_killed(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1249,7 +1263,7 @@ impl<'mc> DragonBattle<'mc> {
     //
 
     pub fn respawn_phase(
-        &mut self,
+        &self,
     ) -> Result<crate::boss::DragonBattleRespawnPhase<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/boss/DragonBattle$RespawnPhase;");
         let res =
@@ -1276,7 +1290,7 @@ impl<'mc> DragonBattle<'mc> {
     //
 
     pub fn set_respawn_phase(
-        &mut self,
+        &self,
         arg0: impl Into<crate::boss::DragonBattleRespawnPhase<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/boss/DragonBattle$RespawnPhase;)Z");
@@ -1294,7 +1308,7 @@ impl<'mc> DragonBattle<'mc> {
     }
     //
 
-    pub fn reset_crystals(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn reset_crystals(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res =
             self.jni_ref()
@@ -1334,6 +1348,11 @@ impl std::fmt::Display for DragonBattleRespawnPhaseEnum {
             DragonBattleRespawnPhaseEnum::End => f.write_str("END"),
             DragonBattleRespawnPhaseEnum::None => f.write_str("NONE"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for DragonBattleRespawnPhase<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct DragonBattleRespawnPhase<'mc>(

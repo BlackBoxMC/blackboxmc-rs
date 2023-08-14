@@ -62,7 +62,7 @@ impl<'mc> JavaPluginLoader<'mc> {
     //
 
     pub fn load_plugin(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/io/File;)Lorg/bukkit/plugin/Plugin;");
@@ -81,7 +81,7 @@ impl<'mc> JavaPluginLoader<'mc> {
     //
 
     pub fn get_plugin_description(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<crate::plugin::PluginDescriptionFile<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/io/File;)Lorg/bukkit/plugin/PluginDescriptionFile;");
@@ -102,7 +102,7 @@ impl<'mc> JavaPluginLoader<'mc> {
     //
 
     pub fn create_registered_listeners(
-        &mut self,
+        &self,
         arg0: impl Into<crate::event::Listener<'mc>>,
         arg1: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
@@ -131,7 +131,7 @@ impl<'mc> JavaPluginLoader<'mc> {
     //
 
     pub fn enable_plugin(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/plugin/Plugin;)V");
@@ -150,7 +150,7 @@ impl<'mc> JavaPluginLoader<'mc> {
     //
 
     pub fn disable_plugin(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/plugin/Plugin;)V");
@@ -169,7 +169,7 @@ impl<'mc> JavaPluginLoader<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -195,7 +195,7 @@ impl<'mc> JavaPluginLoader<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -212,7 +212,7 @@ impl<'mc> JavaPluginLoader<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -226,7 +226,7 @@ impl<'mc> JavaPluginLoader<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -236,7 +236,7 @@ impl<'mc> JavaPluginLoader<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -246,7 +246,7 @@ impl<'mc> JavaPluginLoader<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -256,7 +256,7 @@ impl<'mc> JavaPluginLoader<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -326,7 +326,7 @@ impl<'mc> JavaPlugin<'mc> {
     }
     //
 
-    pub fn server(&mut self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
+    pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Server;");
         let res = self
             .jni_ref()
@@ -339,7 +339,7 @@ impl<'mc> JavaPlugin<'mc> {
     //
 
     pub fn description(
-        &mut self,
+        &self,
     ) -> Result<crate::plugin::PluginDescriptionFile<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/plugin/PluginDescriptionFile;");
         let res =
@@ -353,7 +353,7 @@ impl<'mc> JavaPlugin<'mc> {
     //
 
     pub fn on_tab_complete(
-        &mut self,
+        &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: impl Into<crate::command::Command<'mc>>,
         arg2: impl Into<String>,
@@ -397,7 +397,7 @@ impl<'mc> JavaPlugin<'mc> {
     //
 
     pub fn on_command(
-        &mut self,
+        &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: impl Into<crate::command::Command<'mc>>,
         arg2: impl Into<String>,
@@ -429,7 +429,7 @@ impl<'mc> JavaPlugin<'mc> {
     //
 
     pub fn get_command(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<crate::command::PluginCommand<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Lorg/bukkit/command/PluginCommand;");
@@ -450,7 +450,7 @@ impl<'mc> JavaPlugin<'mc> {
     //
 
     pub fn get_default_biome_provider(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: impl Into<String>,
     ) -> Result<crate::generator::BiomeProvider<'mc>, Box<dyn std::error::Error>> {
@@ -479,7 +479,7 @@ impl<'mc> JavaPlugin<'mc> {
     }
     //
 
-    pub fn is_enabled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_enabled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -510,7 +510,7 @@ impl<'mc> JavaPlugin<'mc> {
     //
 
     pub fn config(
-        &mut self,
+        &self,
     ) -> Result<crate::configuration::file::FileConfiguration<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/configuration/file/FileConfiguration;");
@@ -524,9 +524,7 @@ impl<'mc> JavaPlugin<'mc> {
     }
     //
 
-    pub fn data_folder(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn data_folder(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/io/File;");
         let res =
             self.jni_ref()
@@ -536,7 +534,7 @@ impl<'mc> JavaPlugin<'mc> {
     }
     //
 
-    pub fn save_config(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn save_config(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res =
             self.jni_ref()
@@ -546,7 +544,7 @@ impl<'mc> JavaPlugin<'mc> {
     }
     //
 
-    pub fn save_default_config(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn save_default_config(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -560,7 +558,7 @@ impl<'mc> JavaPlugin<'mc> {
     //
 
     pub fn save_resource(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -584,7 +582,7 @@ impl<'mc> JavaPlugin<'mc> {
     }
     //
 
-    pub fn reload_config(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn reload_config(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res =
             self.jni_ref()
@@ -595,7 +593,7 @@ impl<'mc> JavaPlugin<'mc> {
     //
 
     pub fn plugin_loader(
-        &mut self,
+        &self,
     ) -> Result<crate::plugin::PluginLoader<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/plugin/PluginLoader;");
         let res =
@@ -608,7 +606,7 @@ impl<'mc> JavaPlugin<'mc> {
     }
     //
 
-    pub fn on_disable(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn on_disable(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -618,7 +616,7 @@ impl<'mc> JavaPlugin<'mc> {
     }
     //
 
-    pub fn on_load(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn on_load(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -628,7 +626,7 @@ impl<'mc> JavaPlugin<'mc> {
     }
     //
 
-    pub fn on_enable(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn on_enable(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -638,7 +636,7 @@ impl<'mc> JavaPlugin<'mc> {
     }
     //
 
-    pub fn is_naggable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_naggable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -650,7 +648,7 @@ impl<'mc> JavaPlugin<'mc> {
 
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Plugin.html#setNaggable(boolean)">Plugin</a></code></span>
     /// Set naggable state
-    pub fn set_naggable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_naggable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -666,7 +664,7 @@ impl<'mc> JavaPlugin<'mc> {
     //
 
     pub fn get_default_world_generator(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: impl Into<String>,
     ) -> Result<crate::generator::ChunkGenerator<'mc>, Box<dyn std::error::Error>> {
@@ -716,7 +714,7 @@ impl<'mc> JavaPlugin<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -731,7 +729,7 @@ impl<'mc> JavaPlugin<'mc> {
     //
 
     pub fn get_resource(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Ljava/io/InputStream;");
@@ -750,7 +748,7 @@ impl<'mc> JavaPlugin<'mc> {
     //
 
     pub fn logger(
-        &mut self,
+        &self,
     ) -> Result<blackboxmc_java::logging::JavaLogger<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/Logger;");
         let res = self
@@ -763,7 +761,7 @@ impl<'mc> JavaPlugin<'mc> {
     }
     //
 
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -778,7 +776,7 @@ impl<'mc> JavaPlugin<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -794,7 +792,7 @@ impl<'mc> JavaPlugin<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -805,7 +803,7 @@ impl<'mc> JavaPlugin<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -830,7 +828,7 @@ impl<'mc> JavaPlugin<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -840,7 +838,7 @@ impl<'mc> JavaPlugin<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -850,7 +848,7 @@ impl<'mc> JavaPlugin<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()

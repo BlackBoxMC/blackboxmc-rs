@@ -58,7 +58,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
     //
 
     pub fn enchantment(
-        &mut self,
+        &self,
     ) -> Result<crate::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/enchantments/Enchantment;");
         let res =
@@ -71,7 +71,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
     }
     //
 
-    pub fn start_level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn start_level(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -81,7 +81,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
     }
     //
 
-    pub fn max_level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_level(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -92,7 +92,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
     //
 
     pub fn can_enchant_item(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Z");
@@ -111,7 +111,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
     //
 
     pub fn item_target(
-        &mut self,
+        &self,
     ) -> Result<crate::enchantments::EnchantmentTarget<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/enchantments/EnchantmentTarget;");
         let res =
@@ -137,7 +137,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
     }
     //
 
-    pub fn is_treasure(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_treasure(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -147,7 +147,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
     }
     //
 
-    pub fn is_cursed(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_cursed(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -158,7 +158,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
     //
 
     pub fn conflicts_with(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -176,7 +176,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
     }
     //
 
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -258,7 +258,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -275,7 +275,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -291,7 +291,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
 
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -301,7 +301,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
     }
     //
 
-    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self
             .jni_ref()
@@ -336,7 +336,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -361,7 +361,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -371,7 +371,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -381,7 +381,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -470,7 +470,7 @@ impl<'mc> EnchantmentOffer<'mc> {
     //
 
     pub fn enchantment(
-        &mut self,
+        &self,
     ) -> Result<crate::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/enchantments/Enchantment;");
         let res =
@@ -484,7 +484,7 @@ impl<'mc> EnchantmentOffer<'mc> {
     //
 
     pub fn set_enchantment(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)V");
@@ -502,7 +502,7 @@ impl<'mc> EnchantmentOffer<'mc> {
     }
     //
 
-    pub fn enchantment_level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn enchantment_level(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -516,7 +516,7 @@ impl<'mc> EnchantmentOffer<'mc> {
     //
 
     /// Sets the level of the enchantment.
-    pub fn set_enchantment_level(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_enchantment_level(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -530,7 +530,7 @@ impl<'mc> EnchantmentOffer<'mc> {
     }
     //
 
-    pub fn cost(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn cost(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -541,7 +541,7 @@ impl<'mc> EnchantmentOffer<'mc> {
     //
 
     /// Sets the cost (minimum level) which is displayed as a number on the right hand side of the enchantment offer.
-    pub fn set_cost(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_cost(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -556,7 +556,7 @@ impl<'mc> EnchantmentOffer<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -582,7 +582,7 @@ impl<'mc> EnchantmentOffer<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -599,7 +599,7 @@ impl<'mc> EnchantmentOffer<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -613,7 +613,7 @@ impl<'mc> EnchantmentOffer<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -623,7 +623,7 @@ impl<'mc> EnchantmentOffer<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -633,7 +633,7 @@ impl<'mc> EnchantmentOffer<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -643,7 +643,7 @@ impl<'mc> EnchantmentOffer<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -700,6 +700,11 @@ impl std::fmt::Display for EnchantmentTargetEnum {
             EnchantmentTargetEnum::Crossbow => f.write_str("CROSSBOW"),
             EnchantmentTargetEnum::Tool => f.write_str("TOOL"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for EnchantmentTarget<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct EnchantmentTarget<'mc>(
@@ -813,7 +818,7 @@ impl<'mc> EnchantmentTarget<'mc> {
     //
 
     pub fn includes_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -930,7 +935,7 @@ impl<'mc> Enchantment<'mc> {
     }
     //
 
-    pub fn start_level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn start_level(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -940,7 +945,7 @@ impl<'mc> Enchantment<'mc> {
     }
     //
 
-    pub fn max_level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_level(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -951,7 +956,7 @@ impl<'mc> Enchantment<'mc> {
     //
 
     pub fn can_enchant_item(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Z");
@@ -982,7 +987,7 @@ impl<'mc> Enchantment<'mc> {
     //
 
     pub fn item_target(
-        &mut self,
+        &self,
     ) -> Result<crate::enchantments::EnchantmentTarget<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/enchantments/EnchantmentTarget;");
         let res =
@@ -1008,7 +1013,7 @@ impl<'mc> Enchantment<'mc> {
     }
     //
 
-    pub fn is_treasure(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_treasure(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1018,7 +1023,7 @@ impl<'mc> Enchantment<'mc> {
     }
     //
 
-    pub fn is_cursed(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_cursed(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -1029,7 +1034,7 @@ impl<'mc> Enchantment<'mc> {
     //
 
     pub fn conflicts_with(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -1059,7 +1064,7 @@ impl<'mc> Enchantment<'mc> {
     }
     //
 
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1074,7 +1079,7 @@ impl<'mc> Enchantment<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1091,7 +1096,7 @@ impl<'mc> Enchantment<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1107,7 +1112,7 @@ impl<'mc> Enchantment<'mc> {
 
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1117,7 +1122,7 @@ impl<'mc> Enchantment<'mc> {
     }
     //
 
-    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self
             .jni_ref()
@@ -1152,7 +1157,7 @@ impl<'mc> Enchantment<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1177,7 +1182,7 @@ impl<'mc> Enchantment<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1187,7 +1192,7 @@ impl<'mc> Enchantment<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1197,7 +1202,7 @@ impl<'mc> Enchantment<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()

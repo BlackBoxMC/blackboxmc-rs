@@ -275,7 +275,7 @@ impl<'mc> NumberConversions<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -301,7 +301,7 @@ impl<'mc> NumberConversions<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -318,7 +318,7 @@ impl<'mc> NumberConversions<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -332,7 +332,7 @@ impl<'mc> NumberConversions<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -342,7 +342,7 @@ impl<'mc> NumberConversions<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -352,7 +352,7 @@ impl<'mc> NumberConversions<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -362,7 +362,7 @@ impl<'mc> NumberConversions<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -484,7 +484,7 @@ impl<'mc> BlockIterator<'mc> {
     }
     //
 
-    pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -494,7 +494,7 @@ impl<'mc> BlockIterator<'mc> {
     }
     //
 
-    pub fn has_next(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_next(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -504,7 +504,7 @@ impl<'mc> BlockIterator<'mc> {
     }
     //
 
-    pub fn next(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
+    pub fn next(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/Block;";
@@ -519,7 +519,7 @@ impl<'mc> BlockIterator<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -545,7 +545,7 @@ impl<'mc> BlockIterator<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -562,7 +562,7 @@ impl<'mc> BlockIterator<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -576,7 +576,7 @@ impl<'mc> BlockIterator<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -586,7 +586,7 @@ impl<'mc> BlockIterator<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -596,7 +596,7 @@ impl<'mc> BlockIterator<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -606,7 +606,7 @@ impl<'mc> BlockIterator<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -698,9 +698,7 @@ impl<'mc> Transformation<'mc> {
     }
     //
 
-    pub fn translation(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn translation(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/joml/Vector3f;");
         let res =
             self.jni_ref()
@@ -710,9 +708,7 @@ impl<'mc> Transformation<'mc> {
     }
     //
 
-    pub fn left_rotation(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn left_rotation(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/joml/Quaternionf;");
         let res =
             self.jni_ref()
@@ -722,7 +718,7 @@ impl<'mc> Transformation<'mc> {
     }
     //
 
-    pub fn scale(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn scale(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/joml/Vector3f;");
         let res = self
             .jni_ref()
@@ -732,9 +728,7 @@ impl<'mc> Transformation<'mc> {
     }
     //
 
-    pub fn right_rotation(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn right_rotation(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/joml/Quaternionf;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -748,7 +742,7 @@ impl<'mc> Transformation<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -765,7 +759,7 @@ impl<'mc> Transformation<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -779,7 +773,7 @@ impl<'mc> Transformation<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -790,7 +784,7 @@ impl<'mc> Transformation<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -815,7 +809,7 @@ impl<'mc> Transformation<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -825,7 +819,7 @@ impl<'mc> Transformation<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -835,7 +829,7 @@ impl<'mc> Transformation<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -924,7 +918,7 @@ impl<'mc> RayTraceResult<'mc> {
     }
     //
 
-    pub fn hit_position(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn hit_position(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/Vector;");
         let res =
             self.jni_ref()
@@ -936,7 +930,7 @@ impl<'mc> RayTraceResult<'mc> {
     }
     //
 
-    pub fn hit_block(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
+    pub fn hit_block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/Block;");
         let res =
             self.jni_ref()
@@ -949,7 +943,7 @@ impl<'mc> RayTraceResult<'mc> {
     //
 
     pub fn hit_block_face(
-        &mut self,
+        &self,
     ) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/BlockFace;");
         let res =
@@ -975,7 +969,7 @@ impl<'mc> RayTraceResult<'mc> {
     }
     //
 
-    pub fn hit_entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    pub fn hit_entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res =
             self.jni_ref()
@@ -988,7 +982,7 @@ impl<'mc> RayTraceResult<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1005,7 +999,7 @@ impl<'mc> RayTraceResult<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1019,7 +1013,7 @@ impl<'mc> RayTraceResult<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1030,7 +1024,7 @@ impl<'mc> RayTraceResult<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1055,7 +1049,7 @@ impl<'mc> RayTraceResult<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1065,7 +1059,7 @@ impl<'mc> RayTraceResult<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1075,7 +1069,7 @@ impl<'mc> RayTraceResult<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1194,7 +1188,7 @@ impl<'mc> ChatPaginatorChatPage<'mc> {
 
     //
 
-    pub fn page_number(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn page_number(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -1204,7 +1198,7 @@ impl<'mc> ChatPaginatorChatPage<'mc> {
     }
     //
 
-    pub fn total_pages(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn total_pages(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -1215,7 +1209,7 @@ impl<'mc> ChatPaginatorChatPage<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1241,7 +1235,7 @@ impl<'mc> ChatPaginatorChatPage<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1258,7 +1252,7 @@ impl<'mc> ChatPaginatorChatPage<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1272,7 +1266,7 @@ impl<'mc> ChatPaginatorChatPage<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1282,7 +1276,7 @@ impl<'mc> ChatPaginatorChatPage<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1292,7 +1286,7 @@ impl<'mc> ChatPaginatorChatPage<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1302,7 +1296,7 @@ impl<'mc> ChatPaginatorChatPage<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1350,7 +1344,7 @@ impl<'mc> VoxelShape<'mc> {
     //
 
     pub fn overlaps(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::BoundingBox<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/BoundingBox;)Z");
@@ -1369,7 +1363,7 @@ impl<'mc> VoxelShape<'mc> {
     //
 
     pub fn bounding_boxes(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::util::BoundingBox<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Collection;");
         let res = self.jni_ref().call_method(
@@ -1437,7 +1431,7 @@ impl<'mc> Consumer<'mc> {
     //
 
     pub fn accept(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)V");
@@ -1493,7 +1487,7 @@ impl<'mc> StructureSearchResult<'mc> {
     //
 
     pub fn structure(
-        &mut self,
+        &self,
     ) -> Result<crate::generator::structure::Structure<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/generator/structure/Structure;");
         let res =
@@ -1506,7 +1500,7 @@ impl<'mc> StructureSearchResult<'mc> {
     }
     //
 
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -1613,7 +1607,7 @@ impl<'mc> BoundingBox<'mc> {
     //
 
     pub fn union_with_bounding_box(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1638,7 +1632,7 @@ impl<'mc> BoundingBox<'mc> {
 
     /// Expands this bounding box to contain (or border) the specified position.
     pub fn union_with_vector(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
         arg2: std::option::Option<f64>,
@@ -1671,7 +1665,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn height(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn height(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self
             .jni_ref()
@@ -1681,9 +1675,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -1717,7 +1709,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn min_x(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn min_x(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self
             .jni_ref()
@@ -1727,7 +1719,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn min_y(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn min_y(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self
             .jni_ref()
@@ -1737,7 +1729,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn min_z(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn min_z(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self
             .jni_ref()
@@ -1747,7 +1739,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn min(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn min(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/Vector;");
         let res = self
             .jni_ref()
@@ -1759,7 +1751,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn max_x(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn max_x(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self
             .jni_ref()
@@ -1769,7 +1761,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn max_y(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn max_y(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self
             .jni_ref()
@@ -1779,7 +1771,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn max_z(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn max_z(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self
             .jni_ref()
@@ -1789,7 +1781,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn max(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn max(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/Vector;");
         let res = self
             .jni_ref()
@@ -1801,7 +1793,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn width_x(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn width_x(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self
             .jni_ref()
@@ -1811,7 +1803,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn width_z(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn width_z(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self
             .jni_ref()
@@ -1821,7 +1813,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn volume(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn volume(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self
             .jni_ref()
@@ -1831,7 +1823,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn center_x(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn center_x(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
             self.jni_ref()
@@ -1841,7 +1833,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn center_y(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn center_y(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
             self.jni_ref()
@@ -1851,7 +1843,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn center_z(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn center_z(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
             self.jni_ref()
@@ -1861,7 +1853,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn center(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn center(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/Vector;");
         let res = self
             .jni_ref()
@@ -1876,7 +1868,7 @@ impl<'mc> BoundingBox<'mc> {
     /// Expands this bounding box in the specified direction.
     /// <p>Negative values will expand the bounding box in the negative direction, positive values will expand it in the positive direction. The magnitudes of the direction components determine the corresponding amounts of expansion.</p>
     pub fn expand_directional_with_vector(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
         arg2: std::option::Option<f64>,
@@ -1910,7 +1902,7 @@ impl<'mc> BoundingBox<'mc> {
     //
 
     pub fn intersection(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::BoundingBox<'mc>>,
     ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/BoundingBox;)Lorg/bukkit/util/BoundingBox;");
@@ -1931,7 +1923,7 @@ impl<'mc> BoundingBox<'mc> {
     //
 
     pub fn overlaps_with_bounding_box(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1961,7 +1953,7 @@ impl<'mc> BoundingBox<'mc> {
     //
 
     pub fn ray_trace(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
         arg1: impl Into<crate::util::Vector<'mc>>,
         arg2: f64,
@@ -1994,7 +1986,7 @@ impl<'mc> BoundingBox<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -2011,7 +2003,7 @@ impl<'mc> BoundingBox<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2025,7 +2017,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2035,7 +2027,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
@@ -2112,7 +2104,7 @@ impl<'mc> BoundingBox<'mc> {
     //
 
     pub fn contains_with_bounding_box(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2136,7 +2128,7 @@ impl<'mc> BoundingBox<'mc> {
     /// Checks if this bounding box contains the specified position.
     /// <p>Positions exactly on the minimum borders of the bounding box are considered to be inside the bounding box, while positions exactly on the maximum borders are considered to be outside. This allows bounding boxes to reside directly next to each other with positions always only residing in exactly one of them.</p>
     pub fn contains_with_vector(
-        &mut self,
+        &self,
         arg0: f64,
         arg1: std::option::Option<f64>,
         arg2: std::option::Option<f64>,
@@ -2166,7 +2158,7 @@ impl<'mc> BoundingBox<'mc> {
     //
 
     pub fn copy(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::BoundingBox<'mc>>,
     ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/BoundingBox;)Lorg/bukkit/util/BoundingBox;");
@@ -2189,7 +2181,7 @@ impl<'mc> BoundingBox<'mc> {
     /// Expands this bounding box by the given values in the corresponding directions.
     /// <p>Negative values will shrink the bounding box in the corresponding direction. Shrinking will be limited to the point where the affected opposite faces would meet if the they shrank at uniform speeds.</p>
     pub fn expand_with_double(
-        &mut self,
+        &self,
         arg0: f64,
         arg1: f64,
         arg2: f64,
@@ -2231,7 +2223,7 @@ impl<'mc> BoundingBox<'mc> {
     //
 
     pub fn expand_with_vector(
-        &mut self,
+        &self,
         arg0: impl Into<crate::block::BlockFace<'mc>>,
         arg1: std::option::Option<f64>,
     ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
@@ -2259,7 +2251,7 @@ impl<'mc> BoundingBox<'mc> {
     //
 
     pub fn shift_with_location(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
     ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2284,7 +2276,7 @@ impl<'mc> BoundingBox<'mc> {
 
     /// Shifts this bounding box by the given amounts.
     pub fn shift_with_double(
-        &mut self,
+        &self,
         arg0: f64,
         arg1: f64,
         arg2: std::option::Option<f64>,
@@ -2315,7 +2307,7 @@ impl<'mc> BoundingBox<'mc> {
 
     /// Resizes this bounding box.
     pub fn resize(
-        &mut self,
+        &self,
         arg0: f64,
         arg1: f64,
         arg2: f64,
@@ -2351,7 +2343,7 @@ impl<'mc> BoundingBox<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2376,7 +2368,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -2386,7 +2378,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2396,7 +2388,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2537,7 +2529,7 @@ impl<'mc> BlockVector<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -2553,7 +2545,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2563,7 +2555,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
@@ -2576,7 +2568,7 @@ impl<'mc> BlockVector<'mc> {
     //@NotNull
 
     pub fn multiply_with_vector(
-        &mut self,
+        &self,
         arg0: std::option::Option<f32>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2598,7 +2590,7 @@ impl<'mc> BlockVector<'mc> {
     //@NotNull
 
     pub fn multiply_with_double(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2619,7 +2611,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn is_normalized(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_normalized(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -2629,7 +2621,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn x(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn x(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self
             .jni_ref()
@@ -2639,7 +2631,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn y(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn y(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self
             .jni_ref()
@@ -2649,7 +2641,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn z(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn z(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self
             .jni_ref()
@@ -2660,7 +2652,7 @@ impl<'mc> BlockVector<'mc> {
     //
 
     pub fn set_x_with_float(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2682,7 +2674,7 @@ impl<'mc> BlockVector<'mc> {
     //@NotNull
 
     pub fn set_x_with_int(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2703,7 +2695,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn block_x(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn block_x(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2714,7 +2706,7 @@ impl<'mc> BlockVector<'mc> {
     //@NotNull
 
     pub fn set_y_with_float(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2736,7 +2728,7 @@ impl<'mc> BlockVector<'mc> {
     //
 
     pub fn set_y_with_double(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2757,7 +2749,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn block_y(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn block_y(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2768,7 +2760,7 @@ impl<'mc> BlockVector<'mc> {
     //@NotNull
 
     pub fn set_z_with_float(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2790,7 +2782,7 @@ impl<'mc> BlockVector<'mc> {
     //
 
     pub fn set_z_with_double(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2811,7 +2803,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn block_z(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn block_z(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2822,7 +2814,7 @@ impl<'mc> BlockVector<'mc> {
     //
 
     pub fn subtract(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;");
@@ -2842,7 +2834,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn length_squared(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn length_squared(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
             self.jni_ref()
@@ -2853,7 +2845,7 @@ impl<'mc> BlockVector<'mc> {
     //
 
     pub fn distance_squared(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/Vector;)D");
@@ -2871,7 +2863,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn check_finite(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn check_finite(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res =
             self.jni_ref()
@@ -2881,9 +2873,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -2895,7 +2885,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn is_zero(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_zero(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -2906,7 +2896,7 @@ impl<'mc> BlockVector<'mc> {
     //
 
     pub fn divide(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;");
@@ -2927,7 +2917,7 @@ impl<'mc> BlockVector<'mc> {
     //
 
     pub fn angle(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/Vector;)F");
@@ -2946,7 +2936,7 @@ impl<'mc> BlockVector<'mc> {
     //
 
     pub fn midpoint(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;");
@@ -2967,7 +2957,7 @@ impl<'mc> BlockVector<'mc> {
     //
 
     pub fn get_midpoint(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;");
@@ -2988,7 +2978,7 @@ impl<'mc> BlockVector<'mc> {
     //
 
     pub fn cross_product(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;");
@@ -3009,7 +2999,7 @@ impl<'mc> BlockVector<'mc> {
     //
 
     pub fn get_cross_product(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;");
@@ -3030,7 +3020,7 @@ impl<'mc> BlockVector<'mc> {
     //
 
     pub fn is_in_aabb(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
         arg1: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3056,7 +3046,7 @@ impl<'mc> BlockVector<'mc> {
     //
 
     pub fn is_in_sphere(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
         arg1: f64,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3092,7 +3082,7 @@ impl<'mc> BlockVector<'mc> {
     //@NotNull
 
     pub fn rotate_around_x(
-        &mut self,
+        &self,
         arg0: f64,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(D)Lorg/bukkit/util/Vector;");
@@ -3111,7 +3101,7 @@ impl<'mc> BlockVector<'mc> {
     //@NotNull
 
     pub fn rotate_around_y(
-        &mut self,
+        &self,
         arg0: f64,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(D)Lorg/bukkit/util/Vector;");
@@ -3130,7 +3120,7 @@ impl<'mc> BlockVector<'mc> {
     //@NotNull
 
     pub fn rotate_around_z(
-        &mut self,
+        &self,
         arg0: f64,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(D)Lorg/bukkit/util/Vector;");
@@ -3149,7 +3139,7 @@ impl<'mc> BlockVector<'mc> {
     //
 
     pub fn rotate_around_axis(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
         arg1: f64,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
@@ -3175,7 +3165,7 @@ impl<'mc> BlockVector<'mc> {
     //
 
     pub fn rotate_around_non_unit_axis(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
         arg1: f64,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
@@ -3201,7 +3191,7 @@ impl<'mc> BlockVector<'mc> {
     //
 
     pub fn to_location_with_world(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::World<'mc>>>,
         arg1: std::option::Option<f32>,
         arg2: std::option::Option<f32>,
@@ -3237,7 +3227,7 @@ impl<'mc> BlockVector<'mc> {
     //
 
     pub fn to_block_vector(
-        &mut self,
+        &self,
     ) -> Result<crate::util::BlockVector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/BlockVector;");
         let res =
@@ -3250,9 +3240,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn to_vector3f(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn to_vector3f(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/joml/Vector3f;");
         let res =
             self.jni_ref()
@@ -3262,9 +3250,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn to_vector3d(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn to_vector3d(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/joml/Vector3d;");
         let res =
             self.jni_ref()
@@ -3275,7 +3261,7 @@ impl<'mc> BlockVector<'mc> {
     //@NotNull
 
     pub fn to_vector3i(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -3412,7 +3398,7 @@ impl<'mc> BlockVector<'mc> {
     //
 
     pub fn add(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;");
@@ -3432,7 +3418,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn length(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn length(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self
             .jni_ref()
@@ -3443,7 +3429,7 @@ impl<'mc> BlockVector<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3458,7 +3444,7 @@ impl<'mc> BlockVector<'mc> {
     //
 
     pub fn dot(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/Vector;)D");
@@ -3477,7 +3463,7 @@ impl<'mc> BlockVector<'mc> {
     //
 
     pub fn copy(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;");
@@ -3497,7 +3483,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn normalize(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn normalize(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/Vector;");
         let res = self
             .jni_ref()
@@ -3509,7 +3495,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn zero(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn zero(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/Vector;");
         let res = self
             .jni_ref()
@@ -3522,7 +3508,7 @@ impl<'mc> BlockVector<'mc> {
     //
 
     pub fn distance(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/Vector;)D");
@@ -3541,7 +3527,7 @@ impl<'mc> BlockVector<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3566,7 +3552,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -3576,7 +3562,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3586,7 +3572,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3670,7 +3656,7 @@ impl<'mc> EulerAngle<'mc> {
     }
     //
 
-    pub fn x(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn x(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self
             .jni_ref()
@@ -3680,7 +3666,7 @@ impl<'mc> EulerAngle<'mc> {
     }
     //
 
-    pub fn y(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn y(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self
             .jni_ref()
@@ -3690,7 +3676,7 @@ impl<'mc> EulerAngle<'mc> {
     }
     //
 
-    pub fn z(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn z(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self
             .jni_ref()
@@ -3702,7 +3688,7 @@ impl<'mc> EulerAngle<'mc> {
 
     /// Return a EulerAngle which is the result of changing the x axis to the passed angle
     pub fn set_x(
-        &mut self,
+        &self,
         arg0: f64,
     ) -> Result<crate::util::EulerAngle<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(D)Lorg/bukkit/util/EulerAngle;");
@@ -3722,7 +3708,7 @@ impl<'mc> EulerAngle<'mc> {
 
     /// Return a EulerAngle which is the result of changing the y axis to the passed angle
     pub fn set_y(
-        &mut self,
+        &self,
         arg0: f64,
     ) -> Result<crate::util::EulerAngle<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(D)Lorg/bukkit/util/EulerAngle;");
@@ -3742,7 +3728,7 @@ impl<'mc> EulerAngle<'mc> {
 
     /// Return a EulerAngle which is the result of changing the z axis to the passed angle
     pub fn set_z(
-        &mut self,
+        &self,
         arg0: f64,
     ) -> Result<crate::util::EulerAngle<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(D)Lorg/bukkit/util/EulerAngle;");
@@ -3762,7 +3748,7 @@ impl<'mc> EulerAngle<'mc> {
 
     /// Creates a new EulerAngle which is the result of subtracting the x, y, z components to this EulerAngle
     pub fn subtract(
-        &mut self,
+        &self,
         arg0: f64,
         arg1: f64,
         arg2: f64,
@@ -3790,7 +3776,7 @@ impl<'mc> EulerAngle<'mc> {
 
     /// Creates a new EulerAngle which is the result of adding the x, y, z components to this EulerAngle
     pub fn add(
-        &mut self,
+        &self,
         arg0: f64,
         arg1: f64,
         arg2: f64,
@@ -3817,7 +3803,7 @@ impl<'mc> EulerAngle<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -3833,7 +3819,7 @@ impl<'mc> EulerAngle<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -3844,7 +3830,7 @@ impl<'mc> EulerAngle<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3870,7 +3856,7 @@ impl<'mc> EulerAngle<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3884,7 +3870,7 @@ impl<'mc> EulerAngle<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -3894,7 +3880,7 @@ impl<'mc> EulerAngle<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3904,7 +3890,7 @@ impl<'mc> EulerAngle<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3996,7 +3982,7 @@ impl<'mc> StringUtil<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4022,7 +4008,7 @@ impl<'mc> StringUtil<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -4039,7 +4025,7 @@ impl<'mc> StringUtil<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4053,7 +4039,7 @@ impl<'mc> StringUtil<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4063,7 +4049,7 @@ impl<'mc> StringUtil<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -4073,7 +4059,7 @@ impl<'mc> StringUtil<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4083,7 +4069,7 @@ impl<'mc> StringUtil<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4189,7 +4175,7 @@ impl<'mc> ChatPaginator<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4215,7 +4201,7 @@ impl<'mc> ChatPaginator<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -4232,7 +4218,7 @@ impl<'mc> ChatPaginator<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4246,7 +4232,7 @@ impl<'mc> ChatPaginator<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4256,7 +4242,7 @@ impl<'mc> ChatPaginator<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -4266,7 +4252,7 @@ impl<'mc> ChatPaginator<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4276,7 +4262,7 @@ impl<'mc> ChatPaginator<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4388,7 +4374,7 @@ impl<'mc> Vector<'mc> {
 
     /// Performs scalar multiplication, multiplying all components with a scalar.
     pub fn multiply_with_vector(
-        &mut self,
+        &self,
         arg0: std::option::Option<f32>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -4411,7 +4397,7 @@ impl<'mc> Vector<'mc> {
 
     /// Performs scalar multiplication, multiplying all components with a scalar.
     pub fn multiply_with_double(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -4432,7 +4418,7 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn is_normalized(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_normalized(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -4442,7 +4428,7 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn x(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn x(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self
             .jni_ref()
@@ -4452,7 +4438,7 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn y(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn y(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self
             .jni_ref()
@@ -4462,7 +4448,7 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn z(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn z(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self
             .jni_ref()
@@ -4474,7 +4460,7 @@ impl<'mc> Vector<'mc> {
 
     /// Set the X component.
     pub fn set_x_with_float(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -4497,7 +4483,7 @@ impl<'mc> Vector<'mc> {
 
     /// Set the X component.
     pub fn set_x_with_int(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -4518,7 +4504,7 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn block_x(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn block_x(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4530,7 +4516,7 @@ impl<'mc> Vector<'mc> {
 
     /// Set the Y component.
     pub fn set_y_with_float(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -4553,7 +4539,7 @@ impl<'mc> Vector<'mc> {
 
     /// Set the Y component.
     pub fn set_y_with_double(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -4574,7 +4560,7 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn block_y(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn block_y(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4586,7 +4572,7 @@ impl<'mc> Vector<'mc> {
 
     /// Set the Z component.
     pub fn set_z_with_float(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -4609,7 +4595,7 @@ impl<'mc> Vector<'mc> {
 
     /// Set the Z component.
     pub fn set_z_with_double(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -4630,7 +4616,7 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn block_z(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn block_z(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4641,7 +4627,7 @@ impl<'mc> Vector<'mc> {
     //
 
     pub fn subtract(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;");
@@ -4661,7 +4647,7 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn length_squared(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn length_squared(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
             self.jni_ref()
@@ -4672,7 +4658,7 @@ impl<'mc> Vector<'mc> {
     //
 
     pub fn distance_squared(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/Vector;)D");
@@ -4690,7 +4676,7 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn check_finite(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn check_finite(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res =
             self.jni_ref()
@@ -4700,9 +4686,7 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -4736,7 +4720,7 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn is_zero(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_zero(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -4747,7 +4731,7 @@ impl<'mc> Vector<'mc> {
     //
 
     pub fn divide(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;");
@@ -4768,7 +4752,7 @@ impl<'mc> Vector<'mc> {
     //
 
     pub fn angle(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/Vector;)F");
@@ -4787,7 +4771,7 @@ impl<'mc> Vector<'mc> {
     //
 
     pub fn midpoint(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;");
@@ -4808,7 +4792,7 @@ impl<'mc> Vector<'mc> {
     //
 
     pub fn get_midpoint(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;");
@@ -4829,7 +4813,7 @@ impl<'mc> Vector<'mc> {
     //
 
     pub fn cross_product(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;");
@@ -4850,7 +4834,7 @@ impl<'mc> Vector<'mc> {
     //
 
     pub fn get_cross_product(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;");
@@ -4871,7 +4855,7 @@ impl<'mc> Vector<'mc> {
     //
 
     pub fn is_in_aabb(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
         arg1: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4897,7 +4881,7 @@ impl<'mc> Vector<'mc> {
     //
 
     pub fn is_in_sphere(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
         arg1: f64,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4935,7 +4919,7 @@ impl<'mc> Vector<'mc> {
     /// Rotates the vector around the x axis.
     /// <p>This piece of math is based on the standard rotation matrix for vectors in three dimensional space. This matrix can be found here: <a href="https://en.wikipedia.org/wiki/Rotation_matrix#Basic_rotations">Rotation Matrix</a>.</p>
     pub fn rotate_around_x(
-        &mut self,
+        &self,
         arg0: f64,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(D)Lorg/bukkit/util/Vector;");
@@ -4956,7 +4940,7 @@ impl<'mc> Vector<'mc> {
     /// Rotates the vector around the y axis.
     /// <p>This piece of math is based on the standard rotation matrix for vectors in three dimensional space. This matrix can be found here: <a href="https://en.wikipedia.org/wiki/Rotation_matrix#Basic_rotations">Rotation Matrix</a>.</p>
     pub fn rotate_around_y(
-        &mut self,
+        &self,
         arg0: f64,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(D)Lorg/bukkit/util/Vector;");
@@ -4977,7 +4961,7 @@ impl<'mc> Vector<'mc> {
     /// Rotates the vector around the z axis
     /// <p>This piece of math is based on the standard rotation matrix for vectors in three dimensional space. This matrix can be found here: <a href="https://en.wikipedia.org/wiki/Rotation_matrix#Basic_rotations">Rotation Matrix</a>.</p>
     pub fn rotate_around_z(
-        &mut self,
+        &self,
         arg0: f64,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(D)Lorg/bukkit/util/Vector;");
@@ -4996,7 +4980,7 @@ impl<'mc> Vector<'mc> {
     //
 
     pub fn rotate_around_axis(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
         arg1: f64,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
@@ -5022,7 +5006,7 @@ impl<'mc> Vector<'mc> {
     //
 
     pub fn rotate_around_non_unit_axis(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
         arg1: f64,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
@@ -5048,7 +5032,7 @@ impl<'mc> Vector<'mc> {
     //
 
     pub fn to_location_with_world(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::World<'mc>>>,
         arg1: std::option::Option<f32>,
         arg2: std::option::Option<f32>,
@@ -5084,7 +5068,7 @@ impl<'mc> Vector<'mc> {
     //
 
     pub fn to_block_vector(
-        &mut self,
+        &self,
     ) -> Result<crate::util::BlockVector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/BlockVector;");
         let res =
@@ -5097,9 +5081,7 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn to_vector3f(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn to_vector3f(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/joml/Vector3f;");
         let res =
             self.jni_ref()
@@ -5109,9 +5091,7 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn to_vector3d(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn to_vector3d(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/joml/Vector3d;");
         let res =
             self.jni_ref()
@@ -5123,7 +5103,7 @@ impl<'mc> Vector<'mc> {
 
     /// Get this vector as a JOML <code>Vector3i</code>.
     pub fn to_vector3i(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -5260,7 +5240,7 @@ impl<'mc> Vector<'mc> {
     //
 
     pub fn add(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;");
@@ -5281,7 +5261,7 @@ impl<'mc> Vector<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -5297,7 +5277,7 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn length(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn length(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self
             .jni_ref()
@@ -5308,7 +5288,7 @@ impl<'mc> Vector<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5322,7 +5302,7 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -5332,7 +5312,7 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/util/Vector;";
@@ -5347,7 +5327,7 @@ impl<'mc> Vector<'mc> {
     //
 
     pub fn dot(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/Vector;)D");
@@ -5366,7 +5346,7 @@ impl<'mc> Vector<'mc> {
     //
 
     pub fn copy(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/Vector;)Lorg/bukkit/util/Vector;");
@@ -5386,7 +5366,7 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn normalize(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn normalize(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/Vector;");
         let res = self
             .jni_ref()
@@ -5398,7 +5378,7 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn zero(&mut self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn zero(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/Vector;");
         let res = self
             .jni_ref()
@@ -5411,7 +5391,7 @@ impl<'mc> Vector<'mc> {
     //
 
     pub fn distance(
-        &mut self,
+        &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/util/Vector;)D");
@@ -5430,7 +5410,7 @@ impl<'mc> Vector<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -5455,7 +5435,7 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -5465,7 +5445,7 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -5475,7 +5455,7 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -5571,7 +5551,7 @@ impl<'mc> FileUtil<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -5597,7 +5577,7 @@ impl<'mc> FileUtil<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -5614,7 +5594,7 @@ impl<'mc> FileUtil<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5628,7 +5608,7 @@ impl<'mc> FileUtil<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -5638,7 +5618,7 @@ impl<'mc> FileUtil<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -5648,7 +5628,7 @@ impl<'mc> FileUtil<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -5658,7 +5638,7 @@ impl<'mc> FileUtil<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()

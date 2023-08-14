@@ -63,7 +63,7 @@ impl<'mc> JavaArrayList<'mc> {
     //
 
     pub fn add_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -89,7 +89,7 @@ impl<'mc> JavaArrayList<'mc> {
     //
 
     pub fn remove_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -108,10 +108,7 @@ impl<'mc> JavaArrayList<'mc> {
     }
     //
 
-    pub fn get(
-        &mut self,
-        arg0: i32,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn get(&self, arg0: i32) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/Object;");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -126,7 +123,7 @@ impl<'mc> JavaArrayList<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -142,7 +139,7 @@ impl<'mc> JavaArrayList<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -152,7 +149,7 @@ impl<'mc> JavaArrayList<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -163,7 +160,7 @@ impl<'mc> JavaArrayList<'mc> {
     //
 
     pub fn index_of(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)I");
@@ -179,7 +176,7 @@ impl<'mc> JavaArrayList<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -190,7 +187,7 @@ impl<'mc> JavaArrayList<'mc> {
     //
 
     pub fn last_index_of(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)I");
@@ -206,7 +203,7 @@ impl<'mc> JavaArrayList<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -217,7 +214,7 @@ impl<'mc> JavaArrayList<'mc> {
     //
 
     pub fn replace_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/UnaryOperator;)V");
@@ -233,7 +230,7 @@ impl<'mc> JavaArrayList<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -244,7 +241,7 @@ impl<'mc> JavaArrayList<'mc> {
     //
 
     pub fn sub_list(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: i32,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -267,7 +264,7 @@ impl<'mc> JavaArrayList<'mc> {
 
     //
 
-    pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn iterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self
             .jni_ref()
@@ -278,7 +275,7 @@ impl<'mc> JavaArrayList<'mc> {
     //
 
     pub fn contains(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -294,9 +291,7 @@ impl<'mc> JavaArrayList<'mc> {
     }
     //
 
-    pub fn spliterator(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn spliterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Spliterator;");
         let res =
             self.jni_ref()
@@ -307,7 +302,7 @@ impl<'mc> JavaArrayList<'mc> {
     //
 
     pub fn add_all_with_collection(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -333,7 +328,7 @@ impl<'mc> JavaArrayList<'mc> {
     //
 
     pub fn set(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -355,7 +350,7 @@ impl<'mc> JavaArrayList<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Consumer;)V");
@@ -371,7 +366,7 @@ impl<'mc> JavaArrayList<'mc> {
     }
     //
 
-    pub fn ensure_capacity(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn ensure_capacity(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -385,7 +380,7 @@ impl<'mc> JavaArrayList<'mc> {
     }
     //
 
-    pub fn trim_to_size(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn trim_to_size(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res =
             self.jni_ref()
@@ -396,7 +391,7 @@ impl<'mc> JavaArrayList<'mc> {
     //
 
     pub fn remove_if(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Predicate;)Z");
@@ -412,10 +407,7 @@ impl<'mc> JavaArrayList<'mc> {
     }
     //
 
-    pub fn sort(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn sort(&self, arg0: jni::objects::JObject<'mc>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Comparator;)V");
         let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
@@ -430,7 +422,7 @@ impl<'mc> JavaArrayList<'mc> {
     //
 
     pub fn remove_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -447,7 +439,7 @@ impl<'mc> JavaArrayList<'mc> {
     //
 
     pub fn retain_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -464,7 +456,7 @@ impl<'mc> JavaArrayList<'mc> {
     //
 
     pub fn list_iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -484,7 +476,7 @@ impl<'mc> JavaArrayList<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -499,7 +491,7 @@ impl<'mc> JavaArrayList<'mc> {
     //
 
     pub fn contains_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -516,7 +508,7 @@ impl<'mc> JavaArrayList<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -541,7 +533,7 @@ impl<'mc> JavaArrayList<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -551,7 +543,7 @@ impl<'mc> JavaArrayList<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -561,7 +553,7 @@ impl<'mc> JavaArrayList<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -571,7 +563,7 @@ impl<'mc> JavaArrayList<'mc> {
     }
     //
 
-    pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn stream(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res = self
             .jni_ref()
@@ -582,7 +574,7 @@ impl<'mc> JavaArrayList<'mc> {
     //
 
     pub fn parallel_stream(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res =
@@ -650,7 +642,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     //
 
     pub fn remove_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -676,7 +668,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     //
 
     pub fn get(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Ljava/lang/Object;");
@@ -693,7 +685,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     //
 
     pub fn put(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -715,7 +707,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -732,7 +724,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -746,7 +738,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     }
     //
 
-    pub fn values(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn values(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Collection;");
         let res = self
             .jni_ref()
@@ -756,7 +748,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -766,7 +758,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -776,7 +768,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -786,7 +778,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -796,7 +788,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     }
     //
 
-    pub fn entry_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn entry_set(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
@@ -807,7 +799,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     //
 
     pub fn put_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Map;)V");
@@ -824,7 +816,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     //
 
     pub fn contains_key(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -840,7 +832,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     }
     //
 
-    pub fn key_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn key_set(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
@@ -851,7 +843,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     //
 
     pub fn contains_value(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -868,7 +860,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -893,7 +885,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -903,7 +895,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -913,7 +905,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -924,7 +916,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     //
 
     pub fn replace_with_object(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -954,7 +946,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     //
 
     pub fn replace_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/BiFunction;)V");
@@ -971,7 +963,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     //
 
     pub fn merge(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: jni::objects::JObject<'mc>,
@@ -996,7 +988,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     //
 
     pub fn put_if_absent(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -1018,7 +1010,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     //
 
     pub fn compute(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -1041,7 +1033,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/BiConsumer;)V");
@@ -1058,7 +1050,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     //
 
     pub fn compute_if_absent(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -1081,7 +1073,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     //
 
     pub fn get_or_default(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -1103,7 +1095,7 @@ impl<'mc> JavaAbstractMap<'mc> {
     //
 
     pub fn compute_if_present(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -1218,7 +1210,7 @@ impl<'mc> JavaTreeSet<'mc> {
     //
 
     pub fn sub_set_with_object(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<bool>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -1256,7 +1248,7 @@ impl<'mc> JavaTreeSet<'mc> {
     //
 
     pub fn head_set_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<bool>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -1283,7 +1275,7 @@ impl<'mc> JavaTreeSet<'mc> {
     //
 
     pub fn tail_set_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<bool>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -1309,9 +1301,7 @@ impl<'mc> JavaTreeSet<'mc> {
     }
     //
 
-    pub fn descending_set(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn descending_set(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/NavigableSet;");
         let res =
             self.jni_ref()
@@ -1322,7 +1312,7 @@ impl<'mc> JavaTreeSet<'mc> {
     //
 
     pub fn ceiling(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Ljava/lang/Object;");
@@ -1339,7 +1329,7 @@ impl<'mc> JavaTreeSet<'mc> {
     //
 
     pub fn higher(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Ljava/lang/Object;");
@@ -1355,7 +1345,7 @@ impl<'mc> JavaTreeSet<'mc> {
     }
     //
 
-    pub fn poll_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn poll_first(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -1365,7 +1355,7 @@ impl<'mc> JavaTreeSet<'mc> {
     }
     //
 
-    pub fn poll_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn poll_last(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -1376,7 +1366,7 @@ impl<'mc> JavaTreeSet<'mc> {
     //
 
     pub fn descending_iterator(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self.jni_ref().call_method(
@@ -1391,7 +1381,7 @@ impl<'mc> JavaTreeSet<'mc> {
     //
 
     pub fn add(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1408,7 +1398,7 @@ impl<'mc> JavaTreeSet<'mc> {
     //
 
     pub fn remove(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1424,7 +1414,7 @@ impl<'mc> JavaTreeSet<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -1435,7 +1425,7 @@ impl<'mc> JavaTreeSet<'mc> {
     //
 
     pub fn floor(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Ljava/lang/Object;");
@@ -1451,7 +1441,7 @@ impl<'mc> JavaTreeSet<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1461,7 +1451,7 @@ impl<'mc> JavaTreeSet<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -1471,7 +1461,7 @@ impl<'mc> JavaTreeSet<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1481,7 +1471,7 @@ impl<'mc> JavaTreeSet<'mc> {
     }
     //
 
-    pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn iterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self
             .jni_ref()
@@ -1492,7 +1482,7 @@ impl<'mc> JavaTreeSet<'mc> {
     //
 
     pub fn contains(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1508,7 +1498,7 @@ impl<'mc> JavaTreeSet<'mc> {
     }
     //
 
-    pub fn last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn last(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -1518,9 +1508,7 @@ impl<'mc> JavaTreeSet<'mc> {
     }
     //
 
-    pub fn spliterator(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn spliterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Spliterator;");
         let res =
             self.jni_ref()
@@ -1531,7 +1519,7 @@ impl<'mc> JavaTreeSet<'mc> {
     //
 
     pub fn add_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -1547,7 +1535,7 @@ impl<'mc> JavaTreeSet<'mc> {
     }
     //
 
-    pub fn first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn first(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -1558,7 +1546,7 @@ impl<'mc> JavaTreeSet<'mc> {
     //
 
     pub fn lower(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Ljava/lang/Object;");
@@ -1574,7 +1562,7 @@ impl<'mc> JavaTreeSet<'mc> {
     }
     //
 
-    pub fn comparator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn comparator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Comparator;");
         let res =
             self.jni_ref()
@@ -1585,7 +1573,7 @@ impl<'mc> JavaTreeSet<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1601,7 +1589,7 @@ impl<'mc> JavaTreeSet<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1612,7 +1600,7 @@ impl<'mc> JavaTreeSet<'mc> {
     //
 
     pub fn remove_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -1629,7 +1617,7 @@ impl<'mc> JavaTreeSet<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1646,7 +1634,7 @@ impl<'mc> JavaTreeSet<'mc> {
     //
 
     pub fn retain_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -1663,7 +1651,7 @@ impl<'mc> JavaTreeSet<'mc> {
     //
 
     pub fn contains_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -1680,7 +1668,7 @@ impl<'mc> JavaTreeSet<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1705,7 +1693,7 @@ impl<'mc> JavaTreeSet<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1715,7 +1703,7 @@ impl<'mc> JavaTreeSet<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1725,7 +1713,7 @@ impl<'mc> JavaTreeSet<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1735,7 +1723,7 @@ impl<'mc> JavaTreeSet<'mc> {
     }
     //
 
-    pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn stream(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res = self
             .jni_ref()
@@ -1746,7 +1734,7 @@ impl<'mc> JavaTreeSet<'mc> {
     //
 
     pub fn remove_if(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Predicate;)Z");
@@ -1763,7 +1751,7 @@ impl<'mc> JavaTreeSet<'mc> {
     //
 
     pub fn parallel_stream(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res =
@@ -1775,7 +1763,7 @@ impl<'mc> JavaTreeSet<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Consumer;)V");
@@ -1884,7 +1872,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn set_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -1899,7 +1887,7 @@ impl<'mc> JavaVector<'mc> {
     //
 
     pub fn copy_into(
-        &mut self,
+        &self,
         arg0: Vec<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)V");
@@ -1911,7 +1899,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn remove_element_at(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn remove_element_at(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -1926,7 +1914,7 @@ impl<'mc> JavaVector<'mc> {
     //
 
     pub fn remove_element(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1943,7 +1931,7 @@ impl<'mc> JavaVector<'mc> {
     //
 
     pub fn insert_element_at(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: i32,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1964,7 +1952,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn remove_all_elements(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn remove_all_elements(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1977,9 +1965,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn first_element(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn first_element(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res =
             self.jni_ref()
@@ -1989,9 +1975,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn last_element(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn last_element(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res =
             self.jni_ref()
@@ -2002,7 +1986,7 @@ impl<'mc> JavaVector<'mc> {
     //
 
     pub fn set_element_at(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: i32,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2024,7 +2008,7 @@ impl<'mc> JavaVector<'mc> {
     //
 
     pub fn add_element(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)V");
@@ -2041,7 +2025,7 @@ impl<'mc> JavaVector<'mc> {
     //
 
     pub fn add_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2067,7 +2051,7 @@ impl<'mc> JavaVector<'mc> {
     //
 
     pub fn remove_with_int(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2086,10 +2070,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn get(
-        &mut self,
-        arg0: i32,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn get(&self, arg0: i32) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/Object;");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -2104,7 +2085,7 @@ impl<'mc> JavaVector<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -2121,7 +2102,7 @@ impl<'mc> JavaVector<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2135,7 +2116,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2145,7 +2126,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -2156,7 +2137,7 @@ impl<'mc> JavaVector<'mc> {
     //
 
     pub fn index_of_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -2181,7 +2162,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2192,7 +2173,7 @@ impl<'mc> JavaVector<'mc> {
     //
 
     pub fn last_index_of_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -2217,7 +2198,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -2228,7 +2209,7 @@ impl<'mc> JavaVector<'mc> {
     //
 
     pub fn replace_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/UnaryOperator;)V");
@@ -2244,7 +2225,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2255,7 +2236,7 @@ impl<'mc> JavaVector<'mc> {
     //
 
     pub fn sub_list(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: i32,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -2278,7 +2259,7 @@ impl<'mc> JavaVector<'mc> {
 
     //
 
-    pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn iterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self
             .jni_ref()
@@ -2289,7 +2270,7 @@ impl<'mc> JavaVector<'mc> {
     //
 
     pub fn contains(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -2305,7 +2286,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn elements(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn elements(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Enumeration;");
         let res = self
             .jni_ref()
@@ -2315,9 +2296,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn spliterator(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn spliterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Spliterator;");
         let res =
             self.jni_ref()
@@ -2328,7 +2307,7 @@ impl<'mc> JavaVector<'mc> {
     //
 
     pub fn add_all_with_collection(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2354,7 +2333,7 @@ impl<'mc> JavaVector<'mc> {
     //
 
     pub fn set(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -2376,7 +2355,7 @@ impl<'mc> JavaVector<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Consumer;)V");
@@ -2392,7 +2371,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn capacity(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn capacity(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2402,7 +2381,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn ensure_capacity(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn ensure_capacity(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -2416,7 +2395,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn trim_to_size(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn trim_to_size(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res =
             self.jni_ref()
@@ -2427,7 +2406,7 @@ impl<'mc> JavaVector<'mc> {
     //
 
     pub fn element_at(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/Object;");
@@ -2444,7 +2423,7 @@ impl<'mc> JavaVector<'mc> {
     //
 
     pub fn remove_if(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Predicate;)Z");
@@ -2460,10 +2439,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn sort(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn sort(&self, arg0: jni::objects::JObject<'mc>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Comparator;)V");
         let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
@@ -2478,7 +2454,7 @@ impl<'mc> JavaVector<'mc> {
     //
 
     pub fn remove_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -2495,7 +2471,7 @@ impl<'mc> JavaVector<'mc> {
     //
 
     pub fn retain_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -2512,7 +2488,7 @@ impl<'mc> JavaVector<'mc> {
     //
 
     pub fn list_iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2532,7 +2508,7 @@ impl<'mc> JavaVector<'mc> {
     //
 
     pub fn contains_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -2549,7 +2525,7 @@ impl<'mc> JavaVector<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2574,7 +2550,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -2584,7 +2560,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2594,7 +2570,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2604,7 +2580,7 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn stream(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res = self
             .jni_ref()
@@ -2615,7 +2591,7 @@ impl<'mc> JavaVector<'mc> {
     //
 
     pub fn parallel_stream(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res =
@@ -2725,7 +2701,7 @@ impl<'mc> JavaMap<'mc> {
     //
 
     pub fn remove_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2751,7 +2727,7 @@ impl<'mc> JavaMap<'mc> {
     //
 
     pub fn get(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Ljava/lang/Object;");
@@ -2768,7 +2744,7 @@ impl<'mc> JavaMap<'mc> {
     //
 
     pub fn put(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -2790,7 +2766,7 @@ impl<'mc> JavaMap<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -2806,7 +2782,7 @@ impl<'mc> JavaMap<'mc> {
     }
     //
 
-    pub fn values(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn values(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Collection;");
         let res = self
             .jni_ref()
@@ -2816,7 +2792,7 @@ impl<'mc> JavaMap<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2845,7 +2821,7 @@ impl<'mc> JavaMap<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2855,7 +2831,7 @@ impl<'mc> JavaMap<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -2866,7 +2842,7 @@ impl<'mc> JavaMap<'mc> {
     //
 
     pub fn replace_with_object(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -2896,7 +2872,7 @@ impl<'mc> JavaMap<'mc> {
     //
 
     pub fn replace_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/BiFunction;)V");
@@ -2912,7 +2888,7 @@ impl<'mc> JavaMap<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -3057,7 +3033,7 @@ impl<'mc> JavaMap<'mc> {
     //
 
     pub fn merge(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: jni::objects::JObject<'mc>,
@@ -3081,7 +3057,7 @@ impl<'mc> JavaMap<'mc> {
     }
     //
 
-    pub fn entry_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn entry_set(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
@@ -3092,7 +3068,7 @@ impl<'mc> JavaMap<'mc> {
     //
 
     pub fn put_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Map;)V");
@@ -3109,7 +3085,7 @@ impl<'mc> JavaMap<'mc> {
     //
 
     pub fn put_if_absent(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -3131,7 +3107,7 @@ impl<'mc> JavaMap<'mc> {
     //
 
     pub fn compute(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -3178,7 +3154,7 @@ impl<'mc> JavaMap<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/BiConsumer;)V");
@@ -3195,7 +3171,7 @@ impl<'mc> JavaMap<'mc> {
     //
 
     pub fn contains_key(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -3212,7 +3188,7 @@ impl<'mc> JavaMap<'mc> {
     //
 
     pub fn compute_if_absent(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -3234,7 +3210,7 @@ impl<'mc> JavaMap<'mc> {
     }
     //
 
-    pub fn key_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn key_set(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
@@ -3245,7 +3221,7 @@ impl<'mc> JavaMap<'mc> {
     //
 
     pub fn contains_value(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -3262,7 +3238,7 @@ impl<'mc> JavaMap<'mc> {
     //
 
     pub fn get_or_default(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -3284,7 +3260,7 @@ impl<'mc> JavaMap<'mc> {
     //
 
     pub fn compute_if_present(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -3414,7 +3390,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     //
 
     pub fn remove_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3440,7 +3416,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     //
 
     pub fn get(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Ljava/lang/Object;");
@@ -3457,7 +3433,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     //
 
     pub fn put(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -3478,7 +3454,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     }
     //
 
-    pub fn values(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn values(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Collection;");
         let res = self
             .jni_ref()
@@ -3488,7 +3464,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3498,7 +3474,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -3509,7 +3485,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     //
 
     pub fn replace_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/BiFunction;)V");
@@ -3525,7 +3501,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -3535,7 +3511,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     }
     //
 
-    pub fn entry_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn entry_set(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
@@ -3546,7 +3522,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     //
 
     pub fn put_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Map;)V");
@@ -3563,7 +3539,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/BiConsumer;)V");
@@ -3580,7 +3556,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     //
 
     pub fn contains_key(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -3596,7 +3572,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     }
     //
 
-    pub fn key_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn key_set(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
@@ -3607,7 +3583,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     //
 
     pub fn contains_value(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -3624,7 +3600,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -3641,7 +3617,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3655,7 +3631,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -3666,7 +3642,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3691,7 +3667,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -3701,7 +3677,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3711,7 +3687,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3722,7 +3698,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     //
 
     pub fn replace_with_object(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -3752,7 +3728,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     //
 
     pub fn merge(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: jni::objects::JObject<'mc>,
@@ -3777,7 +3753,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     //
 
     pub fn put_if_absent(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -3799,7 +3775,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     //
 
     pub fn compute(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -3822,7 +3798,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     //
 
     pub fn compute_if_absent(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -3845,7 +3821,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     //
 
     pub fn get_or_default(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -3867,7 +3843,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
     //
 
     pub fn compute_if_present(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -3937,7 +3913,7 @@ impl<'mc> JavaSet<'mc> {
     //
 
     pub fn add(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -3954,7 +3930,7 @@ impl<'mc> JavaSet<'mc> {
     //
 
     pub fn remove(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -3971,7 +3947,7 @@ impl<'mc> JavaSet<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -3987,7 +3963,7 @@ impl<'mc> JavaSet<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4016,7 +3992,7 @@ impl<'mc> JavaSet<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4026,7 +4002,7 @@ impl<'mc> JavaSet<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -4036,7 +4012,7 @@ impl<'mc> JavaSet<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4048,7 +4024,7 @@ impl<'mc> JavaSet<'mc> {
 
     //
 
-    pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn iterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self
             .jni_ref()
@@ -4130,7 +4106,7 @@ impl<'mc> JavaSet<'mc> {
     //
 
     pub fn contains(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -4146,9 +4122,7 @@ impl<'mc> JavaSet<'mc> {
     }
     //
 
-    pub fn spliterator(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn spliterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Spliterator;");
         let res =
             self.jni_ref()
@@ -4159,7 +4133,7 @@ impl<'mc> JavaSet<'mc> {
     //
 
     pub fn add_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -4176,7 +4150,7 @@ impl<'mc> JavaSet<'mc> {
     //
 
     pub fn remove_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -4193,7 +4167,7 @@ impl<'mc> JavaSet<'mc> {
     //
 
     pub fn retain_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -4210,7 +4184,7 @@ impl<'mc> JavaSet<'mc> {
     //
 
     pub fn contains_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -4226,7 +4200,7 @@ impl<'mc> JavaSet<'mc> {
     }
     //
 
-    pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn stream(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res = self
             .jni_ref()
@@ -4237,7 +4211,7 @@ impl<'mc> JavaSet<'mc> {
     //
 
     pub fn remove_if(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Predicate;)Z");
@@ -4254,7 +4228,7 @@ impl<'mc> JavaSet<'mc> {
     //
 
     pub fn parallel_stream(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res =
@@ -4266,7 +4240,7 @@ impl<'mc> JavaSet<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Consumer;)V");
@@ -4420,7 +4394,7 @@ impl<'mc> JavaBase64<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4446,7 +4420,7 @@ impl<'mc> JavaBase64<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -4463,7 +4437,7 @@ impl<'mc> JavaBase64<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4477,7 +4451,7 @@ impl<'mc> JavaBase64<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4487,7 +4461,7 @@ impl<'mc> JavaBase64<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -4497,7 +4471,7 @@ impl<'mc> JavaBase64<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4507,7 +4481,7 @@ impl<'mc> JavaBase64<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4570,7 +4544,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
     //
 
     pub fn add(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -4587,7 +4561,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
     //
 
     pub fn remove(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -4604,7 +4578,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4618,7 +4592,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4628,7 +4602,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -4638,7 +4612,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4650,7 +4624,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
 
     //
 
-    pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn iterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self
             .jni_ref()
@@ -4661,7 +4635,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
     //
 
     pub fn contains(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -4678,7 +4652,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
     //
 
     pub fn add_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -4695,7 +4669,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
     //
 
     pub fn remove_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -4712,7 +4686,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
     //
 
     pub fn retain_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -4729,7 +4703,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
     //
 
     pub fn contains_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -4746,7 +4720,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4772,7 +4746,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -4788,7 +4762,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4798,7 +4772,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -4808,7 +4782,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4818,7 +4792,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4828,7 +4802,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
     }
     //
 
-    pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn stream(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res = self
             .jni_ref()
@@ -4838,9 +4812,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
     }
     //
 
-    pub fn spliterator(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn spliterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Spliterator;");
         let res =
             self.jni_ref()
@@ -4851,7 +4823,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
     //
 
     pub fn remove_if(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Predicate;)Z");
@@ -4868,7 +4840,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
     //
 
     pub fn parallel_stream(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res =
@@ -4880,7 +4852,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Consumer;)V");
@@ -4950,7 +4922,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     //
 
     pub fn add(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -4967,7 +4939,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     //
 
     pub fn remove(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -4986,7 +4958,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4997,7 +4969,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     //
 
     pub fn add_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -5013,7 +4985,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     }
     //
 
-    pub fn element(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn element(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -5024,7 +4996,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5038,7 +5010,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -5048,7 +5020,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -5060,7 +5032,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
 
     //
 
-    pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn iterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self
             .jni_ref()
@@ -5071,7 +5043,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     //
 
     pub fn contains(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -5088,7 +5060,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     //
 
     pub fn remove_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -5105,7 +5077,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     //
 
     pub fn retain_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -5122,7 +5094,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     //
 
     pub fn contains_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -5139,7 +5111,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -5165,7 +5137,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -5181,7 +5153,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -5191,7 +5163,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -5201,7 +5173,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -5211,7 +5183,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -5221,7 +5193,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     }
     //
 
-    pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn stream(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res = self
             .jni_ref()
@@ -5231,9 +5203,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     }
     //
 
-    pub fn spliterator(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn spliterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Spliterator;");
         let res =
             self.jni_ref()
@@ -5244,7 +5214,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     //
 
     pub fn remove_if(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Predicate;)Z");
@@ -5261,7 +5231,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     //
 
     pub fn parallel_stream(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res =
@@ -5273,7 +5243,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Consumer;)V");
@@ -5290,7 +5260,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     //
 
     pub fn offer(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -5306,7 +5276,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     }
     //
 
-    pub fn poll(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn poll(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -5316,7 +5286,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
     }
     //
 
-    pub fn peek(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn peek(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -5403,7 +5373,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -5420,7 +5390,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5434,7 +5404,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -5444,7 +5414,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
     }
     //
 
-    pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn value(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -5454,7 +5424,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
     }
     //
 
-    pub fn key(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn key(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -5465,7 +5435,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
     //
 
     pub fn set_value(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Ljava/lang/Object;");
@@ -5482,7 +5452,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -5507,7 +5477,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -5517,7 +5487,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -5527,7 +5497,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -5580,7 +5550,7 @@ impl<'mc> JavaObserver<'mc> {
     //
 
     pub fn update(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -5711,7 +5681,7 @@ impl<'mc> JavaQueue<'mc> {
     //
 
     pub fn offer(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -5728,7 +5698,7 @@ impl<'mc> JavaQueue<'mc> {
     //
 
     pub fn add(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -5745,7 +5715,7 @@ impl<'mc> JavaQueue<'mc> {
     //
 
     pub fn remove(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -5764,7 +5734,7 @@ impl<'mc> JavaQueue<'mc> {
     }
     //
 
-    pub fn poll(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn poll(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -5774,7 +5744,7 @@ impl<'mc> JavaQueue<'mc> {
     }
     //
 
-    pub fn peek(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn peek(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -5784,7 +5754,7 @@ impl<'mc> JavaQueue<'mc> {
     }
     //
 
-    pub fn element(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn element(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -5795,7 +5765,7 @@ impl<'mc> JavaQueue<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -5811,7 +5781,7 @@ impl<'mc> JavaQueue<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -5821,7 +5791,7 @@ impl<'mc> JavaQueue<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -5831,7 +5801,7 @@ impl<'mc> JavaQueue<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -5841,7 +5811,7 @@ impl<'mc> JavaQueue<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -5853,7 +5823,7 @@ impl<'mc> JavaQueue<'mc> {
 
     //
 
-    pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn iterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self
             .jni_ref()
@@ -5863,7 +5833,7 @@ impl<'mc> JavaQueue<'mc> {
     }
     //
 
-    pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn stream(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res = self
             .jni_ref()
@@ -5874,7 +5844,7 @@ impl<'mc> JavaQueue<'mc> {
     //
 
     pub fn contains(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -5890,9 +5860,7 @@ impl<'mc> JavaQueue<'mc> {
     }
     //
 
-    pub fn spliterator(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn spliterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Spliterator;");
         let res =
             self.jni_ref()
@@ -5903,7 +5871,7 @@ impl<'mc> JavaQueue<'mc> {
     //
 
     pub fn add_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -5920,7 +5888,7 @@ impl<'mc> JavaQueue<'mc> {
     //
 
     pub fn remove_if(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Predicate;)Z");
@@ -5937,7 +5905,7 @@ impl<'mc> JavaQueue<'mc> {
     //
 
     pub fn remove_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -5954,7 +5922,7 @@ impl<'mc> JavaQueue<'mc> {
     //
 
     pub fn retain_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -5971,7 +5939,7 @@ impl<'mc> JavaQueue<'mc> {
     //
 
     pub fn contains_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -5988,7 +5956,7 @@ impl<'mc> JavaQueue<'mc> {
     //
 
     pub fn parallel_stream(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res =
@@ -6000,7 +5968,7 @@ impl<'mc> JavaQueue<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Consumer;)V");
@@ -6064,9 +6032,7 @@ impl<'mc> JavaEnumeration<'mc> {
     }
     //
 
-    pub fn as_iterator(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn as_iterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res =
             self.jni_ref()
@@ -6076,7 +6042,7 @@ impl<'mc> JavaEnumeration<'mc> {
     }
     //
 
-    pub fn has_more_elements(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_more_elements(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -6086,9 +6052,7 @@ impl<'mc> JavaEnumeration<'mc> {
     }
     //
 
-    pub fn next_element(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn next_element(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res =
             self.jni_ref()
@@ -6203,7 +6167,7 @@ impl<'mc> JavaHashtable<'mc> {
     //
 
     pub fn remove_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6229,7 +6193,7 @@ impl<'mc> JavaHashtable<'mc> {
     //
 
     pub fn get(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Ljava/lang/Object;");
@@ -6246,7 +6210,7 @@ impl<'mc> JavaHashtable<'mc> {
     //
 
     pub fn put(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -6268,7 +6232,7 @@ impl<'mc> JavaHashtable<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -6285,7 +6249,7 @@ impl<'mc> JavaHashtable<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -6299,7 +6263,7 @@ impl<'mc> JavaHashtable<'mc> {
     }
     //
 
-    pub fn values(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn values(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Collection;");
         let res = self
             .jni_ref()
@@ -6309,7 +6273,7 @@ impl<'mc> JavaHashtable<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -6319,7 +6283,7 @@ impl<'mc> JavaHashtable<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -6329,7 +6293,7 @@ impl<'mc> JavaHashtable<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -6339,7 +6303,7 @@ impl<'mc> JavaHashtable<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -6350,7 +6314,7 @@ impl<'mc> JavaHashtable<'mc> {
     //
 
     pub fn replace_with_object(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -6380,7 +6344,7 @@ impl<'mc> JavaHashtable<'mc> {
     //
 
     pub fn replace_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/BiFunction;)V");
@@ -6396,7 +6360,7 @@ impl<'mc> JavaHashtable<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -6407,7 +6371,7 @@ impl<'mc> JavaHashtable<'mc> {
     //
 
     pub fn contains(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -6423,7 +6387,7 @@ impl<'mc> JavaHashtable<'mc> {
     }
     //
 
-    pub fn elements(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn elements(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Enumeration;");
         let res = self
             .jni_ref()
@@ -6434,7 +6398,7 @@ impl<'mc> JavaHashtable<'mc> {
     //
 
     pub fn merge(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: jni::objects::JObject<'mc>,
@@ -6458,7 +6422,7 @@ impl<'mc> JavaHashtable<'mc> {
     }
     //
 
-    pub fn entry_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn entry_set(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
@@ -6469,7 +6433,7 @@ impl<'mc> JavaHashtable<'mc> {
     //
 
     pub fn put_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Map;)V");
@@ -6486,7 +6450,7 @@ impl<'mc> JavaHashtable<'mc> {
     //
 
     pub fn put_if_absent(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -6508,7 +6472,7 @@ impl<'mc> JavaHashtable<'mc> {
     //
 
     pub fn compute(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -6531,7 +6495,7 @@ impl<'mc> JavaHashtable<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/BiConsumer;)V");
@@ -6548,7 +6512,7 @@ impl<'mc> JavaHashtable<'mc> {
     //
 
     pub fn contains_key(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -6565,7 +6529,7 @@ impl<'mc> JavaHashtable<'mc> {
     //
 
     pub fn compute_if_absent(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -6587,7 +6551,7 @@ impl<'mc> JavaHashtable<'mc> {
     }
     //
 
-    pub fn keys(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn keys(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Enumeration;");
         let res = self
             .jni_ref()
@@ -6597,7 +6561,7 @@ impl<'mc> JavaHashtable<'mc> {
     }
     //
 
-    pub fn key_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn key_set(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
@@ -6608,7 +6572,7 @@ impl<'mc> JavaHashtable<'mc> {
     //
 
     pub fn contains_value(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -6625,7 +6589,7 @@ impl<'mc> JavaHashtable<'mc> {
     //
 
     pub fn get_or_default(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -6647,7 +6611,7 @@ impl<'mc> JavaHashtable<'mc> {
     //
 
     pub fn compute_if_present(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -6670,7 +6634,7 @@ impl<'mc> JavaHashtable<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -6695,7 +6659,7 @@ impl<'mc> JavaHashtable<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -6705,7 +6669,7 @@ impl<'mc> JavaHashtable<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -6715,7 +6679,7 @@ impl<'mc> JavaHashtable<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -6780,7 +6744,7 @@ impl<'mc> JavaAbstractSet<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -6796,7 +6760,7 @@ impl<'mc> JavaAbstractSet<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -6807,7 +6771,7 @@ impl<'mc> JavaAbstractSet<'mc> {
     //
 
     pub fn remove_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -6824,7 +6788,7 @@ impl<'mc> JavaAbstractSet<'mc> {
     //
 
     pub fn add(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -6841,7 +6805,7 @@ impl<'mc> JavaAbstractSet<'mc> {
     //
 
     pub fn remove(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -6858,7 +6822,7 @@ impl<'mc> JavaAbstractSet<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -6872,7 +6836,7 @@ impl<'mc> JavaAbstractSet<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -6882,7 +6846,7 @@ impl<'mc> JavaAbstractSet<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -6892,7 +6856,7 @@ impl<'mc> JavaAbstractSet<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -6904,7 +6868,7 @@ impl<'mc> JavaAbstractSet<'mc> {
 
     //
 
-    pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn iterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self
             .jni_ref()
@@ -6915,7 +6879,7 @@ impl<'mc> JavaAbstractSet<'mc> {
     //
 
     pub fn contains(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -6932,7 +6896,7 @@ impl<'mc> JavaAbstractSet<'mc> {
     //
 
     pub fn add_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -6949,7 +6913,7 @@ impl<'mc> JavaAbstractSet<'mc> {
     //
 
     pub fn retain_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -6966,7 +6930,7 @@ impl<'mc> JavaAbstractSet<'mc> {
     //
 
     pub fn contains_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -6983,7 +6947,7 @@ impl<'mc> JavaAbstractSet<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -7008,7 +6972,7 @@ impl<'mc> JavaAbstractSet<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -7018,7 +6982,7 @@ impl<'mc> JavaAbstractSet<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -7028,7 +6992,7 @@ impl<'mc> JavaAbstractSet<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -7038,7 +7002,7 @@ impl<'mc> JavaAbstractSet<'mc> {
     }
     //
 
-    pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn stream(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res = self
             .jni_ref()
@@ -7048,9 +7012,7 @@ impl<'mc> JavaAbstractSet<'mc> {
     }
     //
 
-    pub fn spliterator(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn spliterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Spliterator;");
         let res =
             self.jni_ref()
@@ -7061,7 +7023,7 @@ impl<'mc> JavaAbstractSet<'mc> {
     //
 
     pub fn remove_if(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Predicate;)Z");
@@ -7078,7 +7040,7 @@ impl<'mc> JavaAbstractSet<'mc> {
     //
 
     pub fn parallel_stream(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res =
@@ -7090,7 +7052,7 @@ impl<'mc> JavaAbstractSet<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Consumer;)V");
@@ -7160,7 +7122,7 @@ impl<'mc> JavaOptionalInt<'mc> {
     //
 
     pub fn if_present_or_else(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -7182,7 +7144,7 @@ impl<'mc> JavaOptionalInt<'mc> {
     //
 
     pub fn or_else_get(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/IntSupplier;)I");
@@ -7199,7 +7161,7 @@ impl<'mc> JavaOptionalInt<'mc> {
     //
 
     pub fn if_present(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/IntConsumer;)V");
@@ -7215,7 +7177,7 @@ impl<'mc> JavaOptionalInt<'mc> {
     }
     //
 
-    pub fn as_int(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn as_int(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -7226,7 +7188,7 @@ impl<'mc> JavaOptionalInt<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -7243,7 +7205,7 @@ impl<'mc> JavaOptionalInt<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -7257,7 +7219,7 @@ impl<'mc> JavaOptionalInt<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -7267,7 +7229,7 @@ impl<'mc> JavaOptionalInt<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -7277,7 +7239,7 @@ impl<'mc> JavaOptionalInt<'mc> {
     }
     //
 
-    pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn stream(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/IntStream;");
         let res = self
             .jni_ref()
@@ -7318,7 +7280,7 @@ impl<'mc> JavaOptionalInt<'mc> {
     }
     //
 
-    pub fn is_present(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_present(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -7328,7 +7290,7 @@ impl<'mc> JavaOptionalInt<'mc> {
     }
     //
 
-    pub fn or_else(&mut self, arg0: i32) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn or_else(&self, arg0: i32) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(I)I");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -7343,7 +7305,7 @@ impl<'mc> JavaOptionalInt<'mc> {
     //
 
     pub fn or_else_throw(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -7363,7 +7325,7 @@ impl<'mc> JavaOptionalInt<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -7388,7 +7350,7 @@ impl<'mc> JavaOptionalInt<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -7398,7 +7360,7 @@ impl<'mc> JavaOptionalInt<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -7408,7 +7370,7 @@ impl<'mc> JavaOptionalInt<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -7507,7 +7469,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn navigable_key_set(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/NavigableSet;");
         let res =
@@ -7519,7 +7481,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn descending_key_set(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/NavigableSet;");
         let res = self.jni_ref().call_method(
@@ -7533,9 +7495,7 @@ impl<'mc> JavaTreeMap<'mc> {
     }
     //
 
-    pub fn descending_map(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn descending_map(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/NavigableMap;");
         let res =
             self.jni_ref()
@@ -7546,7 +7506,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn sub_map_with_object(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<bool>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -7584,7 +7544,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn head_map_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<bool>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -7611,7 +7571,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn tail_map_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<bool>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -7637,7 +7597,7 @@ impl<'mc> JavaTreeMap<'mc> {
     }
     //
 
-    pub fn last_key(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn last_key(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -7648,7 +7608,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn lower_key(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Ljava/lang/Object;");
@@ -7665,7 +7625,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn floor_key(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Ljava/lang/Object;");
@@ -7682,7 +7642,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn ceiling_key(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Ljava/lang/Object;");
@@ -7699,7 +7659,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn higher_key(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Ljava/lang/Object;");
@@ -7716,7 +7676,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn poll_first_entry(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map$Entry;");
         let res =
@@ -7728,7 +7688,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn poll_last_entry(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map$Entry;");
         let res =
@@ -7739,9 +7699,7 @@ impl<'mc> JavaTreeMap<'mc> {
     }
     //
 
-    pub fn first_entry(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn first_entry(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map$Entry;");
         let res =
             self.jni_ref()
@@ -7751,7 +7709,7 @@ impl<'mc> JavaTreeMap<'mc> {
     }
     //
 
-    pub fn last_entry(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn last_entry(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map$Entry;");
         let res = self
             .jni_ref()
@@ -7762,7 +7720,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn lower_entry(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Ljava/util/Map$Entry;");
@@ -7779,7 +7737,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn floor_entry(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Ljava/util/Map$Entry;");
@@ -7796,7 +7754,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn ceiling_entry(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Ljava/util/Map$Entry;");
@@ -7813,7 +7771,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn higher_entry(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Ljava/util/Map$Entry;");
@@ -7829,7 +7787,7 @@ impl<'mc> JavaTreeMap<'mc> {
     }
     //
 
-    pub fn first_key(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn first_key(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -7840,7 +7798,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn remove_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7866,7 +7824,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn get(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Ljava/lang/Object;");
@@ -7883,7 +7841,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn put(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -7904,7 +7862,7 @@ impl<'mc> JavaTreeMap<'mc> {
     }
     //
 
-    pub fn values(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn values(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Collection;");
         let res = self
             .jni_ref()
@@ -7914,7 +7872,7 @@ impl<'mc> JavaTreeMap<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -7924,7 +7882,7 @@ impl<'mc> JavaTreeMap<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -7935,7 +7893,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn replace_with_object(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -7965,7 +7923,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn replace_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/BiFunction;)V");
@@ -7981,7 +7939,7 @@ impl<'mc> JavaTreeMap<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -7992,7 +7950,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn merge(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: jni::objects::JObject<'mc>,
@@ -8016,7 +7974,7 @@ impl<'mc> JavaTreeMap<'mc> {
     }
     //
 
-    pub fn entry_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn entry_set(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
@@ -8027,7 +7985,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn put_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Map;)V");
@@ -8044,7 +8002,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn put_if_absent(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -8066,7 +8024,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn compute(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -8089,7 +8047,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/BiConsumer;)V");
@@ -8106,7 +8064,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn contains_key(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -8123,7 +8081,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn compute_if_absent(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -8145,7 +8103,7 @@ impl<'mc> JavaTreeMap<'mc> {
     }
     //
 
-    pub fn key_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn key_set(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
@@ -8156,7 +8114,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn contains_value(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -8173,7 +8131,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn compute_if_present(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -8195,7 +8153,7 @@ impl<'mc> JavaTreeMap<'mc> {
     }
     //
 
-    pub fn comparator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn comparator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Comparator;");
         let res =
             self.jni_ref()
@@ -8206,7 +8164,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -8223,7 +8181,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -8237,7 +8195,7 @@ impl<'mc> JavaTreeMap<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -8247,7 +8205,7 @@ impl<'mc> JavaTreeMap<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -8258,7 +8216,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -8283,7 +8241,7 @@ impl<'mc> JavaTreeMap<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -8293,7 +8251,7 @@ impl<'mc> JavaTreeMap<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -8303,7 +8261,7 @@ impl<'mc> JavaTreeMap<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -8314,7 +8272,7 @@ impl<'mc> JavaTreeMap<'mc> {
     //
 
     pub fn get_or_default(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -8485,10 +8443,7 @@ impl<'mc> JavaDeque<'mc> {
     }
     //
 
-    pub fn push(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn push(&self, arg0: jni::objects::JObject<'mc>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)V");
         let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
@@ -8502,7 +8457,7 @@ impl<'mc> JavaDeque<'mc> {
     }
     //
 
-    pub fn pop(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn pop(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -8513,7 +8468,7 @@ impl<'mc> JavaDeque<'mc> {
     //
 
     pub fn add_first(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)V");
@@ -8530,7 +8485,7 @@ impl<'mc> JavaDeque<'mc> {
     //
 
     pub fn add_last(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)V");
@@ -8546,7 +8501,7 @@ impl<'mc> JavaDeque<'mc> {
     }
     //
 
-    pub fn poll_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn poll_first(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -8556,7 +8511,7 @@ impl<'mc> JavaDeque<'mc> {
     }
     //
 
-    pub fn poll_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn poll_last(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -8567,7 +8522,7 @@ impl<'mc> JavaDeque<'mc> {
     //
 
     pub fn offer_last(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -8583,9 +8538,7 @@ impl<'mc> JavaDeque<'mc> {
     }
     //
 
-    pub fn remove_first(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn remove_first(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res =
             self.jni_ref()
@@ -8595,7 +8548,7 @@ impl<'mc> JavaDeque<'mc> {
     }
     //
 
-    pub fn first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn first(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -8605,7 +8558,7 @@ impl<'mc> JavaDeque<'mc> {
     }
     //
 
-    pub fn peek_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn peek_first(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -8616,7 +8569,7 @@ impl<'mc> JavaDeque<'mc> {
     //
 
     pub fn remove_first_occurrence(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -8633,7 +8586,7 @@ impl<'mc> JavaDeque<'mc> {
     //
 
     pub fn offer_first(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -8649,9 +8602,7 @@ impl<'mc> JavaDeque<'mc> {
     }
     //
 
-    pub fn remove_last(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn remove_last(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res =
             self.jni_ref()
@@ -8661,7 +8612,7 @@ impl<'mc> JavaDeque<'mc> {
     }
     //
 
-    pub fn last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn last(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -8671,7 +8622,7 @@ impl<'mc> JavaDeque<'mc> {
     }
     //
 
-    pub fn peek_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn peek_last(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -8682,7 +8633,7 @@ impl<'mc> JavaDeque<'mc> {
     //
 
     pub fn remove_last_occurrence(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -8699,7 +8650,7 @@ impl<'mc> JavaDeque<'mc> {
     //
 
     pub fn offer(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -8716,7 +8667,7 @@ impl<'mc> JavaDeque<'mc> {
     //
 
     pub fn descending_iterator(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self.jni_ref().call_method(
@@ -8731,7 +8682,7 @@ impl<'mc> JavaDeque<'mc> {
     //
 
     pub fn add(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -8748,7 +8699,7 @@ impl<'mc> JavaDeque<'mc> {
     //
 
     pub fn remove(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -8767,7 +8718,7 @@ impl<'mc> JavaDeque<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -8777,7 +8728,7 @@ impl<'mc> JavaDeque<'mc> {
     }
     //
 
-    pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn iterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self
             .jni_ref()
@@ -8788,7 +8739,7 @@ impl<'mc> JavaDeque<'mc> {
     //
 
     pub fn contains(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -8805,7 +8756,7 @@ impl<'mc> JavaDeque<'mc> {
     //
 
     pub fn add_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -8821,7 +8772,7 @@ impl<'mc> JavaDeque<'mc> {
     }
     //
 
-    pub fn poll(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn poll(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -8831,7 +8782,7 @@ impl<'mc> JavaDeque<'mc> {
     }
     //
 
-    pub fn peek(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn peek(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -8841,7 +8792,7 @@ impl<'mc> JavaDeque<'mc> {
     }
     //
 
-    pub fn element(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn element(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -8852,7 +8803,7 @@ impl<'mc> JavaDeque<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -8868,7 +8819,7 @@ impl<'mc> JavaDeque<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -8878,7 +8829,7 @@ impl<'mc> JavaDeque<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -8888,7 +8839,7 @@ impl<'mc> JavaDeque<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -8900,7 +8851,7 @@ impl<'mc> JavaDeque<'mc> {
 
     //
 
-    pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn stream(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res = self
             .jni_ref()
@@ -8910,9 +8861,7 @@ impl<'mc> JavaDeque<'mc> {
     }
     //
 
-    pub fn spliterator(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn spliterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Spliterator;");
         let res =
             self.jni_ref()
@@ -8923,7 +8872,7 @@ impl<'mc> JavaDeque<'mc> {
     //
 
     pub fn remove_if(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Predicate;)Z");
@@ -8940,7 +8889,7 @@ impl<'mc> JavaDeque<'mc> {
     //
 
     pub fn remove_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -8957,7 +8906,7 @@ impl<'mc> JavaDeque<'mc> {
     //
 
     pub fn retain_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -8974,7 +8923,7 @@ impl<'mc> JavaDeque<'mc> {
     //
 
     pub fn contains_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -8991,7 +8940,7 @@ impl<'mc> JavaDeque<'mc> {
     //
 
     pub fn parallel_stream(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res =
@@ -9003,7 +8952,7 @@ impl<'mc> JavaDeque<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Consumer;)V");
@@ -9066,7 +9015,7 @@ impl<'mc> JavaFormattable<'mc> {
     //
 
     pub fn format_to(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: i32,
         arg2: i32,
@@ -9141,7 +9090,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
     //
 
     pub fn if_present_or_else(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -9163,7 +9112,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
     //
 
     pub fn or_else_get(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/DoubleSupplier;)D");
@@ -9180,7 +9129,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
     //
 
     pub fn if_present(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/DoubleConsumer;)V");
@@ -9196,7 +9145,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
     }
     //
 
-    pub fn as_double(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn as_double(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
             self.jni_ref()
@@ -9207,7 +9156,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -9224,7 +9173,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -9238,7 +9187,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -9248,7 +9197,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -9258,7 +9207,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
     }
     //
 
-    pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn stream(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/DoubleStream;");
         let res = self
             .jni_ref()
@@ -9299,7 +9248,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
     }
     //
 
-    pub fn is_present(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_present(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -9309,7 +9258,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
     }
     //
 
-    pub fn or_else(&mut self, arg0: f64) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn or_else(&self, arg0: f64) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("(D)D");
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -9324,7 +9273,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
     //
 
     pub fn or_else_throw(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -9344,7 +9293,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -9369,7 +9318,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -9379,7 +9328,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -9389,7 +9338,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -9448,7 +9397,7 @@ impl<'mc> JavaOptionalLong<'mc> {
     //
 
     pub fn if_present_or_else(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -9470,7 +9419,7 @@ impl<'mc> JavaOptionalLong<'mc> {
     //
 
     pub fn or_else_get(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/LongSupplier;)J");
@@ -9487,7 +9436,7 @@ impl<'mc> JavaOptionalLong<'mc> {
     //
 
     pub fn if_present(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/LongConsumer;)V");
@@ -9503,7 +9452,7 @@ impl<'mc> JavaOptionalLong<'mc> {
     }
     //
 
-    pub fn as_long(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
+    pub fn as_long(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
         let res = self
             .jni_ref()
@@ -9514,7 +9463,7 @@ impl<'mc> JavaOptionalLong<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -9531,7 +9480,7 @@ impl<'mc> JavaOptionalLong<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -9545,7 +9494,7 @@ impl<'mc> JavaOptionalLong<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -9555,7 +9504,7 @@ impl<'mc> JavaOptionalLong<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -9565,7 +9514,7 @@ impl<'mc> JavaOptionalLong<'mc> {
     }
     //
 
-    pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn stream(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/LongStream;");
         let res = self
             .jni_ref()
@@ -9606,7 +9555,7 @@ impl<'mc> JavaOptionalLong<'mc> {
     }
     //
 
-    pub fn is_present(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_present(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -9616,7 +9565,7 @@ impl<'mc> JavaOptionalLong<'mc> {
     }
     //
 
-    pub fn or_else(&mut self, arg0: i64) -> Result<i64, Box<dyn std::error::Error>> {
+    pub fn or_else(&self, arg0: i64) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(J)J");
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let res = self.jni_ref().call_method(
@@ -9631,7 +9580,7 @@ impl<'mc> JavaOptionalLong<'mc> {
     //
 
     pub fn or_else_throw(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -9651,7 +9600,7 @@ impl<'mc> JavaOptionalLong<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -9676,7 +9625,7 @@ impl<'mc> JavaOptionalLong<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -9686,7 +9635,7 @@ impl<'mc> JavaOptionalLong<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -9696,7 +9645,7 @@ impl<'mc> JavaOptionalLong<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -9805,9 +9754,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
     }
     //
 
-    pub fn spliterator(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn spliterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Spliterator;");
         let res =
             self.jni_ref()
@@ -9818,7 +9765,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
     //
 
     pub fn add(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -9835,7 +9782,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
     //
 
     pub fn remove(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -9851,7 +9798,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -9861,7 +9808,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -9871,7 +9818,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -9881,7 +9828,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -9893,7 +9840,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
 
     //
 
-    pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn iterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self
             .jni_ref()
@@ -9904,7 +9851,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
     //
 
     pub fn contains(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -9921,7 +9868,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -9937,7 +9884,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -9948,7 +9895,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
     //
 
     pub fn remove_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -9965,7 +9912,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -9980,7 +9927,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
     //
 
     pub fn add_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -9997,7 +9944,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
     //
 
     pub fn retain_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -10014,7 +9961,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
     //
 
     pub fn contains_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -10031,7 +9978,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -10056,7 +10003,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -10066,7 +10013,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -10076,7 +10023,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -10086,7 +10033,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
     }
     //
 
-    pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn stream(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res = self
             .jni_ref()
@@ -10097,7 +10044,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
     //
 
     pub fn remove_if(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Predicate;)Z");
@@ -10114,7 +10061,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
     //
 
     pub fn parallel_stream(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res =
@@ -10126,7 +10073,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Consumer;)V");
@@ -10241,7 +10188,7 @@ impl<'mc> JavaHashMap<'mc> {
     //
 
     pub fn remove_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10267,7 +10214,7 @@ impl<'mc> JavaHashMap<'mc> {
     //
 
     pub fn get(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Ljava/lang/Object;");
@@ -10284,7 +10231,7 @@ impl<'mc> JavaHashMap<'mc> {
     //
 
     pub fn put(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -10305,7 +10252,7 @@ impl<'mc> JavaHashMap<'mc> {
     }
     //
 
-    pub fn values(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn values(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Collection;");
         let res = self
             .jni_ref()
@@ -10315,7 +10262,7 @@ impl<'mc> JavaHashMap<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -10325,7 +10272,7 @@ impl<'mc> JavaHashMap<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -10335,7 +10282,7 @@ impl<'mc> JavaHashMap<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -10346,7 +10293,7 @@ impl<'mc> JavaHashMap<'mc> {
     //
 
     pub fn replace_with_object(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -10376,7 +10323,7 @@ impl<'mc> JavaHashMap<'mc> {
     //
 
     pub fn replace_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/BiFunction;)V");
@@ -10392,7 +10339,7 @@ impl<'mc> JavaHashMap<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -10403,7 +10350,7 @@ impl<'mc> JavaHashMap<'mc> {
     //
 
     pub fn merge(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: jni::objects::JObject<'mc>,
@@ -10427,7 +10374,7 @@ impl<'mc> JavaHashMap<'mc> {
     }
     //
 
-    pub fn entry_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn entry_set(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
@@ -10438,7 +10385,7 @@ impl<'mc> JavaHashMap<'mc> {
     //
 
     pub fn put_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Map;)V");
@@ -10455,7 +10402,7 @@ impl<'mc> JavaHashMap<'mc> {
     //
 
     pub fn put_if_absent(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -10477,7 +10424,7 @@ impl<'mc> JavaHashMap<'mc> {
     //
 
     pub fn compute(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -10500,7 +10447,7 @@ impl<'mc> JavaHashMap<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/BiConsumer;)V");
@@ -10517,7 +10464,7 @@ impl<'mc> JavaHashMap<'mc> {
     //
 
     pub fn contains_key(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -10534,7 +10481,7 @@ impl<'mc> JavaHashMap<'mc> {
     //
 
     pub fn compute_if_absent(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -10556,7 +10503,7 @@ impl<'mc> JavaHashMap<'mc> {
     }
     //
 
-    pub fn key_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn key_set(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
@@ -10567,7 +10514,7 @@ impl<'mc> JavaHashMap<'mc> {
     //
 
     pub fn contains_value(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -10584,7 +10531,7 @@ impl<'mc> JavaHashMap<'mc> {
     //
 
     pub fn get_or_default(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -10606,7 +10553,7 @@ impl<'mc> JavaHashMap<'mc> {
     //
 
     pub fn compute_if_present(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -10629,7 +10576,7 @@ impl<'mc> JavaHashMap<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -10646,7 +10593,7 @@ impl<'mc> JavaHashMap<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -10660,7 +10607,7 @@ impl<'mc> JavaHashMap<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -10671,7 +10618,7 @@ impl<'mc> JavaHashMap<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -10696,7 +10643,7 @@ impl<'mc> JavaHashMap<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -10706,7 +10653,7 @@ impl<'mc> JavaHashMap<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -10716,7 +10663,7 @@ impl<'mc> JavaHashMap<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -10808,7 +10755,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     //
 
     pub fn remove_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10834,7 +10781,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     //
 
     pub fn get(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Ljava/lang/Object;");
@@ -10851,7 +10798,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     //
 
     pub fn put(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -10873,7 +10820,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -10889,7 +10836,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     }
     //
 
-    pub fn values(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn values(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Collection;");
         let res = self
             .jni_ref()
@@ -10899,7 +10846,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -10909,7 +10856,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -10919,7 +10866,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -10929,7 +10876,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -10940,7 +10887,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     //
 
     pub fn replace_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/BiFunction;)V");
@@ -10956,7 +10903,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -10966,7 +10913,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     }
     //
 
-    pub fn entry_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn entry_set(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
@@ -10977,7 +10924,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     //
 
     pub fn put_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Map;)V");
@@ -10994,7 +10941,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/BiConsumer;)V");
@@ -11011,7 +10958,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     //
 
     pub fn contains_key(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -11027,7 +10974,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     }
     //
 
-    pub fn key_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn key_set(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
@@ -11038,7 +10985,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     //
 
     pub fn contains_value(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -11055,7 +11002,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -11070,7 +11017,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -11095,7 +11042,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -11105,7 +11052,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -11115,7 +11062,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -11126,7 +11073,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     //
 
     pub fn replace_with_object(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -11156,7 +11103,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     //
 
     pub fn merge(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: jni::objects::JObject<'mc>,
@@ -11181,7 +11128,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     //
 
     pub fn put_if_absent(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -11203,7 +11150,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     //
 
     pub fn compute(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -11226,7 +11173,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     //
 
     pub fn compute_if_absent(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -11249,7 +11196,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     //
 
     pub fn get_or_default(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -11271,7 +11218,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     //
 
     pub fn compute_if_present(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -11408,7 +11355,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     //
 
     pub fn get(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Ljava/lang/Object;");
@@ -11424,7 +11371,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     }
     //
 
-    pub fn values(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn values(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Collection;");
         let res = self
             .jni_ref()
@@ -11434,7 +11381,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -11445,7 +11392,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     //
 
     pub fn replace_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/BiFunction;)V");
@@ -11461,7 +11408,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     }
     //
 
-    pub fn entry_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn entry_set(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
@@ -11472,7 +11419,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/BiConsumer;)V");
@@ -11488,7 +11435,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     }
     //
 
-    pub fn key_set(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn key_set(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
@@ -11499,7 +11446,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     //
 
     pub fn contains_value(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -11516,7 +11463,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     //
 
     pub fn get_or_default(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -11538,7 +11485,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     //
 
     pub fn remove_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11564,7 +11511,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     //
 
     pub fn put(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -11585,7 +11532,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -11595,7 +11542,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -11606,7 +11553,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     //
 
     pub fn replace_with_object(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -11635,7 +11582,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -11646,7 +11593,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     //
 
     pub fn merge(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: jni::objects::JObject<'mc>,
@@ -11671,7 +11618,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     //
 
     pub fn put_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Map;)V");
@@ -11688,7 +11635,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     //
 
     pub fn put_if_absent(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -11710,7 +11657,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     //
 
     pub fn compute(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -11733,7 +11680,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     //
 
     pub fn contains_key(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -11750,7 +11697,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     //
 
     pub fn compute_if_absent(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -11773,7 +11720,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     //
 
     pub fn compute_if_present(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -11796,7 +11743,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -11813,7 +11760,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -11827,7 +11774,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -11838,7 +11785,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -11863,7 +11810,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -11873,7 +11820,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -11883,7 +11830,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -11951,7 +11898,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     //
 
     pub fn add_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -11977,7 +11924,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     //
 
     pub fn remove_with_int(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -11996,10 +11943,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     }
     //
 
-    pub fn get(
-        &mut self,
-        arg0: i32,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn get(&self, arg0: i32) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/Object;");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -12013,7 +11957,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     }
     //
 
-    pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn iterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self
             .jni_ref()
@@ -12024,7 +11968,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     //
 
     pub fn add_all_with_collection(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12050,7 +11994,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     //
 
     pub fn set(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -12072,7 +12016,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     //
 
     pub fn list_iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -12092,7 +12036,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -12108,7 +12052,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -12119,7 +12063,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     //
 
     pub fn index_of(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)I");
@@ -12135,7 +12079,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -12146,7 +12090,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     //
 
     pub fn last_index_of(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)I");
@@ -12163,7 +12107,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     //
 
     pub fn sub_list(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: i32,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -12185,7 +12129,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -12199,7 +12143,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -12209,7 +12153,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -12222,7 +12166,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     //
 
     pub fn contains(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -12239,7 +12183,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     //
 
     pub fn remove_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -12256,7 +12200,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     //
 
     pub fn retain_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -12273,7 +12217,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     //
 
     pub fn contains_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -12290,7 +12234,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -12315,7 +12259,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -12325,7 +12269,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -12335,7 +12279,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -12345,7 +12289,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     }
     //
 
-    pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn stream(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res = self
             .jni_ref()
@@ -12355,9 +12299,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     }
     //
 
-    pub fn spliterator(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn spliterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Spliterator;");
         let res =
             self.jni_ref()
@@ -12368,7 +12310,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     //
 
     pub fn remove_if(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Predicate;)Z");
@@ -12385,7 +12327,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     //
 
     pub fn parallel_stream(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res =
@@ -12397,7 +12339,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Consumer;)V");
@@ -12414,7 +12356,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     //
 
     pub fn replace_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/UnaryOperator;)V");
@@ -12430,10 +12372,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     }
     //
 
-    pub fn sort(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn sort(&self, arg0: jni::objects::JObject<'mc>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Comparator;)V");
         let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
@@ -12504,7 +12443,7 @@ impl<'mc> JavaComparator<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -12521,7 +12460,7 @@ impl<'mc> JavaComparator<'mc> {
     //
 
     pub fn compare(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -12581,7 +12520,7 @@ impl<'mc> JavaComparator<'mc> {
     //
 
     pub fn then_comparing_with_comparator(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -12601,7 +12540,7 @@ impl<'mc> JavaComparator<'mc> {
     //
 
     pub fn then_comparing_with_function(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -12681,7 +12620,7 @@ impl<'mc> JavaComparator<'mc> {
     }
     //
 
-    pub fn reversed(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn reversed(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Comparator;");
         let res = self
             .jni_ref()
@@ -12692,7 +12631,7 @@ impl<'mc> JavaComparator<'mc> {
     //
 
     pub fn then_comparing_int(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/ToIntFunction;)Ljava/util/Comparator;");
@@ -12709,7 +12648,7 @@ impl<'mc> JavaComparator<'mc> {
     //
 
     pub fn then_comparing_long(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/ToLongFunction;)Ljava/util/Comparator;");
@@ -12726,7 +12665,7 @@ impl<'mc> JavaComparator<'mc> {
     //
 
     pub fn then_comparing_double(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/ToDoubleFunction;)Ljava/util/Comparator;");
@@ -12858,7 +12797,7 @@ impl<'mc> JavaRandom<'mc> {
     }
     //
 
-    pub fn next_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn next_boolean(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -12869,7 +12808,7 @@ impl<'mc> JavaRandom<'mc> {
     //
 
     pub fn next_long(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
@@ -12895,7 +12834,7 @@ impl<'mc> JavaRandom<'mc> {
     //
 
     pub fn next_float(
-        &mut self,
+        &self,
         arg0: std::option::Option<f32>,
         arg1: std::option::Option<f32>,
     ) -> Result<f32, Box<dyn std::error::Error>> {
@@ -12921,7 +12860,7 @@ impl<'mc> JavaRandom<'mc> {
     //
 
     pub fn ints(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -12947,7 +12886,7 @@ impl<'mc> JavaRandom<'mc> {
     //
 
     pub fn ints_with_long(
-        &mut self,
+        &self,
         arg0: i64,
         arg1: i32,
         arg2: std::option::Option<i32>,
@@ -12975,7 +12914,7 @@ impl<'mc> JavaRandom<'mc> {
     //
 
     pub fn longs(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
         arg2: std::option::Option<i64>,
@@ -13007,7 +12946,7 @@ impl<'mc> JavaRandom<'mc> {
     //
 
     pub fn doubles(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -13033,7 +12972,7 @@ impl<'mc> JavaRandom<'mc> {
     //
 
     pub fn doubles_with_long(
-        &mut self,
+        &self,
         arg0: i64,
         arg1: f64,
         arg2: std::option::Option<f64>,
@@ -13060,7 +12999,7 @@ impl<'mc> JavaRandom<'mc> {
     }
     //
 
-    pub fn set_seed(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_seed(&self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(J)V");
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let res = self.jni_ref().call_method(
@@ -13074,7 +13013,7 @@ impl<'mc> JavaRandom<'mc> {
     }
     //
 
-    pub fn next_bytes(&mut self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn next_bytes(&self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(B)V");
         let res = self
             .jni_ref()
@@ -13085,7 +13024,7 @@ impl<'mc> JavaRandom<'mc> {
     //
 
     pub fn next_gaussian(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
@@ -13111,7 +13050,7 @@ impl<'mc> JavaRandom<'mc> {
     //
 
     pub fn next_double(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
@@ -13137,7 +13076,7 @@ impl<'mc> JavaRandom<'mc> {
     //
 
     pub fn next_int(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -13163,7 +13102,7 @@ impl<'mc> JavaRandom<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -13189,7 +13128,7 @@ impl<'mc> JavaRandom<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -13206,7 +13145,7 @@ impl<'mc> JavaRandom<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -13220,7 +13159,7 @@ impl<'mc> JavaRandom<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -13230,7 +13169,7 @@ impl<'mc> JavaRandom<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -13240,7 +13179,7 @@ impl<'mc> JavaRandom<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -13250,7 +13189,7 @@ impl<'mc> JavaRandom<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -13260,7 +13199,7 @@ impl<'mc> JavaRandom<'mc> {
     }
     //
 
-    pub fn is_deprecated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_deprecated(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -13270,7 +13209,7 @@ impl<'mc> JavaRandom<'mc> {
     }
     //
 
-    pub fn next_exponential(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn next_exponential(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
             self.jni_ref()
@@ -13332,7 +13271,7 @@ impl<'mc> JavaList<'mc> {
     //
 
     pub fn add_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -13358,7 +13297,7 @@ impl<'mc> JavaList<'mc> {
     //
 
     pub fn remove_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -13377,10 +13316,7 @@ impl<'mc> JavaList<'mc> {
     }
     //
 
-    pub fn get(
-        &mut self,
-        arg0: i32,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn get(&self, arg0: i32) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/Object;");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -13395,7 +13331,7 @@ impl<'mc> JavaList<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -13411,7 +13347,7 @@ impl<'mc> JavaList<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -13441,7 +13377,7 @@ impl<'mc> JavaList<'mc> {
     //
 
     pub fn index_of(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)I");
@@ -13457,7 +13393,7 @@ impl<'mc> JavaList<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -13468,7 +13404,7 @@ impl<'mc> JavaList<'mc> {
     //
 
     pub fn last_index_of(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)I");
@@ -13484,7 +13420,7 @@ impl<'mc> JavaList<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -13495,7 +13431,7 @@ impl<'mc> JavaList<'mc> {
     //
 
     pub fn replace_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/UnaryOperator;)V");
@@ -13511,7 +13447,7 @@ impl<'mc> JavaList<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -13522,7 +13458,7 @@ impl<'mc> JavaList<'mc> {
     //
 
     pub fn sub_list(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: i32,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -13545,7 +13481,7 @@ impl<'mc> JavaList<'mc> {
 
     //
 
-    pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn iterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self
             .jni_ref()
@@ -13627,7 +13563,7 @@ impl<'mc> JavaList<'mc> {
     //
 
     pub fn contains(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -13643,9 +13579,7 @@ impl<'mc> JavaList<'mc> {
     }
     //
 
-    pub fn spliterator(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn spliterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Spliterator;");
         let res =
             self.jni_ref()
@@ -13656,7 +13590,7 @@ impl<'mc> JavaList<'mc> {
     //
 
     pub fn add_all_with_collection(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -13682,7 +13616,7 @@ impl<'mc> JavaList<'mc> {
     //
 
     pub fn set(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -13703,10 +13637,7 @@ impl<'mc> JavaList<'mc> {
     }
     //
 
-    pub fn sort(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn sort(&self, arg0: jni::objects::JObject<'mc>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Comparator;)V");
         let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
@@ -13721,7 +13652,7 @@ impl<'mc> JavaList<'mc> {
     //
 
     pub fn remove_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -13738,7 +13669,7 @@ impl<'mc> JavaList<'mc> {
     //
 
     pub fn retain_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -13755,7 +13686,7 @@ impl<'mc> JavaList<'mc> {
     //
 
     pub fn list_iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -13775,7 +13706,7 @@ impl<'mc> JavaList<'mc> {
     //
 
     pub fn contains_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -13791,7 +13722,7 @@ impl<'mc> JavaList<'mc> {
     }
     //
 
-    pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn stream(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res = self
             .jni_ref()
@@ -13802,7 +13733,7 @@ impl<'mc> JavaList<'mc> {
     //
 
     pub fn remove_if(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Predicate;)Z");
@@ -13819,7 +13750,7 @@ impl<'mc> JavaList<'mc> {
     //
 
     pub fn parallel_stream(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res =
@@ -13831,7 +13762,7 @@ impl<'mc> JavaList<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Consumer;)V");
@@ -13943,7 +13874,7 @@ impl<'mc> JavaUUID<'mc> {
     }
     //
 
-    pub fn least_significant_bits(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
+    pub fn least_significant_bits(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13956,7 +13887,7 @@ impl<'mc> JavaUUID<'mc> {
     }
     //
 
-    pub fn most_significant_bits(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
+    pub fn most_significant_bits(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13969,7 +13900,7 @@ impl<'mc> JavaUUID<'mc> {
     }
     //
 
-    pub fn clock_sequence(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn clock_sequence(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -13979,7 +13910,7 @@ impl<'mc> JavaUUID<'mc> {
     }
     //
 
-    pub fn variant(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn variant(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -14023,7 +13954,7 @@ impl<'mc> JavaUUID<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -14040,7 +13971,7 @@ impl<'mc> JavaUUID<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -14054,7 +13985,7 @@ impl<'mc> JavaUUID<'mc> {
     }
     //
 
-    pub fn version(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn version(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -14064,7 +13995,7 @@ impl<'mc> JavaUUID<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -14075,7 +14006,7 @@ impl<'mc> JavaUUID<'mc> {
     //
 
     pub fn compare_to_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -14094,7 +14025,7 @@ impl<'mc> JavaUUID<'mc> {
     }
     //
 
-    pub fn timestamp(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
+    pub fn timestamp(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
         let res = self
             .jni_ref()
@@ -14104,7 +14035,7 @@ impl<'mc> JavaUUID<'mc> {
     }
     //
 
-    pub fn node(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
+    pub fn node(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
         let res = self
             .jni_ref()
@@ -14115,7 +14046,7 @@ impl<'mc> JavaUUID<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -14140,7 +14071,7 @@ impl<'mc> JavaUUID<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -14150,7 +14081,7 @@ impl<'mc> JavaUUID<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -14160,7 +14091,7 @@ impl<'mc> JavaUUID<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -14261,7 +14192,7 @@ impl<'mc> JavaHashSet<'mc> {
     //
 
     pub fn add(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -14278,7 +14209,7 @@ impl<'mc> JavaHashSet<'mc> {
     //
 
     pub fn remove(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -14294,7 +14225,7 @@ impl<'mc> JavaHashSet<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -14304,7 +14235,7 @@ impl<'mc> JavaHashSet<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -14314,7 +14245,7 @@ impl<'mc> JavaHashSet<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -14324,7 +14255,7 @@ impl<'mc> JavaHashSet<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -14336,7 +14267,7 @@ impl<'mc> JavaHashSet<'mc> {
 
     //
 
-    pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn iterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self
             .jni_ref()
@@ -14347,7 +14278,7 @@ impl<'mc> JavaHashSet<'mc> {
     //
 
     pub fn contains(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -14363,9 +14294,7 @@ impl<'mc> JavaHashSet<'mc> {
     }
     //
 
-    pub fn spliterator(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn spliterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Spliterator;");
         let res =
             self.jni_ref()
@@ -14376,7 +14305,7 @@ impl<'mc> JavaHashSet<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -14392,7 +14321,7 @@ impl<'mc> JavaHashSet<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -14403,7 +14332,7 @@ impl<'mc> JavaHashSet<'mc> {
     //
 
     pub fn remove_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -14420,7 +14349,7 @@ impl<'mc> JavaHashSet<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -14435,7 +14364,7 @@ impl<'mc> JavaHashSet<'mc> {
     //
 
     pub fn add_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -14452,7 +14381,7 @@ impl<'mc> JavaHashSet<'mc> {
     //
 
     pub fn retain_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -14469,7 +14398,7 @@ impl<'mc> JavaHashSet<'mc> {
     //
 
     pub fn contains_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -14486,7 +14415,7 @@ impl<'mc> JavaHashSet<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -14511,7 +14440,7 @@ impl<'mc> JavaHashSet<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -14521,7 +14450,7 @@ impl<'mc> JavaHashSet<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -14531,7 +14460,7 @@ impl<'mc> JavaHashSet<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -14541,7 +14470,7 @@ impl<'mc> JavaHashSet<'mc> {
     }
     //
 
-    pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn stream(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res = self
             .jni_ref()
@@ -14552,7 +14481,7 @@ impl<'mc> JavaHashSet<'mc> {
     //
 
     pub fn remove_if(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Predicate;)Z");
@@ -14569,7 +14498,7 @@ impl<'mc> JavaHashSet<'mc> {
     //
 
     pub fn parallel_stream(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res =
@@ -14581,7 +14510,7 @@ impl<'mc> JavaHashSet<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Consumer;)V");
@@ -14655,7 +14584,7 @@ impl<'mc> JavaAbstractList<'mc> {
     //
 
     pub fn add_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -14681,7 +14610,7 @@ impl<'mc> JavaAbstractList<'mc> {
     //
 
     pub fn remove_with_int(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -14700,10 +14629,7 @@ impl<'mc> JavaAbstractList<'mc> {
     }
     //
 
-    pub fn get(
-        &mut self,
-        arg0: i32,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn get(&self, arg0: i32) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/Object;");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -14718,7 +14644,7 @@ impl<'mc> JavaAbstractList<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -14734,7 +14660,7 @@ impl<'mc> JavaAbstractList<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -14745,7 +14671,7 @@ impl<'mc> JavaAbstractList<'mc> {
     //
 
     pub fn index_of(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)I");
@@ -14761,7 +14687,7 @@ impl<'mc> JavaAbstractList<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -14772,7 +14698,7 @@ impl<'mc> JavaAbstractList<'mc> {
     //
 
     pub fn last_index_of(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)I");
@@ -14789,7 +14715,7 @@ impl<'mc> JavaAbstractList<'mc> {
     //
 
     pub fn sub_list(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: i32,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -14810,7 +14736,7 @@ impl<'mc> JavaAbstractList<'mc> {
     }
     //
 
-    pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn iterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self
             .jni_ref()
@@ -14821,7 +14747,7 @@ impl<'mc> JavaAbstractList<'mc> {
     //
 
     pub fn add_all_with_collection(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14847,7 +14773,7 @@ impl<'mc> JavaAbstractList<'mc> {
     //
 
     pub fn set(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -14869,7 +14795,7 @@ impl<'mc> JavaAbstractList<'mc> {
     //
 
     pub fn list_iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -14889,7 +14815,7 @@ impl<'mc> JavaAbstractList<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -14903,7 +14829,7 @@ impl<'mc> JavaAbstractList<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -14913,7 +14839,7 @@ impl<'mc> JavaAbstractList<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -14926,7 +14852,7 @@ impl<'mc> JavaAbstractList<'mc> {
     //
 
     pub fn contains(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -14943,7 +14869,7 @@ impl<'mc> JavaAbstractList<'mc> {
     //
 
     pub fn remove_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -14960,7 +14886,7 @@ impl<'mc> JavaAbstractList<'mc> {
     //
 
     pub fn retain_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -14977,7 +14903,7 @@ impl<'mc> JavaAbstractList<'mc> {
     //
 
     pub fn contains_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -14994,7 +14920,7 @@ impl<'mc> JavaAbstractList<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -15019,7 +14945,7 @@ impl<'mc> JavaAbstractList<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -15029,7 +14955,7 @@ impl<'mc> JavaAbstractList<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -15039,7 +14965,7 @@ impl<'mc> JavaAbstractList<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -15049,7 +14975,7 @@ impl<'mc> JavaAbstractList<'mc> {
     }
     //
 
-    pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn stream(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res = self
             .jni_ref()
@@ -15059,9 +14985,7 @@ impl<'mc> JavaAbstractList<'mc> {
     }
     //
 
-    pub fn spliterator(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn spliterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Spliterator;");
         let res =
             self.jni_ref()
@@ -15072,7 +14996,7 @@ impl<'mc> JavaAbstractList<'mc> {
     //
 
     pub fn remove_if(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Predicate;)Z");
@@ -15089,7 +15013,7 @@ impl<'mc> JavaAbstractList<'mc> {
     //
 
     pub fn parallel_stream(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res =
@@ -15101,7 +15025,7 @@ impl<'mc> JavaAbstractList<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Consumer;)V");
@@ -15118,7 +15042,7 @@ impl<'mc> JavaAbstractList<'mc> {
     //
 
     pub fn replace_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/UnaryOperator;)V");
@@ -15134,10 +15058,7 @@ impl<'mc> JavaAbstractList<'mc> {
     }
     //
 
-    pub fn sort(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn sort(&self, arg0: jni::objects::JObject<'mc>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Comparator;)V");
         let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
@@ -15203,7 +15124,7 @@ impl<'mc> JavaOptional<'mc> {
     //
 
     pub fn if_present_or_else(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -15225,7 +15146,7 @@ impl<'mc> JavaOptional<'mc> {
     //
 
     pub fn or(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Supplier;)Ljava/util/Optional;");
@@ -15242,7 +15163,7 @@ impl<'mc> JavaOptional<'mc> {
     //
 
     pub fn or_else_get(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Supplier;)Ljava/lang/Object;");
@@ -15259,7 +15180,7 @@ impl<'mc> JavaOptional<'mc> {
     //
 
     pub fn if_present(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Consumer;)V");
@@ -15294,7 +15215,7 @@ impl<'mc> JavaOptional<'mc> {
     }
     //
 
-    pub fn get(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn get(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -15305,7 +15226,7 @@ impl<'mc> JavaOptional<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -15322,7 +15243,7 @@ impl<'mc> JavaOptional<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -15336,7 +15257,7 @@ impl<'mc> JavaOptional<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -15346,7 +15267,7 @@ impl<'mc> JavaOptional<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -15357,7 +15278,7 @@ impl<'mc> JavaOptional<'mc> {
     //
 
     pub fn map(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Function;)Ljava/util/Optional;");
@@ -15373,7 +15294,7 @@ impl<'mc> JavaOptional<'mc> {
     }
     //
 
-    pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn stream(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res = self
             .jni_ref()
@@ -15403,7 +15324,7 @@ impl<'mc> JavaOptional<'mc> {
     //
 
     pub fn filter(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Predicate;)Ljava/util/Optional;");
@@ -15432,7 +15353,7 @@ impl<'mc> JavaOptional<'mc> {
     //
 
     pub fn flat_map(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Function;)Ljava/util/Optional;");
@@ -15448,7 +15369,7 @@ impl<'mc> JavaOptional<'mc> {
     }
     //
 
-    pub fn is_present(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_present(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -15459,7 +15380,7 @@ impl<'mc> JavaOptional<'mc> {
     //
 
     pub fn or_else(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Ljava/lang/Object;");
@@ -15476,7 +15397,7 @@ impl<'mc> JavaOptional<'mc> {
     //
 
     pub fn or_else_throw(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -15496,7 +15417,7 @@ impl<'mc> JavaOptional<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -15521,7 +15442,7 @@ impl<'mc> JavaOptional<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -15531,7 +15452,7 @@ impl<'mc> JavaOptional<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -15541,7 +15462,7 @@ impl<'mc> JavaOptional<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -15594,10 +15515,7 @@ impl<'mc> JavaListIterator<'mc> {
     }
     //
 
-    pub fn add(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn add(&self, arg0: jni::objects::JObject<'mc>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)V");
         let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
@@ -15611,7 +15529,7 @@ impl<'mc> JavaListIterator<'mc> {
     }
     //
 
-    pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -15621,7 +15539,7 @@ impl<'mc> JavaListIterator<'mc> {
     }
     //
 
-    pub fn has_next(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_next(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -15631,7 +15549,7 @@ impl<'mc> JavaListIterator<'mc> {
     }
     //
 
-    pub fn next(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn next(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -15641,10 +15559,7 @@ impl<'mc> JavaListIterator<'mc> {
     }
     //
 
-    pub fn set(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set(&self, arg0: jni::objects::JObject<'mc>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)V");
         let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
@@ -15658,7 +15573,7 @@ impl<'mc> JavaListIterator<'mc> {
     }
     //
 
-    pub fn next_index(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn next_index(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -15668,7 +15583,7 @@ impl<'mc> JavaListIterator<'mc> {
     }
     //
 
-    pub fn previous_index(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn previous_index(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -15678,7 +15593,7 @@ impl<'mc> JavaListIterator<'mc> {
     }
     //
 
-    pub fn has_previous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_previous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -15688,7 +15603,7 @@ impl<'mc> JavaListIterator<'mc> {
     }
     //
 
-    pub fn previous(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn previous(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -15699,7 +15614,7 @@ impl<'mc> JavaListIterator<'mc> {
     //
 
     pub fn for_each_remaining(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Consumer;)V");
@@ -15789,10 +15704,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn push(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn push(&self, arg0: jni::objects::JObject<'mc>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)V");
         let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
@@ -15806,7 +15718,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn pop(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn pop(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -15817,7 +15729,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn add_first(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)V");
@@ -15834,7 +15746,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn add_last(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)V");
@@ -15850,7 +15762,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn poll_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn poll_first(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -15860,7 +15772,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn poll_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn poll_last(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -15871,7 +15783,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn offer_last(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -15887,9 +15799,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn remove_first(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn remove_first(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res =
             self.jni_ref()
@@ -15899,7 +15809,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn first(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -15909,7 +15819,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn peek_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn peek_first(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -15920,7 +15830,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn remove_first_occurrence(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -15937,7 +15847,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn offer_first(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -15953,9 +15863,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn remove_last(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn remove_last(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res =
             self.jni_ref()
@@ -15965,7 +15873,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn last(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -15975,7 +15883,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn peek_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn peek_last(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -15986,7 +15894,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn remove_last_occurrence(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -16003,7 +15911,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn offer(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -16020,7 +15928,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn descending_iterator(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self.jni_ref().call_method(
@@ -16035,7 +15943,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn add_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -16061,7 +15969,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn remove(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -16080,10 +15988,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn get(
-        &mut self,
-        arg0: i32,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn get(&self, arg0: i32) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/Object;");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -16097,7 +16002,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -16108,7 +16013,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn index_of(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)I");
@@ -16124,7 +16029,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -16135,7 +16040,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn last_index_of(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)I");
@@ -16151,7 +16056,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -16164,7 +16069,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn contains(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -16180,9 +16085,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn spliterator(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn spliterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Spliterator;");
         let res =
             self.jni_ref()
@@ -16193,7 +16096,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn add_all_with_collection(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -16219,7 +16122,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn set(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -16240,7 +16143,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn poll(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn poll(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -16250,7 +16153,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn peek(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn peek(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -16260,7 +16163,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn element(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn element(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -16271,7 +16174,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn list_iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -16290,7 +16193,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn iterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self
             .jni_ref()
@@ -16301,7 +16204,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -16317,7 +16220,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -16328,7 +16231,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn sub_list(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: i32,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -16350,7 +16253,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -16364,7 +16267,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -16375,7 +16278,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn remove_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -16392,7 +16295,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn retain_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -16409,7 +16312,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn contains_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -16426,7 +16329,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -16451,7 +16354,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -16461,7 +16364,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -16471,7 +16374,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -16481,7 +16384,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn stream(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res = self
             .jni_ref()
@@ -16492,7 +16395,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn remove_if(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Predicate;)Z");
@@ -16509,7 +16412,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn parallel_stream(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res =
@@ -16521,7 +16424,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Consumer;)V");
@@ -16538,7 +16441,7 @@ impl<'mc> JavaLinkedList<'mc> {
     //
 
     pub fn replace_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/UnaryOperator;)V");
@@ -16554,10 +16457,7 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn sort(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn sort(&self, arg0: jni::objects::JObject<'mc>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Comparator;)V");
         let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
@@ -16624,7 +16524,7 @@ impl<'mc> JavaCollection<'mc> {
     //
 
     pub fn add(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -16641,7 +16541,7 @@ impl<'mc> JavaCollection<'mc> {
     //
 
     pub fn remove(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -16658,7 +16558,7 @@ impl<'mc> JavaCollection<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -16674,7 +16574,7 @@ impl<'mc> JavaCollection<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -16684,7 +16584,7 @@ impl<'mc> JavaCollection<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -16694,7 +16594,7 @@ impl<'mc> JavaCollection<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -16704,7 +16604,7 @@ impl<'mc> JavaCollection<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -16716,7 +16616,7 @@ impl<'mc> JavaCollection<'mc> {
 
     //
 
-    pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn iterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self
             .jni_ref()
@@ -16726,7 +16626,7 @@ impl<'mc> JavaCollection<'mc> {
     }
     //
 
-    pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn stream(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res = self
             .jni_ref()
@@ -16737,7 +16637,7 @@ impl<'mc> JavaCollection<'mc> {
     //
 
     pub fn contains(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -16753,9 +16653,7 @@ impl<'mc> JavaCollection<'mc> {
     }
     //
 
-    pub fn spliterator(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn spliterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Spliterator;");
         let res =
             self.jni_ref()
@@ -16766,7 +16664,7 @@ impl<'mc> JavaCollection<'mc> {
     //
 
     pub fn add_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -16783,7 +16681,7 @@ impl<'mc> JavaCollection<'mc> {
     //
 
     pub fn remove_if(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Predicate;)Z");
@@ -16800,7 +16698,7 @@ impl<'mc> JavaCollection<'mc> {
     //
 
     pub fn remove_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -16817,7 +16715,7 @@ impl<'mc> JavaCollection<'mc> {
     //
 
     pub fn retain_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -16834,7 +16732,7 @@ impl<'mc> JavaCollection<'mc> {
     //
 
     pub fn contains_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -16851,7 +16749,7 @@ impl<'mc> JavaCollection<'mc> {
     //
 
     pub fn parallel_stream(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res =
@@ -16863,7 +16761,7 @@ impl<'mc> JavaCollection<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Consumer;)V");
@@ -16918,7 +16816,7 @@ impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
     }
     //
 
-    pub fn next_int(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn next_int(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -16929,7 +16827,7 @@ impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
     //
 
     pub fn for_each_remaining_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -16949,7 +16847,7 @@ impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
     //
 
     pub fn for_each_remaining_with_int_consumer(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -16968,7 +16866,7 @@ impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
     }
     //
 
-    pub fn next(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn next(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
@@ -16980,7 +16878,7 @@ impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
     }
     //
 
-    pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -16990,7 +16888,7 @@ impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
     }
     //
 
-    pub fn has_next(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_next(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -17039,7 +16937,7 @@ impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
     }
     //
 
-    pub fn next_long(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
+    pub fn next_long(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
         let res = self
             .jni_ref()
@@ -17050,7 +16948,7 @@ impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
     //
 
     pub fn for_each_remaining_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -17070,7 +16968,7 @@ impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
     //
 
     pub fn for_each_remaining_with_long_consumer(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -17089,7 +16987,7 @@ impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
     }
     //
 
-    pub fn next(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn next(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
@@ -17101,7 +16999,7 @@ impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
     }
     //
 
-    pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -17111,7 +17009,7 @@ impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
     }
     //
 
-    pub fn has_next(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_next(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -17162,7 +17060,7 @@ impl<'mc> JavaIterator<'mc> {
     }
     //
 
-    pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -17173,7 +17071,7 @@ impl<'mc> JavaIterator<'mc> {
     //
 
     pub fn for_each_remaining(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Consumer;)V");
@@ -17189,7 +17087,7 @@ impl<'mc> JavaIterator<'mc> {
     }
     //
 
-    pub fn has_next(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_next(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -17199,7 +17097,7 @@ impl<'mc> JavaIterator<'mc> {
     }
     //
 
-    pub fn next(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn next(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -17251,7 +17149,7 @@ impl<'mc> JavaPrimitiveIterator<'mc> {
     //
 
     pub fn for_each_remaining_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -17270,7 +17168,7 @@ impl<'mc> JavaPrimitiveIterator<'mc> {
     }
     //
 
-    pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -17280,7 +17178,7 @@ impl<'mc> JavaPrimitiveIterator<'mc> {
     }
     //
 
-    pub fn has_next(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_next(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -17290,7 +17188,7 @@ impl<'mc> JavaPrimitiveIterator<'mc> {
     }
     //
 
-    pub fn next(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn next(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -17382,7 +17280,7 @@ impl<'mc> JavaMapEntry<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -17398,7 +17296,7 @@ impl<'mc> JavaMapEntry<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -17427,7 +17325,7 @@ impl<'mc> JavaMapEntry<'mc> {
     }
     //
 
-    pub fn value(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn value(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -17437,7 +17335,7 @@ impl<'mc> JavaMapEntry<'mc> {
     }
     //
 
-    pub fn key(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn key(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -17448,7 +17346,7 @@ impl<'mc> JavaMapEntry<'mc> {
     //
 
     pub fn set_value(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Ljava/lang/Object;");
@@ -17576,7 +17474,7 @@ impl<'mc> JavaEnumSet<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/util/EnumSet;";
@@ -17664,7 +17562,7 @@ impl<'mc> JavaEnumSet<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -17680,7 +17578,7 @@ impl<'mc> JavaEnumSet<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -17691,7 +17589,7 @@ impl<'mc> JavaEnumSet<'mc> {
     //
 
     pub fn remove_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -17708,7 +17606,7 @@ impl<'mc> JavaEnumSet<'mc> {
     //
 
     pub fn add(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -17725,7 +17623,7 @@ impl<'mc> JavaEnumSet<'mc> {
     //
 
     pub fn remove(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -17742,7 +17640,7 @@ impl<'mc> JavaEnumSet<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -17756,7 +17654,7 @@ impl<'mc> JavaEnumSet<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -17766,7 +17664,7 @@ impl<'mc> JavaEnumSet<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -17776,7 +17674,7 @@ impl<'mc> JavaEnumSet<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -17788,7 +17686,7 @@ impl<'mc> JavaEnumSet<'mc> {
 
     //
 
-    pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn iterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self
             .jni_ref()
@@ -17799,7 +17697,7 @@ impl<'mc> JavaEnumSet<'mc> {
     //
 
     pub fn contains(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -17816,7 +17714,7 @@ impl<'mc> JavaEnumSet<'mc> {
     //
 
     pub fn add_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -17833,7 +17731,7 @@ impl<'mc> JavaEnumSet<'mc> {
     //
 
     pub fn retain_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -17850,7 +17748,7 @@ impl<'mc> JavaEnumSet<'mc> {
     //
 
     pub fn contains_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -17867,7 +17765,7 @@ impl<'mc> JavaEnumSet<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -17892,7 +17790,7 @@ impl<'mc> JavaEnumSet<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -17902,7 +17800,7 @@ impl<'mc> JavaEnumSet<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -17912,7 +17810,7 @@ impl<'mc> JavaEnumSet<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -17922,7 +17820,7 @@ impl<'mc> JavaEnumSet<'mc> {
     }
     //
 
-    pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn stream(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res = self
             .jni_ref()
@@ -17932,9 +17830,7 @@ impl<'mc> JavaEnumSet<'mc> {
     }
     //
 
-    pub fn spliterator(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn spliterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Spliterator;");
         let res =
             self.jni_ref()
@@ -17945,7 +17841,7 @@ impl<'mc> JavaEnumSet<'mc> {
     //
 
     pub fn remove_if(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Predicate;)Z");
@@ -17962,7 +17858,7 @@ impl<'mc> JavaEnumSet<'mc> {
     //
 
     pub fn parallel_stream(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res =
@@ -17974,7 +17870,7 @@ impl<'mc> JavaEnumSet<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Consumer;)V");
@@ -18122,7 +18018,7 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn set_time(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_time(&self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(J)V");
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let res = self.jni_ref().call_method(
@@ -18136,7 +18032,7 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn time(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
+    pub fn time(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
         let res = self
             .jni_ref()
@@ -18146,7 +18042,7 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn year(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn year(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -18156,7 +18052,7 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn seconds(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn seconds(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -18166,7 +18062,7 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn to_instant(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn to_instant(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/time/Instant;");
         let res = self
             .jni_ref()
@@ -18212,7 +18108,7 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn date(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn date(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -18222,7 +18118,7 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn set_date(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_date(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -18236,7 +18132,7 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn month(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn month(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -18246,7 +18142,7 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn set_month(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_month(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -18260,7 +18156,7 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn hours(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hours(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -18270,7 +18166,7 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn set_hours(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_hours(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -18284,7 +18180,7 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn minutes(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn minutes(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -18294,7 +18190,7 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn set_minutes(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_minutes(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -18308,7 +18204,7 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn set_seconds(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_seconds(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -18322,7 +18218,7 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn set_year(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_year(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -18336,7 +18232,7 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn day(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn day(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -18346,7 +18242,7 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn to_locale_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn to_locale_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -18360,7 +18256,7 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn to_gmtstring(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn to_gmtstring(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -18374,7 +18270,7 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn timezone_offset(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn timezone_offset(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18409,7 +18305,7 @@ impl<'mc> JavaDate<'mc> {
     //
 
     pub fn before(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Date;)Z");
@@ -18426,7 +18322,7 @@ impl<'mc> JavaDate<'mc> {
     //
 
     pub fn after(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Date;)Z");
@@ -18443,7 +18339,7 @@ impl<'mc> JavaDate<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -18460,7 +18356,7 @@ impl<'mc> JavaDate<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -18474,7 +18370,7 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -18484,7 +18380,7 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -18495,7 +18391,7 @@ impl<'mc> JavaDate<'mc> {
     //
 
     pub fn compare_to_with_date(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -18534,7 +18430,7 @@ impl<'mc> JavaDate<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -18559,7 +18455,7 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -18569,7 +18465,7 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -18579,7 +18475,7 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -18658,10 +18554,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     }
     //
 
-    pub fn push(
-        &mut self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn push(&self, arg0: jni::objects::JObject<'mc>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)V");
         let val_1 = jni::objects::JValueGen::Object(arg0);
         let res = self.jni_ref().call_method(
@@ -18675,7 +18568,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     }
     //
 
-    pub fn pop(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn pop(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -18686,7 +18579,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     //
 
     pub fn add_first(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)V");
@@ -18703,7 +18596,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     //
 
     pub fn add_last(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)V");
@@ -18719,7 +18612,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     }
     //
 
-    pub fn poll_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn poll_first(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -18729,7 +18622,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     }
     //
 
-    pub fn poll_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn poll_last(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -18740,7 +18633,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     //
 
     pub fn offer_last(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -18756,9 +18649,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     }
     //
 
-    pub fn remove_first(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn remove_first(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res =
             self.jni_ref()
@@ -18768,7 +18659,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     }
     //
 
-    pub fn first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn first(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -18778,7 +18669,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     }
     //
 
-    pub fn peek_first(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn peek_first(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -18789,7 +18680,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     //
 
     pub fn remove_first_occurrence(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -18806,7 +18697,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     //
 
     pub fn offer_first(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -18822,9 +18713,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     }
     //
 
-    pub fn remove_last(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn remove_last(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res =
             self.jni_ref()
@@ -18834,7 +18723,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     }
     //
 
-    pub fn last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn last(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -18844,7 +18733,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     }
     //
 
-    pub fn peek_last(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn peek_last(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -18855,7 +18744,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     //
 
     pub fn remove_last_occurrence(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -18872,7 +18761,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     //
 
     pub fn offer(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -18889,7 +18778,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     //
 
     pub fn descending_iterator(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self.jni_ref().call_method(
@@ -18904,7 +18793,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     //
 
     pub fn add(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -18921,7 +18810,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     //
 
     pub fn remove(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -18940,7 +18829,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/util/ArrayDeque;";
@@ -18952,7 +18841,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -18962,7 +18851,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -18972,7 +18861,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -18984,7 +18873,7 @@ impl<'mc> JavaArrayDeque<'mc> {
 
     //
 
-    pub fn iterator(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn iterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self
             .jni_ref()
@@ -18995,7 +18884,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     //
 
     pub fn contains(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -19011,9 +18900,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     }
     //
 
-    pub fn spliterator(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn spliterator(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Spliterator;");
         let res =
             self.jni_ref()
@@ -19024,7 +18911,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     //
 
     pub fn add_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -19041,7 +18928,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     //
 
     pub fn for_each(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Consumer;)V");
@@ -19057,7 +18944,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     }
     //
 
-    pub fn poll(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn poll(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -19067,7 +18954,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     }
     //
 
-    pub fn peek(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn peek(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -19078,7 +18965,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     //
 
     pub fn remove_if(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Predicate;)Z");
@@ -19094,7 +18981,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     }
     //
 
-    pub fn element(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn element(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -19105,7 +18992,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     //
 
     pub fn remove_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -19122,7 +19009,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     //
 
     pub fn retain_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -19139,7 +19026,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -19154,7 +19041,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     //
 
     pub fn contains_all(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Collection;)Z");
@@ -19171,7 +19058,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -19197,7 +19084,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -19213,7 +19100,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -19223,7 +19110,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -19233,7 +19120,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -19243,7 +19130,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -19253,7 +19140,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     }
     //
 
-    pub fn stream(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn stream(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res = self
             .jni_ref()
@@ -19264,7 +19151,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     //
 
     pub fn parallel_stream(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/stream/Stream;");
         let res =
@@ -19320,7 +19207,7 @@ impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
     }
     //
 
-    pub fn next_double(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn next_double(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
             self.jni_ref()
@@ -19331,7 +19218,7 @@ impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
     //
 
     pub fn for_each_remaining_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -19351,7 +19238,7 @@ impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
     //
 
     pub fn for_each_remaining_with_double_consumer(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -19370,7 +19257,7 @@ impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
     }
     //
 
-    pub fn next(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn next(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
@@ -19382,7 +19269,7 @@ impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
     }
     //
 
-    pub fn remove(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -19392,7 +19279,7 @@ impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
     }
     //
 
-    pub fn has_next(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_next(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()

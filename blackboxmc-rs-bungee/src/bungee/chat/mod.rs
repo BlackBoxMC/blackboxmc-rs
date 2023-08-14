@@ -52,7 +52,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
     //
 
     pub fn serialize_with_selector_component(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -80,7 +80,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
     //
 
     pub fn deserialize_with_json_element(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -110,7 +110,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -136,7 +136,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -153,7 +153,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -167,7 +167,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -177,7 +177,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -187,7 +187,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -197,7 +197,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -281,7 +281,7 @@ impl<'mc> TextComponentSerializer<'mc> {
     //
 
     pub fn serialize_with_text_component(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -309,7 +309,7 @@ impl<'mc> TextComponentSerializer<'mc> {
     //
 
     pub fn deserialize_with_json_element(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -339,7 +339,7 @@ impl<'mc> TextComponentSerializer<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -365,7 +365,7 @@ impl<'mc> TextComponentSerializer<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -382,7 +382,7 @@ impl<'mc> TextComponentSerializer<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -396,7 +396,7 @@ impl<'mc> TextComponentSerializer<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -406,7 +406,7 @@ impl<'mc> TextComponentSerializer<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -416,7 +416,7 @@ impl<'mc> TextComponentSerializer<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -426,7 +426,7 @@ impl<'mc> TextComponentSerializer<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -505,7 +505,7 @@ impl<'mc> BaseComponentSerializer<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -531,7 +531,7 @@ impl<'mc> BaseComponentSerializer<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -548,7 +548,7 @@ impl<'mc> BaseComponentSerializer<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -562,7 +562,7 @@ impl<'mc> BaseComponentSerializer<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -572,7 +572,7 @@ impl<'mc> BaseComponentSerializer<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -582,7 +582,7 @@ impl<'mc> BaseComponentSerializer<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -592,7 +592,7 @@ impl<'mc> BaseComponentSerializer<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -661,7 +661,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
     //
 
     pub fn serialize_with_score_component(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -689,7 +689,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
     //
 
     pub fn deserialize_with_json_element(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -719,7 +719,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -745,7 +745,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -762,7 +762,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -776,7 +776,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -786,7 +786,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -796,7 +796,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -806,7 +806,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -888,7 +888,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
     //
 
     pub fn serialize_with_translatable_component(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -916,7 +916,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
     //
 
     pub fn deserialize_with_json_element(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -947,7 +947,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -973,7 +973,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -990,7 +990,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1004,7 +1004,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1014,7 +1014,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1024,7 +1024,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1034,7 +1034,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1119,7 +1119,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
     //
 
     pub fn serialize_with_keybind_component(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -1147,7 +1147,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
     //
 
     pub fn deserialize_with_json_element(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -1177,7 +1177,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1203,7 +1203,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1220,7 +1220,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1234,7 +1234,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1244,7 +1244,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1254,7 +1254,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1264,7 +1264,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1332,10 +1332,7 @@ impl<'mc> TranslationRegistry<'mc> {
     }
     //
 
-    pub fn translate(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn translate(&self, arg0: impl Into<String>) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Ljava/lang/String;");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -1356,7 +1353,7 @@ impl<'mc> TranslationRegistry<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1373,7 +1370,7 @@ impl<'mc> TranslationRegistry<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1387,7 +1384,7 @@ impl<'mc> TranslationRegistry<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1398,7 +1395,7 @@ impl<'mc> TranslationRegistry<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1423,7 +1420,7 @@ impl<'mc> TranslationRegistry<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1433,7 +1430,7 @@ impl<'mc> TranslationRegistry<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1443,7 +1440,7 @@ impl<'mc> TranslationRegistry<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1511,7 +1508,7 @@ impl<'mc> ComponentSerializer<'mc> {
     //
 
     pub fn deserialize_with_json_element(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -1540,8 +1537,7 @@ impl<'mc> ComponentSerializer<'mc> {
     }
     //
 
-    #[doc(hidden)]
-    pub fn internal_to_string(
+    pub fn to_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -1583,7 +1579,7 @@ impl<'mc> ComponentSerializer<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1609,7 +1605,7 @@ impl<'mc> ComponentSerializer<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1625,7 +1621,7 @@ impl<'mc> ComponentSerializer<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1635,7 +1631,7 @@ impl<'mc> ComponentSerializer<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1645,7 +1641,7 @@ impl<'mc> ComponentSerializer<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1655,7 +1651,7 @@ impl<'mc> ComponentSerializer<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1664,16 +1660,6 @@ impl<'mc> ComponentSerializer<'mc> {
         Ok(())
     }
 }
-
-impl<'mc> std::string::ToString for ComponentSerializer<'mc> {
-    fn to_string(&self) -> String {
-        match &self.internal_to_string() {
-            Ok(a) => a.clone(),
-            Err(err) => format!("Error calling ComponentSerializer.toString: {}", err),
-        }
-    }
-}
-
 impl<'mc> Into<jni::objects::JObject<'mc>> for ComponentSerializer<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1

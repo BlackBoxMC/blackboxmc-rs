@@ -25,6 +25,11 @@ impl std::fmt::Display for HangingBreakEventRemoveCauseEnum {
         }
     }
 }
+impl<'mc> std::fmt::Display for HangingBreakEventRemoveCause<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
+    }
+}
 pub struct HangingBreakEventRemoveCause<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -179,7 +184,7 @@ impl<'mc> HangingBreakEvent<'mc> {
     }
     //
 
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -189,9 +194,7 @@ impl<'mc> HangingBreakEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -205,7 +208,7 @@ impl<'mc> HangingBreakEvent<'mc> {
 
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
-    pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -234,7 +237,7 @@ impl<'mc> HangingBreakEvent<'mc> {
     //
 
     pub fn cause(
-        &mut self,
+        &self,
     ) -> Result<crate::event::hanging::HangingBreakEventRemoveCause<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/event/hanging/HangingBreakEvent$RemoveCause;");
@@ -261,7 +264,7 @@ impl<'mc> HangingBreakEvent<'mc> {
     }
     //
 
-    pub fn entity(&mut self) -> Result<crate::entity::Hanging<'mc>, Box<dyn std::error::Error>> {
+    pub fn entity(&self) -> Result<crate::entity::Hanging<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Hanging;");
         let res = self
             .jni_ref()
@@ -273,7 +276,7 @@ impl<'mc> HangingBreakEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -287,7 +290,7 @@ impl<'mc> HangingBreakEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -298,7 +301,7 @@ impl<'mc> HangingBreakEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -324,7 +327,7 @@ impl<'mc> HangingBreakEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -341,7 +344,7 @@ impl<'mc> HangingBreakEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -355,7 +358,7 @@ impl<'mc> HangingBreakEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -365,7 +368,7 @@ impl<'mc> HangingBreakEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -375,7 +378,7 @@ impl<'mc> HangingBreakEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -385,7 +388,7 @@ impl<'mc> HangingBreakEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -492,7 +495,7 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
     }
     //
 
-    pub fn remover(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    pub fn remover(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res =
             self.jni_ref()
@@ -504,7 +507,7 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
     }
     //
 
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -514,9 +517,7 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -528,7 +529,7 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
     }
     //
 
-    pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -557,7 +558,7 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
     //
 
     pub fn cause(
-        &mut self,
+        &self,
     ) -> Result<crate::event::hanging::HangingBreakEventRemoveCause<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/event/hanging/HangingBreakEvent$RemoveCause;");
@@ -584,7 +585,7 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
     }
     //
 
-    pub fn entity(&mut self) -> Result<crate::entity::Hanging<'mc>, Box<dyn std::error::Error>> {
+    pub fn entity(&self) -> Result<crate::entity::Hanging<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Hanging;");
         let res = self
             .jni_ref()
@@ -596,7 +597,7 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -610,7 +611,7 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -621,7 +622,7 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -647,7 +648,7 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -664,7 +665,7 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -678,7 +679,7 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -688,7 +689,7 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -698,7 +699,7 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -708,7 +709,7 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -749,6 +750,11 @@ impl std::fmt::Display for RemoveCauseEnum {
             RemoveCauseEnum::Physics => f.write_str("PHYSICS"),
             RemoveCauseEnum::Default => f.write_str("DEFAULT"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for RemoveCause<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct RemoveCause<'mc>(
@@ -927,7 +933,7 @@ impl<'mc> HangingPlaceEvent<'mc> {
     }
     //
 
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -937,9 +943,7 @@ impl<'mc> HangingPlaceEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -951,7 +955,7 @@ impl<'mc> HangingPlaceEvent<'mc> {
     }
     //
 
-    pub fn block(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
+    pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/Block;");
         let res = self
             .jni_ref()
@@ -964,7 +968,7 @@ impl<'mc> HangingPlaceEvent<'mc> {
     //
 
     pub fn item_stack(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res =
@@ -977,7 +981,7 @@ impl<'mc> HangingPlaceEvent<'mc> {
     }
     //
 
-    pub fn player(&mut self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
+    pub fn player(&self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Player;");
         let res = self
             .jni_ref()
@@ -991,7 +995,7 @@ impl<'mc> HangingPlaceEvent<'mc> {
 
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
-    pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -1019,9 +1023,7 @@ impl<'mc> HangingPlaceEvent<'mc> {
     }
     //
 
-    pub fn hand(
-        &mut self,
-    ) -> Result<crate::inventory::EquipmentSlot<'mc>, Box<dyn std::error::Error>> {
+    pub fn hand(&self) -> Result<crate::inventory::EquipmentSlot<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/EquipmentSlot;");
         let res = self
             .jni_ref()
@@ -1046,9 +1048,7 @@ impl<'mc> HangingPlaceEvent<'mc> {
     }
     //
 
-    pub fn block_face(
-        &mut self,
-    ) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
+    pub fn block_face(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/BlockFace;");
         let res =
             self.jni_ref()
@@ -1073,7 +1073,7 @@ impl<'mc> HangingPlaceEvent<'mc> {
     }
     //
 
-    pub fn entity(&mut self) -> Result<crate::entity::Hanging<'mc>, Box<dyn std::error::Error>> {
+    pub fn entity(&self) -> Result<crate::entity::Hanging<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Hanging;");
         let res = self
             .jni_ref()
@@ -1085,7 +1085,7 @@ impl<'mc> HangingPlaceEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -1099,7 +1099,7 @@ impl<'mc> HangingPlaceEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1110,7 +1110,7 @@ impl<'mc> HangingPlaceEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1136,7 +1136,7 @@ impl<'mc> HangingPlaceEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1153,7 +1153,7 @@ impl<'mc> HangingPlaceEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1167,7 +1167,7 @@ impl<'mc> HangingPlaceEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1177,7 +1177,7 @@ impl<'mc> HangingPlaceEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1187,7 +1187,7 @@ impl<'mc> HangingPlaceEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1197,7 +1197,7 @@ impl<'mc> HangingPlaceEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1263,7 +1263,7 @@ impl<'mc> HangingEvent<'mc> {
     }
     //
 
-    pub fn entity(&mut self) -> Result<crate::entity::Hanging<'mc>, Box<dyn std::error::Error>> {
+    pub fn entity(&self) -> Result<crate::entity::Hanging<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Hanging;");
         let res = self
             .jni_ref()
@@ -1275,9 +1275,7 @@ impl<'mc> HangingEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -1289,7 +1287,7 @@ impl<'mc> HangingEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -1303,7 +1301,7 @@ impl<'mc> HangingEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1314,7 +1312,7 @@ impl<'mc> HangingEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1340,7 +1338,7 @@ impl<'mc> HangingEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1357,7 +1355,7 @@ impl<'mc> HangingEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1371,7 +1369,7 @@ impl<'mc> HangingEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1381,7 +1379,7 @@ impl<'mc> HangingEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1391,7 +1389,7 @@ impl<'mc> HangingEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1401,7 +1399,7 @@ impl<'mc> HangingEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()

@@ -32,7 +32,7 @@ impl<'mc> ProfileBanList<'mc> {
     //
 
     pub fn add_ban_with_player_profile(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: impl Into<String>,
         arg2: impl Into<blackboxmc_java::JavaDate<'mc>>,
@@ -72,7 +72,7 @@ impl<'mc> ProfileBanList<'mc> {
     //
 
     pub fn add_ban_with_object(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: impl Into<String>,
         arg2: jni::objects::JObject<'mc>,
@@ -110,7 +110,7 @@ impl<'mc> ProfileBanList<'mc> {
     //
 
     pub fn add_ban_with_string(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: impl Into<String>,
         arg2: impl Into<blackboxmc_java::JavaDate<'mc>>,
@@ -152,7 +152,7 @@ impl<'mc> ProfileBanList<'mc> {
     //
 
     pub fn get_ban_entry_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<crate::BanEntry<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -173,9 +173,7 @@ impl<'mc> ProfileBanList<'mc> {
     }
     //
 
-    pub fn ban_entries(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn ban_entries(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -188,7 +186,7 @@ impl<'mc> ProfileBanList<'mc> {
     //
 
     pub fn is_banned_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -208,7 +206,7 @@ impl<'mc> ProfileBanList<'mc> {
     //
 
     pub fn pardon_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -229,7 +227,7 @@ impl<'mc> ProfileBanList<'mc> {
     }
     //
 
-    pub fn entries(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn entries(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -284,7 +282,7 @@ impl<'mc> IpBanList<'mc> {
     //
 
     pub fn get_ban_entry_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<crate::BanEntry<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -306,7 +304,7 @@ impl<'mc> IpBanList<'mc> {
     //
 
     pub fn add_ban_with_object(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: impl Into<String>,
         arg2: impl Into<blackboxmc_java::JavaDate<'mc>>,
@@ -347,9 +345,7 @@ impl<'mc> IpBanList<'mc> {
     }
     //
 
-    pub fn ban_entries(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn ban_entries(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -362,7 +358,7 @@ impl<'mc> IpBanList<'mc> {
     //
 
     pub fn is_banned_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -382,7 +378,7 @@ impl<'mc> IpBanList<'mc> {
     //
 
     pub fn pardon_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -403,7 +399,7 @@ impl<'mc> IpBanList<'mc> {
     }
     //
 
-    pub fn entries(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn entries(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()

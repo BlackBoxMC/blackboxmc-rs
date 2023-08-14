@@ -37,7 +37,7 @@ impl<'mc> Criterias<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -63,7 +63,7 @@ impl<'mc> Criterias<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -80,7 +80,7 @@ impl<'mc> Criterias<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -94,7 +94,7 @@ impl<'mc> Criterias<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -104,7 +104,7 @@ impl<'mc> Criterias<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -114,7 +114,7 @@ impl<'mc> Criterias<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -124,7 +124,7 @@ impl<'mc> Criterias<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -159,6 +159,11 @@ impl std::fmt::Display for TeamOptionStatusEnum {
             TeamOptionStatusEnum::ForOtherTeams => f.write_str("FOR_OTHER_TEAMS"),
             TeamOptionStatusEnum::ForOwnTeam => f.write_str("FOR_OWN_TEAM"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for TeamOptionStatus<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct TeamOptionStatus<'mc>(
@@ -279,7 +284,7 @@ impl<'mc> Criteria<'mc> {
     //
 
     pub fn default_render_type(
-        &mut self,
+        &self,
     ) -> Result<crate::scoreboard::RenderType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/scoreboard/RenderType;");
         let res = self.jni_ref().call_method(
@@ -339,7 +344,7 @@ impl<'mc> Criteria<'mc> {
     }
     //
 
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -375,7 +380,7 @@ impl<'mc> Criteria<'mc> {
     }
     //
 
-    pub fn is_read_only(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_read_only(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -408,6 +413,11 @@ impl std::fmt::Display for NameTagVisibilityEnum {
             NameTagVisibilityEnum::HideForOtherTeams => f.write_str("HIDE_FOR_OTHER_TEAMS"),
             NameTagVisibilityEnum::HideForOwnTeam => f.write_str("HIDE_FOR_OWN_TEAM"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for NameTagVisibility<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct NameTagVisibility<'mc>(
@@ -508,6 +518,11 @@ impl std::fmt::Display for RenderTypeEnum {
             RenderTypeEnum::Integer => f.write_str("INTEGER"),
             RenderTypeEnum::Hearts => f.write_str("HEARTS"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for RenderType<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct RenderType<'mc>(
@@ -618,7 +633,7 @@ impl<'mc> Objective<'mc> {
     }
     //
 
-    pub fn unregister(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn unregister(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res =
             self.jni_ref()
@@ -628,7 +643,7 @@ impl<'mc> Objective<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -642,7 +657,7 @@ impl<'mc> Objective<'mc> {
     }
     //
 
-    pub fn criteria(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn criteria(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -657,7 +672,7 @@ impl<'mc> Objective<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -676,7 +691,7 @@ impl<'mc> Objective<'mc> {
     //
 
     pub fn scoreboard(
-        &mut self,
+        &self,
     ) -> Result<crate::scoreboard::Scoreboard<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/scoreboard/Scoreboard;");
         let res =
@@ -690,7 +705,7 @@ impl<'mc> Objective<'mc> {
     //
 
     pub fn get_score_with_offline_player(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<crate::scoreboard::Score<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -714,7 +729,7 @@ impl<'mc> Objective<'mc> {
     //
 
     pub fn tracked_criteria(
-        &mut self,
+        &self,
     ) -> Result<crate::scoreboard::Criteria<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/scoreboard/Criteria;");
         let res = self.jni_ref().call_method(
@@ -730,7 +745,7 @@ impl<'mc> Objective<'mc> {
     }
     //
 
-    pub fn is_modifiable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_modifiable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -741,7 +756,7 @@ impl<'mc> Objective<'mc> {
     //
 
     pub fn set_display_slot(
-        &mut self,
+        &self,
         arg0: impl Into<crate::scoreboard::DisplaySlot<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/scoreboard/DisplaySlot;)V");
@@ -760,7 +775,7 @@ impl<'mc> Objective<'mc> {
     //
 
     pub fn display_slot(
-        &mut self,
+        &self,
     ) -> Result<crate::scoreboard::DisplaySlot<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/scoreboard/DisplaySlot;");
         let res =
@@ -787,7 +802,7 @@ impl<'mc> Objective<'mc> {
     //
 
     pub fn set_render_type(
-        &mut self,
+        &self,
         arg0: impl Into<crate::scoreboard::RenderType<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/scoreboard/RenderType;)V");
@@ -806,7 +821,7 @@ impl<'mc> Objective<'mc> {
     //
 
     pub fn render_type(
-        &mut self,
+        &self,
     ) -> Result<crate::scoreboard::RenderType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/scoreboard/RenderType;");
         let res =
@@ -832,7 +847,7 @@ impl<'mc> Objective<'mc> {
     }
     //
 
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -882,7 +897,7 @@ impl<'mc> Score<'mc> {
     }
     //
 
-    pub fn entry(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn entry(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -896,7 +911,7 @@ impl<'mc> Score<'mc> {
     }
     //
 
-    pub fn player(&mut self) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
+    pub fn player(&self) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/OfflinePlayer;");
         let res = self
             .jni_ref()
@@ -909,7 +924,7 @@ impl<'mc> Score<'mc> {
     //
 
     pub fn scoreboard(
-        &mut self,
+        &self,
     ) -> Result<crate::scoreboard::Scoreboard<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/scoreboard/Scoreboard;");
         let res =
@@ -923,7 +938,7 @@ impl<'mc> Score<'mc> {
     //
 
     pub fn objective(
-        &mut self,
+        &self,
     ) -> Result<crate::scoreboard::Objective<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/scoreboard/Objective;");
         let res =
@@ -936,7 +951,7 @@ impl<'mc> Score<'mc> {
     }
     //
 
-    pub fn score(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn score(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -947,7 +962,7 @@ impl<'mc> Score<'mc> {
     //
 
     /// Sets the current score.
-    pub fn set_score(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_score(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -961,7 +976,7 @@ impl<'mc> Score<'mc> {
     }
     //
 
-    pub fn is_score_set(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_score_set(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1007,7 +1022,7 @@ impl<'mc> Scoreboard<'mc> {
     }
     //
 
-    pub fn players(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn players(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -1020,7 +1035,7 @@ impl<'mc> Scoreboard<'mc> {
     //
 
     pub fn register_new_objective_with_string(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: impl Into<String>,
         arg2: impl Into<String>,
@@ -1065,7 +1080,7 @@ impl<'mc> Scoreboard<'mc> {
     //
 
     pub fn get_objective_with_display_slot(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<crate::scoreboard::Objective<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1089,7 +1104,7 @@ impl<'mc> Scoreboard<'mc> {
     //
 
     pub fn get_objectives_by_criteria_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::scoreboard::Criteria<'mc>>>,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1115,9 +1130,7 @@ impl<'mc> Scoreboard<'mc> {
     }
     //
 
-    pub fn objectives(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn objectives(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -1130,7 +1143,7 @@ impl<'mc> Scoreboard<'mc> {
     //
 
     pub fn get_scores_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1154,7 +1167,7 @@ impl<'mc> Scoreboard<'mc> {
     //
 
     pub fn reset_scores_with_offline_player(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1176,7 +1189,7 @@ impl<'mc> Scoreboard<'mc> {
     //
 
     pub fn get_player_team(
-        &mut self,
+        &self,
         arg0: impl Into<crate::OfflinePlayer<'mc>>,
     ) -> Result<crate::scoreboard::Team<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/OfflinePlayer;)Lorg/bukkit/scoreboard/Team;");
@@ -1197,7 +1210,7 @@ impl<'mc> Scoreboard<'mc> {
     //
 
     pub fn get_entry_team(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<crate::scoreboard::Team<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Lorg/bukkit/scoreboard/Team;");
@@ -1218,7 +1231,7 @@ impl<'mc> Scoreboard<'mc> {
     //
 
     pub fn get_team(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<crate::scoreboard::Team<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Lorg/bukkit/scoreboard/Team;");
@@ -1238,7 +1251,7 @@ impl<'mc> Scoreboard<'mc> {
     }
     //
 
-    pub fn teams(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn teams(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
@@ -1251,7 +1264,7 @@ impl<'mc> Scoreboard<'mc> {
     //
 
     pub fn register_new_team(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<crate::scoreboard::Team<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Lorg/bukkit/scoreboard/Team;");
@@ -1272,7 +1285,7 @@ impl<'mc> Scoreboard<'mc> {
     //
 
     pub fn clear_slot(
-        &mut self,
+        &self,
         arg0: impl Into<crate::scoreboard::DisplaySlot<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/scoreboard/DisplaySlot;)V");
@@ -1290,7 +1303,7 @@ impl<'mc> Scoreboard<'mc> {
     }
     //
 
-    pub fn entries(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn entries(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -1355,6 +1368,11 @@ impl std::fmt::Display for DisplaySlotEnum {
             DisplaySlotEnum::SidebarYellow => f.write_str("SIDEBAR_YELLOW"),
             DisplaySlotEnum::SidebarWhite => f.write_str("SIDEBAR_WHITE"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for DisplaySlot<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct DisplaySlot<'mc>(
@@ -1500,7 +1518,7 @@ impl<'mc> Team<'mc> {
     //
 
     pub fn remove_entry(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -1519,7 +1537,7 @@ impl<'mc> Team<'mc> {
     //
 
     pub fn set_color(
-        &mut self,
+        &self,
         arg0: impl Into<crate::ChatColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/ChatColor;)V");
@@ -1537,7 +1555,7 @@ impl<'mc> Team<'mc> {
     }
     //
 
-    pub fn unregister(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn unregister(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res =
             self.jni_ref()
@@ -1547,7 +1565,7 @@ impl<'mc> Team<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -1561,7 +1579,7 @@ impl<'mc> Team<'mc> {
     }
     //
 
-    pub fn prefix(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn prefix(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1575,7 +1593,7 @@ impl<'mc> Team<'mc> {
     }
     //
 
-    pub fn color(&mut self) -> Result<crate::ChatColor<'mc>, Box<dyn std::error::Error>> {
+    pub fn color(&self) -> Result<crate::ChatColor<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/ChatColor;");
         let res = self
             .jni_ref()
@@ -1588,7 +1606,7 @@ impl<'mc> Team<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -1606,10 +1624,7 @@ impl<'mc> Team<'mc> {
     }
     //
 
-    pub fn set_prefix(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_prefix(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -1625,7 +1640,7 @@ impl<'mc> Team<'mc> {
     }
     //
 
-    pub fn suffix(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn suffix(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1639,10 +1654,7 @@ impl<'mc> Team<'mc> {
     }
     //
 
-    pub fn set_suffix(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_suffix(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -1658,7 +1670,7 @@ impl<'mc> Team<'mc> {
     }
     //
 
-    pub fn allow_friendly_fire(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn allow_friendly_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1672,10 +1684,7 @@ impl<'mc> Team<'mc> {
     //
 
     /// Sets the team friendly fire state
-    pub fn set_allow_friendly_fire(
-        &mut self,
-        arg0: bool,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_allow_friendly_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -1690,7 +1699,7 @@ impl<'mc> Team<'mc> {
     }
     //
 
-    pub fn can_see_friendly_invisibles(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn can_see_friendly_invisibles(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1705,7 +1714,7 @@ impl<'mc> Team<'mc> {
 
     /// Sets the team's ability to see <a href="../potion/PotionEffectType.html#INVISIBILITY"><code>invisible</code></a> teammates.
     pub fn set_can_see_friendly_invisibles(
-        &mut self,
+        &self,
         arg0: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
@@ -1723,7 +1732,7 @@ impl<'mc> Team<'mc> {
     //
 
     pub fn name_tag_visibility(
-        &mut self,
+        &self,
     ) -> Result<crate::scoreboard::NameTagVisibility<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/scoreboard/NameTagVisibility;");
         let res = self.jni_ref().call_method(
@@ -1753,7 +1762,7 @@ impl<'mc> Team<'mc> {
     //
 
     pub fn set_name_tag_visibility(
-        &mut self,
+        &self,
         arg0: impl Into<crate::scoreboard::NameTagVisibility<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/scoreboard/NameTagVisibility;)V");
@@ -1771,7 +1780,7 @@ impl<'mc> Team<'mc> {
     }
     //
 
-    pub fn players(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn players(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -1784,7 +1793,7 @@ impl<'mc> Team<'mc> {
     //
 
     pub fn scoreboard(
-        &mut self,
+        &self,
     ) -> Result<crate::scoreboard::Scoreboard<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/scoreboard/Scoreboard;");
         let res =
@@ -1798,7 +1807,7 @@ impl<'mc> Team<'mc> {
     //
 
     pub fn add_player(
-        &mut self,
+        &self,
         arg0: impl Into<crate::OfflinePlayer<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/OfflinePlayer;)V");
@@ -1817,7 +1826,7 @@ impl<'mc> Team<'mc> {
     //
 
     pub fn remove_player(
-        &mut self,
+        &self,
         arg0: impl Into<crate::OfflinePlayer<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/OfflinePlayer;)Z");
@@ -1836,7 +1845,7 @@ impl<'mc> Team<'mc> {
     //
 
     pub fn has_player(
-        &mut self,
+        &self,
         arg0: impl Into<crate::OfflinePlayer<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/OfflinePlayer;)Z");
@@ -1854,10 +1863,7 @@ impl<'mc> Team<'mc> {
     }
     //
 
-    pub fn has_entry(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_entry(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -1874,7 +1880,7 @@ impl<'mc> Team<'mc> {
     //
 
     pub fn get_option(
-        &mut self,
+        &self,
         arg0: impl Into<crate::scoreboard::TeamOption<'mc>>,
     ) -> Result<crate::scoreboard::TeamOptionStatus<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from(
@@ -1910,7 +1916,7 @@ impl<'mc> Team<'mc> {
     //
 
     pub fn set_option(
-        &mut self,
+        &self,
         arg0: impl Into<crate::scoreboard::TeamOption<'mc>>,
         arg1: impl Into<crate::scoreboard::TeamOptionStatus<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1937,7 +1943,7 @@ impl<'mc> Team<'mc> {
     }
     //
 
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1951,7 +1957,7 @@ impl<'mc> Team<'mc> {
     }
     //
 
-    pub fn add_entry(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn add_entry(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -1967,7 +1973,7 @@ impl<'mc> Team<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1977,7 +1983,7 @@ impl<'mc> Team<'mc> {
     }
     //
 
-    pub fn entries(&mut self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn entries(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -2028,7 +2034,7 @@ impl<'mc> ScoreboardManager<'mc> {
     //
 
     pub fn main_scoreboard(
-        &mut self,
+        &self,
     ) -> Result<crate::scoreboard::Scoreboard<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/scoreboard/Scoreboard;");
         let res = self.jni_ref().call_method(
@@ -2045,7 +2051,7 @@ impl<'mc> ScoreboardManager<'mc> {
     //
 
     pub fn new_scoreboard(
-        &mut self,
+        &self,
     ) -> Result<crate::scoreboard::Scoreboard<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/scoreboard/Scoreboard;");
         let res = self.jni_ref().call_method(
@@ -2082,6 +2088,11 @@ impl std::fmt::Display for OptionEnum {
             OptionEnum::DeathMessageVisibility => f.write_str("DEATH_MESSAGE_VISIBILITY"),
             OptionEnum::CollisionRule => f.write_str("COLLISION_RULE"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for Option<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct Option<'mc>(
@@ -2183,6 +2194,11 @@ impl std::fmt::Display for OptionStatusEnum {
         }
     }
 }
+impl<'mc> std::fmt::Display for OptionStatus<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
+    }
+}
 pub struct OptionStatus<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2281,6 +2297,11 @@ impl std::fmt::Display for TeamOptionEnum {
             TeamOptionEnum::DeathMessageVisibility => f.write_str("DEATH_MESSAGE_VISIBILITY"),
             TeamOptionEnum::CollisionRule => f.write_str("COLLISION_RULE"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for TeamOption<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct TeamOption<'mc>(

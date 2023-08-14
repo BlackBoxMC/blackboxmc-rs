@@ -32,7 +32,7 @@ impl<'mc> CartographyInventory<'mc> {
     //@Nullable
 
     pub fn get_item(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/inventory/ItemStack;");
@@ -55,7 +55,7 @@ impl<'mc> CartographyInventory<'mc> {
     //
 
     pub fn all_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -79,7 +79,7 @@ impl<'mc> CartographyInventory<'mc> {
     //
 
     pub fn add_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -94,7 +94,7 @@ impl<'mc> CartographyInventory<'mc> {
     //
 
     pub fn set_item(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -118,7 +118,7 @@ impl<'mc> CartographyInventory<'mc> {
     //
 
     pub fn holder(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::InventoryHolder<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/InventoryHolder;");
         let res = self
@@ -131,7 +131,7 @@ impl<'mc> CartographyInventory<'mc> {
     }
     //
 
-    pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -141,7 +141,7 @@ impl<'mc> CartographyInventory<'mc> {
     }
     //
 
-    pub fn set_max_stack_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -156,7 +156,7 @@ impl<'mc> CartographyInventory<'mc> {
     //
 
     pub fn remove_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -173,7 +173,7 @@ impl<'mc> CartographyInventory<'mc> {
     //
 
     pub fn set_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -188,7 +188,7 @@ impl<'mc> CartographyInventory<'mc> {
     //
 
     pub fn set_storage_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -204,7 +204,7 @@ impl<'mc> CartographyInventory<'mc> {
     //
 
     pub fn contains_at_least(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
         arg1: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -227,7 +227,7 @@ impl<'mc> CartographyInventory<'mc> {
     }
     //
 
-    pub fn first_empty(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -238,7 +238,7 @@ impl<'mc> CartographyInventory<'mc> {
     //
 
     pub fn viewers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -257,7 +257,7 @@ impl<'mc> CartographyInventory<'mc> {
     //
 
     pub fn remove_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -278,10 +278,7 @@ impl<'mc> CartographyInventory<'mc> {
     }
     //
 
-    pub fn clear(
-        &mut self,
-        arg0: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self, arg0: std::option::Option<i32>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
@@ -298,7 +295,7 @@ impl<'mc> CartographyInventory<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -309,7 +306,7 @@ impl<'mc> CartographyInventory<'mc> {
     //@NotNull
 
     pub fn iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -331,7 +328,7 @@ impl<'mc> CartographyInventory<'mc> {
     //
 
     pub fn contains_with_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -357,7 +354,7 @@ impl<'mc> CartographyInventory<'mc> {
     //
 
     pub fn first_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -378,7 +375,7 @@ impl<'mc> CartographyInventory<'mc> {
     }
     //
 
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -391,7 +388,7 @@ impl<'mc> CartographyInventory<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::event::inventory::InventoryType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/inventory/InventoryType;");
         let res = self
@@ -417,7 +414,7 @@ impl<'mc> CartographyInventory<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -469,9 +466,7 @@ impl<'mc> Recipe<'mc> {
     }
     //
 
-    pub fn result(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -561,7 +556,7 @@ impl<'mc> StonecuttingRecipe<'mc> {
     //
 
     pub fn set_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
     ) -> Result<crate::inventory::StonecuttingRecipe<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/Material;)Lorg/bukkit/inventory/StonecuttingRecipe;");
@@ -581,9 +576,7 @@ impl<'mc> StonecuttingRecipe<'mc> {
     }
     //
 
-    pub fn input(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn input(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -595,9 +588,7 @@ impl<'mc> StonecuttingRecipe<'mc> {
     }
     //
 
-    pub fn result(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -610,7 +601,7 @@ impl<'mc> StonecuttingRecipe<'mc> {
     //
 
     pub fn set_input_choice(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::RecipeChoice<'mc>>,
     ) -> Result<crate::inventory::StonecuttingRecipe<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from(
@@ -633,7 +624,7 @@ impl<'mc> StonecuttingRecipe<'mc> {
     //
 
     pub fn input_choice(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/RecipeChoice;");
         let res =
@@ -646,7 +637,7 @@ impl<'mc> StonecuttingRecipe<'mc> {
     }
     //
 
-    pub fn group(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -660,7 +651,7 @@ impl<'mc> StonecuttingRecipe<'mc> {
     }
     //
 
-    pub fn set_group(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_group(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -676,7 +667,7 @@ impl<'mc> StonecuttingRecipe<'mc> {
     }
     //
 
-    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self
             .jni_ref()
@@ -689,7 +680,7 @@ impl<'mc> StonecuttingRecipe<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -715,7 +706,7 @@ impl<'mc> StonecuttingRecipe<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -732,7 +723,7 @@ impl<'mc> StonecuttingRecipe<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -746,7 +737,7 @@ impl<'mc> StonecuttingRecipe<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -756,7 +747,7 @@ impl<'mc> StonecuttingRecipe<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -766,7 +757,7 @@ impl<'mc> StonecuttingRecipe<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -776,7 +767,7 @@ impl<'mc> StonecuttingRecipe<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -927,7 +918,7 @@ impl<'mc> FurnaceRecipe<'mc> {
     //
 
     pub fn set_input_with_material(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<crate::inventory::FurnaceRecipe<'mc>, Box<dyn std::error::Error>> {
@@ -955,7 +946,7 @@ impl<'mc> FurnaceRecipe<'mc> {
     //
 
     pub fn set_input_choice_with_recipe_choice(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::inventory::RecipeChoice<'mc>>>,
     ) -> Result<crate::inventory::FurnaceRecipe<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -978,9 +969,7 @@ impl<'mc> FurnaceRecipe<'mc> {
     }
     //
 
-    pub fn input(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn input(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -992,9 +981,7 @@ impl<'mc> FurnaceRecipe<'mc> {
     }
     //
 
-    pub fn result(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -1007,7 +994,7 @@ impl<'mc> FurnaceRecipe<'mc> {
     //
 
     pub fn category(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::recipe::CookingBookCategory<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/recipe/CookingBookCategory;");
@@ -1035,7 +1022,7 @@ impl<'mc> FurnaceRecipe<'mc> {
     //
 
     pub fn input_choice(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/RecipeChoice;");
         let res =
@@ -1048,7 +1035,7 @@ impl<'mc> FurnaceRecipe<'mc> {
     }
     //
 
-    pub fn group(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1062,7 +1049,7 @@ impl<'mc> FurnaceRecipe<'mc> {
     }
     //
 
-    pub fn set_group(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_group(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -1079,7 +1066,7 @@ impl<'mc> FurnaceRecipe<'mc> {
     //
 
     pub fn set_category(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::recipe::CookingBookCategory<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/recipe/CookingBookCategory;)V");
@@ -1097,7 +1084,7 @@ impl<'mc> FurnaceRecipe<'mc> {
     }
     //
 
-    pub fn experience(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+    pub fn experience(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
         let res =
             self.jni_ref()
@@ -1107,7 +1094,7 @@ impl<'mc> FurnaceRecipe<'mc> {
     }
     //
 
-    pub fn set_experience(&mut self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_experience(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
         let val_1 = jni::objects::JValueGen::Float(arg0.into());
         let res = self.jni_ref().call_method(
@@ -1121,7 +1108,7 @@ impl<'mc> FurnaceRecipe<'mc> {
     }
     //
 
-    pub fn set_cooking_time(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_cooking_time(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -1135,7 +1122,7 @@ impl<'mc> FurnaceRecipe<'mc> {
     }
     //
 
-    pub fn cooking_time(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn cooking_time(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -1145,7 +1132,7 @@ impl<'mc> FurnaceRecipe<'mc> {
     }
     //
 
-    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self
             .jni_ref()
@@ -1158,7 +1145,7 @@ impl<'mc> FurnaceRecipe<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1184,7 +1171,7 @@ impl<'mc> FurnaceRecipe<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1201,7 +1188,7 @@ impl<'mc> FurnaceRecipe<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1215,7 +1202,7 @@ impl<'mc> FurnaceRecipe<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1225,7 +1212,7 @@ impl<'mc> FurnaceRecipe<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1235,7 +1222,7 @@ impl<'mc> FurnaceRecipe<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1245,7 +1232,7 @@ impl<'mc> FurnaceRecipe<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1300,9 +1287,7 @@ impl<'mc> HorseInventory<'mc> {
     }
     //
 
-    pub fn armor(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn armor(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -1315,7 +1300,7 @@ impl<'mc> HorseInventory<'mc> {
     //
 
     pub fn set_armor(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -1334,7 +1319,7 @@ impl<'mc> HorseInventory<'mc> {
     //
 
     pub fn set_saddle(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -1352,9 +1337,7 @@ impl<'mc> HorseInventory<'mc> {
     }
     //
 
-    pub fn saddle(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn saddle(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -1367,7 +1350,7 @@ impl<'mc> HorseInventory<'mc> {
     //@Nullable
 
     pub fn get_item(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/inventory/ItemStack;");
@@ -1390,7 +1373,7 @@ impl<'mc> HorseInventory<'mc> {
     //
 
     pub fn all_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1414,7 +1397,7 @@ impl<'mc> HorseInventory<'mc> {
     //
 
     pub fn add_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -1429,7 +1412,7 @@ impl<'mc> HorseInventory<'mc> {
     //
 
     pub fn set_item(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1453,7 +1436,7 @@ impl<'mc> HorseInventory<'mc> {
     //
 
     pub fn holder(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::InventoryHolder<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/InventoryHolder;");
         let res = self
@@ -1466,7 +1449,7 @@ impl<'mc> HorseInventory<'mc> {
     }
     //
 
-    pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -1476,7 +1459,7 @@ impl<'mc> HorseInventory<'mc> {
     }
     //
 
-    pub fn set_max_stack_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -1491,7 +1474,7 @@ impl<'mc> HorseInventory<'mc> {
     //
 
     pub fn remove_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -1508,7 +1491,7 @@ impl<'mc> HorseInventory<'mc> {
     //
 
     pub fn set_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -1523,7 +1506,7 @@ impl<'mc> HorseInventory<'mc> {
     //
 
     pub fn set_storage_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -1539,7 +1522,7 @@ impl<'mc> HorseInventory<'mc> {
     //
 
     pub fn contains_at_least(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
         arg1: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1562,7 +1545,7 @@ impl<'mc> HorseInventory<'mc> {
     }
     //
 
-    pub fn first_empty(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -1573,7 +1556,7 @@ impl<'mc> HorseInventory<'mc> {
     //
 
     pub fn viewers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -1592,7 +1575,7 @@ impl<'mc> HorseInventory<'mc> {
     //
 
     pub fn remove_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1613,10 +1596,7 @@ impl<'mc> HorseInventory<'mc> {
     }
     //
 
-    pub fn clear(
-        &mut self,
-        arg0: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self, arg0: std::option::Option<i32>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
@@ -1633,7 +1613,7 @@ impl<'mc> HorseInventory<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -1644,7 +1624,7 @@ impl<'mc> HorseInventory<'mc> {
     //@NotNull
 
     pub fn iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1666,7 +1646,7 @@ impl<'mc> HorseInventory<'mc> {
     //
 
     pub fn contains_with_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1692,7 +1672,7 @@ impl<'mc> HorseInventory<'mc> {
     //
 
     pub fn first_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1713,7 +1693,7 @@ impl<'mc> HorseInventory<'mc> {
     }
     //
 
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -1726,7 +1706,7 @@ impl<'mc> HorseInventory<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::event::inventory::InventoryType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/inventory/InventoryType;");
         let res = self
@@ -1752,7 +1732,7 @@ impl<'mc> HorseInventory<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1804,9 +1784,7 @@ impl<'mc> ComplexRecipe<'mc> {
     }
     //
 
-    pub fn result(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -1818,7 +1796,7 @@ impl<'mc> ComplexRecipe<'mc> {
     }
     //
 
-    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self
             .jni_ref()
@@ -1880,7 +1858,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     }
     //
 
-    pub fn holder(&mut self) -> Result<crate::block::DoubleChest<'mc>, Box<dyn std::error::Error>> {
+    pub fn holder(&self) -> Result<crate::block::DoubleChest<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/DoubleChest;";
@@ -1895,7 +1873,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     //
 
     pub fn left_side(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/Inventory;");
         let res =
@@ -1909,7 +1887,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     //
 
     pub fn right_side(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/Inventory;");
         let res =
@@ -1923,7 +1901,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     //@Nullable
 
     pub fn get_item(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/inventory/ItemStack;");
@@ -1946,7 +1924,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     //
 
     pub fn all_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1970,7 +1948,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     //
 
     pub fn add_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -1985,7 +1963,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     //
 
     pub fn set_item(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2008,7 +1986,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     }
     //
 
-    pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -2018,7 +1996,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     }
     //
 
-    pub fn set_max_stack_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -2033,7 +2011,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     //
 
     pub fn remove_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -2050,7 +2028,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     //
 
     pub fn set_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -2065,7 +2043,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     //
 
     pub fn set_storage_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -2081,7 +2059,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     //
 
     pub fn contains_at_least(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
         arg1: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2104,7 +2082,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     }
     //
 
-    pub fn first_empty(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -2115,7 +2093,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     //
 
     pub fn viewers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -2134,7 +2112,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     //
 
     pub fn remove_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2155,10 +2133,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     }
     //
 
-    pub fn clear(
-        &mut self,
-        arg0: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self, arg0: std::option::Option<i32>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
@@ -2175,7 +2150,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -2186,7 +2161,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     //@NotNull
 
     pub fn iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2208,7 +2183,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     //
 
     pub fn contains_with_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2234,7 +2209,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     //
 
     pub fn first_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2255,7 +2230,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     }
     //
 
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -2268,7 +2243,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::event::inventory::InventoryType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/inventory/InventoryType;");
         let res = self
@@ -2294,7 +2269,7 @@ impl<'mc> DoubleChestInventory<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2348,7 +2323,7 @@ impl<'mc> BlockInventoryHolder<'mc> {
     }
     //
 
-    pub fn block(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
+    pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/Block;");
         let res = self
             .jni_ref()
@@ -2361,7 +2336,7 @@ impl<'mc> BlockInventoryHolder<'mc> {
     //
 
     pub fn inventory(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/Inventory;");
         let res =
@@ -2418,7 +2393,7 @@ impl<'mc> JukeboxInventory<'mc> {
     }
     //
 
-    pub fn holder(&mut self) -> Result<crate::block::Jukebox<'mc>, Box<dyn std::error::Error>> {
+    pub fn holder(&self) -> Result<crate::block::Jukebox<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/Jukebox;";
@@ -2433,7 +2408,7 @@ impl<'mc> JukeboxInventory<'mc> {
     //
 
     pub fn set_record(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -2451,9 +2426,7 @@ impl<'mc> JukeboxInventory<'mc> {
     }
     //
 
-    pub fn record(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn record(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -2466,7 +2439,7 @@ impl<'mc> JukeboxInventory<'mc> {
     //@Nullable
 
     pub fn get_item(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/inventory/ItemStack;");
@@ -2489,7 +2462,7 @@ impl<'mc> JukeboxInventory<'mc> {
     //
 
     pub fn all_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2513,7 +2486,7 @@ impl<'mc> JukeboxInventory<'mc> {
     //
 
     pub fn add_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -2528,7 +2501,7 @@ impl<'mc> JukeboxInventory<'mc> {
     //
 
     pub fn set_item(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2551,7 +2524,7 @@ impl<'mc> JukeboxInventory<'mc> {
     }
     //
 
-    pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -2561,7 +2534,7 @@ impl<'mc> JukeboxInventory<'mc> {
     }
     //
 
-    pub fn set_max_stack_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -2576,7 +2549,7 @@ impl<'mc> JukeboxInventory<'mc> {
     //
 
     pub fn remove_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -2593,7 +2566,7 @@ impl<'mc> JukeboxInventory<'mc> {
     //
 
     pub fn set_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -2608,7 +2581,7 @@ impl<'mc> JukeboxInventory<'mc> {
     //
 
     pub fn set_storage_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -2624,7 +2597,7 @@ impl<'mc> JukeboxInventory<'mc> {
     //
 
     pub fn contains_at_least(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
         arg1: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2647,7 +2620,7 @@ impl<'mc> JukeboxInventory<'mc> {
     }
     //
 
-    pub fn first_empty(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -2658,7 +2631,7 @@ impl<'mc> JukeboxInventory<'mc> {
     //
 
     pub fn viewers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -2677,7 +2650,7 @@ impl<'mc> JukeboxInventory<'mc> {
     //
 
     pub fn remove_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2698,10 +2671,7 @@ impl<'mc> JukeboxInventory<'mc> {
     }
     //
 
-    pub fn clear(
-        &mut self,
-        arg0: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self, arg0: std::option::Option<i32>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
@@ -2718,7 +2688,7 @@ impl<'mc> JukeboxInventory<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -2729,7 +2699,7 @@ impl<'mc> JukeboxInventory<'mc> {
     //@NotNull
 
     pub fn iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2751,7 +2721,7 @@ impl<'mc> JukeboxInventory<'mc> {
     //
 
     pub fn contains_with_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2777,7 +2747,7 @@ impl<'mc> JukeboxInventory<'mc> {
     //
 
     pub fn first_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2798,7 +2768,7 @@ impl<'mc> JukeboxInventory<'mc> {
     }
     //
 
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -2811,7 +2781,7 @@ impl<'mc> JukeboxInventory<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::event::inventory::InventoryType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/inventory/InventoryType;");
         let res = self
@@ -2837,7 +2807,7 @@ impl<'mc> JukeboxInventory<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2938,9 +2908,7 @@ impl<'mc> SmithingRecipe<'mc> {
     }
     //
 
-    pub fn result(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -2952,9 +2920,7 @@ impl<'mc> SmithingRecipe<'mc> {
     }
     //
 
-    pub fn base(
-        &mut self,
-    ) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
+    pub fn base(&self) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/RecipeChoice;");
         let res = self
             .jni_ref()
@@ -2967,7 +2933,7 @@ impl<'mc> SmithingRecipe<'mc> {
     //
 
     pub fn addition(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/RecipeChoice;");
         let res =
@@ -2980,7 +2946,7 @@ impl<'mc> SmithingRecipe<'mc> {
     }
     //
 
-    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self
             .jni_ref()
@@ -2993,7 +2959,7 @@ impl<'mc> SmithingRecipe<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3019,7 +2985,7 @@ impl<'mc> SmithingRecipe<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -3036,7 +3002,7 @@ impl<'mc> SmithingRecipe<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3050,7 +3016,7 @@ impl<'mc> SmithingRecipe<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -3060,7 +3026,7 @@ impl<'mc> SmithingRecipe<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -3070,7 +3036,7 @@ impl<'mc> SmithingRecipe<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3080,7 +3046,7 @@ impl<'mc> SmithingRecipe<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3148,9 +3114,7 @@ impl<'mc> CraftingRecipe<'mc> {
     }
     //
 
-    pub fn result(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -3163,7 +3127,7 @@ impl<'mc> CraftingRecipe<'mc> {
     //
 
     pub fn category(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::recipe::CraftingBookCategory<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/recipe/CraftingBookCategory;");
@@ -3190,7 +3154,7 @@ impl<'mc> CraftingRecipe<'mc> {
     }
     //
 
-    pub fn group(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3204,7 +3168,7 @@ impl<'mc> CraftingRecipe<'mc> {
     }
     //
 
-    pub fn set_group(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_group(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -3221,7 +3185,7 @@ impl<'mc> CraftingRecipe<'mc> {
     //
 
     pub fn set_category(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::recipe::CraftingBookCategory<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/recipe/CraftingBookCategory;)V");
@@ -3239,7 +3203,7 @@ impl<'mc> CraftingRecipe<'mc> {
     }
     //
 
-    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self
             .jni_ref()
@@ -3252,7 +3216,7 @@ impl<'mc> CraftingRecipe<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3278,7 +3242,7 @@ impl<'mc> CraftingRecipe<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -3295,7 +3259,7 @@ impl<'mc> CraftingRecipe<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3309,7 +3273,7 @@ impl<'mc> CraftingRecipe<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -3319,7 +3283,7 @@ impl<'mc> CraftingRecipe<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -3329,7 +3293,7 @@ impl<'mc> CraftingRecipe<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3339,7 +3303,7 @@ impl<'mc> CraftingRecipe<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3427,6 +3391,11 @@ impl std::fmt::Display for InventoryViewPropertyEnum {
             InventoryViewPropertyEnum::RepairCost => f.write_str("REPAIR_COST"),
             InventoryViewPropertyEnum::BookPage => f.write_str("BOOK_PAGE"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for InventoryViewProperty<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct InventoryViewProperty<'mc>(
@@ -3563,7 +3532,7 @@ impl<'mc> InventoryViewProperty<'mc> {
 
     //
 
-    pub fn id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn id(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -3574,7 +3543,7 @@ impl<'mc> InventoryViewProperty<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::event::inventory::InventoryType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/inventory/InventoryType;");
         let res = self
@@ -3641,7 +3610,7 @@ impl<'mc> InventoryView<'mc> {
 
     /// Gets one item in this inventory view by its raw slot ID.
     pub fn get_item(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/inventory/ItemStack;");
@@ -3664,7 +3633,7 @@ impl<'mc> InventoryView<'mc> {
     //
 
     pub fn set_item(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3689,7 +3658,7 @@ impl<'mc> InventoryView<'mc> {
 
     /// Gets the inventory corresponding to the given raw slot ID. If the slot ID is <a href="#OUTSIDE"><code>OUTSIDE</code></a> null will be returned, otherwise behaviour for illegal and negative slot IDs is undefined. May be used with <a href="#convertSlot(int)"><code>convertSlot(int)</code></a> to directly index an underlying inventory.
     pub fn get_inventory(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<Option<crate::inventory::Inventory<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/inventory/Inventory;");
@@ -3711,7 +3680,7 @@ impl<'mc> InventoryView<'mc> {
     }
     //
 
-    pub fn title(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn title(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3725,9 +3694,7 @@ impl<'mc> InventoryView<'mc> {
     }
     //
 
-    pub fn player(
-        &mut self,
-    ) -> Result<crate::entity::HumanEntity<'mc>, Box<dyn std::error::Error>> {
+    pub fn player(&self) -> Result<crate::entity::HumanEntity<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/HumanEntity;");
         let res = self
             .jni_ref()
@@ -3740,7 +3707,7 @@ impl<'mc> InventoryView<'mc> {
     //
 
     pub fn top_inventory(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/Inventory;");
         let res =
@@ -3754,7 +3721,7 @@ impl<'mc> InventoryView<'mc> {
     //
 
     pub fn bottom_inventory(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/Inventory;");
         let res = self.jni_ref().call_method(
@@ -3772,7 +3739,7 @@ impl<'mc> InventoryView<'mc> {
 
     /// Converts a raw slot ID into its local slot ID into whichever of the two inventories the slot points to.
     /// <p>If the raw slot refers to the upper inventory, it will be returned unchanged and thus be suitable for getTopInventory().getItem(); if it refers to the lower inventory, the output will differ from the input and be suitable for getBottomInventory().getItem().</p>
-    pub fn convert_slot(&mut self, arg0: i32) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn convert_slot(&self, arg0: i32) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(I)I");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -3787,7 +3754,7 @@ impl<'mc> InventoryView<'mc> {
     //
 
     pub fn set_cursor(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -3805,9 +3772,7 @@ impl<'mc> InventoryView<'mc> {
     }
     //
 
-    pub fn cursor(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn cursor(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -3819,7 +3784,7 @@ impl<'mc> InventoryView<'mc> {
     }
     //
 
-    pub fn count_slots(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn count_slots(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -3832,7 +3797,7 @@ impl<'mc> InventoryView<'mc> {
     /// Determine the type of the slot by its raw slot ID.
     /// <p>If the type of the slot is unknown, then <a href="../event/inventory/InventoryType.SlotType.html#CONTAINER"><code>InventoryType.SlotType.CONTAINER</code></a> will be returned.</p>
     pub fn get_slot_type(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<crate::event::inventory::InventoryTypeSlotType<'mc>, Box<dyn std::error::Error>>
     {
@@ -3864,7 +3829,7 @@ impl<'mc> InventoryView<'mc> {
     }
     //
 
-    pub fn original_title(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn original_title(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3881,7 +3846,7 @@ impl<'mc> InventoryView<'mc> {
     }
     //
 
-    pub fn set_title(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_title(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -3898,7 +3863,7 @@ impl<'mc> InventoryView<'mc> {
     //
 
     pub fn set_property(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::InventoryViewProperty<'mc>>,
         arg1: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3921,7 +3886,7 @@ impl<'mc> InventoryView<'mc> {
     }
     //
 
-    pub fn close(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn close(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3932,7 +3897,7 @@ impl<'mc> InventoryView<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::event::inventory::InventoryType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/inventory/InventoryType;");
         let res = self
@@ -3959,7 +3924,7 @@ impl<'mc> InventoryView<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3985,7 +3950,7 @@ impl<'mc> InventoryView<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -4002,7 +3967,7 @@ impl<'mc> InventoryView<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4016,7 +3981,7 @@ impl<'mc> InventoryView<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4026,7 +3991,7 @@ impl<'mc> InventoryView<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -4036,7 +4001,7 @@ impl<'mc> InventoryView<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4046,7 +4011,7 @@ impl<'mc> InventoryView<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4143,7 +4108,7 @@ impl<'mc> CampfireRecipe<'mc> {
     //
 
     pub fn set_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
     ) -> Result<crate::inventory::CookingRecipe<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/Material;)Lorg/bukkit/inventory/CookingRecipe;");
@@ -4163,9 +4128,7 @@ impl<'mc> CampfireRecipe<'mc> {
     }
     //
 
-    pub fn input(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn input(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -4177,9 +4140,7 @@ impl<'mc> CampfireRecipe<'mc> {
     }
     //
 
-    pub fn result(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -4192,7 +4153,7 @@ impl<'mc> CampfireRecipe<'mc> {
     //
 
     pub fn category(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::recipe::CookingBookCategory<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/recipe/CookingBookCategory;");
@@ -4220,7 +4181,7 @@ impl<'mc> CampfireRecipe<'mc> {
     //
 
     pub fn set_input_choice(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::RecipeChoice<'mc>>,
     ) -> Result<crate::inventory::CookingRecipe<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from(
@@ -4243,7 +4204,7 @@ impl<'mc> CampfireRecipe<'mc> {
     //
 
     pub fn input_choice(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/RecipeChoice;");
         let res =
@@ -4256,7 +4217,7 @@ impl<'mc> CampfireRecipe<'mc> {
     }
     //
 
-    pub fn group(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4270,7 +4231,7 @@ impl<'mc> CampfireRecipe<'mc> {
     }
     //
 
-    pub fn set_group(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_group(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -4287,7 +4248,7 @@ impl<'mc> CampfireRecipe<'mc> {
     //
 
     pub fn set_category(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::recipe::CookingBookCategory<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/recipe/CookingBookCategory;)V");
@@ -4305,7 +4266,7 @@ impl<'mc> CampfireRecipe<'mc> {
     }
     //
 
-    pub fn experience(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+    pub fn experience(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
         let res =
             self.jni_ref()
@@ -4315,7 +4276,7 @@ impl<'mc> CampfireRecipe<'mc> {
     }
     //
 
-    pub fn set_experience(&mut self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_experience(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
         let val_1 = jni::objects::JValueGen::Float(arg0.into());
         let res = self.jni_ref().call_method(
@@ -4329,7 +4290,7 @@ impl<'mc> CampfireRecipe<'mc> {
     }
     //
 
-    pub fn set_cooking_time(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_cooking_time(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -4343,7 +4304,7 @@ impl<'mc> CampfireRecipe<'mc> {
     }
     //
 
-    pub fn cooking_time(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn cooking_time(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -4353,7 +4314,7 @@ impl<'mc> CampfireRecipe<'mc> {
     }
     //
 
-    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self
             .jni_ref()
@@ -4366,7 +4327,7 @@ impl<'mc> CampfireRecipe<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4392,7 +4353,7 @@ impl<'mc> CampfireRecipe<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -4409,7 +4370,7 @@ impl<'mc> CampfireRecipe<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4423,7 +4384,7 @@ impl<'mc> CampfireRecipe<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4433,7 +4394,7 @@ impl<'mc> CampfireRecipe<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -4443,7 +4404,7 @@ impl<'mc> CampfireRecipe<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4453,7 +4414,7 @@ impl<'mc> CampfireRecipe<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4552,7 +4513,7 @@ impl<'mc> ItemStack<'mc> {
     //
 
     pub fn set_type(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/Material;)V");
@@ -4570,9 +4531,7 @@ impl<'mc> ItemStack<'mc> {
     }
     //
 
-    pub fn data(
-        &mut self,
-    ) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/material/MaterialData;");
         let res = self
             .jni_ref()
@@ -4585,7 +4544,7 @@ impl<'mc> ItemStack<'mc> {
     //
 
     pub fn set_data(
-        &mut self,
+        &self,
         arg0: impl Into<crate::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/material/MaterialData;)V");
@@ -4603,9 +4562,7 @@ impl<'mc> ItemStack<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -4639,7 +4596,7 @@ impl<'mc> ItemStack<'mc> {
     }
     //
 
-    pub fn translation_key(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn translation_key(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4656,7 +4613,7 @@ impl<'mc> ItemStack<'mc> {
     }
     //
 
-    pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -4667,7 +4624,7 @@ impl<'mc> ItemStack<'mc> {
     //
 
     pub fn get_enchantment_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -4693,7 +4650,7 @@ impl<'mc> ItemStack<'mc> {
     /// durability is now part of ItemMeta. To avoid confusion and misuse, <a href="#getItemMeta()"><code>getItemMeta()</code></a>, <a href="#setItemMeta(org.bukkit.inventory.meta.ItemMeta)"><code>setItemMeta(ItemMeta)</code></a> and <a href="meta/Damageable.html#setDamage(int)"><code>Damageable.setDamage(int)</code></a> should be used instead. This is because any call to this method will be overwritten by subsequent setting of ItemMeta which was created before this call.
     ///
     /// Sets the durability of this item
-    pub fn set_durability(&mut self, arg0: i16) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_durability(&self, arg0: i16) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(S)V");
         let val_1 = jni::objects::JValueGen::Short(arg0.into());
         let res = self.jni_ref().call_method(
@@ -4707,7 +4664,7 @@ impl<'mc> ItemStack<'mc> {
     }
     //
 
-    pub fn amount(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn amount(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4717,7 +4674,7 @@ impl<'mc> ItemStack<'mc> {
     }
     //
 
-    pub fn has_item_meta(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_item_meta(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -4728,7 +4685,7 @@ impl<'mc> ItemStack<'mc> {
     //
 
     pub fn item_meta(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::ItemMeta<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/meta/ItemMeta;");
         let res =
@@ -4742,7 +4699,7 @@ impl<'mc> ItemStack<'mc> {
     //
 
     /// Sets the amount of items in this stack
-    pub fn set_amount(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_amount(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -4756,7 +4713,7 @@ impl<'mc> ItemStack<'mc> {
     }
     //
 
-    pub fn durability(&mut self) -> Result<i16, Box<dyn std::error::Error>> {
+    pub fn durability(&self) -> Result<i16, Box<dyn std::error::Error>> {
         let sig = String::from("()S");
         let res =
             self.jni_ref()
@@ -4767,7 +4724,7 @@ impl<'mc> ItemStack<'mc> {
     //
 
     pub fn set_item_meta(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::meta::ItemMeta<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/meta/ItemMeta;)Z");
@@ -4786,7 +4743,7 @@ impl<'mc> ItemStack<'mc> {
     //
 
     pub fn is_similar(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Z");
@@ -4805,7 +4762,7 @@ impl<'mc> ItemStack<'mc> {
     //
 
     pub fn contains_enchantment(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -4824,7 +4781,7 @@ impl<'mc> ItemStack<'mc> {
     //
 
     pub fn enchantments(
-        &mut self,
+        &self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
@@ -4838,7 +4795,7 @@ impl<'mc> ItemStack<'mc> {
     //
 
     pub fn add_enchantments(
-        &mut self,
+        &self,
         arg0: impl Into<blackboxmc_java::JavaMap<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Map;)V");
@@ -4857,7 +4814,7 @@ impl<'mc> ItemStack<'mc> {
     //
 
     pub fn add_enchantment(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4881,7 +4838,7 @@ impl<'mc> ItemStack<'mc> {
     //
 
     pub fn add_unsafe_enchantment(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4905,7 +4862,7 @@ impl<'mc> ItemStack<'mc> {
     //
 
     pub fn add_unsafe_enchantments(
-        &mut self,
+        &self,
         arg0: impl Into<blackboxmc_java::JavaMap<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Map;)V");
@@ -4924,7 +4881,7 @@ impl<'mc> ItemStack<'mc> {
     //
 
     pub fn remove_enchantment(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -4943,7 +4900,7 @@ impl<'mc> ItemStack<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -4960,7 +4917,7 @@ impl<'mc> ItemStack<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4974,7 +4931,7 @@ impl<'mc> ItemStack<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4984,9 +4941,7 @@ impl<'mc> ItemStack<'mc> {
     }
     //
 
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/ItemStack;";
@@ -5000,7 +4955,7 @@ impl<'mc> ItemStack<'mc> {
     }
     //
 
-    pub fn get_type(&mut self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+    pub fn get_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
         let res = self
             .jni_ref()
@@ -5026,7 +4981,7 @@ impl<'mc> ItemStack<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -5051,7 +5006,7 @@ impl<'mc> ItemStack<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -5061,7 +5016,7 @@ impl<'mc> ItemStack<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -5071,7 +5026,7 @@ impl<'mc> ItemStack<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -5183,7 +5138,7 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
     //
 
     pub fn item_stack(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res =
@@ -5196,7 +5151,7 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
     }
     //
 
-    pub fn choices(&mut self) -> Result<Vec<crate::Material<'mc>>, Box<dyn std::error::Error>> {
+    pub fn choices(&self) -> Result<Vec<crate::Material<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
             self.jni_ref()
@@ -5228,7 +5183,7 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -5245,7 +5200,7 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5259,7 +5214,7 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -5270,7 +5225,7 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
     //
 
     pub fn clone(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::RecipeChoiceMaterialChoice<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -5286,7 +5241,7 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
     //
 
     pub fn test_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -5308,7 +5263,7 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -5333,7 +5288,7 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -5343,7 +5298,7 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -5353,7 +5308,7 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -5395,6 +5350,11 @@ impl std::fmt::Display for ItemFlagEnum {
             ItemFlagEnum::HideDye => f.write_str("HIDE_DYE"),
             ItemFlagEnum::HideArmorTrim => f.write_str("HIDE_ARMOR_TRIM"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for ItemFlag<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct ItemFlag<'mc>(
@@ -5500,6 +5460,11 @@ impl std::fmt::Display for MainHandEnum {
             MainHandEnum::Left => f.write_str("LEFT"),
             MainHandEnum::Right => f.write_str("RIGHT"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for MainHand<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct MainHand<'mc>(
@@ -5616,7 +5581,7 @@ impl<'mc> Inventory<'mc> {
 
     /// Returns the ItemStack found in the slot at the given index
     pub fn get_item(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/inventory/ItemStack;");
@@ -5639,7 +5604,7 @@ impl<'mc> Inventory<'mc> {
     //
 
     pub fn all_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -5663,7 +5628,7 @@ impl<'mc> Inventory<'mc> {
     //
 
     pub fn add_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -5678,7 +5643,7 @@ impl<'mc> Inventory<'mc> {
     //
 
     pub fn set_item(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -5702,7 +5667,7 @@ impl<'mc> Inventory<'mc> {
     //
 
     pub fn holder(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::InventoryHolder<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/InventoryHolder;");
         let res = self
@@ -5715,7 +5680,7 @@ impl<'mc> Inventory<'mc> {
     }
     //
 
-    pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -5733,7 +5698,7 @@ impl<'mc> Inventory<'mc> {
     /// <li>This value is not guaranteed to be preserved; be sure to set it before every time you want to set a slot over the max stack size.</li>
     /// <li>Stacks larger than the default max size for this type of inventory may not display correctly in the client.</li>
     /// </ul>
-    pub fn set_max_stack_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -5748,7 +5713,7 @@ impl<'mc> Inventory<'mc> {
     //
 
     pub fn remove_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -5765,7 +5730,7 @@ impl<'mc> Inventory<'mc> {
     //
 
     pub fn set_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -5780,7 +5745,7 @@ impl<'mc> Inventory<'mc> {
     //
 
     pub fn set_storage_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -5796,7 +5761,7 @@ impl<'mc> Inventory<'mc> {
     //
 
     pub fn contains_at_least(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
         arg1: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5819,7 +5784,7 @@ impl<'mc> Inventory<'mc> {
     }
     //
 
-    pub fn first_empty(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -5830,7 +5795,7 @@ impl<'mc> Inventory<'mc> {
     //
 
     pub fn viewers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -5849,7 +5814,7 @@ impl<'mc> Inventory<'mc> {
     //
 
     pub fn remove_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -5871,10 +5836,7 @@ impl<'mc> Inventory<'mc> {
     //
 
     /// Clears out a particular slot in the index.
-    pub fn clear(
-        &mut self,
-        arg0: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self, arg0: std::option::Option<i32>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
@@ -5891,7 +5853,7 @@ impl<'mc> Inventory<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -5903,7 +5865,7 @@ impl<'mc> Inventory<'mc> {
 
     /// Returns an iterator starting at the given index. If the index is positive, then the first call to next() will return the item at that index; if it is negative, the first call to previous will return the item at index (getSize() + index).
     pub fn iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -5925,7 +5887,7 @@ impl<'mc> Inventory<'mc> {
     //
 
     pub fn contains_with_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5951,7 +5913,7 @@ impl<'mc> Inventory<'mc> {
     //
 
     pub fn first_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -5972,7 +5934,7 @@ impl<'mc> Inventory<'mc> {
     }
     //
 
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -5985,7 +5947,7 @@ impl<'mc> Inventory<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::event::inventory::InventoryType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/inventory/InventoryType;");
         let res = self
@@ -6011,7 +5973,7 @@ impl<'mc> Inventory<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -6114,7 +6076,7 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
     //
 
     pub fn item_stack(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res =
@@ -6128,7 +6090,7 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
     //
 
     pub fn choices(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -6147,7 +6109,7 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -6164,7 +6126,7 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -6178,7 +6140,7 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -6188,7 +6150,7 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
@@ -6201,7 +6163,7 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
     //
 
     pub fn test_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -6223,7 +6185,7 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -6248,7 +6210,7 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -6258,7 +6220,7 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -6268,7 +6230,7 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -6318,7 +6280,7 @@ impl<'mc> LecternInventory<'mc> {
     //
 
     pub fn holder(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::InventoryHolder<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -6334,7 +6296,7 @@ impl<'mc> LecternInventory<'mc> {
     //@Nullable
 
     pub fn get_item(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/inventory/ItemStack;");
@@ -6357,7 +6319,7 @@ impl<'mc> LecternInventory<'mc> {
     //
 
     pub fn all_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -6381,7 +6343,7 @@ impl<'mc> LecternInventory<'mc> {
     //
 
     pub fn add_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -6396,7 +6358,7 @@ impl<'mc> LecternInventory<'mc> {
     //
 
     pub fn set_item(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -6419,7 +6381,7 @@ impl<'mc> LecternInventory<'mc> {
     }
     //
 
-    pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -6429,7 +6391,7 @@ impl<'mc> LecternInventory<'mc> {
     }
     //
 
-    pub fn set_max_stack_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -6444,7 +6406,7 @@ impl<'mc> LecternInventory<'mc> {
     //
 
     pub fn remove_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -6461,7 +6423,7 @@ impl<'mc> LecternInventory<'mc> {
     //
 
     pub fn set_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -6476,7 +6438,7 @@ impl<'mc> LecternInventory<'mc> {
     //
 
     pub fn set_storage_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -6492,7 +6454,7 @@ impl<'mc> LecternInventory<'mc> {
     //
 
     pub fn contains_at_least(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
         arg1: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6515,7 +6477,7 @@ impl<'mc> LecternInventory<'mc> {
     }
     //
 
-    pub fn first_empty(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -6526,7 +6488,7 @@ impl<'mc> LecternInventory<'mc> {
     //
 
     pub fn viewers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -6545,7 +6507,7 @@ impl<'mc> LecternInventory<'mc> {
     //
 
     pub fn remove_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -6566,10 +6528,7 @@ impl<'mc> LecternInventory<'mc> {
     }
     //
 
-    pub fn clear(
-        &mut self,
-        arg0: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self, arg0: std::option::Option<i32>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
@@ -6586,7 +6545,7 @@ impl<'mc> LecternInventory<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -6597,7 +6556,7 @@ impl<'mc> LecternInventory<'mc> {
     //@NotNull
 
     pub fn iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -6619,7 +6578,7 @@ impl<'mc> LecternInventory<'mc> {
     //
 
     pub fn contains_with_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6645,7 +6604,7 @@ impl<'mc> LecternInventory<'mc> {
     //
 
     pub fn first_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -6666,7 +6625,7 @@ impl<'mc> LecternInventory<'mc> {
     }
     //
 
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -6679,7 +6638,7 @@ impl<'mc> LecternInventory<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::event::inventory::InventoryType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/inventory/InventoryType;");
         let res = self
@@ -6705,7 +6664,7 @@ impl<'mc> LecternInventory<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -6760,7 +6719,7 @@ impl<'mc> BrewerInventory<'mc> {
     //
 
     pub fn set_fuel(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -6778,7 +6737,7 @@ impl<'mc> BrewerInventory<'mc> {
     }
     //
 
-    pub fn fuel(&mut self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn fuel(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -6791,7 +6750,7 @@ impl<'mc> BrewerInventory<'mc> {
     //
 
     pub fn holder(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::InventoryHolder<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -6807,7 +6766,7 @@ impl<'mc> BrewerInventory<'mc> {
     //
 
     pub fn ingredient(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res =
@@ -6821,7 +6780,7 @@ impl<'mc> BrewerInventory<'mc> {
     //
 
     pub fn set_ingredient(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -6840,7 +6799,7 @@ impl<'mc> BrewerInventory<'mc> {
     //@Nullable
 
     pub fn get_item(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/inventory/ItemStack;");
@@ -6863,7 +6822,7 @@ impl<'mc> BrewerInventory<'mc> {
     //
 
     pub fn all_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -6887,7 +6846,7 @@ impl<'mc> BrewerInventory<'mc> {
     //
 
     pub fn add_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -6902,7 +6861,7 @@ impl<'mc> BrewerInventory<'mc> {
     //
 
     pub fn set_item(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -6925,7 +6884,7 @@ impl<'mc> BrewerInventory<'mc> {
     }
     //
 
-    pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -6935,7 +6894,7 @@ impl<'mc> BrewerInventory<'mc> {
     }
     //
 
-    pub fn set_max_stack_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -6950,7 +6909,7 @@ impl<'mc> BrewerInventory<'mc> {
     //
 
     pub fn remove_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -6967,7 +6926,7 @@ impl<'mc> BrewerInventory<'mc> {
     //
 
     pub fn set_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -6982,7 +6941,7 @@ impl<'mc> BrewerInventory<'mc> {
     //
 
     pub fn set_storage_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -6998,7 +6957,7 @@ impl<'mc> BrewerInventory<'mc> {
     //
 
     pub fn contains_at_least(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
         arg1: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7021,7 +6980,7 @@ impl<'mc> BrewerInventory<'mc> {
     }
     //
 
-    pub fn first_empty(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -7032,7 +6991,7 @@ impl<'mc> BrewerInventory<'mc> {
     //
 
     pub fn viewers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -7051,7 +7010,7 @@ impl<'mc> BrewerInventory<'mc> {
     //
 
     pub fn remove_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -7072,10 +7031,7 @@ impl<'mc> BrewerInventory<'mc> {
     }
     //
 
-    pub fn clear(
-        &mut self,
-        arg0: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self, arg0: std::option::Option<i32>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
@@ -7092,7 +7048,7 @@ impl<'mc> BrewerInventory<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -7103,7 +7059,7 @@ impl<'mc> BrewerInventory<'mc> {
     //@NotNull
 
     pub fn iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -7125,7 +7081,7 @@ impl<'mc> BrewerInventory<'mc> {
     //
 
     pub fn contains_with_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7151,7 +7107,7 @@ impl<'mc> BrewerInventory<'mc> {
     //
 
     pub fn first_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -7172,7 +7128,7 @@ impl<'mc> BrewerInventory<'mc> {
     }
     //
 
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -7185,7 +7141,7 @@ impl<'mc> BrewerInventory<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::event::inventory::InventoryType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/inventory/InventoryType;");
         let res = self
@@ -7211,7 +7167,7 @@ impl<'mc> BrewerInventory<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -7264,7 +7220,7 @@ impl<'mc> LoomInventory<'mc> {
     //@Nullable
 
     pub fn get_item(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/inventory/ItemStack;");
@@ -7287,7 +7243,7 @@ impl<'mc> LoomInventory<'mc> {
     //
 
     pub fn all_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -7311,7 +7267,7 @@ impl<'mc> LoomInventory<'mc> {
     //
 
     pub fn add_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -7326,7 +7282,7 @@ impl<'mc> LoomInventory<'mc> {
     //
 
     pub fn set_item(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -7350,7 +7306,7 @@ impl<'mc> LoomInventory<'mc> {
     //
 
     pub fn holder(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::InventoryHolder<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/InventoryHolder;");
         let res = self
@@ -7363,7 +7319,7 @@ impl<'mc> LoomInventory<'mc> {
     }
     //
 
-    pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -7373,7 +7329,7 @@ impl<'mc> LoomInventory<'mc> {
     }
     //
 
-    pub fn set_max_stack_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -7388,7 +7344,7 @@ impl<'mc> LoomInventory<'mc> {
     //
 
     pub fn remove_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -7405,7 +7361,7 @@ impl<'mc> LoomInventory<'mc> {
     //
 
     pub fn set_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -7420,7 +7376,7 @@ impl<'mc> LoomInventory<'mc> {
     //
 
     pub fn set_storage_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -7436,7 +7392,7 @@ impl<'mc> LoomInventory<'mc> {
     //
 
     pub fn contains_at_least(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
         arg1: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7459,7 +7415,7 @@ impl<'mc> LoomInventory<'mc> {
     }
     //
 
-    pub fn first_empty(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -7470,7 +7426,7 @@ impl<'mc> LoomInventory<'mc> {
     //
 
     pub fn viewers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -7489,7 +7445,7 @@ impl<'mc> LoomInventory<'mc> {
     //
 
     pub fn remove_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -7510,10 +7466,7 @@ impl<'mc> LoomInventory<'mc> {
     }
     //
 
-    pub fn clear(
-        &mut self,
-        arg0: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self, arg0: std::option::Option<i32>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
@@ -7530,7 +7483,7 @@ impl<'mc> LoomInventory<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -7541,7 +7494,7 @@ impl<'mc> LoomInventory<'mc> {
     //@NotNull
 
     pub fn iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -7563,7 +7516,7 @@ impl<'mc> LoomInventory<'mc> {
     //
 
     pub fn contains_with_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7589,7 +7542,7 @@ impl<'mc> LoomInventory<'mc> {
     //
 
     pub fn first_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -7610,7 +7563,7 @@ impl<'mc> LoomInventory<'mc> {
     }
     //
 
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -7623,7 +7576,7 @@ impl<'mc> LoomInventory<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::event::inventory::InventoryType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/inventory/InventoryType;");
         let res = self
@@ -7649,7 +7602,7 @@ impl<'mc> LoomInventory<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -7737,7 +7690,7 @@ impl<'mc> ShapedRecipe<'mc> {
     //
 
     pub fn shape(
-        &mut self,
+        &self,
         arg0: std::option::Option<Vec<impl Into<String>>>,
     ) -> Result<crate::inventory::ShapedRecipe<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -7754,7 +7707,7 @@ impl<'mc> ShapedRecipe<'mc> {
     //
 
     pub fn set_ingredient_with_char(
-        &mut self,
+        &self,
         arg0: u16,
         arg1: std::option::Option<impl Into<crate::Material<'mc>>>,
         arg2: std::option::Option<i32>,
@@ -7788,7 +7741,7 @@ impl<'mc> ShapedRecipe<'mc> {
     //
 
     pub fn ingredient_map(
-        &mut self,
+        &self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self.jni_ref().call_method(
@@ -7804,9 +7757,7 @@ impl<'mc> ShapedRecipe<'mc> {
     }
     //
 
-    pub fn choice_map(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn choice_map(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -7818,9 +7769,7 @@ impl<'mc> ShapedRecipe<'mc> {
     }
     //
 
-    pub fn result(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -7833,7 +7782,7 @@ impl<'mc> ShapedRecipe<'mc> {
     //
 
     pub fn category(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::recipe::CraftingBookCategory<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/recipe/CraftingBookCategory;");
@@ -7860,7 +7809,7 @@ impl<'mc> ShapedRecipe<'mc> {
     }
     //
 
-    pub fn group(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -7874,7 +7823,7 @@ impl<'mc> ShapedRecipe<'mc> {
     }
     //
 
-    pub fn set_group(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_group(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -7891,7 +7840,7 @@ impl<'mc> ShapedRecipe<'mc> {
     //
 
     pub fn set_category(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::recipe::CraftingBookCategory<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/recipe/CraftingBookCategory;)V");
@@ -7909,7 +7858,7 @@ impl<'mc> ShapedRecipe<'mc> {
     }
     //
 
-    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self
             .jni_ref()
@@ -7922,7 +7871,7 @@ impl<'mc> ShapedRecipe<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -7948,7 +7897,7 @@ impl<'mc> ShapedRecipe<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -7965,7 +7914,7 @@ impl<'mc> ShapedRecipe<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -7979,7 +7928,7 @@ impl<'mc> ShapedRecipe<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -7989,7 +7938,7 @@ impl<'mc> ShapedRecipe<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -7999,7 +7948,7 @@ impl<'mc> ShapedRecipe<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -8009,7 +7958,7 @@ impl<'mc> ShapedRecipe<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -8114,7 +8063,7 @@ impl<'mc> SmithingTransformRecipe<'mc> {
     //
 
     pub fn template(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/RecipeChoice;");
         let res =
@@ -8127,9 +8076,7 @@ impl<'mc> SmithingTransformRecipe<'mc> {
     }
     //
 
-    pub fn result(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -8141,9 +8088,7 @@ impl<'mc> SmithingTransformRecipe<'mc> {
     }
     //
 
-    pub fn base(
-        &mut self,
-    ) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
+    pub fn base(&self) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/RecipeChoice;");
         let res = self
             .jni_ref()
@@ -8156,7 +8101,7 @@ impl<'mc> SmithingTransformRecipe<'mc> {
     //
 
     pub fn addition(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/RecipeChoice;");
         let res =
@@ -8169,7 +8114,7 @@ impl<'mc> SmithingTransformRecipe<'mc> {
     }
     //
 
-    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self
             .jni_ref()
@@ -8182,7 +8127,7 @@ impl<'mc> SmithingTransformRecipe<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -8208,7 +8153,7 @@ impl<'mc> SmithingTransformRecipe<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -8225,7 +8170,7 @@ impl<'mc> SmithingTransformRecipe<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -8239,7 +8184,7 @@ impl<'mc> SmithingTransformRecipe<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -8249,7 +8194,7 @@ impl<'mc> SmithingTransformRecipe<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -8259,7 +8204,7 @@ impl<'mc> SmithingTransformRecipe<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -8269,7 +8214,7 @@ impl<'mc> SmithingTransformRecipe<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -8314,6 +8259,11 @@ impl std::fmt::Display for EquipmentSlotEnum {
             EquipmentSlotEnum::Chest => f.write_str("CHEST"),
             EquipmentSlotEnum::Head => f.write_str("HEAD"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for EquipmentSlot<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct EquipmentSlot<'mc>(
@@ -8433,7 +8383,7 @@ impl<'mc> Merchant<'mc> {
     //
 
     pub fn recipes(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::inventory::MerchantRecipe<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -8455,7 +8405,7 @@ impl<'mc> Merchant<'mc> {
     //
 
     pub fn set_recipes(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::MerchantRecipe<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
@@ -8487,7 +8437,7 @@ impl<'mc> Merchant<'mc> {
 
     /// Get the recipe at a certain index of this merchant's trade list.
     pub fn get_recipe(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<crate::inventory::MerchantRecipe<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/inventory/MerchantRecipe;");
@@ -8506,7 +8456,7 @@ impl<'mc> Merchant<'mc> {
     //
 
     pub fn set_recipe(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: impl Into<crate::inventory::MerchantRecipe<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -8529,7 +8479,7 @@ impl<'mc> Merchant<'mc> {
     }
     //
 
-    pub fn recipe_count(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn recipe_count(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -8539,7 +8489,7 @@ impl<'mc> Merchant<'mc> {
     }
     //
 
-    pub fn is_trading(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_trading(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -8549,9 +8499,7 @@ impl<'mc> Merchant<'mc> {
     }
     //
 
-    pub fn trader(
-        &mut self,
-    ) -> Result<crate::entity::HumanEntity<'mc>, Box<dyn std::error::Error>> {
+    pub fn trader(&self) -> Result<crate::entity::HumanEntity<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/HumanEntity;");
         let res = self
             .jni_ref()
@@ -8601,7 +8549,7 @@ impl<'mc> ItemFactory<'mc> {
     //
 
     pub fn get_item_meta(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
     ) -> Result<crate::inventory::meta::ItemMeta<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/Material;)Lorg/bukkit/inventory/meta/ItemMeta;");
@@ -8622,7 +8570,7 @@ impl<'mc> ItemFactory<'mc> {
     //
 
     pub fn as_meta_for_with_item_meta(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::meta::ItemMeta<'mc>>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<crate::inventory::meta::ItemMeta<'mc>, Box<dyn std::error::Error>> {
@@ -8652,7 +8600,7 @@ impl<'mc> ItemFactory<'mc> {
     //
 
     pub fn is_applicable_with_item_meta(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::meta::ItemMeta<'mc>>,
         arg1: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8680,7 +8628,7 @@ impl<'mc> ItemFactory<'mc> {
     //
 
     pub fn update_material(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::meta::ItemMeta<'mc>>,
         arg1: impl Into<crate::Material<'mc>>,
     ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
@@ -8722,9 +8670,7 @@ impl<'mc> ItemFactory<'mc> {
     }
     //
 
-    pub fn default_leather_color(
-        &mut self,
-    ) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
+    pub fn default_leather_color(&self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Color;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8740,7 +8686,7 @@ impl<'mc> ItemFactory<'mc> {
     //
 
     pub fn create_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Lorg/bukkit/inventory/ItemStack;");
@@ -8761,7 +8707,7 @@ impl<'mc> ItemFactory<'mc> {
     //
 
     pub fn get_spawn_egg(
-        &mut self,
+        &self,
         arg0: impl Into<crate::entity::EntityType<'mc>>,
     ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/entity/EntityType;)Lorg/bukkit/Material;");
@@ -8795,7 +8741,7 @@ impl<'mc> ItemFactory<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::meta::ItemMeta<'mc>>,
         arg1: impl Into<crate::inventory::meta::ItemMeta<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8861,7 +8807,7 @@ impl<'mc> EntityEquipment<'mc> {
     //
 
     pub fn get_item(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig =
@@ -8883,7 +8829,7 @@ impl<'mc> EntityEquipment<'mc> {
     //
 
     pub fn set_item_with_equipment_slot(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
         arg2: std::option::Option<bool>,
@@ -8917,7 +8863,7 @@ impl<'mc> EntityEquipment<'mc> {
     }
     //
 
-    pub fn holder(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    pub fn holder(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res = self
             .jni_ref()
@@ -8930,7 +8876,7 @@ impl<'mc> EntityEquipment<'mc> {
     //
 
     pub fn item_in_hand(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res =
@@ -8944,7 +8890,7 @@ impl<'mc> EntityEquipment<'mc> {
     //
 
     pub fn set_item_in_hand(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -8962,9 +8908,7 @@ impl<'mc> EntityEquipment<'mc> {
     }
     //
 
-    pub fn boots(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn boots(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -8977,7 +8921,7 @@ impl<'mc> EntityEquipment<'mc> {
     //
 
     pub fn set_boots_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
         arg1: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -9005,9 +8949,7 @@ impl<'mc> EntityEquipment<'mc> {
     }
     //
 
-    pub fn leggings(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn leggings(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res =
             self.jni_ref()
@@ -9020,7 +8962,7 @@ impl<'mc> EntityEquipment<'mc> {
     //
 
     pub fn set_leggings_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
         arg1: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -9049,7 +8991,7 @@ impl<'mc> EntityEquipment<'mc> {
     //
 
     pub fn chestplate(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res =
@@ -9063,7 +9005,7 @@ impl<'mc> EntityEquipment<'mc> {
     //
 
     pub fn set_chestplate_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
         arg1: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -9091,9 +9033,7 @@ impl<'mc> EntityEquipment<'mc> {
     }
     //
 
-    pub fn helmet(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn helmet(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -9106,7 +9046,7 @@ impl<'mc> EntityEquipment<'mc> {
     //
 
     pub fn set_helmet_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
         arg1: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -9135,7 +9075,7 @@ impl<'mc> EntityEquipment<'mc> {
     //
 
     pub fn item_in_main_hand(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self.jni_ref().call_method(
@@ -9152,7 +9092,7 @@ impl<'mc> EntityEquipment<'mc> {
     //
 
     pub fn set_item_in_main_hand_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
         arg1: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -9181,7 +9121,7 @@ impl<'mc> EntityEquipment<'mc> {
     //
 
     pub fn item_in_off_hand(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self.jni_ref().call_method(
@@ -9198,7 +9138,7 @@ impl<'mc> EntityEquipment<'mc> {
     //
 
     pub fn set_item_in_off_hand_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
         arg1: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -9229,7 +9169,7 @@ impl<'mc> EntityEquipment<'mc> {
     //
 
     pub fn set_armor_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -9244,7 +9184,7 @@ impl<'mc> EntityEquipment<'mc> {
     }
     //
 
-    pub fn item_in_hand_drop_chance(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+    pub fn item_in_hand_drop_chance(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9265,7 +9205,7 @@ impl<'mc> EntityEquipment<'mc> {
     /// entities can duel wield now use the methods for the specific hand instead
     ///
     pub fn set_item_in_hand_drop_chance(
-        &mut self,
+        &self,
         arg0: f32,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
@@ -9281,7 +9221,7 @@ impl<'mc> EntityEquipment<'mc> {
     }
     //
 
-    pub fn item_in_main_hand_drop_chance(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+    pub fn item_in_main_hand_drop_chance(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9300,7 +9240,7 @@ impl<'mc> EntityEquipment<'mc> {
     /// <li>A drop chance of 1.0F will always drop</li>
     /// </ul>
     pub fn set_item_in_main_hand_drop_chance(
-        &mut self,
+        &self,
         arg0: f32,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
@@ -9316,7 +9256,7 @@ impl<'mc> EntityEquipment<'mc> {
     }
     //
 
-    pub fn item_in_off_hand_drop_chance(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+    pub fn item_in_off_hand_drop_chance(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9335,7 +9275,7 @@ impl<'mc> EntityEquipment<'mc> {
     /// <li>A drop chance of 1.0F will always drop</li>
     /// </ul>
     pub fn set_item_in_off_hand_drop_chance(
-        &mut self,
+        &self,
         arg0: f32,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
@@ -9351,7 +9291,7 @@ impl<'mc> EntityEquipment<'mc> {
     }
     //
 
-    pub fn helmet_drop_chance(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+    pub fn helmet_drop_chance(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9369,7 +9309,7 @@ impl<'mc> EntityEquipment<'mc> {
     /// <li>A drop chance of 0.0F will never drop</li>
     /// <li>A drop chance of 1.0F will always drop</li>
     /// </ul>
-    pub fn set_helmet_drop_chance(&mut self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_helmet_drop_chance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
         let val_1 = jni::objects::JValueGen::Float(arg0.into());
         let res = self.jni_ref().call_method(
@@ -9383,7 +9323,7 @@ impl<'mc> EntityEquipment<'mc> {
     }
     //
 
-    pub fn chestplate_drop_chance(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+    pub fn chestplate_drop_chance(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9401,10 +9341,7 @@ impl<'mc> EntityEquipment<'mc> {
     /// <li>A drop chance of 0.0F will never drop</li>
     /// <li>A drop chance of 1.0F will always drop</li>
     /// </ul>
-    pub fn set_chestplate_drop_chance(
-        &mut self,
-        arg0: f32,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_chestplate_drop_chance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
         let val_1 = jni::objects::JValueGen::Float(arg0.into());
         let res = self.jni_ref().call_method(
@@ -9418,7 +9355,7 @@ impl<'mc> EntityEquipment<'mc> {
     }
     //
 
-    pub fn leggings_drop_chance(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+    pub fn leggings_drop_chance(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9436,10 +9373,7 @@ impl<'mc> EntityEquipment<'mc> {
     /// <li>A drop chance of 0.0F will never drop</li>
     /// <li>A drop chance of 1.0F will always drop</li>
     /// </ul>
-    pub fn set_leggings_drop_chance(
-        &mut self,
-        arg0: f32,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_leggings_drop_chance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
         let val_1 = jni::objects::JValueGen::Float(arg0.into());
         let res = self.jni_ref().call_method(
@@ -9453,7 +9387,7 @@ impl<'mc> EntityEquipment<'mc> {
     }
     //
 
-    pub fn boots_drop_chance(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+    pub fn boots_drop_chance(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9471,7 +9405,7 @@ impl<'mc> EntityEquipment<'mc> {
     /// <li>A drop chance of 0.0F will never drop</li>
     /// <li>A drop chance of 1.0F will always drop</li>
     /// </ul>
-    pub fn set_boots_drop_chance(&mut self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_boots_drop_chance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
         let val_1 = jni::objects::JValueGen::Float(arg0.into());
         let res = self.jni_ref().call_method(
@@ -9485,7 +9419,7 @@ impl<'mc> EntityEquipment<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -9536,7 +9470,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     //
 
     pub fn holder(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::InventoryHolder<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -9552,7 +9486,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     //@Nullable
 
     pub fn get_item(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/inventory/ItemStack;");
@@ -9575,7 +9509,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     //
 
     pub fn all_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -9599,7 +9533,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     //
 
     pub fn add_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -9614,7 +9548,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     //
 
     pub fn set_item(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -9637,7 +9571,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     }
     //
 
-    pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -9647,7 +9581,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     }
     //
 
-    pub fn set_max_stack_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -9662,7 +9596,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     //
 
     pub fn remove_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -9679,7 +9613,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     //
 
     pub fn set_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -9694,7 +9628,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     //
 
     pub fn set_storage_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -9710,7 +9644,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     //
 
     pub fn contains_at_least(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
         arg1: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -9733,7 +9667,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     }
     //
 
-    pub fn first_empty(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -9744,7 +9678,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     //
 
     pub fn viewers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -9763,7 +9697,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     //
 
     pub fn remove_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -9784,10 +9718,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     }
     //
 
-    pub fn clear(
-        &mut self,
-        arg0: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self, arg0: std::option::Option<i32>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
@@ -9804,7 +9735,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -9815,7 +9746,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     //@NotNull
 
     pub fn iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -9837,7 +9768,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     //
 
     pub fn contains_with_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -9863,7 +9794,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     //
 
     pub fn first_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -9884,7 +9815,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     }
     //
 
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -9897,7 +9828,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::event::inventory::InventoryType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/inventory/InventoryType;");
         let res = self
@@ -9923,7 +9854,7 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -10013,7 +9944,7 @@ impl<'mc> ShapelessRecipe<'mc> {
     //
 
     pub fn add_ingredient_with_recipe_choice(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::material::MaterialData<'mc>>>,
     ) -> Result<crate::inventory::ShapelessRecipe<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -10037,7 +9968,7 @@ impl<'mc> ShapelessRecipe<'mc> {
     //
 
     pub fn add_ingredient_with_material(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
         arg1: std::option::Option<i32>,
     ) -> Result<crate::inventory::ShapelessRecipe<'mc>, Box<dyn std::error::Error>> {
@@ -10067,7 +9998,7 @@ impl<'mc> ShapelessRecipe<'mc> {
     //
 
     pub fn add_ingredient_with_int(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: impl Into<crate::Material<'mc>>,
         arg2: std::option::Option<i32>,
@@ -10099,7 +10030,7 @@ impl<'mc> ShapelessRecipe<'mc> {
     //
 
     pub fn remove_ingredient_with_material_data(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::inventory::RecipeChoice<'mc>>>,
     ) -> Result<crate::inventory::ShapelessRecipe<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -10123,7 +10054,7 @@ impl<'mc> ShapelessRecipe<'mc> {
     //
 
     pub fn remove_ingredient_with_material(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<crate::inventory::ShapelessRecipe<'mc>, Box<dyn std::error::Error>> {
@@ -10153,7 +10084,7 @@ impl<'mc> ShapelessRecipe<'mc> {
     //
 
     pub fn remove_ingredient_with_int(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: impl Into<crate::Material<'mc>>,
         arg2: std::option::Option<i32>,
@@ -10185,7 +10116,7 @@ impl<'mc> ShapelessRecipe<'mc> {
     //
 
     pub fn ingredient_list(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self.jni_ref().call_method(
@@ -10207,7 +10138,7 @@ impl<'mc> ShapelessRecipe<'mc> {
     //
 
     pub fn choice_list(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::inventory::RecipeChoice<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -10225,9 +10156,7 @@ impl<'mc> ShapelessRecipe<'mc> {
     }
     //
 
-    pub fn result(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -10240,7 +10169,7 @@ impl<'mc> ShapelessRecipe<'mc> {
     //
 
     pub fn category(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::recipe::CraftingBookCategory<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/recipe/CraftingBookCategory;");
@@ -10267,7 +10196,7 @@ impl<'mc> ShapelessRecipe<'mc> {
     }
     //
 
-    pub fn group(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -10281,7 +10210,7 @@ impl<'mc> ShapelessRecipe<'mc> {
     }
     //
 
-    pub fn set_group(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_group(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -10298,7 +10227,7 @@ impl<'mc> ShapelessRecipe<'mc> {
     //
 
     pub fn set_category(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::recipe::CraftingBookCategory<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/recipe/CraftingBookCategory;)V");
@@ -10316,7 +10245,7 @@ impl<'mc> ShapelessRecipe<'mc> {
     }
     //
 
-    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self
             .jni_ref()
@@ -10329,7 +10258,7 @@ impl<'mc> ShapelessRecipe<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -10355,7 +10284,7 @@ impl<'mc> ShapelessRecipe<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -10372,7 +10301,7 @@ impl<'mc> ShapelessRecipe<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -10386,7 +10315,7 @@ impl<'mc> ShapelessRecipe<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -10396,7 +10325,7 @@ impl<'mc> ShapelessRecipe<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -10406,7 +10335,7 @@ impl<'mc> ShapelessRecipe<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -10416,7 +10345,7 @@ impl<'mc> ShapelessRecipe<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -10471,7 +10400,7 @@ impl<'mc> AnvilInventory<'mc> {
     }
     //
 
-    pub fn rename_text(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn rename_text(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -10485,7 +10414,7 @@ impl<'mc> AnvilInventory<'mc> {
     }
     //
 
-    pub fn repair_cost_amount(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn repair_cost_amount(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10499,7 +10428,7 @@ impl<'mc> AnvilInventory<'mc> {
     //
 
     /// Set the item cost (in amount) to complete the current repair.
-    pub fn set_repair_cost_amount(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_repair_cost_amount(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -10513,7 +10442,7 @@ impl<'mc> AnvilInventory<'mc> {
     }
     //
 
-    pub fn repair_cost(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn repair_cost(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -10525,7 +10454,7 @@ impl<'mc> AnvilInventory<'mc> {
 
     /// Set the item cost (in amount) to complete the current repair.
     /// Set the experience cost (in levels) to complete the current repair.
-    pub fn set_repair_cost(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_repair_cost(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -10539,7 +10468,7 @@ impl<'mc> AnvilInventory<'mc> {
     }
     //
 
-    pub fn maximum_repair_cost(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn maximum_repair_cost(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10553,7 +10482,7 @@ impl<'mc> AnvilInventory<'mc> {
     //
 
     /// Set the maximum experience cost (in levels) to be allowed by the current repair. The default value set by vanilla Minecraft is 40.
-    pub fn set_maximum_repair_cost(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_maximum_repair_cost(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -10568,7 +10497,7 @@ impl<'mc> AnvilInventory<'mc> {
     //@Nullable
 
     pub fn get_item(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/inventory/ItemStack;");
@@ -10591,7 +10520,7 @@ impl<'mc> AnvilInventory<'mc> {
     //
 
     pub fn all_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -10615,7 +10544,7 @@ impl<'mc> AnvilInventory<'mc> {
     //
 
     pub fn add_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -10630,7 +10559,7 @@ impl<'mc> AnvilInventory<'mc> {
     //
 
     pub fn set_item(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -10654,7 +10583,7 @@ impl<'mc> AnvilInventory<'mc> {
     //
 
     pub fn holder(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::InventoryHolder<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/InventoryHolder;");
         let res = self
@@ -10667,7 +10596,7 @@ impl<'mc> AnvilInventory<'mc> {
     }
     //
 
-    pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -10677,7 +10606,7 @@ impl<'mc> AnvilInventory<'mc> {
     }
     //
 
-    pub fn set_max_stack_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -10692,7 +10621,7 @@ impl<'mc> AnvilInventory<'mc> {
     //
 
     pub fn remove_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -10709,7 +10638,7 @@ impl<'mc> AnvilInventory<'mc> {
     //
 
     pub fn set_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -10724,7 +10653,7 @@ impl<'mc> AnvilInventory<'mc> {
     //
 
     pub fn set_storage_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -10740,7 +10669,7 @@ impl<'mc> AnvilInventory<'mc> {
     //
 
     pub fn contains_at_least(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
         arg1: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10763,7 +10692,7 @@ impl<'mc> AnvilInventory<'mc> {
     }
     //
 
-    pub fn first_empty(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -10774,7 +10703,7 @@ impl<'mc> AnvilInventory<'mc> {
     //
 
     pub fn viewers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -10793,7 +10722,7 @@ impl<'mc> AnvilInventory<'mc> {
     //
 
     pub fn remove_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -10814,10 +10743,7 @@ impl<'mc> AnvilInventory<'mc> {
     }
     //
 
-    pub fn clear(
-        &mut self,
-        arg0: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self, arg0: std::option::Option<i32>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
@@ -10834,7 +10760,7 @@ impl<'mc> AnvilInventory<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -10845,7 +10771,7 @@ impl<'mc> AnvilInventory<'mc> {
     //@NotNull
 
     pub fn iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -10867,7 +10793,7 @@ impl<'mc> AnvilInventory<'mc> {
     //
 
     pub fn contains_with_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10893,7 +10819,7 @@ impl<'mc> AnvilInventory<'mc> {
     //
 
     pub fn first_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -10914,7 +10840,7 @@ impl<'mc> AnvilInventory<'mc> {
     }
     //
 
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -10927,7 +10853,7 @@ impl<'mc> AnvilInventory<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::event::inventory::InventoryType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/inventory/InventoryType;");
         let res = self
@@ -10953,7 +10879,7 @@ impl<'mc> AnvilInventory<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -11006,7 +10932,7 @@ impl<'mc> RecipeChoice<'mc> {
     //
 
     pub fn item_stack(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res =
@@ -11019,9 +10945,7 @@ impl<'mc> RecipeChoice<'mc> {
     }
     //
 
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/RecipeChoice;";
@@ -11036,7 +10960,7 @@ impl<'mc> RecipeChoice<'mc> {
     //
 
     pub fn test_with_object(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -11096,7 +11020,7 @@ impl<'mc> InventoryHolder<'mc> {
     //
 
     pub fn inventory(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/Inventory;");
         let res =
@@ -11166,6 +11090,11 @@ impl std::fmt::Display for PropertyEnum {
             PropertyEnum::RepairCost => f.write_str("REPAIR_COST"),
             PropertyEnum::BookPage => f.write_str("BOOK_PAGE"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for Property<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct Property<'mc>(
@@ -11317,7 +11246,7 @@ impl<'mc> EnchantingInventory<'mc> {
     //@Nullable
 
     pub fn get_item(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/inventory/ItemStack;");
@@ -11340,7 +11269,7 @@ impl<'mc> EnchantingInventory<'mc> {
     //
 
     pub fn set_item_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -11368,7 +11297,7 @@ impl<'mc> EnchantingInventory<'mc> {
     //
 
     pub fn secondary(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res =
@@ -11382,7 +11311,7 @@ impl<'mc> EnchantingInventory<'mc> {
     //
 
     pub fn set_secondary(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -11401,7 +11330,7 @@ impl<'mc> EnchantingInventory<'mc> {
     //
 
     pub fn all_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -11425,7 +11354,7 @@ impl<'mc> EnchantingInventory<'mc> {
     //
 
     pub fn add_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -11440,7 +11369,7 @@ impl<'mc> EnchantingInventory<'mc> {
     //
 
     pub fn holder(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::InventoryHolder<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/InventoryHolder;");
         let res = self
@@ -11453,7 +11382,7 @@ impl<'mc> EnchantingInventory<'mc> {
     }
     //
 
-    pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -11463,7 +11392,7 @@ impl<'mc> EnchantingInventory<'mc> {
     }
     //
 
-    pub fn set_max_stack_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -11478,7 +11407,7 @@ impl<'mc> EnchantingInventory<'mc> {
     //
 
     pub fn remove_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -11495,7 +11424,7 @@ impl<'mc> EnchantingInventory<'mc> {
     //
 
     pub fn set_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -11510,7 +11439,7 @@ impl<'mc> EnchantingInventory<'mc> {
     //
 
     pub fn set_storage_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -11526,7 +11455,7 @@ impl<'mc> EnchantingInventory<'mc> {
     //
 
     pub fn contains_at_least(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
         arg1: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11549,7 +11478,7 @@ impl<'mc> EnchantingInventory<'mc> {
     }
     //
 
-    pub fn first_empty(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -11560,7 +11489,7 @@ impl<'mc> EnchantingInventory<'mc> {
     //
 
     pub fn viewers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -11579,7 +11508,7 @@ impl<'mc> EnchantingInventory<'mc> {
     //
 
     pub fn remove_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -11600,10 +11529,7 @@ impl<'mc> EnchantingInventory<'mc> {
     }
     //
 
-    pub fn clear(
-        &mut self,
-        arg0: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self, arg0: std::option::Option<i32>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
@@ -11620,7 +11546,7 @@ impl<'mc> EnchantingInventory<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -11631,7 +11557,7 @@ impl<'mc> EnchantingInventory<'mc> {
     //@NotNull
 
     pub fn iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -11653,7 +11579,7 @@ impl<'mc> EnchantingInventory<'mc> {
     //
 
     pub fn contains_with_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11679,7 +11605,7 @@ impl<'mc> EnchantingInventory<'mc> {
     //
 
     pub fn first_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -11700,7 +11626,7 @@ impl<'mc> EnchantingInventory<'mc> {
     }
     //
 
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -11713,7 +11639,7 @@ impl<'mc> EnchantingInventory<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::event::inventory::InventoryType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/inventory/InventoryType;");
         let res = self
@@ -11739,7 +11665,7 @@ impl<'mc> EnchantingInventory<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -11841,7 +11767,7 @@ impl<'mc> BlastingRecipe<'mc> {
     //
 
     pub fn set_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
     ) -> Result<crate::inventory::CookingRecipe<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/Material;)Lorg/bukkit/inventory/CookingRecipe;");
@@ -11861,9 +11787,7 @@ impl<'mc> BlastingRecipe<'mc> {
     }
     //
 
-    pub fn input(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn input(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -11875,9 +11799,7 @@ impl<'mc> BlastingRecipe<'mc> {
     }
     //
 
-    pub fn result(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -11890,7 +11812,7 @@ impl<'mc> BlastingRecipe<'mc> {
     //
 
     pub fn category(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::recipe::CookingBookCategory<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/recipe/CookingBookCategory;");
@@ -11918,7 +11840,7 @@ impl<'mc> BlastingRecipe<'mc> {
     //
 
     pub fn set_input_choice(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::RecipeChoice<'mc>>,
     ) -> Result<crate::inventory::CookingRecipe<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from(
@@ -11941,7 +11863,7 @@ impl<'mc> BlastingRecipe<'mc> {
     //
 
     pub fn input_choice(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/RecipeChoice;");
         let res =
@@ -11954,7 +11876,7 @@ impl<'mc> BlastingRecipe<'mc> {
     }
     //
 
-    pub fn group(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -11968,7 +11890,7 @@ impl<'mc> BlastingRecipe<'mc> {
     }
     //
 
-    pub fn set_group(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_group(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -11985,7 +11907,7 @@ impl<'mc> BlastingRecipe<'mc> {
     //
 
     pub fn set_category(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::recipe::CookingBookCategory<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/recipe/CookingBookCategory;)V");
@@ -12003,7 +11925,7 @@ impl<'mc> BlastingRecipe<'mc> {
     }
     //
 
-    pub fn experience(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+    pub fn experience(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
         let res =
             self.jni_ref()
@@ -12013,7 +11935,7 @@ impl<'mc> BlastingRecipe<'mc> {
     }
     //
 
-    pub fn set_experience(&mut self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_experience(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
         let val_1 = jni::objects::JValueGen::Float(arg0.into());
         let res = self.jni_ref().call_method(
@@ -12027,7 +11949,7 @@ impl<'mc> BlastingRecipe<'mc> {
     }
     //
 
-    pub fn set_cooking_time(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_cooking_time(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -12041,7 +11963,7 @@ impl<'mc> BlastingRecipe<'mc> {
     }
     //
 
-    pub fn cooking_time(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn cooking_time(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -12051,7 +11973,7 @@ impl<'mc> BlastingRecipe<'mc> {
     }
     //
 
-    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self
             .jni_ref()
@@ -12064,7 +11986,7 @@ impl<'mc> BlastingRecipe<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -12090,7 +12012,7 @@ impl<'mc> BlastingRecipe<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -12107,7 +12029,7 @@ impl<'mc> BlastingRecipe<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -12121,7 +12043,7 @@ impl<'mc> BlastingRecipe<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -12131,7 +12053,7 @@ impl<'mc> BlastingRecipe<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -12141,7 +12063,7 @@ impl<'mc> BlastingRecipe<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -12151,7 +12073,7 @@ impl<'mc> BlastingRecipe<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -12252,7 +12174,7 @@ impl<'mc> SmokingRecipe<'mc> {
     //
 
     pub fn set_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
     ) -> Result<crate::inventory::CookingRecipe<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/Material;)Lorg/bukkit/inventory/CookingRecipe;");
@@ -12272,9 +12194,7 @@ impl<'mc> SmokingRecipe<'mc> {
     }
     //
 
-    pub fn input(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn input(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -12286,9 +12206,7 @@ impl<'mc> SmokingRecipe<'mc> {
     }
     //
 
-    pub fn result(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -12301,7 +12219,7 @@ impl<'mc> SmokingRecipe<'mc> {
     //
 
     pub fn category(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::recipe::CookingBookCategory<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/recipe/CookingBookCategory;");
@@ -12329,7 +12247,7 @@ impl<'mc> SmokingRecipe<'mc> {
     //
 
     pub fn set_input_choice(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::RecipeChoice<'mc>>,
     ) -> Result<crate::inventory::CookingRecipe<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from(
@@ -12352,7 +12270,7 @@ impl<'mc> SmokingRecipe<'mc> {
     //
 
     pub fn input_choice(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/RecipeChoice;");
         let res =
@@ -12365,7 +12283,7 @@ impl<'mc> SmokingRecipe<'mc> {
     }
     //
 
-    pub fn group(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -12379,7 +12297,7 @@ impl<'mc> SmokingRecipe<'mc> {
     }
     //
 
-    pub fn set_group(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_group(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -12396,7 +12314,7 @@ impl<'mc> SmokingRecipe<'mc> {
     //
 
     pub fn set_category(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::recipe::CookingBookCategory<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/recipe/CookingBookCategory;)V");
@@ -12414,7 +12332,7 @@ impl<'mc> SmokingRecipe<'mc> {
     }
     //
 
-    pub fn experience(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+    pub fn experience(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
         let res =
             self.jni_ref()
@@ -12424,7 +12342,7 @@ impl<'mc> SmokingRecipe<'mc> {
     }
     //
 
-    pub fn set_experience(&mut self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_experience(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
         let val_1 = jni::objects::JValueGen::Float(arg0.into());
         let res = self.jni_ref().call_method(
@@ -12438,7 +12356,7 @@ impl<'mc> SmokingRecipe<'mc> {
     }
     //
 
-    pub fn set_cooking_time(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_cooking_time(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -12452,7 +12370,7 @@ impl<'mc> SmokingRecipe<'mc> {
     }
     //
 
-    pub fn cooking_time(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn cooking_time(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -12462,7 +12380,7 @@ impl<'mc> SmokingRecipe<'mc> {
     }
     //
 
-    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self
             .jni_ref()
@@ -12475,7 +12393,7 @@ impl<'mc> SmokingRecipe<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -12501,7 +12419,7 @@ impl<'mc> SmokingRecipe<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -12518,7 +12436,7 @@ impl<'mc> SmokingRecipe<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -12532,7 +12450,7 @@ impl<'mc> SmokingRecipe<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -12542,7 +12460,7 @@ impl<'mc> SmokingRecipe<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -12552,7 +12470,7 @@ impl<'mc> SmokingRecipe<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -12562,7 +12480,7 @@ impl<'mc> SmokingRecipe<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -12617,9 +12535,7 @@ impl<'mc> CraftingInventory<'mc> {
     }
     //
 
-    pub fn result(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -12632,7 +12548,7 @@ impl<'mc> CraftingInventory<'mc> {
     //
 
     pub fn set_result(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -12650,7 +12566,7 @@ impl<'mc> CraftingInventory<'mc> {
     }
     //
 
-    pub fn recipe(&mut self) -> Result<crate::inventory::Recipe<'mc>, Box<dyn std::error::Error>> {
+    pub fn recipe(&self) -> Result<crate::inventory::Recipe<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/Recipe;");
         let res = self
             .jni_ref()
@@ -12665,7 +12581,7 @@ impl<'mc> CraftingInventory<'mc> {
     //
 
     pub fn set_matrix(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -12678,7 +12594,7 @@ impl<'mc> CraftingInventory<'mc> {
     //@Nullable
 
     pub fn get_item(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/inventory/ItemStack;");
@@ -12701,7 +12617,7 @@ impl<'mc> CraftingInventory<'mc> {
     //
 
     pub fn all_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -12725,7 +12641,7 @@ impl<'mc> CraftingInventory<'mc> {
     //
 
     pub fn add_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -12740,7 +12656,7 @@ impl<'mc> CraftingInventory<'mc> {
     //
 
     pub fn set_item(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -12764,7 +12680,7 @@ impl<'mc> CraftingInventory<'mc> {
     //
 
     pub fn holder(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::InventoryHolder<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/InventoryHolder;");
         let res = self
@@ -12777,7 +12693,7 @@ impl<'mc> CraftingInventory<'mc> {
     }
     //
 
-    pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -12787,7 +12703,7 @@ impl<'mc> CraftingInventory<'mc> {
     }
     //
 
-    pub fn set_max_stack_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -12802,7 +12718,7 @@ impl<'mc> CraftingInventory<'mc> {
     //
 
     pub fn remove_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -12819,7 +12735,7 @@ impl<'mc> CraftingInventory<'mc> {
     //
 
     pub fn set_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -12834,7 +12750,7 @@ impl<'mc> CraftingInventory<'mc> {
     //
 
     pub fn set_storage_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -12850,7 +12766,7 @@ impl<'mc> CraftingInventory<'mc> {
     //
 
     pub fn contains_at_least(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
         arg1: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12873,7 +12789,7 @@ impl<'mc> CraftingInventory<'mc> {
     }
     //
 
-    pub fn first_empty(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -12884,7 +12800,7 @@ impl<'mc> CraftingInventory<'mc> {
     //
 
     pub fn viewers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -12903,7 +12819,7 @@ impl<'mc> CraftingInventory<'mc> {
     //
 
     pub fn remove_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -12924,10 +12840,7 @@ impl<'mc> CraftingInventory<'mc> {
     }
     //
 
-    pub fn clear(
-        &mut self,
-        arg0: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self, arg0: std::option::Option<i32>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
@@ -12944,7 +12857,7 @@ impl<'mc> CraftingInventory<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -12955,7 +12868,7 @@ impl<'mc> CraftingInventory<'mc> {
     //@NotNull
 
     pub fn iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -12977,7 +12890,7 @@ impl<'mc> CraftingInventory<'mc> {
     //
 
     pub fn contains_with_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -13003,7 +12916,7 @@ impl<'mc> CraftingInventory<'mc> {
     //
 
     pub fn first_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -13024,7 +12937,7 @@ impl<'mc> CraftingInventory<'mc> {
     }
     //
 
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -13037,7 +12950,7 @@ impl<'mc> CraftingInventory<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::event::inventory::InventoryType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/inventory/InventoryType;");
         let res = self
@@ -13063,7 +12976,7 @@ impl<'mc> CraftingInventory<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -13193,9 +13106,7 @@ impl<'mc> MerchantRecipe<'mc> {
     }
     //
 
-    pub fn result(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -13208,7 +13119,7 @@ impl<'mc> MerchantRecipe<'mc> {
     //
 
     pub fn add_ingredient(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -13226,7 +13137,7 @@ impl<'mc> MerchantRecipe<'mc> {
     }
     //
 
-    pub fn remove_ingredient(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn remove_ingredient(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -13241,7 +13152,7 @@ impl<'mc> MerchantRecipe<'mc> {
     //
 
     pub fn set_ingredients(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
@@ -13272,7 +13183,7 @@ impl<'mc> MerchantRecipe<'mc> {
     //
 
     pub fn ingredients(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -13291,7 +13202,7 @@ impl<'mc> MerchantRecipe<'mc> {
     //
 
     pub fn adjusted_ingredient1(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self.jni_ref().call_method(
@@ -13308,7 +13219,7 @@ impl<'mc> MerchantRecipe<'mc> {
     //
 
     pub fn adjust(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -13326,7 +13237,7 @@ impl<'mc> MerchantRecipe<'mc> {
     }
     //
 
-    pub fn demand(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn demand(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -13336,7 +13247,7 @@ impl<'mc> MerchantRecipe<'mc> {
     }
     //
 
-    pub fn price_multiplier(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+    pub fn price_multiplier(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13349,7 +13260,7 @@ impl<'mc> MerchantRecipe<'mc> {
     }
     //
 
-    pub fn special_price(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn special_price(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -13360,7 +13271,7 @@ impl<'mc> MerchantRecipe<'mc> {
     //
 
     /// Set the demand for this trade.
-    pub fn set_demand(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_demand(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -13375,7 +13286,7 @@ impl<'mc> MerchantRecipe<'mc> {
     //
 
     /// Set the special price for this trade.
-    pub fn set_special_price(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_special_price(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -13389,7 +13300,7 @@ impl<'mc> MerchantRecipe<'mc> {
     }
     //
 
-    pub fn uses(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn uses(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -13400,7 +13311,7 @@ impl<'mc> MerchantRecipe<'mc> {
     //
 
     /// Set the number of times this trade has been used.
-    pub fn set_uses(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_uses(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -13414,7 +13325,7 @@ impl<'mc> MerchantRecipe<'mc> {
     }
     //
 
-    pub fn max_uses(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_uses(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -13425,7 +13336,7 @@ impl<'mc> MerchantRecipe<'mc> {
     //
 
     /// Set the maximum number of uses this trade has.
-    pub fn set_max_uses(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_max_uses(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -13439,7 +13350,7 @@ impl<'mc> MerchantRecipe<'mc> {
     }
     //
 
-    pub fn has_experience_reward(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_experience_reward(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13453,7 +13364,7 @@ impl<'mc> MerchantRecipe<'mc> {
     //
 
     /// Set whether to reward experience to the player for the trade.
-    pub fn set_experience_reward(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_experience_reward(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -13468,7 +13379,7 @@ impl<'mc> MerchantRecipe<'mc> {
     }
     //
 
-    pub fn villager_experience(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn villager_experience(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13482,7 +13393,7 @@ impl<'mc> MerchantRecipe<'mc> {
     //
 
     /// Sets the amount of experience the villager earns from this trade.
-    pub fn set_villager_experience(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_villager_experience(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -13497,7 +13408,7 @@ impl<'mc> MerchantRecipe<'mc> {
     //
 
     /// Sets the price multiplier for the cost of this trade.
-    pub fn set_price_multiplier(&mut self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_price_multiplier(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
         let val_1 = jni::objects::JValueGen::Float(arg0.into());
         let res = self.jni_ref().call_method(
@@ -13512,7 +13423,7 @@ impl<'mc> MerchantRecipe<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -13538,7 +13449,7 @@ impl<'mc> MerchantRecipe<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -13555,7 +13466,7 @@ impl<'mc> MerchantRecipe<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -13569,7 +13480,7 @@ impl<'mc> MerchantRecipe<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -13579,7 +13490,7 @@ impl<'mc> MerchantRecipe<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -13589,7 +13500,7 @@ impl<'mc> MerchantRecipe<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -13599,7 +13510,7 @@ impl<'mc> MerchantRecipe<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -13656,7 +13567,7 @@ impl<'mc> MerchantInventory<'mc> {
     }
     //
 
-    pub fn selected_recipe_index(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn selected_recipe_index(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13670,7 +13581,7 @@ impl<'mc> MerchantInventory<'mc> {
     //
 
     pub fn selected_recipe(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::MerchantRecipe<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/MerchantRecipe;");
         let res = self.jni_ref().call_method(
@@ -13686,9 +13597,7 @@ impl<'mc> MerchantInventory<'mc> {
     }
     //
 
-    pub fn merchant(
-        &mut self,
-    ) -> Result<crate::inventory::Merchant<'mc>, Box<dyn std::error::Error>> {
+    pub fn merchant(&self) -> Result<crate::inventory::Merchant<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/Merchant;");
         let res =
             self.jni_ref()
@@ -13701,7 +13610,7 @@ impl<'mc> MerchantInventory<'mc> {
     //@Nullable
 
     pub fn get_item(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/inventory/ItemStack;");
@@ -13724,7 +13633,7 @@ impl<'mc> MerchantInventory<'mc> {
     //
 
     pub fn all_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -13748,7 +13657,7 @@ impl<'mc> MerchantInventory<'mc> {
     //
 
     pub fn add_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -13763,7 +13672,7 @@ impl<'mc> MerchantInventory<'mc> {
     //
 
     pub fn set_item(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -13787,7 +13696,7 @@ impl<'mc> MerchantInventory<'mc> {
     //
 
     pub fn holder(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::InventoryHolder<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/InventoryHolder;");
         let res = self
@@ -13800,7 +13709,7 @@ impl<'mc> MerchantInventory<'mc> {
     }
     //
 
-    pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -13810,7 +13719,7 @@ impl<'mc> MerchantInventory<'mc> {
     }
     //
 
-    pub fn set_max_stack_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -13825,7 +13734,7 @@ impl<'mc> MerchantInventory<'mc> {
     //
 
     pub fn remove_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -13842,7 +13751,7 @@ impl<'mc> MerchantInventory<'mc> {
     //
 
     pub fn set_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -13857,7 +13766,7 @@ impl<'mc> MerchantInventory<'mc> {
     //
 
     pub fn set_storage_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -13873,7 +13782,7 @@ impl<'mc> MerchantInventory<'mc> {
     //
 
     pub fn contains_at_least(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
         arg1: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -13896,7 +13805,7 @@ impl<'mc> MerchantInventory<'mc> {
     }
     //
 
-    pub fn first_empty(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -13907,7 +13816,7 @@ impl<'mc> MerchantInventory<'mc> {
     //
 
     pub fn viewers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -13926,7 +13835,7 @@ impl<'mc> MerchantInventory<'mc> {
     //
 
     pub fn remove_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -13947,10 +13856,7 @@ impl<'mc> MerchantInventory<'mc> {
     }
     //
 
-    pub fn clear(
-        &mut self,
-        arg0: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self, arg0: std::option::Option<i32>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
@@ -13967,7 +13873,7 @@ impl<'mc> MerchantInventory<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -13978,7 +13884,7 @@ impl<'mc> MerchantInventory<'mc> {
     //@NotNull
 
     pub fn iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -14000,7 +13906,7 @@ impl<'mc> MerchantInventory<'mc> {
     //
 
     pub fn contains_with_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14026,7 +13932,7 @@ impl<'mc> MerchantInventory<'mc> {
     //
 
     pub fn first_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -14047,7 +13953,7 @@ impl<'mc> MerchantInventory<'mc> {
     }
     //
 
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -14060,7 +13966,7 @@ impl<'mc> MerchantInventory<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::event::inventory::InventoryType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/inventory/InventoryType;");
         let res = self
@@ -14086,7 +13992,7 @@ impl<'mc> MerchantInventory<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -14140,9 +14046,7 @@ impl<'mc> LlamaInventory<'mc> {
     }
     //
 
-    pub fn decor(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn decor(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -14155,7 +14059,7 @@ impl<'mc> LlamaInventory<'mc> {
     //
 
     pub fn set_decor(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -14174,7 +14078,7 @@ impl<'mc> LlamaInventory<'mc> {
     //
 
     pub fn set_saddle(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -14192,9 +14096,7 @@ impl<'mc> LlamaInventory<'mc> {
     }
     //
 
-    pub fn saddle(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn saddle(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -14207,7 +14109,7 @@ impl<'mc> LlamaInventory<'mc> {
     //@Nullable
 
     pub fn get_item(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/inventory/ItemStack;");
@@ -14230,7 +14132,7 @@ impl<'mc> LlamaInventory<'mc> {
     //
 
     pub fn all_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -14254,7 +14156,7 @@ impl<'mc> LlamaInventory<'mc> {
     //
 
     pub fn add_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -14269,7 +14171,7 @@ impl<'mc> LlamaInventory<'mc> {
     //
 
     pub fn set_item(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -14293,7 +14195,7 @@ impl<'mc> LlamaInventory<'mc> {
     //
 
     pub fn holder(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::InventoryHolder<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/InventoryHolder;");
         let res = self
@@ -14306,7 +14208,7 @@ impl<'mc> LlamaInventory<'mc> {
     }
     //
 
-    pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -14316,7 +14218,7 @@ impl<'mc> LlamaInventory<'mc> {
     }
     //
 
-    pub fn set_max_stack_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -14331,7 +14233,7 @@ impl<'mc> LlamaInventory<'mc> {
     //
 
     pub fn remove_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -14348,7 +14250,7 @@ impl<'mc> LlamaInventory<'mc> {
     //
 
     pub fn set_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -14363,7 +14265,7 @@ impl<'mc> LlamaInventory<'mc> {
     //
 
     pub fn set_storage_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -14379,7 +14281,7 @@ impl<'mc> LlamaInventory<'mc> {
     //
 
     pub fn contains_at_least(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
         arg1: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14402,7 +14304,7 @@ impl<'mc> LlamaInventory<'mc> {
     }
     //
 
-    pub fn first_empty(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -14413,7 +14315,7 @@ impl<'mc> LlamaInventory<'mc> {
     //
 
     pub fn viewers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -14432,7 +14334,7 @@ impl<'mc> LlamaInventory<'mc> {
     //
 
     pub fn remove_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -14453,10 +14355,7 @@ impl<'mc> LlamaInventory<'mc> {
     }
     //
 
-    pub fn clear(
-        &mut self,
-        arg0: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self, arg0: std::option::Option<i32>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
@@ -14473,7 +14372,7 @@ impl<'mc> LlamaInventory<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -14484,7 +14383,7 @@ impl<'mc> LlamaInventory<'mc> {
     //@NotNull
 
     pub fn iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -14506,7 +14405,7 @@ impl<'mc> LlamaInventory<'mc> {
     //
 
     pub fn contains_with_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14532,7 +14431,7 @@ impl<'mc> LlamaInventory<'mc> {
     //
 
     pub fn first_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -14553,7 +14452,7 @@ impl<'mc> LlamaInventory<'mc> {
     }
     //
 
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -14566,7 +14465,7 @@ impl<'mc> LlamaInventory<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::event::inventory::InventoryType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/inventory/InventoryType;");
         let res = self
@@ -14592,7 +14491,7 @@ impl<'mc> LlamaInventory<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -14647,7 +14546,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     //@Nullable
 
     pub fn get_item(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/inventory/ItemStack;");
@@ -14670,7 +14569,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     //
 
     pub fn all_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -14694,7 +14593,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     //
 
     pub fn add_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -14709,7 +14608,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     //
 
     pub fn set_item(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -14733,7 +14632,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     //
 
     pub fn holder(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::InventoryHolder<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/InventoryHolder;");
         let res = self
@@ -14746,7 +14645,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     }
     //
 
-    pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -14756,7 +14655,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     }
     //
 
-    pub fn set_max_stack_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -14771,7 +14670,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     //
 
     pub fn remove_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -14788,7 +14687,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     //
 
     pub fn set_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -14803,7 +14702,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     //
 
     pub fn set_storage_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -14819,7 +14718,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     //
 
     pub fn contains_at_least(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
         arg1: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14842,7 +14741,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     }
     //
 
-    pub fn first_empty(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -14853,7 +14752,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     //
 
     pub fn viewers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -14872,7 +14771,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     //
 
     pub fn remove_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -14893,10 +14792,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     }
     //
 
-    pub fn clear(
-        &mut self,
-        arg0: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self, arg0: std::option::Option<i32>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
@@ -14913,7 +14809,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -14924,7 +14820,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     //@NotNull
 
     pub fn iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -14946,7 +14842,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     //
 
     pub fn contains_with_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14972,7 +14868,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     //
 
     pub fn first_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -14993,7 +14889,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     }
     //
 
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -15006,7 +14902,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::event::inventory::InventoryType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/inventory/InventoryType;");
         let res = self
@@ -15032,7 +14928,7 @@ impl<'mc> GrindstoneInventory<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -15132,7 +15028,7 @@ impl<'mc> CookingRecipe<'mc> {
     //
 
     pub fn set_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
     ) -> Result<crate::inventory::CookingRecipe<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/Material;)Lorg/bukkit/inventory/CookingRecipe;");
@@ -15152,9 +15048,7 @@ impl<'mc> CookingRecipe<'mc> {
     }
     //
 
-    pub fn input(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn input(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -15166,9 +15060,7 @@ impl<'mc> CookingRecipe<'mc> {
     }
     //
 
-    pub fn result(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -15181,7 +15073,7 @@ impl<'mc> CookingRecipe<'mc> {
     //
 
     pub fn category(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::recipe::CookingBookCategory<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/recipe/CookingBookCategory;");
@@ -15209,7 +15101,7 @@ impl<'mc> CookingRecipe<'mc> {
     //
 
     pub fn set_input_choice(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::RecipeChoice<'mc>>,
     ) -> Result<crate::inventory::CookingRecipe<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from(
@@ -15232,7 +15124,7 @@ impl<'mc> CookingRecipe<'mc> {
     //
 
     pub fn input_choice(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/RecipeChoice;");
         let res =
@@ -15245,7 +15137,7 @@ impl<'mc> CookingRecipe<'mc> {
     }
     //
 
-    pub fn group(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -15259,7 +15151,7 @@ impl<'mc> CookingRecipe<'mc> {
     }
     //
 
-    pub fn set_group(&mut self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_group(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -15276,7 +15168,7 @@ impl<'mc> CookingRecipe<'mc> {
     //
 
     pub fn set_category(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::recipe::CookingBookCategory<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/recipe/CookingBookCategory;)V");
@@ -15294,7 +15186,7 @@ impl<'mc> CookingRecipe<'mc> {
     }
     //
 
-    pub fn experience(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+    pub fn experience(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
         let res =
             self.jni_ref()
@@ -15305,7 +15197,7 @@ impl<'mc> CookingRecipe<'mc> {
     //
 
     /// Sets the experience given by this recipe.
-    pub fn set_experience(&mut self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_experience(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
         let val_1 = jni::objects::JValueGen::Float(arg0.into());
         let res = self.jni_ref().call_method(
@@ -15320,7 +15212,7 @@ impl<'mc> CookingRecipe<'mc> {
     //
 
     /// Set the cooking time for this recipe in ticks.
-    pub fn set_cooking_time(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_cooking_time(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -15334,7 +15226,7 @@ impl<'mc> CookingRecipe<'mc> {
     }
     //
 
-    pub fn cooking_time(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn cooking_time(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -15344,7 +15236,7 @@ impl<'mc> CookingRecipe<'mc> {
     }
     //
 
-    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self
             .jni_ref()
@@ -15357,7 +15249,7 @@ impl<'mc> CookingRecipe<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -15383,7 +15275,7 @@ impl<'mc> CookingRecipe<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -15400,7 +15292,7 @@ impl<'mc> CookingRecipe<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -15414,7 +15306,7 @@ impl<'mc> CookingRecipe<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -15424,7 +15316,7 @@ impl<'mc> CookingRecipe<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -15434,7 +15326,7 @@ impl<'mc> CookingRecipe<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -15444,7 +15336,7 @@ impl<'mc> CookingRecipe<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -15506,7 +15398,7 @@ impl<'mc> StonecutterInventory<'mc> {
     //@Nullable
 
     pub fn get_item(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/inventory/ItemStack;");
@@ -15529,7 +15421,7 @@ impl<'mc> StonecutterInventory<'mc> {
     //
 
     pub fn all_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -15553,7 +15445,7 @@ impl<'mc> StonecutterInventory<'mc> {
     //
 
     pub fn add_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -15568,7 +15460,7 @@ impl<'mc> StonecutterInventory<'mc> {
     //
 
     pub fn set_item(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -15592,7 +15484,7 @@ impl<'mc> StonecutterInventory<'mc> {
     //
 
     pub fn holder(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::InventoryHolder<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/InventoryHolder;");
         let res = self
@@ -15605,7 +15497,7 @@ impl<'mc> StonecutterInventory<'mc> {
     }
     //
 
-    pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -15615,7 +15507,7 @@ impl<'mc> StonecutterInventory<'mc> {
     }
     //
 
-    pub fn set_max_stack_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -15630,7 +15522,7 @@ impl<'mc> StonecutterInventory<'mc> {
     //
 
     pub fn remove_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -15647,7 +15539,7 @@ impl<'mc> StonecutterInventory<'mc> {
     //
 
     pub fn set_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -15662,7 +15554,7 @@ impl<'mc> StonecutterInventory<'mc> {
     //
 
     pub fn set_storage_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -15678,7 +15570,7 @@ impl<'mc> StonecutterInventory<'mc> {
     //
 
     pub fn contains_at_least(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
         arg1: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -15701,7 +15593,7 @@ impl<'mc> StonecutterInventory<'mc> {
     }
     //
 
-    pub fn first_empty(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -15712,7 +15604,7 @@ impl<'mc> StonecutterInventory<'mc> {
     //
 
     pub fn viewers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -15731,7 +15623,7 @@ impl<'mc> StonecutterInventory<'mc> {
     //
 
     pub fn remove_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -15752,10 +15644,7 @@ impl<'mc> StonecutterInventory<'mc> {
     }
     //
 
-    pub fn clear(
-        &mut self,
-        arg0: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self, arg0: std::option::Option<i32>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
@@ -15772,7 +15661,7 @@ impl<'mc> StonecutterInventory<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -15783,7 +15672,7 @@ impl<'mc> StonecutterInventory<'mc> {
     //@NotNull
 
     pub fn iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -15805,7 +15694,7 @@ impl<'mc> StonecutterInventory<'mc> {
     //
 
     pub fn contains_with_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -15831,7 +15720,7 @@ impl<'mc> StonecutterInventory<'mc> {
     //
 
     pub fn first_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -15852,7 +15741,7 @@ impl<'mc> StonecutterInventory<'mc> {
     }
     //
 
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -15865,7 +15754,7 @@ impl<'mc> StonecutterInventory<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::event::inventory::InventoryType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/inventory/InventoryType;");
         let res = self
@@ -15891,7 +15780,7 @@ impl<'mc> StonecutterInventory<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -15940,6 +15829,11 @@ impl std::fmt::Display for CreativeCategoryEnum {
             CreativeCategoryEnum::Combat => f.write_str("COMBAT"),
             CreativeCategoryEnum::Brewing => f.write_str("BREWING"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for CreativeCategory<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct CreativeCategory<'mc>(
@@ -16068,9 +15962,7 @@ impl<'mc> SmithingInventory<'mc> {
     }
     //
 
-    pub fn result(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -16083,7 +15975,7 @@ impl<'mc> SmithingInventory<'mc> {
     //
 
     pub fn set_result(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -16101,7 +15993,7 @@ impl<'mc> SmithingInventory<'mc> {
     }
     //
 
-    pub fn recipe(&mut self) -> Result<crate::inventory::Recipe<'mc>, Box<dyn std::error::Error>> {
+    pub fn recipe(&self) -> Result<crate::inventory::Recipe<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/Recipe;");
         let res = self
             .jni_ref()
@@ -16114,7 +16006,7 @@ impl<'mc> SmithingInventory<'mc> {
     //@Nullable
 
     pub fn get_item(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/inventory/ItemStack;");
@@ -16137,7 +16029,7 @@ impl<'mc> SmithingInventory<'mc> {
     //
 
     pub fn all_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -16161,7 +16053,7 @@ impl<'mc> SmithingInventory<'mc> {
     //
 
     pub fn add_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -16176,7 +16068,7 @@ impl<'mc> SmithingInventory<'mc> {
     //
 
     pub fn set_item(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -16200,7 +16092,7 @@ impl<'mc> SmithingInventory<'mc> {
     //
 
     pub fn holder(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::InventoryHolder<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/InventoryHolder;");
         let res = self
@@ -16213,7 +16105,7 @@ impl<'mc> SmithingInventory<'mc> {
     }
     //
 
-    pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -16223,7 +16115,7 @@ impl<'mc> SmithingInventory<'mc> {
     }
     //
 
-    pub fn set_max_stack_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -16238,7 +16130,7 @@ impl<'mc> SmithingInventory<'mc> {
     //
 
     pub fn remove_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -16255,7 +16147,7 @@ impl<'mc> SmithingInventory<'mc> {
     //
 
     pub fn set_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -16270,7 +16162,7 @@ impl<'mc> SmithingInventory<'mc> {
     //
 
     pub fn set_storage_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -16286,7 +16178,7 @@ impl<'mc> SmithingInventory<'mc> {
     //
 
     pub fn contains_at_least(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
         arg1: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -16309,7 +16201,7 @@ impl<'mc> SmithingInventory<'mc> {
     }
     //
 
-    pub fn first_empty(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -16320,7 +16212,7 @@ impl<'mc> SmithingInventory<'mc> {
     //
 
     pub fn viewers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -16339,7 +16231,7 @@ impl<'mc> SmithingInventory<'mc> {
     //
 
     pub fn remove_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -16360,10 +16252,7 @@ impl<'mc> SmithingInventory<'mc> {
     }
     //
 
-    pub fn clear(
-        &mut self,
-        arg0: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self, arg0: std::option::Option<i32>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
@@ -16380,7 +16269,7 @@ impl<'mc> SmithingInventory<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -16391,7 +16280,7 @@ impl<'mc> SmithingInventory<'mc> {
     //@NotNull
 
     pub fn iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -16413,7 +16302,7 @@ impl<'mc> SmithingInventory<'mc> {
     //
 
     pub fn contains_with_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -16439,7 +16328,7 @@ impl<'mc> SmithingInventory<'mc> {
     //
 
     pub fn first_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -16460,7 +16349,7 @@ impl<'mc> SmithingInventory<'mc> {
     }
     //
 
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -16473,7 +16362,7 @@ impl<'mc> SmithingInventory<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::event::inventory::InventoryType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/inventory/InventoryType;");
         let res = self
@@ -16499,7 +16388,7 @@ impl<'mc> SmithingInventory<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -16554,7 +16443,7 @@ impl<'mc> PlayerInventory<'mc> {
     //@Nullable
 
     pub fn get_item_with_equipment_slot(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -16580,7 +16469,7 @@ impl<'mc> PlayerInventory<'mc> {
     //
 
     pub fn set_item_with_equipment_slot(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -16605,9 +16494,7 @@ impl<'mc> PlayerInventory<'mc> {
     }
     //
 
-    pub fn holder(
-        &mut self,
-    ) -> Result<crate::entity::HumanEntity<'mc>, Box<dyn std::error::Error>> {
+    pub fn holder(&self) -> Result<crate::entity::HumanEntity<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/HumanEntity;";
@@ -16622,7 +16509,7 @@ impl<'mc> PlayerInventory<'mc> {
     //
 
     pub fn item_in_hand(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res =
@@ -16636,7 +16523,7 @@ impl<'mc> PlayerInventory<'mc> {
     //
 
     pub fn set_item_in_hand(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -16654,9 +16541,7 @@ impl<'mc> PlayerInventory<'mc> {
     }
     //
 
-    pub fn boots(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn boots(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -16669,7 +16554,7 @@ impl<'mc> PlayerInventory<'mc> {
     //
 
     pub fn set_boots(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -16687,9 +16572,7 @@ impl<'mc> PlayerInventory<'mc> {
     }
     //
 
-    pub fn leggings(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn leggings(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res =
             self.jni_ref()
@@ -16702,7 +16585,7 @@ impl<'mc> PlayerInventory<'mc> {
     //
 
     pub fn set_leggings(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -16721,7 +16604,7 @@ impl<'mc> PlayerInventory<'mc> {
     //
 
     pub fn chestplate(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res =
@@ -16735,7 +16618,7 @@ impl<'mc> PlayerInventory<'mc> {
     //
 
     pub fn set_chestplate(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -16753,9 +16636,7 @@ impl<'mc> PlayerInventory<'mc> {
     }
     //
 
-    pub fn helmet(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn helmet(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -16768,7 +16649,7 @@ impl<'mc> PlayerInventory<'mc> {
     //
 
     pub fn set_helmet(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -16787,7 +16668,7 @@ impl<'mc> PlayerInventory<'mc> {
     //
 
     pub fn item_in_main_hand(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self.jni_ref().call_method(
@@ -16804,7 +16685,7 @@ impl<'mc> PlayerInventory<'mc> {
     //
 
     pub fn set_item_in_main_hand(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -16823,7 +16704,7 @@ impl<'mc> PlayerInventory<'mc> {
     //
 
     pub fn item_in_off_hand(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self.jni_ref().call_method(
@@ -16840,7 +16721,7 @@ impl<'mc> PlayerInventory<'mc> {
     //
 
     pub fn set_item_in_off_hand(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -16861,7 +16742,7 @@ impl<'mc> PlayerInventory<'mc> {
     //
 
     pub fn set_armor_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -16879,7 +16760,7 @@ impl<'mc> PlayerInventory<'mc> {
     //
 
     pub fn set_extra_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -16894,7 +16775,7 @@ impl<'mc> PlayerInventory<'mc> {
     }
     //
 
-    pub fn held_item_slot(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn held_item_slot(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -16906,7 +16787,7 @@ impl<'mc> PlayerInventory<'mc> {
 
     /// Set the slot number of the currently held item.
     /// <p>This validates whether the slot is between 0 and 8 inclusive.</p>
-    pub fn set_held_item_slot(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_held_item_slot(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -16921,7 +16802,7 @@ impl<'mc> PlayerInventory<'mc> {
     //
 
     pub fn all_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -16945,7 +16826,7 @@ impl<'mc> PlayerInventory<'mc> {
     //
 
     pub fn add_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -16959,7 +16840,7 @@ impl<'mc> PlayerInventory<'mc> {
     }
     //
 
-    pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -16969,7 +16850,7 @@ impl<'mc> PlayerInventory<'mc> {
     }
     //
 
-    pub fn set_max_stack_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -16984,7 +16865,7 @@ impl<'mc> PlayerInventory<'mc> {
     //
 
     pub fn remove_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -17001,7 +16882,7 @@ impl<'mc> PlayerInventory<'mc> {
     //
 
     pub fn set_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -17016,7 +16897,7 @@ impl<'mc> PlayerInventory<'mc> {
     //
 
     pub fn set_storage_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -17032,7 +16913,7 @@ impl<'mc> PlayerInventory<'mc> {
     //
 
     pub fn contains_at_least(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
         arg1: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -17055,7 +16936,7 @@ impl<'mc> PlayerInventory<'mc> {
     }
     //
 
-    pub fn first_empty(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -17066,7 +16947,7 @@ impl<'mc> PlayerInventory<'mc> {
     //
 
     pub fn viewers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -17085,7 +16966,7 @@ impl<'mc> PlayerInventory<'mc> {
     //
 
     pub fn remove_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -17106,10 +16987,7 @@ impl<'mc> PlayerInventory<'mc> {
     }
     //
 
-    pub fn clear(
-        &mut self,
-        arg0: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self, arg0: std::option::Option<i32>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
@@ -17126,7 +17004,7 @@ impl<'mc> PlayerInventory<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -17137,7 +17015,7 @@ impl<'mc> PlayerInventory<'mc> {
     //@NotNull
 
     pub fn iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -17159,7 +17037,7 @@ impl<'mc> PlayerInventory<'mc> {
     //
 
     pub fn contains_with_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -17185,7 +17063,7 @@ impl<'mc> PlayerInventory<'mc> {
     //
 
     pub fn first_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -17206,7 +17084,7 @@ impl<'mc> PlayerInventory<'mc> {
     }
     //
 
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -17219,7 +17097,7 @@ impl<'mc> PlayerInventory<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::event::inventory::InventoryType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/inventory/InventoryType;");
         let res = self
@@ -17245,7 +17123,7 @@ impl<'mc> PlayerInventory<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -17299,9 +17177,7 @@ impl<'mc> FurnaceInventory<'mc> {
     }
     //
 
-    pub fn result(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -17314,7 +17190,7 @@ impl<'mc> FurnaceInventory<'mc> {
     //
 
     pub fn set_result(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -17333,7 +17209,7 @@ impl<'mc> FurnaceInventory<'mc> {
     //
 
     pub fn set_fuel(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -17351,7 +17227,7 @@ impl<'mc> FurnaceInventory<'mc> {
     }
     //
 
-    pub fn fuel(&mut self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn fuel(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -17363,9 +17239,7 @@ impl<'mc> FurnaceInventory<'mc> {
     }
     //
 
-    pub fn smelting(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn smelting(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res =
             self.jni_ref()
@@ -17378,7 +17252,7 @@ impl<'mc> FurnaceInventory<'mc> {
     //
 
     pub fn set_smelting(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -17397,7 +17271,7 @@ impl<'mc> FurnaceInventory<'mc> {
     //
 
     pub fn holder(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::InventoryHolder<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -17413,7 +17287,7 @@ impl<'mc> FurnaceInventory<'mc> {
     //@Nullable
 
     pub fn get_item(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/inventory/ItemStack;");
@@ -17436,7 +17310,7 @@ impl<'mc> FurnaceInventory<'mc> {
     //
 
     pub fn all_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -17460,7 +17334,7 @@ impl<'mc> FurnaceInventory<'mc> {
     //
 
     pub fn add_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -17475,7 +17349,7 @@ impl<'mc> FurnaceInventory<'mc> {
     //
 
     pub fn set_item(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -17498,7 +17372,7 @@ impl<'mc> FurnaceInventory<'mc> {
     }
     //
 
-    pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -17508,7 +17382,7 @@ impl<'mc> FurnaceInventory<'mc> {
     }
     //
 
-    pub fn set_max_stack_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -17523,7 +17397,7 @@ impl<'mc> FurnaceInventory<'mc> {
     //
 
     pub fn remove_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -17540,7 +17414,7 @@ impl<'mc> FurnaceInventory<'mc> {
     //
 
     pub fn set_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -17555,7 +17429,7 @@ impl<'mc> FurnaceInventory<'mc> {
     //
 
     pub fn set_storage_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -17571,7 +17445,7 @@ impl<'mc> FurnaceInventory<'mc> {
     //
 
     pub fn contains_at_least(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
         arg1: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -17594,7 +17468,7 @@ impl<'mc> FurnaceInventory<'mc> {
     }
     //
 
-    pub fn first_empty(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -17605,7 +17479,7 @@ impl<'mc> FurnaceInventory<'mc> {
     //
 
     pub fn viewers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -17624,7 +17498,7 @@ impl<'mc> FurnaceInventory<'mc> {
     //
 
     pub fn remove_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -17645,10 +17519,7 @@ impl<'mc> FurnaceInventory<'mc> {
     }
     //
 
-    pub fn clear(
-        &mut self,
-        arg0: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self, arg0: std::option::Option<i32>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
@@ -17665,7 +17536,7 @@ impl<'mc> FurnaceInventory<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -17676,7 +17547,7 @@ impl<'mc> FurnaceInventory<'mc> {
     //@NotNull
 
     pub fn iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -17698,7 +17569,7 @@ impl<'mc> FurnaceInventory<'mc> {
     //
 
     pub fn contains_with_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -17724,7 +17595,7 @@ impl<'mc> FurnaceInventory<'mc> {
     //
 
     pub fn first_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -17745,7 +17616,7 @@ impl<'mc> FurnaceInventory<'mc> {
     }
     //
 
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -17758,7 +17629,7 @@ impl<'mc> FurnaceInventory<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::event::inventory::InventoryType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/inventory/InventoryType;");
         let res = self
@@ -17784,7 +17655,7 @@ impl<'mc> FurnaceInventory<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -17841,7 +17712,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     //
 
     pub fn set_saddle(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -17859,9 +17730,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     }
     //
 
-    pub fn saddle(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn saddle(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -17874,7 +17743,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     //@Nullable
 
     pub fn get_item(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/inventory/ItemStack;");
@@ -17897,7 +17766,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     //
 
     pub fn all_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -17921,7 +17790,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     //
 
     pub fn add_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -17936,7 +17805,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     //
 
     pub fn set_item(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -17960,7 +17829,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     //
 
     pub fn holder(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::InventoryHolder<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/InventoryHolder;");
         let res = self
@@ -17973,7 +17842,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     }
     //
 
-    pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -17983,7 +17852,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     }
     //
 
-    pub fn set_max_stack_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -17998,7 +17867,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     //
 
     pub fn remove_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -18015,7 +17884,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     //
 
     pub fn set_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -18030,7 +17899,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     //
 
     pub fn set_storage_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -18046,7 +17915,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     //
 
     pub fn contains_at_least(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
         arg1: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -18069,7 +17938,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     }
     //
 
-    pub fn first_empty(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -18080,7 +17949,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     //
 
     pub fn viewers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -18099,7 +17968,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     //
 
     pub fn remove_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -18120,10 +17989,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     }
     //
 
-    pub fn clear(
-        &mut self,
-        arg0: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self, arg0: std::option::Option<i32>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
@@ -18140,7 +18006,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -18151,7 +18017,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     //@NotNull
 
     pub fn iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -18173,7 +18039,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     //
 
     pub fn contains_with_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -18199,7 +18065,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     //
 
     pub fn first_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -18220,7 +18086,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     }
     //
 
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -18233,7 +18099,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::event::inventory::InventoryType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/inventory/InventoryType;");
         let res = self
@@ -18259,7 +18125,7 @@ impl<'mc> AbstractHorseInventory<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -18314,7 +18180,7 @@ impl<'mc> BeaconInventory<'mc> {
     //@Nullable
 
     pub fn get_item(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/inventory/ItemStack;");
@@ -18337,7 +18203,7 @@ impl<'mc> BeaconInventory<'mc> {
     //
 
     pub fn set_item_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -18365,7 +18231,7 @@ impl<'mc> BeaconInventory<'mc> {
     //
 
     pub fn all_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -18389,7 +18255,7 @@ impl<'mc> BeaconInventory<'mc> {
     //
 
     pub fn add_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -18404,7 +18270,7 @@ impl<'mc> BeaconInventory<'mc> {
     //
 
     pub fn holder(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::InventoryHolder<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/InventoryHolder;");
         let res = self
@@ -18417,7 +18283,7 @@ impl<'mc> BeaconInventory<'mc> {
     }
     //
 
-    pub fn max_stack_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -18427,7 +18293,7 @@ impl<'mc> BeaconInventory<'mc> {
     }
     //
 
-    pub fn set_max_stack_size(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -18442,7 +18308,7 @@ impl<'mc> BeaconInventory<'mc> {
     //
 
     pub fn remove_item(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<blackboxmc_java::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)Ljava/util/HashMap;");
@@ -18459,7 +18325,7 @@ impl<'mc> BeaconInventory<'mc> {
     //
 
     pub fn set_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -18474,7 +18340,7 @@ impl<'mc> BeaconInventory<'mc> {
     //
 
     pub fn set_storage_contents(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -18490,7 +18356,7 @@ impl<'mc> BeaconInventory<'mc> {
     //
 
     pub fn contains_at_least(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
         arg1: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -18513,7 +18379,7 @@ impl<'mc> BeaconInventory<'mc> {
     }
     //
 
-    pub fn first_empty(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -18524,7 +18390,7 @@ impl<'mc> BeaconInventory<'mc> {
     //
 
     pub fn viewers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -18543,7 +18409,7 @@ impl<'mc> BeaconInventory<'mc> {
     //
 
     pub fn remove_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -18564,10 +18430,7 @@ impl<'mc> BeaconInventory<'mc> {
     }
     //
 
-    pub fn clear(
-        &mut self,
-        arg0: std::option::Option<i32>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self, arg0: std::option::Option<i32>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
@@ -18584,7 +18447,7 @@ impl<'mc> BeaconInventory<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -18595,7 +18458,7 @@ impl<'mc> BeaconInventory<'mc> {
     //@NotNull
 
     pub fn iterator(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
     ) -> Result<blackboxmc_java::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -18617,7 +18480,7 @@ impl<'mc> BeaconInventory<'mc> {
     //
 
     pub fn contains_with_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -18643,7 +18506,7 @@ impl<'mc> BeaconInventory<'mc> {
     //
 
     pub fn first_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -18664,7 +18527,7 @@ impl<'mc> BeaconInventory<'mc> {
     }
     //
 
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -18677,7 +18540,7 @@ impl<'mc> BeaconInventory<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::event::inventory::InventoryType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/inventory/InventoryType;");
         let res = self
@@ -18703,7 +18566,7 @@ impl<'mc> BeaconInventory<'mc> {
     }
     //
 
-    pub fn size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -18800,7 +18663,7 @@ impl<'mc> SmithingTrimRecipe<'mc> {
     //
 
     pub fn template(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/RecipeChoice;");
         let res =
@@ -18813,9 +18676,7 @@ impl<'mc> SmithingTrimRecipe<'mc> {
     }
     //
 
-    pub fn result(
-        &mut self,
-    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -18827,9 +18688,7 @@ impl<'mc> SmithingTrimRecipe<'mc> {
     }
     //
 
-    pub fn base(
-        &mut self,
-    ) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
+    pub fn base(&self) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/RecipeChoice;");
         let res = self
             .jni_ref()
@@ -18842,7 +18701,7 @@ impl<'mc> SmithingTrimRecipe<'mc> {
     //
 
     pub fn addition(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/RecipeChoice;");
         let res =
@@ -18855,7 +18714,7 @@ impl<'mc> SmithingTrimRecipe<'mc> {
     }
     //
 
-    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self
             .jni_ref()
@@ -18868,7 +18727,7 @@ impl<'mc> SmithingTrimRecipe<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -18894,7 +18753,7 @@ impl<'mc> SmithingTrimRecipe<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -18911,7 +18770,7 @@ impl<'mc> SmithingTrimRecipe<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -18925,7 +18784,7 @@ impl<'mc> SmithingTrimRecipe<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -18935,7 +18794,7 @@ impl<'mc> SmithingTrimRecipe<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -18945,7 +18804,7 @@ impl<'mc> SmithingTrimRecipe<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -18955,7 +18814,7 @@ impl<'mc> SmithingTrimRecipe<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()

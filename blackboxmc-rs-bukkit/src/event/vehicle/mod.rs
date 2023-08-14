@@ -57,9 +57,7 @@ impl<'mc> VehicleUpdateEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -84,7 +82,7 @@ impl<'mc> VehicleUpdateEvent<'mc> {
     }
     //
 
-    pub fn vehicle(&mut self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
+    pub fn vehicle(&self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Vehicle;");
         let res =
             self.jni_ref()
@@ -96,7 +94,7 @@ impl<'mc> VehicleUpdateEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -110,7 +108,7 @@ impl<'mc> VehicleUpdateEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -121,7 +119,7 @@ impl<'mc> VehicleUpdateEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -147,7 +145,7 @@ impl<'mc> VehicleUpdateEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -164,7 +162,7 @@ impl<'mc> VehicleUpdateEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -178,7 +176,7 @@ impl<'mc> VehicleUpdateEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -188,7 +186,7 @@ impl<'mc> VehicleUpdateEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -198,7 +196,7 @@ impl<'mc> VehicleUpdateEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -208,7 +206,7 @@ impl<'mc> VehicleUpdateEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -296,7 +294,7 @@ impl<'mc> VehicleEnterEvent<'mc> {
     }
     //
 
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -306,9 +304,7 @@ impl<'mc> VehicleEnterEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -322,7 +318,7 @@ impl<'mc> VehicleEnterEvent<'mc> {
 
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
-    pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -350,7 +346,7 @@ impl<'mc> VehicleEnterEvent<'mc> {
     }
     //
 
-    pub fn entered(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    pub fn entered(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res =
             self.jni_ref()
@@ -362,7 +358,7 @@ impl<'mc> VehicleEnterEvent<'mc> {
     }
     //
 
-    pub fn vehicle(&mut self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
+    pub fn vehicle(&self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Vehicle;");
         let res =
             self.jni_ref()
@@ -374,7 +370,7 @@ impl<'mc> VehicleEnterEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -388,7 +384,7 @@ impl<'mc> VehicleEnterEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -399,7 +395,7 @@ impl<'mc> VehicleEnterEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -425,7 +421,7 @@ impl<'mc> VehicleEnterEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -442,7 +438,7 @@ impl<'mc> VehicleEnterEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -456,7 +452,7 @@ impl<'mc> VehicleEnterEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -466,7 +462,7 @@ impl<'mc> VehicleEnterEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -476,7 +472,7 @@ impl<'mc> VehicleEnterEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -486,7 +482,7 @@ impl<'mc> VehicleEnterEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -582,7 +578,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
     }
     //
 
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -592,9 +588,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -606,7 +600,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
     }
     //
 
-    pub fn entity(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res = self
             .jni_ref()
@@ -620,7 +614,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
 
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
-    pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -648,7 +642,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
     }
     //
 
-    pub fn is_pickup_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_pickup_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -661,7 +655,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
     }
     //
 
-    pub fn set_pickup_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_pickup_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -676,7 +670,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
     }
     //
 
-    pub fn is_collision_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_collision_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -689,10 +683,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
     }
     //
 
-    pub fn set_collision_cancelled(
-        &mut self,
-        arg0: bool,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_collision_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -707,7 +698,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
     }
     //
 
-    pub fn vehicle(&mut self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
+    pub fn vehicle(&self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Vehicle;");
         let res =
             self.jni_ref()
@@ -719,7 +710,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -733,7 +724,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -744,7 +735,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -770,7 +761,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -787,7 +778,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -801,7 +792,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -811,7 +802,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -821,7 +812,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -831,7 +822,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -928,7 +919,7 @@ impl<'mc> VehicleExitEvent<'mc> {
     }
     //
 
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -938,9 +929,7 @@ impl<'mc> VehicleExitEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -954,7 +943,7 @@ impl<'mc> VehicleExitEvent<'mc> {
 
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
-    pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -982,9 +971,7 @@ impl<'mc> VehicleExitEvent<'mc> {
     }
     //
 
-    pub fn exited(
-        &mut self,
-    ) -> Result<crate::entity::LivingEntity<'mc>, Box<dyn std::error::Error>> {
+    pub fn exited(&self) -> Result<crate::entity::LivingEntity<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/LivingEntity;");
         let res = self
             .jni_ref()
@@ -996,7 +983,7 @@ impl<'mc> VehicleExitEvent<'mc> {
     }
     //
 
-    pub fn vehicle(&mut self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
+    pub fn vehicle(&self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Vehicle;");
         let res =
             self.jni_ref()
@@ -1008,7 +995,7 @@ impl<'mc> VehicleExitEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -1022,7 +1009,7 @@ impl<'mc> VehicleExitEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1033,7 +1020,7 @@ impl<'mc> VehicleExitEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1059,7 +1046,7 @@ impl<'mc> VehicleExitEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1076,7 +1063,7 @@ impl<'mc> VehicleExitEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1090,7 +1077,7 @@ impl<'mc> VehicleExitEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1100,7 +1087,7 @@ impl<'mc> VehicleExitEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1110,7 +1097,7 @@ impl<'mc> VehicleExitEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1120,7 +1107,7 @@ impl<'mc> VehicleExitEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1208,7 +1195,7 @@ impl<'mc> VehicleCollisionEvent<'mc> {
     }
     //
 
-    pub fn vehicle(&mut self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
+    pub fn vehicle(&self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Vehicle;");
         let res =
             self.jni_ref()
@@ -1220,9 +1207,7 @@ impl<'mc> VehicleCollisionEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -1234,7 +1219,7 @@ impl<'mc> VehicleCollisionEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -1248,7 +1233,7 @@ impl<'mc> VehicleCollisionEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1259,7 +1244,7 @@ impl<'mc> VehicleCollisionEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1285,7 +1270,7 @@ impl<'mc> VehicleCollisionEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1302,7 +1287,7 @@ impl<'mc> VehicleCollisionEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1316,7 +1301,7 @@ impl<'mc> VehicleCollisionEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1326,7 +1311,7 @@ impl<'mc> VehicleCollisionEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1336,7 +1321,7 @@ impl<'mc> VehicleCollisionEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1346,7 +1331,7 @@ impl<'mc> VehicleCollisionEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1437,9 +1422,7 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -1451,7 +1434,7 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
     }
     //
 
-    pub fn block(&mut self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
+    pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/Block;");
         let res = self
             .jni_ref()
@@ -1476,7 +1459,7 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
     }
     //
 
-    pub fn vehicle(&mut self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
+    pub fn vehicle(&self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Vehicle;");
         let res =
             self.jni_ref()
@@ -1488,7 +1471,7 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -1502,7 +1485,7 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1513,7 +1496,7 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1539,7 +1522,7 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1556,7 +1539,7 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1570,7 +1553,7 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1580,7 +1563,7 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1590,7 +1573,7 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1600,7 +1583,7 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1682,7 +1665,7 @@ impl<'mc> VehicleCreateEvent<'mc> {
     }
     //
 
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1692,9 +1675,7 @@ impl<'mc> VehicleCreateEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -1708,7 +1689,7 @@ impl<'mc> VehicleCreateEvent<'mc> {
 
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
-    pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -1736,7 +1717,7 @@ impl<'mc> VehicleCreateEvent<'mc> {
     }
     //
 
-    pub fn vehicle(&mut self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
+    pub fn vehicle(&self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Vehicle;");
         let res =
             self.jni_ref()
@@ -1748,7 +1729,7 @@ impl<'mc> VehicleCreateEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -1762,7 +1743,7 @@ impl<'mc> VehicleCreateEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1773,7 +1754,7 @@ impl<'mc> VehicleCreateEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1799,7 +1780,7 @@ impl<'mc> VehicleCreateEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1816,7 +1797,7 @@ impl<'mc> VehicleCreateEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1830,7 +1811,7 @@ impl<'mc> VehicleCreateEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1840,7 +1821,7 @@ impl<'mc> VehicleCreateEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1850,7 +1831,7 @@ impl<'mc> VehicleCreateEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1860,7 +1841,7 @@ impl<'mc> VehicleCreateEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1960,9 +1941,7 @@ impl<'mc> VehicleMoveEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -1987,7 +1966,7 @@ impl<'mc> VehicleMoveEvent<'mc> {
     }
     //
 
-    pub fn from(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn from(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res = self
             .jni_ref()
@@ -1999,7 +1978,7 @@ impl<'mc> VehicleMoveEvent<'mc> {
     }
     //
 
-    pub fn to(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn to(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res = self
             .jni_ref()
@@ -2011,7 +1990,7 @@ impl<'mc> VehicleMoveEvent<'mc> {
     }
     //
 
-    pub fn vehicle(&mut self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
+    pub fn vehicle(&self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Vehicle;");
         let res =
             self.jni_ref()
@@ -2023,7 +2002,7 @@ impl<'mc> VehicleMoveEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -2037,7 +2016,7 @@ impl<'mc> VehicleMoveEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -2048,7 +2027,7 @@ impl<'mc> VehicleMoveEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2074,7 +2053,7 @@ impl<'mc> VehicleMoveEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -2091,7 +2070,7 @@ impl<'mc> VehicleMoveEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2105,7 +2084,7 @@ impl<'mc> VehicleMoveEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2115,7 +2094,7 @@ impl<'mc> VehicleMoveEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -2125,7 +2104,7 @@ impl<'mc> VehicleMoveEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2135,7 +2114,7 @@ impl<'mc> VehicleMoveEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2223,7 +2202,7 @@ impl<'mc> VehicleDestroyEvent<'mc> {
     }
     //
 
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -2233,9 +2212,7 @@ impl<'mc> VehicleDestroyEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -2249,7 +2226,7 @@ impl<'mc> VehicleDestroyEvent<'mc> {
 
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
-    pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -2277,7 +2254,7 @@ impl<'mc> VehicleDestroyEvent<'mc> {
     }
     //
 
-    pub fn attacker(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    pub fn attacker(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res =
             self.jni_ref()
@@ -2289,7 +2266,7 @@ impl<'mc> VehicleDestroyEvent<'mc> {
     }
     //
 
-    pub fn vehicle(&mut self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
+    pub fn vehicle(&self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Vehicle;");
         let res =
             self.jni_ref()
@@ -2301,7 +2278,7 @@ impl<'mc> VehicleDestroyEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -2315,7 +2292,7 @@ impl<'mc> VehicleDestroyEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -2326,7 +2303,7 @@ impl<'mc> VehicleDestroyEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2352,7 +2329,7 @@ impl<'mc> VehicleDestroyEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -2369,7 +2346,7 @@ impl<'mc> VehicleDestroyEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2383,7 +2360,7 @@ impl<'mc> VehicleDestroyEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2393,7 +2370,7 @@ impl<'mc> VehicleDestroyEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -2403,7 +2380,7 @@ impl<'mc> VehicleDestroyEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2413,7 +2390,7 @@ impl<'mc> VehicleDestroyEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2510,7 +2487,7 @@ impl<'mc> VehicleDamageEvent<'mc> {
     }
     //
 
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -2520,9 +2497,7 @@ impl<'mc> VehicleDamageEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -2535,7 +2510,7 @@ impl<'mc> VehicleDamageEvent<'mc> {
     //
 
     /// Sets the damage done to the vehicle
-    pub fn set_damage(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_damage(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -2549,7 +2524,7 @@ impl<'mc> VehicleDamageEvent<'mc> {
     }
     //
 
-    pub fn damage(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn damage(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self
             .jni_ref()
@@ -2561,7 +2536,7 @@ impl<'mc> VehicleDamageEvent<'mc> {
 
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
-    pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -2589,7 +2564,7 @@ impl<'mc> VehicleDamageEvent<'mc> {
     }
     //
 
-    pub fn attacker(&mut self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    pub fn attacker(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res =
             self.jni_ref()
@@ -2601,7 +2576,7 @@ impl<'mc> VehicleDamageEvent<'mc> {
     }
     //
 
-    pub fn vehicle(&mut self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
+    pub fn vehicle(&self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Vehicle;");
         let res =
             self.jni_ref()
@@ -2613,7 +2588,7 @@ impl<'mc> VehicleDamageEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -2627,7 +2602,7 @@ impl<'mc> VehicleDamageEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -2638,7 +2613,7 @@ impl<'mc> VehicleDamageEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2664,7 +2639,7 @@ impl<'mc> VehicleDamageEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -2681,7 +2656,7 @@ impl<'mc> VehicleDamageEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2695,7 +2670,7 @@ impl<'mc> VehicleDamageEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2705,7 +2680,7 @@ impl<'mc> VehicleDamageEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -2715,7 +2690,7 @@ impl<'mc> VehicleDamageEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2725,7 +2700,7 @@ impl<'mc> VehicleDamageEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2809,7 +2784,7 @@ impl<'mc> VehicleEvent<'mc> {
     }
     //
 
-    pub fn vehicle(&mut self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
+    pub fn vehicle(&self) -> Result<crate::entity::Vehicle<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Vehicle;");
         let res =
             self.jni_ref()
@@ -2821,9 +2796,7 @@ impl<'mc> VehicleEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -2835,7 +2808,7 @@ impl<'mc> VehicleEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -2849,7 +2822,7 @@ impl<'mc> VehicleEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -2860,7 +2833,7 @@ impl<'mc> VehicleEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2886,7 +2859,7 @@ impl<'mc> VehicleEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -2903,7 +2876,7 @@ impl<'mc> VehicleEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2917,7 +2890,7 @@ impl<'mc> VehicleEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2927,7 +2900,7 @@ impl<'mc> VehicleEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -2937,7 +2910,7 @@ impl<'mc> VehicleEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2947,7 +2920,7 @@ impl<'mc> VehicleEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()

@@ -17,6 +17,11 @@ impl std::fmt::Display for DataPackCompatibilityEnum {
         }
     }
 }
+impl<'mc> std::fmt::Display for DataPackCompatibility<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
+    }
+}
 pub struct DataPackCompatibility<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -132,9 +137,7 @@ impl<'mc> DataPack<'mc> {
     }
     //
 
-    pub fn source(
-        &mut self,
-    ) -> Result<crate::packs::DataPackSource<'mc>, Box<dyn std::error::Error>> {
+    pub fn source(&self) -> Result<crate::packs::DataPackSource<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/packs/DataPack$Source;");
         let res = self
             .jni_ref()
@@ -159,7 +162,7 @@ impl<'mc> DataPack<'mc> {
     }
     //
 
-    pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn description(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -174,7 +177,7 @@ impl<'mc> DataPack<'mc> {
     //
 
     pub fn requested_features(
-        &mut self,
+        &self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self.jni_ref().call_method(
@@ -190,7 +193,7 @@ impl<'mc> DataPack<'mc> {
     }
     //
 
-    pub fn title(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn title(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -204,7 +207,7 @@ impl<'mc> DataPack<'mc> {
     }
     //
 
-    pub fn pack_format(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn pack_format(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -214,7 +217,7 @@ impl<'mc> DataPack<'mc> {
     }
     //
 
-    pub fn is_enabled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_enabled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -224,7 +227,7 @@ impl<'mc> DataPack<'mc> {
     }
     //
 
-    pub fn is_required(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_required(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -235,7 +238,7 @@ impl<'mc> DataPack<'mc> {
     //
 
     pub fn compatibility(
-        &mut self,
+        &self,
     ) -> Result<crate::packs::DataPackCompatibility<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/packs/DataPack$Compatibility;");
         let res = self.jni_ref().call_method(
@@ -264,7 +267,7 @@ impl<'mc> DataPack<'mc> {
     }
     //
 
-    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self
             .jni_ref()
@@ -321,7 +324,7 @@ impl<'mc> DataPackManager<'mc> {
     //
 
     pub fn get_enabled_data_packs(
-        &mut self,
+        &self,
         arg0: impl Into<crate::World<'mc>>,
     ) -> Result<Vec<crate::packs::DataPack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/World;)Ljava/util/Collection;");
@@ -347,7 +350,7 @@ impl<'mc> DataPackManager<'mc> {
     //
 
     pub fn data_packs(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::packs::DataPack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Collection;");
         let res =
@@ -366,7 +369,7 @@ impl<'mc> DataPackManager<'mc> {
     //
 
     pub fn get_data_pack(
-        &mut self,
+        &self,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
     ) -> Result<crate::packs::DataPack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/NamespacedKey;)Lorg/bukkit/packs/DataPack;");
@@ -387,7 +390,7 @@ impl<'mc> DataPackManager<'mc> {
     //
 
     pub fn get_disabled_data_packs(
-        &mut self,
+        &self,
         arg0: impl Into<crate::World<'mc>>,
     ) -> Result<Vec<crate::packs::DataPack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/World;)Ljava/util/Collection;");
@@ -413,7 +416,7 @@ impl<'mc> DataPackManager<'mc> {
     //
 
     pub fn is_enabled_by_feature_with_material(
-        &mut self,
+        &self,
         arg0: impl Into<crate::entity::EntityType<'mc>>,
         arg1: std::option::Option<impl Into<crate::World<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -469,6 +472,11 @@ impl std::fmt::Display for DataPackSourceEnum {
             DataPackSourceEnum::World => f.write_str("WORLD"),
             DataPackSourceEnum::Server => f.write_str("SERVER"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for DataPackSource<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct DataPackSource<'mc>(
@@ -576,6 +584,11 @@ impl std::fmt::Display for CompatibilityEnum {
         }
     }
 }
+impl<'mc> std::fmt::Display for Compatibility<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
+    }
+}
 pub struct Compatibility<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -675,6 +688,11 @@ impl std::fmt::Display for SourceEnum {
             SourceEnum::World => f.write_str("WORLD"),
             SourceEnum::Server => f.write_str("SERVER"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for Source<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct Source<'mc>(

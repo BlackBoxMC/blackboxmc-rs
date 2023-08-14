@@ -36,6 +36,11 @@ impl std::fmt::Display for MushroomBlockTextureEnum {
         }
     }
 }
+impl<'mc> std::fmt::Display for MushroomBlockTexture<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
+    }
+}
 pub struct MushroomBlockTexture<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,

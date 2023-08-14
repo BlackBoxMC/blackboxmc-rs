@@ -763,7 +763,11 @@ def java_letter_from_rust(type):
         case _:
             return "L"+type.replace(".","/").replace("Java","")+";"
 
-def gen_to_string_func(name):
+def gen_to_string_func(name, static):
+    if static:
+        call = "Self::internal_to_string(&self.0)"
+    else:
+        call = "self.to_string()"
     return """
         impl<'mc> std::string::ToString for """+name+"""<'mc> {
             fn to_string(&self) -> String {
@@ -855,6 +859,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         """)
 
     has_to_string = False
+    has_to_string_is_static = False
 
     names = {}
     methods_ = {}
@@ -969,11 +974,16 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
     for k in new_methods:
         method = new_methods[k]
 
+        static = method["method"]["modifiers"]&8 or is_constructor
+        types = method["method"]["parameters"]
+
         name = k
         if name == "to_string":
-            has_to_string = True
-            name = "internal_to_string"
-        types = method["method"]["parameters"]
+            if len(types) <= 0:
+                has_to_string = True
+                has_to_string_is_static = static
+                name = "internal_to_string"
+
 
         if "options_start_at" in method["method"]:
             options_start_at = method["method"]["options_start_at"]
@@ -983,10 +993,10 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         func_signature = []
         code = []
 
-        static = method["method"]["modifiers"]&8 or is_constructor
+
         if not static:
             func_signature.append({
-                "type_name_resolved": "&mut self",
+                "type_name_resolved": "&self",
                 "type_name_lhand": "",
                 "is_array": False,
                 "is_interface": False,
@@ -1165,7 +1175,8 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         file_cache[mod_path].append(impl)
 
     return {
-        "has_to_string": has_to_string
+        "has_to_string": has_to_string,
+        "has_to_string_is_static": has_to_string_is_static,
     }
 
 def format_comment(comment):
@@ -1263,6 +1274,12 @@ def parse_classes(library, val, classes):
         file_cache[mod_path].append("   }")
         file_cache[mod_path].append("}")
 
+        file_cache[mod_path].append("impl<'mc> std::fmt::Display for "+name+"<'mc> {")
+        file_cache[mod_path].append("   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {")
+        file_cache[mod_path].append("       self.2.fmt(f)")
+        file_cache[mod_path].append("   }")
+        file_cache[mod_path].append("}")
+
         file_cache[mod_path].append(
             "pub struct "+name+"<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>, pub "+name+"Enum);")
 
@@ -1292,14 +1309,16 @@ def parse_classes(library, val, classes):
         gen_from_raw_func(name, True, mod_path, full_name)
 
         has_to_string = False
+        has_to_string_is_static = False
         if "methods" in val:
             grp = parse_methods(library, name,val["methods"],mod_path,True,False,False,variants,False,full_name)
             has_to_string = grp["has_to_string"]
+            has_to_string_is_static = grp["has_to_string_is_static"]
 
         file_cache[mod_path].append("}")
 
         if has_to_string:
-            file_cache[mod_path].append(gen_to_string_func(name))
+            file_cache[mod_path].append(gen_to_string_func(name,has_to_string_is_static))
 
     elif val["isInterface"]: # interface generation
         file_cache[mod_path].append(
@@ -1314,15 +1333,17 @@ def parse_classes(library, val, classes):
         gen_from_raw_func(name, False, mod_path, full_name)
 
         has_to_string = False
+        has_to_string_is_static = False
 
         if "methods" in val:
             grp = parse_methods(library,name,val["methods"],mod_path,False,True,True,[],False,full_name)
             has_to_string = grp["has_to_string"]
+            has_to_string_is_static = grp["has_to_string_is_static"]
 
         file_cache[mod_path].append("}")
 
         if has_to_string:
-            file_cache[mod_path].append(gen_to_string_func(name))
+            file_cache[mod_path].append(gen_to_string_func(name,has_to_string_is_static))
 
         file_cache[mod_path].append("impl<'mc> JNIRaw<'mc> for "+name+"<'mc> {")
         file_cache[mod_path].append("    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {")
@@ -1363,15 +1384,17 @@ def parse_classes(library, val, classes):
             grp = parse_methods(library, name,val["constructors"],mod_path,False,False,False,[],True,full_name)
 
         has_to_string = False
+        has_to_string_is_static = False
 
         if "methods" in val:
             grp = parse_methods(library,name,val["methods"],mod_path,False,False,False,[],False,full_name)
             has_to_string = grp["has_to_string"]
+            has_to_string_is_static = grp["has_to_string_is_static"]
 
         file_cache[mod_path].append("}")
 
         if has_to_string:
-            file_cache[mod_path].append(gen_to_string_func(name))
+            file_cache[mod_path].append(gen_to_string_func(name,has_to_string_is_static))
 
 
     if not val["isEnum"]:

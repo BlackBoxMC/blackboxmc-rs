@@ -32,7 +32,7 @@ impl<'mc> PlayerTextures<'mc> {
     }
     //
 
-    pub fn is_signed(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_signed(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -42,7 +42,7 @@ impl<'mc> PlayerTextures<'mc> {
     }
     //
 
-    pub fn skin(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn skin(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/net/URL;");
         let res = self
             .jni_ref()
@@ -53,7 +53,7 @@ impl<'mc> PlayerTextures<'mc> {
     //
 
     pub fn set_skin_with_url(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<impl Into<crate::profile::PlayerTexturesSkinModel<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -81,7 +81,7 @@ impl<'mc> PlayerTextures<'mc> {
     //
 
     pub fn skin_model(
-        &mut self,
+        &self,
     ) -> Result<crate::profile::PlayerTexturesSkinModel<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/profile/PlayerTextures$SkinModel;");
         let res =
@@ -107,7 +107,7 @@ impl<'mc> PlayerTextures<'mc> {
     }
     //
 
-    pub fn cape(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn cape(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/net/URL;");
         let res = self
             .jni_ref()
@@ -118,7 +118,7 @@ impl<'mc> PlayerTextures<'mc> {
     //
 
     pub fn set_cape(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/net/URL;)V");
@@ -134,7 +134,7 @@ impl<'mc> PlayerTextures<'mc> {
     }
     //
 
-    pub fn timestamp(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
+    pub fn timestamp(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
         let res =
             self.jni_ref()
@@ -144,7 +144,7 @@ impl<'mc> PlayerTextures<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -154,7 +154,7 @@ impl<'mc> PlayerTextures<'mc> {
     }
     //
 
-    pub fn is_empty(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -184,6 +184,11 @@ impl std::fmt::Display for PlayerTexturesSkinModelEnum {
             PlayerTexturesSkinModelEnum::Classic => f.write_str("CLASSIC"),
             PlayerTexturesSkinModelEnum::Slim => f.write_str("SLIM"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for PlayerTexturesSkinModel<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct PlayerTexturesSkinModel<'mc>(
@@ -302,9 +307,7 @@ impl<'mc> PlayerProfile<'mc> {
     }
     //
 
-    pub fn unique_id(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+    pub fn unique_id(&self) -> Result<blackboxmc_java::JavaUUID<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/UUID;");
         let res =
             self.jni_ref()
@@ -317,7 +320,7 @@ impl<'mc> PlayerProfile<'mc> {
     //
 
     pub fn textures(
-        &mut self,
+        &self,
     ) -> Result<crate::profile::PlayerTextures<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/profile/PlayerTextures;");
         let res =
@@ -331,7 +334,7 @@ impl<'mc> PlayerProfile<'mc> {
     //
 
     pub fn set_textures(
-        &mut self,
+        &self,
         arg0: impl Into<crate::profile::PlayerTextures<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/profile/PlayerTextures;)V");
@@ -349,7 +352,7 @@ impl<'mc> PlayerProfile<'mc> {
     }
     //
 
-    pub fn is_complete(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_complete(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -359,7 +362,7 @@ impl<'mc> PlayerProfile<'mc> {
     }
     //
 
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -373,9 +376,7 @@ impl<'mc> PlayerProfile<'mc> {
     }
     //
 
-    pub fn clone(
-        &mut self,
-    ) -> Result<crate::profile::PlayerProfile<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<crate::profile::PlayerProfile<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/profile/PlayerProfile;";
@@ -389,9 +390,7 @@ impl<'mc> PlayerProfile<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -429,6 +428,11 @@ impl std::fmt::Display for SkinModelEnum {
             SkinModelEnum::Classic => f.write_str("CLASSIC"),
             SkinModelEnum::Slim => f.write_str("SLIM"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for SkinModel<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct SkinModel<'mc>(

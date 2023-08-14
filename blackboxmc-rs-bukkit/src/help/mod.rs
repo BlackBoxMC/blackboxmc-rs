@@ -48,7 +48,7 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
     //
 
     pub fn compare_with_string(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -72,7 +72,7 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -98,7 +98,7 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -115,7 +115,7 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -129,7 +129,7 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -139,7 +139,7 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -149,7 +149,7 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -159,7 +159,7 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -170,7 +170,7 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
     //
 
     pub fn reversed(
-        &mut self,
+        &self,
     ) -> Result<blackboxmc_java::JavaComparator<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Comparator;");
         let res = self
@@ -262,7 +262,7 @@ impl<'mc> HelpTopicComparator<'mc> {
     //
 
     pub fn compare_with_help_topic(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -286,7 +286,7 @@ impl<'mc> HelpTopicComparator<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -312,7 +312,7 @@ impl<'mc> HelpTopicComparator<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -329,7 +329,7 @@ impl<'mc> HelpTopicComparator<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -343,7 +343,7 @@ impl<'mc> HelpTopicComparator<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -353,7 +353,7 @@ impl<'mc> HelpTopicComparator<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -363,7 +363,7 @@ impl<'mc> HelpTopicComparator<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -373,7 +373,7 @@ impl<'mc> HelpTopicComparator<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -384,7 +384,7 @@ impl<'mc> HelpTopicComparator<'mc> {
     //
 
     pub fn reversed(
-        &mut self,
+        &self,
     ) -> Result<blackboxmc_java::JavaComparator<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Comparator;");
         let res = self
@@ -455,7 +455,7 @@ impl<'mc> HelpTopicFactory<'mc> {
     //
 
     pub fn create_topic(
-        &mut self,
+        &self,
         arg0: impl Into<crate::command::Command<'mc>>,
     ) -> Result<crate::help::HelpTopic<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/command/Command;)Lorg/bukkit/help/HelpTopic;");
@@ -541,7 +541,7 @@ impl<'mc> HelpTopic<'mc> {
     //
 
     pub fn can_see(
-        &mut self,
+        &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/command/CommandSender;)Z");
@@ -559,10 +559,7 @@ impl<'mc> HelpTopic<'mc> {
     }
     //
 
-    pub fn amend_can_see(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn amend_can_see(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -578,7 +575,7 @@ impl<'mc> HelpTopic<'mc> {
     }
     //
 
-    pub fn short_text(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn short_text(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -593,7 +590,7 @@ impl<'mc> HelpTopic<'mc> {
     //
 
     pub fn get_full_text(
-        &mut self,
+        &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/command/CommandSender;)Ljava/lang/String;");
@@ -616,7 +613,7 @@ impl<'mc> HelpTopic<'mc> {
     //
 
     pub fn amend_topic(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -641,7 +638,7 @@ impl<'mc> HelpTopic<'mc> {
     }
     //
 
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -656,7 +653,7 @@ impl<'mc> HelpTopic<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -682,7 +679,7 @@ impl<'mc> HelpTopic<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -699,7 +696,7 @@ impl<'mc> HelpTopic<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -713,7 +710,7 @@ impl<'mc> HelpTopic<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -723,7 +720,7 @@ impl<'mc> HelpTopic<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -733,7 +730,7 @@ impl<'mc> HelpTopic<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -743,7 +740,7 @@ impl<'mc> HelpTopic<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -797,7 +794,7 @@ impl<'mc> HelpMap<'mc> {
     //
 
     pub fn get_help_topic(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<crate::help::HelpTopic<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Lorg/bukkit/help/HelpTopic;");
@@ -818,7 +815,7 @@ impl<'mc> HelpMap<'mc> {
     //
 
     pub fn help_topics(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::help::HelpTopic<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Collection;");
         let res =
@@ -837,7 +834,7 @@ impl<'mc> HelpMap<'mc> {
     //
 
     pub fn add_topic(
-        &mut self,
+        &self,
         arg0: impl Into<crate::help::HelpTopic<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/help/HelpTopic;)V");
@@ -856,7 +853,7 @@ impl<'mc> HelpMap<'mc> {
     //
 
     pub fn register_help_topic_factory(
-        &mut self,
+        &self,
         arg0: jni::objects::JClass<'mc>,
         arg1: impl Into<crate::help::HelpTopicFactory<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -879,7 +876,7 @@ impl<'mc> HelpMap<'mc> {
     }
     //
 
-    pub fn ignored_plugins(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn ignored_plugins(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -904,7 +901,7 @@ impl<'mc> HelpMap<'mc> {
     }
     //
 
-    pub fn clear(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -961,7 +958,7 @@ impl<'mc> IndexHelpTopic<'mc> {
     //
 
     pub fn can_see(
-        &mut self,
+        &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/command/CommandSender;)Z");
@@ -979,10 +976,7 @@ impl<'mc> IndexHelpTopic<'mc> {
     }
     //
 
-    pub fn amend_can_see(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn amend_can_see(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -999,7 +993,7 @@ impl<'mc> IndexHelpTopic<'mc> {
     //
 
     pub fn get_full_text(
-        &mut self,
+        &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/command/CommandSender;)Ljava/lang/String;");
@@ -1021,7 +1015,7 @@ impl<'mc> IndexHelpTopic<'mc> {
     }
     //
 
-    pub fn short_text(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn short_text(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -1036,7 +1030,7 @@ impl<'mc> IndexHelpTopic<'mc> {
     //
 
     pub fn amend_topic(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1061,7 +1055,7 @@ impl<'mc> IndexHelpTopic<'mc> {
     }
     //
 
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1076,7 +1070,7 @@ impl<'mc> IndexHelpTopic<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1102,7 +1096,7 @@ impl<'mc> IndexHelpTopic<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1119,7 +1113,7 @@ impl<'mc> IndexHelpTopic<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1133,7 +1127,7 @@ impl<'mc> IndexHelpTopic<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1143,7 +1137,7 @@ impl<'mc> IndexHelpTopic<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1153,7 +1147,7 @@ impl<'mc> IndexHelpTopic<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1163,7 +1157,7 @@ impl<'mc> IndexHelpTopic<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1245,7 +1239,7 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
     //
 
     pub fn can_see(
-        &mut self,
+        &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/command/CommandSender;)Z");
@@ -1263,10 +1257,7 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
     }
     //
 
-    pub fn amend_can_see(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn amend_can_see(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -1282,7 +1273,7 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
     }
     //
 
-    pub fn short_text(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn short_text(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -1297,7 +1288,7 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
     //
 
     pub fn get_full_text(
-        &mut self,
+        &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/command/CommandSender;)Ljava/lang/String;");
@@ -1320,7 +1311,7 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
     //
 
     pub fn amend_topic(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1345,7 +1336,7 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
     }
     //
 
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1360,7 +1351,7 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1386,7 +1377,7 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1403,7 +1394,7 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1417,7 +1408,7 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1427,7 +1418,7 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1437,7 +1428,7 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1447,7 +1438,7 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()

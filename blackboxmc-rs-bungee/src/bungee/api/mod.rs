@@ -16,6 +16,11 @@ impl std::fmt::Display for ChatMessageTypeEnum {
         }
     }
 }
+impl<'mc> std::fmt::Display for ChatMessageType<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
+    }
+}
 pub struct ChatMessageType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -135,7 +140,7 @@ impl<'mc> ChatColor<'mc> {
     }
     //
 
-    pub fn color(&mut self) -> Result<(u8, u8, u8), Box<dyn std::error::Error>> {
+    pub fn color(&self) -> Result<(u8, u8, u8), Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/awt/Color;");
         let res = self
             .jni_ref()
@@ -239,7 +244,7 @@ impl<'mc> ChatColor<'mc> {
     }
     //
 
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/String;";
@@ -256,7 +261,7 @@ impl<'mc> ChatColor<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -273,7 +278,7 @@ impl<'mc> ChatColor<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -289,7 +294,7 @@ impl<'mc> ChatColor<'mc> {
 
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -322,7 +327,7 @@ impl<'mc> ChatColor<'mc> {
     }
     //
 
-    pub fn ordinal(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn ordinal(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -333,7 +338,7 @@ impl<'mc> ChatColor<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -358,7 +363,7 @@ impl<'mc> ChatColor<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -368,7 +373,7 @@ impl<'mc> ChatColor<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -378,7 +383,7 @@ impl<'mc> ChatColor<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()

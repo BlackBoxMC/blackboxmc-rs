@@ -18,6 +18,11 @@ impl std::fmt::Display for StructureRotationEnum {
         }
     }
 }
+impl<'mc> std::fmt::Display for StructureRotation<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
+    }
+}
 pub struct StructureRotation<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -123,6 +128,11 @@ impl std::fmt::Display for UsageModeEnum {
         }
     }
 }
+impl<'mc> std::fmt::Display for UsageMode<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
+    }
+}
 pub struct UsageMode<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -220,6 +230,11 @@ impl std::fmt::Display for MirrorEnum {
             MirrorEnum::LeftRight => f.write_str("LEFT_RIGHT"),
             MirrorEnum::FrontBack => f.write_str("FRONT_BACK"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for Mirror<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct Mirror<'mc>(

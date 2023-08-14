@@ -39,7 +39,7 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
     }
     //
 
-    pub fn color(&mut self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
+    pub fn color(&self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Color;");
         let res = self
             .jni_ref()
@@ -51,7 +51,7 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
     }
     //
 
-    pub fn is_instant(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_instant(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -61,7 +61,7 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
     }
     //
 
-    pub fn duration_modifier(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn duration_modifier(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -74,7 +74,7 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
     }
     //
 
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -89,7 +89,7 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::potion::PotionEffectType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/potion/PotionEffectType;");
         let res = self
@@ -125,7 +125,7 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
     //@NotNull
 
     pub fn create_effect(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: i32,
     ) -> Result<crate::potion::PotionEffect<'mc>, Box<dyn std::error::Error>> {
@@ -208,7 +208,7 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -225,7 +225,7 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -241,7 +241,7 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
 
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -251,7 +251,7 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
     }
     //
 
-    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self
             .jni_ref()
@@ -263,7 +263,7 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
     }
     //
 
-    pub fn id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn id(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -296,7 +296,7 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -321,7 +321,7 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -331,7 +331,7 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -341,7 +341,7 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -435,7 +435,7 @@ impl<'mc> PotionData<'mc> {
     }
     //
 
-    pub fn is_upgraded(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_upgraded(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -445,7 +445,7 @@ impl<'mc> PotionData<'mc> {
     }
     //
 
-    pub fn is_extended(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_extended(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -456,7 +456,7 @@ impl<'mc> PotionData<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -472,7 +472,7 @@ impl<'mc> PotionData<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -482,9 +482,7 @@ impl<'mc> PotionData<'mc> {
     }
     //
 
-    pub fn get_type(
-        &mut self,
-    ) -> Result<crate::potion::PotionType<'mc>, Box<dyn std::error::Error>> {
+    pub fn get_type(&self) -> Result<crate::potion::PotionType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/potion/PotionType;");
         let res = self
             .jni_ref()
@@ -510,7 +508,7 @@ impl<'mc> PotionData<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -536,7 +534,7 @@ impl<'mc> PotionData<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -550,7 +548,7 @@ impl<'mc> PotionData<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -560,7 +558,7 @@ impl<'mc> PotionData<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -570,7 +568,7 @@ impl<'mc> PotionData<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -671,7 +669,7 @@ impl<'mc> Potion<'mc> {
 
     /// <span class="deprecated-label">Deprecated.</span>
     /// Sets the level of this potion.
-    pub fn set_level(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_level(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -685,7 +683,7 @@ impl<'mc> Potion<'mc> {
     }
     //
 
-    pub fn level(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn level(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -696,7 +694,7 @@ impl<'mc> Potion<'mc> {
     //
 
     pub fn set_type(
-        &mut self,
+        &self,
         arg0: impl Into<crate::potion::PotionType<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/potion/PotionType;)V");
@@ -715,7 +713,7 @@ impl<'mc> Potion<'mc> {
     //
 
     pub fn effects(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::potion::PotionEffect<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Collection;");
         let res =
@@ -736,7 +734,7 @@ impl<'mc> Potion<'mc> {
     /// <span class="deprecated-label">Deprecated.</span>
     /// Converts this potion to an <a title="class in org.bukkit.inventory" href="../inventory/ItemStack.html"><code>ItemStack</code></a> with the specified amount and a correct damage value.
     pub fn to_item_stack(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/inventory/ItemStack;");
@@ -754,7 +752,7 @@ impl<'mc> Potion<'mc> {
     }
     //
 
-    pub fn splash(&mut self) -> Result<crate::potion::Potion<'mc>, Box<dyn std::error::Error>> {
+    pub fn splash(&self) -> Result<crate::potion::Potion<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/potion/Potion;");
         let res = self
             .jni_ref()
@@ -768,7 +766,7 @@ impl<'mc> Potion<'mc> {
 
     /// <span class="deprecated-label">Deprecated.</span>
     /// Sets whether this potion is a splash potion. Splash potions can be thrown for a radius effect.
-    pub fn set_splash(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_splash(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -783,7 +781,7 @@ impl<'mc> Potion<'mc> {
     }
     //
 
-    pub fn extend(&mut self) -> Result<crate::potion::Potion<'mc>, Box<dyn std::error::Error>> {
+    pub fn extend(&self) -> Result<crate::potion::Potion<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/potion/Potion;");
         let res = self
             .jni_ref()
@@ -797,10 +795,7 @@ impl<'mc> Potion<'mc> {
 
     /// <span class="deprecated-label">Deprecated.</span>
     /// Set whether this potion has extended duration. This will cause the potion to have roughly 8/3 more duration than a regular potion.
-    pub fn set_has_extended_duration(
-        &mut self,
-        arg0: bool,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_has_extended_duration(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -828,7 +823,7 @@ impl<'mc> Potion<'mc> {
     }
     //
 
-    pub fn has_extended_duration(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_extended_duration(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -841,7 +836,7 @@ impl<'mc> Potion<'mc> {
     }
     //
 
-    pub fn is_splash(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_splash(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -851,7 +846,7 @@ impl<'mc> Potion<'mc> {
     }
     //
 
-    pub fn to_damage_value(&mut self) -> Result<i16, Box<dyn std::error::Error>> {
+    pub fn to_damage_value(&self) -> Result<i16, Box<dyn std::error::Error>> {
         let sig = String::from("()S");
         let res =
             self.jni_ref()
@@ -926,7 +921,7 @@ impl<'mc> Potion<'mc> {
     }
     //
 
-    pub fn name_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn name_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -937,7 +932,7 @@ impl<'mc> Potion<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -953,7 +948,7 @@ impl<'mc> Potion<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -964,7 +959,7 @@ impl<'mc> Potion<'mc> {
     //
 
     pub fn apply_with_item_stack(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::entity::LivingEntity<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -985,9 +980,7 @@ impl<'mc> Potion<'mc> {
     }
     //
 
-    pub fn get_type(
-        &mut self,
-    ) -> Result<crate::potion::PotionType<'mc>, Box<dyn std::error::Error>> {
+    pub fn get_type(&self) -> Result<crate::potion::PotionType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/potion/PotionType;");
         let res = self
             .jni_ref()
@@ -1013,7 +1006,7 @@ impl<'mc> Potion<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1039,7 +1032,7 @@ impl<'mc> Potion<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1053,7 +1046,7 @@ impl<'mc> Potion<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1063,7 +1056,7 @@ impl<'mc> Potion<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1073,7 +1066,7 @@ impl<'mc> Potion<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1202,9 +1195,7 @@ impl<'mc> PotionEffect<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -1216,7 +1207,7 @@ impl<'mc> PotionEffect<'mc> {
     }
     //
 
-    pub fn color(&mut self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
+    pub fn color(&self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Color;");
         let res = self
             .jni_ref()
@@ -1228,7 +1219,7 @@ impl<'mc> PotionEffect<'mc> {
     }
     //
 
-    pub fn duration(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn duration(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -1238,7 +1229,7 @@ impl<'mc> PotionEffect<'mc> {
     }
     //
 
-    pub fn amplifier(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn amplifier(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -1249,7 +1240,7 @@ impl<'mc> PotionEffect<'mc> {
     //
 
     pub fn is_shorter_than(
-        &mut self,
+        &self,
         arg0: impl Into<crate::potion::PotionEffect<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/potion/PotionEffect;)Z");
@@ -1267,7 +1258,7 @@ impl<'mc> PotionEffect<'mc> {
     }
     //
 
-    pub fn is_ambient(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_ambient(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -1277,7 +1268,7 @@ impl<'mc> PotionEffect<'mc> {
     }
     //
 
-    pub fn has_particles(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_particles(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1287,7 +1278,7 @@ impl<'mc> PotionEffect<'mc> {
     }
     //
 
-    pub fn has_icon(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_icon(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -1298,7 +1289,7 @@ impl<'mc> PotionEffect<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1315,7 +1306,7 @@ impl<'mc> PotionEffect<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1329,7 +1320,7 @@ impl<'mc> PotionEffect<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1340,7 +1331,7 @@ impl<'mc> PotionEffect<'mc> {
     //
 
     pub fn apply(
-        &mut self,
+        &self,
         arg0: impl Into<crate::entity::LivingEntity<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/entity/LivingEntity;)Z");
@@ -1359,7 +1350,7 @@ impl<'mc> PotionEffect<'mc> {
     //
 
     pub fn get_type(
-        &mut self,
+        &self,
     ) -> Result<crate::potion::PotionEffectType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/potion/PotionEffectType;");
         let res = self
@@ -1372,7 +1363,7 @@ impl<'mc> PotionEffect<'mc> {
     }
     //
 
-    pub fn is_infinite(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_infinite(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1383,7 +1374,7 @@ impl<'mc> PotionEffect<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1408,7 +1399,7 @@ impl<'mc> PotionEffect<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1418,7 +1409,7 @@ impl<'mc> PotionEffect<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1428,7 +1419,7 @@ impl<'mc> PotionEffect<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1491,7 +1482,7 @@ impl<'mc> PotionEffectType<'mc> {
     }
     //
 
-    pub fn color(&mut self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
+    pub fn color(&self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Color;");
         let res = self
             .jni_ref()
@@ -1527,7 +1518,7 @@ impl<'mc> PotionEffectType<'mc> {
 
     /// Creates a PotionEffect from this PotionEffectType, applying duration modifiers and checks.
     pub fn create_effect(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: i32,
     ) -> Result<crate::potion::PotionEffect<'mc>, Box<dyn std::error::Error>> {
@@ -1550,7 +1541,7 @@ impl<'mc> PotionEffectType<'mc> {
     }
     //
 
-    pub fn is_instant(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_instant(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -1560,7 +1551,7 @@ impl<'mc> PotionEffectType<'mc> {
     }
     //
 
-    pub fn duration_modifier(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn duration_modifier(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1639,7 +1630,7 @@ impl<'mc> PotionEffectType<'mc> {
     }
     //
 
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1654,7 +1645,7 @@ impl<'mc> PotionEffectType<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1671,7 +1662,7 @@ impl<'mc> PotionEffectType<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1687,7 +1678,7 @@ impl<'mc> PotionEffectType<'mc> {
 
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1697,7 +1688,7 @@ impl<'mc> PotionEffectType<'mc> {
     }
     //
 
-    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self
             .jni_ref()
@@ -1709,7 +1700,7 @@ impl<'mc> PotionEffectType<'mc> {
     }
     //
 
-    pub fn id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn id(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1742,7 +1733,7 @@ impl<'mc> PotionEffectType<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1767,7 +1758,7 @@ impl<'mc> PotionEffectType<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1777,7 +1768,7 @@ impl<'mc> PotionEffectType<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1787,7 +1778,7 @@ impl<'mc> PotionEffectType<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1841,7 +1832,7 @@ impl<'mc> PotionBrewer<'mc> {
     //
 
     pub fn get_effects(
-        &mut self,
+        &self,
         arg0: impl Into<crate::potion::PotionType<'mc>>,
         arg1: bool,
         arg2: bool,
@@ -1877,7 +1868,7 @@ impl<'mc> PotionBrewer<'mc> {
     //
 
     pub fn create_effect(
-        &mut self,
+        &self,
         arg0: impl Into<crate::potion::PotionEffectType<'mc>>,
         arg1: i32,
         arg2: i32,
@@ -1918,7 +1909,7 @@ impl<'mc> PotionBrewer<'mc> {
     ///
     /// Returns a collection of <a href="PotionEffect.html" title="class in org.bukkit.potion"><code>PotionEffect</code></a> that would be applied from a potion with the given data value.
     pub fn get_effects_from_damage(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<Vec<crate::potion::PotionEffect<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/util/Collection;");
@@ -1998,6 +1989,11 @@ impl std::fmt::Display for PotionTypeEnum {
             PotionTypeEnum::TurtleMaster => f.write_str("TURTLE_MASTER"),
             PotionTypeEnum::SlowFalling => f.write_str("SLOW_FALLING"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for PotionType<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct PotionType<'mc>(

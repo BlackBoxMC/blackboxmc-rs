@@ -47,7 +47,7 @@ impl<'mc> HandlerList<'mc> {
     //
 
     pub fn unregister_with_registered_listener(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -69,7 +69,7 @@ impl<'mc> HandlerList<'mc> {
     //
 
     pub fn unregister_with_listener(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::event::Listener<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -124,7 +124,7 @@ impl<'mc> HandlerList<'mc> {
     }
     //
 
-    pub fn bake(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn bake(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -170,7 +170,7 @@ impl<'mc> HandlerList<'mc> {
     //
 
     pub fn register(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::RegisteredListener<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/plugin/RegisteredListener;)V");
@@ -189,7 +189,7 @@ impl<'mc> HandlerList<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -215,7 +215,7 @@ impl<'mc> HandlerList<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -232,7 +232,7 @@ impl<'mc> HandlerList<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -246,7 +246,7 @@ impl<'mc> HandlerList<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -256,7 +256,7 @@ impl<'mc> HandlerList<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -266,7 +266,7 @@ impl<'mc> HandlerList<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -276,7 +276,7 @@ impl<'mc> HandlerList<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -359,7 +359,7 @@ impl<'mc> Cancellable<'mc> {
     }
     //
 
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -370,7 +370,7 @@ impl<'mc> Cancellable<'mc> {
     //
 
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
-    pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -421,7 +421,7 @@ impl<'mc> EventHandler<'mc> {
     }
     //
 
-    pub fn ignore_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn ignore_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -431,9 +431,7 @@ impl<'mc> EventHandler<'mc> {
     }
     //
 
-    pub fn priority(
-        &mut self,
-    ) -> Result<crate::event::EventPriority<'mc>, Box<dyn std::error::Error>> {
+    pub fn priority(&self) -> Result<crate::event::EventPriority<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/EventPriority;");
         let res = self
             .jni_ref()
@@ -459,7 +457,7 @@ impl<'mc> EventHandler<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -476,7 +474,7 @@ impl<'mc> EventHandler<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -490,7 +488,7 @@ impl<'mc> EventHandler<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -500,9 +498,7 @@ impl<'mc> EventHandler<'mc> {
     }
     //
 
-    pub fn annotation_type(
-        &mut self,
-    ) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn annotation_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res =
             self.jni_ref()
@@ -548,6 +544,11 @@ impl std::fmt::Display for EventResultEnum {
             EventResultEnum::Default => f.write_str("DEFAULT"),
             EventResultEnum::Allow => f.write_str("ALLOW"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for EventResult<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct EventResult<'mc>(
@@ -683,9 +684,7 @@ impl<'mc> Event<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -697,7 +696,7 @@ impl<'mc> Event<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -711,7 +710,7 @@ impl<'mc> Event<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -722,7 +721,7 @@ impl<'mc> Event<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -748,7 +747,7 @@ impl<'mc> Event<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -765,7 +764,7 @@ impl<'mc> Event<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -779,7 +778,7 @@ impl<'mc> Event<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -789,7 +788,7 @@ impl<'mc> Event<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -799,7 +798,7 @@ impl<'mc> Event<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -809,7 +808,7 @@ impl<'mc> Event<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -847,6 +846,11 @@ impl std::fmt::Display for EventPriorityEnum {
             EventPriorityEnum::Highest => f.write_str("HIGHEST"),
             EventPriorityEnum::Monitor => f.write_str("MONITOR"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for EventPriority<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct EventPriority<'mc>(
@@ -950,6 +954,11 @@ impl std::fmt::Display for SpigotResultEnum {
             SpigotResultEnum::Default => f.write_str("DEFAULT"),
             SpigotResultEnum::Allow => f.write_str("ALLOW"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for SpigotResult<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct SpigotResult<'mc>(

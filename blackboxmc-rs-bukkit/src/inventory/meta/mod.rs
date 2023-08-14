@@ -19,6 +19,11 @@ impl std::fmt::Display for BookMetaGenerationEnum {
         }
     }
 }
+impl<'mc> std::fmt::Display for BookMetaGeneration<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
+    }
+}
 pub struct BookMetaGeneration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -137,7 +142,7 @@ impl<'mc> BlockDataMeta<'mc> {
     //
 
     pub fn get_block_data(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Material<'mc>>,
     ) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/Material;)Lorg/bukkit/block/data/BlockData;");
@@ -158,7 +163,7 @@ impl<'mc> BlockDataMeta<'mc> {
     //
 
     pub fn set_block_data(
-        &mut self,
+        &self,
         arg0: impl Into<crate::block::data::BlockData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/block/data/BlockData;)V");
@@ -176,7 +181,7 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     //
 
-    pub fn has_block_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_block_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -186,7 +191,7 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -200,7 +205,7 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     //
 
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -214,7 +219,7 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     //
 
-    pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -225,7 +230,7 @@ impl<'mc> BlockDataMeta<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -243,7 +248,7 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     //
 
-    pub fn has_localized_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -256,7 +261,7 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -274,7 +279,7 @@ impl<'mc> BlockDataMeta<'mc> {
     //
 
     pub fn set_localized_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -292,7 +297,7 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     //
 
-    pub fn has_lore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -302,7 +307,7 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     //
 
-    pub fn lore(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn lore(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -324,10 +329,7 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     //
 
-    pub fn set_lore(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
         let raw_val_1 = self
             .jni_ref()
@@ -355,7 +357,7 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     //
 
-    pub fn has_custom_model_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -368,7 +370,7 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     //
 
-    pub fn custom_model_data(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -381,7 +383,7 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     //
 
-    pub fn set_custom_model_data(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -395,7 +397,7 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     //
 
-    pub fn has_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -406,7 +408,7 @@ impl<'mc> BlockDataMeta<'mc> {
     //
 
     pub fn has_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -425,7 +427,7 @@ impl<'mc> BlockDataMeta<'mc> {
     //
 
     pub fn get_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -443,9 +445,7 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     //
 
-    pub fn enchants(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchants(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -458,7 +458,7 @@ impl<'mc> BlockDataMeta<'mc> {
     //
 
     pub fn add_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -486,7 +486,7 @@ impl<'mc> BlockDataMeta<'mc> {
     //
 
     pub fn remove_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -505,7 +505,7 @@ impl<'mc> BlockDataMeta<'mc> {
     //
 
     pub fn has_conflicting_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -524,7 +524,7 @@ impl<'mc> BlockDataMeta<'mc> {
     //
 
     pub fn add_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -537,7 +537,7 @@ impl<'mc> BlockDataMeta<'mc> {
     //
 
     pub fn remove_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -549,9 +549,7 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     //
 
-    pub fn item_flags(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn item_flags(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -564,7 +562,7 @@ impl<'mc> BlockDataMeta<'mc> {
     //
 
     pub fn has_item_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
@@ -582,7 +580,7 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     //
 
-    pub fn is_unbreakable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -592,7 +590,7 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     //
 
-    pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -607,7 +605,7 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     //
 
-    pub fn has_attribute_modifiers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -621,7 +619,7 @@ impl<'mc> BlockDataMeta<'mc> {
     //
 
     pub fn attribute_modifiers(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lcom/google/common/collect/Multimap;");
         let res = self.jni_ref().call_method(
@@ -636,7 +634,7 @@ impl<'mc> BlockDataMeta<'mc> {
     //
 
     pub fn add_attribute_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -664,7 +662,7 @@ impl<'mc> BlockDataMeta<'mc> {
     //
 
     pub fn set_attribute_modifiers(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
@@ -681,7 +679,7 @@ impl<'mc> BlockDataMeta<'mc> {
     //
 
     pub fn remove_attribute_modifier_with_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -712,7 +710,7 @@ impl<'mc> BlockDataMeta<'mc> {
     //
 
     pub fn custom_tag_container(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
@@ -731,7 +729,7 @@ impl<'mc> BlockDataMeta<'mc> {
 
     #[deprecated]
 
-    pub fn set_version(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -745,7 +743,7 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
@@ -757,9 +755,7 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -772,7 +768,7 @@ impl<'mc> BlockDataMeta<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(
@@ -831,7 +827,7 @@ impl<'mc> ArmorMeta<'mc> {
     }
     //
 
-    pub fn has_trim(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_trim(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -842,7 +838,7 @@ impl<'mc> ArmorMeta<'mc> {
     //
 
     pub fn set_trim(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::meta::trim::ArmorTrim<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/meta/trim/ArmorTrim;)V");
@@ -861,7 +857,7 @@ impl<'mc> ArmorMeta<'mc> {
     //
 
     pub fn trim(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::trim::ArmorTrim<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/meta/trim/ArmorTrim;");
         let res = self
@@ -875,7 +871,7 @@ impl<'mc> ArmorMeta<'mc> {
     //
 
     pub fn clone(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::ArmorMeta<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -890,7 +886,7 @@ impl<'mc> ArmorMeta<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -904,7 +900,7 @@ impl<'mc> ArmorMeta<'mc> {
     }
     //
 
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -918,7 +914,7 @@ impl<'mc> ArmorMeta<'mc> {
     }
     //
 
-    pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -929,7 +925,7 @@ impl<'mc> ArmorMeta<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -947,7 +943,7 @@ impl<'mc> ArmorMeta<'mc> {
     }
     //
 
-    pub fn has_localized_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -960,7 +956,7 @@ impl<'mc> ArmorMeta<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -978,7 +974,7 @@ impl<'mc> ArmorMeta<'mc> {
     //
 
     pub fn set_localized_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -996,7 +992,7 @@ impl<'mc> ArmorMeta<'mc> {
     }
     //
 
-    pub fn has_lore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -1006,7 +1002,7 @@ impl<'mc> ArmorMeta<'mc> {
     }
     //
 
-    pub fn lore(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn lore(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -1028,10 +1024,7 @@ impl<'mc> ArmorMeta<'mc> {
     }
     //
 
-    pub fn set_lore(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
         let raw_val_1 = self
             .jni_ref()
@@ -1059,7 +1052,7 @@ impl<'mc> ArmorMeta<'mc> {
     }
     //
 
-    pub fn has_custom_model_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1072,7 +1065,7 @@ impl<'mc> ArmorMeta<'mc> {
     }
     //
 
-    pub fn custom_model_data(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1085,7 +1078,7 @@ impl<'mc> ArmorMeta<'mc> {
     }
     //
 
-    pub fn set_custom_model_data(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -1099,7 +1092,7 @@ impl<'mc> ArmorMeta<'mc> {
     }
     //
 
-    pub fn has_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1110,7 +1103,7 @@ impl<'mc> ArmorMeta<'mc> {
     //
 
     pub fn has_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -1129,7 +1122,7 @@ impl<'mc> ArmorMeta<'mc> {
     //
 
     pub fn get_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -1147,9 +1140,7 @@ impl<'mc> ArmorMeta<'mc> {
     }
     //
 
-    pub fn enchants(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchants(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -1162,7 +1153,7 @@ impl<'mc> ArmorMeta<'mc> {
     //
 
     pub fn add_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -1190,7 +1181,7 @@ impl<'mc> ArmorMeta<'mc> {
     //
 
     pub fn remove_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -1209,7 +1200,7 @@ impl<'mc> ArmorMeta<'mc> {
     //
 
     pub fn has_conflicting_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -1228,7 +1219,7 @@ impl<'mc> ArmorMeta<'mc> {
     //
 
     pub fn add_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -1241,7 +1232,7 @@ impl<'mc> ArmorMeta<'mc> {
     //
 
     pub fn remove_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -1253,9 +1244,7 @@ impl<'mc> ArmorMeta<'mc> {
     }
     //
 
-    pub fn item_flags(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn item_flags(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -1268,7 +1257,7 @@ impl<'mc> ArmorMeta<'mc> {
     //
 
     pub fn has_item_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
@@ -1286,7 +1275,7 @@ impl<'mc> ArmorMeta<'mc> {
     }
     //
 
-    pub fn is_unbreakable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1296,7 +1285,7 @@ impl<'mc> ArmorMeta<'mc> {
     }
     //
 
-    pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -1311,7 +1300,7 @@ impl<'mc> ArmorMeta<'mc> {
     }
     //
 
-    pub fn has_attribute_modifiers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1325,7 +1314,7 @@ impl<'mc> ArmorMeta<'mc> {
     //
 
     pub fn attribute_modifiers(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lcom/google/common/collect/Multimap;");
         let res = self.jni_ref().call_method(
@@ -1340,7 +1329,7 @@ impl<'mc> ArmorMeta<'mc> {
     //
 
     pub fn add_attribute_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1368,7 +1357,7 @@ impl<'mc> ArmorMeta<'mc> {
     //
 
     pub fn set_attribute_modifiers(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
@@ -1385,7 +1374,7 @@ impl<'mc> ArmorMeta<'mc> {
     //
 
     pub fn remove_attribute_modifier_with_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1416,7 +1405,7 @@ impl<'mc> ArmorMeta<'mc> {
     //
 
     pub fn custom_tag_container(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
@@ -1435,7 +1424,7 @@ impl<'mc> ArmorMeta<'mc> {
 
     #[deprecated]
 
-    pub fn set_version(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -1449,9 +1438,7 @@ impl<'mc> ArmorMeta<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -1464,7 +1451,7 @@ impl<'mc> ArmorMeta<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(
@@ -1526,7 +1513,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     //
 
     pub fn variant(
-        &mut self,
+        &self,
     ) -> Result<crate::entity::AxolotlVariant<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Axolotl$Variant;");
         let res =
@@ -1553,7 +1540,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     //
 
     pub fn set_variant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::entity::AxolotlVariant<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/entity/Axolotl$Variant;)V");
@@ -1571,7 +1558,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     //
 
-    pub fn has_variant(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_variant(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1582,7 +1569,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     //
 
     pub fn clone(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::AxolotlBucketMeta<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -1597,7 +1584,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -1611,7 +1598,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     //
 
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -1625,7 +1612,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     //
 
-    pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1636,7 +1623,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -1654,7 +1641,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     //
 
-    pub fn has_localized_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1667,7 +1654,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1685,7 +1672,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     //
 
     pub fn set_localized_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -1703,7 +1690,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     //
 
-    pub fn has_lore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -1713,7 +1700,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     //
 
-    pub fn lore(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn lore(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -1735,10 +1722,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     //
 
-    pub fn set_lore(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
         let raw_val_1 = self
             .jni_ref()
@@ -1766,7 +1750,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     //
 
-    pub fn has_custom_model_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1779,7 +1763,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     //
 
-    pub fn custom_model_data(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1792,7 +1776,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     //
 
-    pub fn set_custom_model_data(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -1806,7 +1790,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     //
 
-    pub fn has_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1817,7 +1801,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     //
 
     pub fn has_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -1836,7 +1820,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     //
 
     pub fn get_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -1854,9 +1838,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     //
 
-    pub fn enchants(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchants(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -1869,7 +1851,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     //
 
     pub fn add_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -1897,7 +1879,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     //
 
     pub fn remove_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -1916,7 +1898,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     //
 
     pub fn has_conflicting_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -1935,7 +1917,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     //
 
     pub fn add_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -1948,7 +1930,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     //
 
     pub fn remove_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -1960,9 +1942,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     //
 
-    pub fn item_flags(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn item_flags(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -1975,7 +1955,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     //
 
     pub fn has_item_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
@@ -1993,7 +1973,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     //
 
-    pub fn is_unbreakable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -2003,7 +1983,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     //
 
-    pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -2018,7 +1998,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     //
 
-    pub fn has_attribute_modifiers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2032,7 +2012,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     //
 
     pub fn attribute_modifiers(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lcom/google/common/collect/Multimap;");
         let res = self.jni_ref().call_method(
@@ -2047,7 +2027,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     //
 
     pub fn add_attribute_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2075,7 +2055,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     //
 
     pub fn set_attribute_modifiers(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
@@ -2092,7 +2072,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     //
 
     pub fn remove_attribute_modifier_with_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2123,7 +2103,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     //
 
     pub fn custom_tag_container(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
@@ -2142,7 +2122,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
 
     #[deprecated]
 
-    pub fn set_version(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -2156,9 +2136,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -2171,7 +2149,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(
@@ -2229,7 +2207,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     //
 
-    pub fn owner(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn owner(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2243,10 +2221,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     //
 
-    pub fn set_owner(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn set_owner(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -2262,7 +2237,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     //
 
-    pub fn has_owner(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_owner(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -2272,9 +2247,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     //
 
-    pub fn owning_player(
-        &mut self,
-    ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
+    pub fn owning_player(&self) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/OfflinePlayer;");
         let res =
             self.jni_ref()
@@ -2287,7 +2260,7 @@ impl<'mc> SkullMeta<'mc> {
     //
 
     pub fn set_owning_player(
-        &mut self,
+        &self,
         arg0: impl Into<crate::OfflinePlayer<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/OfflinePlayer;)Z");
@@ -2306,7 +2279,7 @@ impl<'mc> SkullMeta<'mc> {
     //
 
     pub fn owner_profile(
-        &mut self,
+        &self,
     ) -> Result<crate::profile::PlayerProfile<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/profile/PlayerProfile;");
         let res =
@@ -2320,7 +2293,7 @@ impl<'mc> SkullMeta<'mc> {
     //
 
     pub fn set_owner_profile(
-        &mut self,
+        &self,
         arg0: impl Into<crate::profile::PlayerProfile<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/profile/PlayerProfile;)V");
@@ -2339,7 +2312,7 @@ impl<'mc> SkullMeta<'mc> {
     //
 
     pub fn note_block_sound(
-        &mut self,
+        &self,
     ) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self.jni_ref().call_method(
@@ -2356,7 +2329,7 @@ impl<'mc> SkullMeta<'mc> {
     //
 
     pub fn set_note_block_sound(
-        &mut self,
+        &self,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/NamespacedKey;)V");
@@ -2375,7 +2348,7 @@ impl<'mc> SkullMeta<'mc> {
     //
 
     pub fn clone(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::SkullMeta<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -2390,7 +2363,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -2404,7 +2377,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     //
 
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -2418,7 +2391,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     //
 
-    pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -2429,7 +2402,7 @@ impl<'mc> SkullMeta<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -2447,7 +2420,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     //
 
-    pub fn has_localized_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2460,7 +2433,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2478,7 +2451,7 @@ impl<'mc> SkullMeta<'mc> {
     //
 
     pub fn set_localized_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -2496,7 +2469,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     //
 
-    pub fn has_lore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -2506,7 +2479,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     //
 
-    pub fn lore(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn lore(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -2528,10 +2501,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     //
 
-    pub fn set_lore(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
         let raw_val_1 = self
             .jni_ref()
@@ -2559,7 +2529,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     //
 
-    pub fn has_custom_model_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2572,7 +2542,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     //
 
-    pub fn custom_model_data(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2585,7 +2555,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     //
 
-    pub fn set_custom_model_data(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -2599,7 +2569,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     //
 
-    pub fn has_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -2610,7 +2580,7 @@ impl<'mc> SkullMeta<'mc> {
     //
 
     pub fn has_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -2629,7 +2599,7 @@ impl<'mc> SkullMeta<'mc> {
     //
 
     pub fn get_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -2647,9 +2617,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     //
 
-    pub fn enchants(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchants(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -2662,7 +2630,7 @@ impl<'mc> SkullMeta<'mc> {
     //
 
     pub fn add_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -2690,7 +2658,7 @@ impl<'mc> SkullMeta<'mc> {
     //
 
     pub fn remove_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -2709,7 +2677,7 @@ impl<'mc> SkullMeta<'mc> {
     //
 
     pub fn has_conflicting_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -2728,7 +2696,7 @@ impl<'mc> SkullMeta<'mc> {
     //
 
     pub fn add_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -2741,7 +2709,7 @@ impl<'mc> SkullMeta<'mc> {
     //
 
     pub fn remove_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -2753,9 +2721,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     //
 
-    pub fn item_flags(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn item_flags(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -2768,7 +2734,7 @@ impl<'mc> SkullMeta<'mc> {
     //
 
     pub fn has_item_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
@@ -2786,7 +2752,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     //
 
-    pub fn is_unbreakable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -2796,7 +2762,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     //
 
-    pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -2811,7 +2777,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     //
 
-    pub fn has_attribute_modifiers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2825,7 +2791,7 @@ impl<'mc> SkullMeta<'mc> {
     //
 
     pub fn attribute_modifiers(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lcom/google/common/collect/Multimap;");
         let res = self.jni_ref().call_method(
@@ -2840,7 +2806,7 @@ impl<'mc> SkullMeta<'mc> {
     //
 
     pub fn add_attribute_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2868,7 +2834,7 @@ impl<'mc> SkullMeta<'mc> {
     //
 
     pub fn set_attribute_modifiers(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
@@ -2885,7 +2851,7 @@ impl<'mc> SkullMeta<'mc> {
     //
 
     pub fn remove_attribute_modifier_with_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2916,7 +2882,7 @@ impl<'mc> SkullMeta<'mc> {
     //
 
     pub fn custom_tag_container(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
@@ -2935,7 +2901,7 @@ impl<'mc> SkullMeta<'mc> {
 
     #[deprecated]
 
-    pub fn set_version(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -2949,9 +2915,7 @@ impl<'mc> SkullMeta<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -2964,7 +2928,7 @@ impl<'mc> SkullMeta<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(
@@ -3022,7 +2986,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     //
 
-    pub fn has_lodestone(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lodestone(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -3032,7 +2996,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     //
 
-    pub fn lodestone(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn lodestone(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -3045,7 +3009,7 @@ impl<'mc> CompassMeta<'mc> {
     //
 
     pub fn set_lodestone(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/Location;)V");
@@ -3063,7 +3027,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     //
 
-    pub fn is_lodestone_tracked(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_lodestone_tracked(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3077,7 +3041,7 @@ impl<'mc> CompassMeta<'mc> {
     //
 
     /// Sets if this compass is tracking a specific lodestone. If true the compass will only work if there is a lodestone at the tracked location.
-    pub fn set_lodestone_tracked(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lodestone_tracked(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -3092,7 +3056,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
@@ -3104,7 +3068,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -3118,7 +3082,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     //
 
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -3132,7 +3096,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     //
 
-    pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -3143,7 +3107,7 @@ impl<'mc> CompassMeta<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -3161,7 +3125,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     //
 
-    pub fn has_localized_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3174,7 +3138,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3192,7 +3156,7 @@ impl<'mc> CompassMeta<'mc> {
     //
 
     pub fn set_localized_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -3210,7 +3174,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     //
 
-    pub fn has_lore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -3220,7 +3184,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     //
 
-    pub fn lore(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn lore(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -3242,10 +3206,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     //
 
-    pub fn set_lore(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
         let raw_val_1 = self
             .jni_ref()
@@ -3273,7 +3234,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     //
 
-    pub fn has_custom_model_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3286,7 +3247,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     //
 
-    pub fn custom_model_data(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3299,7 +3260,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     //
 
-    pub fn set_custom_model_data(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -3313,7 +3274,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     //
 
-    pub fn has_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -3324,7 +3285,7 @@ impl<'mc> CompassMeta<'mc> {
     //
 
     pub fn has_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -3343,7 +3304,7 @@ impl<'mc> CompassMeta<'mc> {
     //
 
     pub fn get_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -3361,9 +3322,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     //
 
-    pub fn enchants(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchants(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -3376,7 +3335,7 @@ impl<'mc> CompassMeta<'mc> {
     //
 
     pub fn add_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -3404,7 +3363,7 @@ impl<'mc> CompassMeta<'mc> {
     //
 
     pub fn remove_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -3423,7 +3382,7 @@ impl<'mc> CompassMeta<'mc> {
     //
 
     pub fn has_conflicting_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -3442,7 +3401,7 @@ impl<'mc> CompassMeta<'mc> {
     //
 
     pub fn add_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -3455,7 +3414,7 @@ impl<'mc> CompassMeta<'mc> {
     //
 
     pub fn remove_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -3467,9 +3426,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     //
 
-    pub fn item_flags(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn item_flags(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -3482,7 +3439,7 @@ impl<'mc> CompassMeta<'mc> {
     //
 
     pub fn has_item_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
@@ -3500,7 +3457,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     //
 
-    pub fn is_unbreakable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -3510,7 +3467,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     //
 
-    pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -3525,7 +3482,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     //
 
-    pub fn has_attribute_modifiers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3539,7 +3496,7 @@ impl<'mc> CompassMeta<'mc> {
     //
 
     pub fn attribute_modifiers(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lcom/google/common/collect/Multimap;");
         let res = self.jni_ref().call_method(
@@ -3554,7 +3511,7 @@ impl<'mc> CompassMeta<'mc> {
     //
 
     pub fn add_attribute_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3582,7 +3539,7 @@ impl<'mc> CompassMeta<'mc> {
     //
 
     pub fn set_attribute_modifiers(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
@@ -3599,7 +3556,7 @@ impl<'mc> CompassMeta<'mc> {
     //
 
     pub fn remove_attribute_modifier_with_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3630,7 +3587,7 @@ impl<'mc> CompassMeta<'mc> {
     //
 
     pub fn custom_tag_container(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
@@ -3649,7 +3606,7 @@ impl<'mc> CompassMeta<'mc> {
 
     #[deprecated]
 
-    pub fn set_version(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -3663,9 +3620,7 @@ impl<'mc> CompassMeta<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -3678,7 +3633,7 @@ impl<'mc> CompassMeta<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(
@@ -3739,7 +3694,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     //
 
-    pub fn has_custom_effects(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_effects(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3753,7 +3708,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     //
 
     pub fn custom_effects(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::potion::PotionEffect<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self.jni_ref().call_method(
@@ -3775,7 +3730,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     //
 
     pub fn add_custom_effect(
-        &mut self,
+        &self,
         arg0: impl Into<crate::potion::PotionEffect<'mc>>,
         arg1: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3800,7 +3755,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     //
 
     pub fn remove_custom_effect(
-        &mut self,
+        &self,
         arg0: impl Into<crate::potion::PotionEffectType<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/potion/PotionEffectType;)Z");
@@ -3819,7 +3774,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     //
 
     pub fn has_custom_effect(
-        &mut self,
+        &self,
         arg0: impl Into<crate::potion::PotionEffectType<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/potion/PotionEffectType;)Z");
@@ -3837,7 +3792,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     //
 
-    pub fn clear_custom_effects(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn clear_custom_effects(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3851,7 +3806,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     //
 
     pub fn clone(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::SuspiciousStewMeta<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -3866,7 +3821,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -3880,7 +3835,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     //
 
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -3894,7 +3849,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     //
 
-    pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -3905,7 +3860,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -3923,7 +3878,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     //
 
-    pub fn has_localized_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3936,7 +3891,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3954,7 +3909,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     //
 
     pub fn set_localized_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -3972,7 +3927,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     //
 
-    pub fn has_lore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -3982,7 +3937,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     //
 
-    pub fn lore(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn lore(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -4004,10 +3959,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     //
 
-    pub fn set_lore(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
         let raw_val_1 = self
             .jni_ref()
@@ -4035,7 +3987,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     //
 
-    pub fn has_custom_model_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4048,7 +4000,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     //
 
-    pub fn custom_model_data(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4061,7 +4013,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     //
 
-    pub fn set_custom_model_data(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -4075,7 +4027,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     //
 
-    pub fn has_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -4086,7 +4038,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     //
 
     pub fn has_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -4105,7 +4057,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     //
 
     pub fn get_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -4123,9 +4075,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     //
 
-    pub fn enchants(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchants(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -4138,7 +4088,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     //
 
     pub fn add_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -4166,7 +4116,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     //
 
     pub fn remove_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -4185,7 +4135,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     //
 
     pub fn has_conflicting_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -4204,7 +4154,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     //
 
     pub fn add_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -4217,7 +4167,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     //
 
     pub fn remove_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -4229,9 +4179,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     //
 
-    pub fn item_flags(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn item_flags(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -4244,7 +4192,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     //
 
     pub fn has_item_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
@@ -4262,7 +4210,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     //
 
-    pub fn is_unbreakable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -4272,7 +4220,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     //
 
-    pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -4287,7 +4235,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     //
 
-    pub fn has_attribute_modifiers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4301,7 +4249,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     //
 
     pub fn attribute_modifiers(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lcom/google/common/collect/Multimap;");
         let res = self.jni_ref().call_method(
@@ -4316,7 +4264,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     //
 
     pub fn add_attribute_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4344,7 +4292,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     //
 
     pub fn set_attribute_modifiers(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
@@ -4361,7 +4309,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     //
 
     pub fn remove_attribute_modifier_with_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4392,7 +4340,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     //
 
     pub fn custom_tag_container(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
@@ -4411,7 +4359,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
 
     #[deprecated]
 
-    pub fn set_version(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -4425,9 +4373,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -4440,7 +4386,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(
@@ -4498,7 +4444,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     //
 
-    pub fn has_charged_projectiles(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_charged_projectiles(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4512,7 +4458,7 @@ impl<'mc> CrossbowMeta<'mc> {
     //
 
     pub fn charged_projectiles(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self.jni_ref().call_method(
@@ -4534,7 +4480,7 @@ impl<'mc> CrossbowMeta<'mc> {
     //
 
     pub fn set_charged_projectiles(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
@@ -4565,7 +4511,7 @@ impl<'mc> CrossbowMeta<'mc> {
     //
 
     pub fn add_charged_projectile(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -4583,7 +4529,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -4597,7 +4543,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     //
 
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -4611,7 +4557,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     //
 
-    pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -4622,7 +4568,7 @@ impl<'mc> CrossbowMeta<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -4640,7 +4586,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     //
 
-    pub fn has_localized_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4653,7 +4599,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4671,7 +4617,7 @@ impl<'mc> CrossbowMeta<'mc> {
     //
 
     pub fn set_localized_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -4689,7 +4635,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     //
 
-    pub fn has_lore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -4699,7 +4645,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     //
 
-    pub fn lore(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn lore(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -4721,10 +4667,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     //
 
-    pub fn set_lore(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
         let raw_val_1 = self
             .jni_ref()
@@ -4752,7 +4695,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     //
 
-    pub fn has_custom_model_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4765,7 +4708,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     //
 
-    pub fn custom_model_data(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4778,7 +4721,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     //
 
-    pub fn set_custom_model_data(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -4792,7 +4735,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     //
 
-    pub fn has_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -4803,7 +4746,7 @@ impl<'mc> CrossbowMeta<'mc> {
     //
 
     pub fn has_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -4822,7 +4765,7 @@ impl<'mc> CrossbowMeta<'mc> {
     //
 
     pub fn get_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -4840,9 +4783,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     //
 
-    pub fn enchants(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchants(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -4855,7 +4796,7 @@ impl<'mc> CrossbowMeta<'mc> {
     //
 
     pub fn add_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -4883,7 +4824,7 @@ impl<'mc> CrossbowMeta<'mc> {
     //
 
     pub fn remove_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -4902,7 +4843,7 @@ impl<'mc> CrossbowMeta<'mc> {
     //
 
     pub fn has_conflicting_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -4921,7 +4862,7 @@ impl<'mc> CrossbowMeta<'mc> {
     //
 
     pub fn add_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -4934,7 +4875,7 @@ impl<'mc> CrossbowMeta<'mc> {
     //
 
     pub fn remove_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -4946,9 +4887,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     //
 
-    pub fn item_flags(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn item_flags(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -4961,7 +4900,7 @@ impl<'mc> CrossbowMeta<'mc> {
     //
 
     pub fn has_item_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
@@ -4979,7 +4918,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     //
 
-    pub fn is_unbreakable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -4989,7 +4928,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     //
 
-    pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -5004,7 +4943,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     //
 
-    pub fn has_attribute_modifiers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5018,7 +4957,7 @@ impl<'mc> CrossbowMeta<'mc> {
     //
 
     pub fn attribute_modifiers(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lcom/google/common/collect/Multimap;");
         let res = self.jni_ref().call_method(
@@ -5033,7 +4972,7 @@ impl<'mc> CrossbowMeta<'mc> {
     //
 
     pub fn add_attribute_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5061,7 +5000,7 @@ impl<'mc> CrossbowMeta<'mc> {
     //
 
     pub fn set_attribute_modifiers(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
@@ -5078,7 +5017,7 @@ impl<'mc> CrossbowMeta<'mc> {
     //
 
     pub fn remove_attribute_modifier_with_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5109,7 +5048,7 @@ impl<'mc> CrossbowMeta<'mc> {
     //
 
     pub fn custom_tag_container(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
@@ -5128,7 +5067,7 @@ impl<'mc> CrossbowMeta<'mc> {
 
     #[deprecated]
 
-    pub fn set_version(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -5142,7 +5081,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
@@ -5154,9 +5093,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -5169,7 +5106,7 @@ impl<'mc> CrossbowMeta<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(
@@ -5228,7 +5165,7 @@ impl<'mc> ItemMeta<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -5242,7 +5179,7 @@ impl<'mc> ItemMeta<'mc> {
     }
     //
 
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -5256,7 +5193,7 @@ impl<'mc> ItemMeta<'mc> {
     }
     //
 
-    pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -5267,7 +5204,7 @@ impl<'mc> ItemMeta<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -5285,7 +5222,7 @@ impl<'mc> ItemMeta<'mc> {
     }
     //
 
-    pub fn has_localized_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5298,7 +5235,7 @@ impl<'mc> ItemMeta<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5316,7 +5253,7 @@ impl<'mc> ItemMeta<'mc> {
     //
 
     pub fn set_localized_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -5334,7 +5271,7 @@ impl<'mc> ItemMeta<'mc> {
     }
     //
 
-    pub fn has_lore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -5344,7 +5281,7 @@ impl<'mc> ItemMeta<'mc> {
     }
     //
 
-    pub fn lore(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn lore(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -5366,10 +5303,7 @@ impl<'mc> ItemMeta<'mc> {
     }
     //
 
-    pub fn set_lore(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
         let raw_val_1 = self
             .jni_ref()
@@ -5397,7 +5331,7 @@ impl<'mc> ItemMeta<'mc> {
     }
     //
 
-    pub fn has_custom_model_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5410,7 +5344,7 @@ impl<'mc> ItemMeta<'mc> {
     }
     //
 
-    pub fn custom_model_data(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5423,7 +5357,7 @@ impl<'mc> ItemMeta<'mc> {
     }
     //
 
-    pub fn set_custom_model_data(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -5437,7 +5371,7 @@ impl<'mc> ItemMeta<'mc> {
     }
     //
 
-    pub fn has_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -5448,7 +5382,7 @@ impl<'mc> ItemMeta<'mc> {
     //
 
     pub fn has_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -5467,7 +5401,7 @@ impl<'mc> ItemMeta<'mc> {
     //
 
     pub fn get_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -5485,9 +5419,7 @@ impl<'mc> ItemMeta<'mc> {
     }
     //
 
-    pub fn enchants(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchants(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -5500,7 +5432,7 @@ impl<'mc> ItemMeta<'mc> {
     //
 
     pub fn add_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -5528,7 +5460,7 @@ impl<'mc> ItemMeta<'mc> {
     //
 
     pub fn remove_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -5547,7 +5479,7 @@ impl<'mc> ItemMeta<'mc> {
     //
 
     pub fn has_conflicting_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -5566,7 +5498,7 @@ impl<'mc> ItemMeta<'mc> {
     //
 
     pub fn add_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -5579,7 +5511,7 @@ impl<'mc> ItemMeta<'mc> {
     //
 
     pub fn remove_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -5591,9 +5523,7 @@ impl<'mc> ItemMeta<'mc> {
     }
     //
 
-    pub fn item_flags(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn item_flags(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -5606,7 +5536,7 @@ impl<'mc> ItemMeta<'mc> {
     //
 
     pub fn has_item_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
@@ -5624,7 +5554,7 @@ impl<'mc> ItemMeta<'mc> {
     }
     //
 
-    pub fn is_unbreakable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -5635,7 +5565,7 @@ impl<'mc> ItemMeta<'mc> {
     //
 
     /// Sets the unbreakable tag. An unbreakable item will not lose durability.
-    pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -5650,7 +5580,7 @@ impl<'mc> ItemMeta<'mc> {
     }
     //
 
-    pub fn has_attribute_modifiers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5664,7 +5594,7 @@ impl<'mc> ItemMeta<'mc> {
     //
 
     pub fn attribute_modifiers(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lcom/google/common/collect/Multimap;");
         let res = self.jni_ref().call_method(
@@ -5679,7 +5609,7 @@ impl<'mc> ItemMeta<'mc> {
     //
 
     pub fn add_attribute_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5707,7 +5637,7 @@ impl<'mc> ItemMeta<'mc> {
     //
 
     pub fn set_attribute_modifiers(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
@@ -5724,7 +5654,7 @@ impl<'mc> ItemMeta<'mc> {
     //
 
     pub fn remove_attribute_modifier_with_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5755,7 +5685,7 @@ impl<'mc> ItemMeta<'mc> {
     //
 
     pub fn custom_tag_container(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
@@ -5780,7 +5710,7 @@ impl<'mc> ItemMeta<'mc> {
     /// internal use only
     ///
     /// Internal use only! Do not use under any circumstances!
-    pub fn set_version(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -5794,7 +5724,7 @@ impl<'mc> ItemMeta<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
@@ -5806,9 +5736,7 @@ impl<'mc> ItemMeta<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -5821,7 +5749,7 @@ impl<'mc> ItemMeta<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(
@@ -5886,7 +5814,7 @@ impl<'mc> Repairable<'mc> {
     }
     //
 
-    pub fn repair_cost(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn repair_cost(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -5897,7 +5825,7 @@ impl<'mc> Repairable<'mc> {
     //
 
     /// Sets the repair penalty
-    pub fn set_repair_cost(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_repair_cost(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -5911,7 +5839,7 @@ impl<'mc> Repairable<'mc> {
     }
     //
 
-    pub fn has_repair_cost(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_repair_cost(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -5922,7 +5850,7 @@ impl<'mc> Repairable<'mc> {
     //
 
     pub fn clone(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::Repairable<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -5937,7 +5865,7 @@ impl<'mc> Repairable<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -5951,7 +5879,7 @@ impl<'mc> Repairable<'mc> {
     }
     //
 
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -5965,7 +5893,7 @@ impl<'mc> Repairable<'mc> {
     }
     //
 
-    pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -5976,7 +5904,7 @@ impl<'mc> Repairable<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -5994,7 +5922,7 @@ impl<'mc> Repairable<'mc> {
     }
     //
 
-    pub fn has_localized_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6007,7 +5935,7 @@ impl<'mc> Repairable<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6025,7 +5953,7 @@ impl<'mc> Repairable<'mc> {
     //
 
     pub fn set_localized_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -6043,7 +5971,7 @@ impl<'mc> Repairable<'mc> {
     }
     //
 
-    pub fn has_lore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -6053,7 +5981,7 @@ impl<'mc> Repairable<'mc> {
     }
     //
 
-    pub fn lore(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn lore(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -6075,10 +6003,7 @@ impl<'mc> Repairable<'mc> {
     }
     //
 
-    pub fn set_lore(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
         let raw_val_1 = self
             .jni_ref()
@@ -6106,7 +6031,7 @@ impl<'mc> Repairable<'mc> {
     }
     //
 
-    pub fn has_custom_model_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6119,7 +6044,7 @@ impl<'mc> Repairable<'mc> {
     }
     //
 
-    pub fn custom_model_data(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6132,7 +6057,7 @@ impl<'mc> Repairable<'mc> {
     }
     //
 
-    pub fn set_custom_model_data(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -6146,7 +6071,7 @@ impl<'mc> Repairable<'mc> {
     }
     //
 
-    pub fn has_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -6157,7 +6082,7 @@ impl<'mc> Repairable<'mc> {
     //
 
     pub fn has_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -6176,7 +6101,7 @@ impl<'mc> Repairable<'mc> {
     //
 
     pub fn get_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -6194,9 +6119,7 @@ impl<'mc> Repairable<'mc> {
     }
     //
 
-    pub fn enchants(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchants(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -6209,7 +6132,7 @@ impl<'mc> Repairable<'mc> {
     //
 
     pub fn add_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -6237,7 +6160,7 @@ impl<'mc> Repairable<'mc> {
     //
 
     pub fn remove_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -6256,7 +6179,7 @@ impl<'mc> Repairable<'mc> {
     //
 
     pub fn has_conflicting_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -6275,7 +6198,7 @@ impl<'mc> Repairable<'mc> {
     //
 
     pub fn add_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -6288,7 +6211,7 @@ impl<'mc> Repairable<'mc> {
     //
 
     pub fn remove_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -6300,9 +6223,7 @@ impl<'mc> Repairable<'mc> {
     }
     //
 
-    pub fn item_flags(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn item_flags(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -6315,7 +6236,7 @@ impl<'mc> Repairable<'mc> {
     //
 
     pub fn has_item_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
@@ -6333,7 +6254,7 @@ impl<'mc> Repairable<'mc> {
     }
     //
 
-    pub fn is_unbreakable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -6343,7 +6264,7 @@ impl<'mc> Repairable<'mc> {
     }
     //
 
-    pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -6358,7 +6279,7 @@ impl<'mc> Repairable<'mc> {
     }
     //
 
-    pub fn has_attribute_modifiers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6372,7 +6293,7 @@ impl<'mc> Repairable<'mc> {
     //
 
     pub fn attribute_modifiers(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lcom/google/common/collect/Multimap;");
         let res = self.jni_ref().call_method(
@@ -6387,7 +6308,7 @@ impl<'mc> Repairable<'mc> {
     //
 
     pub fn add_attribute_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6415,7 +6336,7 @@ impl<'mc> Repairable<'mc> {
     //
 
     pub fn set_attribute_modifiers(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
@@ -6432,7 +6353,7 @@ impl<'mc> Repairable<'mc> {
     //
 
     pub fn remove_attribute_modifier_with_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6463,7 +6384,7 @@ impl<'mc> Repairable<'mc> {
     //
 
     pub fn custom_tag_container(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
@@ -6482,7 +6403,7 @@ impl<'mc> Repairable<'mc> {
 
     #[deprecated]
 
-    pub fn set_version(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -6496,9 +6417,7 @@ impl<'mc> Repairable<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -6511,7 +6430,7 @@ impl<'mc> Repairable<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(
@@ -6569,7 +6488,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     //
 
-    pub fn base_color(&mut self) -> Result<crate::DyeColor<'mc>, Box<dyn std::error::Error>> {
+    pub fn base_color(&self) -> Result<crate::DyeColor<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/DyeColor;");
         let res =
             self.jni_ref()
@@ -6595,7 +6514,7 @@ impl<'mc> BannerMeta<'mc> {
     //
 
     pub fn set_base_color(
-        &mut self,
+        &self,
         arg0: impl Into<crate::DyeColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/DyeColor;)V");
@@ -6614,7 +6533,7 @@ impl<'mc> BannerMeta<'mc> {
     //
 
     pub fn patterns(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::block::banner::Pattern<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -6636,7 +6555,7 @@ impl<'mc> BannerMeta<'mc> {
     //
 
     pub fn set_patterns(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::block::banner::Pattern<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
@@ -6667,7 +6586,7 @@ impl<'mc> BannerMeta<'mc> {
     //
 
     pub fn add_pattern(
-        &mut self,
+        &self,
         arg0: impl Into<crate::block::banner::Pattern<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/block/banner/Pattern;)V");
@@ -6687,7 +6606,7 @@ impl<'mc> BannerMeta<'mc> {
 
     /// Returns the pattern at the specified index
     pub fn get_pattern(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<crate::block::banner::Pattern<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/block/banner/Pattern;");
@@ -6707,7 +6626,7 @@ impl<'mc> BannerMeta<'mc> {
 
     /// Removes the pattern at the specified index
     pub fn remove_pattern(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<crate::block::banner::Pattern<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/block/banner/Pattern;");
@@ -6726,7 +6645,7 @@ impl<'mc> BannerMeta<'mc> {
     //
 
     pub fn set_pattern(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: impl Into<crate::block::banner::Pattern<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -6749,7 +6668,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     //
 
-    pub fn number_of_patterns(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn number_of_patterns(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6762,7 +6681,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -6776,7 +6695,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     //
 
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -6790,7 +6709,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     //
 
-    pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -6801,7 +6720,7 @@ impl<'mc> BannerMeta<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -6819,7 +6738,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     //
 
-    pub fn has_localized_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6832,7 +6751,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6850,7 +6769,7 @@ impl<'mc> BannerMeta<'mc> {
     //
 
     pub fn set_localized_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -6868,7 +6787,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     //
 
-    pub fn has_lore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -6878,7 +6797,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     //
 
-    pub fn lore(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn lore(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -6900,10 +6819,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     //
 
-    pub fn set_lore(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
         let raw_val_1 = self
             .jni_ref()
@@ -6931,7 +6847,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     //
 
-    pub fn has_custom_model_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6944,7 +6860,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     //
 
-    pub fn custom_model_data(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6957,7 +6873,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     //
 
-    pub fn set_custom_model_data(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -6971,7 +6887,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     //
 
-    pub fn has_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -6982,7 +6898,7 @@ impl<'mc> BannerMeta<'mc> {
     //
 
     pub fn has_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -7001,7 +6917,7 @@ impl<'mc> BannerMeta<'mc> {
     //
 
     pub fn get_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -7019,9 +6935,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     //
 
-    pub fn enchants(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchants(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -7034,7 +6948,7 @@ impl<'mc> BannerMeta<'mc> {
     //
 
     pub fn add_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -7062,7 +6976,7 @@ impl<'mc> BannerMeta<'mc> {
     //
 
     pub fn remove_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -7081,7 +6995,7 @@ impl<'mc> BannerMeta<'mc> {
     //
 
     pub fn has_conflicting_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -7100,7 +7014,7 @@ impl<'mc> BannerMeta<'mc> {
     //
 
     pub fn add_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -7113,7 +7027,7 @@ impl<'mc> BannerMeta<'mc> {
     //
 
     pub fn remove_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -7125,9 +7039,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     //
 
-    pub fn item_flags(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn item_flags(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -7140,7 +7052,7 @@ impl<'mc> BannerMeta<'mc> {
     //
 
     pub fn has_item_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
@@ -7158,7 +7070,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     //
 
-    pub fn is_unbreakable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -7168,7 +7080,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     //
 
-    pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -7183,7 +7095,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     //
 
-    pub fn has_attribute_modifiers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7197,7 +7109,7 @@ impl<'mc> BannerMeta<'mc> {
     //
 
     pub fn attribute_modifiers(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lcom/google/common/collect/Multimap;");
         let res = self.jni_ref().call_method(
@@ -7212,7 +7124,7 @@ impl<'mc> BannerMeta<'mc> {
     //
 
     pub fn add_attribute_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7240,7 +7152,7 @@ impl<'mc> BannerMeta<'mc> {
     //
 
     pub fn set_attribute_modifiers(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
@@ -7257,7 +7169,7 @@ impl<'mc> BannerMeta<'mc> {
     //
 
     pub fn remove_attribute_modifier_with_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7288,7 +7200,7 @@ impl<'mc> BannerMeta<'mc> {
     //
 
     pub fn custom_tag_container(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
@@ -7307,7 +7219,7 @@ impl<'mc> BannerMeta<'mc> {
 
     #[deprecated]
 
-    pub fn set_version(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -7321,7 +7233,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
@@ -7333,9 +7245,7 @@ impl<'mc> BannerMeta<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -7348,7 +7258,7 @@ impl<'mc> BannerMeta<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(
@@ -7407,7 +7317,7 @@ impl<'mc> BundleMeta<'mc> {
     //
 
     pub fn add_item(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemStack;)V");
@@ -7425,7 +7335,7 @@ impl<'mc> BundleMeta<'mc> {
     }
     //
 
-    pub fn has_items(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_items(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -7436,7 +7346,7 @@ impl<'mc> BundleMeta<'mc> {
     //
 
     pub fn items(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
@@ -7455,7 +7365,7 @@ impl<'mc> BundleMeta<'mc> {
     //
 
     pub fn set_items(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
@@ -7485,7 +7395,7 @@ impl<'mc> BundleMeta<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -7499,7 +7409,7 @@ impl<'mc> BundleMeta<'mc> {
     }
     //
 
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -7513,7 +7423,7 @@ impl<'mc> BundleMeta<'mc> {
     }
     //
 
-    pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -7524,7 +7434,7 @@ impl<'mc> BundleMeta<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -7542,7 +7452,7 @@ impl<'mc> BundleMeta<'mc> {
     }
     //
 
-    pub fn has_localized_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7555,7 +7465,7 @@ impl<'mc> BundleMeta<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7573,7 +7483,7 @@ impl<'mc> BundleMeta<'mc> {
     //
 
     pub fn set_localized_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -7591,7 +7501,7 @@ impl<'mc> BundleMeta<'mc> {
     }
     //
 
-    pub fn has_lore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -7601,7 +7511,7 @@ impl<'mc> BundleMeta<'mc> {
     }
     //
 
-    pub fn lore(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn lore(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -7623,10 +7533,7 @@ impl<'mc> BundleMeta<'mc> {
     }
     //
 
-    pub fn set_lore(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
         let raw_val_1 = self
             .jni_ref()
@@ -7654,7 +7561,7 @@ impl<'mc> BundleMeta<'mc> {
     }
     //
 
-    pub fn has_custom_model_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7667,7 +7574,7 @@ impl<'mc> BundleMeta<'mc> {
     }
     //
 
-    pub fn custom_model_data(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7680,7 +7587,7 @@ impl<'mc> BundleMeta<'mc> {
     }
     //
 
-    pub fn set_custom_model_data(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -7694,7 +7601,7 @@ impl<'mc> BundleMeta<'mc> {
     }
     //
 
-    pub fn has_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -7705,7 +7612,7 @@ impl<'mc> BundleMeta<'mc> {
     //
 
     pub fn has_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -7724,7 +7631,7 @@ impl<'mc> BundleMeta<'mc> {
     //
 
     pub fn get_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -7742,9 +7649,7 @@ impl<'mc> BundleMeta<'mc> {
     }
     //
 
-    pub fn enchants(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchants(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -7757,7 +7662,7 @@ impl<'mc> BundleMeta<'mc> {
     //
 
     pub fn add_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -7785,7 +7690,7 @@ impl<'mc> BundleMeta<'mc> {
     //
 
     pub fn remove_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -7804,7 +7709,7 @@ impl<'mc> BundleMeta<'mc> {
     //
 
     pub fn has_conflicting_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -7823,7 +7728,7 @@ impl<'mc> BundleMeta<'mc> {
     //
 
     pub fn add_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -7836,7 +7741,7 @@ impl<'mc> BundleMeta<'mc> {
     //
 
     pub fn remove_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -7848,9 +7753,7 @@ impl<'mc> BundleMeta<'mc> {
     }
     //
 
-    pub fn item_flags(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn item_flags(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -7863,7 +7766,7 @@ impl<'mc> BundleMeta<'mc> {
     //
 
     pub fn has_item_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
@@ -7881,7 +7784,7 @@ impl<'mc> BundleMeta<'mc> {
     }
     //
 
-    pub fn is_unbreakable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -7891,7 +7794,7 @@ impl<'mc> BundleMeta<'mc> {
     }
     //
 
-    pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -7906,7 +7809,7 @@ impl<'mc> BundleMeta<'mc> {
     }
     //
 
-    pub fn has_attribute_modifiers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7920,7 +7823,7 @@ impl<'mc> BundleMeta<'mc> {
     //
 
     pub fn attribute_modifiers(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lcom/google/common/collect/Multimap;");
         let res = self.jni_ref().call_method(
@@ -7935,7 +7838,7 @@ impl<'mc> BundleMeta<'mc> {
     //
 
     pub fn add_attribute_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7963,7 +7866,7 @@ impl<'mc> BundleMeta<'mc> {
     //
 
     pub fn set_attribute_modifiers(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
@@ -7980,7 +7883,7 @@ impl<'mc> BundleMeta<'mc> {
     //
 
     pub fn remove_attribute_modifier_with_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8011,7 +7914,7 @@ impl<'mc> BundleMeta<'mc> {
     //
 
     pub fn custom_tag_container(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
@@ -8030,7 +7933,7 @@ impl<'mc> BundleMeta<'mc> {
 
     #[deprecated]
 
-    pub fn set_version(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -8044,7 +7947,7 @@ impl<'mc> BundleMeta<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
@@ -8056,9 +7959,7 @@ impl<'mc> BundleMeta<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -8071,7 +7972,7 @@ impl<'mc> BundleMeta<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(
@@ -8133,7 +8034,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     //
 
     pub fn clone(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::ColorableArmorMeta<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -8148,7 +8049,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     //
 
-    pub fn has_trim(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_trim(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -8159,7 +8060,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     //
 
     pub fn set_trim(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::meta::trim::ArmorTrim<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/meta/trim/ArmorTrim;)V");
@@ -8178,7 +8079,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     //
 
     pub fn trim(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::trim::ArmorTrim<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/meta/trim/ArmorTrim;");
         let res = self
@@ -8191,7 +8092,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -8205,7 +8106,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     //
 
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -8219,7 +8120,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     //
 
-    pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -8230,7 +8131,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -8248,7 +8149,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     //
 
-    pub fn has_localized_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8261,7 +8162,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8279,7 +8180,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     //
 
     pub fn set_localized_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -8297,7 +8198,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     //
 
-    pub fn has_lore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -8307,7 +8208,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     //
 
-    pub fn lore(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn lore(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -8329,10 +8230,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     //
 
-    pub fn set_lore(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
         let raw_val_1 = self
             .jni_ref()
@@ -8360,7 +8258,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     //
 
-    pub fn has_custom_model_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8373,7 +8271,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     //
 
-    pub fn custom_model_data(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8386,7 +8284,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     //
 
-    pub fn set_custom_model_data(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -8400,7 +8298,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     //
 
-    pub fn has_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -8411,7 +8309,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     //
 
     pub fn has_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -8430,7 +8328,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     //
 
     pub fn get_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -8448,9 +8346,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     //
 
-    pub fn enchants(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchants(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -8463,7 +8359,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     //
 
     pub fn add_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -8491,7 +8387,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     //
 
     pub fn remove_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -8510,7 +8406,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     //
 
     pub fn has_conflicting_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -8529,7 +8425,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     //
 
     pub fn add_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -8542,7 +8438,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     //
 
     pub fn remove_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -8554,9 +8450,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     //
 
-    pub fn item_flags(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn item_flags(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -8569,7 +8463,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     //
 
     pub fn has_item_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
@@ -8587,7 +8481,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     //
 
-    pub fn is_unbreakable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -8597,7 +8491,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     //
 
-    pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -8612,7 +8506,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     //
 
-    pub fn has_attribute_modifiers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8626,7 +8520,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     //
 
     pub fn attribute_modifiers(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lcom/google/common/collect/Multimap;");
         let res = self.jni_ref().call_method(
@@ -8641,7 +8535,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     //
 
     pub fn add_attribute_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8669,7 +8563,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     //
 
     pub fn set_attribute_modifiers(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
@@ -8686,7 +8580,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     //
 
     pub fn remove_attribute_modifier_with_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8717,7 +8611,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     //
 
     pub fn custom_tag_container(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
@@ -8736,7 +8630,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
 
     #[deprecated]
 
-    pub fn set_version(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -8750,9 +8644,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -8765,7 +8657,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(
@@ -8782,7 +8674,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     //
 
     pub fn set_color(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Color<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/Color;)V");
@@ -8800,7 +8692,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     }
     //
 
-    pub fn color(&mut self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
+    pub fn color(&self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Color;");
         let res = self
             .jni_ref()
@@ -8862,7 +8754,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     //
 
     pub fn spawned_type(
-        &mut self,
+        &self,
     ) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/EntityType;");
         let res =
@@ -8889,7 +8781,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     //
 
     pub fn set_spawned_type(
-        &mut self,
+        &self,
         arg0: impl Into<crate::entity::EntityType<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/entity/EntityType;)V");
@@ -8908,7 +8800,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     //
 
     pub fn clone(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::SpawnEggMeta<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -8923,7 +8815,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -8937,7 +8829,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     //
 
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -8951,7 +8843,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     //
 
-    pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -8962,7 +8854,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -8980,7 +8872,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     //
 
-    pub fn has_localized_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8993,7 +8885,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9011,7 +8903,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     //
 
     pub fn set_localized_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -9029,7 +8921,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     //
 
-    pub fn has_lore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -9039,7 +8931,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     //
 
-    pub fn lore(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn lore(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -9061,10 +8953,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     //
 
-    pub fn set_lore(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
         let raw_val_1 = self
             .jni_ref()
@@ -9092,7 +8981,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     //
 
-    pub fn has_custom_model_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9105,7 +8994,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     //
 
-    pub fn custom_model_data(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9118,7 +9007,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     //
 
-    pub fn set_custom_model_data(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -9132,7 +9021,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     //
 
-    pub fn has_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -9143,7 +9032,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     //
 
     pub fn has_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -9162,7 +9051,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     //
 
     pub fn get_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -9180,9 +9069,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     //
 
-    pub fn enchants(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchants(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -9195,7 +9082,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     //
 
     pub fn add_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -9223,7 +9110,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     //
 
     pub fn remove_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -9242,7 +9129,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     //
 
     pub fn has_conflicting_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -9261,7 +9148,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     //
 
     pub fn add_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -9274,7 +9161,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     //
 
     pub fn remove_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -9286,9 +9173,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     //
 
-    pub fn item_flags(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn item_flags(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -9301,7 +9186,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     //
 
     pub fn has_item_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
@@ -9319,7 +9204,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     //
 
-    pub fn is_unbreakable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -9329,7 +9214,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     //
 
-    pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -9344,7 +9229,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     //
 
-    pub fn has_attribute_modifiers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9358,7 +9243,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     //
 
     pub fn attribute_modifiers(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lcom/google/common/collect/Multimap;");
         let res = self.jni_ref().call_method(
@@ -9373,7 +9258,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     //
 
     pub fn add_attribute_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -9401,7 +9286,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     //
 
     pub fn set_attribute_modifiers(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
@@ -9418,7 +9303,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     //
 
     pub fn remove_attribute_modifier_with_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -9449,7 +9334,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     //
 
     pub fn custom_tag_container(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
@@ -9468,7 +9353,7 @@ impl<'mc> SpawnEggMeta<'mc> {
 
     #[deprecated]
 
-    pub fn set_version(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -9482,9 +9367,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -9497,7 +9380,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(
@@ -9556,7 +9439,7 @@ impl<'mc> Damageable<'mc> {
     //
 
     /// Sets the damage
-    pub fn set_damage(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_damage(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -9570,7 +9453,7 @@ impl<'mc> Damageable<'mc> {
     }
     //
 
-    pub fn damage(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn damage(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -9580,7 +9463,7 @@ impl<'mc> Damageable<'mc> {
     }
     //
 
-    pub fn has_damage(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_damage(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -9591,7 +9474,7 @@ impl<'mc> Damageable<'mc> {
     //
 
     pub fn clone(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::Damageable<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -9606,7 +9489,7 @@ impl<'mc> Damageable<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -9620,7 +9503,7 @@ impl<'mc> Damageable<'mc> {
     }
     //
 
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -9634,7 +9517,7 @@ impl<'mc> Damageable<'mc> {
     }
     //
 
-    pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -9645,7 +9528,7 @@ impl<'mc> Damageable<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -9663,7 +9546,7 @@ impl<'mc> Damageable<'mc> {
     }
     //
 
-    pub fn has_localized_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9676,7 +9559,7 @@ impl<'mc> Damageable<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9694,7 +9577,7 @@ impl<'mc> Damageable<'mc> {
     //
 
     pub fn set_localized_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -9712,7 +9595,7 @@ impl<'mc> Damageable<'mc> {
     }
     //
 
-    pub fn has_lore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -9722,7 +9605,7 @@ impl<'mc> Damageable<'mc> {
     }
     //
 
-    pub fn lore(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn lore(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -9744,10 +9627,7 @@ impl<'mc> Damageable<'mc> {
     }
     //
 
-    pub fn set_lore(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
         let raw_val_1 = self
             .jni_ref()
@@ -9775,7 +9655,7 @@ impl<'mc> Damageable<'mc> {
     }
     //
 
-    pub fn has_custom_model_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9788,7 +9668,7 @@ impl<'mc> Damageable<'mc> {
     }
     //
 
-    pub fn custom_model_data(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9801,7 +9681,7 @@ impl<'mc> Damageable<'mc> {
     }
     //
 
-    pub fn set_custom_model_data(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -9815,7 +9695,7 @@ impl<'mc> Damageable<'mc> {
     }
     //
 
-    pub fn has_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -9826,7 +9706,7 @@ impl<'mc> Damageable<'mc> {
     //
 
     pub fn has_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -9845,7 +9725,7 @@ impl<'mc> Damageable<'mc> {
     //
 
     pub fn get_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -9863,9 +9743,7 @@ impl<'mc> Damageable<'mc> {
     }
     //
 
-    pub fn enchants(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchants(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -9878,7 +9756,7 @@ impl<'mc> Damageable<'mc> {
     //
 
     pub fn add_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -9906,7 +9784,7 @@ impl<'mc> Damageable<'mc> {
     //
 
     pub fn remove_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -9925,7 +9803,7 @@ impl<'mc> Damageable<'mc> {
     //
 
     pub fn has_conflicting_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -9944,7 +9822,7 @@ impl<'mc> Damageable<'mc> {
     //
 
     pub fn add_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -9957,7 +9835,7 @@ impl<'mc> Damageable<'mc> {
     //
 
     pub fn remove_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -9969,9 +9847,7 @@ impl<'mc> Damageable<'mc> {
     }
     //
 
-    pub fn item_flags(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn item_flags(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -9984,7 +9860,7 @@ impl<'mc> Damageable<'mc> {
     //
 
     pub fn has_item_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
@@ -10002,7 +9878,7 @@ impl<'mc> Damageable<'mc> {
     }
     //
 
-    pub fn is_unbreakable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -10012,7 +9888,7 @@ impl<'mc> Damageable<'mc> {
     }
     //
 
-    pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -10027,7 +9903,7 @@ impl<'mc> Damageable<'mc> {
     }
     //
 
-    pub fn has_attribute_modifiers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10041,7 +9917,7 @@ impl<'mc> Damageable<'mc> {
     //
 
     pub fn attribute_modifiers(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lcom/google/common/collect/Multimap;");
         let res = self.jni_ref().call_method(
@@ -10056,7 +9932,7 @@ impl<'mc> Damageable<'mc> {
     //
 
     pub fn add_attribute_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10084,7 +9960,7 @@ impl<'mc> Damageable<'mc> {
     //
 
     pub fn set_attribute_modifiers(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
@@ -10101,7 +9977,7 @@ impl<'mc> Damageable<'mc> {
     //
 
     pub fn remove_attribute_modifier_with_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10132,7 +10008,7 @@ impl<'mc> Damageable<'mc> {
     //
 
     pub fn custom_tag_container(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
@@ -10151,7 +10027,7 @@ impl<'mc> Damageable<'mc> {
 
     #[deprecated]
 
-    pub fn set_version(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -10165,9 +10041,7 @@ impl<'mc> Damageable<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -10180,7 +10054,7 @@ impl<'mc> Damageable<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(
@@ -10238,9 +10112,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     //
 
-    pub fn effects(
-        &mut self,
-    ) -> Result<Vec<crate::FireworkEffect<'mc>>, Box<dyn std::error::Error>> {
+    pub fn effects(&self) -> Result<Vec<crate::FireworkEffect<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
             self.jni_ref()
@@ -10257,7 +10129,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     //
 
-    pub fn power(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn power(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -10268,7 +10140,7 @@ impl<'mc> FireworkMeta<'mc> {
     //
 
     /// Sets the approximate power of the firework. Each level of power is half a second of flight time.
-    pub fn set_power(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_power(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -10283,7 +10155,7 @@ impl<'mc> FireworkMeta<'mc> {
     //
 
     pub fn add_effect(
-        &mut self,
+        &self,
         arg0: impl Into<crate::FireworkEffect<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/FireworkEffect;)V");
@@ -10301,7 +10173,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     //
 
-    pub fn effects_size(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn effects_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -10312,7 +10184,7 @@ impl<'mc> FireworkMeta<'mc> {
     //
 
     /// Remove an effect from this firework.
-    pub fn remove_effect(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn remove_effect(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -10326,7 +10198,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     //
 
-    pub fn clear_effects(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear_effects(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res =
             self.jni_ref()
@@ -10336,7 +10208,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     //
 
-    pub fn has_effects(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_effects(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -10347,7 +10219,7 @@ impl<'mc> FireworkMeta<'mc> {
     //
 
     pub fn clone(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::FireworkMeta<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -10362,7 +10234,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -10376,7 +10248,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     //
 
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -10390,7 +10262,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     //
 
-    pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -10401,7 +10273,7 @@ impl<'mc> FireworkMeta<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -10419,7 +10291,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     //
 
-    pub fn has_localized_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10432,7 +10304,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10450,7 +10322,7 @@ impl<'mc> FireworkMeta<'mc> {
     //
 
     pub fn set_localized_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -10468,7 +10340,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     //
 
-    pub fn has_lore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -10478,7 +10350,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     //
 
-    pub fn lore(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn lore(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -10500,10 +10372,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     //
 
-    pub fn set_lore(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
         let raw_val_1 = self
             .jni_ref()
@@ -10531,7 +10400,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     //
 
-    pub fn has_custom_model_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10544,7 +10413,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     //
 
-    pub fn custom_model_data(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10557,7 +10426,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     //
 
-    pub fn set_custom_model_data(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -10571,7 +10440,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     //
 
-    pub fn has_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -10582,7 +10451,7 @@ impl<'mc> FireworkMeta<'mc> {
     //
 
     pub fn has_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -10601,7 +10470,7 @@ impl<'mc> FireworkMeta<'mc> {
     //
 
     pub fn get_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -10619,9 +10488,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     //
 
-    pub fn enchants(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchants(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -10634,7 +10501,7 @@ impl<'mc> FireworkMeta<'mc> {
     //
 
     pub fn add_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -10662,7 +10529,7 @@ impl<'mc> FireworkMeta<'mc> {
     //
 
     pub fn remove_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -10681,7 +10548,7 @@ impl<'mc> FireworkMeta<'mc> {
     //
 
     pub fn has_conflicting_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -10700,7 +10567,7 @@ impl<'mc> FireworkMeta<'mc> {
     //
 
     pub fn add_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -10713,7 +10580,7 @@ impl<'mc> FireworkMeta<'mc> {
     //
 
     pub fn remove_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -10725,9 +10592,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     //
 
-    pub fn item_flags(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn item_flags(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -10740,7 +10605,7 @@ impl<'mc> FireworkMeta<'mc> {
     //
 
     pub fn has_item_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
@@ -10758,7 +10623,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     //
 
-    pub fn is_unbreakable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -10768,7 +10633,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     //
 
-    pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -10783,7 +10648,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     //
 
-    pub fn has_attribute_modifiers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10797,7 +10662,7 @@ impl<'mc> FireworkMeta<'mc> {
     //
 
     pub fn attribute_modifiers(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lcom/google/common/collect/Multimap;");
         let res = self.jni_ref().call_method(
@@ -10812,7 +10677,7 @@ impl<'mc> FireworkMeta<'mc> {
     //
 
     pub fn add_attribute_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10840,7 +10705,7 @@ impl<'mc> FireworkMeta<'mc> {
     //
 
     pub fn set_attribute_modifiers(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
@@ -10857,7 +10722,7 @@ impl<'mc> FireworkMeta<'mc> {
     //
 
     pub fn remove_attribute_modifier_with_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10888,7 +10753,7 @@ impl<'mc> FireworkMeta<'mc> {
     //
 
     pub fn custom_tag_container(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
@@ -10907,7 +10772,7 @@ impl<'mc> FireworkMeta<'mc> {
 
     #[deprecated]
 
-    pub fn set_version(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -10921,9 +10786,7 @@ impl<'mc> FireworkMeta<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -10936,7 +10799,7 @@ impl<'mc> FireworkMeta<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(
@@ -10995,7 +10858,7 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn set_color(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Color<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/Color;)V");
@@ -11013,7 +10876,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     //
 
-    pub fn color(&mut self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
+    pub fn color(&self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Color;");
         let res = self
             .jni_ref()
@@ -11025,7 +10888,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     //
 
-    pub fn has_custom_effects(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_effects(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11039,7 +10902,7 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn custom_effects(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::potion::PotionEffect<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self.jni_ref().call_method(
@@ -11061,7 +10924,7 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn add_custom_effect(
-        &mut self,
+        &self,
         arg0: impl Into<crate::potion::PotionEffect<'mc>>,
         arg1: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11086,7 +10949,7 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn remove_custom_effect(
-        &mut self,
+        &self,
         arg0: impl Into<crate::potion::PotionEffectType<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/potion/PotionEffectType;)Z");
@@ -11105,7 +10968,7 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn has_custom_effect(
-        &mut self,
+        &self,
         arg0: impl Into<crate::potion::PotionEffectType<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/potion/PotionEffectType;)Z");
@@ -11123,7 +10986,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     //
 
-    pub fn clear_custom_effects(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn clear_custom_effects(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11137,7 +11000,7 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn set_base_potion_data(
-        &mut self,
+        &self,
         arg0: impl Into<crate::potion::PotionData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/potion/PotionData;)V");
@@ -11156,7 +11019,7 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn base_potion_data(
-        &mut self,
+        &self,
     ) -> Result<crate::potion::PotionData<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/potion/PotionData;");
         let res = self.jni_ref().call_method(
@@ -11173,7 +11036,7 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn set_main_effect(
-        &mut self,
+        &self,
         arg0: impl Into<crate::potion::PotionEffectType<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/potion/PotionEffectType;)Z");
@@ -11191,7 +11054,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     //
 
-    pub fn has_color(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_color(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -11202,7 +11065,7 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn clone(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::PotionMeta<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -11217,7 +11080,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -11231,7 +11094,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     //
 
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -11245,7 +11108,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     //
 
-    pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -11256,7 +11119,7 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -11274,7 +11137,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     //
 
-    pub fn has_localized_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11287,7 +11150,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11305,7 +11168,7 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn set_localized_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -11323,7 +11186,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     //
 
-    pub fn has_lore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -11333,7 +11196,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     //
 
-    pub fn lore(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn lore(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -11355,10 +11218,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     //
 
-    pub fn set_lore(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
         let raw_val_1 = self
             .jni_ref()
@@ -11386,7 +11246,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     //
 
-    pub fn has_custom_model_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11399,7 +11259,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     //
 
-    pub fn custom_model_data(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11412,7 +11272,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     //
 
-    pub fn set_custom_model_data(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -11426,7 +11286,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     //
 
-    pub fn has_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -11437,7 +11297,7 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn has_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -11456,7 +11316,7 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn get_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -11474,9 +11334,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     //
 
-    pub fn enchants(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchants(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -11489,7 +11347,7 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn add_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -11517,7 +11375,7 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn remove_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -11536,7 +11394,7 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn has_conflicting_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -11555,7 +11413,7 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn add_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -11568,7 +11426,7 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn remove_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -11580,9 +11438,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     //
 
-    pub fn item_flags(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn item_flags(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -11595,7 +11451,7 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn has_item_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
@@ -11613,7 +11469,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     //
 
-    pub fn is_unbreakable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -11623,7 +11479,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     //
 
-    pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -11638,7 +11494,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     //
 
-    pub fn has_attribute_modifiers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11652,7 +11508,7 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn attribute_modifiers(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lcom/google/common/collect/Multimap;");
         let res = self.jni_ref().call_method(
@@ -11667,7 +11523,7 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn add_attribute_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11695,7 +11551,7 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn set_attribute_modifiers(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
@@ -11712,7 +11568,7 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn remove_attribute_modifier_with_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11743,7 +11599,7 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn custom_tag_container(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
@@ -11762,7 +11618,7 @@ impl<'mc> PotionMeta<'mc> {
 
     #[deprecated]
 
-    pub fn set_version(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -11776,9 +11632,7 @@ impl<'mc> PotionMeta<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -11791,7 +11645,7 @@ impl<'mc> PotionMeta<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(
@@ -11851,9 +11705,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     //
 
-    pub fn block_state(
-        &mut self,
-    ) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
+    pub fn block_state(&self) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/BlockState;");
         let res =
             self.jni_ref()
@@ -11865,7 +11717,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     //
 
-    pub fn has_block_state(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_block_state(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -11876,7 +11728,7 @@ impl<'mc> BlockStateMeta<'mc> {
     //
 
     pub fn set_block_state(
-        &mut self,
+        &self,
         arg0: impl Into<crate::block::BlockState<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/block/BlockState;)V");
@@ -11894,7 +11746,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -11908,7 +11760,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     //
 
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -11922,7 +11774,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     //
 
-    pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -11933,7 +11785,7 @@ impl<'mc> BlockStateMeta<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -11951,7 +11803,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     //
 
-    pub fn has_localized_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11964,7 +11816,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11982,7 +11834,7 @@ impl<'mc> BlockStateMeta<'mc> {
     //
 
     pub fn set_localized_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -12000,7 +11852,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     //
 
-    pub fn has_lore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -12010,7 +11862,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     //
 
-    pub fn lore(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn lore(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -12032,10 +11884,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     //
 
-    pub fn set_lore(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
         let raw_val_1 = self
             .jni_ref()
@@ -12063,7 +11912,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     //
 
-    pub fn has_custom_model_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12076,7 +11925,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     //
 
-    pub fn custom_model_data(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12089,7 +11938,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     //
 
-    pub fn set_custom_model_data(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -12103,7 +11952,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     //
 
-    pub fn has_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -12114,7 +11963,7 @@ impl<'mc> BlockStateMeta<'mc> {
     //
 
     pub fn has_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -12133,7 +11982,7 @@ impl<'mc> BlockStateMeta<'mc> {
     //
 
     pub fn get_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -12151,9 +12000,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     //
 
-    pub fn enchants(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchants(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -12166,7 +12013,7 @@ impl<'mc> BlockStateMeta<'mc> {
     //
 
     pub fn add_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -12194,7 +12041,7 @@ impl<'mc> BlockStateMeta<'mc> {
     //
 
     pub fn remove_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -12213,7 +12060,7 @@ impl<'mc> BlockStateMeta<'mc> {
     //
 
     pub fn has_conflicting_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -12232,7 +12079,7 @@ impl<'mc> BlockStateMeta<'mc> {
     //
 
     pub fn add_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -12245,7 +12092,7 @@ impl<'mc> BlockStateMeta<'mc> {
     //
 
     pub fn remove_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -12257,9 +12104,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     //
 
-    pub fn item_flags(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn item_flags(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -12272,7 +12117,7 @@ impl<'mc> BlockStateMeta<'mc> {
     //
 
     pub fn has_item_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
@@ -12290,7 +12135,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     //
 
-    pub fn is_unbreakable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -12300,7 +12145,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     //
 
-    pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -12315,7 +12160,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     //
 
-    pub fn has_attribute_modifiers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12329,7 +12174,7 @@ impl<'mc> BlockStateMeta<'mc> {
     //
 
     pub fn attribute_modifiers(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lcom/google/common/collect/Multimap;");
         let res = self.jni_ref().call_method(
@@ -12344,7 +12189,7 @@ impl<'mc> BlockStateMeta<'mc> {
     //
 
     pub fn add_attribute_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12372,7 +12217,7 @@ impl<'mc> BlockStateMeta<'mc> {
     //
 
     pub fn set_attribute_modifiers(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
@@ -12389,7 +12234,7 @@ impl<'mc> BlockStateMeta<'mc> {
     //
 
     pub fn remove_attribute_modifier_with_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12420,7 +12265,7 @@ impl<'mc> BlockStateMeta<'mc> {
     //
 
     pub fn custom_tag_container(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
@@ -12439,7 +12284,7 @@ impl<'mc> BlockStateMeta<'mc> {
 
     #[deprecated]
 
-    pub fn set_version(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -12453,7 +12298,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
@@ -12465,9 +12310,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -12480,7 +12323,7 @@ impl<'mc> BlockStateMeta<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(
@@ -12525,6 +12368,11 @@ impl std::fmt::Display for GenerationEnum {
             GenerationEnum::CopyOfCopy => f.write_str("COPY_OF_COPY"),
             GenerationEnum::Tattered => f.write_str("TATTERED"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for Generation<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct Generation<'mc>(
@@ -12644,7 +12492,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     //
 
     pub fn has_stored_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -12663,7 +12511,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     //
 
     pub fn get_stored_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -12682,7 +12530,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     //
 
     pub fn stored_enchants(
-        &mut self,
+        &self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self.jni_ref().call_method(
@@ -12699,7 +12547,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     //
 
     pub fn add_stored_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -12727,7 +12575,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     //
 
     pub fn remove_stored_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -12746,7 +12594,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     //
 
     pub fn has_conflicting_stored_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -12764,7 +12612,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     //
 
-    pub fn has_stored_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_stored_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12778,7 +12626,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     //
 
     pub fn clone(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::EnchantmentStorageMeta<'mc>, Box<dyn std::error::Error>>
     {
         let mut args = Vec::new();
@@ -12794,7 +12642,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -12808,7 +12656,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     //
 
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -12822,7 +12670,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     //
 
-    pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -12833,7 +12681,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -12851,7 +12699,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     //
 
-    pub fn has_localized_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12864,7 +12712,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12882,7 +12730,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     //
 
     pub fn set_localized_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -12900,7 +12748,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     //
 
-    pub fn has_lore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -12910,7 +12758,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     //
 
-    pub fn lore(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn lore(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -12932,10 +12780,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     //
 
-    pub fn set_lore(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
         let raw_val_1 = self
             .jni_ref()
@@ -12963,7 +12808,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     //
 
-    pub fn has_custom_model_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12976,7 +12821,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     //
 
-    pub fn custom_model_data(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12989,7 +12834,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     //
 
-    pub fn set_custom_model_data(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -13003,7 +12848,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     //
 
-    pub fn has_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -13014,7 +12859,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     //
 
     pub fn has_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -13033,7 +12878,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     //
 
     pub fn get_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -13051,9 +12896,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     //
 
-    pub fn enchants(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchants(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -13066,7 +12909,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     //
 
     pub fn add_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -13094,7 +12937,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     //
 
     pub fn remove_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -13113,7 +12956,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     //
 
     pub fn has_conflicting_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -13132,7 +12975,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     //
 
     pub fn add_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -13145,7 +12988,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     //
 
     pub fn remove_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -13157,9 +13000,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     //
 
-    pub fn item_flags(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn item_flags(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -13172,7 +13013,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     //
 
     pub fn has_item_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
@@ -13190,7 +13031,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     //
 
-    pub fn is_unbreakable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -13200,7 +13041,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     //
 
-    pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -13215,7 +13056,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     //
 
-    pub fn has_attribute_modifiers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13229,7 +13070,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     //
 
     pub fn attribute_modifiers(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lcom/google/common/collect/Multimap;");
         let res = self.jni_ref().call_method(
@@ -13244,7 +13085,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     //
 
     pub fn add_attribute_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -13272,7 +13113,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     //
 
     pub fn set_attribute_modifiers(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
@@ -13289,7 +13130,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     //
 
     pub fn remove_attribute_modifier_with_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -13320,7 +13161,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     //
 
     pub fn custom_tag_container(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
@@ -13339,7 +13180,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
 
     #[deprecated]
 
-    pub fn set_version(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -13353,9 +13194,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -13368,7 +13207,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(
@@ -13429,9 +13268,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     //
 
-    pub fn recipes(
-        &mut self,
-    ) -> Result<Vec<crate::NamespacedKey<'mc>>, Box<dyn std::error::Error>> {
+    pub fn recipes(&self) -> Result<Vec<crate::NamespacedKey<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
             self.jni_ref()
@@ -13449,7 +13286,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     //
 
     pub fn set_recipes(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::NamespacedKey<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
@@ -13480,7 +13317,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     //
 
     pub fn add_recipe(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::NamespacedKey<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/NamespacedKey;)V");
@@ -13492,7 +13329,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     //
 
-    pub fn has_recipes(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_recipes(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -13502,7 +13339,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
@@ -13514,7 +13351,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -13528,7 +13365,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     //
 
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -13542,7 +13379,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     //
 
-    pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -13553,7 +13390,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -13571,7 +13408,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     //
 
-    pub fn has_localized_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13584,7 +13421,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13602,7 +13439,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     //
 
     pub fn set_localized_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -13620,7 +13457,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     //
 
-    pub fn has_lore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -13630,7 +13467,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     //
 
-    pub fn lore(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn lore(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -13652,10 +13489,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     //
 
-    pub fn set_lore(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
         let raw_val_1 = self
             .jni_ref()
@@ -13683,7 +13517,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     //
 
-    pub fn has_custom_model_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13696,7 +13530,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     //
 
-    pub fn custom_model_data(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13709,7 +13543,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     //
 
-    pub fn set_custom_model_data(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -13723,7 +13557,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     //
 
-    pub fn has_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -13734,7 +13568,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     //
 
     pub fn has_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -13753,7 +13587,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     //
 
     pub fn get_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -13771,9 +13605,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     //
 
-    pub fn enchants(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchants(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -13786,7 +13618,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     //
 
     pub fn add_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -13814,7 +13646,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     //
 
     pub fn remove_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -13833,7 +13665,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     //
 
     pub fn has_conflicting_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -13852,7 +13684,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     //
 
     pub fn add_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -13865,7 +13697,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     //
 
     pub fn remove_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -13877,9 +13709,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     //
 
-    pub fn item_flags(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn item_flags(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -13892,7 +13722,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     //
 
     pub fn has_item_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
@@ -13910,7 +13740,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     //
 
-    pub fn is_unbreakable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -13920,7 +13750,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     //
 
-    pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -13935,7 +13765,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     //
 
-    pub fn has_attribute_modifiers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13949,7 +13779,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     //
 
     pub fn attribute_modifiers(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lcom/google/common/collect/Multimap;");
         let res = self.jni_ref().call_method(
@@ -13964,7 +13794,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     //
 
     pub fn add_attribute_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -13992,7 +13822,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     //
 
     pub fn set_attribute_modifiers(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
@@ -14009,7 +13839,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     //
 
     pub fn remove_attribute_modifier_with_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14040,7 +13870,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     //
 
     pub fn custom_tag_container(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
@@ -14059,7 +13889,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
 
     #[deprecated]
 
-    pub fn set_version(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -14073,9 +13903,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -14088,7 +13916,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(
@@ -14147,7 +13975,7 @@ impl<'mc> MapMeta<'mc> {
     //
 
     pub fn set_color(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Color<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/Color;)V");
@@ -14165,7 +13993,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn color(&mut self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
+    pub fn color(&self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Color;");
         let res = self
             .jni_ref()
@@ -14177,7 +14005,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn has_color(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_color(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -14187,7 +14015,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn map_view(&mut self) -> Result<crate::map::MapView<'mc>, Box<dyn std::error::Error>> {
+    pub fn map_view(&self) -> Result<crate::map::MapView<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/map/MapView;");
         let res =
             self.jni_ref()
@@ -14199,7 +14027,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn has_map_id(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_map_id(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -14209,7 +14037,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn map_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn map_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -14227,7 +14055,7 @@ impl<'mc> MapMeta<'mc> {
     /// These methods are poor API: They rely on the caller to pass in an only an integer property, and have poorly defined implementation behavior if that integer is not a valid map (the current implementation for example will generate a new map with a different ID). The xxxMapView family of methods should be used instead.
     ///
     /// Sets the map ID. This is used to determine what map is displayed.
-    pub fn set_map_id(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_map_id(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -14241,7 +14069,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn has_map_view(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_map_view(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -14252,7 +14080,7 @@ impl<'mc> MapMeta<'mc> {
     //
 
     pub fn set_map_view(
-        &mut self,
+        &self,
         arg0: impl Into<crate::map::MapView<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/map/MapView;)V");
@@ -14270,7 +14098,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn is_scaling(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_scaling(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -14281,7 +14109,7 @@ impl<'mc> MapMeta<'mc> {
     //
 
     /// Sets if this map is scaling or not.
-    pub fn set_scaling(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_scaling(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -14296,7 +14124,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn has_location_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_location_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -14306,7 +14134,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn location_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn location_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -14321,7 +14149,7 @@ impl<'mc> MapMeta<'mc> {
     //
 
     pub fn set_location_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -14340,7 +14168,7 @@ impl<'mc> MapMeta<'mc> {
     //
 
     pub fn clone(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::MapMeta<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -14355,7 +14183,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -14369,7 +14197,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -14383,7 +14211,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -14394,7 +14222,7 @@ impl<'mc> MapMeta<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -14412,7 +14240,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn has_localized_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14425,7 +14253,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14443,7 +14271,7 @@ impl<'mc> MapMeta<'mc> {
     //
 
     pub fn set_localized_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -14461,7 +14289,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn has_lore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -14471,7 +14299,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn lore(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn lore(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -14493,10 +14321,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn set_lore(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
         let raw_val_1 = self
             .jni_ref()
@@ -14524,7 +14349,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn has_custom_model_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14537,7 +14362,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn custom_model_data(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14550,7 +14375,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn set_custom_model_data(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -14564,7 +14389,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn has_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -14575,7 +14400,7 @@ impl<'mc> MapMeta<'mc> {
     //
 
     pub fn has_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -14594,7 +14419,7 @@ impl<'mc> MapMeta<'mc> {
     //
 
     pub fn get_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -14612,9 +14437,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn enchants(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchants(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -14627,7 +14450,7 @@ impl<'mc> MapMeta<'mc> {
     //
 
     pub fn add_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -14655,7 +14478,7 @@ impl<'mc> MapMeta<'mc> {
     //
 
     pub fn remove_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -14674,7 +14497,7 @@ impl<'mc> MapMeta<'mc> {
     //
 
     pub fn has_conflicting_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -14693,7 +14516,7 @@ impl<'mc> MapMeta<'mc> {
     //
 
     pub fn add_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -14706,7 +14529,7 @@ impl<'mc> MapMeta<'mc> {
     //
 
     pub fn remove_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -14718,9 +14541,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn item_flags(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn item_flags(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -14733,7 +14554,7 @@ impl<'mc> MapMeta<'mc> {
     //
 
     pub fn has_item_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
@@ -14751,7 +14572,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn is_unbreakable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -14761,7 +14582,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -14776,7 +14597,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn has_attribute_modifiers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14790,7 +14611,7 @@ impl<'mc> MapMeta<'mc> {
     //
 
     pub fn attribute_modifiers(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lcom/google/common/collect/Multimap;");
         let res = self.jni_ref().call_method(
@@ -14805,7 +14626,7 @@ impl<'mc> MapMeta<'mc> {
     //
 
     pub fn add_attribute_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14833,7 +14654,7 @@ impl<'mc> MapMeta<'mc> {
     //
 
     pub fn set_attribute_modifiers(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
@@ -14850,7 +14671,7 @@ impl<'mc> MapMeta<'mc> {
     //
 
     pub fn remove_attribute_modifier_with_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14881,7 +14702,7 @@ impl<'mc> MapMeta<'mc> {
     //
 
     pub fn custom_tag_container(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
@@ -14900,7 +14721,7 @@ impl<'mc> MapMeta<'mc> {
 
     #[deprecated]
 
-    pub fn set_version(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -14914,9 +14735,7 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -14929,7 +14748,7 @@ impl<'mc> MapMeta<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(
@@ -15009,7 +14828,7 @@ impl<'mc> BookMetaSpigot<'mc> {
     //
 
     pub fn set_page(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: Vec<impl Into<blackboxmc_bungee::bungee::api::chat::BaseComponent<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -15027,7 +14846,7 @@ impl<'mc> BookMetaSpigot<'mc> {
     //
 
     pub fn pages(
-        &mut self,
+        &self,
     ) -> Result<
         Vec<blackboxmc_bungee::bungee::api::chat::BaseComponent<'mc>>,
         Box<dyn std::error::Error>,
@@ -15050,7 +14869,7 @@ impl<'mc> BookMetaSpigot<'mc> {
     //
 
     pub fn set_pages_with_base_componentss(
-        &mut self,
+        &self,
         arg0: std::option::Option<
             Vec<impl Into<blackboxmc_bungee::bungee::api::chat::BaseComponent<'mc>>>,
         >,
@@ -15086,7 +14905,7 @@ impl<'mc> BookMetaSpigot<'mc> {
     //
 
     pub fn add_page(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<blackboxmc_bungee::bungee::api::chat::BaseComponent<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lnet/md_5/bungee/api/chat/BaseComponent;)V");
@@ -15099,7 +14918,7 @@ impl<'mc> BookMetaSpigot<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -15125,7 +14944,7 @@ impl<'mc> BookMetaSpigot<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -15142,7 +14961,7 @@ impl<'mc> BookMetaSpigot<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -15156,7 +14975,7 @@ impl<'mc> BookMetaSpigot<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -15166,7 +14985,7 @@ impl<'mc> BookMetaSpigot<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -15176,7 +14995,7 @@ impl<'mc> BookMetaSpigot<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -15186,7 +15005,7 @@ impl<'mc> BookMetaSpigot<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -15237,7 +15056,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     //
 
     pub fn set_color(
-        &mut self,
+        &self,
         arg0: impl Into<crate::Color<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/Color;)V");
@@ -15255,7 +15074,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     //
 
-    pub fn color(&mut self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
+    pub fn color(&self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Color;");
         let res = self
             .jni_ref()
@@ -15268,7 +15087,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     //
 
     pub fn clone(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::LeatherArmorMeta<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -15283,7 +15102,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -15297,7 +15116,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     //
 
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -15311,7 +15130,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     //
 
-    pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -15322,7 +15141,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -15340,7 +15159,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     //
 
-    pub fn has_localized_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15353,7 +15172,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15371,7 +15190,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     //
 
     pub fn set_localized_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -15389,7 +15208,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     //
 
-    pub fn has_lore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -15399,7 +15218,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     //
 
-    pub fn lore(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn lore(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -15421,10 +15240,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     //
 
-    pub fn set_lore(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
         let raw_val_1 = self
             .jni_ref()
@@ -15452,7 +15268,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     //
 
-    pub fn has_custom_model_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15465,7 +15281,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     //
 
-    pub fn custom_model_data(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15478,7 +15294,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     //
 
-    pub fn set_custom_model_data(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -15492,7 +15308,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     //
 
-    pub fn has_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -15503,7 +15319,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     //
 
     pub fn has_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -15522,7 +15338,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     //
 
     pub fn get_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -15540,9 +15356,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     //
 
-    pub fn enchants(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchants(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -15555,7 +15369,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     //
 
     pub fn add_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -15583,7 +15397,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     //
 
     pub fn remove_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -15602,7 +15416,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     //
 
     pub fn has_conflicting_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -15621,7 +15435,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     //
 
     pub fn add_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -15634,7 +15448,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     //
 
     pub fn remove_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -15646,9 +15460,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     //
 
-    pub fn item_flags(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn item_flags(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -15661,7 +15473,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     //
 
     pub fn has_item_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
@@ -15679,7 +15491,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     //
 
-    pub fn is_unbreakable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -15689,7 +15501,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     //
 
-    pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -15704,7 +15516,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     //
 
-    pub fn has_attribute_modifiers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15718,7 +15530,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     //
 
     pub fn attribute_modifiers(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lcom/google/common/collect/Multimap;");
         let res = self.jni_ref().call_method(
@@ -15733,7 +15545,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     //
 
     pub fn add_attribute_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -15761,7 +15573,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     //
 
     pub fn set_attribute_modifiers(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
@@ -15778,7 +15590,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     //
 
     pub fn remove_attribute_modifier_with_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -15809,7 +15621,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     //
 
     pub fn custom_tag_container(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
@@ -15828,7 +15640,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
 
     #[deprecated]
 
-    pub fn set_version(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -15842,9 +15654,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -15857,7 +15667,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(
@@ -15919,7 +15729,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     //
 
     pub fn set_effect(
-        &mut self,
+        &self,
         arg0: impl Into<crate::FireworkEffect<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/FireworkEffect;)V");
@@ -15937,7 +15747,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     //
 
-    pub fn has_effect(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_effect(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -15947,7 +15757,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     //
 
-    pub fn effect(&mut self) -> Result<crate::FireworkEffect<'mc>, Box<dyn std::error::Error>> {
+    pub fn effect(&self) -> Result<crate::FireworkEffect<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/FireworkEffect;");
         let res = self
             .jni_ref()
@@ -15960,7 +15770,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     //
 
     pub fn clone(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::FireworkEffectMeta<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -15975,7 +15785,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -15989,7 +15799,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     //
 
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -16003,7 +15813,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     //
 
-    pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -16014,7 +15824,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -16032,7 +15842,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     //
 
-    pub fn has_localized_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16045,7 +15855,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16063,7 +15873,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     //
 
     pub fn set_localized_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -16081,7 +15891,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     //
 
-    pub fn has_lore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -16091,7 +15901,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     //
 
-    pub fn lore(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn lore(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -16113,10 +15923,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     //
 
-    pub fn set_lore(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
         let raw_val_1 = self
             .jni_ref()
@@ -16144,7 +15951,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     //
 
-    pub fn has_custom_model_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16157,7 +15964,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     //
 
-    pub fn custom_model_data(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16170,7 +15977,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     //
 
-    pub fn set_custom_model_data(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -16184,7 +15991,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     //
 
-    pub fn has_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -16195,7 +16002,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     //
 
     pub fn has_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -16214,7 +16021,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     //
 
     pub fn get_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -16232,9 +16039,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     //
 
-    pub fn enchants(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchants(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -16247,7 +16052,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     //
 
     pub fn add_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -16275,7 +16080,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     //
 
     pub fn remove_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -16294,7 +16099,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     //
 
     pub fn has_conflicting_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -16313,7 +16118,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     //
 
     pub fn add_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -16326,7 +16131,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     //
 
     pub fn remove_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -16338,9 +16143,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     //
 
-    pub fn item_flags(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn item_flags(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -16353,7 +16156,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     //
 
     pub fn has_item_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
@@ -16371,7 +16174,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     //
 
-    pub fn is_unbreakable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -16381,7 +16184,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     //
 
-    pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -16396,7 +16199,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     //
 
-    pub fn has_attribute_modifiers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16410,7 +16213,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     //
 
     pub fn attribute_modifiers(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lcom/google/common/collect/Multimap;");
         let res = self.jni_ref().call_method(
@@ -16425,7 +16228,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     //
 
     pub fn add_attribute_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -16453,7 +16256,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     //
 
     pub fn set_attribute_modifiers(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
@@ -16470,7 +16273,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     //
 
     pub fn remove_attribute_modifier_with_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -16501,7 +16304,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     //
 
     pub fn custom_tag_container(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
@@ -16520,7 +16323,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
 
     #[deprecated]
 
-    pub fn set_version(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -16534,9 +16337,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -16549,7 +16350,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(
@@ -16612,7 +16413,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     //
 
     pub fn pattern(
-        &mut self,
+        &self,
     ) -> Result<crate::entity::TropicalFishPattern<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/TropicalFish$Pattern;");
         let res =
@@ -16639,7 +16440,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     //
 
     pub fn set_pattern(
-        &mut self,
+        &self,
         arg0: impl Into<crate::entity::TropicalFishPattern<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/entity/TropicalFish$Pattern;)V");
@@ -16657,7 +16458,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     //
 
-    pub fn pattern_color(&mut self) -> Result<crate::DyeColor<'mc>, Box<dyn std::error::Error>> {
+    pub fn pattern_color(&self) -> Result<crate::DyeColor<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/DyeColor;");
         let res =
             self.jni_ref()
@@ -16683,7 +16484,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     //
 
     pub fn set_pattern_color(
-        &mut self,
+        &self,
         arg0: impl Into<crate::DyeColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/DyeColor;)V");
@@ -16701,7 +16502,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     //
 
-    pub fn body_color(&mut self) -> Result<crate::DyeColor<'mc>, Box<dyn std::error::Error>> {
+    pub fn body_color(&self) -> Result<crate::DyeColor<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/DyeColor;");
         let res =
             self.jni_ref()
@@ -16727,7 +16528,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     //
 
     pub fn set_body_color(
-        &mut self,
+        &self,
         arg0: impl Into<crate::DyeColor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/DyeColor;)V");
@@ -16745,7 +16546,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     //
 
-    pub fn has_variant(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_variant(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -16755,7 +16556,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
@@ -16767,7 +16568,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -16781,7 +16582,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     //
 
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -16795,7 +16596,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     //
 
-    pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -16806,7 +16607,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -16824,7 +16625,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     //
 
-    pub fn has_localized_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16837,7 +16638,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16855,7 +16656,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     //
 
     pub fn set_localized_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -16873,7 +16674,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     //
 
-    pub fn has_lore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -16883,7 +16684,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     //
 
-    pub fn lore(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn lore(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -16905,10 +16706,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     //
 
-    pub fn set_lore(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
         let raw_val_1 = self
             .jni_ref()
@@ -16936,7 +16734,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     //
 
-    pub fn has_custom_model_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16949,7 +16747,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     //
 
-    pub fn custom_model_data(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16962,7 +16760,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     //
 
-    pub fn set_custom_model_data(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -16976,7 +16774,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     //
 
-    pub fn has_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -16987,7 +16785,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     //
 
     pub fn has_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -17006,7 +16804,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     //
 
     pub fn get_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -17024,9 +16822,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     //
 
-    pub fn enchants(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchants(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -17039,7 +16835,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     //
 
     pub fn add_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -17067,7 +16863,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     //
 
     pub fn remove_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -17086,7 +16882,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     //
 
     pub fn has_conflicting_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -17105,7 +16901,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     //
 
     pub fn add_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -17118,7 +16914,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     //
 
     pub fn remove_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -17130,9 +16926,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     //
 
-    pub fn item_flags(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn item_flags(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -17145,7 +16939,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     //
 
     pub fn has_item_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
@@ -17163,7 +16957,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     //
 
-    pub fn is_unbreakable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -17173,7 +16967,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     //
 
-    pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -17188,7 +16982,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     //
 
-    pub fn has_attribute_modifiers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -17202,7 +16996,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     //
 
     pub fn attribute_modifiers(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lcom/google/common/collect/Multimap;");
         let res = self.jni_ref().call_method(
@@ -17217,7 +17011,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     //
 
     pub fn add_attribute_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -17245,7 +17039,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     //
 
     pub fn set_attribute_modifiers(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
@@ -17262,7 +17056,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     //
 
     pub fn remove_attribute_modifier_with_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -17293,7 +17087,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     //
 
     pub fn custom_tag_container(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
@@ -17312,7 +17106,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
 
     #[deprecated]
 
-    pub fn set_version(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -17326,9 +17120,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -17341,7 +17133,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(
@@ -17400,7 +17192,7 @@ impl<'mc> BookMeta<'mc> {
     //
 
     pub fn spigot(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::BookMetaSpigot<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/meta/BookMeta$Spigot;");
         let res = self
@@ -17415,7 +17207,7 @@ impl<'mc> BookMeta<'mc> {
 
     /// Gets the specified page in the book. The given page must exist.
     /// <p>Pages are 1-indexed.</p>
-    pub fn get_page(&mut self, arg0: i32) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn get_page(&self, arg0: i32) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/String;");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -17434,7 +17226,7 @@ impl<'mc> BookMeta<'mc> {
     //
 
     pub fn set_page(
-        &mut self,
+        &self,
         arg0: i32,
         arg1: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -17457,7 +17249,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn title(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn title(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -17471,7 +17263,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn author(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn author(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -17485,10 +17277,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn set_author(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_author(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -17504,7 +17293,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn pages(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn pages(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -17527,7 +17316,7 @@ impl<'mc> BookMeta<'mc> {
     //
 
     pub fn set_pages_with_list(
-        &mut self,
+        &self,
         arg0: std::option::Option<Vec<impl Into<String>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -17541,10 +17330,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn add_page(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn add_page(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let res = self
             .jni_ref()
@@ -17554,10 +17340,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn set_title(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn set_title(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -17573,7 +17356,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn has_title(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_title(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -17583,7 +17366,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn has_author(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_author(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -17593,7 +17376,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn has_generation(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_generation(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -17604,7 +17387,7 @@ impl<'mc> BookMeta<'mc> {
     //
 
     pub fn generation(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::BookMetaGeneration<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/meta/BookMeta$Generation;");
         let res =
@@ -17631,7 +17414,7 @@ impl<'mc> BookMeta<'mc> {
     //
 
     pub fn set_generation(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::meta::BookMetaGeneration<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/meta/BookMeta$Generation;)V");
@@ -17649,7 +17432,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn has_pages(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_pages(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -17659,7 +17442,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn page_count(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn page_count(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -17670,7 +17453,7 @@ impl<'mc> BookMeta<'mc> {
     //
 
     pub fn clone(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::BookMeta<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -17685,7 +17468,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -17699,7 +17482,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -17713,7 +17496,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -17724,7 +17507,7 @@ impl<'mc> BookMeta<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -17742,7 +17525,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn has_localized_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -17755,7 +17538,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -17773,7 +17556,7 @@ impl<'mc> BookMeta<'mc> {
     //
 
     pub fn set_localized_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -17791,7 +17574,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn has_lore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -17801,7 +17584,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn lore(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn lore(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -17823,10 +17606,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn set_lore(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
         let raw_val_1 = self
             .jni_ref()
@@ -17854,7 +17634,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn has_custom_model_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -17867,7 +17647,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn custom_model_data(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -17880,7 +17660,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn set_custom_model_data(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -17894,7 +17674,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn has_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -17905,7 +17685,7 @@ impl<'mc> BookMeta<'mc> {
     //
 
     pub fn has_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -17924,7 +17704,7 @@ impl<'mc> BookMeta<'mc> {
     //
 
     pub fn get_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -17942,9 +17722,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn enchants(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchants(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -17957,7 +17735,7 @@ impl<'mc> BookMeta<'mc> {
     //
 
     pub fn add_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -17985,7 +17763,7 @@ impl<'mc> BookMeta<'mc> {
     //
 
     pub fn remove_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -18004,7 +17782,7 @@ impl<'mc> BookMeta<'mc> {
     //
 
     pub fn has_conflicting_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -18023,7 +17801,7 @@ impl<'mc> BookMeta<'mc> {
     //
 
     pub fn add_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -18036,7 +17814,7 @@ impl<'mc> BookMeta<'mc> {
     //
 
     pub fn remove_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -18048,9 +17826,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn item_flags(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn item_flags(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -18063,7 +17839,7 @@ impl<'mc> BookMeta<'mc> {
     //
 
     pub fn has_item_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
@@ -18081,7 +17857,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn is_unbreakable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -18091,7 +17867,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -18106,7 +17882,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn has_attribute_modifiers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18120,7 +17896,7 @@ impl<'mc> BookMeta<'mc> {
     //
 
     pub fn attribute_modifiers(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lcom/google/common/collect/Multimap;");
         let res = self.jni_ref().call_method(
@@ -18135,7 +17911,7 @@ impl<'mc> BookMeta<'mc> {
     //
 
     pub fn add_attribute_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -18163,7 +17939,7 @@ impl<'mc> BookMeta<'mc> {
     //
 
     pub fn set_attribute_modifiers(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
@@ -18180,7 +17956,7 @@ impl<'mc> BookMeta<'mc> {
     //
 
     pub fn remove_attribute_modifier_with_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -18211,7 +17987,7 @@ impl<'mc> BookMeta<'mc> {
     //
 
     pub fn custom_tag_container(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
@@ -18230,7 +18006,7 @@ impl<'mc> BookMeta<'mc> {
 
     #[deprecated]
 
-    pub fn set_version(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -18244,9 +18020,7 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -18259,7 +18033,7 @@ impl<'mc> BookMeta<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(
@@ -18320,9 +18094,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     //
 
-    pub fn instrument(
-        &mut self,
-    ) -> Result<crate::MusicInstrument<'mc>, Box<dyn std::error::Error>> {
+    pub fn instrument(&self) -> Result<crate::MusicInstrument<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/MusicInstrument;");
         let res =
             self.jni_ref()
@@ -18335,7 +18107,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     //
 
     pub fn set_instrument(
-        &mut self,
+        &self,
         arg0: impl Into<crate::MusicInstrument<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/MusicInstrument;)V");
@@ -18354,7 +18126,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     //
 
     pub fn clone(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::MusicInstrumentMeta<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -18369,7 +18141,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     //
 
-    pub fn display_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -18383,7 +18155,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     //
 
-    pub fn as_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -18397,7 +18169,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     //
 
-    pub fn has_display_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -18408,7 +18180,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     //
 
     pub fn set_display_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -18426,7 +18198,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     //
 
-    pub fn has_localized_name(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18439,7 +18211,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18457,7 +18229,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     //
 
     pub fn set_localized_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -18475,7 +18247,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     //
 
-    pub fn has_lore(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -18485,7 +18257,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     //
 
-    pub fn lore(&mut self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn lore(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
             .jni_ref()
@@ -18507,10 +18279,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     //
 
-    pub fn set_lore(
-        &mut self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/List;)V");
         let raw_val_1 = self
             .jni_ref()
@@ -18538,7 +18307,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     //
 
-    pub fn has_custom_model_data(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18551,7 +18320,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     //
 
-    pub fn custom_model_data(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18564,7 +18333,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     //
 
-    pub fn set_custom_model_data(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -18578,7 +18347,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     //
 
-    pub fn has_enchants(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -18589,7 +18358,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     //
 
     pub fn has_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -18608,7 +18377,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     //
 
     pub fn get_enchant_level(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)I");
@@ -18626,9 +18395,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     //
 
-    pub fn enchants(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchants(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -18641,7 +18408,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     //
 
     pub fn add_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
         arg1: i32,
         arg2: bool,
@@ -18669,7 +18436,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     //
 
     pub fn remove_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -18688,7 +18455,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     //
 
     pub fn has_conflicting_enchant(
-        &mut self,
+        &self,
         arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;)Z");
@@ -18707,7 +18474,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     //
 
     pub fn add_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -18720,7 +18487,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     //
 
     pub fn remove_item_flags(
-        &mut self,
+        &self,
         arg0: Vec<impl Into<crate::inventory::ItemFlag<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)V");
@@ -18732,9 +18499,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     //
 
-    pub fn item_flags(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn item_flags(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
@@ -18747,7 +18512,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     //
 
     pub fn has_item_flag(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::ItemFlag<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/inventory/ItemFlag;)Z");
@@ -18765,7 +18530,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     //
 
-    pub fn is_unbreakable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -18775,7 +18540,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     //
 
-    pub fn set_unbreakable(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -18790,7 +18555,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     //
 
-    pub fn has_attribute_modifiers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18804,7 +18569,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     //
 
     pub fn attribute_modifiers(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lcom/google/common/collect/Multimap;");
         let res = self.jni_ref().call_method(
@@ -18819,7 +18584,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     //
 
     pub fn add_attribute_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -18847,7 +18612,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     //
 
     pub fn set_attribute_modifiers(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lcom/google/common/collect/Multimap;)V");
@@ -18864,7 +18629,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     //
 
     pub fn remove_attribute_modifier_with_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
         arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -18895,7 +18660,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     //
 
     pub fn custom_tag_container(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::meta::tags::CustomItemTagContainer<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/inventory/meta/tags/CustomItemTagContainer;");
@@ -18914,7 +18679,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
 
     #[deprecated]
 
-    pub fn set_version(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -18928,9 +18693,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -18943,7 +18706,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     //
 
     pub fn persistent_data_container(
-        &mut self,
+        &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/persistence/PersistentDataContainer;");
         let res = self.jni_ref().call_method(

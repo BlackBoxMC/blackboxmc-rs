@@ -44,7 +44,7 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
     /// Sets the char that will be used to separate <a href="ConfigurationSection.html" title="interface in org.bukkit.configuration"><code>ConfigurationSection</code></a>s
     /// <p>This value does not affect how the <a title="interface in org.bukkit.configuration" href="Configuration.html"><code>Configuration</code></a> is stored, only in how you access the data. The default value is '.'.</p>
     pub fn path_separator(
-        &mut self,
+        &self,
         arg0: std::option::Option<u16>,
     ) -> Result<crate::configuration::MemoryConfigurationOptions<'mc>, Box<dyn std::error::Error>>
     {
@@ -70,7 +70,7 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
     /// Sets if the <a href="Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> should copy values from its default <a href="Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> directly.
     /// <p>If this is true, all values in the default Configuration will be directly copied, making it impossible to distinguish between values that were set and values that are provided by default. As a result, <a href="ConfigurationSection.html#contains(java.lang.String)"><code>ConfigurationSection.contains(java.lang.String)</code></a> will always return the same value as <a href="ConfigurationSection.html#isSet(java.lang.String)"><code>ConfigurationSection.isSet(java.lang.String)</code></a>. The default value is false.</p>
     pub fn copy_defaults(
-        &mut self,
+        &self,
         arg0: std::option::Option<bool>,
     ) -> Result<crate::configuration::MemoryConfigurationOptions<'mc>, Box<dyn std::error::Error>>
     {
@@ -94,7 +94,7 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
     //
 
     pub fn configuration(
-        &mut self,
+        &self,
     ) -> Result<crate::configuration::Configuration<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -110,7 +110,7 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -136,7 +136,7 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -153,7 +153,7 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -167,7 +167,7 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -177,7 +177,7 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -187,7 +187,7 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -197,7 +197,7 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -259,7 +259,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn get_string_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<String>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -297,7 +297,7 @@ impl<'mc> MemorySection<'mc> {
     /// <p>If deep is set to true, then this will contain all the keys within any child <a href="ConfigurationSection.html" title="interface in org.bukkit.configuration"><code>ConfigurationSection</code></a>s (and their children, etc). These will be in a valid path notation for you to use.</p>
     /// <p>If deep is set to false, then this will contain only the keys of any direct children, and not their own children.</p>
     pub fn get_keys(
-        &mut self,
+        &self,
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Set;");
@@ -317,7 +317,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn get_color_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::Color<'mc>>>,
     ) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
@@ -349,7 +349,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn get_item_stack_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
@@ -381,7 +381,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn get_offline_player_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
     ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
@@ -417,7 +417,7 @@ impl<'mc> MemorySection<'mc> {
     /// <p>If deep is set to true, then this will contain all the keys and values within any child <a href="ConfigurationSection.html" title="interface in org.bukkit.configuration"><code>ConfigurationSection</code></a>s (and their children, etc). These keys will be in a valid path notation for you to use.</p>
     /// <p>If deep is set to false, then this will contain only the keys and values of any direct children, and not their own children.</p>
     pub fn get_values(
-        &mut self,
+        &self,
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Map;");
@@ -476,7 +476,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn default_section(
-        &mut self,
+        &self,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/configuration/ConfigurationSection;");
         let res = self.jni_ref().call_method(
@@ -492,7 +492,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn current_path(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn current_path(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -507,7 +507,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn add_default(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -531,7 +531,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn is_configuration_section(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -550,7 +550,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn get_configuration_section(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
         let sig =
@@ -572,7 +572,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn create_section_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
@@ -603,10 +603,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn is_string(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_string(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -622,7 +619,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn is_int(&mut self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_int(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -638,10 +635,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn is_boolean(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_boolean(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -657,10 +651,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn is_double(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_double(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -676,7 +667,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn is_long(&mut self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_long(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -692,7 +683,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn is_list(&mut self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_list(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -709,7 +700,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn get_string_list(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Ljava/util/List;");
@@ -756,7 +747,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn get_serializable_with_string(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
         arg2: std::option::Option<
@@ -798,7 +789,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn get_vector_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
@@ -829,10 +820,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn is_vector(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_vector(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -849,7 +837,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn is_offline_player(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -868,7 +856,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn is_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -886,10 +874,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn is_color(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_color(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -905,10 +890,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn is_location(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_location(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -925,7 +907,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn get_comments(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Ljava/util/List;");
@@ -956,7 +938,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn get_inline_comments(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Ljava/util/List;");
@@ -987,7 +969,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn set_comments(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1025,7 +1007,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn set_inline_comments(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1062,7 +1044,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1077,7 +1059,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn get_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -1105,7 +1087,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1120,7 +1102,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn get_boolean_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1149,7 +1131,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn get_int_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -1177,7 +1159,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn get_long_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
@@ -1205,7 +1187,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn get_double_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
@@ -1233,7 +1215,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn contains_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1262,7 +1244,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn get_location_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
@@ -1294,7 +1276,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn parent(
-        &mut self,
+        &self,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/configuration/ConfigurationSection;");
         let res = self
@@ -1308,7 +1290,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn set(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1331,7 +1313,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn is_set(&mut self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_set(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -1348,7 +1330,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn root(
-        &mut self,
+        &self,
     ) -> Result<crate::configuration::Configuration<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/configuration/Configuration;");
         let res = self
@@ -1362,7 +1344,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn get_object_with_string(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -1394,7 +1376,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1420,7 +1402,7 @@ impl<'mc> MemorySection<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1436,7 +1418,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1446,7 +1428,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1456,7 +1438,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1466,7 +1448,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1521,7 +1503,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn add_default(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1545,7 +1527,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn defaults(
-        &mut self,
+        &self,
     ) -> Result<crate::configuration::Configuration<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/configuration/Configuration;");
         let res =
@@ -1559,7 +1541,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn add_defaults_with_map(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::configuration::Configuration<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1581,7 +1563,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn set_defaults(
-        &mut self,
+        &self,
         arg0: impl Into<crate::configuration::Configuration<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/configuration/Configuration;)V");
@@ -1600,7 +1582,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn options(
-        &mut self,
+        &self,
     ) -> Result<crate::configuration::ConfigurationOptions<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/configuration/ConfigurationOptions;");
         let res = self
@@ -1614,7 +1596,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn get_string_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<String>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -1648,7 +1630,7 @@ impl<'mc> Configuration<'mc> {
     //@NotNull
 
     pub fn get_keys(
-        &mut self,
+        &self,
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Set;");
@@ -1668,7 +1650,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn get_color_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::Color<'mc>>>,
     ) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
@@ -1700,7 +1682,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn get_item_stack_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
@@ -1732,7 +1714,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn get_offline_player_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
     ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
@@ -1764,7 +1746,7 @@ impl<'mc> Configuration<'mc> {
     //@NotNull
 
     pub fn get_values(
-        &mut self,
+        &self,
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Map;");
@@ -1784,7 +1766,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn default_section(
-        &mut self,
+        &self,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/configuration/ConfigurationSection;");
         let res = self.jni_ref().call_method(
@@ -1800,7 +1782,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn current_path(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn current_path(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -1815,7 +1797,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn is_configuration_section(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -1834,7 +1816,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn get_configuration_section(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
         let sig =
@@ -1856,7 +1838,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn create_section_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
@@ -1887,10 +1869,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn is_string(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_string(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -1906,7 +1885,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn is_int(&mut self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_int(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -1922,10 +1901,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn is_boolean(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_boolean(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -1941,10 +1917,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn is_double(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_double(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -1960,7 +1933,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn is_long(&mut self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_long(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -1976,7 +1949,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn is_list(&mut self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_list(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -1993,7 +1966,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn get_string_list(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Ljava/util/List;");
@@ -2040,7 +2013,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn get_serializable_with_string(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
         arg2: std::option::Option<
@@ -2082,7 +2055,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn get_vector_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
@@ -2113,10 +2086,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn is_vector(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_vector(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -2133,7 +2103,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn is_offline_player(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -2152,7 +2122,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn is_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -2170,10 +2140,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn is_color(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_color(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -2189,10 +2156,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn is_location(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_location(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -2209,7 +2173,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn get_comments(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Ljava/util/List;");
@@ -2240,7 +2204,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn get_inline_comments(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Ljava/util/List;");
@@ -2271,7 +2235,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn set_comments(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2309,7 +2273,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn set_inline_comments(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2346,7 +2310,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2361,7 +2325,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn get_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -2389,7 +2353,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn get_boolean_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2418,7 +2382,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn get_int_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -2446,7 +2410,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn get_long_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
@@ -2474,7 +2438,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn get_double_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
@@ -2502,7 +2466,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn contains_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2531,7 +2495,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn get_location_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
@@ -2563,7 +2527,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn parent(
-        &mut self,
+        &self,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/configuration/ConfigurationSection;");
         let res = self
@@ -2577,7 +2541,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn set(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2600,7 +2564,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn is_set(&mut self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_set(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -2617,7 +2581,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn root(
-        &mut self,
+        &self,
     ) -> Result<crate::configuration::Configuration<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/configuration/Configuration;");
         let res = self
@@ -2631,7 +2595,7 @@ impl<'mc> Configuration<'mc> {
     //
 
     pub fn get_object_with_string(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -2736,7 +2700,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn add_default(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2760,7 +2724,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn defaults(
-        &mut self,
+        &self,
     ) -> Result<crate::configuration::Configuration<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/configuration/Configuration;");
         let res =
@@ -2774,7 +2738,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn add_defaults_with_configuration(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2796,7 +2760,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn set_defaults(
-        &mut self,
+        &self,
         arg0: impl Into<crate::configuration::Configuration<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/configuration/Configuration;)V");
@@ -2815,7 +2779,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn parent(
-        &mut self,
+        &self,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/configuration/ConfigurationSection;");
         let res = self
@@ -2829,7 +2793,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn options(
-        &mut self,
+        &self,
     ) -> Result<crate::configuration::MemoryConfigurationOptions<'mc>, Box<dyn std::error::Error>>
     {
         let mut args = Vec::new();
@@ -2846,7 +2810,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn get_string_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<String>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -2880,7 +2844,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //@NotNull
 
     pub fn get_keys(
-        &mut self,
+        &self,
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Set;");
@@ -2900,7 +2864,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn get_color_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::Color<'mc>>>,
     ) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
@@ -2932,7 +2896,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn get_item_stack_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
@@ -2964,7 +2928,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn get_offline_player_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
     ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
@@ -2996,7 +2960,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //@NotNull
 
     pub fn get_values(
-        &mut self,
+        &self,
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Map;");
@@ -3055,7 +3019,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn default_section(
-        &mut self,
+        &self,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/configuration/ConfigurationSection;");
         let res = self.jni_ref().call_method(
@@ -3071,7 +3035,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn current_path(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn current_path(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -3086,7 +3050,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn is_configuration_section(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -3105,7 +3069,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn get_configuration_section(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
         let sig =
@@ -3127,7 +3091,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn create_section_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
@@ -3158,10 +3122,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn is_string(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_string(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -3177,7 +3138,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn is_int(&mut self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_int(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -3193,10 +3154,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn is_boolean(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_boolean(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -3212,10 +3170,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn is_double(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_double(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -3231,7 +3186,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn is_long(&mut self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_long(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -3247,7 +3202,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn is_list(&mut self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_list(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -3264,7 +3219,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn get_string_list(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Ljava/util/List;");
@@ -3311,7 +3266,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn get_serializable_with_string(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
         arg2: std::option::Option<
@@ -3353,7 +3308,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn get_vector_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
@@ -3384,10 +3339,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn is_vector(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_vector(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -3404,7 +3356,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn is_offline_player(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -3423,7 +3375,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn is_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -3441,10 +3393,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn is_color(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_color(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -3460,10 +3409,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn is_location(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_location(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -3480,7 +3426,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn get_comments(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Ljava/util/List;");
@@ -3511,7 +3457,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn get_inline_comments(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Ljava/util/List;");
@@ -3542,7 +3488,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn set_comments(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3580,7 +3526,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn set_inline_comments(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3617,7 +3563,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3632,7 +3578,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn get_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -3660,7 +3606,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3675,7 +3621,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn get_boolean_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3704,7 +3650,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn get_int_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -3732,7 +3678,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn get_long_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
@@ -3760,7 +3706,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn get_double_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
@@ -3788,7 +3734,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn contains_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3817,7 +3763,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn get_location_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
@@ -3849,7 +3795,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn set(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3872,7 +3818,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn is_set(&mut self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_set(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -3889,7 +3835,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn root(
-        &mut self,
+        &self,
     ) -> Result<crate::configuration::Configuration<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/configuration/Configuration;");
         let res = self
@@ -3903,7 +3849,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn get_object_with_string(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -3935,7 +3881,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3961,7 +3907,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -3977,7 +3923,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -3987,7 +3933,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -3997,7 +3943,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4007,7 +3953,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4079,7 +4025,7 @@ impl<'mc> ConfigurationOptions<'mc> {
     /// Sets the char that will be used to separate <a title="interface in org.bukkit.configuration" href="ConfigurationSection.html"><code>ConfigurationSection</code></a>s
     /// <p>This value does not affect how the <a href="Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> is stored, only in how you access the data. The default value is '.'.</p>
     pub fn path_separator(
-        &mut self,
+        &self,
         arg0: std::option::Option<u16>,
     ) -> Result<crate::configuration::ConfigurationOptions<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -4103,7 +4049,7 @@ impl<'mc> ConfigurationOptions<'mc> {
     /// Sets if the <a href="Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> should copy values from its default <a href="Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> directly.
     /// <p>If this is true, all values in the default Configuration will be directly copied, making it impossible to distinguish between values that were set and values that are provided by default. As a result, <a href="ConfigurationSection.html#contains(java.lang.String)"><code>ConfigurationSection.contains(java.lang.String)</code></a> will always return the same value as <a href="ConfigurationSection.html#isSet(java.lang.String)"><code>ConfigurationSection.isSet(java.lang.String)</code></a>. The default value is false.</p>
     pub fn copy_defaults(
-        &mut self,
+        &self,
         arg0: std::option::Option<bool>,
     ) -> Result<crate::configuration::ConfigurationOptions<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -4126,7 +4072,7 @@ impl<'mc> ConfigurationOptions<'mc> {
     //
 
     pub fn configuration(
-        &mut self,
+        &self,
     ) -> Result<crate::configuration::Configuration<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/configuration/Configuration;");
         let res =
@@ -4140,7 +4086,7 @@ impl<'mc> ConfigurationOptions<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4166,7 +4112,7 @@ impl<'mc> ConfigurationOptions<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -4183,7 +4129,7 @@ impl<'mc> ConfigurationOptions<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4197,7 +4143,7 @@ impl<'mc> ConfigurationOptions<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4207,7 +4153,7 @@ impl<'mc> ConfigurationOptions<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -4217,7 +4163,7 @@ impl<'mc> ConfigurationOptions<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4227,7 +4173,7 @@ impl<'mc> ConfigurationOptions<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4278,7 +4224,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn get_string_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<String>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -4315,7 +4261,7 @@ impl<'mc> ConfigurationSection<'mc> {
     /// <p>If deep is set to true, then this will contain all the keys within any child <a title="interface in org.bukkit.configuration" href="ConfigurationSection.html"><code>ConfigurationSection</code></a>s (and their children, etc). These will be in a valid path notation for you to use.</p>
     /// <p>If deep is set to false, then this will contain only the keys of any direct children, and not their own children.</p>
     pub fn get_keys(
-        &mut self,
+        &self,
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Set;");
@@ -4335,7 +4281,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn get_color_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::Color<'mc>>>,
     ) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
@@ -4367,7 +4313,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn get_item_stack_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
@@ -4399,7 +4345,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn get_offline_player_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
     ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
@@ -4434,7 +4380,7 @@ impl<'mc> ConfigurationSection<'mc> {
     /// <p>If deep is set to true, then this will contain all the keys and values within any child <a title="interface in org.bukkit.configuration" href="ConfigurationSection.html"><code>ConfigurationSection</code></a>s (and their children, etc). These keys will be in a valid path notation for you to use.</p>
     /// <p>If deep is set to false, then this will contain only the keys and values of any direct children, and not their own children.</p>
     pub fn get_values(
-        &mut self,
+        &self,
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Map;");
@@ -4454,7 +4400,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn default_section(
-        &mut self,
+        &self,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/configuration/ConfigurationSection;");
         let res = self.jni_ref().call_method(
@@ -4470,7 +4416,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn current_path(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn current_path(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -4485,7 +4431,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn add_default(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4509,7 +4455,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn is_configuration_section(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -4528,7 +4474,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn get_configuration_section(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
         let sig =
@@ -4550,7 +4496,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn create_section_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
@@ -4581,10 +4527,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn is_string(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_string(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -4600,7 +4543,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn is_int(&mut self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_int(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -4616,10 +4559,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn is_boolean(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_boolean(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -4635,10 +4575,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn is_double(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_double(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -4654,7 +4591,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn is_long(&mut self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_long(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -4670,7 +4607,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn is_list(&mut self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_list(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -4687,7 +4624,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn get_string_list(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Ljava/util/List;");
@@ -4734,7 +4671,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn get_serializable_with_string(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
         arg2: std::option::Option<
@@ -4776,7 +4713,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn get_vector_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
@@ -4807,10 +4744,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn is_vector(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_vector(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -4827,7 +4761,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn is_offline_player(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -4846,7 +4780,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn is_item_stack(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -4864,10 +4798,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn is_color(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_color(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -4883,10 +4814,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn is_location(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_location(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -4903,7 +4831,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn get_comments(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Ljava/util/List;");
@@ -4934,7 +4862,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn get_inline_comments(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Ljava/util/List;");
@@ -4965,7 +4893,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn set_comments(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -5003,7 +4931,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn set_inline_comments(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -5040,7 +4968,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5055,7 +4983,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn get_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -5083,7 +5011,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn get_boolean_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5112,7 +5040,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn get_int_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -5140,7 +5068,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn get_long_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
@@ -5168,7 +5096,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn get_double_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
@@ -5196,7 +5124,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn contains_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5225,7 +5153,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn get_location_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
@@ -5257,7 +5185,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn parent(
-        &mut self,
+        &self,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/configuration/ConfigurationSection;");
         let res = self
@@ -5271,7 +5199,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn set(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -5294,7 +5222,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn is_set(&mut self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_set(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -5311,7 +5239,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn root(
-        &mut self,
+        &self,
     ) -> Result<crate::configuration::Configuration<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/configuration/Configuration;");
         let res = self
@@ -5325,7 +5253,7 @@ impl<'mc> ConfigurationSection<'mc> {
     //
 
     pub fn get_object_with_string(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,

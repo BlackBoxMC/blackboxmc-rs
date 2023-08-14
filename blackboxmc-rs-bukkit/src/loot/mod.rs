@@ -30,7 +30,7 @@ impl<'mc> LootTable<'mc> {
     //
 
     pub fn populate_loot(
-        &mut self,
+        &self,
         arg0: impl Into<blackboxmc_java::JavaRandom<'mc>>,
         arg1: impl Into<crate::loot::LootContext<'mc>>,
     ) -> Result<Vec<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
@@ -64,7 +64,7 @@ impl<'mc> LootTable<'mc> {
     //
 
     pub fn fill_inventory(
-        &mut self,
+        &self,
         arg0: impl Into<crate::inventory::Inventory<'mc>>,
         arg1: impl Into<blackboxmc_java::JavaRandom<'mc>>,
         arg2: impl Into<crate::loot::LootContext<'mc>>,
@@ -96,7 +96,7 @@ impl<'mc> LootTable<'mc> {
     }
     //
 
-    pub fn key(&mut self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self
             .jni_ref()
@@ -465,6 +465,11 @@ impl std::fmt::Display for LootTablesLootTablesEnum {
             LootTablesLootTablesEnum::SheepWhite => f.write_str("SHEEP_WHITE"),
             LootTablesLootTablesEnum::SheepYellow => f.write_str("SHEEP_YELLOW"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for LootTablesLootTables<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct LootTablesLootTables<'mc>(
@@ -948,7 +953,7 @@ impl<'mc> Lootable<'mc> {
     }
     //
 
-    pub fn seed(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
+    pub fn seed(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
         let res = self
             .jni_ref()
@@ -959,7 +964,7 @@ impl<'mc> Lootable<'mc> {
     //
 
     /// Set the seed used when this Loot Table generates loot.
-    pub fn set_seed(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_seed(&self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(J)V");
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let res = self.jni_ref().call_method(
@@ -974,7 +979,7 @@ impl<'mc> Lootable<'mc> {
     //
 
     pub fn set_loot_table(
-        &mut self,
+        &self,
         arg0: impl Into<crate::loot::LootTable<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/loot/LootTable;)V");
@@ -992,9 +997,7 @@ impl<'mc> Lootable<'mc> {
     }
     //
 
-    pub fn loot_table(
-        &mut self,
-    ) -> Result<crate::loot::LootTable<'mc>, Box<dyn std::error::Error>> {
+    pub fn loot_table(&self) -> Result<crate::loot::LootTable<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/loot/LootTable;");
         let res =
             self.jni_ref()
@@ -1347,6 +1350,11 @@ impl std::fmt::Display for LootTablesEnum {
             LootTablesEnum::SheepWhite => f.write_str("SHEEP_WHITE"),
             LootTablesEnum::SheepYellow => f.write_str("SHEEP_YELLOW"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for LootTables<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct LootTables<'mc>(
@@ -1810,7 +1818,7 @@ impl<'mc> LootContextBuilder<'mc> {
     }
     //
 
-    pub fn build(&mut self) -> Result<crate::loot::LootContext<'mc>, Box<dyn std::error::Error>> {
+    pub fn build(&self) -> Result<crate::loot::LootContext<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/loot/LootContext;");
         let res = self
             .jni_ref()
@@ -1823,7 +1831,7 @@ impl<'mc> LootContextBuilder<'mc> {
     //@NotNull
 
     pub fn luck(
-        &mut self,
+        &self,
         arg0: f32,
     ) -> Result<crate::loot::LootContextBuilder<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(F)Lorg/bukkit/loot/LootContext$Builder;");
@@ -1842,7 +1850,7 @@ impl<'mc> LootContextBuilder<'mc> {
     //
 
     pub fn killer(
-        &mut self,
+        &self,
         arg0: impl Into<crate::entity::HumanEntity<'mc>>,
     ) -> Result<crate::loot::LootContextBuilder<'mc>, Box<dyn std::error::Error>> {
         let sig =
@@ -1864,7 +1872,7 @@ impl<'mc> LootContextBuilder<'mc> {
     //@NotNull
 
     pub fn looting_modifier(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<crate::loot::LootContextBuilder<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/loot/LootContext$Builder;");
@@ -1883,7 +1891,7 @@ impl<'mc> LootContextBuilder<'mc> {
     //
 
     pub fn looted_entity(
-        &mut self,
+        &self,
         arg0: impl Into<crate::entity::Entity<'mc>>,
     ) -> Result<crate::loot::LootContextBuilder<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/entity/Entity;)Lorg/bukkit/loot/LootContext$Builder;");
@@ -1904,7 +1912,7 @@ impl<'mc> LootContextBuilder<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1930,7 +1938,7 @@ impl<'mc> LootContextBuilder<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1947,7 +1955,7 @@ impl<'mc> LootContextBuilder<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1961,7 +1969,7 @@ impl<'mc> LootContextBuilder<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1971,7 +1979,7 @@ impl<'mc> LootContextBuilder<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1981,7 +1989,7 @@ impl<'mc> LootContextBuilder<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1991,7 +1999,7 @@ impl<'mc> LootContextBuilder<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2040,9 +2048,7 @@ impl<'mc> LootContext<'mc> {
     }
     //
 
-    pub fn killer(
-        &mut self,
-    ) -> Result<crate::entity::HumanEntity<'mc>, Box<dyn std::error::Error>> {
+    pub fn killer(&self) -> Result<crate::entity::HumanEntity<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/HumanEntity;");
         let res = self
             .jni_ref()
@@ -2054,7 +2060,7 @@ impl<'mc> LootContext<'mc> {
     }
     //
 
-    pub fn luck(&mut self) -> Result<f32, Box<dyn std::error::Error>> {
+    pub fn luck(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
         let res = self
             .jni_ref()
@@ -2064,7 +2070,7 @@ impl<'mc> LootContext<'mc> {
     }
     //
 
-    pub fn looting_modifier(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn looting_modifier(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2077,9 +2083,7 @@ impl<'mc> LootContext<'mc> {
     }
     //
 
-    pub fn looted_entity(
-        &mut self,
-    ) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    pub fn looted_entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res =
             self.jni_ref()
@@ -2091,7 +2095,7 @@ impl<'mc> LootContext<'mc> {
     }
     //
 
-    pub fn location(&mut self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
             self.jni_ref()
@@ -2104,7 +2108,7 @@ impl<'mc> LootContext<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2130,7 +2134,7 @@ impl<'mc> LootContext<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -2147,7 +2151,7 @@ impl<'mc> LootContext<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2161,7 +2165,7 @@ impl<'mc> LootContext<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2171,7 +2175,7 @@ impl<'mc> LootContext<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -2181,7 +2185,7 @@ impl<'mc> LootContext<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2191,7 +2195,7 @@ impl<'mc> LootContext<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()

@@ -30,7 +30,7 @@ impl<'mc> Attributable<'mc> {
     //
 
     pub fn get_attribute(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<crate::attribute::AttributeInstance<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from(
@@ -95,6 +95,11 @@ impl std::fmt::Display for AttributeEnum {
             AttributeEnum::HorseJumpStrength => f.write_str("HORSE_JUMP_STRENGTH"),
             AttributeEnum::ZombieSpawnReinforcements => f.write_str("ZOMBIE_SPAWN_REINFORCEMENTS"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for Attribute<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct Attribute<'mc>(
@@ -231,7 +236,7 @@ impl<'mc> AttributeInstance<'mc> {
     //
 
     pub fn attribute(
-        &mut self,
+        &self,
     ) -> Result<crate::attribute::Attribute<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/attribute/Attribute;");
         let res =
@@ -257,7 +262,7 @@ impl<'mc> AttributeInstance<'mc> {
     }
     //
 
-    pub fn base_value(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn base_value(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
             self.jni_ref()
@@ -268,7 +273,7 @@ impl<'mc> AttributeInstance<'mc> {
     //
 
     /// Set the base value of this instance.
-    pub fn set_base_value(&mut self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_base_value(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         let res = self.jni_ref().call_method(
@@ -283,7 +288,7 @@ impl<'mc> AttributeInstance<'mc> {
     //
 
     pub fn add_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/attribute/AttributeModifier;)V");
@@ -302,7 +307,7 @@ impl<'mc> AttributeInstance<'mc> {
     //
 
     pub fn remove_modifier(
-        &mut self,
+        &self,
         arg0: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/attribute/AttributeModifier;)V");
@@ -321,7 +326,7 @@ impl<'mc> AttributeInstance<'mc> {
     //
 
     pub fn modifiers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Collection;");
         let res =
@@ -342,7 +347,7 @@ impl<'mc> AttributeInstance<'mc> {
     }
     //
 
-    pub fn value(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn value(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self
             .jni_ref()
@@ -352,7 +357,7 @@ impl<'mc> AttributeInstance<'mc> {
     }
     //
 
-    pub fn default_value(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn default_value(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
             self.jni_ref()
@@ -383,6 +388,11 @@ impl std::fmt::Display for OperationEnum {
             OperationEnum::AddScalar => f.write_str("ADD_SCALAR"),
             OperationEnum::MultiplyScalar1 => f.write_str("MULTIPLY_SCALAR_1"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for Operation<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct Operation<'mc>(
@@ -485,6 +495,11 @@ impl std::fmt::Display for AttributeModifierOperationEnum {
             AttributeModifierOperationEnum::AddScalar => f.write_str("ADD_SCALAR"),
             AttributeModifierOperationEnum::MultiplyScalar1 => f.write_str("MULTIPLY_SCALAR_1"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for AttributeModifierOperation<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct AttributeModifierOperation<'mc>(
@@ -690,9 +705,7 @@ impl<'mc> AttributeModifier<'mc> {
     }
     //
 
-    pub fn unique_id(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+    pub fn unique_id(&self) -> Result<blackboxmc_java::JavaUUID<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/UUID;");
         let res =
             self.jni_ref()
@@ -704,9 +717,7 @@ impl<'mc> AttributeModifier<'mc> {
     }
     //
 
-    pub fn serialize(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
@@ -740,7 +751,7 @@ impl<'mc> AttributeModifier<'mc> {
     }
     //
 
-    pub fn amount(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn amount(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self
             .jni_ref()
@@ -751,7 +762,7 @@ impl<'mc> AttributeModifier<'mc> {
     //
 
     pub fn operation(
-        &mut self,
+        &self,
     ) -> Result<crate::attribute::AttributeModifierOperation<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/attribute/AttributeModifier$Operation;");
         let res =
@@ -777,7 +788,7 @@ impl<'mc> AttributeModifier<'mc> {
     }
     //
 
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -792,7 +803,7 @@ impl<'mc> AttributeModifier<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -809,7 +820,7 @@ impl<'mc> AttributeModifier<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -823,7 +834,7 @@ impl<'mc> AttributeModifier<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -833,9 +844,7 @@ impl<'mc> AttributeModifier<'mc> {
     }
     //
 
-    pub fn slot(
-        &mut self,
-    ) -> Result<crate::inventory::EquipmentSlot<'mc>, Box<dyn std::error::Error>> {
+    pub fn slot(&self) -> Result<crate::inventory::EquipmentSlot<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/EquipmentSlot;");
         let res = self
             .jni_ref()
@@ -861,7 +870,7 @@ impl<'mc> AttributeModifier<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -886,7 +895,7 @@ impl<'mc> AttributeModifier<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -896,7 +905,7 @@ impl<'mc> AttributeModifier<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -906,7 +915,7 @@ impl<'mc> AttributeModifier<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -971,6 +980,11 @@ impl std::fmt::Display for AttributeAttributeEnum {
                 f.write_str("ZOMBIE_SPAWN_REINFORCEMENTS")
             }
         }
+    }
+}
+impl<'mc> std::fmt::Display for AttributeAttribute<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct AttributeAttribute<'mc>(

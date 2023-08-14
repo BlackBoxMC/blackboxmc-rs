@@ -93,7 +93,7 @@ impl<'mc> EnchantItemEvent<'mc> {
     }
     //
 
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -103,9 +103,7 @@ impl<'mc> EnchantItemEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -117,7 +115,7 @@ impl<'mc> EnchantItemEvent<'mc> {
     }
     //
 
-    pub fn item(&mut self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn item(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -131,7 +129,7 @@ impl<'mc> EnchantItemEvent<'mc> {
 
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
-    pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -159,7 +157,7 @@ impl<'mc> EnchantItemEvent<'mc> {
     }
     //
 
-    pub fn enchanter(&mut self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchanter(&self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Player;");
         let res =
             self.jni_ref()
@@ -171,9 +169,7 @@ impl<'mc> EnchantItemEvent<'mc> {
     }
     //
 
-    pub fn enchant_block(
-        &mut self,
-    ) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchant_block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/Block;");
         let res =
             self.jni_ref()
@@ -185,7 +181,7 @@ impl<'mc> EnchantItemEvent<'mc> {
     }
     //
 
-    pub fn exp_level_cost(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn exp_level_cost(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -196,7 +192,7 @@ impl<'mc> EnchantItemEvent<'mc> {
     //
 
     /// Sets the cost (minimum level) which is displayed as a number on the right hand side of the enchantment offer.
-    pub fn set_exp_level_cost(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_exp_level_cost(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -211,7 +207,7 @@ impl<'mc> EnchantItemEvent<'mc> {
     //
 
     pub fn enchants_to_add(
-        &mut self,
+        &self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self.jni_ref().call_method(
@@ -228,7 +224,7 @@ impl<'mc> EnchantItemEvent<'mc> {
     //
 
     pub fn enchantment_hint(
-        &mut self,
+        &self,
     ) -> Result<crate::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/enchantments/Enchantment;");
         let res = self.jni_ref().call_method(
@@ -244,7 +240,7 @@ impl<'mc> EnchantItemEvent<'mc> {
     }
     //
 
-    pub fn level_hint(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn level_hint(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -254,7 +250,7 @@ impl<'mc> EnchantItemEvent<'mc> {
     }
     //
 
-    pub fn which_button(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn which_button(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -265,7 +261,7 @@ impl<'mc> EnchantItemEvent<'mc> {
     //
 
     pub fn inventory(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/Inventory;");
         let res =
@@ -279,7 +275,7 @@ impl<'mc> EnchantItemEvent<'mc> {
     //
 
     pub fn viewers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -297,9 +293,7 @@ impl<'mc> EnchantItemEvent<'mc> {
     }
     //
 
-    pub fn view(
-        &mut self,
-    ) -> Result<crate::inventory::InventoryView<'mc>, Box<dyn std::error::Error>> {
+    pub fn view(&self) -> Result<crate::inventory::InventoryView<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/InventoryView;");
         let res = self
             .jni_ref()
@@ -311,7 +305,7 @@ impl<'mc> EnchantItemEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -325,7 +319,7 @@ impl<'mc> EnchantItemEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -336,7 +330,7 @@ impl<'mc> EnchantItemEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -362,7 +356,7 @@ impl<'mc> EnchantItemEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -379,7 +373,7 @@ impl<'mc> EnchantItemEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -393,7 +387,7 @@ impl<'mc> EnchantItemEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -403,7 +397,7 @@ impl<'mc> EnchantItemEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -413,7 +407,7 @@ impl<'mc> EnchantItemEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -423,7 +417,7 @@ impl<'mc> EnchantItemEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -534,7 +528,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
     }
     //
 
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -544,9 +538,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
     }
     //
 
-    pub fn handlers(
-        &mut self,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
@@ -558,7 +550,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
     }
     //
 
-    pub fn item(&mut self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+    pub fn item(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
             .jni_ref()
@@ -572,7 +564,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
 
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
-    pub fn set_cancelled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -600,7 +592,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
     }
     //
 
-    pub fn enchanter(&mut self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchanter(&self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Player;");
         let res =
             self.jni_ref()
@@ -612,9 +604,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
     }
     //
 
-    pub fn enchant_block(
-        &mut self,
-    ) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
+    pub fn enchant_block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/Block;");
         let res =
             self.jni_ref()
@@ -628,7 +618,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
 
     //
 
-    pub fn enchantment_bonus(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn enchantment_bonus(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -644,7 +634,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
     //
 
     pub fn inventory(
-        &mut self,
+        &self,
     ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/Inventory;");
         let res =
@@ -658,7 +648,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
     //
 
     pub fn viewers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -676,9 +666,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
     }
     //
 
-    pub fn view(
-        &mut self,
-    ) -> Result<crate::inventory::InventoryView<'mc>, Box<dyn std::error::Error>> {
+    pub fn view(&self) -> Result<crate::inventory::InventoryView<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/InventoryView;");
         let res = self
             .jni_ref()
@@ -690,7 +678,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
     }
     //
 
-    pub fn event_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -704,7 +692,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
     }
     //
 
-    pub fn is_asynchronous(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -715,7 +703,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -741,7 +729,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -758,7 +746,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -772,7 +760,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -782,7 +770,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -792,7 +780,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -802,7 +790,7 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()

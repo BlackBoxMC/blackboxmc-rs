@@ -48,7 +48,7 @@ crate::bungee::api::chat::hover::content::Item::from_raw(&jni,res
 //
 
 
-	pub fn count(&mut self) 
+	pub fn count(&self) 
 -> Result<i32, Box<dyn std::error::Error>>
 
 {let sig = String::from("()I");
@@ -61,7 +61,7 @@ res.i()?
 //
 
 
-	pub fn tag(&mut self) 
+	pub fn tag(&self) 
 -> Result<crate::bungee::api::chat::ItemTag<'mc>, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Lnet/md_5/bungee/api/chat/ItemTag;");
@@ -73,7 +73,7 @@ crate::bungee::api::chat::ItemTag::from_raw(&self.jni_ref(),unsafe { jni::object
 //
 
 
-	pub fn set_id(&mut self,arg0: impl Into<String>) 
+	pub fn set_id(&self,arg0: impl Into<String>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let sig = String::from("(Ljava/lang/String;)V");
@@ -86,7 +86,7 @@ Ok(
 //
 
 
-	pub fn set_tag(&mut self,arg0: impl Into<crate::bungee::api::chat::ItemTag<'mc>>) 
+	pub fn set_tag(&self,arg0: impl Into<crate::bungee::api::chat::ItemTag<'mc>>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let sig = String::from("(Lnet/md_5/bungee/api/chat/ItemTag;)V");
@@ -99,7 +99,7 @@ Ok(
 //
 
 
-	pub fn required_action(&mut self) 
+	pub fn required_action(&self) 
 -> Result<crate::bungee::api::chat::HoverEventAction<'mc>, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Lnet/md_5/bungee/api/chat/HoverEvent$Action;");
@@ -113,7 +113,7 @@ crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),raw_obj
 //
 
 
-	pub fn set_count(&mut self,arg0: i32) 
+	pub fn set_count(&self,arg0: i32) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let sig = String::from("(I)V");
@@ -126,7 +126,7 @@ Ok(
 //
 
 
-	pub fn equals(&mut self,arg0: jni::objects::JObject<'mc>) 
+	pub fn equals(&self,arg0: jni::objects::JObject<'mc>) 
 -> Result<bool, Box<dyn std::error::Error>>
 
 {let sig = String::from("(Ljava/lang/Object;)Z");
@@ -141,7 +141,7 @@ res.z()?
 
 
 #[doc(hidden)]
-	pub fn internal_to_string(&mut self) 
+	pub fn internal_to_string(&self) 
 -> Result<String, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Ljava/lang/String;");
@@ -154,7 +154,7 @@ self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni()
 //
 
 
-	pub fn hash_code(&mut self) 
+	pub fn hash_code(&self) 
 -> Result<i32, Box<dyn std::error::Error>>
 
 {let sig = String::from("()I");
@@ -167,7 +167,7 @@ res.i()?
 //
 
 
-	pub fn id(&mut self) 
+	pub fn id(&self) 
 -> Result<String, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Ljava/lang/String;");
@@ -180,7 +180,7 @@ self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni()
 //
 
 
-	pub fn assert_action(&mut self,arg0: impl Into<crate::bungee::api::chat::HoverEventAction<'mc>>) 
+	pub fn assert_action(&self,arg0: impl Into<crate::bungee::api::chat::HoverEventAction<'mc>>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let sig = String::from("(Lnet/md_5/bungee/api/chat/HoverEvent$Action;)V");
@@ -193,7 +193,7 @@ Ok(
 //
 
 
-	pub fn wait(&mut self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
+	pub fn wait(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -217,7 +217,7 @@ Ok(
 //
 
 
-	pub fn class(&mut self) 
+	pub fn class(&self) 
 -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Ljava/lang/Class;");
@@ -230,7 +230,7 @@ unsafe {jni::objects::JClass::from_raw(res.as_jni().l)}
 //
 
 
-	pub fn notify(&mut self) 
+	pub fn notify(&self) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let sig = String::from("()V");
@@ -242,7 +242,7 @@ Ok(
 //
 
 
-	pub fn notify_all(&mut self) 
+	pub fn notify_all(&self) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let sig = String::from("()V");
@@ -320,7 +320,7 @@ crate::bungee::api::chat::hover::content::Entity::from_raw(&jni,res
 //
 
 
-	pub fn set_id(&mut self,arg0: impl Into<String>) 
+	pub fn set_id(&self,arg0: impl Into<String>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let sig = String::from("(Ljava/lang/String;)V");
@@ -333,7 +333,7 @@ Ok(
 //
 
 
-	pub fn set_type(&mut self,arg0: impl Into<String>) 
+	pub fn set_type(&self,arg0: impl Into<String>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let sig = String::from("(Ljava/lang/String;)V");
@@ -346,7 +346,7 @@ Ok(
 //
 
 
-	pub fn required_action(&mut self) 
+	pub fn required_action(&self) 
 -> Result<crate::bungee::api::chat::HoverEventAction<'mc>, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Lnet/md_5/bungee/api/chat/HoverEvent$Action;");
@@ -360,7 +360,7 @@ crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),raw_obj
 //
 
 
-	pub fn name(&mut self) 
+	pub fn name(&self) 
 -> Result<crate::bungee::api::chat::BaseComponent<'mc>, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Lnet/md_5/bungee/api/chat/BaseComponent;");
@@ -372,7 +372,7 @@ crate::bungee::api::chat::BaseComponent::from_raw(&self.jni_ref(),unsafe { jni::
 //
 
 
-	pub fn equals(&mut self,arg0: jni::objects::JObject<'mc>) 
+	pub fn equals(&self,arg0: jni::objects::JObject<'mc>) 
 -> Result<bool, Box<dyn std::error::Error>>
 
 {let sig = String::from("(Ljava/lang/Object;)Z");
@@ -387,7 +387,7 @@ res.z()?
 
 
 #[doc(hidden)]
-	pub fn internal_to_string(&mut self) 
+	pub fn internal_to_string(&self) 
 -> Result<String, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Ljava/lang/String;");
@@ -400,7 +400,7 @@ self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni()
 //
 
 
-	pub fn hash_code(&mut self) 
+	pub fn hash_code(&self) 
 -> Result<i32, Box<dyn std::error::Error>>
 
 {let sig = String::from("()I");
@@ -413,7 +413,7 @@ res.i()?
 //
 
 
-	pub fn set_name(&mut self,arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>) 
+	pub fn set_name(&self,arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let sig = String::from("(Lnet/md_5/bungee/api/chat/BaseComponent;)V");
@@ -426,7 +426,7 @@ Ok(
 //
 
 
-	pub fn id(&mut self) 
+	pub fn id(&self) 
 -> Result<String, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Ljava/lang/String;");
@@ -439,7 +439,7 @@ self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni()
 //
 
 
-	pub fn get_type(&mut self) 
+	pub fn get_type(&self) 
 -> Result<String, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Ljava/lang/String;");
@@ -452,7 +452,7 @@ self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni()
 //
 
 
-	pub fn assert_action(&mut self,arg0: impl Into<crate::bungee::api::chat::HoverEventAction<'mc>>) 
+	pub fn assert_action(&self,arg0: impl Into<crate::bungee::api::chat::HoverEventAction<'mc>>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let sig = String::from("(Lnet/md_5/bungee/api/chat/HoverEvent$Action;)V");
@@ -465,7 +465,7 @@ Ok(
 //
 
 
-	pub fn wait(&mut self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
+	pub fn wait(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -489,7 +489,7 @@ Ok(
 //
 
 
-	pub fn class(&mut self) 
+	pub fn class(&self) 
 -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Ljava/lang/Class;");
@@ -502,7 +502,7 @@ unsafe {jni::objects::JClass::from_raw(res.as_jni().l)}
 //
 
 
-	pub fn notify(&mut self) 
+	pub fn notify(&self) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let sig = String::from("()V");
@@ -514,7 +514,7 @@ Ok(
 //
 
 
-	pub fn notify_all(&mut self) 
+	pub fn notify_all(&self) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let sig = String::from("()V");
@@ -589,7 +589,7 @@ crate::bungee::api::chat::hover::content::ItemSerializer::from_raw(&jni,res
 //
 
 
-	pub fn serialize_with_item(&mut self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: std::option::Option<jni::objects::JObject<'mc>>) 
+	pub fn serialize_with_item(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: std::option::Option<jni::objects::JObject<'mc>>) 
 -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -613,7 +613,7 @@ Ok(res.l()?)}
 //
 
 
-	pub fn deserialize_with_json_element(&mut self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: std::option::Option<jni::objects::JObject<'mc>>) 
+	pub fn deserialize_with_json_element(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: std::option::Option<jni::objects::JObject<'mc>>) 
 -> Result<crate::bungee::api::chat::hover::content::Item<'mc>, Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -638,7 +638,7 @@ crate::bungee::api::chat::hover::content::Item::from_raw(&self.jni_ref(),unsafe 
 //
 
 
-	pub fn wait(&mut self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
+	pub fn wait(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -662,7 +662,7 @@ Ok(
 //
 
 
-	pub fn equals(&mut self,arg0: jni::objects::JObject<'mc>) 
+	pub fn equals(&self,arg0: jni::objects::JObject<'mc>) 
 -> Result<bool, Box<dyn std::error::Error>>
 
 {let sig = String::from("(Ljava/lang/Object;)Z");
@@ -677,7 +677,7 @@ res.z()?
 
 
 #[doc(hidden)]
-	pub fn internal_to_string(&mut self) 
+	pub fn internal_to_string(&self) 
 -> Result<String, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Ljava/lang/String;");
@@ -690,7 +690,7 @@ self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni()
 //
 
 
-	pub fn hash_code(&mut self) 
+	pub fn hash_code(&self) 
 -> Result<i32, Box<dyn std::error::Error>>
 
 {let sig = String::from("()I");
@@ -703,7 +703,7 @@ res.i()?
 //
 
 
-	pub fn class(&mut self) 
+	pub fn class(&self) 
 -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Ljava/lang/Class;");
@@ -716,7 +716,7 @@ unsafe {jni::objects::JClass::from_raw(res.as_jni().l)}
 //
 
 
-	pub fn notify(&mut self) 
+	pub fn notify(&self) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let sig = String::from("()V");
@@ -728,7 +728,7 @@ Ok(
 //
 
 
-	pub fn notify_all(&mut self) 
+	pub fn notify_all(&self) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let sig = String::from("()V");
@@ -802,7 +802,7 @@ crate::bungee::api::chat::hover::content::TextSerializer::from_raw(&jni,res
 //
 
 
-	pub fn serialize_with_text(&mut self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: std::option::Option<jni::objects::JObject<'mc>>) 
+	pub fn serialize_with_text(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: std::option::Option<jni::objects::JObject<'mc>>) 
 -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -826,7 +826,7 @@ Ok(res.l()?)}
 //
 
 
-	pub fn deserialize_with_json_element(&mut self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: std::option::Option<jni::objects::JObject<'mc>>) 
+	pub fn deserialize_with_json_element(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: std::option::Option<jni::objects::JObject<'mc>>) 
 -> Result<crate::bungee::api::chat::hover::content::Text<'mc>, Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -851,7 +851,7 @@ crate::bungee::api::chat::hover::content::Text::from_raw(&self.jni_ref(),unsafe 
 //
 
 
-	pub fn wait(&mut self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
+	pub fn wait(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -875,7 +875,7 @@ Ok(
 //
 
 
-	pub fn equals(&mut self,arg0: jni::objects::JObject<'mc>) 
+	pub fn equals(&self,arg0: jni::objects::JObject<'mc>) 
 -> Result<bool, Box<dyn std::error::Error>>
 
 {let sig = String::from("(Ljava/lang/Object;)Z");
@@ -890,7 +890,7 @@ res.z()?
 
 
 #[doc(hidden)]
-	pub fn internal_to_string(&mut self) 
+	pub fn internal_to_string(&self) 
 -> Result<String, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Ljava/lang/String;");
@@ -903,7 +903,7 @@ self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni()
 //
 
 
-	pub fn hash_code(&mut self) 
+	pub fn hash_code(&self) 
 -> Result<i32, Box<dyn std::error::Error>>
 
 {let sig = String::from("()I");
@@ -916,7 +916,7 @@ res.i()?
 //
 
 
-	pub fn class(&mut self) 
+	pub fn class(&self) 
 -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Ljava/lang/Class;");
@@ -929,7 +929,7 @@ unsafe {jni::objects::JClass::from_raw(res.as_jni().l)}
 //
 
 
-	pub fn notify(&mut self) 
+	pub fn notify(&self) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let sig = String::from("()V");
@@ -941,7 +941,7 @@ Ok(
 //
 
 
-	pub fn notify_all(&mut self) 
+	pub fn notify_all(&self) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let sig = String::from("()V");
@@ -1015,7 +1015,7 @@ crate::bungee::api::chat::hover::content::Content::from_raw(&jni,res
 //
 
 
-	pub fn assert_action(&mut self,arg0: impl Into<crate::bungee::api::chat::HoverEventAction<'mc>>) 
+	pub fn assert_action(&self,arg0: impl Into<crate::bungee::api::chat::HoverEventAction<'mc>>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let sig = String::from("(Lnet/md_5/bungee/api/chat/HoverEvent$Action;)V");
@@ -1028,7 +1028,7 @@ Ok(
 //
 
 
-	pub fn required_action(&mut self) 
+	pub fn required_action(&self) 
 -> Result<crate::bungee::api::chat::HoverEventAction<'mc>, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Lnet/md_5/bungee/api/chat/HoverEvent$Action;");
@@ -1042,7 +1042,7 @@ crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),raw_obj
 //
 
 
-	pub fn equals(&mut self,arg0: jni::objects::JObject<'mc>) 
+	pub fn equals(&self,arg0: jni::objects::JObject<'mc>) 
 -> Result<bool, Box<dyn std::error::Error>>
 
 {let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1057,7 +1057,7 @@ res.z()?
 
 
 #[doc(hidden)]
-	pub fn internal_to_string(&mut self) 
+	pub fn internal_to_string(&self) 
 -> Result<String, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Ljava/lang/String;");
@@ -1070,7 +1070,7 @@ self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni()
 //
 
 
-	pub fn hash_code(&mut self) 
+	pub fn hash_code(&self) 
 -> Result<i32, Box<dyn std::error::Error>>
 
 {let sig = String::from("()I");
@@ -1083,7 +1083,7 @@ res.i()?
 //
 
 
-	pub fn wait(&mut self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
+	pub fn wait(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -1107,7 +1107,7 @@ Ok(
 //
 
 
-	pub fn class(&mut self) 
+	pub fn class(&self) 
 -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Ljava/lang/Class;");
@@ -1120,7 +1120,7 @@ unsafe {jni::objects::JClass::from_raw(res.as_jni().l)}
 //
 
 
-	pub fn notify(&mut self) 
+	pub fn notify(&self) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let sig = String::from("()V");
@@ -1132,7 +1132,7 @@ Ok(
 //
 
 
-	pub fn notify_all(&mut self) 
+	pub fn notify_all(&self) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let sig = String::from("()V");
@@ -1206,7 +1206,7 @@ crate::bungee::api::chat::hover::content::Text::from_raw(&jni,res
 //
 
 
-	pub fn required_action(&mut self) 
+	pub fn required_action(&self) 
 -> Result<crate::bungee::api::chat::HoverEventAction<'mc>, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Lnet/md_5/bungee/api/chat/HoverEvent$Action;");
@@ -1220,7 +1220,7 @@ crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),raw_obj
 //
 
 
-	pub fn equals(&mut self,arg0: jni::objects::JObject<'mc>) 
+	pub fn equals(&self,arg0: jni::objects::JObject<'mc>) 
 -> Result<bool, Box<dyn std::error::Error>>
 
 {let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1235,7 +1235,7 @@ res.z()?
 
 
 #[doc(hidden)]
-	pub fn internal_to_string(&mut self) 
+	pub fn internal_to_string(&self) 
 -> Result<String, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Ljava/lang/String;");
@@ -1248,7 +1248,7 @@ self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni()
 //
 
 
-	pub fn hash_code(&mut self) 
+	pub fn hash_code(&self) 
 -> Result<i32, Box<dyn std::error::Error>>
 
 {let sig = String::from("()I");
@@ -1261,7 +1261,7 @@ res.i()?
 //
 
 
-	pub fn value(&mut self) 
+	pub fn value(&self) 
 -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Ljava/lang/Object;");
@@ -1272,7 +1272,7 @@ Ok(res.l()?)}
 //
 
 
-	pub fn assert_action(&mut self,arg0: impl Into<crate::bungee::api::chat::HoverEventAction<'mc>>) 
+	pub fn assert_action(&self,arg0: impl Into<crate::bungee::api::chat::HoverEventAction<'mc>>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let sig = String::from("(Lnet/md_5/bungee/api/chat/HoverEvent$Action;)V");
@@ -1285,7 +1285,7 @@ Ok(
 //
 
 
-	pub fn wait(&mut self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
+	pub fn wait(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -1309,7 +1309,7 @@ Ok(
 //
 
 
-	pub fn class(&mut self) 
+	pub fn class(&self) 
 -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Ljava/lang/Class;");
@@ -1322,7 +1322,7 @@ unsafe {jni::objects::JClass::from_raw(res.as_jni().l)}
 //
 
 
-	pub fn notify(&mut self) 
+	pub fn notify(&self) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let sig = String::from("()V");
@@ -1334,7 +1334,7 @@ Ok(
 //
 
 
-	pub fn notify_all(&mut self) 
+	pub fn notify_all(&self) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let sig = String::from("()V");
@@ -1409,7 +1409,7 @@ crate::bungee::api::chat::hover::content::EntitySerializer::from_raw(&jni,res
 //
 
 
-	pub fn serialize_with_entity(&mut self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: std::option::Option<jni::objects::JObject<'mc>>) 
+	pub fn serialize_with_entity(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: std::option::Option<jni::objects::JObject<'mc>>) 
 -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -1433,7 +1433,7 @@ Ok(res.l()?)}
 //
 
 
-	pub fn deserialize_with_json_element(&mut self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: std::option::Option<jni::objects::JObject<'mc>>) 
+	pub fn deserialize_with_json_element(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: std::option::Option<jni::objects::JObject<'mc>>) 
 -> Result<crate::bungee::api::chat::hover::content::Entity<'mc>, Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -1458,7 +1458,7 @@ crate::bungee::api::chat::hover::content::Entity::from_raw(&self.jni_ref(),unsaf
 //
 
 
-	pub fn wait(&mut self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
+	pub fn wait(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -1482,7 +1482,7 @@ Ok(
 //
 
 
-	pub fn equals(&mut self,arg0: jni::objects::JObject<'mc>) 
+	pub fn equals(&self,arg0: jni::objects::JObject<'mc>) 
 -> Result<bool, Box<dyn std::error::Error>>
 
 {let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1497,7 +1497,7 @@ res.z()?
 
 
 #[doc(hidden)]
-	pub fn internal_to_string(&mut self) 
+	pub fn internal_to_string(&self) 
 -> Result<String, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Ljava/lang/String;");
@@ -1510,7 +1510,7 @@ self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni()
 //
 
 
-	pub fn hash_code(&mut self) 
+	pub fn hash_code(&self) 
 -> Result<i32, Box<dyn std::error::Error>>
 
 {let sig = String::from("()I");
@@ -1523,7 +1523,7 @@ res.i()?
 //
 
 
-	pub fn class(&mut self) 
+	pub fn class(&self) 
 -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Ljava/lang/Class;");
@@ -1536,7 +1536,7 @@ unsafe {jni::objects::JClass::from_raw(res.as_jni().l)}
 //
 
 
-	pub fn notify(&mut self) 
+	pub fn notify(&self) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let sig = String::from("()V");
@@ -1548,7 +1548,7 @@ Ok(
 //
 
 
-	pub fn notify_all(&mut self) 
+	pub fn notify_all(&self) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let sig = String::from("()V");

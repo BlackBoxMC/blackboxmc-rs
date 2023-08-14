@@ -14,6 +14,11 @@ impl std::fmt::Display for PluginChannelDirectionEnum {
         }
     }
 }
+impl<'mc> std::fmt::Display for PluginChannelDirection<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
+    }
+}
 pub struct PluginChannelDirection<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -131,7 +136,7 @@ impl<'mc> PluginMessageListener<'mc> {
     //
 
     pub fn on_plugin_message_received(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: impl Into<crate::entity::Player<'mc>>,
         arg2: Vec<i8>,
@@ -244,7 +249,7 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
     }
     //
 
-    pub fn is_valid(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -254,7 +259,7 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
     }
     //
 
-    pub fn channel(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn channel(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -269,7 +274,7 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
     //
 
     pub fn listener(
-        &mut self,
+        &self,
     ) -> Result<crate::plugin::messaging::PluginMessageListener<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/plugin/messaging/PluginMessageListener;");
@@ -283,7 +288,7 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
     }
     //
 
-    pub fn plugin(&mut self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
+    pub fn plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
         let res = self
             .jni_ref()
@@ -296,7 +301,7 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -312,7 +317,7 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -323,7 +328,7 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -349,7 +354,7 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -363,7 +368,7 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -373,7 +378,7 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -383,7 +388,7 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -434,7 +439,7 @@ impl<'mc> Messenger<'mc> {
     //
 
     pub fn is_reserved_channel(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -453,7 +458,7 @@ impl<'mc> Messenger<'mc> {
     //
 
     pub fn register_outgoing_plugin_channel(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -479,7 +484,7 @@ impl<'mc> Messenger<'mc> {
     //
 
     pub fn unregister_outgoing_plugin_channel_with_plugin(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
         arg1: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -512,7 +517,7 @@ impl<'mc> Messenger<'mc> {
     //
 
     pub fn register_incoming_plugin_channel(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<String>,
         arg2: impl Into<crate::plugin::messaging::PluginMessageListener<'mc>>,
@@ -549,7 +554,7 @@ impl<'mc> Messenger<'mc> {
     //
 
     pub fn unregister_incoming_plugin_channel_with_plugin(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
         arg1: std::option::Option<impl Into<String>>,
         arg2: std::option::Option<impl Into<crate::plugin::messaging::PluginMessageListener<'mc>>>,
@@ -590,7 +595,7 @@ impl<'mc> Messenger<'mc> {
     //
 
     pub fn outgoing_channels(
-        &mut self,
+        &self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self.jni_ref().call_method(
@@ -607,7 +612,7 @@ impl<'mc> Messenger<'mc> {
     //
 
     pub fn incoming_channels(
-        &mut self,
+        &self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self.jni_ref().call_method(
@@ -624,7 +629,7 @@ impl<'mc> Messenger<'mc> {
     //
 
     pub fn get_incoming_channel_registrations_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -651,7 +656,7 @@ impl<'mc> Messenger<'mc> {
     //
 
     pub fn get_incoming_channel_registrations_with_plugin(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -684,7 +689,7 @@ impl<'mc> Messenger<'mc> {
     //
 
     pub fn is_registration_valid(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::messaging::PluginMessageListenerRegistration<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig =
@@ -704,7 +709,7 @@ impl<'mc> Messenger<'mc> {
     //
 
     pub fn is_incoming_channel_registered(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -730,7 +735,7 @@ impl<'mc> Messenger<'mc> {
     //
 
     pub fn is_outgoing_channel_registered(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -756,7 +761,7 @@ impl<'mc> Messenger<'mc> {
     //
 
     pub fn dispatch_incoming_message(
-        &mut self,
+        &self,
         arg0: impl Into<crate::entity::Player<'mc>>,
         arg1: impl Into<String>,
         arg2: Vec<i8>,
@@ -863,7 +868,7 @@ impl<'mc> StandardMessenger<'mc> {
     //
 
     pub fn is_reserved_channel(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -882,7 +887,7 @@ impl<'mc> StandardMessenger<'mc> {
     //
 
     pub fn register_outgoing_plugin_channel(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -908,7 +913,7 @@ impl<'mc> StandardMessenger<'mc> {
     //
 
     pub fn unregister_outgoing_plugin_channel_with_plugin(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
         arg1: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -941,7 +946,7 @@ impl<'mc> StandardMessenger<'mc> {
     //
 
     pub fn register_incoming_plugin_channel(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<String>,
         arg2: impl Into<crate::plugin::messaging::PluginMessageListener<'mc>>,
@@ -978,7 +983,7 @@ impl<'mc> StandardMessenger<'mc> {
     //
 
     pub fn unregister_incoming_plugin_channel_with_plugin(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
         arg1: std::option::Option<impl Into<String>>,
         arg2: std::option::Option<impl Into<crate::plugin::messaging::PluginMessageListener<'mc>>>,
@@ -1019,7 +1024,7 @@ impl<'mc> StandardMessenger<'mc> {
     //
 
     pub fn get_outgoing_channels(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/plugin/Plugin;)Ljava/util/Set;");
@@ -1040,7 +1045,7 @@ impl<'mc> StandardMessenger<'mc> {
     //
 
     pub fn get_incoming_channels(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/plugin/Plugin;)Ljava/util/Set;");
@@ -1061,7 +1066,7 @@ impl<'mc> StandardMessenger<'mc> {
     //
 
     pub fn get_incoming_channel_registrations_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1088,7 +1093,7 @@ impl<'mc> StandardMessenger<'mc> {
     //
 
     pub fn get_incoming_channel_registrations_with_plugin(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -1121,7 +1126,7 @@ impl<'mc> StandardMessenger<'mc> {
     //
 
     pub fn is_registration_valid(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::messaging::PluginMessageListenerRegistration<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig =
@@ -1141,7 +1146,7 @@ impl<'mc> StandardMessenger<'mc> {
     //
 
     pub fn is_incoming_channel_registered(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1167,7 +1172,7 @@ impl<'mc> StandardMessenger<'mc> {
     //
 
     pub fn is_outgoing_channel_registered(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1193,7 +1198,7 @@ impl<'mc> StandardMessenger<'mc> {
     //
 
     pub fn dispatch_incoming_message(
-        &mut self,
+        &self,
         arg0: impl Into<crate::entity::Player<'mc>>,
         arg1: impl Into<String>,
         arg2: Vec<i8>,
@@ -1275,7 +1280,7 @@ impl<'mc> StandardMessenger<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1301,7 +1306,7 @@ impl<'mc> StandardMessenger<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1318,7 +1323,7 @@ impl<'mc> StandardMessenger<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1332,7 +1337,7 @@ impl<'mc> StandardMessenger<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1342,7 +1347,7 @@ impl<'mc> StandardMessenger<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1352,7 +1357,7 @@ impl<'mc> StandardMessenger<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1362,7 +1367,7 @@ impl<'mc> StandardMessenger<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1420,7 +1425,7 @@ impl<'mc> PluginMessageRecipient<'mc> {
     //
 
     pub fn send_plugin_message(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<String>,
         arg2: Vec<i8>,
@@ -1447,7 +1452,7 @@ impl<'mc> PluginMessageRecipient<'mc> {
     //
 
     pub fn listening_plugin_channels(
-        &mut self,
+        &self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self.jni_ref().call_method(

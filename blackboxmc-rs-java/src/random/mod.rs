@@ -39,7 +39,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     }
     //
 
-    pub fn equidistribution(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn equidistribution(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -52,7 +52,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     }
     //
 
-    pub fn is_deprecated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_deprecated(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -62,7 +62,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     }
     //
 
-    pub fn is_stochastic(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_stochastic(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -72,7 +72,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     }
     //
 
-    pub fn is_hardware(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_hardware(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -82,7 +82,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     }
     //
 
-    pub fn state_bits(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn state_bits(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -92,7 +92,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     }
     //
 
-    pub fn is_statistical(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_statistical(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -102,7 +102,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     }
     //
 
-    pub fn is_arbitrarily_jumpable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_arbitrarily_jumpable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -115,7 +115,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     }
     //
 
-    pub fn is_jumpable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_jumpable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -125,7 +125,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     }
     //
 
-    pub fn is_leapable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_leapable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -135,7 +135,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     }
     //
 
-    pub fn is_splittable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_splittable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -145,7 +145,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     }
     //
 
-    pub fn is_streamable(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_streamable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -167,7 +167,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     }
     //
 
-    pub fn period(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn period(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/math/BigInteger;");
         let res = self
             .jni_ref()
@@ -177,7 +177,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     }
     //
 
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -191,7 +191,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     }
     //
 
-    pub fn group(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -239,7 +239,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     //
 
     pub fn create(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -259,7 +259,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -285,7 +285,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -302,7 +302,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -316,7 +316,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -326,7 +326,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -336,7 +336,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -346,7 +346,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -397,7 +397,7 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
     //
 
     pub fn rngs(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -417,7 +417,7 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
     //
 
     pub fn splits(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -437,7 +437,7 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
     //
 
     pub fn splits_with_long(
-        &mut self,
+        &self,
         arg0: i64,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -461,7 +461,7 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
     //
 
     pub fn split(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -503,7 +503,7 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
     }
     //
 
-    pub fn next_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn next_boolean(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -514,7 +514,7 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
     //
 
     pub fn next_long(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
@@ -540,7 +540,7 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
     //
 
     pub fn next_float(
-        &mut self,
+        &self,
         arg0: std::option::Option<f32>,
         arg1: std::option::Option<f32>,
     ) -> Result<f32, Box<dyn std::error::Error>> {
@@ -566,7 +566,7 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
     //
 
     pub fn ints(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -592,7 +592,7 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
     //
 
     pub fn ints_with_long(
-        &mut self,
+        &self,
         arg0: i64,
         arg1: i32,
         arg2: std::option::Option<i32>,
@@ -620,7 +620,7 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
     //
 
     pub fn longs(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
         arg2: std::option::Option<i64>,
@@ -652,7 +652,7 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
     //
 
     pub fn doubles(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -678,7 +678,7 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
     //
 
     pub fn doubles_with_long(
-        &mut self,
+        &self,
         arg0: i64,
         arg1: f64,
         arg2: std::option::Option<f64>,
@@ -705,7 +705,7 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
     }
     //
 
-    pub fn next_bytes(&mut self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn next_bytes(&self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(B)V");
         let res = self
             .jni_ref()
@@ -716,7 +716,7 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
     //
 
     pub fn next_gaussian(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
@@ -741,7 +741,7 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
     }
     //
 
-    pub fn is_deprecated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_deprecated(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -751,7 +751,7 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
     }
     //
 
-    pub fn next_exponential(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn next_exponential(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
             self.jni_ref()
@@ -762,7 +762,7 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
     //
 
     pub fn next_double(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
@@ -788,7 +788,7 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
     //
 
     pub fn next_int(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -859,7 +859,7 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
     //
 
     pub fn rngs(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -901,7 +901,7 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
     }
     //
 
-    pub fn next_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn next_boolean(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -912,7 +912,7 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
     //
 
     pub fn next_long(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
@@ -938,7 +938,7 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
     //
 
     pub fn next_float(
-        &mut self,
+        &self,
         arg0: std::option::Option<f32>,
         arg1: std::option::Option<f32>,
     ) -> Result<f32, Box<dyn std::error::Error>> {
@@ -964,7 +964,7 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
     //
 
     pub fn ints(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -990,7 +990,7 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
     //
 
     pub fn ints_with_long(
-        &mut self,
+        &self,
         arg0: i64,
         arg1: i32,
         arg2: std::option::Option<i32>,
@@ -1018,7 +1018,7 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
     //
 
     pub fn longs(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
         arg2: std::option::Option<i64>,
@@ -1050,7 +1050,7 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
     //
 
     pub fn doubles(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -1076,7 +1076,7 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
     //
 
     pub fn doubles_with_long(
-        &mut self,
+        &self,
         arg0: i64,
         arg1: f64,
         arg2: std::option::Option<f64>,
@@ -1103,7 +1103,7 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
     }
     //
 
-    pub fn next_bytes(&mut self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn next_bytes(&self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(B)V");
         let res = self
             .jni_ref()
@@ -1114,7 +1114,7 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
     //
 
     pub fn next_gaussian(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
@@ -1139,7 +1139,7 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
     }
     //
 
-    pub fn is_deprecated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_deprecated(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1149,7 +1149,7 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
     }
     //
 
-    pub fn next_exponential(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn next_exponential(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
             self.jni_ref()
@@ -1160,7 +1160,7 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
     //
 
     pub fn next_double(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
@@ -1186,7 +1186,7 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
     //
 
     pub fn next_int(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -1251,7 +1251,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     }
     //
 
-    pub fn leap_distance(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn leap_distance(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
             self.jni_ref()
@@ -1261,7 +1261,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     }
     //
 
-    pub fn leap(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn leap(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1272,7 +1272,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     //
 
     pub fn leaps(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1291,9 +1291,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     }
     //
 
-    pub fn copy_and_leap(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn copy_and_leap(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/random/RandomGenerator$JumpableGenerator;");
         let res =
             self.jni_ref()
@@ -1326,7 +1324,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     }
     //
 
-    pub fn copy(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn copy(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/util/random/RandomGenerator$JumpableGenerator;";
@@ -1338,7 +1336,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     }
     //
 
-    pub fn jump_distance(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn jump_distance(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
             self.jni_ref()
@@ -1349,7 +1347,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     //
 
     pub fn jumps(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1368,9 +1366,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     }
     //
 
-    pub fn copy_and_jump(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn copy_and_jump(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/random/RandomGenerator;");
         let res =
             self.jni_ref()
@@ -1381,7 +1377,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     //
 
     pub fn rngs(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1400,7 +1396,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     }
     //
 
-    pub fn jump(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn jump(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1410,7 +1406,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     }
     //
 
-    pub fn next_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn next_boolean(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1421,7 +1417,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     //
 
     pub fn next_long(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
@@ -1447,7 +1443,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     //
 
     pub fn next_float(
-        &mut self,
+        &self,
         arg0: std::option::Option<f32>,
         arg1: std::option::Option<f32>,
     ) -> Result<f32, Box<dyn std::error::Error>> {
@@ -1473,7 +1469,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     //
 
     pub fn ints(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -1499,7 +1495,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     //
 
     pub fn ints_with_long(
-        &mut self,
+        &self,
         arg0: i64,
         arg1: i32,
         arg2: std::option::Option<i32>,
@@ -1527,7 +1523,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     //
 
     pub fn longs(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
         arg2: std::option::Option<i64>,
@@ -1559,7 +1555,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     //
 
     pub fn doubles(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -1585,7 +1581,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     //
 
     pub fn doubles_with_long(
-        &mut self,
+        &self,
         arg0: i64,
         arg1: f64,
         arg2: std::option::Option<f64>,
@@ -1612,7 +1608,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     }
     //
 
-    pub fn next_bytes(&mut self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn next_bytes(&self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(B)V");
         let res = self
             .jni_ref()
@@ -1623,7 +1619,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     //
 
     pub fn next_gaussian(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
@@ -1648,7 +1644,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     }
     //
 
-    pub fn is_deprecated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_deprecated(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1658,7 +1654,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     }
     //
 
-    pub fn next_exponential(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn next_exponential(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
             self.jni_ref()
@@ -1669,7 +1665,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     //
 
     pub fn next_double(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
@@ -1695,7 +1691,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     //
 
     pub fn next_int(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -1763,7 +1759,7 @@ impl<'mc> JavaRandomGenerator<'mc> {
     }
     //
 
-    pub fn next_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn next_boolean(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1774,7 +1770,7 @@ impl<'mc> JavaRandomGenerator<'mc> {
     //
 
     pub fn next_long(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
@@ -1800,7 +1796,7 @@ impl<'mc> JavaRandomGenerator<'mc> {
     //
 
     pub fn next_float(
-        &mut self,
+        &self,
         arg0: std::option::Option<f32>,
         arg1: std::option::Option<f32>,
     ) -> Result<f32, Box<dyn std::error::Error>> {
@@ -1826,7 +1822,7 @@ impl<'mc> JavaRandomGenerator<'mc> {
     //
 
     pub fn ints(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -1852,7 +1848,7 @@ impl<'mc> JavaRandomGenerator<'mc> {
     //
 
     pub fn ints_with_long(
-        &mut self,
+        &self,
         arg0: i64,
         arg1: i32,
         arg2: std::option::Option<i32>,
@@ -1880,7 +1876,7 @@ impl<'mc> JavaRandomGenerator<'mc> {
     //
 
     pub fn longs(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
         arg2: std::option::Option<i64>,
@@ -1912,7 +1908,7 @@ impl<'mc> JavaRandomGenerator<'mc> {
     //
 
     pub fn doubles(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -1938,7 +1934,7 @@ impl<'mc> JavaRandomGenerator<'mc> {
     //
 
     pub fn doubles_with_long(
-        &mut self,
+        &self,
         arg0: i64,
         arg1: f64,
         arg2: std::option::Option<f64>,
@@ -1965,7 +1961,7 @@ impl<'mc> JavaRandomGenerator<'mc> {
     }
     //
 
-    pub fn next_bytes(&mut self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn next_bytes(&self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(B)V");
         let res = self
             .jni_ref()
@@ -1976,7 +1972,7 @@ impl<'mc> JavaRandomGenerator<'mc> {
     //
 
     pub fn next_gaussian(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
@@ -2001,7 +1997,7 @@ impl<'mc> JavaRandomGenerator<'mc> {
     }
     //
 
-    pub fn is_deprecated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_deprecated(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -2011,7 +2007,7 @@ impl<'mc> JavaRandomGenerator<'mc> {
     }
     //
 
-    pub fn next_exponential(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn next_exponential(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
             self.jni_ref()
@@ -2022,7 +2018,7 @@ impl<'mc> JavaRandomGenerator<'mc> {
     //
 
     pub fn next_double(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
@@ -2048,7 +2044,7 @@ impl<'mc> JavaRandomGenerator<'mc> {
     //
 
     pub fn next_int(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -2148,7 +2144,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     //
 
     pub fn jumps(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2168,7 +2164,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     //
 
     pub fn jumps_with_long(
-        &mut self,
+        &self,
         arg0: i64,
         arg1: std::option::Option<f64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -2192,7 +2188,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     //
 
     pub fn copy_and_jump(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2211,7 +2207,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     }
     //
 
-    pub fn jump_power_of_two(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn jump_power_of_two(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -2225,7 +2221,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     }
     //
 
-    pub fn leap(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn leap(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2235,10 +2231,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     }
     //
 
-    pub fn jump(
-        &mut self,
-        arg0: std::option::Option<f64>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn jump(&self, arg0: std::option::Option<f64>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
@@ -2278,7 +2271,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     }
     //
 
-    pub fn copy(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn copy(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/util/random/RandomGenerator$LeapableGenerator;";
@@ -2290,7 +2283,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     }
     //
 
-    pub fn leap_distance(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn leap_distance(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
             self.jni_ref()
@@ -2301,7 +2294,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     //
 
     pub fn leaps(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2320,9 +2313,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     }
     //
 
-    pub fn copy_and_leap(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn copy_and_leap(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/random/RandomGenerator$JumpableGenerator;");
         let res =
             self.jni_ref()
@@ -2332,7 +2323,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     }
     //
 
-    pub fn jump_distance(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn jump_distance(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
             self.jni_ref()
@@ -2343,7 +2334,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     //
 
     pub fn rngs(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2362,7 +2353,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     }
     //
 
-    pub fn next_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn next_boolean(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -2373,7 +2364,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     //
 
     pub fn next_long(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
@@ -2399,7 +2390,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     //
 
     pub fn next_float(
-        &mut self,
+        &self,
         arg0: std::option::Option<f32>,
         arg1: std::option::Option<f32>,
     ) -> Result<f32, Box<dyn std::error::Error>> {
@@ -2425,7 +2416,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     //
 
     pub fn ints(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -2451,7 +2442,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     //
 
     pub fn ints_with_long(
-        &mut self,
+        &self,
         arg0: i64,
         arg1: i32,
         arg2: std::option::Option<i32>,
@@ -2479,7 +2470,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     //
 
     pub fn longs(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
         arg2: std::option::Option<i64>,
@@ -2511,7 +2502,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     //
 
     pub fn doubles(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -2537,7 +2528,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     //
 
     pub fn doubles_with_long(
-        &mut self,
+        &self,
         arg0: i64,
         arg1: f64,
         arg2: std::option::Option<f64>,
@@ -2564,7 +2555,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     }
     //
 
-    pub fn next_bytes(&mut self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn next_bytes(&self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(B)V");
         let res = self
             .jni_ref()
@@ -2575,7 +2566,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     //
 
     pub fn next_gaussian(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
@@ -2600,7 +2591,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     }
     //
 
-    pub fn is_deprecated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_deprecated(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -2610,7 +2601,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     }
     //
 
-    pub fn next_exponential(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn next_exponential(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
             self.jni_ref()
@@ -2621,7 +2612,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     //
 
     pub fn next_double(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
@@ -2647,7 +2638,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     //
 
     pub fn next_int(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -2719,7 +2710,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
     }
     //
 
-    pub fn jump_distance(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn jump_distance(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
             self.jni_ref()
@@ -2730,7 +2721,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
     //
 
     pub fn jumps(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2749,9 +2740,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
     }
     //
 
-    pub fn copy_and_jump(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn copy_and_jump(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/random/RandomGenerator;");
         let res =
             self.jni_ref()
@@ -2762,7 +2751,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
     //
 
     pub fn rngs(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2781,7 +2770,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
     }
     //
 
-    pub fn jump(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn jump(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2814,7 +2803,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
     }
     //
 
-    pub fn copy(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn copy(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/random/RandomGenerator$JumpableGenerator;");
         let res = self
             .jni_ref()
@@ -2824,7 +2813,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
     }
     //
 
-    pub fn next_boolean(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn next_boolean(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -2835,7 +2824,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
     //
 
     pub fn next_long(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
@@ -2861,7 +2850,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
     //
 
     pub fn next_float(
-        &mut self,
+        &self,
         arg0: std::option::Option<f32>,
         arg1: std::option::Option<f32>,
     ) -> Result<f32, Box<dyn std::error::Error>> {
@@ -2887,7 +2876,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
     //
 
     pub fn ints(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -2913,7 +2902,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
     //
 
     pub fn ints_with_long(
-        &mut self,
+        &self,
         arg0: i64,
         arg1: i32,
         arg2: std::option::Option<i32>,
@@ -2941,7 +2930,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
     //
 
     pub fn longs(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
         arg2: std::option::Option<i64>,
@@ -2973,7 +2962,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
     //
 
     pub fn doubles(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -2999,7 +2988,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
     //
 
     pub fn doubles_with_long(
-        &mut self,
+        &self,
         arg0: i64,
         arg1: f64,
         arg2: std::option::Option<f64>,
@@ -3026,7 +3015,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
     }
     //
 
-    pub fn next_bytes(&mut self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn next_bytes(&self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(B)V");
         let res = self
             .jni_ref()
@@ -3037,7 +3026,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
     //
 
     pub fn next_gaussian(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
@@ -3062,7 +3051,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
     }
     //
 
-    pub fn is_deprecated(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_deprecated(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -3072,7 +3061,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
     }
     //
 
-    pub fn next_exponential(&mut self) -> Result<f64, Box<dyn std::error::Error>> {
+    pub fn next_exponential(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
             self.jni_ref()
@@ -3083,7 +3072,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
     //
 
     pub fn next_double(
-        &mut self,
+        &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
@@ -3109,7 +3098,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
     //
 
     pub fn next_int(
-        &mut self,
+        &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {

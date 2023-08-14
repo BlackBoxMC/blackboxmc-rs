@@ -31,7 +31,7 @@ impl<'mc> ServerOperator<'mc> {
     }
     //
 
-    pub fn is_op(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_op(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -42,7 +42,7 @@ impl<'mc> ServerOperator<'mc> {
     //
 
     /// Sets the operator status of this object
-    pub fn set_op(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_op(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -121,7 +121,7 @@ impl<'mc> PermissibleBase<'mc> {
     //
 
     pub fn is_permission_set_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::permissions::Permission<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -143,7 +143,7 @@ impl<'mc> PermissibleBase<'mc> {
     //
 
     pub fn has_permission_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::permissions::Permission<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -165,7 +165,7 @@ impl<'mc> PermissibleBase<'mc> {
     //
 
     pub fn add_attachment_with_plugin(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<String>,
         arg2: bool,
@@ -204,7 +204,7 @@ impl<'mc> PermissibleBase<'mc> {
     //
 
     pub fn remove_attachment(
-        &mut self,
+        &self,
         arg0: impl Into<crate::permissions::PermissionAttachment<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/permissions/PermissionAttachment;)V");
@@ -222,7 +222,7 @@ impl<'mc> PermissibleBase<'mc> {
     }
     //
 
-    pub fn recalculate_permissions(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn recalculate_permissions(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -236,7 +236,7 @@ impl<'mc> PermissibleBase<'mc> {
     //
 
     pub fn effective_permissions(
-        &mut self,
+        &self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self.jni_ref().call_method(
@@ -252,7 +252,7 @@ impl<'mc> PermissibleBase<'mc> {
     }
     //
 
-    pub fn is_op(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_op(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -264,7 +264,7 @@ impl<'mc> PermissibleBase<'mc> {
 
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="ServerOperator.html#setOp(boolean)">ServerOperator</a></code></span>
     /// Sets the operator status of this object
-    pub fn set_op(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_op(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -279,7 +279,7 @@ impl<'mc> PermissibleBase<'mc> {
     }
     //
 
-    pub fn clear_permissions(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn clear_permissions(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -293,7 +293,7 @@ impl<'mc> PermissibleBase<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -319,7 +319,7 @@ impl<'mc> PermissibleBase<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -336,7 +336,7 @@ impl<'mc> PermissibleBase<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -350,7 +350,7 @@ impl<'mc> PermissibleBase<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -360,7 +360,7 @@ impl<'mc> PermissibleBase<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -370,7 +370,7 @@ impl<'mc> PermissibleBase<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -380,7 +380,7 @@ impl<'mc> PermissibleBase<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -420,6 +420,11 @@ impl std::fmt::Display for PermissionDefaultEnum {
             PermissionDefaultEnum::Op => f.write_str("OP"),
             PermissionDefaultEnum::NotOp => f.write_str("NOT_OP"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for PermissionDefault<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct PermissionDefault<'mc>(
@@ -537,7 +542,7 @@ impl<'mc> Permissible<'mc> {
     //
 
     pub fn is_permission_set_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::permissions::Permission<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -559,7 +564,7 @@ impl<'mc> Permissible<'mc> {
     //
 
     pub fn has_permission_with_permission(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -581,7 +586,7 @@ impl<'mc> Permissible<'mc> {
     //
 
     pub fn add_attachment_with_plugin(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<String>,
         arg2: bool,
@@ -620,7 +625,7 @@ impl<'mc> Permissible<'mc> {
     //
 
     pub fn remove_attachment(
-        &mut self,
+        &self,
         arg0: impl Into<crate::permissions::PermissionAttachment<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/permissions/PermissionAttachment;)V");
@@ -638,7 +643,7 @@ impl<'mc> Permissible<'mc> {
     }
     //
 
-    pub fn recalculate_permissions(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn recalculate_permissions(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -652,7 +657,7 @@ impl<'mc> Permissible<'mc> {
     //
 
     pub fn effective_permissions(
-        &mut self,
+        &self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self.jni_ref().call_method(
@@ -668,7 +673,7 @@ impl<'mc> Permissible<'mc> {
     }
     //
 
-    pub fn is_op(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_op(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -678,7 +683,7 @@ impl<'mc> Permissible<'mc> {
     }
     //
 
-    pub fn set_op(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_op(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -780,9 +785,7 @@ impl<'mc> Permission<'mc> {
     }
     //
 
-    pub fn children(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn children(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -795,7 +798,7 @@ impl<'mc> Permission<'mc> {
     //
 
     pub fn set_default(
-        &mut self,
+        &self,
         arg0: impl Into<crate::permissions::PermissionDefault<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/permissions/PermissionDefault;)V");
@@ -813,7 +816,7 @@ impl<'mc> Permission<'mc> {
     }
     //
 
-    pub fn description(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn description(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -827,7 +830,7 @@ impl<'mc> Permission<'mc> {
     }
     //
 
-    pub fn recalculate_permissibles(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn recalculate_permissibles(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -841,7 +844,7 @@ impl<'mc> Permission<'mc> {
     //
 
     pub fn set_description(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -860,7 +863,7 @@ impl<'mc> Permission<'mc> {
     //
 
     pub fn permissibles(
-        &mut self,
+        &self,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
@@ -874,7 +877,7 @@ impl<'mc> Permission<'mc> {
     //
 
     pub fn add_parent_with_string(
-        &mut self,
+        &self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
         arg1: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -995,7 +998,7 @@ impl<'mc> Permission<'mc> {
     }
     //
 
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1010,7 +1013,7 @@ impl<'mc> Permission<'mc> {
     //
 
     pub fn default(
-        &mut self,
+        &self,
     ) -> Result<crate::permissions::PermissionDefault<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/permissions/PermissionDefault;");
         let res =
@@ -1037,7 +1040,7 @@ impl<'mc> Permission<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1063,7 +1066,7 @@ impl<'mc> Permission<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1080,7 +1083,7 @@ impl<'mc> Permission<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1094,7 +1097,7 @@ impl<'mc> Permission<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1104,7 +1107,7 @@ impl<'mc> Permission<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1114,7 +1117,7 @@ impl<'mc> Permission<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1124,7 +1127,7 @@ impl<'mc> Permission<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1216,7 +1219,7 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
     }
     //
 
-    pub fn permission(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn permission(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -1231,7 +1234,7 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
     //
 
     pub fn attachment(
-        &mut self,
+        &self,
     ) -> Result<crate::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/permissions/PermissionAttachment;");
         let res =
@@ -1245,7 +1248,7 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
     //
 
     pub fn permissible(
-        &mut self,
+        &self,
     ) -> Result<crate::permissions::Permissible<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/permissions/Permissible;");
         let res =
@@ -1258,7 +1261,7 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
     }
     //
 
-    pub fn value(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn value(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -1269,7 +1272,7 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1295,7 +1298,7 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1312,7 +1315,7 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1326,7 +1329,7 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1336,7 +1339,7 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1346,7 +1349,7 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1356,7 +1359,7 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1439,7 +1442,7 @@ impl<'mc> PermissionAttachment<'mc> {
     //
 
     pub fn set_permission_with_permission(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<bool>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1465,7 +1468,7 @@ impl<'mc> PermissionAttachment<'mc> {
     }
     //
 
-    pub fn plugin(&mut self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
+    pub fn plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
         let res = self
             .jni_ref()
@@ -1478,7 +1481,7 @@ impl<'mc> PermissionAttachment<'mc> {
     //
 
     pub fn removal_callback(
-        &mut self,
+        &self,
     ) -> Result<crate::permissions::PermissionRemovedExecutor<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/permissions/PermissionRemovedExecutor;");
@@ -1496,7 +1499,7 @@ impl<'mc> PermissionAttachment<'mc> {
     //
 
     pub fn set_removal_callback(
-        &mut self,
+        &self,
         arg0: impl Into<crate::permissions::PermissionRemovedExecutor<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/permissions/PermissionRemovedExecutor;)V");
@@ -1515,7 +1518,7 @@ impl<'mc> PermissionAttachment<'mc> {
     //
 
     pub fn permissible(
-        &mut self,
+        &self,
     ) -> Result<crate::permissions::Permissible<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/permissions/Permissible;");
         let res =
@@ -1529,7 +1532,7 @@ impl<'mc> PermissionAttachment<'mc> {
     //
 
     pub fn unset_permission_with_permission(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1550,7 +1553,7 @@ impl<'mc> PermissionAttachment<'mc> {
     }
     //
 
-    pub fn remove(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn remove(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -1560,9 +1563,7 @@ impl<'mc> PermissionAttachment<'mc> {
     }
     //
 
-    pub fn permissions(
-        &mut self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn permissions(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
@@ -1575,7 +1576,7 @@ impl<'mc> PermissionAttachment<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1601,7 +1602,7 @@ impl<'mc> PermissionAttachment<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1618,7 +1619,7 @@ impl<'mc> PermissionAttachment<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1632,7 +1633,7 @@ impl<'mc> PermissionAttachment<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1642,7 +1643,7 @@ impl<'mc> PermissionAttachment<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1652,7 +1653,7 @@ impl<'mc> PermissionAttachment<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1662,7 +1663,7 @@ impl<'mc> PermissionAttachment<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1714,7 +1715,7 @@ impl<'mc> PermissionRemovedExecutor<'mc> {
     //
 
     pub fn attachment_removed(
-        &mut self,
+        &self,
         arg0: impl Into<crate::permissions::PermissionAttachment<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/permissions/PermissionAttachment;)V");

@@ -29,7 +29,7 @@ impl<'mc> BukkitTask<'mc> {
     }
     //
 
-    pub fn cancel(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn cancel(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -39,7 +39,7 @@ impl<'mc> BukkitTask<'mc> {
     }
     //
 
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -49,7 +49,7 @@ impl<'mc> BukkitTask<'mc> {
     }
     //
 
-    pub fn is_sync(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_sync(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -59,7 +59,7 @@ impl<'mc> BukkitTask<'mc> {
     }
     //
 
-    pub fn owner(&mut self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
+    pub fn owner(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
         let res = self
             .jni_ref()
@@ -71,7 +71,7 @@ impl<'mc> BukkitTask<'mc> {
     }
     //
 
-    pub fn task_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn task_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -118,7 +118,7 @@ impl<'mc> BukkitWorker<'mc> {
     }
     //
 
-    pub fn owner(&mut self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
+    pub fn owner(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
         let res = self
             .jni_ref()
@@ -130,7 +130,7 @@ impl<'mc> BukkitWorker<'mc> {
     }
     //
 
-    pub fn task_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn task_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -180,7 +180,7 @@ impl<'mc> BukkitScheduler<'mc> {
 
     /// Check if the task queued to be run later.
     /// <p>If a repeating task is currently running, it might not be queued now but could be in the future. A task that is not queued, and not running, will not be queued again.</p>
-    pub fn is_queued(&mut self, arg0: i32) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_queued(&self, arg0: i32) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Z");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -195,7 +195,7 @@ impl<'mc> BukkitScheduler<'mc> {
     //
 
     pub fn schedule_sync_delayed_task_with_plugin(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<crate::scheduler::BukkitRunnable<'mc>>,
         arg2: std::option::Option<i64>,
@@ -230,7 +230,7 @@ impl<'mc> BukkitScheduler<'mc> {
     //
 
     /// Removes task from scheduler.
-    pub fn cancel_task(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn cancel_task(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -245,7 +245,7 @@ impl<'mc> BukkitScheduler<'mc> {
     //
 
     pub fn cancel_tasks(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/plugin/Plugin;)V");
@@ -266,7 +266,7 @@ impl<'mc> BukkitScheduler<'mc> {
     /// Check if the task currently running.
     /// <p>A repeating task might not be running currently, but will be running in the future. A task that has finished, and does not repeat, will not be running ever again.</p>
     /// <p>Explicitly, a task is running if there exists a thread for it, and that thread is alive.</p>
-    pub fn is_currently_running(&mut self, arg0: i32) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_currently_running(&self, arg0: i32) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Z");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -281,7 +281,7 @@ impl<'mc> BukkitScheduler<'mc> {
     //
 
     pub fn active_workers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::scheduler::BukkitWorker<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self.jni_ref().call_method(
@@ -306,7 +306,7 @@ impl<'mc> BukkitScheduler<'mc> {
     //
 
     pub fn pending_tasks(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::scheduler::BukkitTask<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res =
@@ -392,7 +392,7 @@ impl<'mc> BukkitRunnable<'mc> {
     }
     //
 
-    pub fn cancel(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn cancel(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -402,7 +402,7 @@ impl<'mc> BukkitRunnable<'mc> {
     }
     //
 
-    pub fn is_cancelled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -413,7 +413,7 @@ impl<'mc> BukkitRunnable<'mc> {
     //
 
     pub fn run_task(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<crate::scheduler::BukkitTask<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/plugin/Plugin;)Lorg/bukkit/scheduler/BukkitTask;");
@@ -434,7 +434,7 @@ impl<'mc> BukkitRunnable<'mc> {
     //
 
     pub fn run_task_asynchronously(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<crate::scheduler::BukkitTask<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/plugin/Plugin;)Lorg/bukkit/scheduler/BukkitTask;");
@@ -455,7 +455,7 @@ impl<'mc> BukkitRunnable<'mc> {
     //
 
     pub fn run_task_later(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: i64,
     ) -> Result<crate::scheduler::BukkitTask<'mc>, Box<dyn std::error::Error>> {
@@ -481,7 +481,7 @@ impl<'mc> BukkitRunnable<'mc> {
     //
 
     pub fn run_task_later_asynchronously(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: i64,
     ) -> Result<crate::scheduler::BukkitTask<'mc>, Box<dyn std::error::Error>> {
@@ -507,7 +507,7 @@ impl<'mc> BukkitRunnable<'mc> {
     //
 
     pub fn run_task_timer(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: i64,
         arg2: i64,
@@ -536,7 +536,7 @@ impl<'mc> BukkitRunnable<'mc> {
     //
 
     pub fn run_task_timer_asynchronously(
-        &mut self,
+        &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: i64,
         arg2: i64,
@@ -564,7 +564,7 @@ impl<'mc> BukkitRunnable<'mc> {
     }
     //
 
-    pub fn task_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn task_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -575,7 +575,7 @@ impl<'mc> BukkitRunnable<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -601,7 +601,7 @@ impl<'mc> BukkitRunnable<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -618,7 +618,7 @@ impl<'mc> BukkitRunnable<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -632,7 +632,7 @@ impl<'mc> BukkitRunnable<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -642,7 +642,7 @@ impl<'mc> BukkitRunnable<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -652,7 +652,7 @@ impl<'mc> BukkitRunnable<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -662,7 +662,7 @@ impl<'mc> BukkitRunnable<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -672,7 +672,7 @@ impl<'mc> BukkitRunnable<'mc> {
     }
     //
 
-    pub fn run(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()

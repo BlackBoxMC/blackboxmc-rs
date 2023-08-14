@@ -50,7 +50,7 @@ impl<'mc> JavaErrorManager<'mc> {
     //
 
     pub fn error(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: jni::objects::JObject<'mc>,
         arg2: i32,
@@ -77,7 +77,7 @@ impl<'mc> JavaErrorManager<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -103,7 +103,7 @@ impl<'mc> JavaErrorManager<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -120,7 +120,7 @@ impl<'mc> JavaErrorManager<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -134,7 +134,7 @@ impl<'mc> JavaErrorManager<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -144,7 +144,7 @@ impl<'mc> JavaErrorManager<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -154,7 +154,7 @@ impl<'mc> JavaErrorManager<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -164,7 +164,7 @@ impl<'mc> JavaErrorManager<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -233,7 +233,7 @@ impl<'mc> JavaXMLFormatter<'mc> {
     //
 
     pub fn get_head(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Handler;)Ljava/lang/String;");
@@ -254,7 +254,7 @@ impl<'mc> JavaXMLFormatter<'mc> {
     //
 
     pub fn get_tail(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Handler;)Ljava/lang/String;");
@@ -275,7 +275,7 @@ impl<'mc> JavaXMLFormatter<'mc> {
     //
 
     pub fn format(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/LogRecord;)Ljava/lang/String;");
@@ -296,7 +296,7 @@ impl<'mc> JavaXMLFormatter<'mc> {
     //
 
     pub fn format_message(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/LogRecord;)Ljava/lang/String;");
@@ -317,7 +317,7 @@ impl<'mc> JavaXMLFormatter<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -343,7 +343,7 @@ impl<'mc> JavaXMLFormatter<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -360,7 +360,7 @@ impl<'mc> JavaXMLFormatter<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -374,7 +374,7 @@ impl<'mc> JavaXMLFormatter<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -384,7 +384,7 @@ impl<'mc> JavaXMLFormatter<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -394,7 +394,7 @@ impl<'mc> JavaXMLFormatter<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -404,7 +404,7 @@ impl<'mc> JavaXMLFormatter<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -466,7 +466,7 @@ impl<'mc> JavaFormatter<'mc> {
     //
 
     pub fn get_head(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Handler;)Ljava/lang/String;");
@@ -487,7 +487,7 @@ impl<'mc> JavaFormatter<'mc> {
     //
 
     pub fn get_tail(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Handler;)Ljava/lang/String;");
@@ -508,7 +508,7 @@ impl<'mc> JavaFormatter<'mc> {
     //
 
     pub fn format_message(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/LogRecord;)Ljava/lang/String;");
@@ -529,7 +529,7 @@ impl<'mc> JavaFormatter<'mc> {
     //
 
     pub fn format(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/LogRecord;)Ljava/lang/String;");
@@ -550,7 +550,7 @@ impl<'mc> JavaFormatter<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -576,7 +576,7 @@ impl<'mc> JavaFormatter<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -593,7 +593,7 @@ impl<'mc> JavaFormatter<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -607,7 +607,7 @@ impl<'mc> JavaFormatter<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -617,7 +617,7 @@ impl<'mc> JavaFormatter<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -627,7 +627,7 @@ impl<'mc> JavaFormatter<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -637,7 +637,7 @@ impl<'mc> JavaFormatter<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -741,7 +741,7 @@ impl<'mc> JavaSocketHandler<'mc> {
     //
 
     pub fn publish(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/LogRecord;)V");
@@ -757,7 +757,7 @@ impl<'mc> JavaSocketHandler<'mc> {
     }
     //
 
-    pub fn close(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn close(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -768,7 +768,7 @@ impl<'mc> JavaSocketHandler<'mc> {
     //
 
     pub fn is_loggable(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/LogRecord;)Z");
@@ -784,10 +784,7 @@ impl<'mc> JavaSocketHandler<'mc> {
     }
     //
 
-    pub fn set_encoding(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_encoding(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -803,7 +800,7 @@ impl<'mc> JavaSocketHandler<'mc> {
     }
     //
 
-    pub fn flush(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn flush(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -814,7 +811,7 @@ impl<'mc> JavaSocketHandler<'mc> {
     //
 
     pub fn set_filter(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Filter;)V");
@@ -831,7 +828,7 @@ impl<'mc> JavaSocketHandler<'mc> {
     //
 
     pub fn set_level(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Level;)V");
@@ -848,7 +845,7 @@ impl<'mc> JavaSocketHandler<'mc> {
     //
 
     pub fn set_formatter(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Formatter;)V");
@@ -864,7 +861,7 @@ impl<'mc> JavaSocketHandler<'mc> {
     }
     //
 
-    pub fn formatter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn formatter(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/Formatter;");
         let res =
             self.jni_ref()
@@ -875,7 +872,7 @@ impl<'mc> JavaSocketHandler<'mc> {
     //
 
     pub fn set_error_manager(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/ErrorManager;)V");
@@ -891,9 +888,7 @@ impl<'mc> JavaSocketHandler<'mc> {
     }
     //
 
-    pub fn error_manager(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn error_manager(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/ErrorManager;");
         let res =
             self.jni_ref()
@@ -903,7 +898,7 @@ impl<'mc> JavaSocketHandler<'mc> {
     }
     //
 
-    pub fn encoding(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn encoding(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -917,7 +912,7 @@ impl<'mc> JavaSocketHandler<'mc> {
     }
     //
 
-    pub fn filter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn filter(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/Filter;");
         let res = self
             .jni_ref()
@@ -927,7 +922,7 @@ impl<'mc> JavaSocketHandler<'mc> {
     }
     //
 
-    pub fn level(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn level(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/Level;");
         let res = self
             .jni_ref()
@@ -938,7 +933,7 @@ impl<'mc> JavaSocketHandler<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -964,7 +959,7 @@ impl<'mc> JavaSocketHandler<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -981,7 +976,7 @@ impl<'mc> JavaSocketHandler<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -995,7 +990,7 @@ impl<'mc> JavaSocketHandler<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1005,7 +1000,7 @@ impl<'mc> JavaSocketHandler<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1015,7 +1010,7 @@ impl<'mc> JavaSocketHandler<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1025,7 +1020,7 @@ impl<'mc> JavaSocketHandler<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1098,7 +1093,7 @@ impl<'mc> JavaSimpleFormatter<'mc> {
     //
 
     pub fn format(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/LogRecord;)Ljava/lang/String;");
@@ -1119,7 +1114,7 @@ impl<'mc> JavaSimpleFormatter<'mc> {
     //
 
     pub fn get_head(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Handler;)Ljava/lang/String;");
@@ -1140,7 +1135,7 @@ impl<'mc> JavaSimpleFormatter<'mc> {
     //
 
     pub fn get_tail(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Handler;)Ljava/lang/String;");
@@ -1161,7 +1156,7 @@ impl<'mc> JavaSimpleFormatter<'mc> {
     //
 
     pub fn format_message(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/LogRecord;)Ljava/lang/String;");
@@ -1182,7 +1177,7 @@ impl<'mc> JavaSimpleFormatter<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1208,7 +1203,7 @@ impl<'mc> JavaSimpleFormatter<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1225,7 +1220,7 @@ impl<'mc> JavaSimpleFormatter<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1239,7 +1234,7 @@ impl<'mc> JavaSimpleFormatter<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1249,7 +1244,7 @@ impl<'mc> JavaSimpleFormatter<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1259,7 +1254,7 @@ impl<'mc> JavaSimpleFormatter<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1269,7 +1264,7 @@ impl<'mc> JavaSimpleFormatter<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1331,7 +1326,7 @@ impl<'mc> JavaHandler<'mc> {
     //
 
     pub fn set_filter(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Filter;)V");
@@ -1348,7 +1343,7 @@ impl<'mc> JavaHandler<'mc> {
     //
 
     pub fn is_loggable(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/LogRecord;)Z");
@@ -1365,7 +1360,7 @@ impl<'mc> JavaHandler<'mc> {
     //
 
     pub fn set_level(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Level;)V");
@@ -1382,7 +1377,7 @@ impl<'mc> JavaHandler<'mc> {
     //
 
     pub fn set_formatter(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Formatter;)V");
@@ -1398,7 +1393,7 @@ impl<'mc> JavaHandler<'mc> {
     }
     //
 
-    pub fn formatter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn formatter(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/Formatter;");
         let res =
             self.jni_ref()
@@ -1408,10 +1403,7 @@ impl<'mc> JavaHandler<'mc> {
     }
     //
 
-    pub fn set_encoding(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_encoding(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -1428,7 +1420,7 @@ impl<'mc> JavaHandler<'mc> {
     //
 
     pub fn set_error_manager(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/ErrorManager;)V");
@@ -1444,9 +1436,7 @@ impl<'mc> JavaHandler<'mc> {
     }
     //
 
-    pub fn error_manager(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn error_manager(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/ErrorManager;");
         let res =
             self.jni_ref()
@@ -1457,7 +1447,7 @@ impl<'mc> JavaHandler<'mc> {
     //
 
     pub fn publish(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/LogRecord;)V");
@@ -1473,7 +1463,7 @@ impl<'mc> JavaHandler<'mc> {
     }
     //
 
-    pub fn encoding(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn encoding(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -1487,7 +1477,7 @@ impl<'mc> JavaHandler<'mc> {
     }
     //
 
-    pub fn filter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn filter(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/Filter;");
         let res = self
             .jni_ref()
@@ -1497,7 +1487,7 @@ impl<'mc> JavaHandler<'mc> {
     }
     //
 
-    pub fn level(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn level(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/Level;");
         let res = self
             .jni_ref()
@@ -1507,7 +1497,7 @@ impl<'mc> JavaHandler<'mc> {
     }
     //
 
-    pub fn flush(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn flush(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1517,7 +1507,7 @@ impl<'mc> JavaHandler<'mc> {
     }
     //
 
-    pub fn close(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn close(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1528,7 +1518,7 @@ impl<'mc> JavaHandler<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1554,7 +1544,7 @@ impl<'mc> JavaHandler<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1571,7 +1561,7 @@ impl<'mc> JavaHandler<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1585,7 +1575,7 @@ impl<'mc> JavaHandler<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1595,7 +1585,7 @@ impl<'mc> JavaHandler<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1605,7 +1595,7 @@ impl<'mc> JavaHandler<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1615,7 +1605,7 @@ impl<'mc> JavaHandler<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1728,7 +1718,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
     //
 
     pub fn is_loggable(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/LogRecord;)Z");
@@ -1744,7 +1734,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
     }
     //
 
-    pub fn push(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn push(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1755,7 +1745,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
     //
 
     pub fn set_push_level(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Level;)V");
@@ -1771,7 +1761,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
     }
     //
 
-    pub fn push_level(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn push_level(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/Level;");
         let res =
             self.jni_ref()
@@ -1782,7 +1772,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
     //
 
     pub fn publish(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/LogRecord;)V");
@@ -1798,7 +1788,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
     }
     //
 
-    pub fn flush(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn flush(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1808,7 +1798,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
     }
     //
 
-    pub fn close(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn close(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1819,7 +1809,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
     //
 
     pub fn set_filter(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Filter;)V");
@@ -1836,7 +1826,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
     //
 
     pub fn set_level(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Level;)V");
@@ -1853,7 +1843,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
     //
 
     pub fn set_formatter(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Formatter;)V");
@@ -1869,7 +1859,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
     }
     //
 
-    pub fn formatter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn formatter(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/Formatter;");
         let res =
             self.jni_ref()
@@ -1879,10 +1869,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
     }
     //
 
-    pub fn set_encoding(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_encoding(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -1899,7 +1886,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
     //
 
     pub fn set_error_manager(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/ErrorManager;)V");
@@ -1915,9 +1902,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
     }
     //
 
-    pub fn error_manager(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn error_manager(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/ErrorManager;");
         let res =
             self.jni_ref()
@@ -1927,7 +1912,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
     }
     //
 
-    pub fn encoding(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn encoding(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -1941,7 +1926,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
     }
     //
 
-    pub fn filter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn filter(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/Filter;");
         let res = self
             .jni_ref()
@@ -1951,7 +1936,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
     }
     //
 
-    pub fn level(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn level(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/Level;");
         let res = self
             .jni_ref()
@@ -1962,7 +1947,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1988,7 +1973,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -2005,7 +1990,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2019,7 +2004,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2029,7 +2014,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -2039,7 +2024,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2049,7 +2034,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2154,7 +2139,7 @@ impl<'mc> JavaLogger<'mc> {
     //
 
     pub fn warning_with_supplier(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2176,7 +2161,7 @@ impl<'mc> JavaLogger<'mc> {
     //
 
     pub fn config_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2207,7 +2192,7 @@ impl<'mc> JavaLogger<'mc> {
     }
     //
 
-    pub fn resource_bundle_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn resource_bundle_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2225,7 +2210,7 @@ impl<'mc> JavaLogger<'mc> {
     //
 
     pub fn set_filter(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Filter;)V");
@@ -2242,7 +2227,7 @@ impl<'mc> JavaLogger<'mc> {
     //
 
     pub fn is_loggable(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Level;)Z");
@@ -2260,7 +2245,7 @@ impl<'mc> JavaLogger<'mc> {
 
     //
 
-    pub fn use_parent_handlers(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn use_parent_handlers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2274,7 +2259,7 @@ impl<'mc> JavaLogger<'mc> {
     //
 
     pub fn set_resource_bundle(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/ResourceBundle;)V");
@@ -2291,7 +2276,7 @@ impl<'mc> JavaLogger<'mc> {
     //
 
     pub fn logp_with_level(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: impl Into<String>,
         arg2: impl Into<String>,
@@ -2333,7 +2318,7 @@ impl<'mc> JavaLogger<'mc> {
     //
 
     pub fn add_handler(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Handler;)V");
@@ -2350,7 +2335,7 @@ impl<'mc> JavaLogger<'mc> {
     //
 
     pub fn remove_handler(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Handler;)V");
@@ -2366,10 +2351,7 @@ impl<'mc> JavaLogger<'mc> {
     }
     //
 
-    pub fn set_use_parent_handlers(
-        &mut self,
-        arg0: bool,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_use_parent_handlers(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -2385,7 +2367,7 @@ impl<'mc> JavaLogger<'mc> {
     //
 
     pub fn resource_bundle(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/ResourceBundle;");
         let res = self.jni_ref().call_method(
@@ -2412,7 +2394,7 @@ impl<'mc> JavaLogger<'mc> {
     //
 
     pub fn logrb_with_level(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: impl Into<String>,
         arg2: impl Into<String>,
@@ -2453,7 +2435,7 @@ impl<'mc> JavaLogger<'mc> {
     //
 
     pub fn entering_with_string(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<String>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -2487,7 +2469,7 @@ impl<'mc> JavaLogger<'mc> {
     //
 
     pub fn exiting_with_string(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<String>>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -2521,7 +2503,7 @@ impl<'mc> JavaLogger<'mc> {
     //
 
     pub fn throwing(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
         arg1: impl Into<String>,
         arg2: jni::objects::JObject<'mc>,
@@ -2550,7 +2532,7 @@ impl<'mc> JavaLogger<'mc> {
     //
 
     pub fn severe_with_supplier(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2572,7 +2554,7 @@ impl<'mc> JavaLogger<'mc> {
     //
 
     pub fn fine_with_supplier(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2594,7 +2576,7 @@ impl<'mc> JavaLogger<'mc> {
     //
 
     pub fn finer_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2614,7 +2596,7 @@ impl<'mc> JavaLogger<'mc> {
     //
 
     pub fn finest_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2634,7 +2616,7 @@ impl<'mc> JavaLogger<'mc> {
     //
 
     pub fn set_level(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Level;)V");
@@ -2650,7 +2632,7 @@ impl<'mc> JavaLogger<'mc> {
     }
     //
 
-    pub fn filter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn filter(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/Filter;");
         let res = self
             .jni_ref()
@@ -2660,7 +2642,7 @@ impl<'mc> JavaLogger<'mc> {
     }
     //
 
-    pub fn level(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn level(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/Level;");
         let res = self
             .jni_ref()
@@ -2670,7 +2652,7 @@ impl<'mc> JavaLogger<'mc> {
     }
     //
 
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2685,7 +2667,7 @@ impl<'mc> JavaLogger<'mc> {
     //
 
     pub fn log_with_log_record(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2711,7 +2693,7 @@ impl<'mc> JavaLogger<'mc> {
     //
 
     pub fn log_with_level(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: impl Into<String>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
@@ -2741,7 +2723,7 @@ impl<'mc> JavaLogger<'mc> {
     //
 
     pub fn info_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2760,7 +2742,7 @@ impl<'mc> JavaLogger<'mc> {
     }
     //
 
-    pub fn parent(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn parent(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/Logger;");
         let res = self
             .jni_ref()
@@ -2801,7 +2783,7 @@ impl<'mc> JavaLogger<'mc> {
     //
 
     pub fn set_parent(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Logger;)V");
@@ -2818,7 +2800,7 @@ impl<'mc> JavaLogger<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2844,7 +2826,7 @@ impl<'mc> JavaLogger<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -2861,7 +2843,7 @@ impl<'mc> JavaLogger<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2875,7 +2857,7 @@ impl<'mc> JavaLogger<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2885,7 +2867,7 @@ impl<'mc> JavaLogger<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -2895,7 +2877,7 @@ impl<'mc> JavaLogger<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2905,7 +2887,7 @@ impl<'mc> JavaLogger<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2990,7 +2972,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
     //
 
     pub fn publish(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/LogRecord;)V");
@@ -3006,7 +2988,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
     }
     //
 
-    pub fn close(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn close(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3017,7 +2999,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
     //
 
     pub fn is_loggable(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/LogRecord;)Z");
@@ -3033,10 +3015,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
     }
     //
 
-    pub fn set_encoding(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_encoding(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -3052,7 +3031,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
     }
     //
 
-    pub fn flush(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn flush(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3063,7 +3042,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
     //
 
     pub fn set_filter(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Filter;)V");
@@ -3080,7 +3059,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
     //
 
     pub fn set_level(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Level;)V");
@@ -3097,7 +3076,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
     //
 
     pub fn set_formatter(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Formatter;)V");
@@ -3113,7 +3092,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
     }
     //
 
-    pub fn formatter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn formatter(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/Formatter;");
         let res =
             self.jni_ref()
@@ -3124,7 +3103,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
     //
 
     pub fn set_error_manager(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/ErrorManager;)V");
@@ -3140,9 +3119,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
     }
     //
 
-    pub fn error_manager(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn error_manager(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/ErrorManager;");
         let res =
             self.jni_ref()
@@ -3152,7 +3129,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
     }
     //
 
-    pub fn encoding(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn encoding(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -3166,7 +3143,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
     }
     //
 
-    pub fn filter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn filter(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/Filter;");
         let res = self
             .jni_ref()
@@ -3176,7 +3153,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
     }
     //
 
-    pub fn level(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn level(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/Level;");
         let res = self
             .jni_ref()
@@ -3187,7 +3164,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3213,7 +3190,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -3230,7 +3207,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3244,7 +3221,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -3254,7 +3231,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -3264,7 +3241,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3274,7 +3251,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3364,7 +3341,7 @@ impl<'mc> JavaLoggingPermission<'mc> {
     //
 
     pub fn new_permission_collection(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/security/PermissionCollection;");
         let res = self.jni_ref().call_method(
@@ -3379,7 +3356,7 @@ impl<'mc> JavaLoggingPermission<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -3395,7 +3372,7 @@ impl<'mc> JavaLoggingPermission<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -3406,7 +3383,7 @@ impl<'mc> JavaLoggingPermission<'mc> {
     //
 
     pub fn implies(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/security/Permission;)Z");
@@ -3422,7 +3399,7 @@ impl<'mc> JavaLoggingPermission<'mc> {
     }
     //
 
-    pub fn actions(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn actions(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -3437,7 +3414,7 @@ impl<'mc> JavaLoggingPermission<'mc> {
     //
 
     pub fn check_guard(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)V");
@@ -3453,7 +3430,7 @@ impl<'mc> JavaLoggingPermission<'mc> {
     }
     //
 
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3468,7 +3445,7 @@ impl<'mc> JavaLoggingPermission<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3483,7 +3460,7 @@ impl<'mc> JavaLoggingPermission<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3508,7 +3485,7 @@ impl<'mc> JavaLoggingPermission<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -3518,7 +3495,7 @@ impl<'mc> JavaLoggingPermission<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3528,7 +3505,7 @@ impl<'mc> JavaLoggingPermission<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3577,7 +3554,7 @@ impl<'mc> JavaFilter<'mc> {
     //
 
     pub fn is_loggable(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/LogRecord;)Z");
@@ -3667,7 +3644,7 @@ impl<'mc> JavaLogRecord<'mc> {
     }
     //
 
-    pub fn millis(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
+    pub fn millis(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
         let res = self
             .jni_ref()
@@ -3677,7 +3654,7 @@ impl<'mc> JavaLogRecord<'mc> {
     }
     //
 
-    pub fn resource_bundle_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn resource_bundle_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3695,7 +3672,7 @@ impl<'mc> JavaLogRecord<'mc> {
     //
 
     pub fn set_logger_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -3714,7 +3691,7 @@ impl<'mc> JavaLogRecord<'mc> {
     //
 
     pub fn set_resource_bundle_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -3733,7 +3710,7 @@ impl<'mc> JavaLogRecord<'mc> {
     //
 
     pub fn set_resource_bundle(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/ResourceBundle;)V");
@@ -3750,7 +3727,7 @@ impl<'mc> JavaLogRecord<'mc> {
     //
 
     pub fn set_parameters(
-        &mut self,
+        &self,
         arg0: Vec<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)V");
@@ -3763,7 +3740,7 @@ impl<'mc> JavaLogRecord<'mc> {
     //
 
     pub fn set_thrown(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Throwable;)V");
@@ -3780,7 +3757,7 @@ impl<'mc> JavaLogRecord<'mc> {
     //
 
     pub fn set_source_class_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -3799,7 +3776,7 @@ impl<'mc> JavaLogRecord<'mc> {
     //
 
     pub fn set_source_method_name(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -3818,7 +3795,7 @@ impl<'mc> JavaLogRecord<'mc> {
     //
 
     pub fn resource_bundle(
-        &mut self,
+        &self,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/ResourceBundle;");
         let res = self.jni_ref().call_method(
@@ -3833,7 +3810,7 @@ impl<'mc> JavaLogRecord<'mc> {
     //
 
     pub fn set_level(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Level;)V");
@@ -3850,7 +3827,7 @@ impl<'mc> JavaLogRecord<'mc> {
     //
 
     pub fn set_instant(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/time/Instant;)V");
@@ -3866,7 +3843,7 @@ impl<'mc> JavaLogRecord<'mc> {
     }
     //
 
-    pub fn sequence_number(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
+    pub fn sequence_number(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3879,7 +3856,7 @@ impl<'mc> JavaLogRecord<'mc> {
     }
     //
 
-    pub fn set_sequence_number(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_sequence_number(&self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(J)V");
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let res = self.jni_ref().call_method(
@@ -3893,7 +3870,7 @@ impl<'mc> JavaLogRecord<'mc> {
     }
     //
 
-    pub fn source_class_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn source_class_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3910,7 +3887,7 @@ impl<'mc> JavaLogRecord<'mc> {
     }
     //
 
-    pub fn source_method_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn source_method_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3927,7 +3904,7 @@ impl<'mc> JavaLogRecord<'mc> {
     }
     //
 
-    pub fn thread_id(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn thread_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
             self.jni_ref()
@@ -3937,7 +3914,7 @@ impl<'mc> JavaLogRecord<'mc> {
     }
     //
 
-    pub fn set_thread_id(&mut self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_thread_id(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
@@ -3951,7 +3928,7 @@ impl<'mc> JavaLogRecord<'mc> {
     }
     //
 
-    pub fn long_thread_id(&mut self) -> Result<i64, Box<dyn std::error::Error>> {
+    pub fn long_thread_id(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
         let res =
             self.jni_ref()
@@ -3962,7 +3939,7 @@ impl<'mc> JavaLogRecord<'mc> {
     //
 
     pub fn set_long_thread_id(
-        &mut self,
+        &self,
         arg0: i64,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(J)Ljava/util/logging/LogRecord;");
@@ -3978,7 +3955,7 @@ impl<'mc> JavaLogRecord<'mc> {
     }
     //
 
-    pub fn instant(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn instant(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/time/Instant;");
         let res =
             self.jni_ref()
@@ -3988,7 +3965,7 @@ impl<'mc> JavaLogRecord<'mc> {
     }
     //
 
-    pub fn thrown(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn thrown(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Throwable;");
         let res = self
             .jni_ref()
@@ -3998,7 +3975,7 @@ impl<'mc> JavaLogRecord<'mc> {
     }
     //
 
-    pub fn set_millis(&mut self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_millis(&self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(J)V");
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
         let res = self.jni_ref().call_method(
@@ -4012,7 +3989,7 @@ impl<'mc> JavaLogRecord<'mc> {
     }
     //
 
-    pub fn logger_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn logger_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -4026,7 +4003,7 @@ impl<'mc> JavaLogRecord<'mc> {
     }
     //
 
-    pub fn level(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn level(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/Level;");
         let res = self
             .jni_ref()
@@ -4036,10 +4013,7 @@ impl<'mc> JavaLogRecord<'mc> {
     }
     //
 
-    pub fn set_message(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_message(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -4055,7 +4029,7 @@ impl<'mc> JavaLogRecord<'mc> {
     }
     //
 
-    pub fn message(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn message(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -4072,7 +4046,7 @@ impl<'mc> JavaLogRecord<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4098,7 +4072,7 @@ impl<'mc> JavaLogRecord<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -4115,7 +4089,7 @@ impl<'mc> JavaLogRecord<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4129,7 +4103,7 @@ impl<'mc> JavaLogRecord<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4139,7 +4113,7 @@ impl<'mc> JavaLogRecord<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -4149,7 +4123,7 @@ impl<'mc> JavaLogRecord<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4159,7 +4133,7 @@ impl<'mc> JavaLogRecord<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4260,7 +4234,7 @@ impl<'mc> JavaStreamHandler<'mc> {
     //
 
     pub fn is_loggable(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/LogRecord;)Z");
@@ -4276,10 +4250,7 @@ impl<'mc> JavaStreamHandler<'mc> {
     }
     //
 
-    pub fn set_encoding(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_encoding(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -4296,7 +4267,7 @@ impl<'mc> JavaStreamHandler<'mc> {
     //
 
     pub fn publish(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/LogRecord;)V");
@@ -4312,7 +4283,7 @@ impl<'mc> JavaStreamHandler<'mc> {
     }
     //
 
-    pub fn flush(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn flush(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4322,7 +4293,7 @@ impl<'mc> JavaStreamHandler<'mc> {
     }
     //
 
-    pub fn close(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn close(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4333,7 +4304,7 @@ impl<'mc> JavaStreamHandler<'mc> {
     //
 
     pub fn set_filter(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Filter;)V");
@@ -4350,7 +4321,7 @@ impl<'mc> JavaStreamHandler<'mc> {
     //
 
     pub fn set_level(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Level;)V");
@@ -4367,7 +4338,7 @@ impl<'mc> JavaStreamHandler<'mc> {
     //
 
     pub fn set_formatter(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/Formatter;)V");
@@ -4383,7 +4354,7 @@ impl<'mc> JavaStreamHandler<'mc> {
     }
     //
 
-    pub fn formatter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn formatter(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/Formatter;");
         let res =
             self.jni_ref()
@@ -4394,7 +4365,7 @@ impl<'mc> JavaStreamHandler<'mc> {
     //
 
     pub fn set_error_manager(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/logging/ErrorManager;)V");
@@ -4410,9 +4381,7 @@ impl<'mc> JavaStreamHandler<'mc> {
     }
     //
 
-    pub fn error_manager(
-        &mut self,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn error_manager(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/ErrorManager;");
         let res =
             self.jni_ref()
@@ -4422,7 +4391,7 @@ impl<'mc> JavaStreamHandler<'mc> {
     }
     //
 
-    pub fn encoding(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn encoding(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
@@ -4436,7 +4405,7 @@ impl<'mc> JavaStreamHandler<'mc> {
     }
     //
 
-    pub fn filter(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn filter(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/Filter;");
         let res = self
             .jni_ref()
@@ -4446,7 +4415,7 @@ impl<'mc> JavaStreamHandler<'mc> {
     }
     //
 
-    pub fn level(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn level(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/Level;");
         let res = self
             .jni_ref()
@@ -4457,7 +4426,7 @@ impl<'mc> JavaStreamHandler<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4483,7 +4452,7 @@ impl<'mc> JavaStreamHandler<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -4500,7 +4469,7 @@ impl<'mc> JavaStreamHandler<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4514,7 +4483,7 @@ impl<'mc> JavaStreamHandler<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4524,7 +4493,7 @@ impl<'mc> JavaStreamHandler<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -4534,7 +4503,7 @@ impl<'mc> JavaStreamHandler<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4544,7 +4513,7 @@ impl<'mc> JavaStreamHandler<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4615,7 +4584,7 @@ impl<'mc> JavaLevel<'mc> {
     }
     //
 
-    pub fn resource_bundle_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn resource_bundle_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4653,7 +4622,7 @@ impl<'mc> JavaLevel<'mc> {
     }
     //
 
-    pub fn localized_name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4670,7 +4639,7 @@ impl<'mc> JavaLevel<'mc> {
     }
     //
 
-    pub fn name(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4685,7 +4654,7 @@ impl<'mc> JavaLevel<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -4702,7 +4671,7 @@ impl<'mc> JavaLevel<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4716,7 +4685,7 @@ impl<'mc> JavaLevel<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4726,7 +4695,7 @@ impl<'mc> JavaLevel<'mc> {
     }
     //
 
-    pub fn int_value(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn int_value(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4737,7 +4706,7 @@ impl<'mc> JavaLevel<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4762,7 +4731,7 @@ impl<'mc> JavaLevel<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -4772,7 +4741,7 @@ impl<'mc> JavaLevel<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4782,7 +4751,7 @@ impl<'mc> JavaLevel<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()

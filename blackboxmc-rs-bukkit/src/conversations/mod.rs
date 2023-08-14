@@ -47,7 +47,7 @@ impl<'mc> NumericPrompt<'mc> {
     //
 
     pub fn blocks_for_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/conversations/ConversationContext;)Z");
@@ -66,7 +66,7 @@ impl<'mc> NumericPrompt<'mc> {
     //
 
     pub fn accept_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
         arg1: impl Into<String>,
     ) -> Result<crate::conversations::Prompt<'mc>, Box<dyn std::error::Error>> {
@@ -94,7 +94,7 @@ impl<'mc> NumericPrompt<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -120,7 +120,7 @@ impl<'mc> NumericPrompt<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -137,7 +137,7 @@ impl<'mc> NumericPrompt<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -151,7 +151,7 @@ impl<'mc> NumericPrompt<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -161,7 +161,7 @@ impl<'mc> NumericPrompt<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -171,7 +171,7 @@ impl<'mc> NumericPrompt<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -181,7 +181,7 @@ impl<'mc> NumericPrompt<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -192,7 +192,7 @@ impl<'mc> NumericPrompt<'mc> {
     //
 
     pub fn get_prompt_text(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig =
@@ -272,7 +272,7 @@ impl<'mc> ConversationPrefix<'mc> {
     //
 
     pub fn get_prefix(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig =
@@ -361,7 +361,7 @@ impl<'mc> ConversationFactory<'mc> {
     //
 
     pub fn with_prefix(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationPrefix<'mc>>,
     ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/conversations/ConversationPrefix;)Lorg/bukkit/conversations/ConversationFactory;");
@@ -384,7 +384,7 @@ impl<'mc> ConversationFactory<'mc> {
     /// Sets the modality of all <a href="Conversation.html" title="class in org.bukkit.conversations"><code>Conversation</code></a>s created by this factory. If a conversation is modal, all messages directed to the player are suppressed for the duration of the conversation.
     /// <p>The default is True.</p>
     pub fn with_modality(
-        &mut self,
+        &self,
         arg0: bool,
     ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Lorg/bukkit/conversations/ConversationFactory;");
@@ -405,7 +405,7 @@ impl<'mc> ConversationFactory<'mc> {
 
     /// Sets the local echo status for all <a title="class in org.bukkit.conversations" href="Conversation.html"><code>Conversation</code></a>s created by this factory. If local echo is enabled, any text submitted to a conversation gets echoed back into the submitter's chat window.
     pub fn with_local_echo(
-        &mut self,
+        &self,
         arg0: bool,
     ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Lorg/bukkit/conversations/ConversationFactory;");
@@ -427,7 +427,7 @@ impl<'mc> ConversationFactory<'mc> {
     /// Sets the number of inactive seconds to wait before automatically abandoning all generated conversations.
     /// <p>The default is 600 seconds (5 minutes).</p>
     pub fn with_timeout(
-        &mut self,
+        &self,
         arg0: i32,
     ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/conversations/ConversationFactory;");
@@ -446,7 +446,7 @@ impl<'mc> ConversationFactory<'mc> {
     //
 
     pub fn with_conversation_canceller(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationCanceller<'mc>>,
     ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/conversations/ConversationCanceller;)Lorg/bukkit/conversations/ConversationFactory;");
@@ -467,7 +467,7 @@ impl<'mc> ConversationFactory<'mc> {
     //
 
     pub fn with_first_prompt(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::Prompt<'mc>>,
     ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from(
@@ -490,7 +490,7 @@ impl<'mc> ConversationFactory<'mc> {
     //
 
     pub fn with_initial_session_data(
-        &mut self,
+        &self,
         arg0: impl Into<blackboxmc_java::JavaMap<'mc>>,
     ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Map;)Lorg/bukkit/conversations/ConversationFactory;");
@@ -511,7 +511,7 @@ impl<'mc> ConversationFactory<'mc> {
     //
 
     pub fn with_escape_sequence(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
         let sig =
@@ -533,7 +533,7 @@ impl<'mc> ConversationFactory<'mc> {
     //
 
     pub fn that_excludes_non_players_with_message(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
         let sig =
@@ -555,7 +555,7 @@ impl<'mc> ConversationFactory<'mc> {
     //
 
     pub fn add_conversation_abandoned_listener(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationAbandonedListener<'mc>>,
     ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/conversations/ConversationAbandonedListener;)Lorg/bukkit/conversations/ConversationFactory;");
@@ -576,7 +576,7 @@ impl<'mc> ConversationFactory<'mc> {
     //
 
     pub fn build_conversation(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::Conversable<'mc>>,
     ) -> Result<crate::conversations::Conversation<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from(
@@ -599,7 +599,7 @@ impl<'mc> ConversationFactory<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -625,7 +625,7 @@ impl<'mc> ConversationFactory<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -642,7 +642,7 @@ impl<'mc> ConversationFactory<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -656,7 +656,7 @@ impl<'mc> ConversationFactory<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -666,7 +666,7 @@ impl<'mc> ConversationFactory<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -676,7 +676,7 @@ impl<'mc> ConversationFactory<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -686,7 +686,7 @@ impl<'mc> ConversationFactory<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -773,7 +773,7 @@ impl<'mc> InactivityConversationCanceller<'mc> {
     //
 
     pub fn set_conversation(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::Conversation<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/conversations/Conversation;)V");
@@ -792,7 +792,7 @@ impl<'mc> InactivityConversationCanceller<'mc> {
     //
 
     pub fn cancel_based_on_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
         arg1: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -818,7 +818,7 @@ impl<'mc> InactivityConversationCanceller<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
@@ -831,7 +831,7 @@ impl<'mc> InactivityConversationCanceller<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -857,7 +857,7 @@ impl<'mc> InactivityConversationCanceller<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -874,7 +874,7 @@ impl<'mc> InactivityConversationCanceller<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -888,7 +888,7 @@ impl<'mc> InactivityConversationCanceller<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -898,7 +898,7 @@ impl<'mc> InactivityConversationCanceller<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -908,7 +908,7 @@ impl<'mc> InactivityConversationCanceller<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -918,7 +918,7 @@ impl<'mc> InactivityConversationCanceller<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1010,7 +1010,7 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
     //
 
     pub fn set_conversation(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::Conversation<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/conversations/Conversation;)V");
@@ -1029,7 +1029,7 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
     //
 
     pub fn cancel_based_on_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
         arg1: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1055,7 +1055,7 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
@@ -1068,7 +1068,7 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1094,7 +1094,7 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1111,7 +1111,7 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1125,7 +1125,7 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1135,7 +1135,7 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1145,7 +1145,7 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1155,7 +1155,7 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1213,7 +1213,7 @@ impl<'mc> Conversable<'mc> {
     //
 
     pub fn accept_conversation_input(
-        &mut self,
+        &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -1232,7 +1232,7 @@ impl<'mc> Conversable<'mc> {
     //
 
     pub fn begin_conversation(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::Conversation<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/conversations/Conversation;)Z");
@@ -1251,7 +1251,7 @@ impl<'mc> Conversable<'mc> {
     //
 
     pub fn abandon_conversation_with_conversation(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::conversations::Conversation<'mc>>>,
         arg1: std::option::Option<impl Into<crate::conversations::ConversationAbandonedEvent<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1283,7 +1283,7 @@ impl<'mc> Conversable<'mc> {
     }
     //
 
-    pub fn is_conversing(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_conversing(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -1294,7 +1294,7 @@ impl<'mc> Conversable<'mc> {
     //
 
     pub fn send_raw_message_with_string(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<blackboxmc_java::JavaUUID<'mc>>>,
         arg1: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1353,6 +1353,11 @@ impl std::fmt::Display for ConversationConversationStateEnum {
             ConversationConversationStateEnum::Started => f.write_str("STARTED"),
             ConversationConversationStateEnum::Abandoned => f.write_str("ABANDONED"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for ConversationConversationState<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct ConversationConversationState<'mc>(
@@ -1519,7 +1524,7 @@ impl<'mc> Conversation<'mc> {
     //
 
     pub fn prefix(
-        &mut self,
+        &self,
     ) -> Result<crate::conversations::ConversationPrefix<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/conversations/ConversationPrefix;");
         let res = self
@@ -1532,10 +1537,7 @@ impl<'mc> Conversation<'mc> {
     }
     //
 
-    pub fn accept_input(
-        &mut self,
-        arg0: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn accept_input(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
@@ -1551,7 +1553,7 @@ impl<'mc> Conversation<'mc> {
     }
     //
 
-    pub fn is_modal(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_modal(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
             .jni_ref()
@@ -1562,7 +1564,7 @@ impl<'mc> Conversation<'mc> {
     //
 
     pub fn add_conversation_abandoned_listener(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationAbandonedListener<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/conversations/ConversationAbandonedListener;)V");
@@ -1581,7 +1583,7 @@ impl<'mc> Conversation<'mc> {
     //
 
     /// Sets the status of local echo for this conversation. If local echo is enabled, any text submitted to a conversation gets echoed back into the submitter's chat window.
-    pub fn set_local_echo_enabled(&mut self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_local_echo_enabled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -2
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -1597,7 +1599,7 @@ impl<'mc> Conversation<'mc> {
     //
 
     pub fn for_whom(
-        &mut self,
+        &self,
     ) -> Result<crate::conversations::Conversable<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/conversations/Conversable;");
         let res =
@@ -1611,7 +1613,7 @@ impl<'mc> Conversation<'mc> {
     //
 
     pub fn abandon(
-        &mut self,
+        &self,
         arg0: std::option::Option<impl Into<crate::conversations::ConversationAbandonedEvent<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1632,7 +1634,7 @@ impl<'mc> Conversation<'mc> {
     }
     //
 
-    pub fn is_local_echo_enabled(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn is_local_echo_enabled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1646,7 +1648,7 @@ impl<'mc> Conversation<'mc> {
     //
 
     pub fn cancellers(
-        &mut self,
+        &self,
     ) -> Result<Vec<crate::conversations::ConversationCanceller<'mc>>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Ljava/util/List;");
@@ -1667,7 +1669,7 @@ impl<'mc> Conversation<'mc> {
     }
     //
 
-    pub fn output_next_prompt(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn output_next_prompt(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1681,7 +1683,7 @@ impl<'mc> Conversation<'mc> {
     //
 
     pub fn remove_conversation_abandoned_listener(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationAbandonedListener<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/conversations/ConversationAbandonedListener;)V");
@@ -1699,7 +1701,7 @@ impl<'mc> Conversation<'mc> {
     }
     //
 
-    pub fn begin(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn begin(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1710,7 +1712,7 @@ impl<'mc> Conversation<'mc> {
     //
 
     pub fn context(
-        &mut self,
+        &self,
     ) -> Result<crate::conversations::ConversationContext<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/conversations/ConversationContext;");
         let res =
@@ -1724,7 +1726,7 @@ impl<'mc> Conversation<'mc> {
     //
 
     pub fn state(
-        &mut self,
+        &self,
     ) -> Result<crate::conversations::ConversationConversationState<'mc>, Box<dyn std::error::Error>>
     {
         let sig = String::from("()Lorg/bukkit/conversations/Conversation$ConversationState;");
@@ -1752,7 +1754,7 @@ impl<'mc> Conversation<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1778,7 +1780,7 @@ impl<'mc> Conversation<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -1795,7 +1797,7 @@ impl<'mc> Conversation<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1809,7 +1811,7 @@ impl<'mc> Conversation<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -1819,7 +1821,7 @@ impl<'mc> Conversation<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -1829,7 +1831,7 @@ impl<'mc> Conversation<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1839,7 +1841,7 @@ impl<'mc> Conversation<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -1892,7 +1894,7 @@ impl<'mc> ConversationAbandonedListener<'mc> {
     //
 
     pub fn conversation_abandoned(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationAbandonedEvent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/conversations/ConversationAbandonedEvent;)V");
@@ -1936,6 +1938,11 @@ impl std::fmt::Display for ConversationStateEnum {
             ConversationStateEnum::Started => f.write_str("STARTED"),
             ConversationStateEnum::Abandoned => f.write_str("ABANDONED"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for ConversationState<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct ConversationState<'mc>(
@@ -2071,7 +2078,7 @@ impl<'mc> ValidatingPrompt<'mc> {
     //
 
     pub fn blocks_for_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/conversations/ConversationContext;)Z");
@@ -2090,7 +2097,7 @@ impl<'mc> ValidatingPrompt<'mc> {
     //
 
     pub fn accept_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
         arg1: impl Into<String>,
     ) -> Result<crate::conversations::Prompt<'mc>, Box<dyn std::error::Error>> {
@@ -2118,7 +2125,7 @@ impl<'mc> ValidatingPrompt<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2144,7 +2151,7 @@ impl<'mc> ValidatingPrompt<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -2161,7 +2168,7 @@ impl<'mc> ValidatingPrompt<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2175,7 +2182,7 @@ impl<'mc> ValidatingPrompt<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2185,7 +2192,7 @@ impl<'mc> ValidatingPrompt<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -2195,7 +2202,7 @@ impl<'mc> ValidatingPrompt<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2205,7 +2212,7 @@ impl<'mc> ValidatingPrompt<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2216,7 +2223,7 @@ impl<'mc> ValidatingPrompt<'mc> {
     //
 
     pub fn get_prompt_text(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig =
@@ -2310,7 +2317,7 @@ impl<'mc> RegexPrompt<'mc> {
     //
 
     pub fn blocks_for_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/conversations/ConversationContext;)Z");
@@ -2329,7 +2336,7 @@ impl<'mc> RegexPrompt<'mc> {
     //
 
     pub fn accept_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
         arg1: impl Into<String>,
     ) -> Result<crate::conversations::Prompt<'mc>, Box<dyn std::error::Error>> {
@@ -2357,7 +2364,7 @@ impl<'mc> RegexPrompt<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2383,7 +2390,7 @@ impl<'mc> RegexPrompt<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -2400,7 +2407,7 @@ impl<'mc> RegexPrompt<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2414,7 +2421,7 @@ impl<'mc> RegexPrompt<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2424,7 +2431,7 @@ impl<'mc> RegexPrompt<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -2434,7 +2441,7 @@ impl<'mc> RegexPrompt<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2444,7 +2451,7 @@ impl<'mc> RegexPrompt<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2455,7 +2462,7 @@ impl<'mc> RegexPrompt<'mc> {
     //
 
     pub fn get_prompt_text(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig =
@@ -2548,7 +2555,7 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
     //
 
     pub fn set_conversation(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::Conversation<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/conversations/Conversation;)V");
@@ -2567,7 +2574,7 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
     //
 
     pub fn cancel_based_on_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
         arg1: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2593,7 +2600,7 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
     }
     //
 
-    pub fn clone(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
@@ -2606,7 +2613,7 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2632,7 +2639,7 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -2649,7 +2656,7 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2663,7 +2670,7 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2673,7 +2680,7 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -2683,7 +2690,7 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2693,7 +2700,7 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2768,7 +2775,7 @@ impl<'mc> StringPrompt<'mc> {
     //
 
     pub fn blocks_for_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/conversations/ConversationContext;)Z");
@@ -2787,7 +2794,7 @@ impl<'mc> StringPrompt<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2813,7 +2820,7 @@ impl<'mc> StringPrompt<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -2830,7 +2837,7 @@ impl<'mc> StringPrompt<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2844,7 +2851,7 @@ impl<'mc> StringPrompt<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -2854,7 +2861,7 @@ impl<'mc> StringPrompt<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -2864,7 +2871,7 @@ impl<'mc> StringPrompt<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2874,7 +2881,7 @@ impl<'mc> StringPrompt<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -2885,7 +2892,7 @@ impl<'mc> StringPrompt<'mc> {
     //
 
     pub fn get_prompt_text(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig =
@@ -2909,7 +2916,7 @@ impl<'mc> StringPrompt<'mc> {
     //
 
     pub fn accept_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
         arg1: impl Into<String>,
     ) -> Result<crate::conversations::Prompt<'mc>, Box<dyn std::error::Error>> {
@@ -3030,7 +3037,7 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
     //
 
     pub fn get_prefix(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig =
@@ -3054,7 +3061,7 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3080,7 +3087,7 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -3097,7 +3104,7 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3111,7 +3118,7 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -3121,7 +3128,7 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -3131,7 +3138,7 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3141,7 +3148,7 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3214,7 +3221,7 @@ impl<'mc> ConversationCanceller<'mc> {
     //
 
     pub fn set_conversation(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::Conversation<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/conversations/Conversation;)V");
@@ -3233,7 +3240,7 @@ impl<'mc> ConversationCanceller<'mc> {
     //
 
     pub fn cancel_based_on_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
         arg1: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3260,7 +3267,7 @@ impl<'mc> ConversationCanceller<'mc> {
     //
 
     pub fn clone(
-        &mut self,
+        &self,
     ) -> Result<crate::conversations::ConversationCanceller<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -3332,7 +3339,7 @@ impl<'mc> FixedSetPrompt<'mc> {
     //
 
     pub fn blocks_for_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/conversations/ConversationContext;)Z");
@@ -3351,7 +3358,7 @@ impl<'mc> FixedSetPrompt<'mc> {
     //
 
     pub fn accept_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
         arg1: impl Into<String>,
     ) -> Result<crate::conversations::Prompt<'mc>, Box<dyn std::error::Error>> {
@@ -3379,7 +3386,7 @@ impl<'mc> FixedSetPrompt<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3405,7 +3412,7 @@ impl<'mc> FixedSetPrompt<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -3422,7 +3429,7 @@ impl<'mc> FixedSetPrompt<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3436,7 +3443,7 @@ impl<'mc> FixedSetPrompt<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -3446,7 +3453,7 @@ impl<'mc> FixedSetPrompt<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -3456,7 +3463,7 @@ impl<'mc> FixedSetPrompt<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3466,7 +3473,7 @@ impl<'mc> FixedSetPrompt<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3477,7 +3484,7 @@ impl<'mc> FixedSetPrompt<'mc> {
     //
 
     pub fn get_prompt_text(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig =
@@ -3565,7 +3572,7 @@ impl<'mc> NullConversationPrefix<'mc> {
     //
 
     pub fn get_prefix(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig =
@@ -3589,7 +3596,7 @@ impl<'mc> NullConversationPrefix<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3615,7 +3622,7 @@ impl<'mc> NullConversationPrefix<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -3632,7 +3639,7 @@ impl<'mc> NullConversationPrefix<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3646,7 +3653,7 @@ impl<'mc> NullConversationPrefix<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -3656,7 +3663,7 @@ impl<'mc> NullConversationPrefix<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -3666,7 +3673,7 @@ impl<'mc> NullConversationPrefix<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3676,7 +3683,7 @@ impl<'mc> NullConversationPrefix<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -3741,7 +3748,7 @@ impl<'mc> Prompt<'mc> {
     //
 
     pub fn get_prompt_text(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig =
@@ -3765,7 +3772,7 @@ impl<'mc> Prompt<'mc> {
     //
 
     pub fn blocks_for_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/conversations/ConversationContext;)Z");
@@ -3784,7 +3791,7 @@ impl<'mc> Prompt<'mc> {
     //
 
     pub fn accept_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
         arg1: impl Into<String>,
     ) -> Result<crate::conversations::Prompt<'mc>, Box<dyn std::error::Error>> {
@@ -3887,7 +3894,7 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
     }
     //
 
-    pub fn graceful_exit(&mut self) -> Result<bool, Box<dyn std::error::Error>> {
+    pub fn graceful_exit(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
             self.jni_ref()
@@ -3898,7 +3905,7 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
     //
 
     pub fn canceller(
-        &mut self,
+        &self,
     ) -> Result<crate::conversations::ConversationCanceller<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/conversations/ConversationCanceller;");
         let res =
@@ -3912,7 +3919,7 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
     //
 
     pub fn context(
-        &mut self,
+        &self,
     ) -> Result<crate::conversations::ConversationContext<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/conversations/ConversationContext;");
         let res =
@@ -3925,7 +3932,7 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
     }
     //
 
-    pub fn source(&mut self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn source(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
             .jni_ref()
@@ -3936,7 +3943,7 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3951,7 +3958,7 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3977,7 +3984,7 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -3993,7 +4000,7 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4003,7 +4010,7 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -4013,7 +4020,7 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4023,7 +4030,7 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4112,7 +4119,7 @@ impl<'mc> ConversationContext<'mc> {
     }
     //
 
-    pub fn plugin(&mut self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
+    pub fn plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
         let res = self
             .jni_ref()
@@ -4125,7 +4132,7 @@ impl<'mc> ConversationContext<'mc> {
     //
 
     pub fn for_whom(
-        &mut self,
+        &self,
     ) -> Result<crate::conversations::Conversable<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/conversations/Conversable;");
         let res =
@@ -4139,7 +4146,7 @@ impl<'mc> ConversationContext<'mc> {
     //
 
     pub fn all_session_data(
-        &mut self,
+        &self,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self.jni_ref().call_method(
@@ -4156,7 +4163,7 @@ impl<'mc> ConversationContext<'mc> {
     //
 
     pub fn get_session_data(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Ljava/lang/Object;");
@@ -4173,7 +4180,7 @@ impl<'mc> ConversationContext<'mc> {
     //
 
     pub fn set_session_data(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4195,7 +4202,7 @@ impl<'mc> ConversationContext<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4221,7 +4228,7 @@ impl<'mc> ConversationContext<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -4238,7 +4245,7 @@ impl<'mc> ConversationContext<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4252,7 +4259,7 @@ impl<'mc> ConversationContext<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4262,7 +4269,7 @@ impl<'mc> ConversationContext<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -4272,7 +4279,7 @@ impl<'mc> ConversationContext<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4282,7 +4289,7 @@ impl<'mc> ConversationContext<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4357,7 +4364,7 @@ impl<'mc> PlayerNamePrompt<'mc> {
     //
 
     pub fn blocks_for_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/conversations/ConversationContext;)Z");
@@ -4376,7 +4383,7 @@ impl<'mc> PlayerNamePrompt<'mc> {
     //
 
     pub fn accept_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
         arg1: impl Into<String>,
     ) -> Result<crate::conversations::Prompt<'mc>, Box<dyn std::error::Error>> {
@@ -4404,7 +4411,7 @@ impl<'mc> PlayerNamePrompt<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4430,7 +4437,7 @@ impl<'mc> PlayerNamePrompt<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -4447,7 +4454,7 @@ impl<'mc> PlayerNamePrompt<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4461,7 +4468,7 @@ impl<'mc> PlayerNamePrompt<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4471,7 +4478,7 @@ impl<'mc> PlayerNamePrompt<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -4481,7 +4488,7 @@ impl<'mc> PlayerNamePrompt<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4491,7 +4498,7 @@ impl<'mc> PlayerNamePrompt<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4502,7 +4509,7 @@ impl<'mc> PlayerNamePrompt<'mc> {
     //
 
     pub fn get_prompt_text(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig =
@@ -4586,7 +4593,7 @@ impl<'mc> BooleanPrompt<'mc> {
     //
 
     pub fn blocks_for_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/conversations/ConversationContext;)Z");
@@ -4605,7 +4612,7 @@ impl<'mc> BooleanPrompt<'mc> {
     //
 
     pub fn accept_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
         arg1: impl Into<String>,
     ) -> Result<crate::conversations::Prompt<'mc>, Box<dyn std::error::Error>> {
@@ -4633,7 +4640,7 @@ impl<'mc> BooleanPrompt<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4659,7 +4666,7 @@ impl<'mc> BooleanPrompt<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -4676,7 +4683,7 @@ impl<'mc> BooleanPrompt<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4690,7 +4697,7 @@ impl<'mc> BooleanPrompt<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4700,7 +4707,7 @@ impl<'mc> BooleanPrompt<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -4710,7 +4717,7 @@ impl<'mc> BooleanPrompt<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4720,7 +4727,7 @@ impl<'mc> BooleanPrompt<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4731,7 +4738,7 @@ impl<'mc> BooleanPrompt<'mc> {
     //
 
     pub fn get_prompt_text(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig =
@@ -4815,7 +4822,7 @@ impl<'mc> MessagePrompt<'mc> {
     //
 
     pub fn blocks_for_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/conversations/ConversationContext;)Z");
@@ -4834,7 +4841,7 @@ impl<'mc> MessagePrompt<'mc> {
     //
 
     pub fn accept_input(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
         arg1: impl Into<String>,
     ) -> Result<crate::conversations::Prompt<'mc>, Box<dyn std::error::Error>> {
@@ -4862,7 +4869,7 @@ impl<'mc> MessagePrompt<'mc> {
     //
 
     pub fn wait(
-        &mut self,
+        &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4888,7 +4895,7 @@ impl<'mc> MessagePrompt<'mc> {
     //
 
     pub fn equals(
-        &mut self,
+        &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Object;)Z");
@@ -4905,7 +4912,7 @@ impl<'mc> MessagePrompt<'mc> {
     //
 
     #[doc(hidden)]
-    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4919,7 +4926,7 @@ impl<'mc> MessagePrompt<'mc> {
     }
     //
 
-    pub fn hash_code(&mut self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
@@ -4929,7 +4936,7 @@ impl<'mc> MessagePrompt<'mc> {
     }
     //
 
-    pub fn class(&mut self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
+    pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
             .jni_ref()
@@ -4939,7 +4946,7 @@ impl<'mc> MessagePrompt<'mc> {
     }
     //
 
-    pub fn notify(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4949,7 +4956,7 @@ impl<'mc> MessagePrompt<'mc> {
     }
     //
 
-    pub fn notify_all(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
@@ -4960,7 +4967,7 @@ impl<'mc> MessagePrompt<'mc> {
     //
 
     pub fn get_prompt_text(
-        &mut self,
+        &self,
         arg0: impl Into<crate::conversations::ConversationContext<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let sig =

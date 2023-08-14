@@ -16,6 +16,11 @@ impl std::fmt::Display for CookingBookCategoryEnum {
         }
     }
 }
+impl<'mc> std::fmt::Display for CookingBookCategory<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
+    }
+}
 pub struct CookingBookCategory<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -116,6 +121,11 @@ impl std::fmt::Display for CraftingBookCategoryEnum {
             CraftingBookCategoryEnum::Equipment => f.write_str("EQUIPMENT"),
             CraftingBookCategoryEnum::Misc => f.write_str("MISC"),
         }
+    }
+}
+impl<'mc> std::fmt::Display for CraftingBookCategory<'mc> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.2.fmt(f)
     }
 }
 pub struct CraftingBookCategory<'mc>(
