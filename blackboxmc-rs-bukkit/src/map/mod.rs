@@ -92,22 +92,22 @@ impl<'mc> MapCursorCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
+    //
 
-    /// Add a cursor to the collection.
-    pub fn add_cursor_with_map_cursor(
+    pub fn add_cursor(
         &self,
-        arg0: std::option::Option<i32>,
+        arg0: i32,
         arg1: std::option::Option<i32>,
         arg2: std::option::Option<i8>,
+        arg3: std::option::Option<i8>,
+        arg4: std::option::Option<bool>,
+        arg5: std::option::Option<impl Into<String>>,
     ) -> Result<crate::map::MapCursor<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_1);
-        }
+        sig += "I";
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "I";
             let val_2 = jni::objects::JValueGen::Int(a.into());
@@ -118,44 +118,17 @@ impl<'mc> MapCursorCollection<'mc> {
             let val_3 = jni::objects::JValueGen::Byte(a.into());
             args.push(val_3);
         }
-        sig += ")Lorg/bukkit/map/MapCursor;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "addCursor", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::map::MapCursor::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
-    pub fn add_cursor_with_int(
-        &self,
-        arg0: i32,
-        arg1: i32,
-        arg2: i8,
-        arg3: i8,
-        arg4: bool,
-        arg5: std::option::Option<impl Into<String>>,
-    ) -> Result<crate::map::MapCursor<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        args.push(val_1);
-        sig += "I";
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        args.push(val_2);
-        sig += "B";
-        let val_3 = jni::objects::JValueGen::Byte(arg2.into());
-        args.push(val_3);
-        sig += "B";
-        let val_4 = jni::objects::JValueGen::Byte(arg3.into());
-        args.push(val_4);
-        sig += "Z";
-        // 5
-        let val_5 = jni::objects::JValueGen::Bool(arg4.into());
-        args.push(val_5);
+        if let Some(a) = arg3 {
+            sig += "B";
+            let val_4 = jni::objects::JValueGen::Byte(a.into());
+            args.push(val_4);
+        }
+        if let Some(a) = arg4 {
+            sig += "Z";
+            // 2
+            let val_5 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_5);
+        }
         if let Some(a) = arg5 {
             sig += "Ljava/lang/String;";
             let val_6 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
@@ -1114,7 +1087,7 @@ impl<'mc> MapCursor<'mc> {
         });
         args.push(val_4);
         sig += "Z";
-        // 5
+        // 6
         let val_5 = jni::objects::JValueGen::Bool(arg4.into());
         args.push(val_5);
         if let Some(a) = arg5 {
@@ -1165,7 +1138,7 @@ impl<'mc> MapCursor<'mc> {
     /// Set the visibility status of this cursor.
     pub fn set_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2042,7 +2015,7 @@ impl<'mc> MapRenderer<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "Z";
-            // -1
+            // 1
             let val_1 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_1);
         }
@@ -2420,7 +2393,7 @@ impl<'mc> MapView<'mc> {
                 .call_method(&self.jni_object(), "getRenderers", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -2484,7 +2457,7 @@ impl<'mc> MapView<'mc> {
     /// Sets whether a position cursor should be shown when the map is near its center.
     pub fn set_tracking_position(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2513,7 +2486,7 @@ impl<'mc> MapView<'mc> {
     /// Whether the map will show a smaller position cursor (true), or no position cursor (false) when cursor is outside of map's range.
     pub fn set_unlimited_tracking(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2529,7 +2502,7 @@ impl<'mc> MapView<'mc> {
     /// Gets whether the map is locked or not. A locked map may not be explored further.
     pub fn set_locked(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2952,17 +2925,15 @@ impl<'mc> MapPalette<'mc> {
     /// Get the index of the closest matching color in the palette to the given color.
     pub fn match_color(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<i32>,
+        arg0: i32,
         arg1: std::option::Option<i32>,
         arg2: std::option::Option<i32>,
     ) -> Result<i8, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_1);
-        }
+        sig += "I";
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "I";
             let val_2 = jni::objects::JValueGen::Int(a.into());

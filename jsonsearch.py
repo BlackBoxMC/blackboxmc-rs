@@ -10,13 +10,28 @@ past = ["spigot.json"]
 should_print = False
 cur = json.loads(f.read())
 for arg in args:
-    if arg in cur:
-        cur = cur[arg]
+    if arg == "_keys_":
+        cur = cur.keys()
         should_print = True
         past.append(arg)
+    elif arg.startswith("("):
+        parts = arg.replace("(","").replace(")","").split("=")
+        curr = list(filter(lambda f: f[parts[0]] == parts[1], cur))
+        if len(curr) >= 1:
+            cur = curr
+            should_print = True
+            past.append(arg)
+        else:
+            should_print = False
+            print(arg+" not in "+":".join(past))
     else:
-        should_print = False
-        print(arg+" not in "+":".join(past))
+        if arg in cur:
+            cur = cur[arg]
+            should_print = True
+            past.append(arg)
+        else:
+            should_print = False
+            print(arg+" not in "+":".join(past))
 
 if should_print:
     print(cur)

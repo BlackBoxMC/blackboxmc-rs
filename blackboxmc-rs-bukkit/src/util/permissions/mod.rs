@@ -46,11 +46,13 @@ impl<'mc> JNIInstantiatable<'mc> for DefaultPermissions<'mc> {
 impl<'mc> DefaultPermissions<'mc> {
     //
 
-    pub fn register_permission_with_permission(
+    pub fn register_permission(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<String>>,
         arg2: std::option::Option<impl Into<crate::permissions::PermissionDefault<'mc>>>,
+        arg3: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
+        arg4: std::option::Option<impl Into<crate::permissions::Permission<'mc>>>,
     ) -> Result<crate::permissions::Permission<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -73,41 +75,6 @@ impl<'mc> DefaultPermissions<'mc> {
             });
             args.push(val_3);
         }
-        sig += ")Lorg/bukkit/permissions/Permission;";
-        let cls = jni.find_class("org/bukkit/permissions/Permission");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "registerPermission", sig.as_str(), args);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::permissions::Permission::from_raw(&jni, obj)
-    }
-    //
-
-    pub fn register_permission_with_string(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-        arg1: impl Into<String>,
-        arg2: impl Into<crate::permissions::PermissionDefault<'mc>>,
-        arg3: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
-        arg4: std::option::Option<impl Into<crate::permissions::Permission<'mc>>>,
-    ) -> Result<crate::permissions::Permission<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Ljava/lang/String;";
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            jni.new_string(arg0.into())?,
-        ));
-        args.push(val_1);
-        sig += "Ljava/lang/String;";
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            jni.new_string(arg1.into())?,
-        ));
-        args.push(val_2);
-        sig += "Lorg/bukkit/permissions/PermissionDefault;";
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
-        });
-        args.push(val_3);
         if let Some(a) = arg3 {
             sig += "Ljava/util/Map;";
             let val_4 = jni::objects::JValueGen::Object(unsafe {

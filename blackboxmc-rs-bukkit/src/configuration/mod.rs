@@ -3,7 +3,7 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-/// Various settings for controlling the input and output of a <a title="class in org.bukkit.configuration" href="MemoryConfiguration.html"><code>MemoryConfiguration</code></a>
+/// Various settings for controlling the input and output of a <a href="MemoryConfiguration.html" title="class in org.bukkit.configuration"><code>MemoryConfiguration</code></a>
 pub struct MemoryConfigurationOptions<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -48,7 +48,7 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
     //@NotNull
 
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="ConfigurationOptions.html#pathSeparator(char)">ConfigurationOptions</a></code></span>
-    /// Sets the char that will be used to separate <a href="ConfigurationSection.html" title="interface in org.bukkit.configuration"><code>ConfigurationSection</code></a>s
+    /// Sets the char that will be used to separate <a title="interface in org.bukkit.configuration" href="ConfigurationSection.html"><code>ConfigurationSection</code></a>s
     /// <p>This value does not affect how the <a title="interface in org.bukkit.configuration" href="Configuration.html"><code>Configuration</code></a> is stored, only in how you access the data. The default value is '.'.</p>
     pub fn path_separator(
         &self,
@@ -74,7 +74,7 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
     //@NotNull
 
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="ConfigurationOptions.html#copyDefaults(boolean)">ConfigurationOptions</a></code></span>
-    /// Sets if the <a href="Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> should copy values from its default <a href="Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> directly.
+    /// Sets if the <a title="interface in org.bukkit.configuration" href="Configuration.html"><code>Configuration</code></a> should copy values from its default <a title="interface in org.bukkit.configuration" href="Configuration.html"><code>Configuration</code></a> directly.
     /// <p>If this is true, all values in the default Configuration will be directly copied, making it impossible to distinguish between values that were set and values that are provided by default. As a result, <a href="ConfigurationSection.html#contains(java.lang.String)"><code>ConfigurationSection.contains(java.lang.String)</code></a> will always return the same value as <a href="ConfigurationSection.html#isSet(java.lang.String)"><code>ConfigurationSection.isSet(java.lang.String)</code></a>. The default value is false.</p>
     pub fn copy_defaults(
         &self,
@@ -85,7 +85,7 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "Z";
-            // -1
+            // 1
             let val_1 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_1);
         }
@@ -230,7 +230,7 @@ impl<'mc> Into<crate::configuration::ConfigurationOptions<'mc>>
         crate::configuration::ConfigurationOptions::from_raw(&self.jni_ref(), self.1).expect("Error converting MemoryConfigurationOptions into crate::configuration::ConfigurationOptions")
     }
 }
-/// A type of <a href="ConfigurationSection.html" title="interface in org.bukkit.configuration"><code>ConfigurationSection</code></a> that is stored in memory.
+/// A type of <a title="interface in org.bukkit.configuration" href="ConfigurationSection.html"><code>ConfigurationSection</code></a> that is stored in memory.
 pub struct MemorySection<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -272,18 +272,16 @@ impl<'mc> MemorySection<'mc> {
 
     pub fn get_string(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<String>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Ljava/lang/String;";
             let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
@@ -313,7 +311,7 @@ impl<'mc> MemorySection<'mc> {
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Set;");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -330,18 +328,16 @@ impl<'mc> MemorySection<'mc> {
 
     pub fn get_color(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::Color<'mc>>>,
     ) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/Color;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -362,18 +358,16 @@ impl<'mc> MemorySection<'mc> {
 
     pub fn get_item_stack(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/inventory/ItemStack;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -394,18 +388,16 @@ impl<'mc> MemorySection<'mc> {
 
     pub fn get_offline_player(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
     ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/OfflinePlayer;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -426,14 +418,14 @@ impl<'mc> MemorySection<'mc> {
 
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="ConfigurationSection.html#getValues(boolean)">ConfigurationSection</a></code></span>
     /// Gets a Map containing all keys and their values for this section.
-    /// <p>If deep is set to true, then this will contain all the keys and values within any child <a href="ConfigurationSection.html" title="interface in org.bukkit.configuration"><code>ConfigurationSection</code></a>s (and their children, etc). These keys will be in a valid path notation for you to use.</p>
+    /// <p>If deep is set to true, then this will contain all the keys and values within any child <a title="interface in org.bukkit.configuration" href="ConfigurationSection.html"><code>ConfigurationSection</code></a>s (and their children, etc). These keys will be in a valid path notation for you to use.</p>
     /// <p>If deep is set to false, then this will contain only the keys and values of any direct children, and not their own children.</p>
     pub fn get_values(
         &self,
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Map;");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -451,7 +443,7 @@ impl<'mc> MemorySection<'mc> {
     pub fn create_path(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::configuration::ConfigurationSection<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
+        arg1: impl Into<String>,
         arg2: std::option::Option<impl Into<crate::configuration::ConfigurationSection<'mc>>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -461,13 +453,11 @@ impl<'mc> MemorySection<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/String;";
-            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                jni.new_string(a.into())?,
-            ));
-            args.push(val_2);
-        }
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg1.into())?,
+        ));
+        args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Lorg/bukkit/configuration/ConfigurationSection;";
             let val_3 = jni::objects::JValueGen::Object(unsafe {
@@ -585,18 +575,16 @@ impl<'mc> MemorySection<'mc> {
 
     pub fn create_section(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Ljava/util/Map;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -727,7 +715,7 @@ impl<'mc> MemorySection<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -761,7 +749,7 @@ impl<'mc> MemorySection<'mc> {
     pub fn get_serializable(
         &self,
         arg0: impl Into<String>,
-        arg1: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: jni::objects::JClass<'mc>,
         arg2: std::option::Option<
             impl Into<crate::configuration::serialization::ConfigurationSerializable<'mc>>,
         >,
@@ -776,11 +764,9 @@ impl<'mc> MemorySection<'mc> {
             self.jni_ref().new_string(arg0.into())?,
         ));
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/Class;";
-            let val_2 = jni::objects::JValueGen::Object(a.into());
-            args.push(val_2);
-        }
+        sig += "Ljava/lang/Class;";
+        let val_2 = jni::objects::JValueGen::Object(arg1.into());
+        args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Lorg/bukkit/configuration/serialization/ConfigurationSerializable;";
             let val_3 = jni::objects::JValueGen::Object(unsafe {
@@ -802,18 +788,16 @@ impl<'mc> MemorySection<'mc> {
 
     pub fn get_vector(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/util/Vector;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -934,7 +918,7 @@ impl<'mc> MemorySection<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -965,7 +949,7 @@ impl<'mc> MemorySection<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -1072,18 +1056,16 @@ impl<'mc> MemorySection<'mc> {
 
     pub fn get(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Ljava/lang/Object;";
             let val_2 = jni::objects::JValueGen::Object(a);
@@ -1115,21 +1097,19 @@ impl<'mc> MemorySection<'mc> {
 
     pub fn get_boolean(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 0
+            // 2
             let val_2 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_2);
         }
@@ -1144,18 +1124,16 @@ impl<'mc> MemorySection<'mc> {
 
     pub fn get_int(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "I";
             let val_2 = jni::objects::JValueGen::Int(a.into());
@@ -1172,18 +1150,16 @@ impl<'mc> MemorySection<'mc> {
 
     pub fn get_long(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "J";
             let val_2 = jni::objects::JValueGen::Long(a.into());
@@ -1200,18 +1176,16 @@ impl<'mc> MemorySection<'mc> {
 
     pub fn get_double(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "D";
             let val_2 = jni::objects::JValueGen::Double(a.into());
@@ -1228,21 +1202,19 @@ impl<'mc> MemorySection<'mc> {
 
     pub fn contains(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 0
+            // 2
             let val_2 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_2);
         }
@@ -1257,18 +1229,16 @@ impl<'mc> MemorySection<'mc> {
 
     pub fn get_location(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/Location;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -1358,7 +1328,7 @@ impl<'mc> MemorySection<'mc> {
     pub fn get_object(
         &self,
         arg0: impl Into<String>,
-        arg1: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: jni::objects::JClass<'mc>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1368,11 +1338,9 @@ impl<'mc> MemorySection<'mc> {
             self.jni_ref().new_string(arg0.into())?,
         ));
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/Class;";
-            let val_2 = jni::objects::JValueGen::Object(a.into());
-            args.push(val_2);
-        }
+        sig += "Ljava/lang/Class;";
+        let val_2 = jni::objects::JValueGen::Object(arg1.into());
+        args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Ljava/lang/Object;";
             let val_3 = jni::objects::JValueGen::Object(a);
@@ -1568,17 +1536,15 @@ impl<'mc> Configuration<'mc> {
 
     pub fn add_defaults(
         &self,
-        arg0: std::option::Option<impl Into<crate::configuration::Configuration<'mc>>>,
+        arg0: impl Into<crate::configuration::Configuration<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/configuration/Configuration;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Lorg/bukkit/configuration/Configuration;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         sig += ")V";
         let res = self
             .jni_ref()
@@ -1623,18 +1589,16 @@ impl<'mc> Configuration<'mc> {
 
     pub fn get_string(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<String>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Ljava/lang/String;";
             let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
@@ -1660,7 +1624,7 @@ impl<'mc> Configuration<'mc> {
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Set;");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1677,18 +1641,16 @@ impl<'mc> Configuration<'mc> {
 
     pub fn get_color(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::Color<'mc>>>,
     ) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/Color;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -1709,18 +1671,16 @@ impl<'mc> Configuration<'mc> {
 
     pub fn get_item_stack(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/inventory/ItemStack;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -1741,18 +1701,16 @@ impl<'mc> Configuration<'mc> {
 
     pub fn get_offline_player(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
     ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/OfflinePlayer;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -1776,7 +1734,7 @@ impl<'mc> Configuration<'mc> {
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Map;");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1865,18 +1823,16 @@ impl<'mc> Configuration<'mc> {
 
     pub fn create_section(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Ljava/util/Map;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -2007,7 +1963,7 @@ impl<'mc> Configuration<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -2041,7 +1997,7 @@ impl<'mc> Configuration<'mc> {
     pub fn get_serializable(
         &self,
         arg0: impl Into<String>,
-        arg1: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: jni::objects::JClass<'mc>,
         arg2: std::option::Option<
             impl Into<crate::configuration::serialization::ConfigurationSerializable<'mc>>,
         >,
@@ -2056,11 +2012,9 @@ impl<'mc> Configuration<'mc> {
             self.jni_ref().new_string(arg0.into())?,
         ));
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/Class;";
-            let val_2 = jni::objects::JValueGen::Object(a.into());
-            args.push(val_2);
-        }
+        sig += "Ljava/lang/Class;";
+        let val_2 = jni::objects::JValueGen::Object(arg1.into());
+        args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Lorg/bukkit/configuration/serialization/ConfigurationSerializable;";
             let val_3 = jni::objects::JValueGen::Object(unsafe {
@@ -2082,18 +2036,16 @@ impl<'mc> Configuration<'mc> {
 
     pub fn get_vector(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/util/Vector;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -2214,7 +2166,7 @@ impl<'mc> Configuration<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -2245,7 +2197,7 @@ impl<'mc> Configuration<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -2352,18 +2304,16 @@ impl<'mc> Configuration<'mc> {
 
     pub fn get(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Ljava/lang/Object;";
             let val_2 = jni::objects::JValueGen::Object(a);
@@ -2380,21 +2330,19 @@ impl<'mc> Configuration<'mc> {
 
     pub fn get_boolean(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 0
+            // 2
             let val_2 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_2);
         }
@@ -2409,18 +2357,16 @@ impl<'mc> Configuration<'mc> {
 
     pub fn get_int(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "I";
             let val_2 = jni::objects::JValueGen::Int(a.into());
@@ -2437,18 +2383,16 @@ impl<'mc> Configuration<'mc> {
 
     pub fn get_long(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "J";
             let val_2 = jni::objects::JValueGen::Long(a.into());
@@ -2465,18 +2409,16 @@ impl<'mc> Configuration<'mc> {
 
     pub fn get_double(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "D";
             let val_2 = jni::objects::JValueGen::Double(a.into());
@@ -2493,21 +2435,19 @@ impl<'mc> Configuration<'mc> {
 
     pub fn contains(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 0
+            // 2
             let val_2 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_2);
         }
@@ -2522,18 +2462,16 @@ impl<'mc> Configuration<'mc> {
 
     pub fn get_location(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/Location;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -2623,7 +2561,7 @@ impl<'mc> Configuration<'mc> {
     pub fn get_object(
         &self,
         arg0: impl Into<String>,
-        arg1: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: jni::objects::JClass<'mc>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2633,11 +2571,9 @@ impl<'mc> Configuration<'mc> {
             self.jni_ref().new_string(arg0.into())?,
         ));
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/Class;";
-            let val_2 = jni::objects::JValueGen::Object(a.into());
-            args.push(val_2);
-        }
+        sig += "Ljava/lang/Class;";
+        let val_2 = jni::objects::JValueGen::Object(arg1.into());
+        args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Ljava/lang/Object;";
             let val_3 = jni::objects::JValueGen::Object(a);
@@ -2658,7 +2594,7 @@ impl<'mc> Into<crate::configuration::ConfigurationSection<'mc>> for Configuratio
         )
     }
 }
-/// This is a <a title="interface in org.bukkit.configuration" href="Configuration.html"><code>Configuration</code></a> implementation that does not save or load from any source, and stores all values in memory only. This is useful for temporary Configurations for providing defaults.
+/// This is a <a href="Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> implementation that does not save or load from any source, and stores all values in memory only. This is useful for temporary Configurations for providing defaults.
 pub struct MemoryConfiguration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2761,17 +2697,15 @@ impl<'mc> MemoryConfiguration<'mc> {
 
     pub fn add_defaults(
         &self,
-        arg0: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
+        arg0: impl Into<blackboxmc_java::JavaMap<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/util/Map;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Ljava/util/Map;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         sig += ")V";
         let res = self
             .jni_ref()
@@ -2833,18 +2767,16 @@ impl<'mc> MemoryConfiguration<'mc> {
 
     pub fn get_string(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<String>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Ljava/lang/String;";
             let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
@@ -2870,7 +2802,7 @@ impl<'mc> MemoryConfiguration<'mc> {
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Set;");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2887,18 +2819,16 @@ impl<'mc> MemoryConfiguration<'mc> {
 
     pub fn get_color(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::Color<'mc>>>,
     ) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/Color;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -2919,18 +2849,16 @@ impl<'mc> MemoryConfiguration<'mc> {
 
     pub fn get_item_stack(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/inventory/ItemStack;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -2951,18 +2879,16 @@ impl<'mc> MemoryConfiguration<'mc> {
 
     pub fn get_offline_player(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
     ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/OfflinePlayer;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -2986,7 +2912,7 @@ impl<'mc> MemoryConfiguration<'mc> {
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Map;");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3004,7 +2930,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     pub fn create_path(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::configuration::ConfigurationSection<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
+        arg1: impl Into<String>,
         arg2: std::option::Option<impl Into<crate::configuration::ConfigurationSection<'mc>>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -3014,13 +2940,11 @@ impl<'mc> MemoryConfiguration<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/String;";
-            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                jni.new_string(a.into())?,
-            ));
-            args.push(val_2);
-        }
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg1.into())?,
+        ));
+        args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Lorg/bukkit/configuration/ConfigurationSection;";
             let val_3 = jni::objects::JValueGen::Object(unsafe {
@@ -3114,18 +3038,16 @@ impl<'mc> MemoryConfiguration<'mc> {
 
     pub fn create_section(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Ljava/util/Map;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -3256,7 +3178,7 @@ impl<'mc> MemoryConfiguration<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -3290,7 +3212,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     pub fn get_serializable(
         &self,
         arg0: impl Into<String>,
-        arg1: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: jni::objects::JClass<'mc>,
         arg2: std::option::Option<
             impl Into<crate::configuration::serialization::ConfigurationSerializable<'mc>>,
         >,
@@ -3305,11 +3227,9 @@ impl<'mc> MemoryConfiguration<'mc> {
             self.jni_ref().new_string(arg0.into())?,
         ));
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/Class;";
-            let val_2 = jni::objects::JValueGen::Object(a.into());
-            args.push(val_2);
-        }
+        sig += "Ljava/lang/Class;";
+        let val_2 = jni::objects::JValueGen::Object(arg1.into());
+        args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Lorg/bukkit/configuration/serialization/ConfigurationSerializable;";
             let val_3 = jni::objects::JValueGen::Object(unsafe {
@@ -3331,18 +3251,16 @@ impl<'mc> MemoryConfiguration<'mc> {
 
     pub fn get_vector(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/util/Vector;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -3463,7 +3381,7 @@ impl<'mc> MemoryConfiguration<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -3494,7 +3412,7 @@ impl<'mc> MemoryConfiguration<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -3601,18 +3519,16 @@ impl<'mc> MemoryConfiguration<'mc> {
 
     pub fn get(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Ljava/lang/Object;";
             let val_2 = jni::objects::JValueGen::Object(a);
@@ -3644,21 +3560,19 @@ impl<'mc> MemoryConfiguration<'mc> {
 
     pub fn get_boolean(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 0
+            // 2
             let val_2 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_2);
         }
@@ -3673,18 +3587,16 @@ impl<'mc> MemoryConfiguration<'mc> {
 
     pub fn get_int(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "I";
             let val_2 = jni::objects::JValueGen::Int(a.into());
@@ -3701,18 +3613,16 @@ impl<'mc> MemoryConfiguration<'mc> {
 
     pub fn get_long(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "J";
             let val_2 = jni::objects::JValueGen::Long(a.into());
@@ -3729,18 +3639,16 @@ impl<'mc> MemoryConfiguration<'mc> {
 
     pub fn get_double(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "D";
             let val_2 = jni::objects::JValueGen::Double(a.into());
@@ -3757,21 +3665,19 @@ impl<'mc> MemoryConfiguration<'mc> {
 
     pub fn contains(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 0
+            // 2
             let val_2 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_2);
         }
@@ -3786,18 +3692,16 @@ impl<'mc> MemoryConfiguration<'mc> {
 
     pub fn get_location(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/Location;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -3873,7 +3777,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     pub fn get_object(
         &self,
         arg0: impl Into<String>,
-        arg1: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: jni::objects::JClass<'mc>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -3883,11 +3787,9 @@ impl<'mc> MemoryConfiguration<'mc> {
             self.jni_ref().new_string(arg0.into())?,
         ));
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/Class;";
-            let val_2 = jni::objects::JValueGen::Object(a.into());
-            args.push(val_2);
-        }
+        sig += "Ljava/lang/Class;";
+        let val_2 = jni::objects::JValueGen::Object(arg1.into());
+        args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Ljava/lang/Object;";
             let val_3 = jni::objects::JValueGen::Object(a);
@@ -4049,7 +3951,7 @@ impl<'mc> JNIInstantiatable<'mc> for ConfigurationOptions<'mc> {
 impl<'mc> ConfigurationOptions<'mc> {
     //@NotNull
 
-    /// Sets the char that will be used to separate <a title="interface in org.bukkit.configuration" href="ConfigurationSection.html"><code>ConfigurationSection</code></a>s
+    /// Sets the char that will be used to separate <a href="ConfigurationSection.html" title="interface in org.bukkit.configuration"><code>ConfigurationSection</code></a>s
     /// <p>This value does not affect how the <a href="Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> is stored, only in how you access the data. The default value is '.'.</p>
     pub fn path_separator(
         &self,
@@ -4073,7 +3975,7 @@ impl<'mc> ConfigurationOptions<'mc> {
     }
     //@NotNull
 
-    /// Sets if the <a href="Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> should copy values from its default <a href="Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> directly.
+    /// Sets if the <a href="Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> should copy values from its default <a title="interface in org.bukkit.configuration" href="Configuration.html"><code>Configuration</code></a> directly.
     /// <p>If this is true, all values in the default Configuration will be directly copied, making it impossible to distinguish between values that were set and values that are provided by default. As a result, <a href="ConfigurationSection.html#contains(java.lang.String)"><code>ConfigurationSection.contains(java.lang.String)</code></a> will always return the same value as <a href="ConfigurationSection.html#isSet(java.lang.String)"><code>ConfigurationSection.isSet(java.lang.String)</code></a>. The default value is false.</p>
     pub fn copy_defaults(
         &self,
@@ -4083,7 +3985,7 @@ impl<'mc> ConfigurationOptions<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "Z";
-            // -1
+            // 1
             let val_1 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_1);
         }
@@ -4266,18 +4168,16 @@ impl<'mc> ConfigurationSection<'mc> {
 
     pub fn get_string(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<String>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Ljava/lang/String;";
             let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
@@ -4299,14 +4199,14 @@ impl<'mc> ConfigurationSection<'mc> {
     //@NotNull
 
     /// Gets a set containing all keys in this section.
-    /// <p>If deep is set to true, then this will contain all the keys within any child <a title="interface in org.bukkit.configuration" href="ConfigurationSection.html"><code>ConfigurationSection</code></a>s (and their children, etc). These will be in a valid path notation for you to use.</p>
+    /// <p>If deep is set to true, then this will contain all the keys within any child <a href="ConfigurationSection.html" title="interface in org.bukkit.configuration"><code>ConfigurationSection</code></a>s (and their children, etc). These will be in a valid path notation for you to use.</p>
     /// <p>If deep is set to false, then this will contain only the keys of any direct children, and not their own children.</p>
     pub fn get_keys(
         &self,
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Set;");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4323,18 +4223,16 @@ impl<'mc> ConfigurationSection<'mc> {
 
     pub fn get_color(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::Color<'mc>>>,
     ) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/Color;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -4355,18 +4253,16 @@ impl<'mc> ConfigurationSection<'mc> {
 
     pub fn get_item_stack(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/inventory/ItemStack;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -4387,18 +4283,16 @@ impl<'mc> ConfigurationSection<'mc> {
 
     pub fn get_offline_player(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
     ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/OfflinePlayer;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -4418,14 +4312,14 @@ impl<'mc> ConfigurationSection<'mc> {
     //@NotNull
 
     /// Gets a Map containing all keys and their values for this section.
-    /// <p>If deep is set to true, then this will contain all the keys and values within any child <a title="interface in org.bukkit.configuration" href="ConfigurationSection.html"><code>ConfigurationSection</code></a>s (and their children, etc). These keys will be in a valid path notation for you to use.</p>
+    /// <p>If deep is set to true, then this will contain all the keys and values within any child <a href="ConfigurationSection.html" title="interface in org.bukkit.configuration"><code>ConfigurationSection</code></a>s (and their children, etc). These keys will be in a valid path notation for you to use.</p>
     /// <p>If deep is set to false, then this will contain only the keys and values of any direct children, and not their own children.</p>
     pub fn get_values(
         &self,
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Map;");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4538,18 +4432,16 @@ impl<'mc> ConfigurationSection<'mc> {
 
     pub fn create_section(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Ljava/util/Map;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -4680,7 +4572,7 @@ impl<'mc> ConfigurationSection<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -4714,7 +4606,7 @@ impl<'mc> ConfigurationSection<'mc> {
     pub fn get_serializable(
         &self,
         arg0: impl Into<String>,
-        arg1: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: jni::objects::JClass<'mc>,
         arg2: std::option::Option<
             impl Into<crate::configuration::serialization::ConfigurationSerializable<'mc>>,
         >,
@@ -4729,11 +4621,9 @@ impl<'mc> ConfigurationSection<'mc> {
             self.jni_ref().new_string(arg0.into())?,
         ));
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/Class;";
-            let val_2 = jni::objects::JValueGen::Object(a.into());
-            args.push(val_2);
-        }
+        sig += "Ljava/lang/Class;";
+        let val_2 = jni::objects::JValueGen::Object(arg1.into());
+        args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Lorg/bukkit/configuration/serialization/ConfigurationSerializable;";
             let val_3 = jni::objects::JValueGen::Object(unsafe {
@@ -4755,18 +4645,16 @@ impl<'mc> ConfigurationSection<'mc> {
 
     pub fn get_vector(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/util/Vector;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -4887,7 +4775,7 @@ impl<'mc> ConfigurationSection<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -4918,7 +4806,7 @@ impl<'mc> ConfigurationSection<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -5025,18 +4913,16 @@ impl<'mc> ConfigurationSection<'mc> {
 
     pub fn get(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Ljava/lang/Object;";
             let val_2 = jni::objects::JValueGen::Object(a);
@@ -5053,21 +4939,19 @@ impl<'mc> ConfigurationSection<'mc> {
 
     pub fn get_boolean(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 0
+            // 2
             let val_2 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_2);
         }
@@ -5082,18 +4966,16 @@ impl<'mc> ConfigurationSection<'mc> {
 
     pub fn get_int(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "I";
             let val_2 = jni::objects::JValueGen::Int(a.into());
@@ -5110,18 +4992,16 @@ impl<'mc> ConfigurationSection<'mc> {
 
     pub fn get_long(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "J";
             let val_2 = jni::objects::JValueGen::Long(a.into());
@@ -5138,18 +5018,16 @@ impl<'mc> ConfigurationSection<'mc> {
 
     pub fn get_double(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "D";
             let val_2 = jni::objects::JValueGen::Double(a.into());
@@ -5166,21 +5044,19 @@ impl<'mc> ConfigurationSection<'mc> {
 
     pub fn contains(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 0
+            // 2
             let val_2 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_2);
         }
@@ -5195,18 +5071,16 @@ impl<'mc> ConfigurationSection<'mc> {
 
     pub fn get_location(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/Location;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -5296,7 +5170,7 @@ impl<'mc> ConfigurationSection<'mc> {
     pub fn get_object(
         &self,
         arg0: impl Into<String>,
-        arg1: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: jni::objects::JClass<'mc>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -5306,11 +5180,9 @@ impl<'mc> ConfigurationSection<'mc> {
             self.jni_ref().new_string(arg0.into())?,
         ));
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/Class;";
-            let val_2 = jni::objects::JValueGen::Object(a.into());
-            args.push(val_2);
-        }
+        sig += "Ljava/lang/Class;";
+        let val_2 = jni::objects::JValueGen::Object(arg1.into());
+        args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Ljava/lang/Object;";
             let val_3 = jni::objects::JValueGen::Object(a);

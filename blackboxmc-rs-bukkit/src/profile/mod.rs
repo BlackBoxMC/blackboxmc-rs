@@ -70,16 +70,14 @@ impl<'mc> PlayerTextures<'mc> {
 
     pub fn set_skin(
         &self,
-        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+        arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<impl Into<crate::profile::PlayerTexturesSkinModel<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/net/URL;";
-            let val_1 = jni::objects::JValueGen::Object(a);
-            args.push(val_1);
-        }
+        sig += "Ljava/net/URL;";
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/profile/PlayerTextures$SkinModel;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {

@@ -368,8 +368,8 @@ impl<'mc> DataPackManager<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
-        let mut iter = blackboxmc_java::JavaIterator::from_raw(&self.jni_ref(), col.iterator()?)?;
+        let col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
             new_vec.push(crate::packs::DataPack::from_raw(&self.jni_ref(), obj)?);
@@ -387,8 +387,8 @@ impl<'mc> DataPackManager<'mc> {
                 .call_method(&self.jni_object(), "getDataPacks", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
-        let mut iter = blackboxmc_java::JavaIterator::from_raw(&self.jni_ref(), col.iterator()?)?;
+        let col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
             new_vec.push(crate::packs::DataPack::from_raw(&self.jni_ref(), obj)?);
@@ -434,8 +434,8 @@ impl<'mc> DataPackManager<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
-        let mut iter = blackboxmc_java::JavaIterator::from_raw(&self.jni_ref(), col.iterator()?)?;
+        let col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
             new_vec.push(crate::packs::DataPack::from_raw(&self.jni_ref(), obj)?);
@@ -447,7 +447,7 @@ impl<'mc> DataPackManager<'mc> {
     pub fn is_enabled_by_feature(
         &self,
         arg0: impl Into<crate::entity::EntityType<'mc>>,
-        arg1: std::option::Option<impl Into<crate::World<'mc>>>,
+        arg1: impl Into<crate::World<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -456,13 +456,11 @@ impl<'mc> DataPackManager<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/World;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/World;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),

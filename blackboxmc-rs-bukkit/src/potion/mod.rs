@@ -413,28 +413,26 @@ impl<'mc> JNIInstantiatable<'mc> for PotionData<'mc> {
 impl<'mc> PotionData<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::potion::PotionType<'mc>>>,
+        arg0: impl Into<crate::potion::PotionType<'mc>>,
         arg1: std::option::Option<bool>,
         arg2: std::option::Option<bool>,
     ) -> Result<crate::potion::PotionData<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/potion/PotionType;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Lorg/bukkit/potion/PotionType;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 0
+            // 2
             let val_2 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_2);
         }
         if let Some(a) = arg2 {
             sig += "Z";
-            // 0
+            // 2
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -644,20 +642,18 @@ impl<'mc> Potion<'mc> {
     #[deprecated]
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::potion::PotionType<'mc>>>,
+        arg0: impl Into<crate::potion::PotionType<'mc>>,
         arg1: std::option::Option<i32>,
         arg2: std::option::Option<bool>,
         arg3: std::option::Option<bool>,
     ) -> Result<crate::potion::Potion<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/potion/PotionType;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Lorg/bukkit/potion/PotionType;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "I";
             let val_2 = jni::objects::JValueGen::Int(a.into());
@@ -665,13 +661,13 @@ impl<'mc> Potion<'mc> {
         }
         if let Some(a) = arg2 {
             sig += "Z";
-            // 0
+            // 2
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
         if let Some(a) = arg3 {
             sig += "Z";
-            // 0
+            // 2
             let val_4 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_4);
         }
@@ -738,8 +734,8 @@ impl<'mc> Potion<'mc> {
                 .call_method(&self.jni_object(), "getEffects", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
-        let mut iter = blackboxmc_java::JavaIterator::from_raw(&self.0, col.iterator()?)?;
+        let col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
             new_vec.push(crate::potion::PotionEffect::from_raw(&self.0, obj)?);
@@ -785,7 +781,7 @@ impl<'mc> Potion<'mc> {
     /// Sets whether this potion is a splash potion. Splash potions can be thrown for a radius effect.
     pub fn set_splash(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -814,7 +810,7 @@ impl<'mc> Potion<'mc> {
     /// Set whether this potion has extended duration. This will cause the potion to have roughly 8/3 more duration than a regular potion.
     pub fn set_has_extended_duration(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -977,17 +973,15 @@ impl<'mc> Potion<'mc> {
 
     pub fn apply(
         &self,
-        arg0: std::option::Option<impl Into<crate::entity::LivingEntity<'mc>>>,
+        arg0: impl Into<crate::entity::LivingEntity<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/entity/LivingEntity;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Lorg/bukkit/entity/LivingEntity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         sig += ")V";
         let res = self
             .jni_ref()
@@ -1102,7 +1096,7 @@ impl<'mc> std::string::ToString for Potion<'mc> {
     }
 }
 
-/// Represents a potion effect, that can be added to a <a title="interface in org.bukkit.entity" href="../entity/LivingEntity.html"><code>LivingEntity</code></a>. A potion effect has a duration that it will last for, an amplifier that will enhance its effects, and a <a href="PotionEffectType.html" title="class in org.bukkit.potion"><code>PotionEffectType</code></a>, that represents its effect on an entity.
+/// Represents a potion effect, that can be added to a <a href="../entity/LivingEntity.html" title="interface in org.bukkit.entity"><code>LivingEntity</code></a>. A potion effect has a duration that it will last for, an amplifier that will enhance its effects, and a <a href="PotionEffectType.html" title="class in org.bukkit.potion"><code>PotionEffectType</code></a>, that represents its effect on an entity.
 pub struct PotionEffect<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1140,21 +1134,22 @@ impl<'mc> JNIInstantiatable<'mc> for PotionEffect<'mc> {
 }
 
 impl<'mc> PotionEffect<'mc> {
-    pub fn new_with_map(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::potion::PotionEffectType<'mc>>>,
+        arg0: impl Into<crate::potion::PotionEffectType<'mc>>,
         arg1: std::option::Option<i32>,
         arg2: std::option::Option<i32>,
+        arg3: std::option::Option<bool>,
+        arg4: std::option::Option<bool>,
+        arg5: std::option::Option<bool>,
     ) -> Result<crate::potion::PotionEffect<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/potion/PotionEffectType;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Lorg/bukkit/potion/PotionEffectType;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "I";
             let val_2 = jni::objects::JValueGen::Int(a.into());
@@ -1165,46 +1160,21 @@ impl<'mc> PotionEffect<'mc> {
             let val_3 = jni::objects::JValueGen::Int(a.into());
             args.push(val_3);
         }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/potion/PotionEffect");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::potion::PotionEffect::from_raw(&jni, res)
-    }
-    pub fn new_with_potion_effect_type(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::potion::PotionEffectType<'mc>>,
-        arg1: i32,
-        arg2: i32,
-        arg3: bool,
-        arg4: bool,
-        arg5: std::option::Option<bool>,
-    ) -> Result<crate::potion::PotionEffect<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/potion/PotionEffectType;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += "I";
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        args.push(val_2);
-        sig += "I";
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        args.push(val_3);
-        sig += "Z";
-        // 5
-        let val_4 = jni::objects::JValueGen::Bool(arg3.into());
-        args.push(val_4);
-        sig += "Z";
-        // 5
-        let val_5 = jni::objects::JValueGen::Bool(arg4.into());
-        args.push(val_5);
+        if let Some(a) = arg3 {
+            sig += "Z";
+            // 2
+            let val_4 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_4);
+        }
+        if let Some(a) = arg4 {
+            sig += "Z";
+            // 2
+            let val_5 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_5);
+        }
         if let Some(a) = arg5 {
             sig += "Z";
-            // 5
+            // 2
             let val_6 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_6);
         }
@@ -1830,7 +1800,7 @@ impl<'mc> Into<crate::Keyed<'mc>> for PotionEffectType<'mc> {
             .expect("Error converting PotionEffectType into crate::Keyed")
     }
 }
-/// Represents a brewer that can create <a title="class in org.bukkit.potion" href="PotionEffect.html"><code>PotionEffect</code></a>s.
+/// Represents a brewer that can create <a href="PotionEffect.html" title="class in org.bukkit.potion"><code>PotionEffect</code></a>s.
 ///
 /// This is a representation of an abstract class.
 pub struct PotionBrewer<'mc>(
@@ -1882,9 +1852,9 @@ impl<'mc> PotionBrewer<'mc> {
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
-        // -2
+        // -1
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1898,8 +1868,8 @@ impl<'mc> PotionBrewer<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
-        let mut iter = blackboxmc_java::JavaIterator::from_raw(&self.jni_ref(), col.iterator()?)?;
+        let col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
             new_vec.push(crate::potion::PotionEffect::from_raw(&self.jni_ref(), obj)?);
@@ -1948,7 +1918,7 @@ impl<'mc> PotionBrewer<'mc> {
     /// </div>
     /// Non-Functional
     ///
-    /// Returns a collection of <a href="PotionEffect.html" title="class in org.bukkit.potion"><code>PotionEffect</code></a> that would be applied from a potion with the given data value.
+    /// Returns a collection of <a title="class in org.bukkit.potion" href="PotionEffect.html"><code>PotionEffect</code></a> that would be applied from a potion with the given data value.
     pub fn get_effects_from_damage(
         &self,
         arg0: i32,
@@ -1963,8 +1933,8 @@ impl<'mc> PotionBrewer<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
-        let mut iter = blackboxmc_java::JavaIterator::from_raw(&self.jni_ref(), col.iterator()?)?;
+        let col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
             new_vec.push(crate::potion::PotionEffect::from_raw(&self.jni_ref(), obj)?);

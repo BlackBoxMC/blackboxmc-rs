@@ -3,7 +3,7 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-/// The <a href="PersistentDataHolder.html" title="interface in org.bukkit.persistence"><code>PersistentDataHolder</code></a> interface defines an object that can store custom persistent meta data on it.
+/// The <a title="interface in org.bukkit.persistence" href="PersistentDataHolder.html"><code>PersistentDataHolder</code></a> interface defines an object that can store custom persistent meta data on it.
 ///
 /// This is a representation of an abstract class.
 pub struct PersistentDataHolder<'mc>(
@@ -590,7 +590,7 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
     pub fn to_primitive(
         &self,
         arg0: bool,
-        arg1: std::option::Option<impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>>,
+        arg1: impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>,
     ) -> Result<i8, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -601,13 +601,11 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
             vec![arg0.into()],
         )?);
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/persistence/PersistentDataAdapterContext;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/persistence/PersistentDataAdapterContext;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Ljava/lang/Byte;";
         let res = self
             .jni_ref()
@@ -620,20 +618,18 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
     pub fn from_primitive(
         &self,
         arg0: jni::objects::JObject<'mc>,
-        arg1: std::option::Option<impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>>,
+        arg1: impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "Ljava/lang/Object;";
         let val_1 = jni::objects::JValueGen::Object(arg0);
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/persistence/PersistentDataAdapterContext;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/persistence/PersistentDataAdapterContext;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Ljava/lang/Object;";
         let res =
             self.jni_ref()
@@ -799,6 +795,18 @@ impl<'mc> JNIInstantiatable<'mc> for PersistentDataContainer<'mc> {
 impl<'mc> PersistentDataContainer<'mc> {
     //
 
+    pub fn keys(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getKeys", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn has(
         &self,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
@@ -824,18 +832,6 @@ impl<'mc> PersistentDataContainer<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
-    }
-    //
-
-    pub fn keys(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Set;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getKeys", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 

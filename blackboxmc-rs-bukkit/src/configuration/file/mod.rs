@@ -100,17 +100,12 @@ impl<'mc> FileConfiguration<'mc> {
     }
     //
 
-    pub fn load_with_string(
-        &self,
-        arg0: std::option::Option<jni::objects::JObject<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn load(&self, arg0: jni::objects::JObject<'mc>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/io/Reader;";
-            let val_1 = jni::objects::JValueGen::Object(a);
-            args.push(val_1);
-        }
+        sig += "Ljava/io/File;";
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        args.push(val_1);
         sig += ")V";
         let res = self
             .jni_ref()
@@ -120,39 +115,14 @@ impl<'mc> FileConfiguration<'mc> {
     }
     //
 
-    pub fn load_with_file(
-        &self,
-        arg0: std::option::Option<jni::objects::JObject<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn save(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/io/File;";
-            let val_1 = jni::objects::JValueGen::Object(a);
-            args.push(val_1);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "load", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
-    pub fn save(
-        &self,
-        arg0: std::option::Option<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         sig += ")V";
         let res = self
             .jni_ref()
@@ -219,17 +189,15 @@ impl<'mc> FileConfiguration<'mc> {
 
     pub fn add_defaults(
         &self,
-        arg0: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
+        arg0: impl Into<blackboxmc_java::JavaMap<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/util/Map;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Ljava/util/Map;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         sig += ")V";
         let res = self
             .jni_ref()
@@ -274,18 +242,16 @@ impl<'mc> FileConfiguration<'mc> {
 
     pub fn get_string(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<String>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Ljava/lang/String;";
             let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
@@ -311,7 +277,7 @@ impl<'mc> FileConfiguration<'mc> {
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Set;");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -328,18 +294,16 @@ impl<'mc> FileConfiguration<'mc> {
 
     pub fn get_color(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::Color<'mc>>>,
     ) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/Color;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -360,18 +324,16 @@ impl<'mc> FileConfiguration<'mc> {
 
     pub fn get_item_stack(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/inventory/ItemStack;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -392,18 +354,16 @@ impl<'mc> FileConfiguration<'mc> {
 
     pub fn get_offline_player(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
     ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/OfflinePlayer;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -427,7 +387,7 @@ impl<'mc> FileConfiguration<'mc> {
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Map;");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -445,7 +405,7 @@ impl<'mc> FileConfiguration<'mc> {
     pub fn create_path(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::configuration::ConfigurationSection<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
+        arg1: impl Into<String>,
         arg2: std::option::Option<impl Into<crate::configuration::ConfigurationSection<'mc>>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -455,13 +415,11 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/String;";
-            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                jni.new_string(a.into())?,
-            ));
-            args.push(val_2);
-        }
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg1.into())?,
+        ));
+        args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Lorg/bukkit/configuration/ConfigurationSection;";
             let val_3 = jni::objects::JValueGen::Object(unsafe {
@@ -555,18 +513,16 @@ impl<'mc> FileConfiguration<'mc> {
 
     pub fn create_section(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Ljava/util/Map;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -697,7 +653,7 @@ impl<'mc> FileConfiguration<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -731,7 +687,7 @@ impl<'mc> FileConfiguration<'mc> {
     pub fn get_serializable(
         &self,
         arg0: impl Into<String>,
-        arg1: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: jni::objects::JClass<'mc>,
         arg2: std::option::Option<
             impl Into<crate::configuration::serialization::ConfigurationSerializable<'mc>>,
         >,
@@ -746,11 +702,9 @@ impl<'mc> FileConfiguration<'mc> {
             self.jni_ref().new_string(arg0.into())?,
         ));
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/Class;";
-            let val_2 = jni::objects::JValueGen::Object(a.into());
-            args.push(val_2);
-        }
+        sig += "Ljava/lang/Class;";
+        let val_2 = jni::objects::JValueGen::Object(arg1.into());
+        args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Lorg/bukkit/configuration/serialization/ConfigurationSerializable;";
             let val_3 = jni::objects::JValueGen::Object(unsafe {
@@ -772,18 +726,16 @@ impl<'mc> FileConfiguration<'mc> {
 
     pub fn get_vector(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/util/Vector;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -904,7 +856,7 @@ impl<'mc> FileConfiguration<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -935,7 +887,7 @@ impl<'mc> FileConfiguration<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -1042,18 +994,16 @@ impl<'mc> FileConfiguration<'mc> {
 
     pub fn get(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Ljava/lang/Object;";
             let val_2 = jni::objects::JValueGen::Object(a);
@@ -1085,21 +1035,19 @@ impl<'mc> FileConfiguration<'mc> {
 
     pub fn get_boolean(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 0
+            // 2
             let val_2 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_2);
         }
@@ -1114,18 +1062,16 @@ impl<'mc> FileConfiguration<'mc> {
 
     pub fn get_int(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "I";
             let val_2 = jni::objects::JValueGen::Int(a.into());
@@ -1142,18 +1088,16 @@ impl<'mc> FileConfiguration<'mc> {
 
     pub fn get_long(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "J";
             let val_2 = jni::objects::JValueGen::Long(a.into());
@@ -1170,18 +1114,16 @@ impl<'mc> FileConfiguration<'mc> {
 
     pub fn get_double(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "D";
             let val_2 = jni::objects::JValueGen::Double(a.into());
@@ -1198,21 +1140,19 @@ impl<'mc> FileConfiguration<'mc> {
 
     pub fn contains(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 0
+            // 2
             let val_2 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_2);
         }
@@ -1227,18 +1167,16 @@ impl<'mc> FileConfiguration<'mc> {
 
     pub fn get_location(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/Location;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -1314,7 +1252,7 @@ impl<'mc> FileConfiguration<'mc> {
     pub fn get_object(
         &self,
         arg0: impl Into<String>,
-        arg1: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: jni::objects::JClass<'mc>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1324,11 +1262,9 @@ impl<'mc> FileConfiguration<'mc> {
             self.jni_ref().new_string(arg0.into())?,
         ));
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/Class;";
-            let val_2 = jni::objects::JValueGen::Object(a.into());
-            args.push(val_2);
-        }
+        sig += "Ljava/lang/Class;";
+        let val_2 = jni::objects::JValueGen::Object(arg1.into());
+        args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Ljava/lang/Object;";
             let val_3 = jni::objects::JValueGen::Object(a);
@@ -1442,7 +1378,7 @@ impl<'mc> Into<crate::configuration::MemoryConfiguration<'mc>> for FileConfigura
         )
     }
 }
-/// Various settings for controlling the input and output of a <a href="FileConfiguration.html" title="class in org.bukkit.configuration.file"><code>FileConfiguration</code></a>
+/// Various settings for controlling the input and output of a <a title="class in org.bukkit.configuration.file" href="FileConfiguration.html"><code>FileConfiguration</code></a>
 pub struct FileConfigurationOptions<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1540,7 +1476,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
     //@NotNull
 
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="../ConfigurationOptions.html#copyDefaults(boolean)">ConfigurationOptions</a></code></span>
-    /// Sets if the <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> should copy values from its default <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a> directly.
+    /// Sets if the <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a> should copy values from its default <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a> directly.
     /// <p>If this is true, all values in the default Configuration will be directly copied, making it impossible to distinguish between values that were set and values that are provided by default. As a result, <a href="../ConfigurationSection.html#contains(java.lang.String)"><code>ConfigurationSection.contains(java.lang.String)</code></a> will always return the same value as <a href="../ConfigurationSection.html#isSet(java.lang.String)"><code>ConfigurationSection.isSet(java.lang.String)</code></a>. The default value is false.</p>
     pub fn copy_defaults(
         &self,
@@ -1551,7 +1487,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "Z";
-            // -1
+            // 1
             let val_1 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_1);
         }
@@ -1577,7 +1513,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "Z";
-            // -1
+            // 1
             let val_1 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_1);
         }
@@ -1635,7 +1571,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
             .call_method(&self.jni_object(), "getFooter", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -1704,7 +1640,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "Z";
-            // -1
+            // 1
             let val_1 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_1);
         }
@@ -1893,30 +1829,6 @@ impl<'mc> JNIInstantiatable<'mc> for YamlConfigurationOptions<'mc> {
 }
 
 impl<'mc> YamlConfigurationOptions<'mc> {
-    //@NotNull
-
-    /// Sets how long a line can be, before it gets split.
-    pub fn width(
-        &self,
-        arg0: std::option::Option<i32>,
-    ) -> Result<crate::configuration::file::YamlConfigurationOptions<'mc>, Box<dyn std::error::Error>>
-    {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_1);
-        }
-        sig += ")Lorg/bukkit/configuration/file/YamlConfigurationOptions;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "width", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::configuration::file::YamlConfigurationOptions::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     //
 
     pub fn header(
@@ -1944,8 +1856,32 @@ impl<'mc> YamlConfigurationOptions<'mc> {
     }
     //@NotNull
 
+    /// Sets how long a line can be, before it gets split.
+    pub fn width(
+        &self,
+        arg0: std::option::Option<i32>,
+    ) -> Result<crate::configuration::file::YamlConfigurationOptions<'mc>, Box<dyn std::error::Error>>
+    {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_1);
+        }
+        sig += ")Lorg/bukkit/configuration/file/YamlConfigurationOptions;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "width", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::configuration::file::YamlConfigurationOptions::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //@NotNull
+
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="../ConfigurationOptions.html#pathSeparator(char)">ConfigurationOptions</a></code></span>
-    /// Sets the char that will be used to separate <a href="../ConfigurationSection.html" title="interface in org.bukkit.configuration"><code>ConfigurationSection</code></a>s
+    /// Sets the char that will be used to separate <a title="interface in org.bukkit.configuration" href="../ConfigurationSection.html"><code>ConfigurationSection</code></a>s
     /// <p>This value does not affect how the <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> is stored, only in how you access the data. The default value is '.'.</p>
     pub fn path_separator(
         &self,
@@ -1971,7 +1907,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
     //@NotNull
 
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="../ConfigurationOptions.html#copyDefaults(boolean)">ConfigurationOptions</a></code></span>
-    /// Sets if the <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a> should copy values from its default <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a> directly.
+    /// Sets if the <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> should copy values from its default <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> directly.
     /// <p>If this is true, all values in the default Configuration will be directly copied, making it impossible to distinguish between values that were set and values that are provided by default. As a result, <a href="../ConfigurationSection.html#contains(java.lang.String)"><code>ConfigurationSection.contains(java.lang.String)</code></a> will always return the same value as <a href="../ConfigurationSection.html#isSet(java.lang.String)"><code>ConfigurationSection.isSet(java.lang.String)</code></a>. The default value is false.</p>
     pub fn copy_defaults(
         &self,
@@ -1982,7 +1918,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "Z";
-            // -1
+            // 1
             let val_1 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_1);
         }
@@ -2009,7 +1945,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "Z";
-            // -1
+            // 1
             let val_1 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_1);
         }
@@ -2026,30 +1962,28 @@ impl<'mc> YamlConfigurationOptions<'mc> {
 
     pub fn set_header(
         &self,
-        arg0: std::option::Option<Vec<impl Into<String>>>,
+        arg0: Vec<impl Into<String>>,
     ) -> Result<crate::configuration::file::YamlConfigurationOptions<'mc>, Box<dyn std::error::Error>>
     {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/util/List;";
-            let raw_val_1 = self
-                .jni_ref()
-                .new_object("java/util/ArrayList", "()V", vec![])?;
-            for v in a {
-                let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                    self.jni_ref().new_string(v.into())?,
-                ));
-                self.jni_ref().call_method(
-                    &raw_val_1,
-                    "add",
-                    "(Ljava/lang/String)V",
-                    vec![jni::objects::JValueGen::from(map_val_0)],
-                )?;
-            }
-            let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-            args.push(val_1);
+        sig += "Ljava/util/List;";
+        let raw_val_1 = self
+            .jni_ref()
+            .new_object("java/util/ArrayList", "()V", vec![])?;
+        for v in arg0 {
+            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(v.into())?,
+            ));
+            self.jni_ref().call_method(
+                &raw_val_1,
+                "add",
+                "(Ljava/lang/String)V",
+                vec![jni::objects::JValueGen::from(map_val_0)],
+            )?;
         }
+        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
+        args.push(val_1);
         sig += ")Lorg/bukkit/configuration/file/YamlConfigurationOptions;";
         let res = self
             .jni_ref()
@@ -2074,7 +2008,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "Z";
-            // -1
+            // 1
             let val_1 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_1);
         }
@@ -2137,7 +2071,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             .call_method(&self.jni_object(), "getFooter", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -2322,16 +2256,14 @@ impl<'mc> YamlConfiguration<'mc> {
 
     pub fn load_configuration(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+        arg0: jni::objects::JObject<'mc>,
     ) -> Result<crate::configuration::file::YamlConfiguration<'mc>, Box<dyn std::error::Error>>
     {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/io/Reader;";
-            let val_1 = jni::objects::JValueGen::Object(a);
-            args.push(val_1);
-        }
+        sig += "Ljava/io/Reader;";
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        args.push(val_1);
         sig += ")Lorg/bukkit/configuration/file/YamlConfiguration;";
         let cls = jni.find_class("org/bukkit/configuration/file/YamlConfiguration");
         let cls = jni.translate_error_with_class(cls)?;
@@ -2392,17 +2324,12 @@ impl<'mc> YamlConfiguration<'mc> {
     }
     //
 
-    pub fn load_with_string(
-        &self,
-        arg0: std::option::Option<jni::objects::JObject<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn load(&self, arg0: jni::objects::JObject<'mc>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/io/Reader;";
-            let val_1 = jni::objects::JValueGen::Object(a);
-            args.push(val_1);
-        }
+        sig += "Ljava/io/File;";
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        args.push(val_1);
         sig += ")V";
         let res = self
             .jni_ref()
@@ -2412,39 +2339,14 @@ impl<'mc> YamlConfiguration<'mc> {
     }
     //
 
-    pub fn load_with_file(
-        &self,
-        arg0: std::option::Option<jni::objects::JObject<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn save(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/io/File;";
-            let val_1 = jni::objects::JValueGen::Object(a);
-            args.push(val_1);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "load", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
-    pub fn save(
-        &self,
-        arg0: std::option::Option<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         sig += ")V";
         let res = self
             .jni_ref()
@@ -2494,17 +2396,15 @@ impl<'mc> YamlConfiguration<'mc> {
 
     pub fn add_defaults(
         &self,
-        arg0: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
+        arg0: impl Into<blackboxmc_java::JavaMap<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/util/Map;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Ljava/util/Map;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         sig += ")V";
         let res = self
             .jni_ref()
@@ -2549,18 +2449,16 @@ impl<'mc> YamlConfiguration<'mc> {
 
     pub fn get_string(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<String>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Ljava/lang/String;";
             let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
@@ -2586,7 +2484,7 @@ impl<'mc> YamlConfiguration<'mc> {
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Set;");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2603,18 +2501,16 @@ impl<'mc> YamlConfiguration<'mc> {
 
     pub fn get_color(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::Color<'mc>>>,
     ) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/Color;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -2635,18 +2531,16 @@ impl<'mc> YamlConfiguration<'mc> {
 
     pub fn get_item_stack(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/inventory/ItemStack;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -2667,18 +2561,16 @@ impl<'mc> YamlConfiguration<'mc> {
 
     pub fn get_offline_player(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
     ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/OfflinePlayer;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -2702,7 +2594,7 @@ impl<'mc> YamlConfiguration<'mc> {
         arg0: bool,
     ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Map;");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2720,7 +2612,7 @@ impl<'mc> YamlConfiguration<'mc> {
     pub fn create_path(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::configuration::ConfigurationSection<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
+        arg1: impl Into<String>,
         arg2: std::option::Option<impl Into<crate::configuration::ConfigurationSection<'mc>>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2730,13 +2622,11 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/String;";
-            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                jni.new_string(a.into())?,
-            ));
-            args.push(val_2);
-        }
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg1.into())?,
+        ));
+        args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Lorg/bukkit/configuration/ConfigurationSection;";
             let val_3 = jni::objects::JValueGen::Object(unsafe {
@@ -2830,18 +2720,16 @@ impl<'mc> YamlConfiguration<'mc> {
 
     pub fn create_section(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Ljava/util/Map;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -2972,7 +2860,7 @@ impl<'mc> YamlConfiguration<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -3006,7 +2894,7 @@ impl<'mc> YamlConfiguration<'mc> {
     pub fn get_serializable(
         &self,
         arg0: impl Into<String>,
-        arg1: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: jni::objects::JClass<'mc>,
         arg2: std::option::Option<
             impl Into<crate::configuration::serialization::ConfigurationSerializable<'mc>>,
         >,
@@ -3021,11 +2909,9 @@ impl<'mc> YamlConfiguration<'mc> {
             self.jni_ref().new_string(arg0.into())?,
         ));
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/Class;";
-            let val_2 = jni::objects::JValueGen::Object(a.into());
-            args.push(val_2);
-        }
+        sig += "Ljava/lang/Class;";
+        let val_2 = jni::objects::JValueGen::Object(arg1.into());
+        args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Lorg/bukkit/configuration/serialization/ConfigurationSerializable;";
             let val_3 = jni::objects::JValueGen::Object(unsafe {
@@ -3047,18 +2933,16 @@ impl<'mc> YamlConfiguration<'mc> {
 
     pub fn get_vector(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/util/Vector;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -3179,7 +3063,7 @@ impl<'mc> YamlConfiguration<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -3210,7 +3094,7 @@ impl<'mc> YamlConfiguration<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -3317,18 +3201,16 @@ impl<'mc> YamlConfiguration<'mc> {
 
     pub fn get(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Ljava/lang/Object;";
             let val_2 = jni::objects::JValueGen::Object(a);
@@ -3360,21 +3242,19 @@ impl<'mc> YamlConfiguration<'mc> {
 
     pub fn get_boolean(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 0
+            // 2
             let val_2 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_2);
         }
@@ -3389,18 +3269,16 @@ impl<'mc> YamlConfiguration<'mc> {
 
     pub fn get_int(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "I";
             let val_2 = jni::objects::JValueGen::Int(a.into());
@@ -3417,18 +3295,16 @@ impl<'mc> YamlConfiguration<'mc> {
 
     pub fn get_long(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<i64>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "J";
             let val_2 = jni::objects::JValueGen::Long(a.into());
@@ -3445,18 +3321,16 @@ impl<'mc> YamlConfiguration<'mc> {
 
     pub fn get_double(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "D";
             let val_2 = jni::objects::JValueGen::Double(a.into());
@@ -3473,21 +3347,19 @@ impl<'mc> YamlConfiguration<'mc> {
 
     pub fn contains(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 0
+            // 2
             let val_2 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_2);
         }
@@ -3502,18 +3374,16 @@ impl<'mc> YamlConfiguration<'mc> {
 
     pub fn get_location(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::Location<'mc>>>,
     ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/Location;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -3589,7 +3459,7 @@ impl<'mc> YamlConfiguration<'mc> {
     pub fn get_object(
         &self,
         arg0: impl Into<String>,
-        arg1: std::option::Option<jni::objects::JClass<'mc>>,
+        arg1: jni::objects::JClass<'mc>,
         arg2: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -3599,11 +3469,9 @@ impl<'mc> YamlConfiguration<'mc> {
             self.jni_ref().new_string(arg0.into())?,
         ));
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/Class;";
-            let val_2 = jni::objects::JValueGen::Object(a.into());
-            args.push(val_2);
-        }
+        sig += "Ljava/lang/Class;";
+        let val_2 = jni::objects::JValueGen::Object(arg1.into());
+        args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Ljava/lang/Object;";
             let val_3 = jni::objects::JValueGen::Object(a);

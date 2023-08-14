@@ -214,7 +214,7 @@ impl<'mc> SignSide<'mc> {
     /// Sets whether this side of the sign has glowing text.
     pub fn set_glowing_text(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),

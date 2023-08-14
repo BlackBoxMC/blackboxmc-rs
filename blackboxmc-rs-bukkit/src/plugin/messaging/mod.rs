@@ -269,16 +269,6 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
     }
     //
 
-    pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isValid", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
     pub fn channel(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
@@ -290,6 +280,16 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
+    }
+    //
+
+    pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isValid", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
     }
     //
 
@@ -430,7 +430,7 @@ impl<'mc> std::string::ToString for PluginMessageListenerRegistration<'mc> {
     }
 }
 
-/// A class responsible for managing the registrations of plugin channels and their listeners. Channel names must contain a colon separator and consist of only [a-z0-9/._-] - i.e. they MUST be valid <a href="../../NamespacedKey.html" title="class in org.bukkit"><code>NamespacedKey</code></a>. The "BungeeCord" channel is an exception and may only take this form.
+/// A class responsible for managing the registrations of plugin channels and their listeners. Channel names must contain a colon separator and consist of only [a-z0-9/._-] - i.e. they MUST be valid <a title="class in org.bukkit" href="../../NamespacedKey.html"><code>NamespacedKey</code></a>. The "BungeeCord" channel is an exception and may only take this form.
 ///
 /// This is a representation of an abstract class.
 pub struct Messenger<'mc>(
@@ -519,18 +519,16 @@ impl<'mc> Messenger<'mc> {
 
     pub fn unregister_outgoing_plugin_channel(
         &self,
-        arg0: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/plugin/Plugin;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Lorg/bukkit/plugin/Plugin;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Ljava/lang/String;";
             let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
@@ -589,19 +587,17 @@ impl<'mc> Messenger<'mc> {
 
     pub fn unregister_incoming_plugin_channel(
         &self,
-        arg0: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
         arg2: std::option::Option<impl Into<crate::plugin::messaging::PluginMessageListener<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/plugin/Plugin;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Lorg/bukkit/plugin/Plugin;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Ljava/lang/String;";
             let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
@@ -662,34 +658,7 @@ impl<'mc> Messenger<'mc> {
     }
     //
 
-    pub fn get_incoming_channel_registrations_with_string(
-        &self,
-        arg0: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/plugin/Plugin;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
-        sig += ")Ljava/util/Set;";
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getIncomingChannelRegistrations",
-            sig.as_str(),
-            args,
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
-    pub fn get_incoming_channel_registrations_with_plugin(
+    pub fn get_incoming_channel_registrations(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -820,7 +789,7 @@ impl<'mc> Messenger<'mc> {
         Ok(())
     }
 }
-/// Standard implementation to <a href="Messenger.html" title="interface in org.bukkit.plugin.messaging"><code>Messenger</code></a>
+/// Standard implementation to <a title="interface in org.bukkit.plugin.messaging" href="Messenger.html"><code>Messenger</code></a>
 pub struct StandardMessenger<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -944,18 +913,16 @@ impl<'mc> StandardMessenger<'mc> {
 
     pub fn unregister_outgoing_plugin_channel(
         &self,
-        arg0: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/plugin/Plugin;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Lorg/bukkit/plugin/Plugin;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Ljava/lang/String;";
             let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
@@ -1014,19 +981,17 @@ impl<'mc> StandardMessenger<'mc> {
 
     pub fn unregister_incoming_plugin_channel(
         &self,
-        arg0: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
         arg2: std::option::Option<impl Into<crate::plugin::messaging::PluginMessageListener<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/plugin/Plugin;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Lorg/bukkit/plugin/Plugin;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Ljava/lang/String;";
             let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
@@ -1095,34 +1060,7 @@ impl<'mc> StandardMessenger<'mc> {
     }
     //
 
-    pub fn get_incoming_channel_registrations_with_string(
-        &self,
-        arg0: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/plugin/Plugin;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
-        sig += ")Ljava/util/Set;";
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getIncomingChannelRegistrations",
-            sig.as_str(),
-            args,
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
-    pub fn get_incoming_channel_registrations_with_plugin(
+    pub fn get_incoming_channel_registrations(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: std::option::Option<impl Into<String>>,

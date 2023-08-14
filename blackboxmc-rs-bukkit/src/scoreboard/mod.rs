@@ -344,18 +344,16 @@ impl<'mc> Criteria<'mc> {
 
     pub fn statistic(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::Statistic<'mc>>>,
+        arg0: impl Into<crate::Statistic<'mc>>,
         arg1: std::option::Option<impl Into<crate::entity::EntityType<'mc>>>,
     ) -> Result<crate::scoreboard::Criteria<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/Statistic;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Lorg/bukkit/Statistic;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/entity/EntityType;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -683,16 +681,6 @@ impl<'mc> JNIInstantiatable<'mc> for Objective<'mc> {
 impl<'mc> Objective<'mc> {
     //
 
-    pub fn unregister(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "unregister", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
@@ -704,6 +692,16 @@ impl<'mc> Objective<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
+    }
+    //
+
+    pub fn unregister(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "unregister", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     //
 
@@ -756,17 +754,15 @@ impl<'mc> Objective<'mc> {
 
     pub fn get_score(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
     ) -> Result<crate::scoreboard::Score<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         sig += ")Lorg/bukkit/scoreboard/Score;";
         let res = self
             .jni_ref()
@@ -1098,7 +1094,7 @@ impl<'mc> Scoreboard<'mc> {
         &self,
         arg0: impl Into<String>,
         arg1: impl Into<String>,
-        arg2: impl Into<String>,
+        arg2: std::option::Option<impl Into<String>>,
         arg3: std::option::Option<impl Into<crate::scoreboard::RenderType<'mc>>>,
     ) -> Result<crate::scoreboard::Objective<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1113,11 +1109,13 @@ impl<'mc> Scoreboard<'mc> {
             self.jni_ref().new_string(arg1.into())?,
         ));
         args.push(val_2);
-        sig += "Ljava/lang/String;";
-        let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg2.into())?,
-        ));
-        args.push(val_3);
+        if let Some(a) = arg2 {
+            sig += "Ljava/lang/String;";
+            let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_3);
+        }
         if let Some(a) = arg3 {
             sig += "Lorg/bukkit/scoreboard/RenderType;";
             let val_4 = jni::objects::JValueGen::Object(unsafe {
@@ -1141,17 +1139,15 @@ impl<'mc> Scoreboard<'mc> {
 
     pub fn get_objective(
         &self,
-        arg0: std::option::Option<impl Into<String>>,
+        arg0: impl Into<String>,
     ) -> Result<crate::scoreboard::Objective<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         sig += ")Lorg/bukkit/scoreboard/Objective;";
         let res =
             self.jni_ref()
@@ -1165,17 +1161,15 @@ impl<'mc> Scoreboard<'mc> {
 
     pub fn get_objectives_by_criteria(
         &self,
-        arg0: std::option::Option<impl Into<crate::scoreboard::Criteria<'mc>>>,
+        arg0: impl Into<crate::scoreboard::Criteria<'mc>>,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/scoreboard/Criteria;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Lorg/bukkit/scoreboard/Criteria;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         sig += ")Ljava/util/Set;";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1204,17 +1198,15 @@ impl<'mc> Scoreboard<'mc> {
 
     pub fn get_scores(
         &self,
-        arg0: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
+        arg0: impl Into<crate::OfflinePlayer<'mc>>,
     ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/OfflinePlayer;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Lorg/bukkit/OfflinePlayer;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         sig += ")Ljava/util/Set;";
         let res = self
             .jni_ref()
@@ -1226,19 +1218,14 @@ impl<'mc> Scoreboard<'mc> {
     }
     //
 
-    pub fn reset_scores(
-        &self,
-        arg0: std::option::Option<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn reset_scores(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/String;";
-            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
         sig += ")V";
         let res = self
             .jni_ref()
@@ -1590,25 +1577,6 @@ impl<'mc> JNIInstantiatable<'mc> for Team<'mc> {
 impl<'mc> Team<'mc> {
     //
 
-    pub fn remove_entry(
-        &self,
-        arg0: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)Z");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "removeEntry",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
     pub fn set_color(
         &self,
         arg0: impl Into<crate::ChatColor<'mc>>,
@@ -1628,13 +1596,22 @@ impl<'mc> Team<'mc> {
     }
     //
 
-    pub fn unregister(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "unregister", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
+    pub fn remove_entry(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)Z");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "removeEntry",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
     }
     //
 
@@ -1649,6 +1626,16 @@ impl<'mc> Team<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
+    }
+    //
+
+    pub fn unregister(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "unregister", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     //
 
@@ -1759,7 +1746,7 @@ impl<'mc> Team<'mc> {
     /// Sets the team friendly fire state
     pub fn set_allow_friendly_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1791,7 +1778,7 @@ impl<'mc> Team<'mc> {
         arg0: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),

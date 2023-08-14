@@ -41,43 +41,25 @@ impl<'mc> JNIInstantiatable<'mc> for Chest<'mc> {
 }
 
 impl<'mc> Chest<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::block::BlockFace<'mc>>>,
-    ) -> Result<crate::material::Chest<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/block/BlockFace;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/Chest");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::Chest::from_raw(&jni, res)
-    }
     //['since', '']
 
     //['forRemoval', 'false']
 
     #[deprecated]
-    pub fn new_with_material(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::material::Chest<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Material;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
+        if let Some(a) = arg0 {
+            sig += "Lorg/bukkit/Material;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());
@@ -376,43 +358,27 @@ impl<'mc> JNIInstantiatable<'mc> for Diode<'mc> {
 impl<'mc> Diode<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::block::BlockFace<'mc>>>,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<bool>,
     ) -> Result<crate::material::Diode<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/Material;";
+            sig += "Lorg/bukkit/block/BlockFace;";
             let val_1 = jni::objects::JValueGen::Object(unsafe {
                 jni::objects::JObject::from_raw(a.into().jni_object().clone())
             });
             args.push(val_1);
         }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/Diode");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::Diode::from_raw(&jni, res)
-    }
-    pub fn new_with_block_face(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::BlockFace<'mc>>,
-        arg1: i32,
-        arg2: std::option::Option<bool>,
-    ) -> Result<crate::material::Diode<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/block/BlockFace;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += "I";
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        args.push(val_2);
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
         if let Some(a) = arg2 {
             sig += "Z";
-            // 2
+            // 1
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -755,9 +721,15 @@ impl<'mc> JNIInstantiatable<'mc> for Pumpkin<'mc> {
 }
 
 impl<'mc> Pumpkin<'mc> {
+    //['since', '']
+
+    //['forRemoval', 'false']
+
+    #[deprecated]
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
+        arg1: std::option::Option<i8>,
     ) -> Result<crate::material::Pumpkin<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -768,30 +740,6 @@ impl<'mc> Pumpkin<'mc> {
             });
             args.push(val_1);
         }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/Pumpkin");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::Pumpkin::from_raw(&jni, res)
-    }
-    //['since', '']
-
-    //['forRemoval', 'false']
-
-    #[deprecated]
-    pub fn new_with_material(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Material<'mc>>,
-        arg1: std::option::Option<i8>,
-    ) -> Result<crate::material::Pumpkin<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Material;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());
@@ -1455,7 +1403,7 @@ impl<'mc> PoweredRail<'mc> {
     /// Set whether this PoweredRail should be powered or not.
     pub fn set_powered(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1491,7 +1439,7 @@ impl<'mc> PoweredRail<'mc> {
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
-        // -2
+        // -1
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1885,7 +1833,7 @@ impl<'mc> TripwireHook<'mc> {
     /// Set tripwire connection state
     pub fn set_connected(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1912,7 +1860,7 @@ impl<'mc> TripwireHook<'mc> {
     /// Set hook activated state
     pub fn set_activated(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2204,19 +2152,17 @@ impl<'mc> JNIInstantiatable<'mc> for SimpleAttachableMaterialData<'mc> {
 impl<'mc> SimpleAttachableMaterialData<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
+        arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<impl Into<crate::block::BlockFace<'mc>>>,
     ) -> Result<crate::material::SimpleAttachableMaterialData<'mc>, Box<dyn std::error::Error>>
     {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/Material;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Lorg/bukkit/Material;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/block/BlockFace;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -2558,7 +2504,7 @@ impl<'mc> Openable<'mc> {
     /// Configure this door to be either open or closed;
     pub fn set_open(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2965,44 +2911,28 @@ impl<'mc> JNIInstantiatable<'mc> for Comparator<'mc> {
 impl<'mc> Comparator<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::block::BlockFace<'mc>>>,
+        arg1: std::option::Option<bool>,
+        arg2: std::option::Option<bool>,
     ) -> Result<crate::material::Comparator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/Material;";
+            sig += "Lorg/bukkit/block/BlockFace;";
             let val_1 = jni::objects::JValueGen::Object(unsafe {
                 jni::objects::JObject::from_raw(a.into().jni_object().clone())
             });
             args.push(val_1);
         }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/Comparator");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::Comparator::from_raw(&jni, res)
-    }
-    pub fn new_with_block_face(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::BlockFace<'mc>>,
-        arg1: bool,
-        arg2: std::option::Option<bool>,
-    ) -> Result<crate::material::Comparator<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/block/BlockFace;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += "Z";
-        // 2
-        let val_2 = jni::objects::JValueGen::Bool(arg1.into());
-        args.push(val_2);
+        if let Some(a) = arg1 {
+            sig += "Z";
+            // 1
+            let val_2 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_2);
+        }
         if let Some(a) = arg2 {
             sig += "Z";
-            // 2
+            // 1
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -3073,7 +3003,7 @@ impl<'mc> Comparator<'mc> {
     /// Sets whether the comparator is in subtraction mode.
     pub fn set_subtraction_mode(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3452,7 +3382,7 @@ impl<'mc> Button<'mc> {
     /// Sets the current state of this button
     pub fn set_powered(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3734,43 +3664,25 @@ impl<'mc> JNIInstantiatable<'mc> for Coal<'mc> {
 }
 
 impl<'mc> Coal<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::CoalType<'mc>>>,
-    ) -> Result<crate::material::Coal<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/CoalType;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/Coal");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::Coal::from_raw(&jni, res)
-    }
     //['since', '']
 
     //['forRemoval', 'false']
 
     #[deprecated]
-    pub fn new_with_material(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::material::Coal<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Material;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
+        if let Some(a) = arg0 {
+            sig += "Lorg/bukkit/Material;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());
@@ -4155,6 +4067,8 @@ impl<'mc> Tree<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
+        arg1: std::option::Option<impl Into<crate::TreeSpecies<'mc>>>,
+        arg2: std::option::Option<impl Into<crate::block::BlockFace<'mc>>>,
     ) -> Result<crate::material::Tree<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -4165,26 +4079,6 @@ impl<'mc> Tree<'mc> {
             });
             args.push(val_1);
         }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/Tree");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::Tree::from_raw(&jni, res)
-    }
-    pub fn new_with_material(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Material<'mc>>,
-        arg1: std::option::Option<impl Into<crate::TreeSpecies<'mc>>>,
-        arg2: std::option::Option<impl Into<crate::block::BlockFace<'mc>>>,
-    ) -> Result<crate::material::Tree<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Material;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/TreeSpecies;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -4543,18 +4437,16 @@ impl<'mc> PistonBaseMaterial<'mc> {
     #[deprecated]
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
+        arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::material::PistonBaseMaterial<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/Material;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Lorg/bukkit/Material;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());
@@ -4627,7 +4519,7 @@ impl<'mc> PistonBaseMaterial<'mc> {
     /// Sets the current state of this piston
     pub fn set_powered(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4986,7 +4878,7 @@ impl<'mc> TrapDoor<'mc> {
     /// Configure this door to be either open or closed;
     pub fn set_open(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5013,7 +4905,7 @@ impl<'mc> TrapDoor<'mc> {
     /// Set trapdoor inverted state
     pub fn set_inverted(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5305,43 +5197,25 @@ impl<'mc> JNIInstantiatable<'mc> for Crops<'mc> {
 }
 
 impl<'mc> Crops<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::CropState<'mc>>>,
-    ) -> Result<crate::material::Crops<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/CropState;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/Crops");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::Crops::from_raw(&jni, res)
-    }
     //['since', '']
 
     //['forRemoval', 'false']
 
     #[deprecated]
-    pub fn new_with_material(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::material::Crops<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Material;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
+        if let Some(a) = arg0 {
+            sig += "Lorg/bukkit/Material;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());
@@ -5645,39 +5519,18 @@ impl<'mc> SpawnEgg<'mc> {
     #[deprecated]
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<i8>,
-    ) -> Result<crate::material::SpawnEgg<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "B";
-            let val_1 = jni::objects::JValueGen::Byte(a.into());
-            args.push(val_1);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/SpawnEgg");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::SpawnEgg::from_raw(&jni, res)
-    }
-    //['since', '']
-
-    //['forRemoval', 'false']
-
-    #[deprecated]
-    pub fn new_with_material(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::material::SpawnEgg<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Material;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
+        if let Some(a) = arg0 {
+            sig += "Lorg/bukkit/Material;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());
@@ -6016,7 +5869,7 @@ impl<'mc> MonsterEggs<'mc> {
                 .call_method(&self.jni_object(), "getTextures", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -6322,43 +6175,25 @@ impl<'mc> JNIInstantiatable<'mc> for Furnace<'mc> {
 }
 
 impl<'mc> Furnace<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::block::BlockFace<'mc>>>,
-    ) -> Result<crate::material::Furnace<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/block/BlockFace;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/Furnace");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::Furnace::from_raw(&jni, res)
-    }
     //['since', '']
 
     //['forRemoval', 'false']
 
     #[deprecated]
-    pub fn new_with_material(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::material::Furnace<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Material;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
+        if let Some(a) = arg0 {
+            sig += "Lorg/bukkit/Material;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());
@@ -6722,7 +6557,7 @@ impl<'mc> Rails<'mc> {
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
-        // -2
+        // -1
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6999,6 +6834,8 @@ impl<'mc> Sapling<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
+        arg1: std::option::Option<impl Into<crate::TreeSpecies<'mc>>>,
+        arg2: std::option::Option<bool>,
     ) -> Result<crate::material::Sapling<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -7009,26 +6846,6 @@ impl<'mc> Sapling<'mc> {
             });
             args.push(val_1);
         }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/Sapling");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::Sapling::from_raw(&jni, res)
-    }
-    pub fn new_with_material(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Material<'mc>>,
-        arg1: std::option::Option<impl Into<crate::TreeSpecies<'mc>>>,
-        arg2: std::option::Option<bool>,
-    ) -> Result<crate::material::Sapling<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Material;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/TreeSpecies;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -7068,7 +6885,7 @@ impl<'mc> Sapling<'mc> {
     /// Set whether this sapling will grow when next ticked with bonemeal
     pub fn set_is_instant_growable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7425,18 +7242,16 @@ impl<'mc> PistonExtensionMaterial<'mc> {
     #[deprecated]
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
+        arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::material::PistonExtensionMaterial<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/Material;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Lorg/bukkit/Material;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());
@@ -7536,7 +7351,7 @@ impl<'mc> PistonExtensionMaterial<'mc> {
     /// Sets whether or not this extension is sticky
     pub fn set_sticky(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7888,7 +7703,7 @@ impl<'mc> Lever<'mc> {
     /// Set this lever to be powered or not.
     pub fn set_powered(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8179,18 +7994,16 @@ impl<'mc> DirectionalContainer<'mc> {
     #[deprecated]
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
+        arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::material::DirectionalContainer<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/Material;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Lorg/bukkit/Material;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());
@@ -8493,9 +8306,15 @@ impl<'mc> JNIInstantiatable<'mc> for NetherWarts<'mc> {
 }
 
 impl<'mc> NetherWarts<'mc> {
+    //['since', '']
+
+    //['forRemoval', 'false']
+
+    #[deprecated]
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
+        arg1: std::option::Option<i8>,
     ) -> Result<crate::material::NetherWarts<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -8506,30 +8325,6 @@ impl<'mc> NetherWarts<'mc> {
             });
             args.push(val_1);
         }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/NetherWarts");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::NetherWarts::from_raw(&jni, res)
-    }
-    //['since', '']
-
-    //['forRemoval', 'false']
-
-    #[deprecated]
-    pub fn new_with_material(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Material<'mc>>,
-        arg1: std::option::Option<i8>,
-    ) -> Result<crate::material::NetherWarts<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Material;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());
@@ -8833,18 +8628,16 @@ impl<'mc> MaterialData<'mc> {
     #[deprecated]
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
+        arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/Material;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Lorg/bukkit/Material;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());
@@ -9099,43 +8892,25 @@ impl<'mc> JNIInstantiatable<'mc> for LongGrass<'mc> {
 }
 
 impl<'mc> LongGrass<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::GrassSpecies<'mc>>>,
-    ) -> Result<crate::material::LongGrass<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/GrassSpecies;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/LongGrass");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::LongGrass::from_raw(&jni, res)
-    }
     //['since', '']
 
     //['forRemoval', 'false']
 
     #[deprecated]
-    pub fn new_with_material(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::material::LongGrass<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Material;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
+        if let Some(a) = arg0 {
+            sig += "Lorg/bukkit/Material;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());
@@ -9479,7 +9254,7 @@ impl<'mc> Tripwire<'mc> {
     /// Set tripwire activated state
     pub fn set_activated(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9509,7 +9284,7 @@ impl<'mc> Tripwire<'mc> {
     /// Set object triggering state for this tripwire
     pub fn set_object_triggering(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9767,18 +9542,16 @@ impl<'mc> TexturedMaterial<'mc> {
     #[deprecated]
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
+        arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::material::TexturedMaterial<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/Material;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Lorg/bukkit/Material;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());
@@ -9825,7 +9598,7 @@ impl<'mc> TexturedMaterial<'mc> {
                 .call_method(&self.jni_object(), "getTextures", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -10161,9 +9934,15 @@ impl<'mc> JNIInstantiatable<'mc> for Dispenser<'mc> {
 }
 
 impl<'mc> Dispenser<'mc> {
+    //['since', '']
+
+    //['forRemoval', 'false']
+
+    #[deprecated]
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
+        arg1: std::option::Option<i8>,
     ) -> Result<crate::material::Dispenser<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -10174,30 +9953,6 @@ impl<'mc> Dispenser<'mc> {
             });
             args.push(val_1);
         }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/Dispenser");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::Dispenser::from_raw(&jni, res)
-    }
-    //['since', '']
-
-    //['forRemoval', 'false']
-
-    #[deprecated]
-    pub fn new_with_material(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Material<'mc>>,
-        arg1: std::option::Option<i8>,
-    ) -> Result<crate::material::Dispenser<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Material;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());
@@ -10904,7 +10659,7 @@ impl<'mc> Gate<'mc> {
     /// Configure this door to be either open or closed;
     pub fn set_open(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11336,7 +11091,7 @@ impl<'mc> Step<'mc> {
     /// Set step inverted state
     pub fn set_inverted(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11356,7 +11111,7 @@ impl<'mc> Step<'mc> {
                 .call_method(&self.jni_object(), "getTextures", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -11702,7 +11457,7 @@ impl<'mc> SmoothBrick<'mc> {
                 .call_method(&self.jni_object(), "getTextures", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -12010,63 +11765,19 @@ impl<'mc> JNIInstantiatable<'mc> for Leaves<'mc> {
 impl<'mc> Leaves<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::TreeSpecies<'mc>>>,
-    ) -> Result<crate::material::Leaves<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/TreeSpecies;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/Leaves");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::Leaves::from_raw(&jni, res)
-    }
-    pub fn new_with_material(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Material<'mc>>,
-        arg1: std::option::Option<impl Into<crate::TreeSpecies<'mc>>>,
-    ) -> Result<crate::material::Leaves<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Material;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/TreeSpecies;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/Leaves");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::Leaves::from_raw(&jni, res)
-    }
-    pub fn new_with_tree_species(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
         arg1: std::option::Option<impl Into<crate::TreeSpecies<'mc>>>,
         arg2: std::option::Option<bool>,
     ) -> Result<crate::material::Leaves<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Material;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
+        if let Some(a) = arg0 {
+            sig += "Lorg/bukkit/Material;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/TreeSpecies;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -12103,7 +11814,7 @@ impl<'mc> Leaves<'mc> {
     /// Set whether this leaf block will disappear when too far from a log
     pub fn set_decayable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12130,7 +11841,7 @@ impl<'mc> Leaves<'mc> {
     /// Set whether this leaf block is in the process of decaying
     pub fn set_decaying(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12425,9 +12136,15 @@ impl<'mc> JNIInstantiatable<'mc> for Dye<'mc> {
 }
 
 impl<'mc> Dye<'mc> {
+    //['since', '']
+
+    //['forRemoval', 'false']
+
+    #[deprecated]
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
+        arg1: std::option::Option<i8>,
     ) -> Result<crate::material::Dye<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -12438,30 +12155,6 @@ impl<'mc> Dye<'mc> {
             });
             args.push(val_1);
         }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/Dye");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::Dye::from_raw(&jni, res)
-    }
-    //['since', '']
-
-    //['forRemoval', 'false']
-
-    #[deprecated]
-    pub fn new_with_material(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Material<'mc>>,
-        arg1: std::option::Option<i8>,
-    ) -> Result<crate::material::Dye<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Material;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());
@@ -13049,9 +12742,15 @@ impl<'mc> JNIInstantiatable<'mc> for Observer<'mc> {
 }
 
 impl<'mc> Observer<'mc> {
+    //['since', '']
+
+    //['forRemoval', 'false']
+
+    #[deprecated]
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
+        arg1: std::option::Option<i8>,
     ) -> Result<crate::material::Observer<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -13062,30 +12761,6 @@ impl<'mc> Observer<'mc> {
             });
             args.push(val_1);
         }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/Observer");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::Observer::from_raw(&jni, res)
-    }
-    //['since', '']
-
-    //['forRemoval', 'false']
-
-    #[deprecated]
-    pub fn new_with_material(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Material<'mc>>,
-        arg1: std::option::Option<i8>,
-    ) -> Result<crate::material::Observer<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Material;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());
@@ -13411,18 +13086,16 @@ impl<'mc> Stairs<'mc> {
     #[deprecated]
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
+        arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::material::Stairs<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/Material;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Lorg/bukkit/Material;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());
@@ -13495,7 +13168,7 @@ impl<'mc> Stairs<'mc> {
     /// Set step inverted state
     pub fn set_inverted(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13812,43 +13485,25 @@ impl<'mc> JNIInstantiatable<'mc> for Sandstone<'mc> {
 }
 
 impl<'mc> Sandstone<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::SandstoneType<'mc>>>,
-    ) -> Result<crate::material::Sandstone<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/SandstoneType;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/Sandstone");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::Sandstone::from_raw(&jni, res)
-    }
     //['since', '']
 
     //['forRemoval', 'false']
 
     #[deprecated]
-    pub fn new_with_material(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::material::Sandstone<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Material;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
+        if let Some(a) = arg0 {
+            sig += "Lorg/bukkit/Material;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());
@@ -14145,43 +13800,25 @@ impl<'mc> JNIInstantiatable<'mc> for EnderChest<'mc> {
 }
 
 impl<'mc> EnderChest<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::block::BlockFace<'mc>>>,
-    ) -> Result<crate::material::EnderChest<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/block/BlockFace;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/EnderChest");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::EnderChest::from_raw(&jni, res)
-    }
     //['since', '']
 
     //['forRemoval', 'false']
 
     #[deprecated]
-    pub fn new_with_material(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::material::EnderChest<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Material;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
+        if let Some(a) = arg0 {
+            sig += "Lorg/bukkit/Material;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());
@@ -14487,18 +14124,16 @@ impl<'mc> FurnaceAndDispenser<'mc> {
     #[deprecated]
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
+        arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::material::FurnaceAndDispenser<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/Material;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Lorg/bukkit/Material;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());
@@ -14798,9 +14433,15 @@ impl<'mc> JNIInstantiatable<'mc> for Bed<'mc> {
 }
 
 impl<'mc> Bed<'mc> {
+    //['since', '']
+
+    //['forRemoval', 'false']
+
+    #[deprecated]
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
+        arg1: std::option::Option<i8>,
     ) -> Result<crate::material::Bed<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -14811,30 +14452,6 @@ impl<'mc> Bed<'mc> {
             });
             args.push(val_1);
         }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/Bed");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::Bed::from_raw(&jni, res)
-    }
-    //['since', '']
-
-    //['forRemoval', 'false']
-
-    #[deprecated]
-    pub fn new_with_material(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Material<'mc>>,
-        arg1: std::option::Option<i8>,
-    ) -> Result<crate::material::Bed<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Material;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());
@@ -14907,7 +14524,7 @@ impl<'mc> Bed<'mc> {
     /// Configure this to be either the head or the foot of the bed
     pub fn set_head_of_bed(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15496,7 +15113,7 @@ impl<'mc> WoodenStep<'mc> {
     /// Set step inverted state
     pub fn set_inverted(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15796,7 +15413,7 @@ impl<'mc> Vine<'mc> {
     //['forRemoval', 'false']
 
     #[deprecated]
-    pub fn new_with_block_faces(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
         arg1: std::option::Option<i8>,
@@ -16119,9 +15736,15 @@ impl<'mc> JNIInstantiatable<'mc> for Wood<'mc> {
 }
 
 impl<'mc> Wood<'mc> {
+    //['since', '']
+
+    //['forRemoval', 'false']
+
+    #[deprecated]
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
+        arg1: std::option::Option<i8>,
     ) -> Result<crate::material::Wood<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -16132,30 +15755,6 @@ impl<'mc> Wood<'mc> {
             });
             args.push(val_1);
         }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/Wood");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::Wood::from_raw(&jni, res)
-    }
-    //['since', '']
-
-    //['forRemoval', 'false']
-
-    #[deprecated]
-    pub fn new_with_material(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Material<'mc>>,
-        arg1: std::option::Option<i8>,
-    ) -> Result<crate::material::Wood<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Material;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());
@@ -16930,7 +16529,7 @@ impl<'mc> Mushroom<'mc> {
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
-        // -2
+        // -1
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -17672,49 +17271,20 @@ impl<'mc> JNIInstantiatable<'mc> for CocoaPlant<'mc> {
 }
 
 impl<'mc> CocoaPlant<'mc> {
-    //['since', '']
-
-    //['forRemoval', 'false']
-
-    #[deprecated]
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
-        arg1: std::option::Option<i8>,
+        arg0: std::option::Option<impl Into<crate::material::CocoaPlantCocoaPlantSize<'mc>>>,
+        arg1: std::option::Option<impl Into<crate::block::BlockFace<'mc>>>,
     ) -> Result<crate::material::CocoaPlant<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/Material;";
+            sig += "Lorg/bukkit/material/CocoaPlant$CocoaPlantSize;";
             let val_1 = jni::objects::JValueGen::Object(unsafe {
                 jni::objects::JObject::from_raw(a.into().jni_object().clone())
             });
             args.push(val_1);
         }
-        if let Some(a) = arg1 {
-            sig += "B";
-            let val_2 = jni::objects::JValueGen::Byte(a.into());
-            args.push(val_2);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/CocoaPlant");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::CocoaPlant::from_raw(&jni, res)
-    }
-    pub fn new_with_cocoa_plantcocoa_plant_size(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::material::CocoaPlantCocoaPlantSize<'mc>>,
-        arg1: std::option::Option<impl Into<crate::block::BlockFace<'mc>>>,
-    ) -> Result<crate::material::CocoaPlant<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/material/CocoaPlant$CocoaPlantSize;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/block/BlockFace;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -18102,6 +17672,7 @@ impl<'mc> Door<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::TreeSpecies<'mc>>>,
         arg1: std::option::Option<impl Into<crate::block::BlockFace<'mc>>>,
+        arg2: std::option::Option<bool>,
     ) -> Result<crate::material::Door<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -18119,65 +17690,11 @@ impl<'mc> Door<'mc> {
             });
             args.push(val_2);
         }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/Door");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::Door::from_raw(&jni, res)
-    }
-    pub fn new_with_material(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::TreeSpecies<'mc>>,
-        arg1: impl Into<crate::block::BlockFace<'mc>>,
-        arg2: std::option::Option<bool>,
-    ) -> Result<crate::material::Door<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/TreeSpecies;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += "Lorg/bukkit/block/BlockFace;";
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Z";
-            // 2
+            // 1
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/Door");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::Door::from_raw(&jni, res)
-    }
-    //['since', '']
-
-    //['forRemoval', 'false']
-
-    #[deprecated]
-    pub fn new_with_tree_species(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Material<'mc>>,
-        arg1: std::option::Option<i8>,
-    ) -> Result<crate::material::Door<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Material;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "B";
-            let val_2 = jni::objects::JValueGen::Byte(a.into());
-            args.push(val_2);
         }
         sig += ")V";
         let cls = jni.find_class("org/bukkit/material/Door");
@@ -18236,7 +17753,7 @@ impl<'mc> Door<'mc> {
     /// Set whether the door is open. Undefined if <code>isTopHalf()</code> is true.
     pub fn set_open(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18263,7 +17780,7 @@ impl<'mc> Door<'mc> {
     /// Set whether the hinge is on the left or right side. Left is false, right is true. Undefined if <code>isTopHalf()</code> is false.
     pub fn set_hinge(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18280,7 +17797,7 @@ impl<'mc> Door<'mc> {
     /// Configure this part of the door to be either the top or the bottom half
     pub fn set_top_half(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18669,7 +18186,7 @@ impl<'mc> Directional<'mc> {
         Ok(())
     }
 }
-/// This is the superclass for the <a href="DetectorRail.html" title="class in org.bukkit.material"><code>DetectorRail</code></a> and <a href="PoweredRail.html" title="class in org.bukkit.material"><code>PoweredRail</code></a> classes
+/// This is the superclass for the <a href="DetectorRail.html" title="class in org.bukkit.material"><code>DetectorRail</code></a> and <a title="class in org.bukkit.material" href="PoweredRail.html"><code>PoweredRail</code></a> classes
 pub struct ExtendedRails<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -18714,18 +18231,16 @@ impl<'mc> ExtendedRails<'mc> {
     #[deprecated]
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
+        arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::material::ExtendedRails<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/Material;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Lorg/bukkit/Material;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());
@@ -18749,7 +18264,7 @@ impl<'mc> ExtendedRails<'mc> {
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
-        // -2
+        // -1
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -19729,7 +19244,7 @@ impl<'mc> Command<'mc> {
     /// Sets the current state of this Material
     pub fn set_powered(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -20032,7 +19547,7 @@ impl<'mc> DetectorRail<'mc> {
     /// <span class="deprecated-label">Deprecated.</span>
     pub fn set_pressed(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -20068,7 +19583,7 @@ impl<'mc> DetectorRail<'mc> {
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
-        // -2
+        // -1
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -20359,9 +19874,15 @@ impl<'mc> JNIInstantiatable<'mc> for Hopper<'mc> {
 }
 
 impl<'mc> Hopper<'mc> {
+    //['since', '']
+
+    //['forRemoval', 'false']
+
+    #[deprecated]
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
+        arg1: std::option::Option<i8>,
     ) -> Result<crate::material::Hopper<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -20372,30 +19893,6 @@ impl<'mc> Hopper<'mc> {
             });
             args.push(val_1);
         }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/Hopper");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::Hopper::from_raw(&jni, res)
-    }
-    //['since', '']
-
-    //['forRemoval', 'false']
-
-    #[deprecated]
-    pub fn new_with_block_face(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Material<'mc>>,
-        arg1: std::option::Option<i8>,
-    ) -> Result<crate::material::Hopper<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Material;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());
@@ -20468,7 +19965,7 @@ impl<'mc> Hopper<'mc> {
     /// Sets whether the hopper is active or not.
     pub fn set_active(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -20741,9 +20238,15 @@ impl<'mc> JNIInstantiatable<'mc> for Skull<'mc> {
 }
 
 impl<'mc> Skull<'mc> {
+    //['since', '']
+
+    //['forRemoval', 'false']
+
+    #[deprecated]
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
+        arg1: std::option::Option<i8>,
     ) -> Result<crate::material::Skull<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -20754,30 +20257,6 @@ impl<'mc> Skull<'mc> {
             });
             args.push(val_1);
         }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/Skull");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::Skull::from_raw(&jni, res)
-    }
-    //['since', '']
-
-    //['forRemoval', 'false']
-
-    #[deprecated]
-    pub fn new_with_material(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Material<'mc>>,
-        arg1: std::option::Option<i8>,
-    ) -> Result<crate::material::Skull<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Material;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());
@@ -21438,43 +20917,25 @@ impl<'mc> JNIInstantiatable<'mc> for Wool<'mc> {
 }
 
 impl<'mc> Wool<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::DyeColor<'mc>>>,
-    ) -> Result<crate::material::Wool<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/DyeColor;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/material/Wool");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::material::Wool::from_raw(&jni, res)
-    }
     //['since', '']
 
     //['forRemoval', 'false']
 
     #[deprecated]
-    pub fn new_with_material(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Material<'mc>>,
+        arg0: std::option::Option<impl Into<crate::Material<'mc>>>,
         arg1: std::option::Option<i8>,
     ) -> Result<crate::material::Wool<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Material;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
+        if let Some(a) = arg0 {
+            sig += "Lorg/bukkit/Material;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
         if let Some(a) = arg1 {
             sig += "B";
             let val_2 = jni::objects::JValueGen::Byte(a.into());

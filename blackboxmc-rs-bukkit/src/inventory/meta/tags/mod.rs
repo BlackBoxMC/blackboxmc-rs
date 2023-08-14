@@ -4,7 +4,7 @@ use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
 /// This class represents an enum with a generic content type. It defines the types a custom item tag can have.
-/// <p>This interface can be used to create your own custom <a href="ItemTagType.html" title="interface in org.bukkit.inventory.meta.tags"><code>ItemTagType</code></a> with different complex types. This may be useful for the likes of a UUIDItemTagType:</p>
+/// <p>This interface can be used to create your own custom <a title="interface in org.bukkit.inventory.meta.tags" href="ItemTagType.html"><code>ItemTagType</code></a> with different complex types. This may be useful for the likes of a UUIDItemTagType:</p>
 /// <pre> <code>
 /// public class UUIDItemTagType implements ItemTagType&lt;byte[], UUID&gt; {
 /// {@literal @Override}

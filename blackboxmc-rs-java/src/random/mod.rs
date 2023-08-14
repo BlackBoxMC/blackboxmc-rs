@@ -46,29 +46,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaRandomGeneratorFactory<'mc> {
 impl<'mc> JavaRandomGeneratorFactory<'mc> {
     //
 
-    pub fn equidistribution(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equidistribution",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    //
-
-    pub fn is_deprecated(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isDeprecated", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
     pub fn is_stochastic(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
@@ -162,15 +139,26 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     }
     //
 
-    pub fn all(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/stream/Stream;");
-        let cls = jni.find_class("java/util/stream/Stream");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "all", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        Ok(res.l()?)
+    pub fn equidistribution(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "equidistribution",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    //
+
+    pub fn is_deprecated(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isDeprecated", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
     }
     //
 
@@ -214,20 +202,21 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
 
     pub fn default(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::random::JavaRandomGeneratorFactory<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/random/RandomGeneratorFactory;");
         let cls = jni.find_class("java/util/random/RandomGeneratorFactory");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "getDefault", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
-        Ok(res.l()?)
+        let obj = res.l()?;
+        crate::random::JavaRandomGeneratorFactory::from_raw(&jni, obj)
     }
     //
 
     pub fn of(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::random::JavaRandomGeneratorFactory<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Ljava/util/random/RandomGeneratorFactory;");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             jni.new_string(arg0.into())?,
@@ -241,23 +230,20 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
             vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
-        Ok(res.l()?)
+        let obj = res.l()?;
+        crate::random::JavaRandomGeneratorFactory::from_raw(&jni, obj)
     }
     //
 
     pub fn create(
         &self,
         arg0: std::option::Option<i64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::random::JavaRandomGenerator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
+            let val_1 = jni::objects::JValueGen::Long(a.into());
             args.push(val_1);
         }
         sig += ")Ljava/util/random/RandomGenerator;";
@@ -265,7 +251,9 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "create", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
+        crate::random::JavaRandomGenerator::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     //
 
@@ -278,20 +266,12 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
+            let val_1 = jni::objects::JValueGen::Long(a.into());
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "I";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
+            let val_2 = jni::objects::JValueGen::Int(a.into());
             args.push(val_2);
         }
         sig += ")V";
@@ -429,87 +409,22 @@ impl<'mc> JNIInstantiatable<'mc> for JavaRandomGeneratorSplittableGenerator<'mc>
 impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
     //
 
-    pub fn rngs(
-        &self,
-        arg0: std::option::Option<i64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        sig += ")Ljava/util/stream/Stream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "rngs", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn splits(
-        &self,
-        arg0: std::option::Option<jni::objects::JObject<'mc>>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/util/random/RandomGenerator$SplittableGenerator;";
-            let val_1 = jni::objects::JValueGen::Object(a);
-            args.push(val_1);
-        }
-        sig += ")Ljava/util/stream/Stream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "splits", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn splits_with_long(
-        &self,
-        arg0: i64,
-        arg1: std::option::Option<jni::objects::JObject<'mc>>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "J";
-        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "long",
-            "(J)V",
-            vec![arg0.into()],
-        )?);
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/util/random/RandomGenerator$SplittableGenerator;";
-            let val_2 = jni::objects::JValueGen::Object(a);
-            args.push(val_2);
-        }
-        sig += ")Ljava/util/stream/Stream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "splits", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
     pub fn split(
         &self,
-        arg0: std::option::Option<jni::objects::JObject<'mc>>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        arg0: std::option::Option<
+            impl Into<crate::random::JavaRandomGeneratorSplittableGenerator<'mc>>,
+        >,
+    ) -> Result<
+        crate::random::JavaRandomGeneratorSplittableGenerator<'mc>,
+        Box<dyn std::error::Error>,
+    > {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "Ljava/util/random/RandomGenerator$SplittableGenerator;";
-            let val_1 = jni::objects::JValueGen::Object(a);
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
             args.push(val_1);
         }
         sig += ")Ljava/util/random/RandomGenerator$SplittableGenerator;";
@@ -517,14 +432,19 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "split", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
+        crate::random::JavaRandomGeneratorSplittableGenerator::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     //
 
     pub fn of(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<
+        crate::random::JavaRandomGeneratorSplittableGenerator<'mc>,
+        Box<dyn std::error::Error>,
+    > {
         let sig = String::from(
             "(Ljava/lang/String;)Ljava/util/random/RandomGenerator$SplittableGenerator;",
         );
@@ -540,7 +460,60 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
             vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
-        Ok(res.l()?)
+        let obj = res.l()?;
+        crate::random::JavaRandomGeneratorSplittableGenerator::from_raw(&jni, obj)
+    }
+    //
+
+    pub fn next_double(
+        &self,
+        arg0: std::option::Option<f64>,
+        arg1: std::option::Option<f64>,
+    ) -> Result<f64, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "D";
+            let val_1 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "D";
+            let val_2 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_2);
+        }
+        sig += ")D";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "nextDouble", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+    //
+
+    pub fn next_int(
+        &self,
+        arg0: std::option::Option<i32>,
+        arg1: std::option::Option<i32>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        sig += ")I";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "nextInt", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
     }
     //
 
@@ -563,20 +536,12 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
+            let val_1 = jni::objects::JValueGen::Long(a.into());
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "J";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
+            let val_2 = jni::objects::JValueGen::Long(a.into());
             args.push(val_2);
         }
         sig += ")J";
@@ -597,20 +562,12 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "F";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "float",
-                "(F)V",
-                vec![a.into()],
-            )?);
+            let val_1 = jni::objects::JValueGen::Float(a.into());
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "F";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "float",
-                "(F)V",
-                vec![a.into()],
-            )?);
+            let val_2 = jni::objects::JValueGen::Float(a.into());
             args.push(val_2);
         }
         sig += ")F";
@@ -619,198 +576,6 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
             .call_method(&self.jni_object(), "nextFloat", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
-    }
-    //
-
-    pub fn ints(
-        &self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "I";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        sig += ")Ljava/util/stream/IntStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "ints", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn ints_with_long(
-        &self,
-        arg0: i64,
-        arg1: i32,
-        arg2: std::option::Option<i32>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "J";
-        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "long",
-            "(J)V",
-            vec![arg0.into()],
-        )?);
-        args.push(val_1);
-        sig += "I";
-        let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "int",
-            "(I)V",
-            vec![arg1.into()],
-        )?);
-        args.push(val_2);
-        if let Some(a) = arg2 {
-            sig += "I";
-            let val_3 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_3);
-        }
-        sig += ")Ljava/util/stream/IntStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "ints", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn longs(
-        &self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i64>,
-        arg2: std::option::Option<i64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "J";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "J";
-            let val_3 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
-            args.push(val_3);
-        }
-        sig += ")Ljava/util/stream/LongStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "longs", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn doubles(
-        &self,
-        arg0: std::option::Option<f64>,
-        arg1: std::option::Option<f64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "D";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "D";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        sig += ")Ljava/util/stream/DoubleStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "doubles", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn doubles_with_long(
-        &self,
-        arg0: i64,
-        arg1: f64,
-        arg2: std::option::Option<f64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "J";
-        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "long",
-            "(J)V",
-            vec![arg0.into()],
-        )?);
-        args.push(val_1);
-        sig += "D";
-        let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "double",
-            "(D)V",
-            vec![arg1.into()],
-        )?);
-        args.push(val_2);
-        if let Some(a) = arg2 {
-            sig += "D";
-            let val_3 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_3);
-        }
-        sig += ")Ljava/util/stream/DoubleStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "doubles", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
     }
     //
 
@@ -833,20 +598,12 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "D";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
+            let val_1 = jni::objects::JValueGen::Double(a.into());
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "D";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
+            let val_2 = jni::objects::JValueGen::Double(a.into());
             args.push(val_2);
         }
         sig += ")D";
@@ -876,78 +633,12 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
-
-    pub fn next_double(
-        &self,
-        arg0: std::option::Option<f64>,
-        arg1: std::option::Option<f64>,
-    ) -> Result<f64, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "D";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "D";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        sig += ")D";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "nextDouble", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    //
-
-    pub fn next_int(
-        &self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "I";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        sig += ")I";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "nextInt", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
 }
-impl<'mc> Into<jni::objects::JObject<'mc>> for JavaRandomGeneratorSplittableGenerator<'mc> {
-    fn into(self) -> jni::objects::JObject<'mc> {
-        self.1
+impl<'mc> Into<crate::random::JavaRandomGeneratorStreamableGenerator<'mc>>
+    for JavaRandomGeneratorSplittableGenerator<'mc>
+{
+    fn into(self) -> crate::random::JavaRandomGeneratorStreamableGenerator<'mc> {
+        crate::random::JavaRandomGeneratorStreamableGenerator::from_raw(&self.jni_ref(), self.1).expect("Error converting JavaRandomGeneratorSplittableGenerator into crate::random::JavaRandomGeneratorStreamableGenerator")
     }
 }
 
@@ -996,34 +687,13 @@ impl<'mc> JNIInstantiatable<'mc> for JavaRandomGeneratorStreamableGenerator<'mc>
 impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
     //
 
-    pub fn rngs(
-        &self,
-        arg0: std::option::Option<i64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        sig += ")Ljava/util/stream/Stream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "rngs", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
     pub fn of(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<
+        crate::random::JavaRandomGeneratorStreamableGenerator<'mc>,
+        Box<dyn std::error::Error>,
+    > {
         let sig = String::from(
             "(Ljava/lang/String;)Ljava/util/random/RandomGenerator$StreamableGenerator;",
         );
@@ -1039,7 +709,60 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
             vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
-        Ok(res.l()?)
+        let obj = res.l()?;
+        crate::random::JavaRandomGeneratorStreamableGenerator::from_raw(&jni, obj)
+    }
+    //
+
+    pub fn next_double(
+        &self,
+        arg0: std::option::Option<f64>,
+        arg1: std::option::Option<f64>,
+    ) -> Result<f64, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "D";
+            let val_1 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "D";
+            let val_2 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_2);
+        }
+        sig += ")D";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "nextDouble", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+    //
+
+    pub fn next_int(
+        &self,
+        arg0: std::option::Option<i32>,
+        arg1: std::option::Option<i32>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        sig += ")I";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "nextInt", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
     }
     //
 
@@ -1062,20 +785,12 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
+            let val_1 = jni::objects::JValueGen::Long(a.into());
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "J";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
+            let val_2 = jni::objects::JValueGen::Long(a.into());
             args.push(val_2);
         }
         sig += ")J";
@@ -1096,20 +811,12 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "F";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "float",
-                "(F)V",
-                vec![a.into()],
-            )?);
+            let val_1 = jni::objects::JValueGen::Float(a.into());
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "F";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "float",
-                "(F)V",
-                vec![a.into()],
-            )?);
+            let val_2 = jni::objects::JValueGen::Float(a.into());
             args.push(val_2);
         }
         sig += ")F";
@@ -1118,198 +825,6 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
             .call_method(&self.jni_object(), "nextFloat", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
-    }
-    //
-
-    pub fn ints(
-        &self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "I";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        sig += ")Ljava/util/stream/IntStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "ints", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn ints_with_long(
-        &self,
-        arg0: i64,
-        arg1: i32,
-        arg2: std::option::Option<i32>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "J";
-        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "long",
-            "(J)V",
-            vec![arg0.into()],
-        )?);
-        args.push(val_1);
-        sig += "I";
-        let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "int",
-            "(I)V",
-            vec![arg1.into()],
-        )?);
-        args.push(val_2);
-        if let Some(a) = arg2 {
-            sig += "I";
-            let val_3 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_3);
-        }
-        sig += ")Ljava/util/stream/IntStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "ints", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn longs(
-        &self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i64>,
-        arg2: std::option::Option<i64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "J";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "J";
-            let val_3 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
-            args.push(val_3);
-        }
-        sig += ")Ljava/util/stream/LongStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "longs", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn doubles(
-        &self,
-        arg0: std::option::Option<f64>,
-        arg1: std::option::Option<f64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "D";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "D";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        sig += ")Ljava/util/stream/DoubleStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "doubles", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn doubles_with_long(
-        &self,
-        arg0: i64,
-        arg1: f64,
-        arg2: std::option::Option<f64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "J";
-        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "long",
-            "(J)V",
-            vec![arg0.into()],
-        )?);
-        args.push(val_1);
-        sig += "D";
-        let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "double",
-            "(D)V",
-            vec![arg1.into()],
-        )?);
-        args.push(val_2);
-        if let Some(a) = arg2 {
-            sig += "D";
-            let val_3 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_3);
-        }
-        sig += ")Ljava/util/stream/DoubleStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "doubles", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
     }
     //
 
@@ -1332,20 +847,12 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "D";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
+            let val_1 = jni::objects::JValueGen::Double(a.into());
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "D";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
+            let val_2 = jni::objects::JValueGen::Double(a.into());
             args.push(val_2);
         }
         sig += ")D";
@@ -1374,74 +881,6 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
                 .call_method(&self.jni_object(), "nextExponential", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
-    }
-    //
-
-    pub fn next_double(
-        &self,
-        arg0: std::option::Option<f64>,
-        arg1: std::option::Option<f64>,
-    ) -> Result<f64, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "D";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "D";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        sig += ")D";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "nextDouble", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    //
-
-    pub fn next_int(
-        &self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "I";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        sig += ")I";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "nextInt", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
     }
 }
 
@@ -1510,44 +949,26 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     }
     //
 
-    pub fn leaps(
+    pub fn copy_and_leap(
         &self,
-        arg0: std::option::Option<i64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        sig += ")Ljava/util/stream/Stream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "leaps", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn copy_and_leap(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::random::JavaRandomGeneratorJumpableGenerator<'mc>, Box<dyn std::error::Error>>
+    {
         let sig = String::from("()Ljava/util/random/RandomGenerator$JumpableGenerator;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "copyAndLeap", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
+        crate::random::JavaRandomGeneratorJumpableGenerator::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     //
 
     pub fn of(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::random::JavaRandomGeneratorLeapableGenerator<'mc>, Box<dyn std::error::Error>>
+    {
         let sig = String::from(
             "(Ljava/lang/String;)Ljava/util/random/RandomGenerator$LeapableGenerator;",
         );
@@ -1563,11 +984,15 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
-        Ok(res.l()?)
+        let obj = res.l()?;
+        crate::random::JavaRandomGeneratorLeapableGenerator::from_raw(&jni, obj)
     }
     //
 
-    pub fn copy(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn copy(
+        &self,
+    ) -> Result<crate::random::JavaRandomGeneratorJumpableGenerator<'mc>, Box<dyn std::error::Error>>
+    {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/util/random/RandomGenerator$JumpableGenerator;";
@@ -1575,7 +1000,19 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "copy", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
+        crate::random::JavaRandomGeneratorJumpableGenerator::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
+    pub fn jump(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "jump", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     //
 
@@ -1589,71 +1026,69 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
     }
     //
 
-    pub fn jumps(
+    pub fn copy_and_jump(
         &self,
-        arg0: std::option::Option<i64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        sig += ")Ljava/util/stream/Stream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "jumps", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn copy_and_jump(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::random::JavaRandomGenerator<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/random/RandomGenerator;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "copyAndJump", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
+        crate::random::JavaRandomGenerator::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     //
 
-    pub fn rngs(
+    pub fn next_double(
         &self,
-        arg0: std::option::Option<i64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        arg0: std::option::Option<f64>,
+        arg1: std::option::Option<f64>,
+    ) -> Result<f64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
+            sig += "D";
+            let val_1 = jni::objects::JValueGen::Double(a.into());
             args.push(val_1);
         }
-        sig += ")Ljava/util/stream/Stream;";
+        if let Some(a) = arg1 {
+            sig += "D";
+            let val_2 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_2);
+        }
+        sig += ")D";
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "rngs", sig.as_str(), args);
+            .call_method(&self.jni_object(), "nextDouble", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
+        Ok(res.d()?)
     }
     //
 
-    pub fn jump(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
+    pub fn next_int(
+        &self,
+        arg0: std::option::Option<i32>,
+        arg1: std::option::Option<i32>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        sig += ")I";
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "jump", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
+            .call_method(&self.jni_object(), "nextInt", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
     }
     //
 
@@ -1676,20 +1111,12 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
+            let val_1 = jni::objects::JValueGen::Long(a.into());
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "J";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
+            let val_2 = jni::objects::JValueGen::Long(a.into());
             args.push(val_2);
         }
         sig += ")J";
@@ -1710,20 +1137,12 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "F";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "float",
-                "(F)V",
-                vec![a.into()],
-            )?);
+            let val_1 = jni::objects::JValueGen::Float(a.into());
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "F";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "float",
-                "(F)V",
-                vec![a.into()],
-            )?);
+            let val_2 = jni::objects::JValueGen::Float(a.into());
             args.push(val_2);
         }
         sig += ")F";
@@ -1732,198 +1151,6 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             .call_method(&self.jni_object(), "nextFloat", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
-    }
-    //
-
-    pub fn ints(
-        &self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "I";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        sig += ")Ljava/util/stream/IntStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "ints", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn ints_with_long(
-        &self,
-        arg0: i64,
-        arg1: i32,
-        arg2: std::option::Option<i32>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "J";
-        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "long",
-            "(J)V",
-            vec![arg0.into()],
-        )?);
-        args.push(val_1);
-        sig += "I";
-        let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "int",
-            "(I)V",
-            vec![arg1.into()],
-        )?);
-        args.push(val_2);
-        if let Some(a) = arg2 {
-            sig += "I";
-            let val_3 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_3);
-        }
-        sig += ")Ljava/util/stream/IntStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "ints", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn longs(
-        &self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i64>,
-        arg2: std::option::Option<i64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "J";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "J";
-            let val_3 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
-            args.push(val_3);
-        }
-        sig += ")Ljava/util/stream/LongStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "longs", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn doubles(
-        &self,
-        arg0: std::option::Option<f64>,
-        arg1: std::option::Option<f64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "D";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "D";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        sig += ")Ljava/util/stream/DoubleStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "doubles", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn doubles_with_long(
-        &self,
-        arg0: i64,
-        arg1: f64,
-        arg2: std::option::Option<f64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "J";
-        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "long",
-            "(J)V",
-            vec![arg0.into()],
-        )?);
-        args.push(val_1);
-        sig += "D";
-        let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "double",
-            "(D)V",
-            vec![arg1.into()],
-        )?);
-        args.push(val_2);
-        if let Some(a) = arg2 {
-            sig += "D";
-            let val_3 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_3);
-        }
-        sig += ")Ljava/util/stream/DoubleStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "doubles", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
     }
     //
 
@@ -1946,20 +1173,12 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "D";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
+            let val_1 = jni::objects::JValueGen::Double(a.into());
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "D";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
+            let val_2 = jni::objects::JValueGen::Double(a.into());
             args.push(val_2);
         }
         sig += ")D";
@@ -1989,78 +1208,12 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
-
-    pub fn next_double(
-        &self,
-        arg0: std::option::Option<f64>,
-        arg1: std::option::Option<f64>,
-    ) -> Result<f64, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "D";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "D";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        sig += ")D";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "nextDouble", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    //
-
-    pub fn next_int(
-        &self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "I";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        sig += ")I";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "nextInt", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
 }
-impl<'mc> Into<jni::objects::JObject<'mc>> for JavaRandomGeneratorLeapableGenerator<'mc> {
-    fn into(self) -> jni::objects::JObject<'mc> {
-        self.1
+impl<'mc> Into<crate::random::JavaRandomGeneratorJumpableGenerator<'mc>>
+    for JavaRandomGeneratorLeapableGenerator<'mc>
+{
+    fn into(self) -> crate::random::JavaRandomGeneratorJumpableGenerator<'mc> {
+        crate::random::JavaRandomGeneratorJumpableGenerator::from_raw(&self.jni_ref(), self.1).expect("Error converting JavaRandomGeneratorLeapableGenerator into crate::random::JavaRandomGeneratorJumpableGenerator")
     }
 }
 
@@ -2107,6 +1260,58 @@ impl<'mc> JNIInstantiatable<'mc> for JavaRandomGenerator<'mc> {
 impl<'mc> JavaRandomGenerator<'mc> {
     //
 
+    pub fn next_double(
+        &self,
+        arg0: std::option::Option<f64>,
+        arg1: std::option::Option<f64>,
+    ) -> Result<f64, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "D";
+            let val_1 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "D";
+            let val_2 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_2);
+        }
+        sig += ")D";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "nextDouble", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+    //
+
+    pub fn next_int(
+        &self,
+        arg0: std::option::Option<i32>,
+        arg1: std::option::Option<i32>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        sig += ")I";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "nextInt", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    //
+
     pub fn next_boolean(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
@@ -2126,20 +1331,12 @@ impl<'mc> JavaRandomGenerator<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
+            let val_1 = jni::objects::JValueGen::Long(a.into());
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "J";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
+            let val_2 = jni::objects::JValueGen::Long(a.into());
             args.push(val_2);
         }
         sig += ")J";
@@ -2160,20 +1357,12 @@ impl<'mc> JavaRandomGenerator<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "F";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "float",
-                "(F)V",
-                vec![a.into()],
-            )?);
+            let val_1 = jni::objects::JValueGen::Float(a.into());
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "F";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "float",
-                "(F)V",
-                vec![a.into()],
-            )?);
+            let val_2 = jni::objects::JValueGen::Float(a.into());
             args.push(val_2);
         }
         sig += ")F";
@@ -2182,198 +1371,6 @@ impl<'mc> JavaRandomGenerator<'mc> {
             .call_method(&self.jni_object(), "nextFloat", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
-    }
-    //
-
-    pub fn ints(
-        &self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "I";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        sig += ")Ljava/util/stream/IntStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "ints", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn ints_with_long(
-        &self,
-        arg0: i64,
-        arg1: i32,
-        arg2: std::option::Option<i32>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "J";
-        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "long",
-            "(J)V",
-            vec![arg0.into()],
-        )?);
-        args.push(val_1);
-        sig += "I";
-        let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "int",
-            "(I)V",
-            vec![arg1.into()],
-        )?);
-        args.push(val_2);
-        if let Some(a) = arg2 {
-            sig += "I";
-            let val_3 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_3);
-        }
-        sig += ")Ljava/util/stream/IntStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "ints", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn longs(
-        &self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i64>,
-        arg2: std::option::Option<i64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "J";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "J";
-            let val_3 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
-            args.push(val_3);
-        }
-        sig += ")Ljava/util/stream/LongStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "longs", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn doubles(
-        &self,
-        arg0: std::option::Option<f64>,
-        arg1: std::option::Option<f64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "D";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "D";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        sig += ")Ljava/util/stream/DoubleStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "doubles", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn doubles_with_long(
-        &self,
-        arg0: i64,
-        arg1: f64,
-        arg2: std::option::Option<f64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "J";
-        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "long",
-            "(J)V",
-            vec![arg0.into()],
-        )?);
-        args.push(val_1);
-        sig += "D";
-        let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "double",
-            "(D)V",
-            vec![arg1.into()],
-        )?);
-        args.push(val_2);
-        if let Some(a) = arg2 {
-            sig += "D";
-            let val_3 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_3);
-        }
-        sig += ")Ljava/util/stream/DoubleStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "doubles", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
     }
     //
 
@@ -2396,20 +1393,12 @@ impl<'mc> JavaRandomGenerator<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "D";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
+            let val_1 = jni::objects::JValueGen::Double(a.into());
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "D";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
+            let val_2 = jni::objects::JValueGen::Double(a.into());
             args.push(val_2);
         }
         sig += ")D";
@@ -2441,90 +1430,23 @@ impl<'mc> JavaRandomGenerator<'mc> {
     }
     //
 
-    pub fn next_double(
-        &self,
-        arg0: std::option::Option<f64>,
-        arg1: std::option::Option<f64>,
-    ) -> Result<f64, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "D";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "D";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        sig += ")D";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "nextDouble", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    //
-
-    pub fn next_int(
-        &self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "I";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        sig += ")I";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "nextInt", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    //
-
     pub fn default(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::random::JavaRandomGenerator<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/random/RandomGenerator;");
         let cls = jni.find_class("java/util/random/RandomGenerator");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "getDefault", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
-        Ok(res.l()?)
+        let obj = res.l()?;
+        crate::random::JavaRandomGenerator::from_raw(&jni, obj)
     }
     //
 
     pub fn of(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::random::JavaRandomGenerator<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Ljava/util/random/RandomGenerator;");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             jni.new_string(arg0.into())?,
@@ -2538,7 +1460,8 @@ impl<'mc> JavaRandomGenerator<'mc> {
             vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
-        Ok(res.l()?)
+        let obj = res.l()?;
+        crate::random::JavaRandomGenerator::from_raw(&jni, obj)
     }
 }
 
@@ -2588,75 +1511,35 @@ impl<'mc> JNIInstantiatable<'mc> for JavaRandomGeneratorArbitrarilyJumpableGener
 impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     //
 
-    pub fn jumps(
-        &self,
-        arg0: std::option::Option<i64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn jump(&self, arg0: std::option::Option<f64>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
+            sig += "D";
+            let val_1 = jni::objects::JValueGen::Double(a.into());
             args.push(val_1);
         }
-        sig += ")Ljava/util/stream/Stream;";
+        sig += ")V";
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "jumps", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn jumps_with_long(
-        &self,
-        arg0: i64,
-        arg1: std::option::Option<f64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "J";
-        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "long",
-            "(J)V",
-            vec![arg0.into()],
-        )?);
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "D";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        sig += ")Ljava/util/stream/Stream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "jumps", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
+            .call_method(&self.jni_object(), "jump", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     //
 
     pub fn copy_and_jump(
         &self,
         arg0: std::option::Option<f64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<
+        crate::random::JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc>,
+        Box<dyn std::error::Error>,
+    > {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "D";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
+            let val_1 = jni::objects::JValueGen::Double(a.into());
             args.push(val_1);
         }
         sig += ")Ljava/util/random/RandomGenerator$ArbitrarilyJumpableGenerator;";
@@ -2664,17 +1547,16 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "copyAndJump", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
+        crate::random::JavaRandomGeneratorArbitrarilyJumpableGenerator::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )
     }
     //
 
     pub fn jump_power_of_two(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "int",
-            "(I)V",
-            vec![arg0.into()],
-        )?);
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "jumpPowerOfTwo",
@@ -2696,31 +1578,13 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     }
     //
 
-    pub fn jump(&self, arg0: std::option::Option<f64>) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "D";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "jump", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn of(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<
+        crate::random::JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc>,
+        Box<dyn std::error::Error>,
+    > {
         let sig = String::from(
             "(Ljava/lang/String;)Ljava/util/random/RandomGenerator$ArbitrarilyJumpableGenerator;",
         );
@@ -2736,11 +1600,15 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
-        Ok(res.l()?)
+        let obj = res.l()?;
+        crate::random::JavaRandomGeneratorArbitrarilyJumpableGenerator::from_raw(&jni, obj)
     }
     //
 
-    pub fn copy(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn copy(
+        &self,
+    ) -> Result<crate::random::JavaRandomGeneratorLeapableGenerator<'mc>, Box<dyn std::error::Error>>
+    {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/util/random/RandomGenerator$LeapableGenerator;";
@@ -2748,7 +1616,9 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "copy", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
+        crate::random::JavaRandomGeneratorLeapableGenerator::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     //
 
@@ -2762,37 +1632,18 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     }
     //
 
-    pub fn leaps(
+    pub fn copy_and_leap(
         &self,
-        arg0: std::option::Option<i64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        sig += ")Ljava/util/stream/Stream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "leaps", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn copy_and_leap(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::random::JavaRandomGeneratorJumpableGenerator<'mc>, Box<dyn std::error::Error>>
+    {
         let sig = String::from("()Ljava/util/random/RandomGenerator$JumpableGenerator;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "copyAndLeap", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
+        crate::random::JavaRandomGeneratorJumpableGenerator::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     //
 
@@ -2806,27 +1657,55 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
     }
     //
 
-    pub fn rngs(
+    pub fn next_double(
         &self,
-        arg0: std::option::Option<i64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        arg0: std::option::Option<f64>,
+        arg1: std::option::Option<f64>,
+    ) -> Result<f64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
+            sig += "D";
+            let val_1 = jni::objects::JValueGen::Double(a.into());
             args.push(val_1);
         }
-        sig += ")Ljava/util/stream/Stream;";
+        if let Some(a) = arg1 {
+            sig += "D";
+            let val_2 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_2);
+        }
+        sig += ")D";
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "rngs", sig.as_str(), args);
+            .call_method(&self.jni_object(), "nextDouble", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
+        Ok(res.d()?)
+    }
+    //
+
+    pub fn next_int(
+        &self,
+        arg0: std::option::Option<i32>,
+        arg1: std::option::Option<i32>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        sig += ")I";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "nextInt", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
     }
     //
 
@@ -2849,20 +1728,12 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
+            let val_1 = jni::objects::JValueGen::Long(a.into());
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "J";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
+            let val_2 = jni::objects::JValueGen::Long(a.into());
             args.push(val_2);
         }
         sig += ")J";
@@ -2883,20 +1754,12 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "F";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "float",
-                "(F)V",
-                vec![a.into()],
-            )?);
+            let val_1 = jni::objects::JValueGen::Float(a.into());
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "F";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "float",
-                "(F)V",
-                vec![a.into()],
-            )?);
+            let val_2 = jni::objects::JValueGen::Float(a.into());
             args.push(val_2);
         }
         sig += ")F";
@@ -2905,198 +1768,6 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             .call_method(&self.jni_object(), "nextFloat", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
-    }
-    //
-
-    pub fn ints(
-        &self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "I";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        sig += ")Ljava/util/stream/IntStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "ints", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn ints_with_long(
-        &self,
-        arg0: i64,
-        arg1: i32,
-        arg2: std::option::Option<i32>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "J";
-        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "long",
-            "(J)V",
-            vec![arg0.into()],
-        )?);
-        args.push(val_1);
-        sig += "I";
-        let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "int",
-            "(I)V",
-            vec![arg1.into()],
-        )?);
-        args.push(val_2);
-        if let Some(a) = arg2 {
-            sig += "I";
-            let val_3 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_3);
-        }
-        sig += ")Ljava/util/stream/IntStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "ints", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn longs(
-        &self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i64>,
-        arg2: std::option::Option<i64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "J";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "J";
-            let val_3 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
-            args.push(val_3);
-        }
-        sig += ")Ljava/util/stream/LongStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "longs", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn doubles(
-        &self,
-        arg0: std::option::Option<f64>,
-        arg1: std::option::Option<f64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "D";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "D";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        sig += ")Ljava/util/stream/DoubleStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "doubles", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn doubles_with_long(
-        &self,
-        arg0: i64,
-        arg1: f64,
-        arg2: std::option::Option<f64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "J";
-        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "long",
-            "(J)V",
-            vec![arg0.into()],
-        )?);
-        args.push(val_1);
-        sig += "D";
-        let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "double",
-            "(D)V",
-            vec![arg1.into()],
-        )?);
-        args.push(val_2);
-        if let Some(a) = arg2 {
-            sig += "D";
-            let val_3 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_3);
-        }
-        sig += ")Ljava/util/stream/DoubleStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "doubles", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
     }
     //
 
@@ -3119,20 +1790,12 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "D";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
+            let val_1 = jni::objects::JValueGen::Double(a.into());
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "D";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
+            let val_2 = jni::objects::JValueGen::Double(a.into());
             args.push(val_2);
         }
         sig += ")D";
@@ -3162,80 +1825,12 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
-
-    pub fn next_double(
-        &self,
-        arg0: std::option::Option<f64>,
-        arg1: std::option::Option<f64>,
-    ) -> Result<f64, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "D";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "D";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        sig += ")D";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "nextDouble", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    //
-
-    pub fn next_int(
-        &self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "I";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        sig += ")I";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "nextInt", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
 }
-impl<'mc> Into<jni::objects::JObject<'mc>>
+impl<'mc> Into<crate::random::JavaRandomGeneratorLeapableGenerator<'mc>>
     for JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc>
 {
-    fn into(self) -> jni::objects::JObject<'mc> {
-        self.1
+    fn into(self) -> crate::random::JavaRandomGeneratorLeapableGenerator<'mc> {
+        crate::random::JavaRandomGeneratorLeapableGenerator::from_raw(&self.jni_ref(), self.1).expect("Error converting JavaRandomGeneratorArbitrarilyJumpableGenerator into crate::random::JavaRandomGeneratorLeapableGenerator")
     }
 }
 
@@ -3284,74 +1879,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaRandomGeneratorJumpableGenerator<'mc> {
 impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
     //
 
-    pub fn jump_distance(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "jumpDistance", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    //
-
-    pub fn jumps(
-        &self,
-        arg0: std::option::Option<i64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        sig += ")Ljava/util/stream/Stream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "jumps", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn copy_and_jump(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/random/RandomGenerator;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "copyAndJump", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn rngs(
-        &self,
-        arg0: std::option::Option<i64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        sig += ")Ljava/util/stream/Stream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "rngs", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
     pub fn jump(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
@@ -3362,10 +1889,35 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
     }
     //
 
+    pub fn jump_distance(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "jumpDistance", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+    //
+
+    pub fn copy_and_jump(
+        &self,
+    ) -> Result<crate::random::JavaRandomGenerator<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/random/RandomGenerator;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "copyAndJump", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::random::JavaRandomGenerator::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn of(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<crate::random::JavaRandomGeneratorJumpableGenerator<'mc>, Box<dyn std::error::Error>>
+    {
         let sig = String::from(
             "(Ljava/lang/String;)Ljava/util/random/RandomGenerator$JumpableGenerator;",
         );
@@ -3381,17 +1933,75 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
             vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
-        Ok(res.l()?)
+        let obj = res.l()?;
+        crate::random::JavaRandomGeneratorJumpableGenerator::from_raw(&jni, obj)
     }
     //
 
-    pub fn copy(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn copy(
+        &self,
+    ) -> Result<crate::random::JavaRandomGeneratorJumpableGenerator<'mc>, Box<dyn std::error::Error>>
+    {
         let sig = String::from("()Ljava/util/random/RandomGenerator$JumpableGenerator;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "copy", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
+        crate::random::JavaRandomGeneratorJumpableGenerator::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
+    pub fn next_double(
+        &self,
+        arg0: std::option::Option<f64>,
+        arg1: std::option::Option<f64>,
+    ) -> Result<f64, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "D";
+            let val_1 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "D";
+            let val_2 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_2);
+        }
+        sig += ")D";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "nextDouble", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+    //
+
+    pub fn next_int(
+        &self,
+        arg0: std::option::Option<i32>,
+        arg1: std::option::Option<i32>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        sig += ")I";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "nextInt", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
     }
     //
 
@@ -3414,20 +2024,12 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "J";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
+            let val_1 = jni::objects::JValueGen::Long(a.into());
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "J";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
+            let val_2 = jni::objects::JValueGen::Long(a.into());
             args.push(val_2);
         }
         sig += ")J";
@@ -3448,20 +2050,12 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "F";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "float",
-                "(F)V",
-                vec![a.into()],
-            )?);
+            let val_1 = jni::objects::JValueGen::Float(a.into());
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "F";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "float",
-                "(F)V",
-                vec![a.into()],
-            )?);
+            let val_2 = jni::objects::JValueGen::Float(a.into());
             args.push(val_2);
         }
         sig += ")F";
@@ -3470,198 +2064,6 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
             .call_method(&self.jni_object(), "nextFloat", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
-    }
-    //
-
-    pub fn ints(
-        &self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "I";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        sig += ")Ljava/util/stream/IntStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "ints", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn ints_with_long(
-        &self,
-        arg0: i64,
-        arg1: i32,
-        arg2: std::option::Option<i32>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "J";
-        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "long",
-            "(J)V",
-            vec![arg0.into()],
-        )?);
-        args.push(val_1);
-        sig += "I";
-        let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "int",
-            "(I)V",
-            vec![arg1.into()],
-        )?);
-        args.push(val_2);
-        if let Some(a) = arg2 {
-            sig += "I";
-            let val_3 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_3);
-        }
-        sig += ")Ljava/util/stream/IntStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "ints", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn longs(
-        &self,
-        arg0: std::option::Option<i64>,
-        arg1: std::option::Option<i64>,
-        arg2: std::option::Option<i64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "J";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "J";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "J";
-            let val_3 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "long",
-                "(J)V",
-                vec![a.into()],
-            )?);
-            args.push(val_3);
-        }
-        sig += ")Ljava/util/stream/LongStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "longs", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn doubles(
-        &self,
-        arg0: std::option::Option<f64>,
-        arg1: std::option::Option<f64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "D";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "D";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        sig += ")Ljava/util/stream/DoubleStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "doubles", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn doubles_with_long(
-        &self,
-        arg0: i64,
-        arg1: f64,
-        arg2: std::option::Option<f64>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "J";
-        let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "long",
-            "(J)V",
-            vec![arg0.into()],
-        )?);
-        args.push(val_1);
-        sig += "D";
-        let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-            "double",
-            "(D)V",
-            vec![arg1.into()],
-        )?);
-        args.push(val_2);
-        if let Some(a) = arg2 {
-            sig += "D";
-            let val_3 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_3);
-        }
-        sig += ")Ljava/util/stream/DoubleStream;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "doubles", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
     }
     //
 
@@ -3684,20 +2086,12 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "D";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
+            let val_1 = jni::objects::JValueGen::Double(a.into());
             args.push(val_1);
         }
         if let Some(a) = arg1 {
             sig += "D";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
+            let val_2 = jni::objects::JValueGen::Double(a.into());
             args.push(val_2);
         }
         sig += ")D";
@@ -3727,77 +2121,11 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
-
-    pub fn next_double(
-        &self,
-        arg0: std::option::Option<f64>,
-        arg1: std::option::Option<f64>,
-    ) -> Result<f64, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "D";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "D";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "double",
-                "(D)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        sig += ")D";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "nextDouble", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    //
-
-    pub fn next_int(
-        &self,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<i32>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "I";
-            let val_1 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Object(self.jni_ref().new_object(
-                "int",
-                "(I)V",
-                vec![a.into()],
-            )?);
-            args.push(val_2);
-        }
-        sig += ")I";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "nextInt", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
 }
-impl<'mc> Into<jni::objects::JObject<'mc>> for JavaRandomGeneratorJumpableGenerator<'mc> {
-    fn into(self) -> jni::objects::JObject<'mc> {
-        self.1
+impl<'mc> Into<crate::random::JavaRandomGeneratorStreamableGenerator<'mc>>
+    for JavaRandomGeneratorJumpableGenerator<'mc>
+{
+    fn into(self) -> crate::random::JavaRandomGeneratorStreamableGenerator<'mc> {
+        crate::random::JavaRandomGeneratorStreamableGenerator::from_raw(&self.jni_ref(), self.1).expect("Error converting JavaRandomGeneratorJumpableGenerator into crate::random::JavaRandomGeneratorStreamableGenerator")
     }
 }

@@ -305,18 +305,16 @@ impl<'mc> JNIInstantiatable<'mc> for Pattern<'mc> {
 impl<'mc> Pattern<'mc> {
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::DyeColor<'mc>>>,
+        arg0: impl Into<crate::DyeColor<'mc>>,
         arg1: std::option::Option<impl Into<crate::block::banner::PatternType<'mc>>>,
     ) -> Result<crate::block::banner::Pattern<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/DyeColor;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Lorg/bukkit/DyeColor;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/block/banner/PatternType;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {

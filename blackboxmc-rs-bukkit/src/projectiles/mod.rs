@@ -49,16 +49,14 @@ impl<'mc> ProjectileSource<'mc> {
 
     pub fn launch_projectile(
         &self,
-        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+        arg0: jni::objects::JClass<'mc>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
     ) -> Result<crate::entity::Projectile<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/Class;";
-            let val_1 = jni::objects::JValueGen::Object(a.into());
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/Class;";
+        let val_1 = jni::objects::JValueGen::Object(arg0.into());
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/util/Vector;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {
@@ -136,16 +134,14 @@ impl<'mc> BlockProjectileSource<'mc> {
 
     pub fn launch_projectile(
         &self,
-        arg0: std::option::Option<jni::objects::JClass<'mc>>,
+        arg0: jni::objects::JClass<'mc>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
     ) -> Result<crate::entity::Projectile<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/Class;";
-            let val_1 = jni::objects::JValueGen::Object(a.into());
-            args.push(val_1);
-        }
+        sig += "Ljava/lang/Class;";
+        let val_1 = jni::objects::JValueGen::Object(arg0.into());
+        args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/util/Vector;";
             let val_2 = jni::objects::JValueGen::Object(unsafe {

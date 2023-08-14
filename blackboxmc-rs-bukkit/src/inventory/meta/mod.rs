@@ -338,7 +338,7 @@ impl<'mc> BlockDataMeta<'mc> {
             .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -496,7 +496,7 @@ impl<'mc> BlockDataMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -620,7 +620,7 @@ impl<'mc> BlockDataMeta<'mc> {
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1042,7 +1042,7 @@ impl<'mc> ArmorMeta<'mc> {
             .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -1200,7 +1200,7 @@ impl<'mc> ArmorMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1324,7 +1324,7 @@ impl<'mc> ArmorMeta<'mc> {
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1749,7 +1749,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
             .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -1907,7 +1907,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2031,7 +2031,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2258,20 +2258,6 @@ impl<'mc> JNIInstantiatable<'mc> for SkullMeta<'mc> {
 impl<'mc> SkullMeta<'mc> {
     //
 
-    pub fn owner(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getOwner", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    //
-
     pub fn set_owner(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
@@ -2285,6 +2271,20 @@ impl<'mc> SkullMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
+    }
+    //
+
+    pub fn owner(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getOwner", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     //
 
@@ -2537,7 +2537,7 @@ impl<'mc> SkullMeta<'mc> {
             .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -2695,7 +2695,7 @@ impl<'mc> SkullMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2819,7 +2819,7 @@ impl<'mc> SkullMeta<'mc> {
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3103,7 +3103,7 @@ impl<'mc> CompassMeta<'mc> {
     /// Sets if this compass is tracking a specific lodestone. If true the compass will only work if there is a lodestone at the tracked location.
     pub fn set_lodestone_tracked(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3251,7 +3251,7 @@ impl<'mc> CompassMeta<'mc> {
             .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -3409,7 +3409,7 @@ impl<'mc> CompassMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3533,7 +3533,7 @@ impl<'mc> CompassMeta<'mc> {
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3788,7 +3788,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -3807,7 +3807,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
-        // -2
+        // -1
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4013,7 +4013,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
             .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -4171,7 +4171,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4295,7 +4295,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4547,7 +4547,7 @@ impl<'mc> CrossbowMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -4730,7 +4730,7 @@ impl<'mc> CrossbowMeta<'mc> {
             .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -4888,7 +4888,7 @@ impl<'mc> CrossbowMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5012,7 +5012,7 @@ impl<'mc> CrossbowMeta<'mc> {
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5375,7 +5375,7 @@ impl<'mc> ItemMeta<'mc> {
             .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -5533,7 +5533,7 @@ impl<'mc> ItemMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5658,7 +5658,7 @@ impl<'mc> ItemMeta<'mc> {
     /// Sets the unbreakable tag. An unbreakable item will not lose durability.
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6084,7 +6084,7 @@ impl<'mc> Repairable<'mc> {
             .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -6242,7 +6242,7 @@ impl<'mc> Repairable<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6366,7 +6366,7 @@ impl<'mc> Repairable<'mc> {
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6646,7 +6646,7 @@ impl<'mc> BannerMeta<'mc> {
                 .call_method(&self.jni_object(), "getPatterns", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -6909,7 +6909,7 @@ impl<'mc> BannerMeta<'mc> {
             .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -7067,7 +7067,7 @@ impl<'mc> BannerMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7191,7 +7191,7 @@ impl<'mc> BannerMeta<'mc> {
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7468,7 +7468,7 @@ impl<'mc> BundleMeta<'mc> {
             .call_method(&self.jni_object(), "getItems", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -7632,7 +7632,7 @@ impl<'mc> BundleMeta<'mc> {
             .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -7790,7 +7790,7 @@ impl<'mc> BundleMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7914,7 +7914,7 @@ impl<'mc> BundleMeta<'mc> {
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8338,7 +8338,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
             .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -8496,7 +8496,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8620,7 +8620,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9070,7 +9070,7 @@ impl<'mc> SpawnEggMeta<'mc> {
             .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -9228,7 +9228,7 @@ impl<'mc> SpawnEggMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9352,7 +9352,7 @@ impl<'mc> SpawnEggMeta<'mc> {
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9753,7 +9753,7 @@ impl<'mc> Damageable<'mc> {
             .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -9911,7 +9911,7 @@ impl<'mc> Damageable<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10035,7 +10035,7 @@ impl<'mc> Damageable<'mc> {
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10269,7 +10269,7 @@ impl<'mc> FireworkMeta<'mc> {
                 .call_method(&self.jni_object(), "getEffects", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -10507,7 +10507,7 @@ impl<'mc> FireworkMeta<'mc> {
             .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -10665,7 +10665,7 @@ impl<'mc> FireworkMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10789,7 +10789,7 @@ impl<'mc> FireworkMeta<'mc> {
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11072,7 +11072,7 @@ impl<'mc> PotionMeta<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -11091,7 +11091,7 @@ impl<'mc> PotionMeta<'mc> {
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
-        // -2
+        // -1
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11362,7 +11362,7 @@ impl<'mc> PotionMeta<'mc> {
             .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -11520,7 +11520,7 @@ impl<'mc> PotionMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11644,7 +11644,7 @@ impl<'mc> PotionMeta<'mc> {
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12037,7 +12037,7 @@ impl<'mc> BlockStateMeta<'mc> {
             .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -12195,7 +12195,7 @@ impl<'mc> BlockStateMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12319,7 +12319,7 @@ impl<'mc> BlockStateMeta<'mc> {
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12742,7 +12742,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12950,7 +12950,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
             .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -13108,7 +13108,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13232,7 +13232,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13469,7 +13469,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
                 .call_method(&self.jni_object(), "getRecipes", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -13668,7 +13668,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
             .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -13826,7 +13826,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13950,7 +13950,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14314,7 +14314,7 @@ impl<'mc> MapMeta<'mc> {
     /// Sets if this map is scaling or not.
     pub fn set_scaling(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14509,7 +14509,7 @@ impl<'mc> MapMeta<'mc> {
             .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -14667,7 +14667,7 @@ impl<'mc> MapMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14791,7 +14791,7 @@ impl<'mc> MapMeta<'mc> {
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15060,7 +15060,7 @@ impl<'mc> BookMetaSpigot<'mc> {
             .call_method(&self.jni_object(), "getPages", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -15073,26 +15073,27 @@ impl<'mc> BookMetaSpigot<'mc> {
 
     pub fn set_pages(
         &self,
-        arg0: std::option::Option<
-            Vec<impl Into<blackboxmc_bungee::bungee::api::chat::BaseComponent<'mc>>>,
-        >,
+        arg0: Vec<impl Into<blackboxmc_bungee::bungee::api::chat::BaseComponent<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/util/List;";
-            let raw_val_1 = self
-                .jni_ref()
-                .new_object("java/util/ArrayList", "()V", vec![])?;
-            for v in a {
-                let map_val_0 = jni::objects::JValueGen::Object(unsafe {
-                    jni::objects::JObject::from_raw(v.into().jni_object().clone())
-                });
-                self.jni_ref().call_method(&raw_val_1,"add","(Lnet/md_5/bungee/api/chat/blackboxmc_bungee::bungee::api::chat::BaseComponent)V",vec![jni::objects::JValueGen::from(map_val_0)])?;
-            }
-            let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-            args.push(val_1);
+        sig += "Ljava/util/List;";
+        let raw_val_1 = self
+            .jni_ref()
+            .new_object("java/util/ArrayList", "()V", vec![])?;
+        for v in arg0 {
+            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(v.into().jni_object().clone())
+            });
+            self.jni_ref().call_method(
+                &raw_val_1,
+                "add",
+                "(Lnet/md_5/bungee/api/chat/blackboxmc_bungee::bungee::api::chat::BaseComponent)V",
+                vec![jni::objects::JValueGen::from(map_val_0)],
+            )?;
         }
+        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
+        args.push(val_1);
         sig += ")V";
         let res = self
             .jni_ref()
@@ -15437,7 +15438,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
             .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -15595,7 +15596,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15719,7 +15720,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16129,7 +16130,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
             .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -16287,7 +16288,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16411,7 +16412,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16921,7 +16922,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
             .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -17079,7 +17080,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -17203,7 +17204,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -17539,7 +17540,7 @@ impl<'mc> BookMeta<'mc> {
             .call_method(&self.jni_object(), "getPages", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -17556,7 +17557,7 @@ impl<'mc> BookMeta<'mc> {
 
     pub fn set_pages(
         &self,
-        arg0: std::option::Option<Vec<impl Into<String>>>,
+        arg0: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -17830,7 +17831,7 @@ impl<'mc> BookMeta<'mc> {
             .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -17988,7 +17989,7 @@ impl<'mc> BookMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18112,7 +18113,7 @@ impl<'mc> BookMeta<'mc> {
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18512,7 +18513,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
             .call_method(&self.jni_object(), "getLore", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -18670,7 +18671,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -2
+        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18794,7 +18795,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),

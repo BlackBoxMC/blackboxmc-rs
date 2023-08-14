@@ -482,7 +482,7 @@ impl<'mc> RespawnPhase<'mc> {
         )
     }
 }
-/// Represents a custom <a href="BossBar.html" title="interface in org.bukkit.boss"><code>BossBar</code></a> that has a <a href="../NamespacedKey.html" title="class in org.bukkit"><code>NamespacedKey</code></a>
+/// Represents a custom <a title="interface in org.bukkit.boss" href="BossBar.html"><code>BossBar</code></a> that has a <a title="class in org.bukkit" href="../NamespacedKey.html"><code>NamespacedKey</code></a>
 ///
 /// This is a representation of an abstract class.
 pub struct KeyedBossBar<'mc>(
@@ -574,7 +574,7 @@ impl<'mc> KeyedBossBar<'mc> {
 
     pub fn set_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -633,7 +633,7 @@ impl<'mc> KeyedBossBar<'mc> {
                 .call_method(&self.jni_object(), "getPlayers", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -949,7 +949,7 @@ impl<'mc> BossBar<'mc> {
     /// Set if the boss bar is displayed to attached players.
     pub fn set_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1008,7 +1008,7 @@ impl<'mc> BossBar<'mc> {
                 .call_method(&self.jni_object(), "getPlayers", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -1294,7 +1294,7 @@ impl<'mc> DragonBattle<'mc> {
     /// Generate the end portal.
     pub fn generate_end_portal(&self, arg0: bool) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Z");
-        // -2
+        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),

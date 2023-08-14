@@ -69,8 +69,8 @@ impl<'mc> LootTable<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
-        let mut iter = blackboxmc_java::JavaIterator::from_raw(&self.jni_ref(), col.iterator()?)?;
+        let col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
             new_vec.push(crate::inventory::ItemStack::from_raw(&self.jni_ref(), obj)?);
@@ -936,7 +936,7 @@ impl<'mc> LootTablesLootTables<'mc> {
         )
     }
 }
-/// Represents a <a href="../block/Container.html" title="interface in org.bukkit.block"><code>Container</code></a> or a <a href="../entity/Mob.html" title="interface in org.bukkit.entity"><code>Mob</code></a> that can have a loot table.
+/// Represents a <a title="interface in org.bukkit.block" href="../block/Container.html"><code>Container</code></a> or a <a href="../entity/Mob.html" title="interface in org.bukkit.entity"><code>Mob</code></a> that can have a loot table.
 ///
 /// Container loot will only generate upon opening, and only when the container is <i>first</i> opened.
 ///
@@ -1787,7 +1787,7 @@ impl<'mc> LootTables<'mc> {
         )
     }
 }
-/// Represents additional information a <a title="interface in org.bukkit.loot" href="LootTable.html"><code>LootTable</code></a> can use to modify it's generated loot.
+/// Represents additional information a <a href="LootTable.html" title="interface in org.bukkit.loot"><code>LootTable</code></a> can use to modify it's generated loot.
 pub struct LootContext<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,

@@ -27,11 +27,10 @@ library_resolves = {
 parsed_classes = {}
 excluded_classes = [
     "org.bukkit.plugin.SimplePluginManager",    # uses stuff that isn't being generated due to that java bug and i don't want to write an entire class binding for something that's getting deprecated anyways.
-    "java.lang.JavaThread", "java.lang.JavaIterable", "java.lang.JavaRunnable",
+    "java.lang.JavaThread", "java.lang.JavaIterable", "java.lang.JavaRunnable", "java.lang.JavaCharSequence", "java.util.regex.JavaMatcher", "java.util.JavaObservable", "java.util.JavaFormatter", "java.lang.JavaException", "java.util.JavaResourceBundle", "java.lang.JavaThrowable",
 
     "java.util.concurrent",                     # i want to lessen my workload and binding this is going to be pointless since your only option of multithreading is through BukkitRunnables.
     "java.util.stream",                         # unneeded when java's iterator is bound.
-    "java.util.function",                       # useless unless i can do implement Into for the functions in question and that can't be done safely.
 
     "net.md_5.bungee.chat.TranslationRegistry$TranslationProvider",
     "org.bukkit.plugin.SimpleServicesManager",
@@ -239,7 +238,7 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
                 v = java_type_from_rust(type)
                 match(type["type_name_original"]):
                     case "boolean":
-                        res.append("// "+str(options_start_at-1)+"\nlet "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Bool("+new_arg+".into());")
+                        res.append("// "+str(options_start_at)+"\nlet "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Bool("+new_arg+".into());")
                     case "byte":
                         res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Byte("+new_arg+".into());")
                     case "char":
@@ -444,14 +443,14 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
             gen = return_group["generics"][0]["type_name_resolved"]
             match return_group["type_name_original"]:
                 case "java.util.Collection":
-                    code.append("let mut col = blackboxmc_java::JavaCollection::from_raw(&"+
+                    code.append("let col = blackboxmc_java::JavaCollection::from_raw(&"+
                                                 prefix+",res.l()"+end_line+")"+end_line+";"+
-                                "let mut iter = blackboxmc_java::JavaIterator::from_raw(&"+val_1+", col.iterator()"+end_line+")"+end_line+";"+
+                                "let iter = col.iterator()"+end_line+";"+
                                 "        while iter.has_next()"+end_line+" {"+
                                 "            let obj = iter.next()"+end_line+";")
                     normally = gen+"::from_raw(&"+val_1+",obj,)"+end_line
                 case "java.util.List":
-                    code.append("let mut list = blackboxmc_java::JavaList::from_raw(&"+val_1+", res.l()"+end_line+")"+end_line+";"+
+                    code.append("let list = blackboxmc_java::JavaList::from_raw(&"+val_1+", res.l()"+end_line+")"+end_line+";"+
                                 "let size = list.size()"+end_line+";"+
                                 "for i in 0..=size {"+
                                 "let obj = list.get(i)"+end_line+";")
@@ -546,19 +545,26 @@ def correct_question_mark(argname, ty, method, i, returning, library, is_constru
     gen = re.search("^(.*?)<(.*?)>$", ty)
     if gen is not None:
         name = gen.group(2)
-        if "?" in name:
-            name = name.replace("? extends","").replace("? super","").replace("<?>","").replace(" ","")
-            # we don't support further generics at this point.
-            gen2 = re.search("<(.*?)>", name)
-            if gen2 is not None:
-                return None
-            # if its still there at this point, move on.
+        if "," in name:
+            names = name.split(",")
+        else:
+            names = [name]
+        final = []
+        for name in names:
             if "?" in name:
+                name = name.replace("? extends","").replace("? super","").replace("<?>","").replace(" ","")
+                # we don't support further generics at this point.
+                gen2 = re.search("<(.*?)>", name)
+                if gen2 is not None:
+                    return None
+                # if its still there at this point, move on.
+                if "?" in name:
+                    return None
+            grp = java_type_to_rust(argname, name, method, i, returning, library, is_constructor=False, skip_vec=True)
+            if grp is None:
                 return None
-        grp = java_type_to_rust(argname, name, method, i, returning, library, is_constructor=False, skip_vec=True)
-        if grp is None:
-            return None
-        return grp
+            final.append(grp)
+        return final
     else:
         grp = java_type_to_rust(argname, ty, method, i, returning, library, is_constructor=False, skip_vec=True)
         if grp is None:
@@ -599,7 +605,7 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
     if ty.replace("com.destroystokyo.paper","org.bukkit") in interface_names:
         is_interface = True
 
-    type_name_original = ty
+    type_name_original = ty.replace("Java","")
     match ty.replace("Java",""):
         case "void":
             type_name_resolved = "()"
@@ -636,31 +642,47 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
                 grp = correct_question_mark(argname, parameter_type, method, i, returning, library, is_constructor)
                 if grp is None:
                     return None
-                generics = [grp]
+                generics = grp
+            #case "java.util.HashMap":
+            #    if skip_vec:
+            #        return None
+            #    type_name_resolved = "std::collections::HashMap"
+            #    parts = []
+            #    grp = correct_question_mark(argname, parameter_type, method, i, returning, library, is_constructor)
+            #    if grp is None:
+            #        return None
+            #    parts += grp
+            #    generics = parts
             case _:
+                ty = ty.replace("Javajava","java")
                 crate_name = ".".join(
                     filter(lambda f: f.lower() == f, ty.split(".")))
 
-                cont = True
                 while crate_name not in library_resolves and crate_name != "":
                     parts = crate_name.split(".")
                     parts.pop()
                     crate_name = ".".join(parts)
 
                 if crate_name == "":
+                    print(type_name_original)
                     usage_unsafe = True
                 else:
+                    if library_name_format(library_resolves[crate_name]) == library_name_format(library_resolves["java.util"]):
+                        class_name = "".join(filter(lambda f: f[0].upper() == f[0], ty.split(".")))
+                        what = ty
+                        ty = ty.replace(class_name, "Java"+class_name)
+
+
                     if crate_name == library or library is False:
                         to_replace = "crate"
                     else:
                         to_replace = library_name_format(library_resolves[crate_name])
-                        if to_replace == library_name_format(library_resolves["java.util"]):
-                            class_name = "".join(filter(lambda f: f[0].upper() == f[0], ty.split(".")))
-                            ty = ty.replace(class_name, "Java"+class_name)
 
                     type_name_resolved = ty.replace(
                         crate_name, to_replace).replace(".", "::").replace("-", "_").replace("$", "")
 
+                    if "JavaObject" in type_name_resolved:
+                        type_name_resolved = "jni::objects::JObject"
     if type_alone == "":
         type_alone = type_name_resolved
 
@@ -948,13 +970,16 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             n = 0
             for m in methods__:
                 breaking = False
+                if "modifiers" in m:
+                    if(m["modifiers"]&1 != 1): # skip protected/private methods
+                        continue
+                if len(m["parameters"]) >= 1:
+                    method_first_arg = camel_case_to_snake_case(m["parameters"][0][1])
                 if last_method is None:
-                    options_start_at = len(m["parameters"])
+                    options_start_at = len(m["parameters"])+1
                     m["options_start_at"] = options_start_at
                     last_method = m
                     method_buildup.append(m)
-                    if len(m["parameters"]) >= 1:
-                        method_first_arg = camel_case_to_snake_case(m["parameters"][0][1])
                 else:
                     i = 0
                     if len(last_method["parameters"]) > len(m["parameters"]):
@@ -979,20 +1004,19 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
                 if n == len(methods__) and breaking is not True:
                     method_buildup.append(m)
                     breaking = True
-
-                if breaking:
-                    identifier = method_first_arg.split(".")[len(method_first_arg.split("."))-1].lower()
-                    method_map[identifier] = method_buildup.copy()
-                    method_buildup = []
-                    last_method = None
-                    method_first_arg = ""
-                    options_start_at = 0
+            else:
+                identifier = method_first_arg.split(".")[len(method_first_arg.split("."))-1].lower()
+                method_map[identifier] = method_buildup.copy()
+                method_buildup = []
+                last_method = None
+                method_first_arg = ""
+                options_start_at = 0
 
 
             for group_name in method_map:
                 methods = method_map[group_name]
                 if group_name != "":
-                    if len(method_map) > 1:
+                    if len(method_map) >= 2:
                         new_name = name+"_with_"+group_name.replace("$","").replace("[]","s")
                     else:
                         new_name = name

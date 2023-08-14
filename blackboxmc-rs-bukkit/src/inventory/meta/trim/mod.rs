@@ -203,7 +203,7 @@ impl<'mc> std::string::ToString for ArmorTrim<'mc> {
     }
 }
 
-/// Represents a material that may be used in an <a href="ArmorTrim.html" title="class in org.bukkit.inventory.meta.trim"><code>ArmorTrim</code></a>.
+/// Represents a material that may be used in an <a title="class in org.bukkit.inventory.meta.trim" href="ArmorTrim.html"><code>ArmorTrim</code></a>.
 ///
 /// This is a representation of an abstract class.
 pub struct TrimMaterial<'mc>(
@@ -263,7 +263,7 @@ impl<'mc> Into<crate::Keyed<'mc>> for TrimMaterial<'mc> {
             .expect("Error converting TrimMaterial into crate::Keyed")
     }
 }
-/// Represents a pattern that may be used in an <a title="class in org.bukkit.inventory.meta.trim" href="ArmorTrim.html"><code>ArmorTrim</code></a>.
+/// Represents a pattern that may be used in an <a href="ArmorTrim.html" title="class in org.bukkit.inventory.meta.trim"><code>ArmorTrim</code></a>.
 ///
 /// This is a representation of an abstract class.
 pub struct TrimPattern<'mc>(

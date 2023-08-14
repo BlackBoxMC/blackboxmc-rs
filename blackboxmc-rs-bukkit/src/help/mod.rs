@@ -57,18 +57,16 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
     pub fn compare(
         &self,
         arg0: jni::objects::JObject<'mc>,
-        arg1: std::option::Option<jni::objects::JObject<'mc>>,
+        arg1: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "Ljava/lang/Object;";
         let val_1 = jni::objects::JValueGen::Object(arg0);
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/Object;";
-            let val_2 = jni::objects::JValueGen::Object(a);
-            args.push(val_2);
-        }
+        sig += "Ljava/lang/Object;";
+        let val_2 = jni::objects::JValueGen::Object(arg1);
+        args.push(val_2);
         sig += ")I";
         let res = self
             .jni_ref()
@@ -176,6 +174,36 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
     }
     //
 
+    pub fn then_comparing(
+        &self,
+        arg0: impl Into<blackboxmc_java::function::JavaFunction<'mc>>,
+        arg1: std::option::Option<impl Into<blackboxmc_java::JavaComparator<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaComparator<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/function/Function;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Ljava/util/Comparator;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Ljava/util/Comparator;";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "thenComparing", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaComparator::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn reversed(
         &self,
     ) -> Result<blackboxmc_java::JavaComparator<'mc>, Box<dyn std::error::Error>> {
@@ -183,6 +211,69 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "reversed", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaComparator::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
+    pub fn then_comparing_int(
+        &self,
+        arg0: impl Into<blackboxmc_java::function::JavaToIntFunction<'mc>>,
+    ) -> Result<blackboxmc_java::JavaComparator<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/function/ToIntFunction;)Ljava/util/Comparator;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "thenComparingInt",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaComparator::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
+    pub fn then_comparing_long(
+        &self,
+        arg0: impl Into<blackboxmc_java::function::JavaToLongFunction<'mc>>,
+    ) -> Result<blackboxmc_java::JavaComparator<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/function/ToLongFunction;)Ljava/util/Comparator;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "thenComparingLong",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaComparator::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
+    pub fn then_comparing_double(
+        &self,
+        arg0: impl Into<blackboxmc_java::function::JavaToDoubleFunction<'mc>>,
+    ) -> Result<blackboxmc_java::JavaComparator<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/function/ToDoubleFunction;)Ljava/util/Comparator;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "thenComparingDouble",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaComparator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -276,18 +367,16 @@ impl<'mc> HelpTopicComparator<'mc> {
     pub fn compare(
         &self,
         arg0: jni::objects::JObject<'mc>,
-        arg1: std::option::Option<jni::objects::JObject<'mc>>,
+        arg1: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "Ljava/lang/Object;";
         let val_1 = jni::objects::JValueGen::Object(arg0);
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/Object;";
-            let val_2 = jni::objects::JValueGen::Object(a);
-            args.push(val_2);
-        }
+        sig += "Ljava/lang/Object;";
+        let val_2 = jni::objects::JValueGen::Object(arg1);
+        args.push(val_2);
         sig += ")I";
         let res = self
             .jni_ref()
@@ -395,6 +484,36 @@ impl<'mc> HelpTopicComparator<'mc> {
     }
     //
 
+    pub fn then_comparing(
+        &self,
+        arg0: impl Into<blackboxmc_java::function::JavaFunction<'mc>>,
+        arg1: std::option::Option<impl Into<blackboxmc_java::JavaComparator<'mc>>>,
+    ) -> Result<blackboxmc_java::JavaComparator<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/function/Function;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Ljava/util/Comparator;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Ljava/util/Comparator;";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "thenComparing", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaComparator::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn reversed(
         &self,
     ) -> Result<blackboxmc_java::JavaComparator<'mc>, Box<dyn std::error::Error>> {
@@ -402,6 +521,69 @@ impl<'mc> HelpTopicComparator<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "reversed", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaComparator::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
+    pub fn then_comparing_int(
+        &self,
+        arg0: impl Into<blackboxmc_java::function::JavaToIntFunction<'mc>>,
+    ) -> Result<blackboxmc_java::JavaComparator<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/function/ToIntFunction;)Ljava/util/Comparator;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "thenComparingInt",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaComparator::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
+    pub fn then_comparing_long(
+        &self,
+        arg0: impl Into<blackboxmc_java::function::JavaToLongFunction<'mc>>,
+    ) -> Result<blackboxmc_java::JavaComparator<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/function/ToLongFunction;)Ljava/util/Comparator;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "thenComparingLong",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::JavaComparator::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
+    pub fn then_comparing_double(
+        &self,
+        arg0: impl Into<blackboxmc_java::function::JavaToDoubleFunction<'mc>>,
+    ) -> Result<blackboxmc_java::JavaComparator<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/function/ToDoubleFunction;)Ljava/util/Comparator;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "thenComparingDouble",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::JavaComparator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -859,8 +1041,8 @@ impl<'mc> HelpMap<'mc> {
                 .call_method(&self.jni_object(), "getHelpTopics", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
-        let mut iter = blackboxmc_java::JavaIterator::from_raw(&self.jni_ref(), col.iterator()?)?;
+        let col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
             new_vec.push(crate::help::HelpTopic::from_raw(&self.jni_ref(), obj)?);
@@ -922,7 +1104,7 @@ impl<'mc> HelpMap<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let mut list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
