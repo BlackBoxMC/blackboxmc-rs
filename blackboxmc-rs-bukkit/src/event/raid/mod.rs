@@ -141,7 +141,8 @@ impl<'mc> RaidEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -194,6 +195,16 @@ impl<'mc> RaidEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for RaidEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling RaidEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::world::WorldEvent<'mc>> for RaidEvent<'mc> {
     fn into(self) -> crate::event::world::WorldEvent<'mc> {
         crate::event::world::WorldEvent::from_raw(&self.jni_ref(), self.1)
@@ -435,7 +446,8 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -488,6 +500,16 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for RaidSpawnWaveEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling RaidSpawnWaveEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::raid::RaidEvent<'mc>> for RaidSpawnWaveEvent<'mc> {
     fn into(self) -> crate::event::raid::RaidEvent<'mc> {
         crate::event::raid::RaidEvent::from_raw(&self.jni_ref(), self.1)
@@ -718,7 +740,8 @@ impl<'mc> RaidTriggerEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -771,6 +794,16 @@ impl<'mc> RaidTriggerEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for RaidTriggerEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling RaidTriggerEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for RaidTriggerEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -997,7 +1030,8 @@ impl<'mc> RaidFinishEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1050,6 +1084,16 @@ impl<'mc> RaidFinishEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for RaidFinishEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling RaidFinishEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::raid::RaidEvent<'mc>> for RaidFinishEvent<'mc> {
     fn into(self) -> crate::event::raid::RaidEvent<'mc> {
         crate::event::raid::RaidEvent::from_raw(&self.jni_ref(), self.1)
@@ -1378,7 +1422,8 @@ impl<'mc> RaidStopEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1431,6 +1476,16 @@ impl<'mc> RaidStopEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for RaidStopEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling RaidStopEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::raid::RaidEvent<'mc>> for RaidStopEvent<'mc> {
     fn into(self) -> crate::event::raid::RaidEvent<'mc> {
         crate::event::raid::RaidEvent::from_raw(&self.jni_ref(), self.1)

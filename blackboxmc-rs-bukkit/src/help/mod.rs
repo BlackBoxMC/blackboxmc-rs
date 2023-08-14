@@ -114,7 +114,8 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -181,6 +182,19 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
         })
     }
 }
+
+impl<'mc> std::string::ToString for HelpTopicComparatorTopicNameComparator<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!(
+                "Error calling HelpTopicComparatorTopicNameComparator.toString: {}",
+                err
+            ),
+        }
+    }
+}
+
 impl<'mc> Into<blackboxmc_java::JavaComparator<'mc>>
     for HelpTopicComparatorTopicNameComparator<'mc>
 {
@@ -314,7 +328,8 @@ impl<'mc> HelpTopicComparator<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -381,6 +396,16 @@ impl<'mc> HelpTopicComparator<'mc> {
         })
     }
 }
+
+impl<'mc> std::string::ToString for HelpTopicComparator<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling HelpTopicComparator.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<blackboxmc_java::JavaComparator<'mc>> for HelpTopicComparator<'mc> {
     fn into(self) -> blackboxmc_java::JavaComparator<'mc> {
         blackboxmc_java::JavaComparator::from_raw(&self.jni_ref(), self.1)
@@ -673,7 +698,8 @@ impl<'mc> HelpTopic<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -726,6 +752,16 @@ impl<'mc> HelpTopic<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for HelpTopic<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling HelpTopic.toString: {}", err),
+        }
+    }
+}
+
 /// The HelpMap tracks all help topics registered in a Bukkit server. When the server starts up or is reloaded, help is processed and topics are added in the following order:
 /// <ol>
 /// <li>General topics are loaded from the help.yml</li>
@@ -1082,7 +1118,8 @@ impl<'mc> IndexHelpTopic<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1135,6 +1172,16 @@ impl<'mc> IndexHelpTopic<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for IndexHelpTopic<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling IndexHelpTopic.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::help::HelpTopic<'mc>> for IndexHelpTopic<'mc> {
     fn into(self) -> crate::help::HelpTopic<'mc> {
         crate::help::HelpTopic::from_raw(&self.jni_ref(), self.1)
@@ -1355,7 +1402,8 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1408,6 +1456,16 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for GenericCommandHelpTopic<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling GenericCommandHelpTopic.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::help::HelpTopic<'mc>> for GenericCommandHelpTopic<'mc> {
     fn into(self) -> crate::help::HelpTopic<'mc> {
         crate::help::HelpTopic::from_raw(&self.jni_ref(), self.1)

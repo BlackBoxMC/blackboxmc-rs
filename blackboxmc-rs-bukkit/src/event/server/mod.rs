@@ -232,7 +232,8 @@ impl<'mc> RemoteServerCommandEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -285,6 +286,16 @@ impl<'mc> RemoteServerCommandEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for RemoteServerCommandEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling RemoteServerCommandEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::server::ServerCommandEvent<'mc>> for RemoteServerCommandEvent<'mc> {
     fn into(self) -> crate::event::server::ServerCommandEvent<'mc> {
         crate::event::server::ServerCommandEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting RemoteServerCommandEvent into crate::event::server::ServerCommandEvent")
@@ -451,7 +462,8 @@ impl<'mc> PluginEnableEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -504,6 +516,16 @@ impl<'mc> PluginEnableEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PluginEnableEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PluginEnableEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::server::PluginEvent<'mc>> for PluginEnableEvent<'mc> {
     fn into(self) -> crate::event::server::PluginEvent<'mc> {
         crate::event::server::PluginEvent::from_raw(&self.jni_ref(), self.1)
@@ -755,7 +777,8 @@ impl<'mc> ServerCommandEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -808,6 +831,16 @@ impl<'mc> ServerCommandEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ServerCommandEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ServerCommandEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for ServerCommandEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -986,7 +1019,8 @@ impl<'mc> ServiceUnregisterEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1039,6 +1073,16 @@ impl<'mc> ServiceUnregisterEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ServiceUnregisterEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ServiceUnregisterEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::server::ServiceEvent<'mc>> for ServiceUnregisterEvent<'mc> {
     fn into(self) -> crate::event::server::ServiceEvent<'mc> {
         crate::event::server::ServiceEvent::from_raw(&self.jni_ref(), self.1).expect(
@@ -1286,7 +1330,8 @@ impl<'mc> BroadcastMessageEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1339,6 +1384,16 @@ impl<'mc> BroadcastMessageEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BroadcastMessageEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BroadcastMessageEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for BroadcastMessageEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -1486,7 +1541,8 @@ impl<'mc> ServerEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1539,6 +1595,16 @@ impl<'mc> ServerEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ServerEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ServerEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Event<'mc>> for ServerEvent<'mc> {
     fn into(self) -> crate::event::Event<'mc> {
         crate::event::Event::from_raw(&self.jni_ref(), self.1)
@@ -1827,7 +1893,8 @@ impl<'mc> TabCompleteEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1880,6 +1947,16 @@ impl<'mc> TabCompleteEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for TabCompleteEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling TabCompleteEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for TabCompleteEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -2054,7 +2131,8 @@ impl<'mc> PluginDisableEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2107,6 +2185,16 @@ impl<'mc> PluginDisableEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PluginDisableEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PluginDisableEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::server::PluginEvent<'mc>> for PluginDisableEvent<'mc> {
     fn into(self) -> crate::event::server::PluginEvent<'mc> {
         crate::event::server::PluginEvent::from_raw(&self.jni_ref(), self.1)
@@ -2275,7 +2363,8 @@ impl<'mc> MapInitializeEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2328,6 +2417,16 @@ impl<'mc> MapInitializeEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for MapInitializeEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling MapInitializeEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::server::ServerEvent<'mc>> for MapInitializeEvent<'mc> {
     fn into(self) -> crate::event::server::ServerEvent<'mc> {
         crate::event::server::ServerEvent::from_raw(&self.jni_ref(), self.1)
@@ -2482,7 +2581,8 @@ impl<'mc> ServiceEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2535,6 +2635,16 @@ impl<'mc> ServiceEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ServiceEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ServiceEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::server::ServerEvent<'mc>> for ServiceEvent<'mc> {
     fn into(self) -> crate::event::server::ServerEvent<'mc> {
         crate::event::server::ServerEvent::from_raw(&self.jni_ref(), self.1)
@@ -2817,7 +2927,8 @@ impl<'mc> ServerLoadEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2870,6 +2981,16 @@ impl<'mc> ServerLoadEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ServerLoadEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ServerLoadEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::server::ServerEvent<'mc>> for ServerLoadEvent<'mc> {
     fn into(self) -> crate::event::server::ServerEvent<'mc> {
         crate::event::server::ServerEvent::from_raw(&self.jni_ref(), self.1)
@@ -3041,7 +3162,8 @@ impl<'mc> ServiceRegisterEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3094,6 +3216,16 @@ impl<'mc> ServiceRegisterEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ServiceRegisterEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ServiceRegisterEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::server::ServiceEvent<'mc>> for ServiceRegisterEvent<'mc> {
     fn into(self) -> crate::event::server::ServiceEvent<'mc> {
         crate::event::server::ServiceEvent::from_raw(&self.jni_ref(), self.1)
@@ -3339,7 +3471,8 @@ impl<'mc> PluginEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3392,6 +3525,16 @@ impl<'mc> PluginEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PluginEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PluginEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::server::ServerEvent<'mc>> for PluginEvent<'mc> {
     fn into(self) -> crate::event::server::ServerEvent<'mc> {
         crate::event::server::ServerEvent::from_raw(&self.jni_ref(), self.1)
@@ -3701,7 +3844,8 @@ impl<'mc> ServerListPingEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3754,6 +3898,16 @@ impl<'mc> ServerListPingEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ServerListPingEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ServerListPingEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::server::ServerEvent<'mc>> for ServerListPingEvent<'mc> {
     fn into(self) -> crate::event::server::ServerEvent<'mc> {
         crate::event::server::ServerEvent::from_raw(&self.jni_ref(), self.1)

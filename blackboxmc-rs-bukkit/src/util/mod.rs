@@ -317,7 +317,8 @@ impl<'mc> NumberConversions<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -370,6 +371,16 @@ impl<'mc> NumberConversions<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for NumberConversions<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling NumberConversions.toString: {}", err),
+        }
+    }
+}
+
 /// This class performs ray tracing and iterates along blocks on a line
 pub struct BlockIterator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -550,7 +561,8 @@ impl<'mc> BlockIterator<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -603,6 +615,16 @@ impl<'mc> BlockIterator<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockIterator<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockIterator.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<blackboxmc_java::JavaIterator<'mc>> for BlockIterator<'mc> {
     fn into(self) -> blackboxmc_java::JavaIterator<'mc> {
         blackboxmc_java::JavaIterator::from_raw(&self.jni_ref(), self.1)
@@ -742,7 +764,8 @@ impl<'mc> Transformation<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -821,6 +844,16 @@ impl<'mc> Transformation<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Transformation<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Transformation.toString: {}", err),
+        }
+    }
+}
+
 /// The hit result of a ray trace.
 /// <p>Only the hit position is guaranteed to always be available. The availability of the other attributes depends on what got hit and on the context in which the ray trace was performed.</p>
 pub struct RayTraceResult<'mc>(
@@ -971,7 +1004,8 @@ impl<'mc> RayTraceResult<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1050,6 +1084,16 @@ impl<'mc> RayTraceResult<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for RayTraceResult<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling RayTraceResult.toString: {}", err),
+        }
+    }
+}
+
 /// This is a cached version of a server-icon. It's internal representation and implementation is undefined.
 ///
 /// This is a representation of an abstract class.
@@ -1213,7 +1257,8 @@ impl<'mc> ChatPaginatorChatPage<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1266,6 +1311,16 @@ impl<'mc> ChatPaginatorChatPage<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ChatPaginatorChatPage<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ChatPaginatorChatPage.toString: {}", err),
+        }
+    }
+}
+
 /// A shape made out of voxels. For example, used to represent the detailed collision shape of blocks.
 ///
 /// This is a representation of an abstract class.
@@ -1955,7 +2010,8 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2349,6 +2405,16 @@ impl<'mc> BoundingBox<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BoundingBox<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BoundingBox.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'mc>>
     for BoundingBox<'mc>
 {
@@ -3376,7 +3442,8 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3528,6 +3595,16 @@ impl<'mc> BlockVector<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockVector<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockVector.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::util::Vector<'mc>> for BlockVector<'mc> {
     fn into(self) -> crate::util::Vector<'mc> {
         crate::util::Vector::from_raw(&self.jni_ref(), self.1)
@@ -3792,7 +3869,8 @@ impl<'mc> EulerAngle<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3833,6 +3911,15 @@ impl<'mc> EulerAngle<'mc> {
             .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+}
+
+impl<'mc> std::string::ToString for EulerAngle<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling EulerAngle.toString: {}", err),
+        }
     }
 }
 
@@ -3951,7 +4038,8 @@ impl<'mc> StringUtil<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4004,6 +4092,16 @@ impl<'mc> StringUtil<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for StringUtil<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling StringUtil.toString: {}", err),
+        }
+    }
+}
+
 /// The ChatPaginator takes a raw string of arbitrary length and breaks it down into an array of strings appropriate for displaying on the Minecraft player console.
 pub struct ChatPaginator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4133,7 +4231,8 @@ impl<'mc> ChatPaginator<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4186,6 +4285,16 @@ impl<'mc> ChatPaginator<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ChatPaginator<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ChatPaginator.toString: {}", err),
+        }
+    }
+}
+
 /// Represents a mutable vector. Because the components of Vectors are mutable, storing Vectors long term may be dangerous if passing code modifies the Vector later. If you want to keep around a Vector, it may be wise to call <code>clone()</code> in order to get a copy.
 pub struct Vector<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5198,7 +5307,8 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5374,6 +5484,16 @@ impl<'mc> Vector<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Vector<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Vector.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'mc>>
     for Vector<'mc>
 {
@@ -5493,7 +5613,8 @@ impl<'mc> FileUtil<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5546,5 +5667,15 @@ impl<'mc> FileUtil<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for FileUtil<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling FileUtil.toString: {}", err),
+        }
+    }
+}
+
 pub mod noise;
 pub mod permissions;

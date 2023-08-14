@@ -731,7 +731,8 @@ impl<'mc> StonecuttingRecipe<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -784,6 +785,16 @@ impl<'mc> StonecuttingRecipe<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for StonecuttingRecipe<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling StonecuttingRecipe.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::inventory::Recipe<'mc>> for StonecuttingRecipe<'mc> {
     fn into(self) -> crate::inventory::Recipe<'mc> {
         crate::inventory::Recipe::from_raw(&self.jni_ref(), self.1)
@@ -1189,7 +1200,8 @@ impl<'mc> FurnaceRecipe<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1242,6 +1254,16 @@ impl<'mc> FurnaceRecipe<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for FurnaceRecipe<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling FurnaceRecipe.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::inventory::CookingRecipe<'mc>> for FurnaceRecipe<'mc> {
     fn into(self) -> crate::inventory::CookingRecipe<'mc> {
         crate::inventory::CookingRecipe::from_raw(&self.jni_ref(), self.1)
@@ -3013,7 +3035,8 @@ impl<'mc> SmithingRecipe<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3066,6 +3089,16 @@ impl<'mc> SmithingRecipe<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for SmithingRecipe<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling SmithingRecipe.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::inventory::Recipe<'mc>> for SmithingRecipe<'mc> {
     fn into(self) -> crate::inventory::Recipe<'mc> {
         crate::inventory::Recipe::from_raw(&self.jni_ref(), self.1)
@@ -3261,7 +3294,8 @@ impl<'mc> CraftingRecipe<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3314,6 +3348,16 @@ impl<'mc> CraftingRecipe<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for CraftingRecipe<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling CraftingRecipe.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::inventory::Recipe<'mc>> for CraftingRecipe<'mc> {
     fn into(self) -> crate::inventory::Recipe<'mc> {
         crate::inventory::Recipe::from_raw(&self.jni_ref(), self.1)
@@ -3957,7 +4001,8 @@ impl<'mc> InventoryView<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4010,6 +4055,16 @@ impl<'mc> InventoryView<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for InventoryView<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling InventoryView.toString: {}", err),
+        }
+    }
+}
+
 /// Represents a campfire recipe.
 pub struct CampfireRecipe<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4353,7 +4408,8 @@ impl<'mc> CampfireRecipe<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4406,6 +4462,16 @@ impl<'mc> CampfireRecipe<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for CampfireRecipe<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling CampfireRecipe.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::inventory::CookingRecipe<'mc>> for CampfireRecipe<'mc> {
     fn into(self) -> crate::inventory::CookingRecipe<'mc> {
         crate::inventory::CookingRecipe::from_raw(&self.jni_ref(), self.1)
@@ -4893,7 +4959,8 @@ impl<'mc> ItemStack<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5013,6 +5080,16 @@ impl<'mc> ItemStack<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ItemStack<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ItemStack.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'mc>>
     for ItemStack<'mc>
 {
@@ -5167,7 +5244,8 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5284,6 +5362,16 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for RecipeChoiceMaterialChoice<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling RecipeChoiceMaterialChoice.toString: {}", err),
+        }
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum ItemFlagEnum {
     HideEnchants,
@@ -6075,7 +6163,8 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -6188,6 +6277,16 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for RecipeChoiceExactChoice<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling RecipeChoiceExactChoice.toString: {}", err),
+        }
+    }
+}
+
 /// Interface to the inventory of a Lectern.
 ///
 /// This is a representation of an abstract class.
@@ -7865,7 +7964,8 @@ impl<'mc> ShapedRecipe<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -7918,6 +8018,16 @@ impl<'mc> ShapedRecipe<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ShapedRecipe<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ShapedRecipe.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::inventory::CraftingRecipe<'mc>> for ShapedRecipe<'mc> {
     fn into(self) -> crate::inventory::CraftingRecipe<'mc> {
         crate::inventory::CraftingRecipe::from_raw(&self.jni_ref(), self.1)
@@ -8114,7 +8224,8 @@ impl<'mc> SmithingTransformRecipe<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -8167,6 +8278,16 @@ impl<'mc> SmithingTransformRecipe<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for SmithingTransformRecipe<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling SmithingTransformRecipe.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::inventory::SmithingRecipe<'mc>> for SmithingTransformRecipe<'mc> {
     fn into(self) -> crate::inventory::SmithingRecipe<'mc> {
         crate::inventory::SmithingRecipe::from_raw(&self.jni_ref(), self.1).expect(
@@ -10250,7 +10371,8 @@ impl<'mc> ShapelessRecipe<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -10303,6 +10425,16 @@ impl<'mc> ShapelessRecipe<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ShapelessRecipe<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ShapelessRecipe.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::inventory::CraftingRecipe<'mc>> for ShapelessRecipe<'mc> {
     fn into(self) -> crate::inventory::CraftingRecipe<'mc> {
         crate::inventory::CraftingRecipe::from_raw(&self.jni_ref(), self.1)
@@ -11974,7 +12106,8 @@ impl<'mc> BlastingRecipe<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -12027,6 +12160,16 @@ impl<'mc> BlastingRecipe<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlastingRecipe<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlastingRecipe.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::inventory::CookingRecipe<'mc>> for BlastingRecipe<'mc> {
     fn into(self) -> crate::inventory::CookingRecipe<'mc> {
         crate::inventory::CookingRecipe::from_raw(&self.jni_ref(), self.1)
@@ -12374,7 +12517,8 @@ impl<'mc> SmokingRecipe<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -12427,6 +12571,16 @@ impl<'mc> SmokingRecipe<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for SmokingRecipe<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling SmokingRecipe.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::inventory::CookingRecipe<'mc>> for SmokingRecipe<'mc> {
     fn into(self) -> crate::inventory::CookingRecipe<'mc> {
         crate::inventory::CookingRecipe::from_raw(&self.jni_ref(), self.1)
@@ -13400,7 +13554,8 @@ impl<'mc> MerchantRecipe<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -13453,6 +13608,16 @@ impl<'mc> MerchantRecipe<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for MerchantRecipe<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling MerchantRecipe.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::inventory::Recipe<'mc>> for MerchantRecipe<'mc> {
     fn into(self) -> crate::inventory::Recipe<'mc> {
         crate::inventory::Recipe::from_raw(&self.jni_ref(), self.1)
@@ -15234,7 +15399,8 @@ impl<'mc> CookingRecipe<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -15287,6 +15453,16 @@ impl<'mc> CookingRecipe<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for CookingRecipe<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling CookingRecipe.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::inventory::Recipe<'mc>> for CookingRecipe<'mc> {
     fn into(self) -> crate::inventory::Recipe<'mc> {
         crate::inventory::Recipe::from_raw(&self.jni_ref(), self.1)
@@ -18734,7 +18910,8 @@ impl<'mc> SmithingTrimRecipe<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -18787,6 +18964,16 @@ impl<'mc> SmithingTrimRecipe<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for SmithingTrimRecipe<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling SmithingTrimRecipe.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::inventory::ComplexRecipe<'mc>> for SmithingTrimRecipe<'mc> {
     fn into(self) -> crate::inventory::ComplexRecipe<'mc> {
         crate::inventory::ComplexRecipe::from_raw(&self.jni_ref(), self.1)

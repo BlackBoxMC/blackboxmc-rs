@@ -353,7 +353,8 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -406,6 +407,19 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ItemTagTypePrimitiveTagType<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!(
+                "Error calling ItemTagTypePrimitiveTagType.toString: {}",
+                err
+            ),
+        }
+    }
+}
+
 /// This interface represents a map like object, capable of storing custom tags in it.
 ///
 /// This is a representation of an abstract class.

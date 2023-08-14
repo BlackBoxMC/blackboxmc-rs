@@ -142,7 +142,8 @@ impl<'mc> ArmorTrim<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -185,6 +186,16 @@ impl<'mc> ArmorTrim<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ArmorTrim<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ArmorTrim.toString: {}", err),
+        }
+    }
+}
+
 /// Represents a material that may be used in an <a href="ArmorTrim.html" title="class in org.bukkit.inventory.meta.trim"><code>ArmorTrim</code></a>.
 ///
 /// This is a representation of an abstract class.

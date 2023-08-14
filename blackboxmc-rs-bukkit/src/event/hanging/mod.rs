@@ -340,7 +340,8 @@ impl<'mc> HangingBreakEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -393,6 +394,16 @@ impl<'mc> HangingBreakEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for HangingBreakEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling HangingBreakEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for HangingBreakEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -652,7 +663,8 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -705,6 +717,16 @@ impl<'mc> HangingBreakByEntityEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for HangingBreakByEntityEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling HangingBreakByEntityEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::hanging::HangingBreakEvent<'mc>> for HangingBreakByEntityEvent<'mc> {
     fn into(self) -> crate::event::hanging::HangingBreakEvent<'mc> {
         crate::event::hanging::HangingBreakEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting HangingBreakByEntityEvent into crate::event::hanging::HangingBreakEvent")
@@ -1130,7 +1152,8 @@ impl<'mc> HangingPlaceEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1183,6 +1206,16 @@ impl<'mc> HangingPlaceEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for HangingPlaceEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling HangingPlaceEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for HangingPlaceEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -1323,7 +1356,8 @@ impl<'mc> HangingEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1376,6 +1410,16 @@ impl<'mc> HangingEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for HangingEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling HangingEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Event<'mc>> for HangingEvent<'mc> {
     fn into(self) -> crate::event::Event<'mc> {
         crate::event::Event::from_raw(&self.jni_ref(), self.1)

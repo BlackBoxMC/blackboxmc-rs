@@ -432,7 +432,8 @@ impl<'mc> Pattern<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -475,6 +476,16 @@ impl<'mc> Pattern<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Pattern<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Pattern.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'mc>>
     for Pattern<'mc>
 {

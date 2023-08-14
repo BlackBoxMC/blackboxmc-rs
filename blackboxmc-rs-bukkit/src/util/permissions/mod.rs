@@ -180,7 +180,8 @@ impl<'mc> DefaultPermissions<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -231,6 +232,15 @@ impl<'mc> DefaultPermissions<'mc> {
             .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+}
+
+impl<'mc> std::string::ToString for DefaultPermissions<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling DefaultPermissions.toString: {}", err),
+        }
     }
 }
 
@@ -338,7 +348,8 @@ impl<'mc> CommandPermissions<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -389,6 +400,15 @@ impl<'mc> CommandPermissions<'mc> {
             .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+}
+
+impl<'mc> std::string::ToString for CommandPermissions<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling CommandPermissions.toString: {}", err),
+        }
     }
 }
 
@@ -496,7 +516,8 @@ impl<'mc> BroadcastPermissions<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -547,5 +568,14 @@ impl<'mc> BroadcastPermissions<'mc> {
             .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+}
+
+impl<'mc> std::string::ToString for BroadcastPermissions<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BroadcastPermissions.toString: {}", err),
+        }
     }
 }

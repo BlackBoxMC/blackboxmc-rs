@@ -378,7 +378,8 @@ impl<'mc> EnchantItemEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -431,6 +432,16 @@ impl<'mc> EnchantItemEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for EnchantItemEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling EnchantItemEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for EnchantItemEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -746,7 +757,8 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -799,6 +811,16 @@ impl<'mc> PrepareItemEnchantEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PrepareItemEnchantEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PrepareItemEnchantEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for PrepareItemEnchantEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)

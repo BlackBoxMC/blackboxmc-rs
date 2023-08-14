@@ -348,7 +348,8 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -391,6 +392,19 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PluginMessageListenerRegistration<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!(
+                "Error calling PluginMessageListenerRegistration.toString: {}",
+                err
+            ),
+        }
+    }
+}
+
 /// A class responsible for managing the registrations of plugin channels and their listeners. Channel names must contain a colon separator and consist of only [a-z0-9/._-] - i.e. they MUST be valid <a href="../../NamespacedKey.html" title="class in org.bukkit"><code>NamespacedKey</code></a>. The "BungeeCord" channel is an exception and may only take this form.
 ///
 /// This is a representation of an abstract class.
@@ -1303,7 +1317,8 @@ impl<'mc> StandardMessenger<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1356,6 +1371,16 @@ impl<'mc> StandardMessenger<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for StandardMessenger<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling StandardMessenger.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::plugin::messaging::Messenger<'mc>> for StandardMessenger<'mc> {
     fn into(self) -> crate::plugin::messaging::Messenger<'mc> {
         crate::plugin::messaging::Messenger::from_raw(&self.jni_ref(), self.1)

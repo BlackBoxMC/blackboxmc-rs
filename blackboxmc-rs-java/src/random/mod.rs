@@ -217,6 +217,27 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     }
     //
 
+    pub fn of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)Ljava/util/random/RandomGeneratorFactory;");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        let cls = jni.find_class("java/util/random/RandomGeneratorFactory");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "of",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
     pub fn create(
         &mut self,
         arg0: std::option::Option<i64>,
@@ -280,7 +301,8 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -331,6 +353,15 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
             .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+}
+
+impl<'mc> std::string::ToString for JavaRandomGeneratorFactory<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaRandomGeneratorFactory.toString: {}", err),
+        }
     }
 }
 
@@ -445,6 +476,29 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "split", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from(
+            "(Ljava/lang/String;)Ljava/util/random/RandomGenerator$SplittableGenerator;",
+        );
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        let cls = jni.find_class("java/util/random/RandomGenerator$SplittableGenerator");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "of",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error(res)?;
         Ok(res.l()?)
     }
     //
@@ -820,6 +874,29 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "rngs", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from(
+            "(Ljava/lang/String;)Ljava/util/random/RandomGenerator$StreamableGenerator;",
+        );
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        let cls = jni.find_class("java/util/random/RandomGenerator$StreamableGenerator");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "of",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error(res)?;
         Ok(res.l()?)
     }
     //
@@ -1222,6 +1299,29 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             self.jni_ref()
                 .call_method(&self.jni_object(), "copyAndLeap", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from(
+            "(Ljava/lang/String;)Ljava/util/random/RandomGenerator$LeapableGenerator;",
+        );
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        let cls = jni.find_class("java/util/random/RandomGenerator$LeapableGenerator");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "of",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error(res)?;
         Ok(res.l()?)
     }
     //
@@ -1983,6 +2083,27 @@ impl<'mc> JavaRandomGenerator<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.l()?)
     }
+    //
+
+    pub fn of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)Ljava/util/random/RandomGenerator;");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        let cls = jni.find_class("java/util/random/RandomGenerator");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "of",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
+    }
 }
 impl<'mc> JNIRaw<'mc> for JavaRandomGenerator<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
@@ -2131,6 +2252,29 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             .call_method(&self.jni_object(), "jump", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    //
+
+    pub fn of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from(
+            "(Ljava/lang/String;)Ljava/util/random/RandomGenerator$ArbitrarilyJumpableGenerator;",
+        );
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        let cls = jni.find_class("java/util/random/RandomGenerator$ArbitrarilyJumpableGenerator");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "of",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
     //
 
@@ -2644,6 +2788,29 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
             .call_method(&self.jni_object(), "jump", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    //
+
+    pub fn of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from(
+            "(Ljava/lang/String;)Ljava/util/random/RandomGenerator$JumpableGenerator;",
+        );
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        let cls = jni.find_class("java/util/random/RandomGenerator$JumpableGenerator");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "of",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
     //
 

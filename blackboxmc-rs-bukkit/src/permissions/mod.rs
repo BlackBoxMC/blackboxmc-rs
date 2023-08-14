@@ -335,7 +335,8 @@ impl<'mc> PermissibleBase<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -388,6 +389,16 @@ impl<'mc> PermissibleBase<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PermissibleBase<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PermissibleBase.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::permissions::Permissible<'mc>> for PermissibleBase<'mc> {
     fn into(self) -> crate::permissions::Permissible<'mc> {
         crate::permissions::Permissible::from_raw(&self.jni_ref(), self.1)
@@ -1068,7 +1079,8 @@ impl<'mc> Permission<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1121,6 +1133,16 @@ impl<'mc> Permission<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Permission<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Permission.toString: {}", err),
+        }
+    }
+}
+
 /// Holds information on a permission and which <a href="PermissionAttachment.html" title="class in org.bukkit.permissions"><code>PermissionAttachment</code></a> provides it
 pub struct PermissionAttachmentInfo<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1289,7 +1311,8 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1342,6 +1365,16 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PermissionAttachmentInfo<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PermissionAttachmentInfo.toString: {}", err),
+        }
+    }
+}
+
 /// Holds information about a permission attachment on a <a title="interface in org.bukkit.permissions" href="Permissible.html"><code>Permissible</code></a> object
 pub struct PermissionAttachment<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1584,7 +1617,8 @@ impl<'mc> PermissionAttachment<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1637,6 +1671,16 @@ impl<'mc> PermissionAttachment<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PermissionAttachment<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PermissionAttachment.toString: {}", err),
+        }
+    }
+}
+
 /// Represents a class which is to be notified when a <a title="class in org.bukkit.permissions" href="PermissionAttachment.html"><code>PermissionAttachment</code></a> is removed from a <a title="interface in org.bukkit.permissions" href="Permissible.html"><code>Permissible</code></a>
 ///
 /// This is a representation of an abstract class.

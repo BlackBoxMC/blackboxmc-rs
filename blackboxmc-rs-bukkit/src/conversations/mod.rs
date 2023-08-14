@@ -136,7 +136,8 @@ impl<'mc> NumericPrompt<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -213,6 +214,16 @@ impl<'mc> NumericPrompt<'mc> {
             .to_string())
     }
 }
+
+impl<'mc> std::string::ToString for NumericPrompt<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling NumericPrompt.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::conversations::ValidatingPrompt<'mc>> for NumericPrompt<'mc> {
     fn into(self) -> crate::conversations::ValidatingPrompt<'mc> {
         crate::conversations::ValidatingPrompt::from_raw(&self.jni_ref(), self.1)
@@ -630,7 +641,8 @@ impl<'mc> ConversationFactory<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -683,6 +695,16 @@ impl<'mc> ConversationFactory<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ConversationFactory<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ConversationFactory.toString: {}", err),
+        }
+    }
+}
+
 /// An InactivityConversationCanceller will cancel a <a href="Conversation.html" title="class in org.bukkit.conversations"><code>Conversation</code></a> after a period of inactivity by the user.
 pub struct InactivityConversationCanceller<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -851,7 +873,8 @@ impl<'mc> InactivityConversationCanceller<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -904,6 +927,19 @@ impl<'mc> InactivityConversationCanceller<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for InactivityConversationCanceller<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!(
+                "Error calling InactivityConversationCanceller.toString: {}",
+                err
+            ),
+        }
+    }
+}
+
 impl<'mc> Into<crate::conversations::ConversationCanceller<'mc>>
     for InactivityConversationCanceller<'mc>
 {
@@ -1074,7 +1110,8 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1127,6 +1164,19 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ExactMatchConversationCanceller<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!(
+                "Error calling ExactMatchConversationCanceller.toString: {}",
+                err
+            ),
+        }
+    }
+}
+
 impl<'mc> Into<crate::conversations::ConversationCanceller<'mc>>
     for ExactMatchConversationCanceller<'mc>
 {
@@ -1744,7 +1794,8 @@ impl<'mc> Conversation<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1795,6 +1846,15 @@ impl<'mc> Conversation<'mc> {
             .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+}
+
+impl<'mc> std::string::ToString for Conversation<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Conversation.toString: {}", err),
+        }
     }
 }
 
@@ -2100,7 +2160,8 @@ impl<'mc> ValidatingPrompt<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2177,6 +2238,16 @@ impl<'mc> ValidatingPrompt<'mc> {
             .to_string())
     }
 }
+
+impl<'mc> std::string::ToString for ValidatingPrompt<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ValidatingPrompt.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::conversations::Prompt<'mc>> for ValidatingPrompt<'mc> {
     fn into(self) -> crate::conversations::Prompt<'mc> {
         crate::conversations::Prompt::from_raw(&self.jni_ref(), self.1)
@@ -2328,7 +2399,8 @@ impl<'mc> RegexPrompt<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2405,6 +2477,16 @@ impl<'mc> RegexPrompt<'mc> {
             .to_string())
     }
 }
+
+impl<'mc> std::string::ToString for RegexPrompt<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling RegexPrompt.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::conversations::ValidatingPrompt<'mc>> for RegexPrompt<'mc> {
     fn into(self) -> crate::conversations::ValidatingPrompt<'mc> {
         crate::conversations::ValidatingPrompt::from_raw(&self.jni_ref(), self.1)
@@ -2566,7 +2648,8 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2619,6 +2702,19 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ManuallyAbandonedConversationCanceller<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!(
+                "Error calling ManuallyAbandonedConversationCanceller.toString: {}",
+                err
+            ),
+        }
+    }
+}
+
 impl<'mc> Into<crate::conversations::ConversationCanceller<'mc>>
     for ManuallyAbandonedConversationCanceller<'mc>
 {
@@ -2733,7 +2829,8 @@ impl<'mc> StringPrompt<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2838,6 +2935,16 @@ impl<'mc> StringPrompt<'mc> {
         })
     }
 }
+
+impl<'mc> std::string::ToString for StringPrompt<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling StringPrompt.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::conversations::Prompt<'mc>> for StringPrompt<'mc> {
     fn into(self) -> crate::conversations::Prompt<'mc> {
         crate::conversations::Prompt::from_raw(&self.jni_ref(), self.1)
@@ -2989,7 +3096,8 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3042,6 +3150,19 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PluginNameConversationPrefix<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!(
+                "Error calling PluginNameConversationPrefix.toString: {}",
+                err
+            ),
+        }
+    }
+}
+
 impl<'mc> Into<crate::conversations::ConversationPrefix<'mc>>
     for PluginNameConversationPrefix<'mc>
 {
@@ -3300,7 +3421,8 @@ impl<'mc> FixedSetPrompt<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3377,6 +3499,16 @@ impl<'mc> FixedSetPrompt<'mc> {
             .to_string())
     }
 }
+
+impl<'mc> std::string::ToString for FixedSetPrompt<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling FixedSetPrompt.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::conversations::ValidatingPrompt<'mc>> for FixedSetPrompt<'mc> {
     fn into(self) -> crate::conversations::ValidatingPrompt<'mc> {
         crate::conversations::ValidatingPrompt::from_raw(&self.jni_ref(), self.1)
@@ -3499,7 +3631,8 @@ impl<'mc> NullConversationPrefix<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3552,6 +3685,16 @@ impl<'mc> NullConversationPrefix<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for NullConversationPrefix<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling NullConversationPrefix.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::conversations::ConversationPrefix<'mc>> for NullConversationPrefix<'mc> {
     fn into(self) -> crate::conversations::ConversationPrefix<'mc> {
         crate::conversations::ConversationPrefix::from_raw(&self.jni_ref(), self.1).expect(
@@ -3792,7 +3935,8 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3888,6 +4032,16 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ConversationAbandonedEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ConversationAbandonedEvent.toString: {}", err),
+        }
+    }
+}
+
 /// A ConversationContext provides continuity between nodes in the prompt graph by giving the developer access to the subject of the conversation and a generic map for storing values that are shared between all <a title="interface in org.bukkit.conversations" href="Prompt.html"><code>Prompt</code></a> invocations.
 pub struct ConversationContext<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4083,7 +4237,8 @@ impl<'mc> ConversationContext<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4136,6 +4291,16 @@ impl<'mc> ConversationContext<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ConversationContext<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ConversationContext.toString: {}", err),
+        }
+    }
+}
+
 /// PlayerNamePrompt is the base class for any prompt that requires the player to enter another player's name.
 pub struct PlayerNamePrompt<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4281,7 +4446,8 @@ impl<'mc> PlayerNamePrompt<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4358,6 +4524,16 @@ impl<'mc> PlayerNamePrompt<'mc> {
             .to_string())
     }
 }
+
+impl<'mc> std::string::ToString for PlayerNamePrompt<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PlayerNamePrompt.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::conversations::ValidatingPrompt<'mc>> for PlayerNamePrompt<'mc> {
     fn into(self) -> crate::conversations::ValidatingPrompt<'mc> {
         crate::conversations::ValidatingPrompt::from_raw(&self.jni_ref(), self.1)
@@ -4499,7 +4675,8 @@ impl<'mc> BooleanPrompt<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4576,6 +4753,16 @@ impl<'mc> BooleanPrompt<'mc> {
             .to_string())
     }
 }
+
+impl<'mc> std::string::ToString for BooleanPrompt<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BooleanPrompt.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::conversations::ValidatingPrompt<'mc>> for BooleanPrompt<'mc> {
     fn into(self) -> crate::conversations::ValidatingPrompt<'mc> {
         crate::conversations::ValidatingPrompt::from_raw(&self.jni_ref(), self.1)
@@ -4717,7 +4904,8 @@ impl<'mc> MessagePrompt<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4794,6 +4982,16 @@ impl<'mc> MessagePrompt<'mc> {
             .to_string())
     }
 }
+
+impl<'mc> std::string::ToString for MessagePrompt<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling MessagePrompt.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::conversations::Prompt<'mc>> for MessagePrompt<'mc> {
     fn into(self) -> crate::conversations::Prompt<'mc> {
         crate::conversations::Prompt::from_raw(&self.jni_ref(), self.1)

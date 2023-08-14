@@ -216,7 +216,8 @@ impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -269,6 +270,19 @@ impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PersistentDataTypePrimitivePersistentDataType<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!(
+                "Error calling PersistentDataTypePrimitivePersistentDataType.toString: {}",
+                err
+            ),
+        }
+    }
+}
+
 /// This interface represents the context in which the <a title="interface in org.bukkit.persistence" href="PersistentDataType.html"><code>PersistentDataType</code></a> can serialize and deserialize the passed values.
 ///
 /// This is a representation of an abstract class.
@@ -654,7 +668,8 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -707,6 +722,19 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PersistentDataTypeBooleanPersistentDataType<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!(
+                "Error calling PersistentDataTypeBooleanPersistentDataType.toString: {}",
+                err
+            ),
+        }
+    }
+}
+
 /// This interface represents a map like object, capable of storing custom tags in it.
 ///
 /// This is a representation of an abstract class.

@@ -152,7 +152,8 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -205,6 +206,16 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for MemoryConfigurationOptions<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling MemoryConfigurationOptions.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::configuration::ConfigurationOptions<'mc>>
     for MemoryConfigurationOptions<'mc>
 {
@@ -1093,7 +1104,8 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1463,6 +1475,16 @@ impl<'mc> MemorySection<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for MemorySection<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling MemorySection.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::configuration::ConfigurationSection<'mc>> for MemorySection<'mc> {
     fn into(self) -> crate::configuration::ConfigurationSection<'mc> {
         crate::configuration::ConfigurationSection::from_raw(&self.jni_ref(), self.1).expect(
@@ -3637,7 +3659,8 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3993,6 +4016,16 @@ impl<'mc> MemoryConfiguration<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for MemoryConfiguration<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling MemoryConfiguration.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::configuration::Configuration<'mc>> for MemoryConfiguration<'mc> {
     fn into(self) -> crate::configuration::Configuration<'mc> {
         crate::configuration::Configuration::from_raw(&self.jni_ref(), self.1)
@@ -4149,7 +4182,8 @@ impl<'mc> ConfigurationOptions<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4202,6 +4236,16 @@ impl<'mc> ConfigurationOptions<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ConfigurationOptions<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ConfigurationOptions.toString: {}", err),
+        }
+    }
+}
+
 /// Represents a section of a <a href="Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a>
 ///
 /// This is a representation of an abstract class.

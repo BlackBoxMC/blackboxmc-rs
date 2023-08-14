@@ -483,7 +483,8 @@ impl<'mc> JavaArrayList<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -591,6 +592,16 @@ impl<'mc> JavaArrayList<'mc> {
         Ok(res.l()?)
     }
 }
+
+impl<'mc> std::string::ToString for JavaArrayList<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaArrayList.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaArrayList<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -720,7 +731,8 @@ impl<'mc> JavaAbstractMap<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1112,6 +1124,16 @@ impl<'mc> JavaAbstractMap<'mc> {
         Ok(res.l()?)
     }
 }
+
+impl<'mc> std::string::ToString for JavaAbstractMap<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaAbstractMap.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaAbstractMap<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -1606,7 +1628,8 @@ impl<'mc> JavaTreeSet<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1767,6 +1790,16 @@ impl<'mc> JavaTreeSet<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaTreeSet<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaTreeSet.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaTreeSet<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -2087,7 +2120,8 @@ impl<'mc> JavaVector<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2591,6 +2625,16 @@ impl<'mc> JavaVector<'mc> {
         Ok(res.l()?)
     }
 }
+
+impl<'mc> std::string::ToString for JavaVector<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaVector.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaVector<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -2875,6 +2919,140 @@ impl<'mc> JavaMap<'mc> {
             .call_method(&self.jni_object(), "size", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
+    }
+    //
+
+    pub fn of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+        arg1: std::option::Option<jni::objects::JObject<'mc>>,
+        arg2: std::option::Option<jni::objects::JObject<'mc>>,
+        arg3: std::option::Option<jni::objects::JObject<'mc>>,
+        arg4: std::option::Option<jni::objects::JObject<'mc>>,
+        arg5: std::option::Option<jni::objects::JObject<'mc>>,
+        arg6: std::option::Option<jni::objects::JObject<'mc>>,
+        arg7: std::option::Option<jni::objects::JObject<'mc>>,
+        arg8: std::option::Option<jni::objects::JObject<'mc>>,
+        arg9: std::option::Option<jni::objects::JObject<'mc>>,
+        arg10: std::option::Option<jni::objects::JObject<'mc>>,
+        arg11: std::option::Option<jni::objects::JObject<'mc>>,
+        arg12: std::option::Option<jni::objects::JObject<'mc>>,
+        arg13: std::option::Option<jni::objects::JObject<'mc>>,
+        arg14: std::option::Option<jni::objects::JObject<'mc>>,
+        arg15: std::option::Option<jni::objects::JObject<'mc>>,
+        arg16: std::option::Option<jni::objects::JObject<'mc>>,
+        arg17: std::option::Option<jni::objects::JObject<'mc>>,
+        arg18: std::option::Option<jni::objects::JObject<'mc>>,
+        arg19: std::option::Option<jni::objects::JObject<'mc>>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/lang/Object;";
+            let val_1 = jni::objects::JValueGen::Object(a);
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "Ljava/lang/Object;";
+            let val_2 = jni::objects::JValueGen::Object(a);
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "Ljava/lang/Object;";
+            let val_3 = jni::objects::JValueGen::Object(a);
+            args.push(val_3);
+        }
+        if let Some(a) = arg3 {
+            sig += "Ljava/lang/Object;";
+            let val_4 = jni::objects::JValueGen::Object(a);
+            args.push(val_4);
+        }
+        if let Some(a) = arg4 {
+            sig += "Ljava/lang/Object;";
+            let val_5 = jni::objects::JValueGen::Object(a);
+            args.push(val_5);
+        }
+        if let Some(a) = arg5 {
+            sig += "Ljava/lang/Object;";
+            let val_6 = jni::objects::JValueGen::Object(a);
+            args.push(val_6);
+        }
+        if let Some(a) = arg6 {
+            sig += "Ljava/lang/Object;";
+            let val_7 = jni::objects::JValueGen::Object(a);
+            args.push(val_7);
+        }
+        if let Some(a) = arg7 {
+            sig += "Ljava/lang/Object;";
+            let val_8 = jni::objects::JValueGen::Object(a);
+            args.push(val_8);
+        }
+        if let Some(a) = arg8 {
+            sig += "Ljava/lang/Object;";
+            let val_9 = jni::objects::JValueGen::Object(a);
+            args.push(val_9);
+        }
+        if let Some(a) = arg9 {
+            sig += "Ljava/lang/Object;";
+            let val_10 = jni::objects::JValueGen::Object(a);
+            args.push(val_10);
+        }
+        if let Some(a) = arg10 {
+            sig += "Ljava/lang/Object;";
+            let val_11 = jni::objects::JValueGen::Object(a);
+            args.push(val_11);
+        }
+        if let Some(a) = arg11 {
+            sig += "Ljava/lang/Object;";
+            let val_12 = jni::objects::JValueGen::Object(a);
+            args.push(val_12);
+        }
+        if let Some(a) = arg12 {
+            sig += "Ljava/lang/Object;";
+            let val_13 = jni::objects::JValueGen::Object(a);
+            args.push(val_13);
+        }
+        if let Some(a) = arg13 {
+            sig += "Ljava/lang/Object;";
+            let val_14 = jni::objects::JValueGen::Object(a);
+            args.push(val_14);
+        }
+        if let Some(a) = arg14 {
+            sig += "Ljava/lang/Object;";
+            let val_15 = jni::objects::JValueGen::Object(a);
+            args.push(val_15);
+        }
+        if let Some(a) = arg15 {
+            sig += "Ljava/lang/Object;";
+            let val_16 = jni::objects::JValueGen::Object(a);
+            args.push(val_16);
+        }
+        if let Some(a) = arg16 {
+            sig += "Ljava/lang/Object;";
+            let val_17 = jni::objects::JValueGen::Object(a);
+            args.push(val_17);
+        }
+        if let Some(a) = arg17 {
+            sig += "Ljava/lang/Object;";
+            let val_18 = jni::objects::JValueGen::Object(a);
+            args.push(val_18);
+        }
+        if let Some(a) = arg18 {
+            sig += "Ljava/lang/Object;";
+            let val_19 = jni::objects::JValueGen::Object(a);
+            args.push(val_19);
+        }
+        if let Some(a) = arg19 {
+            sig += "Ljava/lang/Object;";
+            let val_20 = jni::objects::JValueGen::Object(a);
+            args.push(val_20);
+        }
+        sig += ")Ljava/util/Map;";
+        let cls = jni.find_class("java/util/Map");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "of", sig.as_str(), args);
+        let res = jni.translate_error(res)?;
+        Ok(res.l()?)
     }
     //
 
@@ -3462,7 +3640,8 @@ impl<'mc> JavaWeakHashMap<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3709,6 +3888,16 @@ impl<'mc> JavaWeakHashMap<'mc> {
         Ok(res.l()?)
     }
 }
+
+impl<'mc> std::string::ToString for JavaWeakHashMap<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaWeakHashMap.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaWeakHashMap<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -3865,6 +4054,21 @@ impl<'mc> JavaSet<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "iterator", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += ")Ljava/util/Set;";
+        let cls = jni.find_class("java/util/Set");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "of", sig.as_str(), args);
+        let res = jni.translate_error(res)?;
         Ok(res.l()?)
     }
     //
@@ -4258,7 +4462,8 @@ impl<'mc> JavaBase64<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4311,6 +4516,16 @@ impl<'mc> JavaBase64<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaBase64<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaBase64.toString: {}", err),
+        }
+    }
+}
+
 /// This class provides a skeletal implementation of the <tt>Collection</tt> interface, to minimize the effort required to implement this interface.
 /// <p>To implement an unmodifiable collection, the programmer needs only to extend this class and provide implementations for the <tt>iterator</tt> and <tt>size</tt> methods. (The iterator returned by the <tt>iterator</tt> method must implement <tt>hasNext</tt> and <tt>next</tt>.)</p>
 /// <p>To implement a modifiable collection, the programmer must additionally override this class's <tt>add</tt> method (which otherwise throws an <tt>UnsupportedOperationException</tt>), and the iterator returned by the <tt>iterator</tt> method must additionally implement its <tt>remove</tt> method.</p>
@@ -4388,7 +4603,8 @@ impl<'mc> JavaAbstractCollection<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4679,6 +4895,16 @@ impl<'mc> JavaAbstractCollection<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaAbstractCollection<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaAbstractCollection.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaAbstractCollection<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -4797,7 +5023,8 @@ impl<'mc> JavaAbstractQueue<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5098,6 +5325,16 @@ impl<'mc> JavaAbstractQueue<'mc> {
         Ok(res.l()?)
     }
 }
+
+impl<'mc> std::string::ToString for JavaAbstractQueue<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaAbstractQueue.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaAbstractQueue<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -5182,7 +5419,8 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5298,6 +5536,16 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaAbstractMapSimpleEntry<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaAbstractMapSimpleEntry.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaAbstractMapSimpleEntry<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -6036,7 +6284,8 @@ impl<'mc> JavaHashtable<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -6475,6 +6724,16 @@ impl<'mc> JavaHashtable<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaHashtable<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaHashtable.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaHashtable<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -6598,7 +6857,8 @@ impl<'mc> JavaAbstractSet<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -6845,6 +7105,16 @@ impl<'mc> JavaAbstractSet<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaAbstractSet<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaAbstractSet.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaAbstractSet<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -6972,7 +7242,8 @@ impl<'mc> JavaOptionalInt<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -7012,6 +7283,25 @@ impl<'mc> JavaOptionalInt<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "stream", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: i32,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(I)Ljava/util/OptionalInt;");
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let cls = jni.find_class("java/util/OptionalInt");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "of",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error(res)?;
         Ok(res.l()?)
     }
     //
@@ -7127,6 +7417,16 @@ impl<'mc> JavaOptionalInt<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaOptionalInt<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaOptionalInt.toString: {}", err),
+        }
+    }
+}
+
 /// A Red-Black tree based <a href="../../java/util/NavigableMap.html" title="interface in java.util"><code>NavigableMap</code></a> implementation. The map is sorted according to the <a href="../../java/lang/Comparable.html" title="interface in java.lang">natural ordering</a> of its keys, or by a <a title="interface in java.util" href="../../java/util/Comparator.html"><code>Comparator</code></a> provided at map creation time, depending on which constructor is used.
 /// <p>This implementation provides guaranteed log(n) time cost for the <code>containsKey</code>, <code>get</code>, <code>put</code> and <code>remove</code> operations. Algorithms are adaptations of those in Cormen, Leiserson, and Rivest's <em>Introduction to Algorithms</em>.</p>
 /// <p>Note that the ordering maintained by a tree map, like any sorted map, and whether or not an explicit comparator is provided, must be <em>consistent with <code>equals</code></em> if this sorted map is to correctly implement the <code>Map</code> interface. (See <code>Comparable</code> or <code>Comparator</code> for a precise definition of <em>consistent with equals</em>.) This is so because the <code>Map</code> interface is defined in terms of the <code>equals</code> operation, but a sorted map performs all key comparisons using its <code>compareTo</code> (or <code>compare</code>) method, so two keys that are deemed equal by this method are, from the standpoint of the sorted map, equal. The behavior of a sorted map <em>is</em> well-defined even if its ordering is inconsistent with <code>equals</code>; it just fails to obey the general contract of the <code>Map</code> interface.</p>
@@ -7922,7 +8222,8 @@ impl<'mc> JavaTreeMap<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -8033,6 +8334,16 @@ impl<'mc> JavaTreeMap<'mc> {
         Ok(res.l()?)
     }
 }
+
+impl<'mc> std::string::ToString for JavaTreeMap<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaTreeMap.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaTreeMap<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -8912,7 +9223,8 @@ impl<'mc> JavaOptionalDouble<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -8952,6 +9264,25 @@ impl<'mc> JavaOptionalDouble<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "stream", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: f64,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(D)Ljava/util/OptionalDouble;");
+        let val_1 = jni::objects::JValueGen::Double(arg0.into());
+        let cls = jni.find_class("java/util/OptionalDouble");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "of",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error(res)?;
         Ok(res.l()?)
     }
     //
@@ -9067,6 +9398,16 @@ impl<'mc> JavaOptionalDouble<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaOptionalDouble<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaOptionalDouble.toString: {}", err),
+        }
+    }
+}
+
 /// A container object which may or may not contain a <code>long</code> value. If a value is present, <code>isPresent()</code> will return <code>true</code> and <code>getAsLong()</code> will return the value.
 /// <p>Additional methods that depend on the presence or absence of a contained value are provided, such as <a href="../../java/util/OptionalLong.html#orElse-long-"><code>orElse()</code></a> (return a default value if value not present) and <a href="../../java/util/OptionalLong.html#ifPresent-java.util.function.LongConsumer-"><code>ifPresent()</code></a> (execute a block of code if the value is present).</p>
 /// <p>This is a <a href="../lang/doc-files/ValueBased.html">value-based</a> class; use of identity-sensitive operations (including reference equality (<code>==</code>), identity hash code, or synchronization) on instances of <code>OptionalLong</code> may have unpredictable results and should be avoided.</p>
@@ -9189,7 +9530,8 @@ impl<'mc> JavaOptionalLong<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -9229,6 +9571,25 @@ impl<'mc> JavaOptionalLong<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "stream", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: i64,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(J)Ljava/util/OptionalLong;");
+        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let cls = jni.find_class("java/util/OptionalLong");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "of",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error(res)?;
         Ok(res.l()?)
     }
     //
@@ -9344,6 +9705,16 @@ impl<'mc> JavaOptionalLong<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaOptionalLong<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaOptionalLong.toString: {}", err),
+        }
+    }
+}
+
 /// <p>Hash table and linked list implementation of the <tt>Set</tt> interface, with predictable iteration order. This implementation differs from <tt>HashSet</tt> in that it maintains a doubly-linked list running through all of its entries. This linked list defines the iteration ordering, which is the order in which elements were inserted into the set (<i>insertion-order</i>). Note that insertion order is <i>not</i> affected if an element is <i>re-inserted</i> into the set. (An element <tt>e</tt> is reinserted into a set <tt>s</tt> if <tt>s.add(e)</tt> is invoked when <tt>s.contains(e)</tt> would return <tt>true</tt> immediately prior to the invocation.)</p>
 /// <p>This implementation spares its clients from the unspecified, generally chaotic ordering provided by <a title="class in java.util" href="../../java/util/HashSet.html"><code>HashSet</code></a>, without incurring the increased cost associated with <a href="../../java/util/TreeSet.html" title="class in java.util"><code>TreeSet</code></a>. It can be used to produce a copy of a set that has the same order as the original, regardless of the original set's implementation:</p>
 /// <pre> void foo(Set s) {
@@ -9593,7 +9964,8 @@ impl<'mc> JavaLinkedHashSet<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -9769,6 +10141,16 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaLinkedHashSet<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaLinkedHashSet.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaLinkedHashSet<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -10263,7 +10645,8 @@ impl<'mc> JavaHashMap<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -10342,6 +10725,16 @@ impl<'mc> JavaHashMap<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaHashMap<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaHashMap.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaHashMap<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -10661,7 +11054,8 @@ impl<'mc> JavaIdentityHashMap<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -10898,6 +11292,16 @@ impl<'mc> JavaIdentityHashMap<'mc> {
         Ok(res.l()?)
     }
 }
+
+impl<'mc> std::string::ToString for JavaIdentityHashMap<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaIdentityHashMap.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaIdentityHashMap<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -11408,7 +11812,8 @@ impl<'mc> JavaLinkedHashMap<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -11487,6 +11892,16 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaLinkedHashMap<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaLinkedHashMap.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaLinkedHashMap<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -11769,7 +12184,8 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -12030,6 +12446,16 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaAbstractSequentialList<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaAbstractSequentialList.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaAbstractSequentialList<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -12779,7 +13205,8 @@ impl<'mc> JavaRandom<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -12852,6 +13279,16 @@ impl<'mc> JavaRandom<'mc> {
         Ok(res.d()?)
     }
 }
+
+impl<'mc> std::string::ToString for JavaRandom<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaRandom.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaRandom<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -13114,6 +13551,21 @@ impl<'mc> JavaList<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "iterator", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += ")Ljava/util/List;";
+        let cls = jni.find_class("java/util/List");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "of", sig.as_str(), args);
+        let res = jni.translate_error(res)?;
         Ok(res.l()?)
     }
     //
@@ -13587,7 +14039,8 @@ impl<'mc> JavaUUID<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -13716,6 +14169,16 @@ impl<'mc> JavaUUID<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaUUID<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaUUID.toString: {}", err),
+        }
+    }
+}
+
 /// This class implements the <tt>Set</tt> interface, backed by a hash table (actually a <tt>HashMap</tt> instance). It makes no guarantees as to the iteration order of the set; in particular, it does not guarantee that the order will remain constant over time. This class permits the <tt>null</tt> element.
 /// <p>This class offers constant time performance for the basic operations (<tt>add</tt>, <tt>remove</tt>, <tt>contains</tt> and <tt>size</tt>), assuming the hash function disperses the elements properly among the buckets. Iterating over this set requires time proportional to the sum of the <tt>HashSet</tt> instance's size (the number of elements) plus the "capacity" of the backing <tt>HashMap</tt> instance (the number of buckets). Thus, it's very important not to set the initial capacity too high (or the load factor too low) if iteration performance is important.</p>
 /// <p><strong>Note that this implementation is not synchronized.</strong> If multiple threads access a hash set concurrently, and at least one of the threads modifies the set, it <i>must</i> be synchronized externally. This is typically accomplished by synchronizing on some object that naturally encapsulates the set. If no such object exists, the set should be "wrapped" using the <a href="../../java/util/Collections.html#synchronizedSet-java.util.Set-"><code>Collections.synchronizedSet</code></a> method. This is best done at creation time, to prevent accidental unsynchronized access to the set:</p>
@@ -13956,7 +14419,8 @@ impl<'mc> JavaHashSet<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -14132,6 +14596,16 @@ impl<'mc> JavaHashSet<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaHashSet<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaHashSet.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaHashSet<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -14414,7 +14888,8 @@ impl<'mc> JavaAbstractList<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -14675,6 +15150,16 @@ impl<'mc> JavaAbstractList<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaAbstractList<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaAbstractList.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaAbstractList<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -14836,7 +15321,8 @@ impl<'mc> JavaOptional<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -14893,6 +15379,25 @@ impl<'mc> JavaOptional<'mc> {
             .jni_ref()
             .call_method(&self.jni_object(), "stream", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn of(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/Object;)Ljava/util/Optional;");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let cls = jni.find_class("java/util/Optional");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "of",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error(res)?;
         Ok(res.l()?)
     }
     //
@@ -15045,6 +15550,16 @@ impl<'mc> JavaOptional<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaOptional<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaOptional.toString: {}", err),
+        }
+    }
+}
+
 /// An iterator for lists that allows the programmer to traverse the list in either direction, modify the list during iteration, and obtain the iterator's current position in the list. A <code>ListIterator</code> has no current element; its <i>cursor position</i> always lies between the element that would be returned by a call to <code>previous()</code> and the element that would be returned by a call to <code>next()</code>. An iterator for a list of length <code>n</code> has <code>n+1</code> possible cursor positions, as illustrated by the carets (<code>^</code>) below:
 /// <pre>Element(0) Element(1) Element(2) ... Element(n-1)
 /// cursor positions:^^^^^
@@ -15834,7 +16349,8 @@ impl<'mc> JavaLinkedList<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -16054,6 +16570,16 @@ impl<'mc> JavaLinkedList<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaLinkedList<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaLinkedList.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaLinkedList<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -17215,7 +17741,8 @@ impl<'mc> JavaEnumSet<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -17462,6 +17989,16 @@ impl<'mc> JavaEnumSet<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaEnumSet<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaEnumSet.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaEnumSet<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -17922,7 +18459,8 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -18050,6 +18588,16 @@ impl<'mc> JavaDate<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaDate<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaDate.toString: {}", err),
+        }
+    }
+}
+
 /// Resizable-array implementation of the <a href="../../java/util/Deque.html" title="interface in java.util"><code>Deque</code></a> interface. Array deques have no capacity restrictions; they grow as necessary to support usage. They are not thread-safe; in the absence of external synchronization, they do not support concurrent access by multiple threads. Null elements are prohibited. This class is likely to be faster than <a href="../../java/util/Stack.html" title="class in java.util"><code>Stack</code></a> when used as a stack, and faster than <a title="class in java.util" href="../../java/util/LinkedList.html"><code>LinkedList</code></a> when used as a queue.
 /// <p>Most <code>ArrayDeque</code> operations run in amortized constant time. Exceptions include <a href="../../java/util/ArrayDeque.html#remove-java.lang.Object-"><code>remove</code></a>, <a href="../../java/util/ArrayDeque.html#removeFirstOccurrence-java.lang.Object-"><code>removeFirstOccurrence</code></a>, <a href="../../java/util/ArrayDeque.html#removeLastOccurrence-java.lang.Object-"><code>removeLastOccurrence</code></a>, <a href="../../java/util/ArrayDeque.html#contains-java.lang.Object-"><code>contains</code></a>, <a href="../../java/util/ArrayDeque.html#iterator--"><code>iterator.remove()</code></a>, and the bulk operations, all of which run in linear time.</p>
 /// <p>The iterators returned by this class's <code>iterator</code> method are <i>fail-fast</i>: If the deque is modified at any time after the iterator is created, in any way except through the iterator's own <code>remove</code> method, the iterator will generally throw a <a title="class in java.util" href="../../java/util/ConcurrentModificationException.html"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
@@ -18590,7 +19138,8 @@ impl<'mc> JavaArrayDeque<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -18725,6 +19274,16 @@ impl<'mc> JavaArrayDeque<'mc> {
         Ok(res.l()?)
     }
 }
+
+impl<'mc> std::string::ToString for JavaArrayDeque<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaArrayDeque.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaArrayDeque<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1

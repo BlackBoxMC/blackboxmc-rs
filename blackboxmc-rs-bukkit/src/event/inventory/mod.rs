@@ -239,7 +239,8 @@ impl<'mc> InventoryOpenEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -292,6 +293,16 @@ impl<'mc> InventoryOpenEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for InventoryOpenEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling InventoryOpenEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for InventoryOpenEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -541,7 +552,8 @@ impl<'mc> PrepareItemCraftEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -594,6 +606,16 @@ impl<'mc> PrepareItemCraftEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PrepareItemCraftEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PrepareItemCraftEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::inventory::InventoryEvent<'mc>> for PrepareItemCraftEvent<'mc> {
     fn into(self) -> crate::event::inventory::InventoryEvent<'mc> {
         crate::event::inventory::InventoryEvent::from_raw(&self.jni_ref(), self.1).expect(
@@ -841,7 +863,8 @@ impl<'mc> PrepareAnvilEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -894,6 +917,16 @@ impl<'mc> PrepareAnvilEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PrepareAnvilEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PrepareAnvilEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::inventory::PrepareInventoryResultEvent<'mc>>
     for PrepareAnvilEvent<'mc>
 {
@@ -1250,7 +1283,8 @@ impl<'mc> BrewEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1303,6 +1337,16 @@ impl<'mc> BrewEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BrewEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BrewEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for BrewEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -1586,7 +1630,8 @@ impl<'mc> InventoryMoveItemEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1639,6 +1684,16 @@ impl<'mc> InventoryMoveItemEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for InventoryMoveItemEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling InventoryMoveItemEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for InventoryMoveItemEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -1897,7 +1952,8 @@ impl<'mc> FurnaceSmeltEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1950,6 +2006,16 @@ impl<'mc> FurnaceSmeltEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for FurnaceSmeltEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling FurnaceSmeltEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::block::BlockCookEvent<'mc>> for FurnaceSmeltEvent<'mc> {
     fn into(self) -> crate::event::block::BlockCookEvent<'mc> {
         crate::event::block::BlockCookEvent::from_raw(&self.jni_ref(), self.1)
@@ -2492,7 +2558,8 @@ impl<'mc> SmithItemEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2545,6 +2612,16 @@ impl<'mc> SmithItemEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for SmithItemEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling SmithItemEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::inventory::InventoryClickEvent<'mc>> for SmithItemEvent<'mc> {
     fn into(self) -> crate::event::inventory::InventoryClickEvent<'mc> {
         crate::event::inventory::InventoryClickEvent::from_raw(&self.jni_ref(), self.1).expect(
@@ -2957,7 +3034,8 @@ impl<'mc> BrewingStandFuelEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3010,6 +3088,16 @@ impl<'mc> BrewingStandFuelEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BrewingStandFuelEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BrewingStandFuelEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for BrewingStandFuelEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -3264,7 +3352,8 @@ impl<'mc> PrepareGrindstoneEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3317,6 +3406,16 @@ impl<'mc> PrepareGrindstoneEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PrepareGrindstoneEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PrepareGrindstoneEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::inventory::PrepareInventoryResultEvent<'mc>>
     for PrepareGrindstoneEvent<'mc>
 {
@@ -3694,7 +3793,8 @@ impl<'mc> HopperInventorySearchEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3747,6 +3847,16 @@ impl<'mc> HopperInventorySearchEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for HopperInventorySearchEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling HopperInventorySearchEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for HopperInventorySearchEvent<'mc> {
     fn into(self) -> crate::event::block::BlockEvent<'mc> {
         crate::event::block::BlockEvent::from_raw(&self.jni_ref(), self.1).expect(
@@ -4308,7 +4418,8 @@ impl<'mc> CraftItemEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4361,6 +4472,16 @@ impl<'mc> CraftItemEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for CraftItemEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling CraftItemEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::inventory::InventoryClickEvent<'mc>> for CraftItemEvent<'mc> {
     fn into(self) -> crate::event::inventory::InventoryClickEvent<'mc> {
         crate::event::inventory::InventoryClickEvent::from_raw(&self.jni_ref(), self.1).expect(
@@ -4600,7 +4721,8 @@ impl<'mc> FurnaceStartSmeltEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4653,6 +4775,16 @@ impl<'mc> FurnaceStartSmeltEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for FurnaceStartSmeltEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling FurnaceStartSmeltEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::block::InventoryBlockStartEvent<'mc>> for FurnaceStartSmeltEvent<'mc> {
     fn into(self) -> crate::event::block::InventoryBlockStartEvent<'mc> {
         crate::event::block::InventoryBlockStartEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting FurnaceStartSmeltEvent into crate::event::block::InventoryBlockStartEvent")
@@ -4870,7 +5002,8 @@ impl<'mc> InventoryPickupItemEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4923,6 +5056,16 @@ impl<'mc> InventoryPickupItemEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for InventoryPickupItemEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling InventoryPickupItemEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for InventoryPickupItemEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -5219,7 +5362,8 @@ impl<'mc> InventoryInteractEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5272,6 +5416,16 @@ impl<'mc> InventoryInteractEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for InventoryInteractEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling InventoryInteractEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for InventoryInteractEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -5481,7 +5635,8 @@ impl<'mc> InventoryEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5534,6 +5689,16 @@ impl<'mc> InventoryEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for InventoryEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling InventoryEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Event<'mc>> for InventoryEvent<'mc> {
     fn into(self) -> crate::event::Event<'mc> {
         crate::event::Event::from_raw(&self.jni_ref(), self.1)
@@ -6062,7 +6227,8 @@ impl<'mc> InventoryCreativeEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -6115,6 +6281,16 @@ impl<'mc> InventoryCreativeEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for InventoryCreativeEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling InventoryCreativeEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::inventory::InventoryClickEvent<'mc>> for InventoryCreativeEvent<'mc> {
     fn into(self) -> crate::event::inventory::InventoryClickEvent<'mc> {
         crate::event::inventory::InventoryClickEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting InventoryCreativeEvent into crate::event::inventory::InventoryClickEvent")
@@ -6373,7 +6549,8 @@ impl<'mc> FurnaceExtractEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -6426,6 +6603,16 @@ impl<'mc> FurnaceExtractEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for FurnaceExtractEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling FurnaceExtractEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::block::BlockExpEvent<'mc>> for FurnaceExtractEvent<'mc> {
     fn into(self) -> crate::event::block::BlockExpEvent<'mc> {
         crate::event::block::BlockExpEvent::from_raw(&self.jni_ref(), self.1)
@@ -7090,7 +7277,8 @@ impl<'mc> PrepareSmithingEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -7143,6 +7331,16 @@ impl<'mc> PrepareSmithingEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PrepareSmithingEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PrepareSmithingEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::inventory::PrepareInventoryResultEvent<'mc>>
     for PrepareSmithingEvent<'mc>
 {
@@ -7462,7 +7660,8 @@ impl<'mc> TradeSelectEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -7515,6 +7714,16 @@ impl<'mc> TradeSelectEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for TradeSelectEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling TradeSelectEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::inventory::InventoryInteractEvent<'mc>> for TradeSelectEvent<'mc> {
     fn into(self) -> crate::event::inventory::InventoryInteractEvent<'mc> {
         crate::event::inventory::InventoryInteractEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting TradeSelectEvent into crate::event::inventory::InventoryInteractEvent")
@@ -8344,7 +8553,8 @@ impl<'mc> InventoryClickEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -8397,6 +8607,16 @@ impl<'mc> InventoryClickEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for InventoryClickEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling InventoryClickEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::inventory::InventoryInteractEvent<'mc>> for InventoryClickEvent<'mc> {
     fn into(self) -> crate::event::inventory::InventoryInteractEvent<'mc> {
         crate::event::inventory::InventoryInteractEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting InventoryClickEvent into crate::event::inventory::InventoryInteractEvent")
@@ -8834,7 +9054,8 @@ impl<'mc> InventoryDragEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -8887,6 +9108,16 @@ impl<'mc> InventoryDragEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for InventoryDragEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling InventoryDragEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::inventory::InventoryInteractEvent<'mc>> for InventoryDragEvent<'mc> {
     fn into(self) -> crate::event::inventory::InventoryInteractEvent<'mc> {
         crate::event::inventory::InventoryInteractEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting InventoryDragEvent into crate::event::inventory::InventoryInteractEvent")
@@ -9154,7 +9385,8 @@ impl<'mc> FurnaceBurnEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -9207,6 +9439,16 @@ impl<'mc> FurnaceBurnEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for FurnaceBurnEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling FurnaceBurnEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for FurnaceBurnEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -9430,7 +9672,8 @@ impl<'mc> InventoryCloseEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -9483,6 +9726,16 @@ impl<'mc> InventoryCloseEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for InventoryCloseEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling InventoryCloseEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::inventory::InventoryEvent<'mc>> for InventoryCloseEvent<'mc> {
     fn into(self) -> crate::event::inventory::InventoryEvent<'mc> {
         crate::event::inventory::InventoryEvent::from_raw(&self.jni_ref(), self.1).expect(
@@ -9732,7 +9985,8 @@ impl<'mc> PrepareInventoryResultEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -9785,6 +10039,19 @@ impl<'mc> PrepareInventoryResultEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PrepareInventoryResultEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!(
+                "Error calling PrepareInventoryResultEvent.toString: {}",
+                err
+            ),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::inventory::InventoryEvent<'mc>> for PrepareInventoryResultEvent<'mc> {
     fn into(self) -> crate::event::inventory::InventoryEvent<'mc> {
         crate::event::inventory::InventoryEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting PrepareInventoryResultEvent into crate::event::inventory::InventoryEvent")

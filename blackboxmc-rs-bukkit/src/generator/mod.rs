@@ -510,7 +510,8 @@ impl<'mc> BiomeProvider<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -563,6 +564,16 @@ impl<'mc> BiomeProvider<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BiomeProvider<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BiomeProvider.toString: {}", err),
+        }
+    }
+}
+
 /// Interface to biome section for chunk to be generated: initialized with default values for world type and seed.
 /// <p>Custom generator is free to access and tailor values during generateBlockSections() or generateExtBlockSections().</p>
 ///
@@ -1069,7 +1080,8 @@ impl<'mc> BlockPopulator<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1122,6 +1134,16 @@ impl<'mc> BlockPopulator<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockPopulator<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockPopulator.toString: {}", err),
+        }
+    }
+}
+
 /// A limited region is used in world generation for features which are going over a chunk. For example, trees or ores. Use <a href="#getBuffer()"><code>getBuffer()</code></a> to know how much you can go beyond the central chunk. The buffer zone may or may not be already populated. The coordinates are <b>absolute</b> from the world origin.
 ///
 /// This is a representation of an abstract class.
@@ -2592,7 +2614,8 @@ impl<'mc> ChunkGenerator<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2645,4 +2668,14 @@ impl<'mc> ChunkGenerator<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ChunkGenerator<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ChunkGenerator.toString: {}", err),
+        }
+    }
+}
+
 pub mod structure;

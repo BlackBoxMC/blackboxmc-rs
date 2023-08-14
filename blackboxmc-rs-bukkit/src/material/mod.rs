@@ -143,7 +143,8 @@ impl<'mc> Chest<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -312,6 +313,16 @@ impl<'mc> Chest<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Chest<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Chest.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::DirectionalContainer<'mc>> for Chest<'mc> {
     fn into(self) -> crate::material::DirectionalContainer<'mc> {
         crate::material::DirectionalContainer::from_raw(&self.jni_ref(), self.1)
@@ -482,7 +493,8 @@ impl<'mc> Diode<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -667,6 +679,16 @@ impl<'mc> Diode<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Diode<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Diode.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Directional<'mc>> for Diode<'mc> {
     fn into(self) -> crate::material::Directional<'mc> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1)
@@ -823,7 +845,8 @@ impl<'mc> Pumpkin<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1008,6 +1031,16 @@ impl<'mc> Pumpkin<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Pumpkin<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Pumpkin.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Directional<'mc>> for Pumpkin<'mc> {
     fn into(self) -> crate::material::Directional<'mc> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1)
@@ -1119,7 +1152,8 @@ impl<'mc> FlowerPot<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1302,6 +1336,16 @@ impl<'mc> FlowerPot<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for FlowerPot<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling FlowerPot.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::MaterialData<'mc>> for FlowerPot<'mc> {
     fn into(self) -> crate::material::MaterialData<'mc> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1)
@@ -1489,7 +1533,8 @@ impl<'mc> PoweredRail<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1658,6 +1703,16 @@ impl<'mc> PoweredRail<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PoweredRail<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PoweredRail.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Redstone<'mc>> for PoweredRail<'mc> {
     fn into(self) -> crate::material::Redstone<'mc> {
         crate::material::Redstone::from_raw(&self.jni_ref(), self.1)
@@ -1846,7 +1901,8 @@ impl<'mc> TripwireHook<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2057,6 +2113,16 @@ impl<'mc> TripwireHook<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for TripwireHook<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling TripwireHook.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Redstone<'mc>> for TripwireHook<'mc> {
     fn into(self) -> crate::material::Redstone<'mc> {
         crate::material::Redstone::from_raw(&self.jni_ref(), self.1)
@@ -2163,7 +2229,8 @@ impl<'mc> SimpleAttachableMaterialData<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2390,6 +2457,19 @@ impl<'mc> SimpleAttachableMaterialData<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for SimpleAttachableMaterialData<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!(
+                "Error calling SimpleAttachableMaterialData.toString: {}",
+                err
+            ),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Attachable<'mc>> for SimpleAttachableMaterialData<'mc> {
     fn into(self) -> crate::material::Attachable<'mc> {
         crate::material::Attachable::from_raw(&self.jni_ref(), self.1).expect(
@@ -2620,7 +2700,8 @@ impl<'mc> Torch<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2789,6 +2870,16 @@ impl<'mc> Torch<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Torch<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Torch.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc>> for Torch<'mc> {
     fn into(self) -> crate::material::SimpleAttachableMaterialData<'mc> {
         crate::material::SimpleAttachableMaterialData::from_raw(&self.jni_ref(), self.1)
@@ -2974,7 +3065,8 @@ impl<'mc> Comparator<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3159,6 +3251,16 @@ impl<'mc> Comparator<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Comparator<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Comparator.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Directional<'mc>> for Comparator<'mc> {
     fn into(self) -> crate::material::Directional<'mc> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1)
@@ -3316,7 +3418,8 @@ impl<'mc> Button<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3524,6 +3627,16 @@ impl<'mc> Button<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Button<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Button.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Redstone<'mc>> for Button<'mc> {
     fn into(self) -> crate::material::Redstone<'mc> {
         crate::material::Redstone::from_raw(&self.jni_ref(), self.1)
@@ -3639,7 +3752,8 @@ impl<'mc> Coal<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3849,6 +3963,16 @@ impl<'mc> Coal<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Coal<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Coal.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::MaterialData<'mc>> for Coal<'mc> {
     fn into(self) -> crate::material::MaterialData<'mc> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1)
@@ -4070,7 +4194,8 @@ impl<'mc> Tree<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4297,6 +4422,16 @@ impl<'mc> Tree<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Tree<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Tree.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Wood<'mc>> for Tree<'mc> {
     fn into(self) -> crate::material::Wood<'mc> {
         crate::material::Wood::from_raw(&self.jni_ref(), self.1)
@@ -4558,7 +4693,8 @@ impl<'mc> PistonBaseMaterial<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4637,6 +4773,16 @@ impl<'mc> PistonBaseMaterial<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PistonBaseMaterial<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PistonBaseMaterial.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Directional<'mc>> for PistonBaseMaterial<'mc> {
     fn into(self) -> crate::material::Directional<'mc> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1)
@@ -4812,7 +4958,8 @@ impl<'mc> TrapDoor<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5030,6 +5177,16 @@ impl<'mc> TrapDoor<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for TrapDoor<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling TrapDoor.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Openable<'mc>> for TrapDoor<'mc> {
     fn into(self) -> crate::material::Openable<'mc> {
         crate::material::Openable::from_raw(&self.jni_ref(), self.1)
@@ -5145,7 +5302,8 @@ impl<'mc> Crops<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5353,6 +5511,16 @@ impl<'mc> Crops<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Crops<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Crops.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::MaterialData<'mc>> for Crops<'mc> {
     fn into(self) -> crate::material::MaterialData<'mc> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1)
@@ -5492,7 +5660,8 @@ impl<'mc> SpawnEgg<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5675,6 +5844,16 @@ impl<'mc> SpawnEgg<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for SpawnEgg<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling SpawnEgg.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::MaterialData<'mc>> for SpawnEgg<'mc> {
     fn into(self) -> crate::material::MaterialData<'mc> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1)
@@ -5838,7 +6017,8 @@ impl<'mc> MonsterEggs<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -6007,6 +6187,16 @@ impl<'mc> MonsterEggs<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for MonsterEggs<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling MonsterEggs.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::TexturedMaterial<'mc>> for MonsterEggs<'mc> {
     fn into(self) -> crate::material::TexturedMaterial<'mc> {
         crate::material::TexturedMaterial::from_raw(&self.jni_ref(), self.1)
@@ -6155,7 +6345,8 @@ impl<'mc> Furnace<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -6324,6 +6515,16 @@ impl<'mc> Furnace<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Furnace<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Furnace.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::FurnaceAndDispenser<'mc>> for Furnace<'mc> {
     fn into(self) -> crate::material::FurnaceAndDispenser<'mc> {
         crate::material::FurnaceAndDispenser::from_raw(&self.jni_ref(), self.1)
@@ -6468,7 +6669,8 @@ impl<'mc> Rails<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -6653,6 +6855,16 @@ impl<'mc> Rails<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Rails<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Rails.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::MaterialData<'mc>> for Rails<'mc> {
     fn into(self) -> crate::material::MaterialData<'mc> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1)
@@ -6780,7 +6992,8 @@ impl<'mc> Sapling<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -7007,6 +7220,16 @@ impl<'mc> Sapling<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Sapling<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Sapling.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Wood<'mc>> for Sapling<'mc> {
     fn into(self) -> crate::material::Wood<'mc> {
         crate::material::Wood::from_raw(&self.jni_ref(), self.1)
@@ -7333,7 +7556,8 @@ impl<'mc> PistonExtensionMaterial<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -7412,6 +7636,16 @@ impl<'mc> PistonExtensionMaterial<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PistonExtensionMaterial<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PistonExtensionMaterial.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Attachable<'mc>> for PistonExtensionMaterial<'mc> {
     fn into(self) -> crate::material::Attachable<'mc> {
         crate::material::Attachable::from_raw(&self.jni_ref(), self.1)
@@ -7563,7 +7797,8 @@ impl<'mc> Lever<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -7771,6 +8006,16 @@ impl<'mc> Lever<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Lever<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Lever.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Redstone<'mc>> for Lever<'mc> {
     fn into(self) -> crate::material::Redstone<'mc> {
         crate::material::Redstone::from_raw(&self.jni_ref(), self.1)
@@ -7895,7 +8140,8 @@ impl<'mc> DirectionalContainer<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -8080,6 +8326,16 @@ impl<'mc> DirectionalContainer<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for DirectionalContainer<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling DirectionalContainer.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Directional<'mc>> for DirectionalContainer<'mc> {
     fn into(self) -> crate::material::Directional<'mc> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1)
@@ -8195,7 +8451,8 @@ impl<'mc> NetherWarts<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -8405,6 +8662,16 @@ impl<'mc> NetherWarts<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for NetherWarts<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling NetherWarts.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::MaterialData<'mc>> for NetherWarts<'mc> {
     fn into(self) -> crate::material::MaterialData<'mc> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1)
@@ -8575,7 +8842,8 @@ impl<'mc> MaterialData<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -8670,6 +8938,16 @@ impl<'mc> MaterialData<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for MaterialData<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling MaterialData.toString: {}", err),
+        }
+    }
+}
+
 /// Represents the different types of long grasses.
 pub struct LongGrass<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -8798,7 +9076,8 @@ impl<'mc> LongGrass<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -8981,6 +9260,16 @@ impl<'mc> LongGrass<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for LongGrass<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling LongGrass.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::MaterialData<'mc>> for LongGrass<'mc> {
     fn into(self) -> crate::material::MaterialData<'mc> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1)
@@ -9110,7 +9399,8 @@ impl<'mc> Tripwire<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -9291,6 +9581,16 @@ impl<'mc> Tripwire<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Tripwire<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Tripwire.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::MaterialData<'mc>> for Tripwire<'mc> {
     fn into(self) -> crate::material::MaterialData<'mc> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1)
@@ -9440,7 +9740,8 @@ impl<'mc> TexturedMaterial<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -9625,6 +9926,16 @@ impl<'mc> TexturedMaterial<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for TexturedMaterial<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling TexturedMaterial.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::MaterialData<'mc>> for TexturedMaterial<'mc> {
     fn into(self) -> crate::material::MaterialData<'mc> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1)
@@ -9823,7 +10134,8 @@ impl<'mc> Dispenser<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -9992,6 +10304,16 @@ impl<'mc> Dispenser<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Dispenser<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Dispenser.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::FurnaceAndDispenser<'mc>> for Dispenser<'mc> {
     fn into(self) -> crate::material::FurnaceAndDispenser<'mc> {
         crate::material::FurnaceAndDispenser::from_raw(&self.jni_ref(), self.1)
@@ -10119,7 +10441,8 @@ impl<'mc> Cake<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -10302,6 +10625,16 @@ impl<'mc> Cake<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Cake<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Cake.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::MaterialData<'mc>> for Cake<'mc> {
     fn into(self) -> crate::material::MaterialData<'mc> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1)
@@ -10436,7 +10769,8 @@ impl<'mc> Gate<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -10631,6 +10965,16 @@ impl<'mc> Gate<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Gate<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Gate.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Directional<'mc>> for Gate<'mc> {
     fn into(self) -> crate::material::Directional<'mc> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1)
@@ -10872,7 +11216,8 @@ impl<'mc> Step<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -11099,6 +11444,16 @@ impl<'mc> Step<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Step<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Step.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::TexturedMaterial<'mc>> for Step<'mc> {
     fn into(self) -> crate::material::TexturedMaterial<'mc> {
         crate::material::TexturedMaterial::from_raw(&self.jni_ref(), self.1)
@@ -11262,7 +11617,8 @@ impl<'mc> SmoothBrick<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -11431,6 +11787,16 @@ impl<'mc> SmoothBrick<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for SmoothBrick<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling SmoothBrick.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::TexturedMaterial<'mc>> for SmoothBrick<'mc> {
     fn into(self) -> crate::material::TexturedMaterial<'mc> {
         crate::material::TexturedMaterial::from_raw(&self.jni_ref(), self.1)
@@ -11605,7 +11971,8 @@ impl<'mc> Leaves<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -11832,6 +12199,16 @@ impl<'mc> Leaves<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Leaves<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Leaves.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Wood<'mc>> for Leaves<'mc> {
     fn into(self) -> crate::material::Wood<'mc> {
         crate::material::Wood::from_raw(&self.jni_ref(), self.1)
@@ -11966,7 +12343,8 @@ impl<'mc> Dye<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -12149,6 +12527,16 @@ impl<'mc> Dye<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Dye<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Dye.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Colorable<'mc>> for Dye<'mc> {
     fn into(self) -> crate::material::Colorable<'mc> {
         crate::material::Colorable::from_raw(&self.jni_ref(), self.1)
@@ -12237,7 +12625,8 @@ impl<'mc> PressurePlate<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -12418,6 +12807,16 @@ impl<'mc> PressurePlate<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PressurePlate<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PressurePlate.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::PressureSensor<'mc>> for PressurePlate<'mc> {
     fn into(self) -> crate::material::PressureSensor<'mc> {
         crate::material::PressureSensor::from_raw(&self.jni_ref(), self.1)
@@ -12568,7 +12967,8 @@ impl<'mc> Observer<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -12753,6 +13153,16 @@ impl<'mc> Observer<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Observer<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Observer.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Directional<'mc>> for Observer<'mc> {
     fn into(self) -> crate::material::Directional<'mc> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1)
@@ -12968,7 +13378,8 @@ impl<'mc> Stairs<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -13153,6 +13564,16 @@ impl<'mc> Stairs<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Stairs<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Stairs.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Directional<'mc>> for Stairs<'mc> {
     fn into(self) -> crate::material::Directional<'mc> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1)
@@ -13268,7 +13689,8 @@ impl<'mc> Sandstone<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -13478,6 +13900,16 @@ impl<'mc> Sandstone<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Sandstone<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Sandstone.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::MaterialData<'mc>> for Sandstone<'mc> {
     fn into(self) -> crate::material::MaterialData<'mc> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1)
@@ -13628,7 +14060,8 @@ impl<'mc> EnderChest<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -13797,6 +14230,16 @@ impl<'mc> EnderChest<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for EnderChest<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling EnderChest.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::DirectionalContainer<'mc>> for EnderChest<'mc> {
     fn into(self) -> crate::material::DirectionalContainer<'mc> {
         crate::material::DirectionalContainer::from_raw(&self.jni_ref(), self.1)
@@ -13931,7 +14374,8 @@ impl<'mc> FurnaceAndDispenser<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -14100,6 +14544,16 @@ impl<'mc> FurnaceAndDispenser<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for FurnaceAndDispenser<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling FurnaceAndDispenser.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::DirectionalContainer<'mc>> for FurnaceAndDispenser<'mc> {
     fn into(self) -> crate::material::DirectionalContainer<'mc> {
         crate::material::DirectionalContainer::from_raw(&self.jni_ref(), self.1).expect(
@@ -14262,7 +14716,8 @@ impl<'mc> Bed<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -14447,6 +14902,16 @@ impl<'mc> Bed<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Bed<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Bed.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Directional<'mc>> for Bed<'mc> {
     fn into(self) -> crate::material::Directional<'mc> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1)
@@ -14535,7 +15000,8 @@ impl<'mc> RedstoneWire<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -14716,6 +15182,16 @@ impl<'mc> RedstoneWire<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for RedstoneWire<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling RedstoneWire.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Redstone<'mc>> for RedstoneWire<'mc> {
     fn into(self) -> crate::material::Redstone<'mc> {
         crate::material::Redstone::from_raw(&self.jni_ref(), self.1)
@@ -14821,7 +15297,8 @@ impl<'mc> WoodenStep<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -15050,6 +15527,16 @@ impl<'mc> WoodenStep<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for WoodenStep<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling WoodenStep.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Wood<'mc>> for WoodenStep<'mc> {
     fn into(self) -> crate::material::Wood<'mc> {
         crate::material::Wood::from_raw(&self.jni_ref(), self.1)
@@ -15179,7 +15666,8 @@ impl<'mc> Vine<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -15364,6 +15852,16 @@ impl<'mc> Vine<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Vine<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Vine.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::MaterialData<'mc>> for Vine<'mc> {
     fn into(self) -> crate::material::MaterialData<'mc> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1)
@@ -15498,7 +15996,8 @@ impl<'mc> Wood<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -15679,6 +16178,16 @@ impl<'mc> Wood<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Wood<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Wood.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::MaterialData<'mc>> for Wood<'mc> {
     fn into(self) -> crate::material::MaterialData<'mc> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1)
@@ -15832,7 +16341,8 @@ impl<'mc> Banner<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -16017,6 +16527,16 @@ impl<'mc> Banner<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Banner<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Banner.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Attachable<'mc>> for Banner<'mc> {
     fn into(self) -> crate::material::Attachable<'mc> {
         crate::material::Attachable::from_raw(&self.jni_ref(), self.1)
@@ -16214,7 +16734,8 @@ impl<'mc> Mushroom<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -16397,6 +16918,16 @@ impl<'mc> Mushroom<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Mushroom<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Mushroom.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::MaterialData<'mc>> for Mushroom<'mc> {
     fn into(self) -> crate::material::MaterialData<'mc> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1)
@@ -16479,7 +17010,8 @@ impl<'mc> RedstoneTorch<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -16735,6 +17267,16 @@ impl<'mc> RedstoneTorch<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for RedstoneTorch<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling RedstoneTorch.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Redstone<'mc>> for RedstoneTorch<'mc> {
     fn into(self) -> crate::material::Redstone<'mc> {
         crate::material::Redstone::from_raw(&self.jni_ref(), self.1)
@@ -17032,7 +17574,8 @@ impl<'mc> CocoaPlant<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -17244,6 +17787,16 @@ impl<'mc> CocoaPlant<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for CocoaPlant<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling CocoaPlant.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Directional<'mc>> for CocoaPlant<'mc> {
     fn into(self) -> crate::material::Directional<'mc> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1)
@@ -17561,7 +18114,8 @@ impl<'mc> Door<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -17754,6 +18308,16 @@ impl<'mc> Door<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Door<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Door.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Directional<'mc>> for Door<'mc> {
     fn into(self) -> crate::material::Directional<'mc> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1)
@@ -18006,7 +18570,8 @@ impl<'mc> ExtendedRails<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -18175,6 +18740,16 @@ impl<'mc> ExtendedRails<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ExtendedRails<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ExtendedRails.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Rails<'mc>> for ExtendedRails<'mc> {
     fn into(self) -> crate::material::Rails<'mc> {
         crate::material::Rails::from_raw(&self.jni_ref(), self.1)
@@ -18257,7 +18832,8 @@ impl<'mc> Cauldron<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -18448,6 +19024,16 @@ impl<'mc> Cauldron<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Cauldron<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Cauldron.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::MaterialData<'mc>> for Cauldron<'mc> {
     fn into(self) -> crate::material::MaterialData<'mc> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), self.1)
@@ -18608,7 +19194,8 @@ impl<'mc> Ladder<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -18777,6 +19364,16 @@ impl<'mc> Ladder<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Ladder<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Ladder.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::SimpleAttachableMaterialData<'mc>> for Ladder<'mc> {
     fn into(self) -> crate::material::SimpleAttachableMaterialData<'mc> {
         crate::material::SimpleAttachableMaterialData::from_raw(&self.jni_ref(), self.1)
@@ -18876,7 +19473,8 @@ impl<'mc> Command<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -19059,6 +19657,16 @@ impl<'mc> Command<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Command<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Command.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Redstone<'mc>> for Command<'mc> {
     fn into(self) -> crate::material::Redstone<'mc> {
         crate::material::Redstone::from_raw(&self.jni_ref(), self.1)
@@ -19251,7 +19859,8 @@ impl<'mc> DetectorRail<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -19420,6 +20029,16 @@ impl<'mc> DetectorRail<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for DetectorRail<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling DetectorRail.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::PressureSensor<'mc>> for DetectorRail<'mc> {
     fn into(self) -> crate::material::PressureSensor<'mc> {
         crate::material::PressureSensor::from_raw(&self.jni_ref(), self.1)
@@ -19587,7 +20206,8 @@ impl<'mc> Hopper<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -19782,6 +20402,16 @@ impl<'mc> Hopper<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Hopper<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Hopper.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Directional<'mc>> for Hopper<'mc> {
     fn into(self) -> crate::material::Directional<'mc> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1)
@@ -19928,7 +20558,8 @@ impl<'mc> Skull<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -20113,6 +20744,16 @@ impl<'mc> Skull<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Skull<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Skull.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Directional<'mc>> for Skull<'mc> {
     fn into(self) -> crate::material::Directional<'mc> {
         crate::material::Directional::from_raw(&self.jni_ref(), self.1)
@@ -20272,7 +20913,8 @@ impl<'mc> Sign<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -20457,6 +21099,16 @@ impl<'mc> Sign<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Sign<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Sign.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Attachable<'mc>> for Sign<'mc> {
     fn into(self) -> crate::material::Attachable<'mc> {
         crate::material::Attachable::from_raw(&self.jni_ref(), self.1)
@@ -20597,7 +21249,8 @@ impl<'mc> Wool<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -20780,6 +21433,16 @@ impl<'mc> Wool<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Wool<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Wool.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::material::Colorable<'mc>> for Wool<'mc> {
     fn into(self) -> crate::material::Colorable<'mc> {
         crate::material::Colorable::from_raw(&self.jni_ref(), self.1)

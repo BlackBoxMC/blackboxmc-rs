@@ -465,7 +465,8 @@ impl<'mc> ReloadCommand<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -609,6 +610,16 @@ impl<'mc> ReloadCommand<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ReloadCommand<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ReloadCommand.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::command::defaults::BukkitCommand<'mc>> for ReloadCommand<'mc> {
     fn into(self) -> crate::command::defaults::BukkitCommand<'mc> {
         crate::command::defaults::BukkitCommand::from_raw(&self.jni_ref(), self.1)
@@ -1102,7 +1113,8 @@ impl<'mc> TimingsCommand<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1246,6 +1258,16 @@ impl<'mc> TimingsCommand<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for TimingsCommand<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling TimingsCommand.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::command::defaults::BukkitCommand<'mc>> for TimingsCommand<'mc> {
     fn into(self) -> crate::command::defaults::BukkitCommand<'mc> {
         crate::command::defaults::BukkitCommand::from_raw(&self.jni_ref(), self.1)
@@ -1669,7 +1691,8 @@ impl<'mc> BukkitCommand<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1842,6 +1865,16 @@ impl<'mc> BukkitCommand<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BukkitCommand<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BukkitCommand.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::command::Command<'mc>> for BukkitCommand<'mc> {
     fn into(self) -> crate::command::Command<'mc> {
         crate::command::Command::from_raw(&self.jni_ref(), self.1)
@@ -2315,7 +2348,8 @@ impl<'mc> VersionCommand<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2459,6 +2493,16 @@ impl<'mc> VersionCommand<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for VersionCommand<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling VersionCommand.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::command::defaults::BukkitCommand<'mc>> for VersionCommand<'mc> {
     fn into(self) -> crate::command::defaults::BukkitCommand<'mc> {
         crate::command::defaults::BukkitCommand::from_raw(&self.jni_ref(), self.1)
@@ -2921,7 +2965,8 @@ impl<'mc> HelpCommand<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3065,6 +3110,16 @@ impl<'mc> HelpCommand<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for HelpCommand<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling HelpCommand.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::command::defaults::BukkitCommand<'mc>> for HelpCommand<'mc> {
     fn into(self) -> crate::command::defaults::BukkitCommand<'mc> {
         crate::command::defaults::BukkitCommand::from_raw(&self.jni_ref(), self.1)
@@ -3538,7 +3593,8 @@ impl<'mc> PluginsCommand<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3682,6 +3738,16 @@ impl<'mc> PluginsCommand<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PluginsCommand<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PluginsCommand.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::command::defaults::BukkitCommand<'mc>> for PluginsCommand<'mc> {
     fn into(self) -> crate::command::defaults::BukkitCommand<'mc> {
         crate::command::defaults::BukkitCommand::from_raw(&self.jni_ref(), self.1)

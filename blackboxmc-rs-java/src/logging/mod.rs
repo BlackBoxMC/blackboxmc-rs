@@ -119,7 +119,8 @@ impl<'mc> JavaErrorManager<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -172,6 +173,16 @@ impl<'mc> JavaErrorManager<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaErrorManager<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaErrorManager.toString: {}", err),
+        }
+    }
+}
+
 /// Format a LogRecord into a standard XML format.
 /// <p>The DTD specification is provided as Appendix A to the Java Logging APIs specification.</p>
 /// <p>The XMLFormatter can be used with arbitrary character encodings, but it is recommended that it normally be used with UTF-8. The character encoding can be set on the output Handler.</p>
@@ -348,7 +359,8 @@ impl<'mc> JavaXMLFormatter<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -401,6 +413,16 @@ impl<'mc> JavaXMLFormatter<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaXMLFormatter<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaXMLFormatter.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaXMLFormatter<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -570,7 +592,8 @@ impl<'mc> JavaFormatter<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -623,6 +646,16 @@ impl<'mc> JavaFormatter<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaFormatter<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaFormatter.toString: {}", err),
+        }
+    }
+}
+
 /// Simple network logging <tt>Handler</tt>.
 /// <p><tt>LogRecords</tt> are published to a network stream connection. By default the <tt>XMLFormatter</tt> class is used for formatting.</p>
 /// <p><b>Configuration:</b> By default each <tt>SocketHandler</tt> is initialized using the following <tt>LogManager</tt> configuration properties where <tt>&lt;handler-name&gt;</tt> refers to the fully-qualified class name of the handler. If properties are not defined (or have invalid values) then the specified default values are used.</p>
@@ -947,7 +980,8 @@ impl<'mc> JavaSocketHandler<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1000,6 +1034,16 @@ impl<'mc> JavaSocketHandler<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaSocketHandler<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaSocketHandler.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaSocketHandler<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -1180,7 +1224,8 @@ impl<'mc> JavaSimpleFormatter<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1233,6 +1278,16 @@ impl<'mc> JavaSimpleFormatter<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaSimpleFormatter<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaSimpleFormatter.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaSimpleFormatter<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -1515,7 +1570,8 @@ impl<'mc> JavaHandler<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1568,6 +1624,16 @@ impl<'mc> JavaHandler<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaHandler<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaHandler.toString: {}", err),
+        }
+    }
+}
+
 /// <tt>Handler</tt> that buffers requests in a circular buffer in memory.
 /// <p>Normally this <tt>Handler</tt> simply stores incoming <tt>LogRecords</tt> into its memory buffer and discards earlier records. This buffering is very cheap and avoids formatting costs. On certain trigger conditions, the <tt>MemoryHandler</tt> will push out its current buffer contents to a target <tt>Handler</tt>, which will typically publish them to the outside world.</p>
 /// <p>There are three main models for triggering a push of the buffer:</p>
@@ -1938,7 +2004,8 @@ impl<'mc> JavaMemoryHandler<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1991,6 +2058,16 @@ impl<'mc> JavaMemoryHandler<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaMemoryHandler<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaMemoryHandler.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaMemoryHandler<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -2783,7 +2860,8 @@ impl<'mc> JavaLogger<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2836,6 +2914,16 @@ impl<'mc> JavaLogger<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaLogger<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaLogger.toString: {}", err),
+        }
+    }
+}
+
 /// This <tt>Handler</tt> publishes log records to <tt>System.err</tt>. By default the <tt>SimpleFormatter</tt> is used to generate brief summaries.
 /// <p><b>Configuration:</b> By default each <tt>ConsoleHandler</tt> is initialized using the following <tt>LogManager</tt> configuration properties where <code>&lt;handler-name&gt;</code> refers to the fully-qualified class name of the handler. If properties are not defined (or have invalid values) then the specified default values are used.</p>
 /// <ul>
@@ -3141,7 +3229,8 @@ impl<'mc> JavaConsoleHandler<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3194,6 +3283,16 @@ impl<'mc> JavaConsoleHandler<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaConsoleHandler<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaConsoleHandler.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaConsoleHandler<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -3368,7 +3467,8 @@ impl<'mc> JavaLoggingPermission<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3437,6 +3537,16 @@ impl<'mc> JavaLoggingPermission<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaLoggingPermission<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaLoggingPermission.toString: {}", err),
+        }
+    }
+}
+
 /// A Filter can be used to provide fine grain control over what is logged, beyond the control provided by log levels.
 /// <p>Each Logger and each Handler can have a filter associated with it. The Logger or Handler will call the isLoggable method to check if a given LogRecord should be published. If isLoggable returns false, the LogRecord will be discarded.</p>
 ///
@@ -4004,7 +4114,8 @@ impl<'mc> JavaLogRecord<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4057,6 +4168,16 @@ impl<'mc> JavaLogRecord<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaLogRecord<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaLogRecord.toString: {}", err),
+        }
+    }
+}
+
 /// Stream based logging <tt>Handler</tt>.
 /// <p>This is primarily intended as a base class or support class to be used in implementing other logging <tt>Handlers</tt>.</p>
 /// <p><tt>LogRecords</tt> are published to a given <tt>java.io.OutputStream</tt>.</p>
@@ -4378,7 +4499,8 @@ impl<'mc> JavaStreamHandler<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4431,6 +4553,16 @@ impl<'mc> JavaStreamHandler<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaStreamHandler<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaStreamHandler.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for JavaStreamHandler<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -4569,7 +4701,8 @@ impl<'mc> JavaLevel<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4656,5 +4789,14 @@ impl<'mc> JavaLevel<'mc> {
             .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+}
+
+impl<'mc> std::string::ToString for JavaLevel<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaLevel.toString: {}", err),
+        }
     }
 }

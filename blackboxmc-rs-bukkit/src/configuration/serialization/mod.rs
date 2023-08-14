@@ -238,7 +238,8 @@ impl<'mc> ConfigurationSerialization<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -291,6 +292,16 @@ impl<'mc> ConfigurationSerialization<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ConfigurationSerialization<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ConfigurationSerialization.toString: {}", err),
+        }
+    }
+}
+
 /// Represents an object that may be serialized.
 /// <p>These objects MUST implement one of the following, in addition to the methods as defined by this interface:</p>
 /// <ul>
@@ -429,7 +440,8 @@ impl<'mc> SerializableAs<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -464,6 +476,16 @@ impl<'mc> SerializableAs<'mc> {
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
 }
+
+impl<'mc> std::string::ToString for SerializableAs<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling SerializableAs.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> JNIRaw<'mc> for SerializableAs<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -534,7 +556,8 @@ impl<'mc> DelegateDeserialization<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -569,6 +592,16 @@ impl<'mc> DelegateDeserialization<'mc> {
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
 }
+
+impl<'mc> std::string::ToString for DelegateDeserialization<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling DelegateDeserialization.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> JNIRaw<'mc> for DelegateDeserialization<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()

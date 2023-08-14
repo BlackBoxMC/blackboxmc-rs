@@ -211,7 +211,8 @@ impl<'mc> MoistureChangeEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -264,6 +265,16 @@ impl<'mc> MoistureChangeEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for MoistureChangeEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling MoistureChangeEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for MoistureChangeEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -504,7 +515,8 @@ impl<'mc> BlockReceiveGameEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -557,6 +569,16 @@ impl<'mc> BlockReceiveGameEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockReceiveGameEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockReceiveGameEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for BlockReceiveGameEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -827,7 +849,8 @@ impl<'mc> BlockDropItemEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -880,6 +903,16 @@ impl<'mc> BlockDropItemEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockDropItemEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockDropItemEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for BlockDropItemEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -1273,7 +1306,8 @@ impl<'mc> TNTPrimeEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1326,6 +1360,16 @@ impl<'mc> TNTPrimeEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for TNTPrimeEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling TNTPrimeEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for TNTPrimeEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -1538,7 +1582,8 @@ impl<'mc> BellResonateEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1591,6 +1636,16 @@ impl<'mc> BellResonateEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BellResonateEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BellResonateEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BellResonateEvent<'mc> {
     fn into(self) -> crate::event::block::BlockEvent<'mc> {
         crate::event::block::BlockEvent::from_raw(&self.jni_ref(), self.1)
@@ -1849,7 +1904,8 @@ impl<'mc> BlockExplodeEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1902,6 +1958,16 @@ impl<'mc> BlockExplodeEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockExplodeEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockExplodeEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for BlockExplodeEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -2370,7 +2436,8 @@ impl<'mc> CauldronLevelChangeEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2423,6 +2490,16 @@ impl<'mc> CauldronLevelChangeEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for CauldronLevelChangeEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling CauldronLevelChangeEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for CauldronLevelChangeEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -2797,7 +2874,8 @@ impl<'mc> BlockMultiPlaceEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2850,6 +2928,16 @@ impl<'mc> BlockMultiPlaceEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockMultiPlaceEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockMultiPlaceEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::block::BlockPlaceEvent<'mc>> for BlockMultiPlaceEvent<'mc> {
     fn into(self) -> crate::event::block::BlockPlaceEvent<'mc> {
         crate::event::block::BlockPlaceEvent::from_raw(&self.jni_ref(), self.1).expect(
@@ -3226,7 +3314,8 @@ impl<'mc> BlockCanBuildEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3279,6 +3368,16 @@ impl<'mc> BlockCanBuildEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockCanBuildEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockCanBuildEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockCanBuildEvent<'mc> {
     fn into(self) -> crate::event::block::BlockEvent<'mc> {
         crate::event::block::BlockEvent::from_raw(&self.jni_ref(), self.1)
@@ -3518,7 +3617,8 @@ impl<'mc> BlockSpreadEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3571,6 +3671,16 @@ impl<'mc> BlockSpreadEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockSpreadEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockSpreadEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::block::BlockFormEvent<'mc>> for BlockSpreadEvent<'mc> {
     fn into(self) -> crate::event::block::BlockFormEvent<'mc> {
         crate::event::block::BlockFormEvent::from_raw(&self.jni_ref(), self.1)
@@ -3780,7 +3890,8 @@ impl<'mc> BlockDamageAbortEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3833,6 +3944,16 @@ impl<'mc> BlockDamageAbortEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockDamageAbortEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockDamageAbortEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockDamageAbortEvent<'mc> {
     fn into(self) -> crate::event::block::BlockEvent<'mc> {
         crate::event::block::BlockEvent::from_raw(&self.jni_ref(), self.1)
@@ -4055,7 +4176,8 @@ impl<'mc> BlockFormEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4108,6 +4230,16 @@ impl<'mc> BlockFormEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockFormEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockFormEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::block::BlockGrowEvent<'mc>> for BlockFormEvent<'mc> {
     fn into(self) -> crate::event::block::BlockGrowEvent<'mc> {
         crate::event::block::BlockGrowEvent::from_raw(&self.jni_ref(), self.1)
@@ -4507,7 +4639,8 @@ impl<'mc> BlockPistonRetractEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4560,6 +4693,16 @@ impl<'mc> BlockPistonRetractEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockPistonRetractEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockPistonRetractEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::block::BlockPistonEvent<'mc>> for BlockPistonRetractEvent<'mc> {
     fn into(self) -> crate::event::block::BlockPistonEvent<'mc> {
         crate::event::block::BlockPistonEvent::from_raw(&self.jni_ref(), self.1).expect(
@@ -5089,7 +5232,8 @@ impl<'mc> BlockPistonExtendEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5142,6 +5286,16 @@ impl<'mc> BlockPistonExtendEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockPistonExtendEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockPistonExtendEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::block::BlockPistonEvent<'mc>> for BlockPistonExtendEvent<'mc> {
     fn into(self) -> crate::event::block::BlockPistonEvent<'mc> {
         crate::event::block::BlockPistonEvent::from_raw(&self.jni_ref(), self.1).expect(
@@ -5392,7 +5546,8 @@ impl<'mc> BlockFertilizeEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5445,6 +5600,16 @@ impl<'mc> BlockFertilizeEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockFertilizeEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockFertilizeEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for BlockFertilizeEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -5670,7 +5835,8 @@ impl<'mc> BrewingStartEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5723,6 +5889,16 @@ impl<'mc> BrewingStartEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BrewingStartEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BrewingStartEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::block::InventoryBlockStartEvent<'mc>> for BrewingStartEvent<'mc> {
     fn into(self) -> crate::event::block::InventoryBlockStartEvent<'mc> {
         crate::event::block::InventoryBlockStartEvent::from_raw(&self.jni_ref(), self.1).expect(
@@ -5920,7 +6096,8 @@ impl<'mc> InventoryBlockStartEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5973,6 +6150,16 @@ impl<'mc> InventoryBlockStartEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for InventoryBlockStartEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling InventoryBlockStartEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for InventoryBlockStartEvent<'mc> {
     fn into(self) -> crate::event::block::BlockEvent<'mc> {
         crate::event::block::BlockEvent::from_raw(&self.jni_ref(), self.1).expect(
@@ -6199,7 +6386,8 @@ impl<'mc> BlockGrowEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -6252,6 +6440,16 @@ impl<'mc> BlockGrowEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockGrowEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockGrowEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for BlockGrowEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -6541,7 +6739,8 @@ impl<'mc> BlockDispenseArmorEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -6594,6 +6793,16 @@ impl<'mc> BlockDispenseArmorEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockDispenseArmorEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockDispenseArmorEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::block::BlockDispenseEvent<'mc>> for BlockDispenseArmorEvent<'mc> {
     fn into(self) -> crate::event::block::BlockDispenseEvent<'mc> {
         crate::event::block::BlockDispenseEvent::from_raw(&self.jni_ref(), self.1).expect(
@@ -6848,7 +7057,8 @@ impl<'mc> BlockCookEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -6901,6 +7111,16 @@ impl<'mc> BlockCookEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockCookEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockCookEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for BlockCookEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -7132,7 +7352,8 @@ impl<'mc> BlockPistonEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -7185,6 +7406,16 @@ impl<'mc> BlockPistonEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockPistonEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockPistonEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for BlockPistonEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -7415,7 +7646,8 @@ impl<'mc> BlockFadeEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -7468,6 +7700,16 @@ impl<'mc> BlockFadeEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockFadeEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockFadeEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for BlockFadeEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -7830,7 +8072,8 @@ impl<'mc> BlockPlaceEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -7883,6 +8126,16 @@ impl<'mc> BlockPlaceEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockPlaceEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockPlaceEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for BlockPlaceEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -8142,7 +8395,8 @@ impl<'mc> BlockPhysicsEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -8195,6 +8449,16 @@ impl<'mc> BlockPhysicsEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockPhysicsEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockPhysicsEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for BlockPhysicsEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -8439,7 +8703,8 @@ impl<'mc> EntityBlockFormEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -8492,6 +8757,16 @@ impl<'mc> EntityBlockFormEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for EntityBlockFormEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling EntityBlockFormEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::block::BlockFormEvent<'mc>> for EntityBlockFormEvent<'mc> {
     fn into(self) -> crate::event::block::BlockFormEvent<'mc> {
         crate::event::block::BlockFormEvent::from_raw(&self.jni_ref(), self.1).expect(
@@ -8727,7 +9002,8 @@ impl<'mc> SpongeAbsorbEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -8780,6 +9056,16 @@ impl<'mc> SpongeAbsorbEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for SpongeAbsorbEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling SpongeAbsorbEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for SpongeAbsorbEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -8981,7 +9267,8 @@ impl<'mc> BlockExpEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -9034,6 +9321,16 @@ impl<'mc> BlockExpEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockExpEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockExpEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockExpEvent<'mc> {
     fn into(self) -> crate::event::block::BlockEvent<'mc> {
         crate::event::block::BlockEvent::from_raw(&self.jni_ref(), self.1)
@@ -9329,7 +9626,8 @@ impl<'mc> SignChangeEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -9382,6 +9680,16 @@ impl<'mc> SignChangeEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for SignChangeEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling SignChangeEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for SignChangeEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -9583,7 +9891,8 @@ impl<'mc> LeavesDecayEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -9636,6 +9945,16 @@ impl<'mc> LeavesDecayEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for LeavesDecayEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling LeavesDecayEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for LeavesDecayEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -9882,7 +10201,8 @@ impl<'mc> BlockFromToEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -9935,6 +10255,16 @@ impl<'mc> BlockFromToEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockFromToEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockFromToEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for BlockFromToEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -10175,7 +10505,8 @@ impl<'mc> BlockShearEntityEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -10228,6 +10559,16 @@ impl<'mc> BlockShearEntityEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockShearEntityEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockShearEntityEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for BlockShearEntityEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -10470,7 +10811,8 @@ impl<'mc> FluidLevelChangeEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -10523,6 +10865,16 @@ impl<'mc> FluidLevelChangeEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for FluidLevelChangeEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling FluidLevelChangeEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for FluidLevelChangeEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -10751,7 +11103,8 @@ impl<'mc> BlockBurnEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -10804,6 +11157,16 @@ impl<'mc> BlockBurnEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockBurnEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockBurnEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for BlockBurnEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -11081,7 +11444,8 @@ impl<'mc> BlockDispenseEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -11134,6 +11498,16 @@ impl<'mc> BlockDispenseEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockDispenseEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockDispenseEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for BlockDispenseEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -11385,7 +11759,8 @@ impl<'mc> BellRingEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -11438,6 +11813,16 @@ impl<'mc> BellRingEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BellRingEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BellRingEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for BellRingEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -11707,7 +12092,8 @@ impl<'mc> BlockDamageEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -11760,6 +12146,16 @@ impl<'mc> BlockDamageEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockDamageEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockDamageEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for BlockDamageEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -12001,7 +12397,8 @@ impl<'mc> CampfireStartEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -12054,6 +12451,16 @@ impl<'mc> CampfireStartEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for CampfireStartEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling CampfireStartEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::block::InventoryBlockStartEvent<'mc>> for CampfireStartEvent<'mc> {
     fn into(self) -> crate::event::block::InventoryBlockStartEvent<'mc> {
         crate::event::block::InventoryBlockStartEvent::from_raw(&self.jni_ref(), self.1).expect("Error converting CampfireStartEvent into crate::event::block::InventoryBlockStartEvent")
@@ -12325,7 +12732,8 @@ impl<'mc> BlockBreakEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -12378,6 +12786,16 @@ impl<'mc> BlockBreakEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockBreakEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockBreakEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for BlockBreakEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -12594,7 +13012,8 @@ impl<'mc> BlockRedstoneEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -12647,6 +13066,16 @@ impl<'mc> BlockRedstoneEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockRedstoneEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockRedstoneEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockRedstoneEvent<'mc> {
     fn into(self) -> crate::event::block::BlockEvent<'mc> {
         crate::event::block::BlockEvent::from_raw(&self.jni_ref(), self.1)
@@ -13063,7 +13492,8 @@ impl<'mc> BlockIgniteEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -13116,6 +13546,16 @@ impl<'mc> BlockIgniteEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockIgniteEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockIgniteEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for BlockIgniteEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -13402,7 +13842,8 @@ impl<'mc> NotePlayEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -13455,6 +13896,16 @@ impl<'mc> NotePlayEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for NotePlayEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling NotePlayEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for NotePlayEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -13613,7 +14064,8 @@ impl<'mc> BlockEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -13666,6 +14118,16 @@ impl<'mc> BlockEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for BlockEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BlockEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Event<'mc>> for BlockEvent<'mc> {
     fn into(self) -> crate::event::Event<'mc> {
         crate::event::Event::from_raw(&self.jni_ref(), self.1)

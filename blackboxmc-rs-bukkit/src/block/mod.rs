@@ -25554,7 +25554,8 @@ impl<'mc> DoubleChest<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -25607,6 +25608,16 @@ impl<'mc> DoubleChest<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for DoubleChest<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling DoubleChest.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::inventory::InventoryHolder<'mc>> for DoubleChest<'mc> {
     fn into(self) -> crate::inventory::InventoryHolder<'mc> {
         crate::inventory::InventoryHolder::from_raw(&self.jni_ref(), self.1)

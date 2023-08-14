@@ -125,7 +125,8 @@ impl<'mc> TextComponent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -808,6 +809,16 @@ impl<'mc> TextComponent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for TextComponent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling TextComponent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::bungee::api::chat::BaseComponent<'mc>> for TextComponent<'mc> {
     fn into(self) -> crate::bungee::api::chat::BaseComponent<'mc> {
         crate::bungee::api::chat::BaseComponent::from_raw(&self.jni_ref(), self.1)
@@ -1191,7 +1202,8 @@ impl<'mc> HoverEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1270,6 +1282,15 @@ impl<'mc> HoverEvent<'mc> {
             .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+}
+
+impl<'mc> std::string::ToString for HoverEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling HoverEvent.toString: {}", err),
+        }
     }
 }
 
@@ -1927,7 +1948,8 @@ impl<'mc> BaseComponent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2018,6 +2040,15 @@ impl<'mc> BaseComponent<'mc> {
             .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+}
+
+impl<'mc> std::string::ToString for BaseComponent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BaseComponent.toString: {}", err),
+        }
     }
 }
 
@@ -2128,7 +2159,8 @@ impl<'mc> SelectorComponent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2811,6 +2843,16 @@ impl<'mc> SelectorComponent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for SelectorComponent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling SelectorComponent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::bungee::api::chat::BaseComponent<'mc>> for SelectorComponent<'mc> {
     fn into(self) -> crate::bungee::api::chat::BaseComponent<'mc> {
         crate::bungee::api::chat::BaseComponent::from_raw(&self.jni_ref(), self.1).expect(
@@ -2979,7 +3021,8 @@ impl<'mc> ScoreComponent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3708,6 +3751,16 @@ impl<'mc> ScoreComponent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ScoreComponent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ScoreComponent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::bungee::api::chat::BaseComponent<'mc>> for ScoreComponent<'mc> {
     fn into(self) -> crate::bungee::api::chat::BaseComponent<'mc> {
         crate::bungee::api::chat::BaseComponent::from_raw(&self.jni_ref(), self.1)
@@ -3932,7 +3985,8 @@ impl<'mc> ClickEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4023,6 +4077,15 @@ impl<'mc> ClickEvent<'mc> {
             .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+}
+
+impl<'mc> std::string::ToString for ClickEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ClickEvent.toString: {}", err),
+        }
     }
 }
 
@@ -4210,7 +4273,8 @@ impl<'mc> ItemTagSerializer<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -4263,6 +4327,16 @@ impl<'mc> ItemTagSerializer<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ItemTagSerializer<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ItemTagSerializer.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for ItemTagSerializer<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -4500,7 +4574,8 @@ impl<'mc> TranslatableComponent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5184,6 +5259,16 @@ impl<'mc> TranslatableComponent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for TranslatableComponent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling TranslatableComponent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::bungee::api::chat::BaseComponent<'mc>> for TranslatableComponent<'mc> {
     fn into(self) -> crate::bungee::api::chat::BaseComponent<'mc> {
         crate::bungee::api::chat::BaseComponent::from_raw(&self.jni_ref(), self.1).expect(
@@ -5347,7 +5432,8 @@ impl<'mc> ItemTag<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5424,6 +5510,15 @@ impl<'mc> ItemTag<'mc> {
             .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+}
+
+impl<'mc> std::string::ToString for ItemTag<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ItemTag.toString: {}", err),
+        }
     }
 }
 
@@ -5533,7 +5628,8 @@ impl<'mc> KeybindComponent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -6216,6 +6312,16 @@ impl<'mc> KeybindComponent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for KeybindComponent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling KeybindComponent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::bungee::api::chat::BaseComponent<'mc>> for KeybindComponent<'mc> {
     fn into(self) -> crate::bungee::api::chat::BaseComponent<'mc> {
         crate::bungee::api::chat::BaseComponent::from_raw(&self.jni_ref(), self.1).expect(
@@ -6903,7 +7009,8 @@ impl<'mc> ComponentBuilder<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -6956,4 +7063,14 @@ impl<'mc> ComponentBuilder<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ComponentBuilder<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ComponentBuilder.toString: {}", err),
+        }
+    }
+}
+
 pub mod hover;

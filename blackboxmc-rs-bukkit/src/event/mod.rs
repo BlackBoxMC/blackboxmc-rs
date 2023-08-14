@@ -231,7 +231,8 @@ impl<'mc> HandlerList<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -284,6 +285,16 @@ impl<'mc> HandlerList<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for HandlerList<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling HandlerList.toString: {}", err),
+        }
+    }
+}
+
 /// Simple interface for tagging all EventListeners
 ///
 /// This is a representation of an abstract class.
@@ -464,7 +475,8 @@ impl<'mc> EventHandler<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -499,6 +511,16 @@ impl<'mc> EventHandler<'mc> {
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
 }
+
+impl<'mc> std::string::ToString for EventHandler<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling EventHandler.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> JNIRaw<'mc> for EventHandler<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -742,7 +764,8 @@ impl<'mc> Event<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -795,6 +818,16 @@ impl<'mc> Event<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Event<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Event.toString: {}", err),
+        }
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum EventPriorityEnum {
     Lowest,

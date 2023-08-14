@@ -220,7 +220,8 @@ impl<'mc> MapCursorCollection<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -273,6 +274,16 @@ impl<'mc> MapCursorCollection<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for MapCursorCollection<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling MapCursorCollection.toString: {}", err),
+        }
+    }
+}
+
 /// An enum representing all possible scales a map can be set to.
 #[derive(PartialEq, Eq)]
 pub enum MapViewScaleEnum {
@@ -680,7 +691,8 @@ impl<'mc> MinecraftFont<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -733,6 +745,16 @@ impl<'mc> MinecraftFont<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for MinecraftFont<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling MinecraftFont.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::map::MapFont<'mc>> for MinecraftFont<'mc> {
     fn into(self) -> crate::map::MapFont<'mc> {
         crate::map::MapFont::from_raw(&self.jni_ref(), self.1)
@@ -1316,7 +1338,8 @@ impl<'mc> MapCursor<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1369,6 +1392,16 @@ impl<'mc> MapCursor<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for MapCursor<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling MapCursor.toString: {}", err),
+        }
+    }
+}
+
 /// Represents the graphics for a single character in a MapFont.
 pub struct MapFontCharacterSprite<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1511,7 +1544,8 @@ impl<'mc> MapFontCharacterSprite<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1564,6 +1598,16 @@ impl<'mc> MapFontCharacterSprite<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for MapFontCharacterSprite<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling MapFontCharacterSprite.toString: {}", err),
+        }
+    }
+}
+
 /// Represents a canvas for drawing to a map. Each canvas is associated with a specific <a href="MapRenderer.html" title="class in org.bukkit.map"><code>MapRenderer</code></a> and represents that renderer's layer on the map.
 ///
 /// This is a representation of an abstract class.
@@ -2060,7 +2104,8 @@ impl<'mc> MapRenderer<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2113,6 +2158,16 @@ impl<'mc> MapRenderer<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for MapRenderer<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling MapRenderer.toString: {}", err),
+        }
+    }
+}
+
 /// Represents a map item.
 ///
 /// This is a representation of an abstract class.
@@ -2619,7 +2674,8 @@ impl<'mc> MapFont<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2672,6 +2728,16 @@ impl<'mc> MapFont<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for MapFont<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling MapFont.toString: {}", err),
+        }
+    }
+}
+
 /// Represents the palette that map items use.
 /// <p>These fields are hee base color ranges. Each entry corresponds to four colors of varying shades with values entry to entry + 3.</p>
 pub struct MapPalette<'mc>(
@@ -2931,7 +2997,8 @@ impl<'mc> MapPalette<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2982,5 +3049,14 @@ impl<'mc> MapPalette<'mc> {
             .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+}
+
+impl<'mc> std::string::ToString for MapPalette<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling MapPalette.toString: {}", err),
+        }
     }
 }

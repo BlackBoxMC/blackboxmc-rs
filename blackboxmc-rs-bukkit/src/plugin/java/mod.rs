@@ -211,7 +211,8 @@ impl<'mc> JavaPluginLoader<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -264,6 +265,16 @@ impl<'mc> JavaPluginLoader<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaPluginLoader<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaPluginLoader.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::plugin::PluginLoader<'mc>> for JavaPluginLoader<'mc> {
     fn into(self) -> crate::plugin::PluginLoader<'mc> {
         crate::plugin::PluginLoader::from_raw(&self.jni_ref(), self.1)
@@ -704,7 +715,8 @@ impl<'mc> JavaPlugin<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -847,6 +859,16 @@ impl<'mc> JavaPlugin<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for JavaPlugin<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling JavaPlugin.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::plugin::PluginBase<'mc>> for JavaPlugin<'mc> {
     fn into(self) -> crate::plugin::PluginBase<'mc> {
         crate::plugin::PluginBase::from_raw(&self.jni_ref(), self.1)

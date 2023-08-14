@@ -274,7 +274,8 @@ impl<'mc> EnchantmentWrapper<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -389,6 +390,16 @@ impl<'mc> EnchantmentWrapper<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for EnchantmentWrapper<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling EnchantmentWrapper.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::enchantments::Enchantment<'mc>> for EnchantmentWrapper<'mc> {
     fn into(self) -> crate::enchantments::Enchantment<'mc> {
         crate::enchantments::Enchantment::from_raw(&self.jni_ref(), self.1)
@@ -587,7 +598,8 @@ impl<'mc> EnchantmentOffer<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -640,6 +652,16 @@ impl<'mc> EnchantmentOffer<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for EnchantmentOffer<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling EnchantmentOffer.toString: {}", err),
+        }
+    }
+}
+
 /// Represents the applicable target for a <a href="Enchantment.html" title="class in org.bukkit.enchantments"><code>Enchantment</code></a>
 #[derive(PartialEq, Eq)]
 pub enum EnchantmentTargetEnum {
@@ -1068,7 +1090,8 @@ impl<'mc> Enchantment<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1183,6 +1206,16 @@ impl<'mc> Enchantment<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Enchantment<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Enchantment.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::Keyed<'mc>> for Enchantment<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
         crate::Keyed::from_raw(&self.jni_ref(), self.1)

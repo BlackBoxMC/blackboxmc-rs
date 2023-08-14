@@ -224,7 +224,8 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -349,6 +350,16 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PotionEffectTypeWrapper<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PotionEffectTypeWrapper.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::potion::PotionEffectType<'mc>> for PotionEffectTypeWrapper<'mc> {
     fn into(self) -> crate::potion::PotionEffectType<'mc> {
         crate::potion::PotionEffectType::from_raw(&self.jni_ref(), self.1)
@@ -524,7 +535,8 @@ impl<'mc> PotionData<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -567,6 +579,16 @@ impl<'mc> PotionData<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PotionData<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PotionData.toString: {}", err),
+        }
+    }
+}
+
 /// Potion Adapter for pre-1.9 data values see @PotionMeta for 1.9+
 pub struct Potion<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1016,7 +1038,8 @@ impl<'mc> Potion<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1059,6 +1082,16 @@ impl<'mc> Potion<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Potion<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Potion.toString: {}", err),
+        }
+    }
+}
+
 /// Represents a potion effect, that can be added to a <a title="interface in org.bukkit.entity" href="../entity/LivingEntity.html"><code>LivingEntity</code></a>. A potion effect has a duration that it will last for, an amplifier that will enhance its effects, and a <a href="PotionEffectType.html" title="class in org.bukkit.potion"><code>PotionEffectType</code></a>, that represents its effect on an entity.
 pub struct PotionEffect<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1281,7 +1314,8 @@ impl<'mc> PotionEffect<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1403,6 +1437,16 @@ impl<'mc> PotionEffect<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PotionEffect<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PotionEffect.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'mc>>
     for PotionEffect<'mc>
 {
@@ -1626,7 +1670,8 @@ impl<'mc> PotionEffectType<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1751,6 +1796,16 @@ impl<'mc> PotionEffectType<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PotionEffectType<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PotionEffectType.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::Keyed<'mc>> for PotionEffectType<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
         crate::Keyed::from_raw(&self.jni_ref(), self.1)

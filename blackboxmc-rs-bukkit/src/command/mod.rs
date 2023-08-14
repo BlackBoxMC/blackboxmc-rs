@@ -131,7 +131,8 @@ impl<'mc> CommandSenderSpigot<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -182,6 +183,15 @@ impl<'mc> CommandSenderSpigot<'mc> {
             .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+}
+
+impl<'mc> std::string::ToString for CommandSenderSpigot<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling CommandSenderSpigot.toString: {}", err),
+        }
     }
 }
 
@@ -793,7 +803,8 @@ impl<'mc> SimpleCommandMap<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -846,6 +857,16 @@ impl<'mc> SimpleCommandMap<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for SimpleCommandMap<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling SimpleCommandMap.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::command::CommandMap<'mc>> for SimpleCommandMap<'mc> {
     fn into(self) -> crate::command::CommandMap<'mc> {
         crate::command::CommandMap::from_raw(&self.jni_ref(), self.1)
@@ -1320,7 +1341,8 @@ impl<'mc> FormattedCommandAlias<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1464,6 +1486,16 @@ impl<'mc> FormattedCommandAlias<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for FormattedCommandAlias<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling FormattedCommandAlias.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::command::Command<'mc>> for FormattedCommandAlias<'mc> {
     fn into(self) -> crate::command::Command<'mc> {
         crate::command::Command::from_raw(&self.jni_ref(), self.1)
@@ -2510,7 +2542,8 @@ impl<'mc> Command<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2683,6 +2716,16 @@ impl<'mc> Command<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Command<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Command.toString: {}", err),
+        }
+    }
+}
+
 /// Represents a command that delegates to one or more other commands
 pub struct MultipleCommandAlias<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3152,7 +3195,8 @@ impl<'mc> MultipleCommandAlias<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3296,6 +3340,16 @@ impl<'mc> MultipleCommandAlias<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for MultipleCommandAlias<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling MultipleCommandAlias.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::command::Command<'mc>> for MultipleCommandAlias<'mc> {
     fn into(self) -> crate::command::Command<'mc> {
         crate::command::Command::from_raw(&self.jni_ref(), self.1)
@@ -3422,7 +3476,8 @@ impl<'mc> PluginCommandYamlParser<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3473,6 +3528,15 @@ impl<'mc> PluginCommandYamlParser<'mc> {
             .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+}
+
+impl<'mc> std::string::ToString for PluginCommandYamlParser<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PluginCommandYamlParser.toString: {}", err),
+        }
     }
 }
 
@@ -4578,7 +4642,8 @@ impl<'mc> PluginCommand<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -5086,6 +5151,16 @@ impl<'mc> PluginCommand<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PluginCommand<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PluginCommand.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::command::PluginIdentifiableCommand<'mc>> for PluginCommand<'mc> {
     fn into(self) -> crate::command::PluginIdentifiableCommand<'mc> {
         crate::command::PluginIdentifiableCommand::from_raw(&self.jni_ref(), self.1)

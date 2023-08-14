@@ -163,7 +163,8 @@ impl<'mc> VehicleUpdateEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -216,6 +217,16 @@ impl<'mc> VehicleUpdateEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for VehicleUpdateEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling VehicleUpdateEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleUpdateEvent<'mc> {
     fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
         crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1)
@@ -430,7 +441,8 @@ impl<'mc> VehicleEnterEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -483,6 +495,16 @@ impl<'mc> VehicleEnterEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for VehicleEnterEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling VehicleEnterEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for VehicleEnterEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -764,7 +786,8 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -817,6 +840,19 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for VehicleEntityCollisionEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!(
+                "Error calling VehicleEntityCollisionEvent.toString: {}",
+                err
+            ),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for VehicleEntityCollisionEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -1039,7 +1075,8 @@ impl<'mc> VehicleExitEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1092,6 +1129,16 @@ impl<'mc> VehicleExitEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for VehicleExitEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling VehicleExitEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for VehicleExitEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -1254,7 +1301,8 @@ impl<'mc> VehicleCollisionEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1307,6 +1355,16 @@ impl<'mc> VehicleCollisionEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for VehicleCollisionEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling VehicleCollisionEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleCollisionEvent<'mc> {
     fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
         crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1).expect(
@@ -1497,7 +1555,8 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1550,6 +1609,16 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for VehicleBlockCollisionEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling VehicleBlockCollisionEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::vehicle::VehicleCollisionEvent<'mc>>
     for VehicleBlockCollisionEvent<'mc>
 {
@@ -1746,7 +1815,8 @@ impl<'mc> VehicleCreateEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1799,6 +1869,16 @@ impl<'mc> VehicleCreateEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for VehicleCreateEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling VehicleCreateEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for VehicleCreateEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -2010,7 +2090,8 @@ impl<'mc> VehicleMoveEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2063,6 +2144,16 @@ impl<'mc> VehicleMoveEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for VehicleMoveEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling VehicleMoveEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::vehicle::VehicleEvent<'mc>> for VehicleMoveEvent<'mc> {
     fn into(self) -> crate::event::vehicle::VehicleEvent<'mc> {
         crate::event::vehicle::VehicleEvent::from_raw(&self.jni_ref(), self.1)
@@ -2277,7 +2368,8 @@ impl<'mc> VehicleDestroyEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2330,6 +2422,16 @@ impl<'mc> VehicleDestroyEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for VehicleDestroyEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling VehicleDestroyEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for VehicleDestroyEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -2578,7 +2680,8 @@ impl<'mc> VehicleDamageEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2631,6 +2734,16 @@ impl<'mc> VehicleDamageEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for VehicleDamageEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling VehicleDamageEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Cancellable<'mc>> for VehicleDamageEvent<'mc> {
     fn into(self) -> crate::event::Cancellable<'mc> {
         crate::event::Cancellable::from_raw(&self.jni_ref(), self.1)
@@ -2789,7 +2902,8 @@ impl<'mc> VehicleEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2842,6 +2956,16 @@ impl<'mc> VehicleEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for VehicleEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling VehicleEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::event::Event<'mc>> for VehicleEvent<'mc> {
     fn into(self) -> crate::event::Event<'mc> {
         crate::event::Event::from_raw(&self.jni_ref(), self.1)

@@ -243,7 +243,8 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -296,6 +297,16 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for SimplexNoiseGenerator<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling SimplexNoiseGenerator.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::util::noise::PerlinNoiseGenerator<'mc>> for SimplexNoiseGenerator<'mc> {
     fn into(self) -> crate::util::noise::PerlinNoiseGenerator<'mc> {
         crate::util::noise::PerlinNoiseGenerator::from_raw(&self.jni_ref(), self.1).expect(
@@ -542,7 +553,8 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -595,6 +607,16 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PerlinNoiseGenerator<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PerlinNoiseGenerator.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::util::noise::NoiseGenerator<'mc>> for PerlinNoiseGenerator<'mc> {
     fn into(self) -> crate::util::noise::NoiseGenerator<'mc> {
         crate::util::noise::NoiseGenerator::from_raw(&self.jni_ref(), self.1)
@@ -891,7 +913,8 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -944,6 +967,16 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for SimplexOctaveGenerator<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling SimplexOctaveGenerator.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::util::noise::OctaveGenerator<'mc>> for SimplexOctaveGenerator<'mc> {
     fn into(self) -> crate::util::noise::OctaveGenerator<'mc> {
         crate::util::noise::OctaveGenerator::from_raw(&self.jni_ref(), self.1).expect(
@@ -1166,7 +1199,8 @@ impl<'mc> OctaveGenerator<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1219,6 +1253,16 @@ impl<'mc> OctaveGenerator<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for OctaveGenerator<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling OctaveGenerator.toString: {}", err),
+        }
+    }
+}
+
 /// Creates perlin noise through unbiased octaves
 pub struct PerlinOctaveGenerator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1476,7 +1520,8 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1529,6 +1574,16 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PerlinOctaveGenerator<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PerlinOctaveGenerator.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::util::noise::OctaveGenerator<'mc>> for PerlinOctaveGenerator<'mc> {
     fn into(self) -> crate::util::noise::OctaveGenerator<'mc> {
         crate::util::noise::OctaveGenerator::from_raw(&self.jni_ref(), self.1).expect(
@@ -1702,7 +1757,8 @@ impl<'mc> NoiseGenerator<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1753,5 +1809,14 @@ impl<'mc> NoiseGenerator<'mc> {
             .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+}
+
+impl<'mc> std::string::ToString for NoiseGenerator<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling NoiseGenerator.toString: {}", err),
+        }
     }
 }

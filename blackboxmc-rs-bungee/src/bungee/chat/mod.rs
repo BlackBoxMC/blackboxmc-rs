@@ -152,7 +152,8 @@ impl<'mc> SelectorComponentSerializer<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -205,6 +206,19 @@ impl<'mc> SelectorComponentSerializer<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for SelectorComponentSerializer<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!(
+                "Error calling SelectorComponentSerializer.toString: {}",
+                err
+            ),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for SelectorComponentSerializer<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -367,7 +381,8 @@ impl<'mc> TextComponentSerializer<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -420,6 +435,16 @@ impl<'mc> TextComponentSerializer<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for TextComponentSerializer<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling TextComponentSerializer.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for TextComponentSerializer<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -522,7 +547,8 @@ impl<'mc> BaseComponentSerializer<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -573,6 +599,15 @@ impl<'mc> BaseComponentSerializer<'mc> {
             .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+}
+
+impl<'mc> std::string::ToString for BaseComponentSerializer<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling BaseComponentSerializer.toString: {}", err),
+        }
     }
 }
 
@@ -726,7 +761,8 @@ impl<'mc> ScoreComponentSerializer<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -779,6 +815,16 @@ impl<'mc> ScoreComponentSerializer<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ScoreComponentSerializer<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ScoreComponentSerializer.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for ScoreComponentSerializer<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -943,7 +989,8 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -996,6 +1043,19 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for TranslatableComponentSerializer<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!(
+                "Error calling TranslatableComponentSerializer.toString: {}",
+                err
+            ),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for TranslatableComponentSerializer<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -1159,7 +1219,8 @@ impl<'mc> KeybindComponentSerializer<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1212,6 +1273,16 @@ impl<'mc> KeybindComponentSerializer<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for KeybindComponentSerializer<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling KeybindComponentSerializer.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for KeybindComponentSerializer<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1
@@ -1301,7 +1372,8 @@ impl<'mc> TranslationRegistry<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1378,6 +1450,15 @@ impl<'mc> TranslationRegistry<'mc> {
             .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+}
+
+impl<'mc> std::string::ToString for TranslationRegistry<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling TranslationRegistry.toString: {}", err),
+        }
     }
 }
 
@@ -1459,7 +1540,8 @@ impl<'mc> ComponentSerializer<'mc> {
     }
     //
 
-    pub fn to_string(
+    #[doc(hidden)]
+    pub fn internal_to_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -1582,6 +1664,16 @@ impl<'mc> ComponentSerializer<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ComponentSerializer<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ComponentSerializer.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<jni::objects::JObject<'mc>> for ComponentSerializer<'mc> {
     fn into(self) -> jni::objects::JObject<'mc> {
         self.1

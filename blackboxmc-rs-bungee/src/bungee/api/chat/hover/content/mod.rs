@@ -140,7 +140,8 @@ res.z()?
 //
 
 
-	pub fn to_string(&mut self) 
+#[doc(hidden)]
+	pub fn internal_to_string(&mut self) 
 -> Result<String, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Ljava/lang/String;");
@@ -251,6 +252,19 @@ Ok(
 ()
 )}
 }
+
+        impl<'mc> std::string::ToString for Item<'mc> {
+            fn to_string(&self) -> String {
+                match &self.internal_to_string() {
+                    Ok(a) => a.clone(),
+                    Err(err) => format!(
+                        "Error calling Item.toString: {}",
+                        err
+                    ),
+                }
+            }
+        }
+        
 impl<'mc> Into<crate::bungee::api::chat::hover::content::Content<'mc>> for Item<'mc>{
 
 fn into(self) -> crate::bungee::api::chat::hover::content::Content<'mc> {
@@ -372,7 +386,8 @@ res.z()?
 //
 
 
-	pub fn to_string(&mut self) 
+#[doc(hidden)]
+	pub fn internal_to_string(&mut self) 
 -> Result<String, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Ljava/lang/String;");
@@ -509,6 +524,19 @@ Ok(
 ()
 )}
 }
+
+        impl<'mc> std::string::ToString for Entity<'mc> {
+            fn to_string(&self) -> String {
+                match &self.internal_to_string() {
+                    Ok(a) => a.clone(),
+                    Err(err) => format!(
+                        "Error calling Entity.toString: {}",
+                        err
+                    ),
+                }
+            }
+        }
+        
 impl<'mc> Into<crate::bungee::api::chat::hover::content::Content<'mc>> for Entity<'mc>{
 
 fn into(self) -> crate::bungee::api::chat::hover::content::Content<'mc> {
@@ -648,7 +676,8 @@ res.z()?
 //
 
 
-	pub fn to_string(&mut self) 
+#[doc(hidden)]
+	pub fn internal_to_string(&mut self) 
 -> Result<String, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Ljava/lang/String;");
@@ -709,6 +738,19 @@ Ok(
 ()
 )}
 }
+
+        impl<'mc> std::string::ToString for ItemSerializer<'mc> {
+            fn to_string(&self) -> String {
+                match &self.internal_to_string() {
+                    Ok(a) => a.clone(),
+                    Err(err) => format!(
+                        "Error calling ItemSerializer.toString: {}",
+                        err
+                    ),
+                }
+            }
+        }
+        
 impl<'mc> Into<jni::objects::JObject<'mc>> for ItemSerializer<'mc>{
 
 fn into(self) -> jni::objects::JObject<'mc> {
@@ -847,7 +889,8 @@ res.z()?
 //
 
 
-	pub fn to_string(&mut self) 
+#[doc(hidden)]
+	pub fn internal_to_string(&mut self) 
 -> Result<String, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Ljava/lang/String;");
@@ -908,6 +951,19 @@ Ok(
 ()
 )}
 }
+
+        impl<'mc> std::string::ToString for TextSerializer<'mc> {
+            fn to_string(&self) -> String {
+                match &self.internal_to_string() {
+                    Ok(a) => a.clone(),
+                    Err(err) => format!(
+                        "Error calling TextSerializer.toString: {}",
+                        err
+                    ),
+                }
+            }
+        }
+        
 impl<'mc> Into<jni::objects::JObject<'mc>> for TextSerializer<'mc>{
 
 fn into(self) -> jni::objects::JObject<'mc> {
@@ -1000,7 +1056,8 @@ res.z()?
 //
 
 
-	pub fn to_string(&mut self) 
+#[doc(hidden)]
+	pub fn internal_to_string(&mut self) 
 -> Result<String, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Ljava/lang/String;");
@@ -1086,6 +1143,19 @@ Ok(
 )}
 }
 
+        impl<'mc> std::string::ToString for Content<'mc> {
+            fn to_string(&self) -> String {
+                match &self.internal_to_string() {
+                    Ok(a) => a.clone(),
+                    Err(err) => format!(
+                        "Error calling Content.toString: {}",
+                        err
+                    ),
+                }
+            }
+        }
+        
+
 pub struct Text<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate) jni::objects::JObject<'mc>);
 impl<'mc> blackboxmc_general::JNIRaw<'mc> for Text<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
@@ -1164,7 +1234,8 @@ res.z()?
 //
 
 
-	pub fn to_string(&mut self) 
+#[doc(hidden)]
+	pub fn internal_to_string(&mut self) 
 -> Result<String, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Ljava/lang/String;");
@@ -1273,6 +1344,19 @@ Ok(
 ()
 )}
 }
+
+        impl<'mc> std::string::ToString for Text<'mc> {
+            fn to_string(&self) -> String {
+                match &self.internal_to_string() {
+                    Ok(a) => a.clone(),
+                    Err(err) => format!(
+                        "Error calling Text.toString: {}",
+                        err
+                    ),
+                }
+            }
+        }
+        
 impl<'mc> Into<crate::bungee::api::chat::hover::content::Content<'mc>> for Text<'mc>{
 
 fn into(self) -> crate::bungee::api::chat::hover::content::Content<'mc> {
@@ -1412,7 +1496,8 @@ res.z()?
 //
 
 
-	pub fn to_string(&mut self) 
+#[doc(hidden)]
+	pub fn internal_to_string(&mut self) 
 -> Result<String, Box<dyn std::error::Error>>
 
 {let sig = String::from("()Ljava/lang/String;");
@@ -1473,6 +1558,19 @@ Ok(
 ()
 )}
 }
+
+        impl<'mc> std::string::ToString for EntitySerializer<'mc> {
+            fn to_string(&self) -> String {
+                match &self.internal_to_string() {
+                    Ok(a) => a.clone(),
+                    Err(err) => format!(
+                        "Error calling EntitySerializer.toString: {}",
+                        err
+                    ),
+                }
+            }
+        }
+        
 impl<'mc> Into<jni::objects::JObject<'mc>> for EntitySerializer<'mc>{
 
 fn into(self) -> jni::objects::JObject<'mc> {

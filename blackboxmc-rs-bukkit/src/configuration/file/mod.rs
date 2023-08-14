@@ -1079,7 +1079,8 @@ impl<'mc> FileConfiguration<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1435,6 +1436,16 @@ impl<'mc> FileConfiguration<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for FileConfiguration<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling FileConfiguration.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::configuration::MemoryConfiguration<'mc>> for FileConfiguration<'mc> {
     fn into(self) -> crate::configuration::MemoryConfiguration<'mc> {
         crate::configuration::MemoryConfiguration::from_raw(&self.jni_ref(), self.1).expect(
@@ -1773,7 +1784,8 @@ impl<'mc> FileConfigurationOptions<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1826,6 +1838,16 @@ impl<'mc> FileConfigurationOptions<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for FileConfigurationOptions<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling FileConfigurationOptions.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::configuration::MemoryConfigurationOptions<'mc>>
     for FileConfigurationOptions<'mc>
 {
@@ -2174,7 +2196,8 @@ impl<'mc> YamlConfigurationOptions<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2227,6 +2250,16 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for YamlConfigurationOptions<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling YamlConfigurationOptions.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::configuration::file::FileConfigurationOptions<'mc>>
     for YamlConfigurationOptions<'mc>
 {
@@ -3324,7 +3357,8 @@ impl<'mc> YamlConfiguration<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3680,6 +3714,16 @@ impl<'mc> YamlConfiguration<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for YamlConfiguration<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling YamlConfiguration.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::configuration::file::FileConfiguration<'mc>> for YamlConfiguration<'mc> {
     fn into(self) -> crate::configuration::file::FileConfiguration<'mc> {
         crate::configuration::file::FileConfiguration::from_raw(&self.jni_ref(), self.1).expect(

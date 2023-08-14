@@ -698,7 +698,8 @@ impl<'mc> MetadataStoreBase<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -751,6 +752,16 @@ impl<'mc> MetadataStoreBase<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for MetadataStoreBase<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling MetadataStoreBase.toString: {}", err),
+        }
+    }
+}
+
 /// The LazyMetadataValue class implements a type of metadata that is not computed until another plugin asks for it.
 /// <p>By making metadata values lazy, no computation is done by the providing plugin until absolutely necessary (if ever). Additionally, LazyMetadataValue objects cache their values internally unless overridden by a <a href="LazyMetadataValue.CacheStrategy.html" title="enum in org.bukkit.metadata"><code>LazyMetadataValue.CacheStrategy</code></a> or invalidated at the individual or plugin level. Once invalidated, the LazyMetadataValue will recompute its value when asked.</p>
 pub struct LazyMetadataValue<'mc>(
@@ -1060,7 +1071,8 @@ impl<'mc> LazyMetadataValue<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1113,6 +1125,16 @@ impl<'mc> LazyMetadataValue<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for LazyMetadataValue<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling LazyMetadataValue.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::metadata::MetadataValueAdapter<'mc>> for LazyMetadataValue<'mc> {
     fn into(self) -> crate::metadata::MetadataValueAdapter<'mc> {
         crate::metadata::MetadataValueAdapter::from_raw(&self.jni_ref(), self.1)
@@ -1341,7 +1363,8 @@ impl<'mc> FixedMetadataValue<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1394,6 +1417,16 @@ impl<'mc> FixedMetadataValue<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for FixedMetadataValue<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling FixedMetadataValue.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::metadata::LazyMetadataValue<'mc>> for FixedMetadataValue<'mc> {
     fn into(self) -> crate::metadata::LazyMetadataValue<'mc> {
         crate::metadata::LazyMetadataValue::from_raw(&self.jni_ref(), self.1)
@@ -1579,7 +1612,8 @@ impl<'mc> MetadataValueAdapter<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1652,6 +1686,16 @@ impl<'mc> MetadataValueAdapter<'mc> {
         Ok(res.l()?)
     }
 }
+
+impl<'mc> std::string::ToString for MetadataValueAdapter<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling MetadataValueAdapter.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::metadata::MetadataValue<'mc>> for MetadataValueAdapter<'mc> {
     fn into(self) -> crate::metadata::MetadataValue<'mc> {
         crate::metadata::MetadataValue::from_raw(&self.jni_ref(), self.1)

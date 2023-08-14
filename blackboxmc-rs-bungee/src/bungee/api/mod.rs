@@ -272,7 +272,8 @@ impl<'mc> ChatColor<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -386,4 +387,14 @@ impl<'mc> ChatColor<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ChatColor<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ChatColor.toString: {}", err),
+        }
+    }
+}
+
 pub mod chat;

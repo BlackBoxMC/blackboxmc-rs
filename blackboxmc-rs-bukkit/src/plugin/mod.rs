@@ -814,7 +814,8 @@ impl<'mc> PluginDescriptionFile<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -867,6 +868,16 @@ impl<'mc> PluginDescriptionFile<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for PluginDescriptionFile<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PluginDescriptionFile.toString: {}", err),
+        }
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum PluginLoadOrderEnum {
     Startup,
@@ -1141,7 +1152,8 @@ impl<'mc> RegisteredServiceProvider<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -1194,6 +1206,16 @@ impl<'mc> RegisteredServiceProvider<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for RegisteredServiceProvider<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling RegisteredServiceProvider.toString: {}", err),
+        }
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum FlagsEnum {
     //['since', '']
@@ -2029,7 +2051,8 @@ impl<'mc> PluginBase<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2431,6 +2454,16 @@ impl<'mc> PluginBase<'mc> {
         Ok(res.z()?)
     }
 }
+
+impl<'mc> std::string::ToString for PluginBase<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling PluginBase.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::plugin::Plugin<'mc>> for PluginBase<'mc> {
     fn into(self) -> crate::plugin::Plugin<'mc> {
         crate::plugin::Plugin::from_raw(&self.jni_ref(), self.1)
@@ -3068,7 +3101,8 @@ impl<'mc> TimedRegisteredListener<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3121,6 +3155,16 @@ impl<'mc> TimedRegisteredListener<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for TimedRegisteredListener<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling TimedRegisteredListener.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::plugin::RegisteredListener<'mc>> for TimedRegisteredListener<'mc> {
     fn into(self) -> crate::plugin::RegisteredListener<'mc> {
         crate::plugin::RegisteredListener::from_raw(&self.jni_ref(), self.1).expect(
@@ -3483,7 +3527,8 @@ impl<'mc> RegisteredListener<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -3536,6 +3581,16 @@ impl<'mc> RegisteredListener<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for RegisteredListener<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling RegisteredListener.toString: {}", err),
+        }
+    }
+}
+
 /// Represents a Plugin
 /// <p>The use of <a href="PluginBase.html" title="class in org.bukkit.plugin"><code>PluginBase</code></a> is recommended for actual Implementation</p>
 ///

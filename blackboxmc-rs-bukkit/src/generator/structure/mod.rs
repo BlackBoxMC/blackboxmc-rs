@@ -90,7 +90,8 @@ impl<'mc> StructureType<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -155,6 +156,16 @@ impl<'mc> StructureType<'mc> {
         })
     }
 }
+
+impl<'mc> std::string::ToString for StructureType<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling StructureType.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::Keyed<'mc>> for StructureType<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
         crate::Keyed::from_raw(&self.jni_ref(), self.1)
@@ -266,7 +277,8 @@ impl<'mc> Structure<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -331,6 +343,16 @@ impl<'mc> Structure<'mc> {
         })
     }
 }
+
+impl<'mc> std::string::ToString for Structure<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Structure.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::Keyed<'mc>> for Structure<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
         crate::Keyed::from_raw(&self.jni_ref(), self.1)

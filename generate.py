@@ -206,12 +206,12 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
             arg = "arg"+str(n)
 
     ty = type["type_name_resolved"].replace("&dyn ","")
-    
+
     res = []
 
     do_option = n >= options_start_at and options_start_at != -1
-    
-    
+
+
     let = java_letter_from_rust(type["type_name_original"])
     if do_option:
         res.append("if let Some(a) = "+arg+" {")
@@ -312,7 +312,7 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
             case _:
                 print("Untranslated argument:\t\t"+type["type_name_alone"],"\t\t",type["type_name_original"])
                 return None
-            
+
     if options_start_at != -1:
         if not no_sig:
             res.append("args.push("+var_prefix+"_"+str(n)+");")
@@ -351,10 +351,10 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
             code.append("let res = "+prefix+".call_static_method(cls,\""+method["original_name"]+"\",")
 
         code.append("sig.as_str(),"+arr+");")
-        
+
         if is_constructor:
             code.append("let res = jni.translate_error_no_gen(res)"+end_line+";")
-        else: 
+        else:
             code.append("let res = jni.translate_error(res)"+end_line+";")
     else:
         code.append(
@@ -433,7 +433,7 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
                         "            .call_method(unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }, \"getBlue\", \"(V)I\", vec![])"+
                         "            ; let b = "+prefix+".translate_error(b)?.i()? as u8;"+
                         "Ok(")
-                        
+
             if nullable:
                 code.append("Some(")
             code.append("(r, g, b)")
@@ -763,6 +763,22 @@ def java_letter_from_rust(type):
         case _:
             return "L"+type.replace(".","/").replace("Java","")+";"
 
+def gen_to_string_func(name):
+    return """
+        impl<'mc> std::string::ToString for """+name+"""<'mc> {
+            fn to_string(&self) -> String {
+                match &self.internal_to_string() {
+                    Ok(a) => a.clone(),
+                    Err(err) => format!(
+                        "Error calling """+name+""".toString: {}",
+                        err
+                    ),
+                }
+            }
+        }
+        """
+
+
 def gen_from_raw_func(name, is_enum, mod_path, full_name):
     impl_signature = []
     impl_signature.append("pub fn from_raw(env: &blackboxmc_general::SharedJNIEnv<'mc>, obj: jni::objects::JObject<'mc>")
@@ -838,6 +854,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             }
         """)
 
+    has_to_string = False
 
     names = {}
     methods_ = {}
@@ -953,8 +970,9 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         method = new_methods[k]
 
         name = k
-        if name == "of":
-            continue
+        if name == "to_string":
+            has_to_string = True
+            name = "internal_to_string"
         types = method["method"]["parameters"]
 
         if "options_start_at" in method["method"]:
@@ -1024,7 +1042,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         # lets parse the types into java.
         n = 0
         types = []
-        
+
         if is_constructor:
             return_group = java_type_to_rust("", method["method"]["name"], method, i, True, library, True)
         else:
@@ -1051,7 +1069,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
                     code.append(t)
             types.append("jni::objects::JValueGen::from(val_"+str(n)+")")
             n += 1
-        
+
         if options_start_at != -1:
             if not is_constructor:
                 code.append("sig += \")"+java_letter_from_rust(return_group["type_name_original"])+"\";")
@@ -1060,7 +1078,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         if(not should_continue):
             continue
 
-        
+
 
         if("?" in return_group["type_name_resolved"]):
             continue
@@ -1125,6 +1143,8 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
 
         if "comment" in method["method"]:
             impl_signature.append(format_comment(method["method"]["comment"]))
+        if name.startswith("internal_"):
+            impl_signature.append("#[doc(hidden)]")
         impl_signature.append(
             "\tpub fn "+name+generic_letters_str+"("+func_signature_resolved+") "
         )
@@ -1143,6 +1163,10 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
 
     for impl in impl_signature:
         file_cache[mod_path].append(impl)
+
+    return {
+        "has_to_string": has_to_string
+    }
 
 def format_comment(comment):
     final_comment = ""
@@ -1267,10 +1291,15 @@ def parse_classes(library, val, classes):
 
         gen_from_raw_func(name, True, mod_path, full_name)
 
+        has_to_string = False
         if "methods" in val:
-            parse_methods(library, name,val["methods"],mod_path,True,False,False,variants,False,full_name)
+            grp = parse_methods(library, name,val["methods"],mod_path,True,False,False,variants,False,full_name)
+            has_to_string = grp["has_to_string"]
 
         file_cache[mod_path].append("}")
+
+        if has_to_string:
+            file_cache[mod_path].append(gen_to_string_func(name))
 
     elif val["isInterface"]: # interface generation
         file_cache[mod_path].append(
@@ -1284,9 +1313,16 @@ def parse_classes(library, val, classes):
 
         gen_from_raw_func(name, False, mod_path, full_name)
 
+        has_to_string = False
+
         if "methods" in val:
-            parse_methods(library,name,val["methods"],mod_path,False,True,True,[],False,full_name)
+            grp = parse_methods(library,name,val["methods"],mod_path,False,True,True,[],False,full_name)
+            has_to_string = grp["has_to_string"]
+
         file_cache[mod_path].append("}")
+
+        if has_to_string:
+            file_cache[mod_path].append(gen_to_string_func(name))
 
         file_cache[mod_path].append("impl<'mc> JNIRaw<'mc> for "+name+"<'mc> {")
         file_cache[mod_path].append("    fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {")
@@ -1324,12 +1360,19 @@ def parse_classes(library, val, classes):
         gen_from_raw_func(name, False, mod_path, full_name)
 
         if "constructors" in val:
-            parse_methods(library, name,val["constructors"],mod_path,False,False,False,[],True,full_name)
+            grp = parse_methods(library, name,val["constructors"],mod_path,False,False,False,[],True,full_name)
+
+        has_to_string = False
 
         if "methods" in val:
-            parse_methods(library,name,val["methods"],mod_path,False,False,False,[],False,full_name)
+            grp = parse_methods(library,name,val["methods"],mod_path,False,False,False,[],False,full_name)
+            has_to_string = grp["has_to_string"]
 
         file_cache[mod_path].append("}")
+
+        if has_to_string:
+            file_cache[mod_path].append(gen_to_string_func(name))
+
 
     if not val["isEnum"]:
         if "interfaces" in val:

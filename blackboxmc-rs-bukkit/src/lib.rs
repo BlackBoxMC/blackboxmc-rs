@@ -2619,7 +2619,8 @@ impl<'mc> ServerSpigot<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -2672,6 +2673,16 @@ impl<'mc> ServerSpigot<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ServerSpigot<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ServerSpigot.toString: {}", err),
+        }
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum DifficultyEnum {
     Peaceful,
@@ -7854,7 +7865,8 @@ impl<'mc> ParticleDustOptions<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -7907,6 +7919,16 @@ impl<'mc> ParticleDustOptions<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ParticleDustOptions<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ParticleDustOptions.toString: {}", err),
+        }
+    }
+}
+
 pub struct ParticleDustTransition<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -8049,7 +8071,8 @@ impl<'mc> ParticleDustTransition<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -8102,6 +8125,16 @@ impl<'mc> ParticleDustTransition<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for ParticleDustTransition<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ParticleDustTransition.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::ParticleDustOptions<'mc>> for ParticleDustTransition<'mc> {
     fn into(self) -> crate::ParticleDustOptions<'mc> {
         crate::ParticleDustOptions::from_raw(&self.jni_ref(), self.1)
@@ -8776,7 +8809,8 @@ impl<'mc> Utility<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -8811,6 +8845,16 @@ impl<'mc> Utility<'mc> {
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
 }
+
+impl<'mc> std::string::ToString for Utility<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Utility.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> JNIRaw<'mc> for Utility<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -9257,7 +9301,8 @@ impl<'mc> GameEvent<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -9310,6 +9355,16 @@ impl<'mc> GameEvent<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for GameEvent<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling GameEvent.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::Keyed<'mc>> for GameEvent<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
         crate::Keyed::from_raw(&self.jni_ref(), self.1)
@@ -9885,7 +9940,8 @@ impl<'mc> WorldSpigot<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -9938,6 +9994,16 @@ impl<'mc> WorldSpigot<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for WorldSpigot<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling WorldSpigot.toString: {}", err),
+        }
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum FluidFluidEnum {
     Water,
@@ -10798,7 +10864,8 @@ impl<'mc> Color<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -10877,6 +10944,16 @@ impl<'mc> Color<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Color<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Color.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'mc>> for Color<'mc> {
     fn into(self) -> crate::configuration::serialization::ConfigurationSerializable<'mc> {
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&self.jni_ref(), self.1).expect("Error converting Color into crate::configuration::serialization::ConfigurationSerializable")
@@ -18443,7 +18520,8 @@ impl<'mc> VibrationDestinationBlockDestination<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -18496,6 +18574,19 @@ impl<'mc> VibrationDestinationBlockDestination<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for VibrationDestinationBlockDestination<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!(
+                "Error calling VibrationDestinationBlockDestination.toString: {}",
+                err
+            ),
+        }
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum GameModeEnum {
     Creative,
@@ -19178,7 +19269,8 @@ impl<'mc> Note<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -19267,6 +19359,16 @@ impl<'mc> Note<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Note<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Note.toString: {}", err),
+        }
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum EnvironmentEnum {
     Normal,
@@ -22569,7 +22671,8 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -22622,6 +22725,16 @@ impl<'mc> Bukkit<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Bukkit<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Bukkit.toString: {}", err),
+        }
+    }
+}
+
 /// All supported color values for chat
 pub struct ChatColor<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22793,7 +22906,8 @@ impl<'mc> ChatColor<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -22818,6 +22932,16 @@ impl<'mc> ChatColor<'mc> {
         Ok(res.c()?)
     }
 }
+
+impl<'mc> std::string::ToString for ChatColor<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling ChatColor.toString: {}", err),
+        }
+    }
+}
+
 /// A ban list, containing bans of some <a title="enum in org.bukkit" href="BanList.Type.html"><code>BanList.Type</code></a>.
 ///
 /// This is a representation of an abstract class.
@@ -23253,7 +23377,8 @@ impl<'mc> Warning<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -23288,6 +23413,16 @@ impl<'mc> Warning<'mc> {
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
 }
+
+impl<'mc> std::string::ToString for Warning<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Warning.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> JNIRaw<'mc> for Warning<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -23774,7 +23909,8 @@ impl<'mc> WorldCreator<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -23827,6 +23963,16 @@ impl<'mc> WorldCreator<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for WorldCreator<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling WorldCreator.toString: {}", err),
+        }
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum ArtEnum {
     Kebab,
@@ -24281,7 +24427,8 @@ impl<'mc> GameRule<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -24394,6 +24541,16 @@ impl<'mc> GameRule<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for GameRule<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling GameRule.toString: {}", err),
+        }
+    }
+}
+
 /// Represents a static, thread-safe snapshot of chunk of blocks.
 /// <p>Purpose is to allow clean, efficient copy of a chunk data to be made, and then handed off for processing in another thread (e.g. map rendering)</p>
 ///
@@ -24905,7 +25062,8 @@ impl<'mc> MusicInstrument<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -24958,6 +25116,16 @@ impl<'mc> MusicInstrument<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for MusicInstrument<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling MusicInstrument.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::Keyed<'mc>> for MusicInstrument<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
         crate::Keyed::from_raw(&self.jni_ref(), self.1)
@@ -25286,7 +25454,8 @@ impl<'mc> FireworkEffectBuilder<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -25339,6 +25508,16 @@ impl<'mc> FireworkEffectBuilder<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for FireworkEffectBuilder<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling FireworkEffectBuilder.toString: {}", err),
+        }
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum FireworkEffectTypeEnum {
     Ball,
@@ -25593,7 +25772,8 @@ impl<'mc> FireworkEffect<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -25712,6 +25892,16 @@ impl<'mc> FireworkEffect<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for FireworkEffect<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling FireworkEffect.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'mc>>
     for FireworkEffect<'mc>
 {
@@ -25869,7 +26059,8 @@ impl<'mc> MinecraftExperimental<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -25904,6 +26095,16 @@ impl<'mc> MinecraftExperimental<'mc> {
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
 }
+
+impl<'mc> std::string::ToString for MinecraftExperimental<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling MinecraftExperimental.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> JNIRaw<'mc> for MinecraftExperimental<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -33734,7 +33935,8 @@ impl<'mc> NamespacedKey<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -33827,6 +34029,16 @@ impl<'mc> NamespacedKey<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for NamespacedKey<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling NamespacedKey.toString: {}", err),
+        }
+    }
+}
+
 /// A RegionAccessor gives access to getting, modifying and spawning <a title="enum in org.bukkit.block" href="block/Biome.html"><code>Biome</code></a>, <a title="interface in org.bukkit.block" href="block/BlockState.html"><code>BlockState</code></a> and <a href="entity/Entity.html" title="interface in org.bukkit.entity"><code>Entity</code></a>, as well as generating some basic structures.
 ///
 /// This is a representation of an abstract class.
@@ -35346,7 +35558,8 @@ impl<'mc> Vibration<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -35397,6 +35610,15 @@ impl<'mc> Vibration<'mc> {
             .call_method(&self.jni_object(), "notifyAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+}
+
+impl<'mc> std::string::ToString for Vibration<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Vibration.toString: {}", err),
+        }
     }
 }
 
@@ -35518,7 +35740,8 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -35592,6 +35815,16 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
         })
     }
 }
+
+impl<'mc> std::string::ToString for RegistrySimpleRegistry<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling RegistrySimpleRegistry.toString: {}", err),
+        }
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum MaterialEnum {
     Air,
@@ -45495,7 +45728,8 @@ impl<'mc> VibrationDestinationEntityDestination<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -45548,6 +45782,19 @@ impl<'mc> VibrationDestinationEntityDestination<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for VibrationDestinationEntityDestination<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!(
+                "Error calling VibrationDestinationEntityDestination.toString: {}",
+                err
+            ),
+        }
+    }
+}
+
 #[derive(PartialEq, Eq)]
 pub enum StatisticStatisticEnum {
     DamageDealt,
@@ -46069,7 +46316,8 @@ impl<'mc> UndefinedNullability<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -46104,6 +46352,16 @@ impl<'mc> UndefinedNullability<'mc> {
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
 }
+
+impl<'mc> std::string::ToString for UndefinedNullability<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling UndefinedNullability.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> JNIRaw<'mc> for UndefinedNullability<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
@@ -56716,7 +56974,8 @@ impl<'mc> StructureType<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -56807,6 +57066,16 @@ impl<'mc> StructureType<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for StructureType<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling StructureType.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::Keyed<'mc>> for StructureType<'mc> {
     fn into(self) -> crate::Keyed<'mc> {
         crate::Keyed::from_raw(&self.jni_ref(), self.1)
@@ -57943,7 +58212,8 @@ impl<'mc> Location<'mc> {
     }
     //
 
-    pub fn to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    #[doc(hidden)]
+    pub fn internal_to_string(&mut self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
@@ -58065,6 +58335,16 @@ impl<'mc> Location<'mc> {
         Ok(())
     }
 }
+
+impl<'mc> std::string::ToString for Location<'mc> {
+    fn to_string(&self) -> String {
+        match &self.internal_to_string() {
+            Ok(a) => a.clone(),
+            Err(err) => format!("Error calling Location.toString: {}", err),
+        }
+    }
+}
+
 impl<'mc> Into<crate::configuration::serialization::ConfigurationSerializable<'mc>>
     for Location<'mc>
 {
