@@ -48,9 +48,9 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
     //@NotNull
 
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="ConfigurationOptions.html#pathSeparator(char)">ConfigurationOptions</a></code></span>
-    /// Sets the char that will be used to separate <a title="interface in org.bukkit.configuration" href="ConfigurationSection.html"><code>ConfigurationSection</code></a>s
+    /// Sets the char that will be used to separate <a href="ConfigurationSection.html" title="interface in org.bukkit.configuration"><code>ConfigurationSection</code></a>s
     /// <p>This value does not affect how the <a title="interface in org.bukkit.configuration" href="Configuration.html"><code>Configuration</code></a> is stored, only in how you access the data. The default value is '.'.</p>
-    pub fn path_separator(
+    pub fn path_separator_with_char(
         &self,
         arg0: std::option::Option<u16>,
     ) -> Result<crate::configuration::MemoryConfigurationOptions<'mc>, Box<dyn std::error::Error>>
@@ -76,7 +76,7 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="ConfigurationOptions.html#copyDefaults(boolean)">ConfigurationOptions</a></code></span>
     /// Sets if the <a title="interface in org.bukkit.configuration" href="Configuration.html"><code>Configuration</code></a> should copy values from its default <a title="interface in org.bukkit.configuration" href="Configuration.html"><code>Configuration</code></a> directly.
     /// <p>If this is true, all values in the default Configuration will be directly copied, making it impossible to distinguish between values that were set and values that are provided by default. As a result, <a href="ConfigurationSection.html#contains(java.lang.String)"><code>ConfigurationSection.contains(java.lang.String)</code></a> will always return the same value as <a href="ConfigurationSection.html#isSet(java.lang.String)"><code>ConfigurationSection.isSet(java.lang.String)</code></a>. The default value is false.</p>
-    pub fn copy_defaults(
+    pub fn copy_defaults_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
     ) -> Result<crate::configuration::MemoryConfigurationOptions<'mc>, Box<dyn std::error::Error>>
@@ -116,7 +116,7 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -230,7 +230,7 @@ impl<'mc> Into<crate::configuration::ConfigurationOptions<'mc>>
         crate::configuration::ConfigurationOptions::from_raw(&self.jni_ref(), self.1).expect("Error converting MemoryConfigurationOptions into crate::configuration::ConfigurationOptions")
     }
 }
-/// A type of <a title="interface in org.bukkit.configuration" href="ConfigurationSection.html"><code>ConfigurationSection</code></a> that is stored in memory.
+/// A type of <a href="ConfigurationSection.html" title="interface in org.bukkit.configuration"><code>ConfigurationSection</code></a> that is stored in memory.
 pub struct MemorySection<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -270,7 +270,7 @@ impl<'mc> JNIInstantiatable<'mc> for MemorySection<'mc> {
 impl<'mc> MemorySection<'mc> {
     //
 
-    pub fn get_string(
+    pub fn get_string_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<String>>,
@@ -309,7 +309,7 @@ impl<'mc> MemorySection<'mc> {
     pub fn get_keys(
         &self,
         arg0: bool,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Set;");
         // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -320,13 +320,13 @@ impl<'mc> MemorySection<'mc> {
             vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     //
 
-    pub fn get_color(
+    pub fn get_color_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::Color<'mc>>>,
@@ -356,7 +356,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn get_item_stack(
+    pub fn get_item_stack_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
@@ -386,7 +386,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn get_offline_player(
+    pub fn get_offline_player_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
@@ -423,7 +423,7 @@ impl<'mc> MemorySection<'mc> {
     pub fn get_values(
         &self,
         arg0: bool,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Map;");
         // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -434,13 +434,13 @@ impl<'mc> MemorySection<'mc> {
             vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     //
 
-    pub fn create_path(
+    pub fn create_path_with_configuration_section(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::configuration::ConfigurationSection<'mc>>,
         arg1: impl Into<String>,
@@ -573,10 +573,10 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn create_section(
+    pub fn create_section_with_string(
         &self,
         arg0: impl Into<String>,
-        arg1: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
+        arg1: std::option::Option<impl Into<blackboxmc_java::util::JavaMap<'mc>>>,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -715,7 +715,7 @@ impl<'mc> MemorySection<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -746,7 +746,7 @@ impl<'mc> MemorySection<'mc> {
 
     //
 
-    pub fn get_serializable(
+    pub fn get_serializable_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: jni::objects::JClass<'mc>,
@@ -786,7 +786,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn get_vector(
+    pub fn get_vector_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
@@ -918,7 +918,7 @@ impl<'mc> MemorySection<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -949,7 +949,7 @@ impl<'mc> MemorySection<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -1054,7 +1054,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn get(
+    pub fn get_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -1095,7 +1095,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn get_boolean(
+    pub fn get_boolean_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<bool>,
@@ -1122,7 +1122,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn get_int(
+    pub fn get_int_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<i32>,
@@ -1148,7 +1148,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn get_long(
+    pub fn get_long_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<i64>,
@@ -1174,7 +1174,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn get_double(
+    pub fn get_double_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<f64>,
@@ -1200,7 +1200,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn contains(
+    pub fn contains_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<bool>,
@@ -1227,7 +1227,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn get_location(
+    pub fn get_location_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::Location<'mc>>>,
@@ -1325,7 +1325,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn get_object(
+    pub fn get_object_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: jni::objects::JClass<'mc>,
@@ -1355,7 +1355,7 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1534,7 +1534,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn add_defaults(
+    pub fn add_defaults_with_configuration(
         &self,
         arg0: impl Into<crate::configuration::Configuration<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1587,7 +1587,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn get_string(
+    pub fn get_string_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<String>>,
@@ -1622,7 +1622,7 @@ impl<'mc> Configuration<'mc> {
     pub fn get_keys(
         &self,
         arg0: bool,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Set;");
         // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -1633,13 +1633,13 @@ impl<'mc> Configuration<'mc> {
             vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     //
 
-    pub fn get_color(
+    pub fn get_color_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::Color<'mc>>>,
@@ -1669,7 +1669,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn get_item_stack(
+    pub fn get_item_stack_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
@@ -1699,7 +1699,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn get_offline_player(
+    pub fn get_offline_player_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
@@ -1732,7 +1732,7 @@ impl<'mc> Configuration<'mc> {
     pub fn get_values(
         &self,
         arg0: bool,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Map;");
         // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -1743,7 +1743,7 @@ impl<'mc> Configuration<'mc> {
             vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1821,10 +1821,10 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn create_section(
+    pub fn create_section_with_string(
         &self,
         arg0: impl Into<String>,
-        arg1: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
+        arg1: std::option::Option<impl Into<blackboxmc_java::util::JavaMap<'mc>>>,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -1963,7 +1963,7 @@ impl<'mc> Configuration<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -1994,7 +1994,7 @@ impl<'mc> Configuration<'mc> {
 
     //
 
-    pub fn get_serializable(
+    pub fn get_serializable_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: jni::objects::JClass<'mc>,
@@ -2034,7 +2034,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn get_vector(
+    pub fn get_vector_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
@@ -2166,7 +2166,7 @@ impl<'mc> Configuration<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -2197,7 +2197,7 @@ impl<'mc> Configuration<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -2302,7 +2302,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn get(
+    pub fn get_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -2328,7 +2328,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn get_boolean(
+    pub fn get_boolean_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<bool>,
@@ -2355,7 +2355,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn get_int(
+    pub fn get_int_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<i32>,
@@ -2381,7 +2381,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn get_long(
+    pub fn get_long_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<i64>,
@@ -2407,7 +2407,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn get_double(
+    pub fn get_double_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<f64>,
@@ -2433,7 +2433,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn contains(
+    pub fn contains_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<bool>,
@@ -2460,7 +2460,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn get_location(
+    pub fn get_location_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::Location<'mc>>>,
@@ -2558,7 +2558,7 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn get_object(
+    pub fn get_object_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: jni::objects::JClass<'mc>,
@@ -2594,7 +2594,7 @@ impl<'mc> Into<crate::configuration::ConfigurationSection<'mc>> for Configuratio
         )
     }
 }
-/// This is a <a href="Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> implementation that does not save or load from any source, and stores all values in memory only. This is useful for temporary Configurations for providing defaults.
+/// This is a <a title="interface in org.bukkit.configuration" href="Configuration.html"><code>Configuration</code></a> implementation that does not save or load from any source, and stores all values in memory only. This is useful for temporary Configurations for providing defaults.
 pub struct MemoryConfiguration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -2635,26 +2635,6 @@ impl<'mc> JNIInstantiatable<'mc> for MemoryConfiguration<'mc> {
 }
 
 impl<'mc> MemoryConfiguration<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::configuration::Configuration<'mc>>>,
-    ) -> Result<crate::configuration::MemoryConfiguration<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Lorg/bukkit/configuration/Configuration;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/configuration/MemoryConfiguration");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::configuration::MemoryConfiguration::from_raw(&jni, res)
-    }
     //
 
     pub fn add_default(
@@ -2695,9 +2675,9 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn add_defaults(
+    pub fn add_defaults_with_map(
         &self,
-        arg0: impl Into<blackboxmc_java::JavaMap<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::JavaMap<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -2765,7 +2745,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn get_string(
+    pub fn get_string_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<String>>,
@@ -2800,7 +2780,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     pub fn get_keys(
         &self,
         arg0: bool,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Set;");
         // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -2811,13 +2791,13 @@ impl<'mc> MemoryConfiguration<'mc> {
             vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     //
 
-    pub fn get_color(
+    pub fn get_color_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::Color<'mc>>>,
@@ -2847,7 +2827,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn get_item_stack(
+    pub fn get_item_stack_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
@@ -2877,7 +2857,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn get_offline_player(
+    pub fn get_offline_player_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
@@ -2910,7 +2890,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     pub fn get_values(
         &self,
         arg0: bool,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Map;");
         // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -2921,13 +2901,13 @@ impl<'mc> MemoryConfiguration<'mc> {
             vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     //
 
-    pub fn create_path(
+    pub fn create_path_with_configuration_section(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::configuration::ConfigurationSection<'mc>>,
         arg1: impl Into<String>,
@@ -3036,10 +3016,10 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn create_section(
+    pub fn create_section_with_string(
         &self,
         arg0: impl Into<String>,
-        arg1: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
+        arg1: std::option::Option<impl Into<blackboxmc_java::util::JavaMap<'mc>>>,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -3178,7 +3158,7 @@ impl<'mc> MemoryConfiguration<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -3209,7 +3189,7 @@ impl<'mc> MemoryConfiguration<'mc> {
 
     //
 
-    pub fn get_serializable(
+    pub fn get_serializable_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: jni::objects::JClass<'mc>,
@@ -3249,7 +3229,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn get_vector(
+    pub fn get_vector_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
@@ -3381,7 +3361,7 @@ impl<'mc> MemoryConfiguration<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -3412,7 +3392,7 @@ impl<'mc> MemoryConfiguration<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -3517,7 +3497,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn get(
+    pub fn get_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -3558,7 +3538,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn get_boolean(
+    pub fn get_boolean_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<bool>,
@@ -3585,7 +3565,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn get_int(
+    pub fn get_int_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<i32>,
@@ -3611,7 +3591,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn get_long(
+    pub fn get_long_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<i64>,
@@ -3637,7 +3617,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn get_double(
+    pub fn get_double_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<f64>,
@@ -3663,7 +3643,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn contains(
+    pub fn contains_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<bool>,
@@ -3690,7 +3670,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn get_location(
+    pub fn get_location_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::Location<'mc>>>,
@@ -3774,7 +3754,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn get_object(
+    pub fn get_object_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: jni::objects::JClass<'mc>,
@@ -3804,7 +3784,7 @@ impl<'mc> MemoryConfiguration<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3908,7 +3888,7 @@ impl<'mc> Into<crate::configuration::MemorySection<'mc>> for MemoryConfiguration
             .expect("Error converting MemoryConfiguration into crate::configuration::MemorySection")
     }
 }
-/// Various settings for controlling the input and output of a <a title="interface in org.bukkit.configuration" href="Configuration.html"><code>Configuration</code></a>
+/// Various settings for controlling the input and output of a <a href="Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a>
 pub struct ConfigurationOptions<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -3951,9 +3931,9 @@ impl<'mc> JNIInstantiatable<'mc> for ConfigurationOptions<'mc> {
 impl<'mc> ConfigurationOptions<'mc> {
     //@NotNull
 
-    /// Sets the char that will be used to separate <a href="ConfigurationSection.html" title="interface in org.bukkit.configuration"><code>ConfigurationSection</code></a>s
-    /// <p>This value does not affect how the <a href="Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> is stored, only in how you access the data. The default value is '.'.</p>
-    pub fn path_separator(
+    /// Sets the char that will be used to separate <a title="interface in org.bukkit.configuration" href="ConfigurationSection.html"><code>ConfigurationSection</code></a>s
+    /// <p>This value does not affect how the <a title="interface in org.bukkit.configuration" href="Configuration.html"><code>Configuration</code></a> is stored, only in how you access the data. The default value is '.'.</p>
+    pub fn path_separator_with_char(
         &self,
         arg0: std::option::Option<u16>,
     ) -> Result<crate::configuration::ConfigurationOptions<'mc>, Box<dyn std::error::Error>> {
@@ -3975,9 +3955,9 @@ impl<'mc> ConfigurationOptions<'mc> {
     }
     //@NotNull
 
-    /// Sets if the <a href="Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> should copy values from its default <a title="interface in org.bukkit.configuration" href="Configuration.html"><code>Configuration</code></a> directly.
+    /// Sets if the <a title="interface in org.bukkit.configuration" href="Configuration.html"><code>Configuration</code></a> should copy values from its default <a title="interface in org.bukkit.configuration" href="Configuration.html"><code>Configuration</code></a> directly.
     /// <p>If this is true, all values in the default Configuration will be directly copied, making it impossible to distinguish between values that were set and values that are provided by default. As a result, <a href="ConfigurationSection.html#contains(java.lang.String)"><code>ConfigurationSection.contains(java.lang.String)</code></a> will always return the same value as <a href="ConfigurationSection.html#isSet(java.lang.String)"><code>ConfigurationSection.isSet(java.lang.String)</code></a>. The default value is false.</p>
-    pub fn copy_defaults(
+    pub fn copy_defaults_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
     ) -> Result<crate::configuration::ConfigurationOptions<'mc>, Box<dyn std::error::Error>> {
@@ -4014,7 +3994,7 @@ impl<'mc> ConfigurationOptions<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -4121,7 +4101,7 @@ impl<'mc> std::string::ToString for ConfigurationOptions<'mc> {
     }
 }
 
-/// Represents a section of a <a href="Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a>
+/// Represents a section of a <a title="interface in org.bukkit.configuration" href="Configuration.html"><code>Configuration</code></a>
 ///
 /// This is a representation of an abstract class.
 pub struct ConfigurationSection<'mc>(
@@ -4166,7 +4146,7 @@ impl<'mc> JNIInstantiatable<'mc> for ConfigurationSection<'mc> {
 impl<'mc> ConfigurationSection<'mc> {
     //
 
-    pub fn get_string(
+    pub fn get_string_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<String>>,
@@ -4199,12 +4179,12 @@ impl<'mc> ConfigurationSection<'mc> {
     //@NotNull
 
     /// Gets a set containing all keys in this section.
-    /// <p>If deep is set to true, then this will contain all the keys within any child <a href="ConfigurationSection.html" title="interface in org.bukkit.configuration"><code>ConfigurationSection</code></a>s (and their children, etc). These will be in a valid path notation for you to use.</p>
+    /// <p>If deep is set to true, then this will contain all the keys within any child <a title="interface in org.bukkit.configuration" href="ConfigurationSection.html"><code>ConfigurationSection</code></a>s (and their children, etc). These will be in a valid path notation for you to use.</p>
     /// <p>If deep is set to false, then this will contain only the keys of any direct children, and not their own children.</p>
     pub fn get_keys(
         &self,
         arg0: bool,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Set;");
         // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -4215,13 +4195,13 @@ impl<'mc> ConfigurationSection<'mc> {
             vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     //
 
-    pub fn get_color(
+    pub fn get_color_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::Color<'mc>>>,
@@ -4251,7 +4231,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn get_item_stack(
+    pub fn get_item_stack_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
@@ -4281,7 +4261,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn get_offline_player(
+    pub fn get_offline_player_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::OfflinePlayer<'mc>>>,
@@ -4312,12 +4292,12 @@ impl<'mc> ConfigurationSection<'mc> {
     //@NotNull
 
     /// Gets a Map containing all keys and their values for this section.
-    /// <p>If deep is set to true, then this will contain all the keys and values within any child <a href="ConfigurationSection.html" title="interface in org.bukkit.configuration"><code>ConfigurationSection</code></a>s (and their children, etc). These keys will be in a valid path notation for you to use.</p>
+    /// <p>If deep is set to true, then this will contain all the keys and values within any child <a title="interface in org.bukkit.configuration" href="ConfigurationSection.html"><code>ConfigurationSection</code></a>s (and their children, etc). These keys will be in a valid path notation for you to use.</p>
     /// <p>If deep is set to false, then this will contain only the keys and values of any direct children, and not their own children.</p>
     pub fn get_values(
         &self,
         arg0: bool,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Map;");
         // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
@@ -4328,7 +4308,7 @@ impl<'mc> ConfigurationSection<'mc> {
             vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -4430,10 +4410,10 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn create_section(
+    pub fn create_section_with_string(
         &self,
         arg0: impl Into<String>,
-        arg1: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
+        arg1: std::option::Option<impl Into<blackboxmc_java::util::JavaMap<'mc>>>,
     ) -> Result<crate::configuration::ConfigurationSection<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -4572,7 +4552,7 @@ impl<'mc> ConfigurationSection<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -4603,7 +4583,7 @@ impl<'mc> ConfigurationSection<'mc> {
 
     //
 
-    pub fn get_serializable(
+    pub fn get_serializable_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: jni::objects::JClass<'mc>,
@@ -4643,7 +4623,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn get_vector(
+    pub fn get_vector_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
@@ -4775,7 +4755,7 @@ impl<'mc> ConfigurationSection<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -4806,7 +4786,7 @@ impl<'mc> ConfigurationSection<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -4911,7 +4891,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn get(
+    pub fn get_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -4937,7 +4917,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn get_boolean(
+    pub fn get_boolean_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<bool>,
@@ -4964,7 +4944,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn get_int(
+    pub fn get_int_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<i32>,
@@ -4990,7 +4970,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn get_long(
+    pub fn get_long_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<i64>,
@@ -5016,7 +4996,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn get_double(
+    pub fn get_double_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<f64>,
@@ -5042,7 +5022,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn contains(
+    pub fn contains_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<bool>,
@@ -5069,7 +5049,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn get_location(
+    pub fn get_location_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::Location<'mc>>>,
@@ -5167,7 +5147,7 @@ impl<'mc> ConfigurationSection<'mc> {
     }
     //
 
-    pub fn get_object(
+    pub fn get_object_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: jni::objects::JClass<'mc>,

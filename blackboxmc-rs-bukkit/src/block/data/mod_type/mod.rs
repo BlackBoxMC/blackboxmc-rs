@@ -161,13 +161,13 @@ impl<'mc> PistonHead<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -192,7 +192,7 @@ impl<'mc> PistonHead<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -631,13 +631,13 @@ impl<'mc> Chest<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -662,7 +662,7 @@ impl<'mc> Chest<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1041,13 +1041,13 @@ impl<'mc> JNIInstantiatable<'mc> for GlassPane<'mc> {
 impl<'mc> GlassPane<'mc> {
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1080,13 +1080,13 @@ impl<'mc> GlassPane<'mc> {
 
     pub fn allowed_faces(
         &self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAllowedFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1130,7 +1130,7 @@ impl<'mc> GlassPane<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1553,7 +1553,7 @@ impl<'mc> TripwireHook<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1898,13 +1898,13 @@ impl<'mc> TripwireHook<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -2047,7 +2047,7 @@ impl<'mc> PitcherCrop<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2501,13 +2501,13 @@ impl<'mc> Lectern<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -2532,7 +2532,7 @@ impl<'mc> Lectern<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2993,7 +2993,7 @@ impl<'mc> DaylightDetector<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3409,7 +3409,7 @@ impl<'mc> StructureBlock<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3839,13 +3839,13 @@ impl<'mc> PinkPetals<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -3870,7 +3870,7 @@ impl<'mc> PinkPetals<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4288,13 +4288,13 @@ impl<'mc> Piston<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -4319,7 +4319,7 @@ impl<'mc> Piston<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4712,7 +4712,7 @@ impl<'mc> TNT<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5060,13 +5060,13 @@ impl<'mc> JNIInstantiatable<'mc> for Fence<'mc> {
 impl<'mc> Fence<'mc> {
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -5099,13 +5099,13 @@ impl<'mc> Fence<'mc> {
 
     pub fn allowed_faces(
         &self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAllowedFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -5149,7 +5149,7 @@ impl<'mc> Fence<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5912,7 +5912,7 @@ impl<'mc> SculkCatalyst<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6602,13 +6602,13 @@ impl<'mc> Furnace<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -6633,7 +6633,7 @@ impl<'mc> Furnace<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7068,7 +7068,7 @@ impl<'mc> Sapling<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7697,13 +7697,13 @@ impl<'mc> WallHangingSign<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -7728,7 +7728,7 @@ impl<'mc> WallHangingSign<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8201,13 +8201,13 @@ impl<'mc> TechnicalPiston<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -8232,7 +8232,7 @@ impl<'mc> TechnicalPiston<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8670,13 +8670,13 @@ impl<'mc> Switch<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -8701,7 +8701,7 @@ impl<'mc> Switch<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -9284,7 +9284,7 @@ impl<'mc> BubbleColumn<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -9722,13 +9722,13 @@ impl<'mc> Bell<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -9753,7 +9753,7 @@ impl<'mc> Bell<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10231,7 +10231,7 @@ impl<'mc> Bamboo<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10685,7 +10685,7 @@ impl<'mc> Jigsaw<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11077,13 +11077,13 @@ impl<'mc> Chain<'mc> {
     }
     //
 
-    pub fn axes(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn axes(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getAxes", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -11108,7 +11108,7 @@ impl<'mc> Chain<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11531,7 +11531,7 @@ impl<'mc> Lantern<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11868,7 +11868,7 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for Lantern<'mc> {
             .expect("Error converting Lantern into crate::block::data::Waterlogged")
     }
 }
-/// Similar to <a title="interface in org.bukkit.block.data" href="../Powerable.html"><code>Powerable</code></a>, 'triggered' indicates whether or not the dispenser is currently activated.
+/// Similar to <a href="../Powerable.html" title="interface in org.bukkit.block.data"><code>Powerable</code></a>, 'triggered' indicates whether or not the dispenser is currently activated.
 ///
 /// This is a representation of an abstract class.
 pub struct Dispenser<'mc>(
@@ -11980,13 +11980,13 @@ impl<'mc> Dispenser<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -12011,7 +12011,7 @@ impl<'mc> Dispenser<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12654,7 +12654,7 @@ impl<'mc> RespawnAnchor<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -13058,7 +13058,7 @@ impl<'mc> Cake<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -13478,13 +13478,13 @@ impl<'mc> EndPortalFrame<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -13509,7 +13509,7 @@ impl<'mc> EndPortalFrame<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -13901,13 +13901,13 @@ impl<'mc> DecoratedPot<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -13932,7 +13932,7 @@ impl<'mc> DecoratedPot<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14311,13 +14311,13 @@ impl<'mc> JNIInstantiatable<'mc> for GlowLichen<'mc> {
 impl<'mc> GlowLichen<'mc> {
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -14350,13 +14350,13 @@ impl<'mc> GlowLichen<'mc> {
 
     pub fn allowed_faces(
         &self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAllowedFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -14400,7 +14400,7 @@ impl<'mc> GlowLichen<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14935,13 +14935,13 @@ impl<'mc> Observer<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -14966,7 +14966,7 @@ impl<'mc> Observer<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -15576,7 +15576,7 @@ impl<'mc> Stairs<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -15921,13 +15921,13 @@ impl<'mc> Stairs<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -16174,13 +16174,13 @@ impl<'mc> CalibratedSculkSensor<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -16205,7 +16205,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -16820,13 +16820,13 @@ impl<'mc> EnderChest<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -16851,7 +16851,7 @@ impl<'mc> EnderChest<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -17188,7 +17188,7 @@ impl<'mc> Into<crate::block::data::Waterlogged<'mc>> for EnderChest<'mc> {
             .expect("Error converting EnderChest into crate::block::data::Waterlogged")
     }
 }
-/// Similar to <a title="interface in org.bukkit.block.data" href="../Bisected.html"><code>Bisected</code></a>, 'part' denotes which half of the bed this block corresponds to.
+/// Similar to <a href="../Bisected.html" title="interface in org.bukkit.block.data"><code>Bisected</code></a>, 'part' denotes which half of the bed this block corresponds to.
 ///
 /// 'occupied' property is a quick flag to check if a player is currently sleeping in this bed block.
 ///
@@ -17332,13 +17332,13 @@ impl<'mc> Bed<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -17363,7 +17363,7 @@ impl<'mc> Bed<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -17873,13 +17873,13 @@ impl<'mc> AmethystCluster<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -17904,7 +17904,7 @@ impl<'mc> AmethystCluster<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -18404,7 +18404,7 @@ impl<'mc> NoteBlock<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -18918,7 +18918,7 @@ impl<'mc> MangrovePropagule<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -19468,7 +19468,7 @@ impl<'mc> SculkSensor<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -19938,13 +19938,13 @@ impl<'mc> BigDripleaf<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -19969,7 +19969,7 @@ impl<'mc> BigDripleaf<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -20386,13 +20386,13 @@ impl<'mc> Ladder<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -20417,7 +20417,7 @@ impl<'mc> Ladder<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -20908,7 +20908,7 @@ impl<'mc> Scaffolding<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -21293,13 +21293,15 @@ impl<'mc> BrewingStand<'mc> {
     }
     //
 
-    pub fn bottles(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn bottles(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getBottles", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -21337,7 +21339,7 @@ impl<'mc> BrewingStand<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -21738,7 +21740,7 @@ impl<'mc> Fire<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -22039,13 +22041,13 @@ impl<'mc> Fire<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -22078,13 +22080,13 @@ impl<'mc> Fire<'mc> {
 
     pub fn allowed_faces(
         &self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAllowedFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -22120,7 +22122,7 @@ impl<'mc> Into<crate::block::data::MultipleFacing<'mc>> for Fire<'mc> {
             .expect("Error converting Fire into crate::block::data::MultipleFacing")
     }
 }
-/// Similar to <a title="interface in org.bukkit.block.data" href="../Powerable.html"><code>Powerable</code></a>, 'enabled' indicates whether or not the hopper is currently activated.
+/// Similar to <a href="../Powerable.html" title="interface in org.bukkit.block.data"><code>Powerable</code></a>, 'enabled' indicates whether or not the hopper is currently activated.
 ///
 /// Unlike most other blocks, a hopper is only enabled when it is <b>not</b> receiving any power.
 ///
@@ -22234,13 +22236,13 @@ impl<'mc> Hopper<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -22265,7 +22267,7 @@ impl<'mc> Hopper<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -22734,13 +22736,13 @@ impl<'mc> Repeater<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -22765,7 +22767,7 @@ impl<'mc> Repeater<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -23234,7 +23236,7 @@ impl<'mc> Slab<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -23654,7 +23656,7 @@ impl<'mc> Snow<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -24286,7 +24288,7 @@ impl<'mc> Cocoa<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -24631,13 +24633,13 @@ impl<'mc> Cocoa<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -24786,13 +24788,13 @@ impl<'mc> Comparator<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -24817,7 +24819,7 @@ impl<'mc> Comparator<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -25240,7 +25242,7 @@ impl<'mc> RedstoneRail<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -25585,13 +25587,15 @@ impl<'mc> RedstoneRail<'mc> {
     }
     //
 
-    pub fn shapes(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn shapes(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getShapes", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -25722,7 +25726,7 @@ impl<'mc> CaveVinesPlant<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -26123,7 +26127,7 @@ impl<'mc> Light<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -26546,13 +26550,13 @@ impl<'mc> SmallDripleaf<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -26577,7 +26581,7 @@ impl<'mc> SmallDripleaf<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -27067,7 +27071,7 @@ impl<'mc> TrapDoor<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -27412,13 +27416,13 @@ impl<'mc> TrapDoor<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -27614,13 +27618,13 @@ impl<'mc> Grindstone<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -27645,7 +27649,7 @@ impl<'mc> Grindstone<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -28255,13 +28259,13 @@ impl<'mc> Beehive<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -28286,7 +28290,7 @@ impl<'mc> Beehive<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -28678,13 +28682,13 @@ impl<'mc> CoralWallFan<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -28709,7 +28713,7 @@ impl<'mc> CoralWallFan<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -29088,13 +29092,13 @@ impl<'mc> JNIInstantiatable<'mc> for SculkVein<'mc> {
 impl<'mc> SculkVein<'mc> {
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -29127,13 +29131,13 @@ impl<'mc> SculkVein<'mc> {
 
     pub fn allowed_faces(
         &self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAllowedFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -29177,7 +29181,7 @@ impl<'mc> SculkVein<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -29739,7 +29743,7 @@ impl<'mc> Tripwire<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -30040,13 +30044,13 @@ impl<'mc> Tripwire<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -30079,13 +30083,13 @@ impl<'mc> Tripwire<'mc> {
 
     pub fn allowed_faces(
         &self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAllowedFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -30326,7 +30330,7 @@ impl<'mc> Wall<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -30964,7 +30968,7 @@ impl<'mc> Farmland<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -31382,13 +31386,13 @@ impl<'mc> Gate<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -31413,7 +31417,7 @@ impl<'mc> Gate<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -32033,7 +32037,7 @@ impl<'mc> SculkShrieker<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -32561,13 +32565,13 @@ impl<'mc> Campfire<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -32592,7 +32596,7 @@ impl<'mc> Campfire<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -33046,13 +33050,13 @@ impl<'mc> Dripleaf<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -33077,7 +33081,7 @@ impl<'mc> Dripleaf<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -33551,7 +33555,7 @@ impl<'mc> SeaPickle<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -33946,13 +33950,13 @@ impl<'mc> RedstoneWallTorch<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -33977,7 +33981,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -34619,13 +34623,13 @@ impl<'mc> WallSign<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -34650,7 +34654,7 @@ impl<'mc> WallSign<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -35096,13 +35100,13 @@ impl<'mc> RedstoneWire<'mc> {
 
     pub fn allowed_faces(
         &self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAllowedFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -35161,7 +35165,7 @@ impl<'mc> RedstoneWire<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -35538,7 +35542,7 @@ impl<'mc> Jukebox<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -36036,13 +36040,13 @@ impl<'mc> Barrel<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -36067,7 +36071,7 @@ impl<'mc> Barrel<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -36516,13 +36520,13 @@ impl<'mc> CommandBlock<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -36547,7 +36551,7 @@ impl<'mc> CommandBlock<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -37006,7 +37010,7 @@ impl<'mc> Door<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -37351,13 +37355,13 @@ impl<'mc> Door<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -37524,7 +37528,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
 
     pub fn occupied_slots(
         &self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -37533,7 +37537,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -37596,13 +37600,13 @@ impl<'mc> ChiseledBookshelf<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -37627,7 +37631,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -38019,7 +38023,7 @@ impl<'mc> HangingSign<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -38530,7 +38534,7 @@ impl<'mc> Candle<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -38967,7 +38971,7 @@ impl<'mc> PointedDripstone<'mc> {
 
     pub fn vertical_directions(
         &self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -38976,7 +38980,7 @@ impl<'mc> PointedDripstone<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -39075,7 +39079,7 @@ impl<'mc> PointedDripstone<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -39467,13 +39471,13 @@ impl<'mc> LightningRod<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -39498,7 +39502,7 @@ impl<'mc> LightningRod<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -40083,7 +40087,7 @@ impl<'mc> Sign<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -40742,7 +40746,7 @@ impl<'mc> CaveVines<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -41219,7 +41223,7 @@ impl<'mc> TurtleEgg<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {

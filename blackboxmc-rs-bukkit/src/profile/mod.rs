@@ -58,6 +58,16 @@ impl<'mc> PlayerTextures<'mc> {
     }
     //
 
+    pub fn timestamp(&self) -> Result<i64, Box<dyn std::error::Error>> {
+        let sig = String::from("()J");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getTimestamp", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.j()?)
+    }
+    //
+
     pub fn skin(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/net/URL;");
         let res = self
@@ -68,7 +78,7 @@ impl<'mc> PlayerTextures<'mc> {
     }
     //
 
-    pub fn set_skin(
+    pub fn set_skin_with_url(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<impl Into<crate::profile::PlayerTexturesSkinModel<'mc>>>,
@@ -145,16 +155,6 @@ impl<'mc> PlayerTextures<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn timestamp(&self) -> Result<i64, Box<dyn std::error::Error>> {
-        let sig = String::from("()J");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getTimestamp", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j()?)
     }
     //
 
@@ -334,13 +334,15 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerProfile<'mc> {
 impl<'mc> PlayerProfile<'mc> {
     //
 
-    pub fn unique_id(&self) -> Result<blackboxmc_java::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+    pub fn unique_id(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/UUID;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getUniqueId", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaUUID::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaUUID::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -417,13 +419,15 @@ impl<'mc> PlayerProfile<'mc> {
     }
     //
 
-    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }

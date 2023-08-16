@@ -11,3 +11,4 @@ blackboxmc_general = {version = "0.2.0", path = "../blackboxmc-rs-general"}
 color-eyre = "0.6.2"
 eyre = "0.6.8"
 jni = "0.21.1"
+libffi = "3.2.0"

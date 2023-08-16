@@ -55,9 +55,9 @@ impl<'mc> CommandSenderSpigot<'mc> {
     }
     //
 
-    pub fn send_message(
+    pub fn send_message_with_uuid(
         &self,
-        arg0: impl Into<blackboxmc_java::JavaUUID<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
         arg1: std::option::Option<
             Vec<impl Into<blackboxmc_bungee::bungee::api::chat::BaseComponent<'mc>>>,
         >,
@@ -78,7 +78,7 @@ impl<'mc> CommandSenderSpigot<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -256,9 +256,9 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
     }
     //
 
-    pub fn send_message(
+    pub fn send_message_with_uuid(
         &self,
-        arg0: impl Into<blackboxmc_java::JavaUUID<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -298,7 +298,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
     }
     //
 
-    pub fn is_permission_set(
+    pub fn is_permission_set_with_permission(
         &self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -318,7 +318,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
     }
     //
 
-    pub fn has_permission(
+    pub fn has_permission_with_string(
         &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -338,7 +338,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
     }
     //
 
-    pub fn add_attachment(
+    pub fn add_attachment_with_plugin(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -415,7 +415,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
 
     pub fn effective_permissions(
         &self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -424,7 +424,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -501,24 +501,6 @@ impl<'mc> JNIInstantiatable<'mc> for SimpleCommandMap<'mc> {
 }
 
 impl<'mc> SimpleCommandMap<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Server<'mc>>,
-    ) -> Result<crate::command::SimpleCommandMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/Server;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/command/SimpleCommandMap");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::command::SimpleCommandMap::from_raw(&jni, res)
-    }
     //
 
     pub fn register_all(
@@ -590,7 +572,7 @@ impl<'mc> SimpleCommandMap<'mc> {
     }
     //
 
-    pub fn tab_complete(
+    pub fn tab_complete_with_command_sender(
         &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: impl Into<String>,
@@ -621,7 +603,7 @@ impl<'mc> SimpleCommandMap<'mc> {
             .call_method(&self.jni_object(), "tabComplete", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -645,7 +627,7 @@ impl<'mc> SimpleCommandMap<'mc> {
                 .call_method(&self.jni_object(), "getCommands", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
         let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
@@ -707,7 +689,7 @@ impl<'mc> SimpleCommandMap<'mc> {
     }
     //
 
-    pub fn register(
+    pub fn register_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: impl Into<String>,
@@ -741,7 +723,7 @@ impl<'mc> SimpleCommandMap<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -895,25 +877,6 @@ impl<'mc> JNIInstantiatable<'mc> for FormattedCommandAlias<'mc> {
 }
 
 impl<'mc> FormattedCommandAlias<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-        arg1: Vec<impl Into<String>>,
-    ) -> Result<crate::command::FormattedCommandAlias<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;Ljava/lang/String;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            jni.new_string(arg0.into())?,
-        ));
-        let cls = jni.find_class("org/bukkit/command/FormattedCommandAlias");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::command::FormattedCommandAlias::from_raw(&jni, res)
-    }
     //
 
     pub fn execute(
@@ -959,25 +922,6 @@ impl<'mc> FormattedCommandAlias<'mc> {
     }
     //
 
-    pub fn set_permission(
-        &self,
-        arg0: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setPermission",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn unregister(
         &self,
         arg0: impl Into<crate::command::CommandMap<'mc>>,
@@ -997,6 +941,25 @@ impl<'mc> FormattedCommandAlias<'mc> {
     }
     //
 
+    pub fn set_permission(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setPermission",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
     pub fn description(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
@@ -1011,7 +974,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
     }
     //
 
-    pub fn tab_complete(
+    pub fn tab_complete_with_command_sender(
         &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: impl Into<String>,
@@ -1043,7 +1006,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
             .call_method(&self.jni_object(), "tabComplete", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -1161,7 +1124,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
                 .call_method(&self.jni_object(), "getAliases", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -1275,7 +1238,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
     }
     //
 
-    pub fn broadcast_command_message(
+    pub fn broadcast_command_message_with_command_sender(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: impl Into<String>,
@@ -1382,7 +1345,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1561,7 +1524,7 @@ impl<'mc> TabCompleter<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -1730,9 +1693,9 @@ impl<'mc> ConsoleCommandSender<'mc> {
     }
     //
 
-    pub fn send_message(
+    pub fn send_message_with_uuid(
         &self,
-        arg0: impl Into<blackboxmc_java::JavaUUID<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1772,7 +1735,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
     }
     //
 
-    pub fn is_permission_set(
+    pub fn is_permission_set_with_permission(
         &self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1792,7 +1755,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
     }
     //
 
-    pub fn has_permission(
+    pub fn has_permission_with_string(
         &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1812,7 +1775,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
     }
     //
 
-    pub fn add_attachment(
+    pub fn add_attachment_with_plugin(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -1889,7 +1852,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
 
     pub fn effective_permissions(
         &self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1898,7 +1861,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1967,7 +1930,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
     }
     //
 
-    pub fn abandon_conversation(
+    pub fn abandon_conversation_with_conversation(
         &self,
         arg0: impl Into<crate::conversations::Conversation<'mc>>,
         arg1: std::option::Option<impl Into<crate::conversations::ConversationAbandonedEvent<'mc>>>,
@@ -2008,9 +1971,9 @@ impl<'mc> ConsoleCommandSender<'mc> {
     }
     //
 
-    pub fn send_raw_message(
+    pub fn send_raw_message_with_uuid(
         &self,
-        arg0: impl Into<blackboxmc_java::JavaUUID<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2158,25 +2121,6 @@ impl<'mc> Command<'mc> {
     }
     //
 
-    pub fn set_permission(
-        &self,
-        arg0: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setPermission",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn unregister(
         &self,
         arg0: impl Into<crate::command::CommandMap<'mc>>,
@@ -2196,6 +2140,25 @@ impl<'mc> Command<'mc> {
     }
     //
 
+    pub fn set_permission(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setPermission",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
     pub fn description(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
@@ -2210,7 +2173,7 @@ impl<'mc> Command<'mc> {
     }
     //
 
-    pub fn tab_complete(
+    pub fn tab_complete_with_command_sender(
         &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: impl Into<String>,
@@ -2242,7 +2205,7 @@ impl<'mc> Command<'mc> {
             .call_method(&self.jni_object(), "tabComplete", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -2360,7 +2323,7 @@ impl<'mc> Command<'mc> {
                 .call_method(&self.jni_object(), "getAliases", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -2474,7 +2437,7 @@ impl<'mc> Command<'mc> {
     }
     //
 
-    pub fn broadcast_command_message(
+    pub fn broadcast_command_message_with_command_sender(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: impl Into<String>,
@@ -2610,7 +2573,7 @@ impl<'mc> Command<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2742,25 +2705,6 @@ impl<'mc> JNIInstantiatable<'mc> for MultipleCommandAlias<'mc> {
 }
 
 impl<'mc> MultipleCommandAlias<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-        arg1: Vec<impl Into<crate::command::Command<'mc>>>,
-    ) -> Result<crate::command::MultipleCommandAlias<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;Lorg/bukkit/command/Command;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            jni.new_string(arg0.into())?,
-        ));
-        let cls = jni.find_class("org/bukkit/command/MultipleCommandAlias");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::command::MultipleCommandAlias::from_raw(&jni, res)
-    }
     //
 
     //
@@ -2808,25 +2752,6 @@ impl<'mc> MultipleCommandAlias<'mc> {
     }
     //
 
-    pub fn set_permission(
-        &self,
-        arg0: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setPermission",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn unregister(
         &self,
         arg0: impl Into<crate::command::CommandMap<'mc>>,
@@ -2846,6 +2771,25 @@ impl<'mc> MultipleCommandAlias<'mc> {
     }
     //
 
+    pub fn set_permission(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setPermission",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
     pub fn description(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
@@ -2860,7 +2804,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
     }
     //
 
-    pub fn tab_complete(
+    pub fn tab_complete_with_command_sender(
         &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: impl Into<String>,
@@ -2892,7 +2836,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
             .call_method(&self.jni_object(), "tabComplete", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -3010,7 +2954,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
                 .call_method(&self.jni_object(), "getAliases", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -3124,7 +3068,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
     }
     //
 
-    pub fn broadcast_command_message(
+    pub fn broadcast_command_message_with_command_sender(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: impl Into<String>,
@@ -3231,7 +3175,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3401,7 +3345,7 @@ impl<'mc> PluginCommandYamlParser<'mc> {
         );
         let res = jni.translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&jni, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&jni, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -3411,7 +3355,7 @@ impl<'mc> PluginCommandYamlParser<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3611,9 +3555,9 @@ impl<'mc> ProxiedCommandSender<'mc> {
     }
     //
 
-    pub fn send_message(
+    pub fn send_message_with_uuid(
         &self,
-        arg0: impl Into<blackboxmc_java::JavaUUID<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -3653,7 +3597,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
     }
     //
 
-    pub fn is_permission_set(
+    pub fn is_permission_set_with_permission(
         &self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3673,7 +3617,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
     }
     //
 
-    pub fn has_permission(
+    pub fn has_permission_with_string(
         &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3693,7 +3637,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
     }
     //
 
-    pub fn add_attachment(
+    pub fn add_attachment_with_plugin(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -3770,7 +3714,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
 
     pub fn effective_permissions(
         &self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3779,7 +3723,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -3896,7 +3840,7 @@ impl<'mc> TabExecutor<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -4022,9 +3966,9 @@ impl<'mc> CommandSender<'mc> {
     }
     //
 
-    pub fn send_message(
+    pub fn send_message_with_uuid(
         &self,
-        arg0: impl Into<blackboxmc_java::JavaUUID<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -4064,7 +4008,7 @@ impl<'mc> CommandSender<'mc> {
     }
     //
 
-    pub fn is_permission_set(
+    pub fn is_permission_set_with_permission(
         &self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4084,7 +4028,7 @@ impl<'mc> CommandSender<'mc> {
     }
     //
 
-    pub fn has_permission(
+    pub fn has_permission_with_string(
         &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4104,7 +4048,7 @@ impl<'mc> CommandSender<'mc> {
     }
     //
 
-    pub fn add_attachment(
+    pub fn add_attachment_with_plugin(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -4181,7 +4125,7 @@ impl<'mc> CommandSender<'mc> {
 
     pub fn effective_permissions(
         &self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4190,7 +4134,7 @@ impl<'mc> CommandSender<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -4337,7 +4281,7 @@ impl<'mc> CommandMap<'mc> {
     }
     //
 
-    pub fn tab_complete(
+    pub fn tab_complete_with_command_sender(
         &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: impl Into<String>,
@@ -4368,7 +4312,7 @@ impl<'mc> CommandMap<'mc> {
             .call_method(&self.jni_object(), "tabComplete", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -4409,7 +4353,7 @@ impl<'mc> CommandMap<'mc> {
     }
     //
 
-    pub fn register(
+    pub fn register_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: impl Into<String>,
@@ -4482,7 +4426,7 @@ impl<'mc> JNIInstantiatable<'mc> for PluginCommand<'mc> {
 impl<'mc> PluginCommand<'mc> {
     //
 
-    pub fn tab_complete(
+    pub fn tab_complete_with_command_sender(
         &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: impl Into<String>,
@@ -4514,7 +4458,7 @@ impl<'mc> PluginCommand<'mc> {
             .call_method(&self.jni_object(), "tabComplete", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -4665,25 +4609,6 @@ impl<'mc> PluginCommand<'mc> {
     }
     //
 
-    pub fn set_permission(
-        &self,
-        arg0: impl Into<String>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setPermission",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn unregister(
         &self,
         arg0: impl Into<crate::command::CommandMap<'mc>>,
@@ -4700,6 +4625,25 @@ impl<'mc> PluginCommand<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
+    }
+    //
+
+    pub fn set_permission(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setPermission",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     //
 
@@ -4820,7 +4764,7 @@ impl<'mc> PluginCommand<'mc> {
                 .call_method(&self.jni_object(), "getAliases", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -4934,7 +4878,7 @@ impl<'mc> PluginCommand<'mc> {
     }
     //
 
-    pub fn broadcast_command_message(
+    pub fn broadcast_command_message_with_command_sender(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
         arg1: impl Into<String>,
@@ -5026,7 +4970,7 @@ impl<'mc> PluginCommand<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -5212,9 +5156,9 @@ impl<'mc> BlockCommandSender<'mc> {
     }
     //
 
-    pub fn send_message(
+    pub fn send_message_with_uuid(
         &self,
-        arg0: impl Into<blackboxmc_java::JavaUUID<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -5254,7 +5198,7 @@ impl<'mc> BlockCommandSender<'mc> {
     }
     //
 
-    pub fn is_permission_set(
+    pub fn is_permission_set_with_permission(
         &self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5274,7 +5218,7 @@ impl<'mc> BlockCommandSender<'mc> {
     }
     //
 
-    pub fn has_permission(
+    pub fn has_permission_with_string(
         &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5294,7 +5238,7 @@ impl<'mc> BlockCommandSender<'mc> {
     }
     //
 
-    pub fn add_attachment(
+    pub fn add_attachment_with_plugin(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -5371,7 +5315,7 @@ impl<'mc> BlockCommandSender<'mc> {
 
     pub fn effective_permissions(
         &self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5380,7 +5324,7 @@ impl<'mc> BlockCommandSender<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }

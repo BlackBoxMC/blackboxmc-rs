@@ -53,7 +53,7 @@ impl<'mc> HandlerList<'mc> {
     }
     //
 
-    pub fn unregister(
+    pub fn unregister_with_listener(
         &self,
         arg0: impl Into<crate::event::Listener<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -73,7 +73,7 @@ impl<'mc> HandlerList<'mc> {
     }
     //
 
-    pub fn unregister_all(
+    pub fn unregister_all_with_listener(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::event::Listener<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -120,7 +120,7 @@ impl<'mc> HandlerList<'mc> {
     pub fn get_registered_listeners(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
-    ) -> Result<blackboxmc_java::JavaArrayList<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaArrayList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/plugin/Plugin;)Ljava/util/ArrayList;");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
@@ -135,20 +135,20 @@ impl<'mc> HandlerList<'mc> {
         );
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
-        blackboxmc_java::JavaArrayList::from_raw(&jni, obj)
+        blackboxmc_java::util::JavaArrayList::from_raw(&jni, obj)
     }
     //
 
     pub fn handler_lists(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<blackboxmc_java::JavaArrayList<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaArrayList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/ArrayList;");
         let cls = jni.find_class("java/util/ArrayList");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "getHandlerLists", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
-        blackboxmc_java::JavaArrayList::from_raw(&jni, obj)
+        blackboxmc_java::util::JavaArrayList::from_raw(&jni, obj)
     }
     //
 
@@ -171,7 +171,7 @@ impl<'mc> HandlerList<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -523,7 +523,7 @@ impl<'mc> std::string::ToString for EventHandler<'mc> {
     }
 }
 
-/// Represents an event. All events require a static method named getHandlerList() which returns the same <a title="class in org.bukkit.event" href="HandlerList.html"><code>HandlerList</code></a> as <a href="#getHandlers()"><code>getHandlers()</code></a>.
+/// Represents an event. All events require a static method named getHandlerList() which returns the same <a href="HandlerList.html" title="class in org.bukkit.event"><code>HandlerList</code></a> as <a href="#getHandlers()"><code>getHandlers()</code></a>.
 pub struct Event<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -673,25 +673,6 @@ impl<'mc> JNIInstantiatable<'mc> for Event<'mc> {
 }
 
 impl<'mc> Event<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<bool>,
-    ) -> Result<crate::event::Event<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Z";
-            // 1
-            let val_1 = jni::objects::JValueGen::Bool(a.into());
-            args.push(val_1);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/event/Event");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::Event::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -730,7 +711,7 @@ impl<'mc> Event<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

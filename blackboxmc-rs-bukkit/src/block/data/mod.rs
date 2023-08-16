@@ -99,7 +99,7 @@ impl<'mc> Hatchable<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -492,7 +492,7 @@ impl<'mc> Lightable<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -910,7 +910,7 @@ impl<'mc> FaceAttachable<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1424,7 +1424,7 @@ impl<'mc> Ageable<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1817,7 +1817,7 @@ impl<'mc> Openable<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2211,13 +2211,15 @@ impl<'mc> Rail<'mc> {
     }
     //
 
-    pub fn shapes(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn shapes(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getShapes", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -2267,7 +2269,7 @@ impl<'mc> Rail<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2634,7 +2636,7 @@ impl<'mc> BlockData<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3022,13 +3024,13 @@ impl<'mc> Orientable<'mc> {
     }
     //
 
-    pub fn axes(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn axes(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getAxes", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -3053,7 +3055,7 @@ impl<'mc> Orientable<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3446,7 +3448,7 @@ impl<'mc> Powerable<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3969,7 +3971,7 @@ impl<'mc> Levelled<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4321,13 +4323,13 @@ impl<'mc> JNIInstantiatable<'mc> for MultipleFacing<'mc> {
 impl<'mc> MultipleFacing<'mc> {
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -4360,13 +4362,13 @@ impl<'mc> MultipleFacing<'mc> {
 
     pub fn allowed_faces(
         &self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getAllowedFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -4410,7 +4412,7 @@ impl<'mc> MultipleFacing<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4944,7 +4946,7 @@ impl<'mc> Snowable<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5338,13 +5340,13 @@ impl<'mc> Directional<'mc> {
     }
     //
 
-    pub fn faces(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFaces", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -5369,7 +5371,7 @@ impl<'mc> Directional<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5886,7 +5888,7 @@ impl<'mc> Rotatable<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6279,7 +6281,7 @@ impl<'mc> Hangable<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6672,7 +6674,7 @@ impl<'mc> Waterlogged<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7078,7 +7080,7 @@ impl<'mc> AnaloguePowerable<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7483,7 +7485,7 @@ impl<'mc> Brushable<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7878,7 +7880,7 @@ impl<'mc> Attachable<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8293,7 +8295,7 @@ impl<'mc> Bisected<'mc> {
     }
     //
 
-    pub fn is_supported(
+    pub fn is_supported_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {

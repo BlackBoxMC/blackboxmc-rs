@@ -47,19 +47,6 @@ Ok(Self(env.clone(), obj))
     }
     
 impl<'mc> Item<'mc> {
-	pub fn new(jni: &blackboxmc_general::SharedJNIEnv<'mc>,arg0: impl Into<String>,arg1: i32,arg2: impl Into<crate::bungee::api::chat::ItemTag<'mc>>) 
--> Result<crate::bungee::api::chat::hover::content::Item<'mc>, Box<dyn std::error::Error>>
-
-{let sig = String::from("(Ljava/lang/String;ILnet/md_5/bungee/api/chat/ItemTag;)V");
-let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(jni.new_string(arg0.into())?));
-let val_2 = jni::objects::JValueGen::Int(arg1.into());
-let val_3 = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone())});
-let cls = jni.find_class("net/md_5/bungee/api/chat/hover/content/Item"); let cls = jni.translate_error_with_class(cls)?;
-let res = jni.new_object(cls,
-sig.as_str(),vec![jni::objects::JValueGen::from(val_1),jni::objects::JValueGen::from(val_2),jni::objects::JValueGen::from(val_3)]);
-let res = jni.translate_error_no_gen(res)?;
-crate::bungee::api::chat::hover::content::Item::from_raw(&jni,res
-)}
 //
 
 
@@ -88,19 +75,6 @@ crate::bungee::api::chat::ItemTag::from_raw(&self.jni_ref(),unsafe { jni::object
 //
 
 
-	pub fn set_id(&self,arg0: impl Into<String>) 
--> Result<(), Box<dyn std::error::Error>>
-
-{let sig = String::from("(Ljava/lang/String;)V");
-let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?));
-let res = self.jni_ref().call_method(&self.jni_object(),"setId",sig.as_str(),vec![jni::objects::JValueGen::from(val_1)]);
-self.jni_ref().translate_error(res)?;
-Ok(
-()
-)}
-//
-
-
 	pub fn set_tag(&self,arg0: impl Into<crate::bungee::api::chat::ItemTag<'mc>>) 
 -> Result<(), Box<dyn std::error::Error>>
 
@@ -124,6 +98,19 @@ self.jni_ref().translate_error(res)?;
 let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };let variant = self.0.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]); let variant = self.jni_ref().translate_error(variant)?;let variant_str = self.0    .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?    .to_string_lossy()    .to_string();
 crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),raw_obj
 , crate::bungee::api::chat::HoverEventAction::from_string(variant_str).ok_or(eyre::eyre!("String gaven for variant was invalid"))?
+)}
+//
+
+
+	pub fn set_id(&self,arg0: impl Into<String>) 
+-> Result<(), Box<dyn std::error::Error>>
+
+{let sig = String::from("(Ljava/lang/String;)V");
+let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?));
+let res = self.jni_ref().call_method(&self.jni_object(),"setId",sig.as_str(),vec![jni::objects::JValueGen::from(val_1)]);
+self.jni_ref().translate_error(res)?;
+Ok(
+()
 )}
 //
 
@@ -208,7 +195,7 @@ Ok(
 //
 
 
-	pub fn wait(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
+	pub fn wait_with_long(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -332,32 +319,6 @@ Ok(Self(env.clone(), obj))
     }
     
 impl<'mc> Entity<'mc> {
-	pub fn new(jni: &blackboxmc_general::SharedJNIEnv<'mc>,arg0: impl Into<String>,arg1: impl Into<String>,arg2: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>) 
--> Result<crate::bungee::api::chat::hover::content::Entity<'mc>, Box<dyn std::error::Error>>
-
-{let sig = String::from("(Ljava/lang/String;Ljava/lang/String;Lnet/md_5/bungee/api/chat/BaseComponent;)V");
-let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(jni.new_string(arg0.into())?));
-let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(jni.new_string(arg1.into())?));
-let val_3 = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone())});
-let cls = jni.find_class("net/md_5/bungee/api/chat/hover/content/Entity"); let cls = jni.translate_error_with_class(cls)?;
-let res = jni.new_object(cls,
-sig.as_str(),vec![jni::objects::JValueGen::from(val_1),jni::objects::JValueGen::from(val_2),jni::objects::JValueGen::from(val_3)]);
-let res = jni.translate_error_no_gen(res)?;
-crate::bungee::api::chat::hover::content::Entity::from_raw(&jni,res
-)}
-//
-
-
-	pub fn set_id(&self,arg0: impl Into<String>) 
--> Result<(), Box<dyn std::error::Error>>
-
-{let sig = String::from("(Ljava/lang/String;)V");
-let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?));
-let res = self.jni_ref().call_method(&self.jni_object(),"setId",sig.as_str(),vec![jni::objects::JValueGen::from(val_1)]);
-self.jni_ref().translate_error(res)?;
-Ok(
-()
-)}
 //
 
 
@@ -384,6 +345,19 @@ self.jni_ref().translate_error(res)?;
 let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };let variant = self.0.call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]); let variant = self.jni_ref().translate_error(variant)?;let variant_str = self.0    .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?    .to_string_lossy()    .to_string();
 crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),raw_obj
 , crate::bungee::api::chat::HoverEventAction::from_string(variant_str).ok_or(eyre::eyre!("String gaven for variant was invalid"))?
+)}
+//
+
+
+	pub fn set_id(&self,arg0: impl Into<String>) 
+-> Result<(), Box<dyn std::error::Error>>
+
+{let sig = String::from("(Ljava/lang/String;)V");
+let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(self.jni_ref().new_string(arg0.into())?));
+let res = self.jni_ref().call_method(&self.jni_object(),"setId",sig.as_str(),vec![jni::objects::JValueGen::from(val_1)]);
+self.jni_ref().translate_error(res)?;
+Ok(
+()
 )}
 //
 
@@ -493,7 +467,7 @@ Ok(
 //
 
 
-	pub fn wait(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
+	pub fn wait_with_long(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -630,7 +604,7 @@ crate::bungee::api::chat::hover::content::ItemSerializer::from_raw(&jni,res
 //
 
 
-	pub fn serialize(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: jni::objects::JObject<'mc>) 
+	pub fn serialize_with_object(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: jni::objects::JObject<'mc>) 
 -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -652,7 +626,7 @@ Ok(res.l()?)}
 //
 
 
-	pub fn deserialize(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: jni::objects::JObject<'mc>) 
+	pub fn deserialize_with_json_element(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: jni::objects::JObject<'mc>) 
 -> Result<crate::bungee::api::chat::hover::content::Item<'mc>, Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -675,7 +649,7 @@ crate::bungee::api::chat::hover::content::Item::from_raw(&self.jni_ref(),unsafe 
 //
 
 
-	pub fn wait(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
+	pub fn wait_with_long(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -852,7 +826,7 @@ crate::bungee::api::chat::hover::content::TextSerializer::from_raw(&jni,res
 //
 
 
-	pub fn serialize(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: jni::objects::JObject<'mc>) 
+	pub fn serialize_with_object(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: jni::objects::JObject<'mc>) 
 -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -874,7 +848,7 @@ Ok(res.l()?)}
 //
 
 
-	pub fn deserialize(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: jni::objects::JObject<'mc>) 
+	pub fn deserialize_with_json_element(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: jni::objects::JObject<'mc>) 
 -> Result<crate::bungee::api::chat::hover::content::Text<'mc>, Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -897,7 +871,7 @@ crate::bungee::api::chat::hover::content::Text::from_raw(&self.jni_ref(),unsafe 
 //
 
 
-	pub fn wait(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
+	pub fn wait_with_long(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -1142,7 +1116,7 @@ res.i()?
 //
 
 
-	pub fn wait(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
+	pub fn wait_with_long(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -1258,21 +1232,6 @@ Ok(Self(env.clone(), obj))
     }
     
 impl<'mc> Text<'mc> {
-	pub fn new(jni: &blackboxmc_general::SharedJNIEnv<'mc>,arg0: impl Into<String>) 
--> Result<crate::bungee::api::chat::hover::content::Text<'mc>, Box<dyn std::error::Error>>
-
-{let mut args = Vec::new();
-let mut sig = String::from("(");
-sig += "Ljava/lang/String;";
-let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(jni.new_string(arg0.into())?));
-args.push(val_1);
-sig += ")V";
-let cls = jni.find_class("net/md_5/bungee/api/chat/hover/content/Text"); let cls = jni.translate_error_with_class(cls)?;
-let res = jni.new_object(cls,
-sig.as_str(),args);
-let res = jni.translate_error_no_gen(res)?;
-crate::bungee::api::chat::hover::content::Text::from_raw(&jni,res
-)}
 //
 
 
@@ -1355,7 +1314,7 @@ Ok(
 //
 
 
-	pub fn wait(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
+	pub fn wait_with_long(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -1492,7 +1451,7 @@ crate::bungee::api::chat::hover::content::EntitySerializer::from_raw(&jni,res
 //
 
 
-	pub fn serialize(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: jni::objects::JObject<'mc>) 
+	pub fn serialize_with_object(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: jni::objects::JObject<'mc>) 
 -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -1514,7 +1473,7 @@ Ok(res.l()?)}
 //
 
 
-	pub fn deserialize(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: jni::objects::JObject<'mc>) 
+	pub fn deserialize_with_json_element(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: jni::objects::JObject<'mc>) 
 -> Result<crate::bungee::api::chat::hover::content::Entity<'mc>, Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -1537,7 +1496,7 @@ crate::bungee::api::chat::hover::content::Entity::from_raw(&self.jni_ref(),unsaf
 //
 
 
-	pub fn wait(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
+	pub fn wait_with_long(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();

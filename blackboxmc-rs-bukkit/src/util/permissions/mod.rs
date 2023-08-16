@@ -46,12 +46,12 @@ impl<'mc> JNIInstantiatable<'mc> for DefaultPermissions<'mc> {
 impl<'mc> DefaultPermissions<'mc> {
     //
 
-    pub fn register_permission(
+    pub fn register_permission_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<String>>,
         arg2: std::option::Option<impl Into<crate::permissions::PermissionDefault<'mc>>>,
-        arg3: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
+        arg3: std::option::Option<impl Into<blackboxmc_java::util::JavaMap<'mc>>>,
         arg4: std::option::Option<impl Into<crate::permissions::Permission<'mc>>>,
     ) -> Result<crate::permissions::Permission<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -111,7 +111,7 @@ impl<'mc> DefaultPermissions<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -284,7 +284,7 @@ impl<'mc> CommandPermissions<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -457,7 +457,7 @@ impl<'mc> BroadcastPermissions<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

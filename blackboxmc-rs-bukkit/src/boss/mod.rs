@@ -482,7 +482,7 @@ impl<'mc> RespawnPhase<'mc> {
         )
     }
 }
-/// Represents a custom <a title="interface in org.bukkit.boss" href="BossBar.html"><code>BossBar</code></a> that has a <a title="class in org.bukkit" href="../NamespacedKey.html"><code>NamespacedKey</code></a>
+/// Represents a custom <a href="BossBar.html" title="interface in org.bukkit.boss"><code>BossBar</code></a> that has a <a href="../NamespacedKey.html" title="class in org.bukkit"><code>NamespacedKey</code></a>
 ///
 /// This is a representation of an abstract class.
 pub struct KeyedBossBar<'mc>(
@@ -633,7 +633,7 @@ impl<'mc> KeyedBossBar<'mc> {
                 .call_method(&self.jni_object(), "getPlayers", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -1008,7 +1008,7 @@ impl<'mc> BossBar<'mc> {
                 .call_method(&self.jni_object(), "getPlayers", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;

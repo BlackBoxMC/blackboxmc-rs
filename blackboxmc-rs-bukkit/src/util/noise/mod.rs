@@ -46,27 +46,9 @@ impl<'mc> JNIInstantiatable<'mc> for SimplexNoiseGenerator<'mc> {
 }
 
 impl<'mc> SimplexNoiseGenerator<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<blackboxmc_java::JavaRandom<'mc>>,
-    ) -> Result<crate::util::noise::SimplexNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Ljava/util/Random;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/util/noise/SimplexNoiseGenerator");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::util::noise::SimplexNoiseGenerator::from_raw(&jni, res)
-    }
     //
 
-    pub fn noise(
+    pub fn noise_with_double(
         &self,
         arg0: f64,
         arg1: std::option::Option<f64>,
@@ -121,7 +103,7 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
     }
     //
 
-    pub fn get_noise(
+    pub fn get_noise_with_double(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: f64,
         arg1: std::option::Option<f64>,
@@ -203,7 +185,7 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -358,25 +340,9 @@ impl<'mc> JNIInstantiatable<'mc> for PerlinNoiseGenerator<'mc> {
 }
 
 impl<'mc> PerlinNoiseGenerator<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: i64,
-    ) -> Result<crate::util::noise::PerlinNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "J";
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        args.push(val_1);
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/util/noise/PerlinNoiseGenerator");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::util::noise::PerlinNoiseGenerator::from_raw(&jni, res)
-    }
     //
 
-    pub fn noise(
+    pub fn noise_with_double(
         &self,
         arg0: f64,
         arg1: std::option::Option<f64>,
@@ -432,7 +398,7 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
     //
 
     /// Generates noise for the 3D coordinates using the specified number of octaves and parameters
-    pub fn get_noise(
+    pub fn get_noise_with_double(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: f64,
         arg1: std::option::Option<f64>,
@@ -512,7 +478,7 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -667,28 +633,6 @@ impl<'mc> JNIInstantiatable<'mc> for SimplexOctaveGenerator<'mc> {
 }
 
 impl<'mc> SimplexOctaveGenerator<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<blackboxmc_java::JavaRandom<'mc>>,
-        arg1: i32,
-    ) -> Result<crate::util::noise::SimplexOctaveGenerator<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Ljava/util/Random;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += "I";
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        args.push(val_2);
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/util/noise/SimplexOctaveGenerator");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::util::noise::SimplexOctaveGenerator::from_raw(&jni, res)
-    }
     //
 
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="OctaveGenerator.html#setScale(double)">OctaveGenerator</a></code></span>
@@ -709,7 +653,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
     //
 
     /// Generates noise for the 3D coordinates using the specified number of octaves and parameters
-    pub fn noise(
+    pub fn noise_with_double(
         &self,
         arg0: f64,
         arg1: f64,
@@ -859,7 +803,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
 
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1109,7 +1053,7 @@ impl<'mc> OctaveGenerator<'mc> {
     //
 
     /// Generates noise for the 3D coordinates using the specified number of octaves and parameters
-    pub fn noise(
+    pub fn noise_with_double(
         &self,
         arg0: f64,
         arg1: f64,
@@ -1154,7 +1098,7 @@ impl<'mc> OctaveGenerator<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1303,26 +1247,6 @@ impl<'mc> JNIInstantiatable<'mc> for PerlinOctaveGenerator<'mc> {
 }
 
 impl<'mc> PerlinOctaveGenerator<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: i64,
-        arg1: i32,
-    ) -> Result<crate::util::noise::PerlinOctaveGenerator<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "J";
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        args.push(val_1);
-        sig += "I";
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        args.push(val_2);
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/util/noise/PerlinOctaveGenerator");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::util::noise::PerlinOctaveGenerator::from_raw(&jni, res)
-    }
     //
 
     pub fn set_scale(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
@@ -1413,7 +1337,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
 
     //
 
-    pub fn noise(
+    pub fn noise_with_double(
         &self,
         arg0: f64,
         arg1: f64,
@@ -1458,7 +1382,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1635,7 +1559,7 @@ impl<'mc> NoiseGenerator<'mc> {
     //
 
     /// Generates noise for the 3D coordinates using the specified number of octaves and parameters
-    pub fn noise(
+    pub fn noise_with_double(
         &self,
         arg0: f64,
         arg1: std::option::Option<f64>,
@@ -1710,7 +1634,7 @@ impl<'mc> NoiseGenerator<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

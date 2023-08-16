@@ -44,31 +44,6 @@ impl<'mc> JNIInstantiatable<'mc> for MoistureChangeEvent<'mc> {
 }
 
 impl<'mc> MoistureChangeEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::block::BlockState<'mc>>,
-    ) -> Result<crate::event::block::MoistureChangeEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockState;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/block/MoistureChangeEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::MoistureChangeEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -171,7 +146,7 @@ impl<'mc> MoistureChangeEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -332,38 +307,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockReceiveGameEvent<'mc> {
 }
 
 impl<'mc> BlockReceiveGameEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::GameEvent<'mc>>,
-        arg1: impl Into<crate::block::Block<'mc>>,
-        arg2: impl Into<crate::entity::Entity<'mc>>,
-    ) -> Result<crate::event::block::BlockReceiveGameEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from(
-            "(Lorg/bukkit/GameEvent;Lorg/bukkit/block/Block;Lorg/bukkit/entity/Entity;)V",
-        );
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/block/BlockReceiveGameEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockReceiveGameEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -478,7 +421,7 @@ impl<'mc> BlockReceiveGameEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -637,51 +580,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockDropItemEvent<'mc> {
 }
 
 impl<'mc> BlockDropItemEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::block::BlockState<'mc>>,
-        arg2: impl Into<crate::entity::Player<'mc>>,
-        arg3: Vec<impl Into<crate::entity::Item<'mc>>>,
-    ) -> Result<crate::event::block::BlockDropItemEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockState;Lorg/bukkit/entity/Player;Ljava/util/List;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
-        });
-        let raw_val_4 = jni.new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg3 {
-            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(v.into().jni_object().clone())
-            });
-            jni.call_method(
-                &raw_val_4,
-                "add",
-                "(Lorg/bukkit/entity/crate::entity::Item)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_4 = jni::objects::JValueGen::Object(raw_val_4);
-        let cls = jni.find_class("org/bukkit/event/block/BlockDropItemEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-                jni::objects::JValueGen::from(val_4),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockDropItemEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -737,7 +635,7 @@ impl<'mc> BlockDropItemEvent<'mc> {
             .call_method(&self.jni_object(), "getItems", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -813,7 +711,7 @@ impl<'mc> BlockDropItemEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1103,41 +1001,6 @@ impl<'mc> JNIInstantiatable<'mc> for TNTPrimeEvent<'mc> {
 }
 
 impl<'mc> TNTPrimeEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::event::block::TNTPrimeEventPrimeCause<'mc>>,
-        arg2: impl Into<crate::entity::Entity<'mc>>,
-        arg3: impl Into<crate::block::Block<'mc>>,
-    ) -> Result<crate::event::block::TNTPrimeEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/Block;Lorg/bukkit/event/block/TNTPrimeEvent$PrimeCause;Lorg/bukkit/entity/Entity;Lorg/bukkit/block/Block;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
-        });
-        let val_4 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg3.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/block/TNTPrimeEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-                jni::objects::JValueGen::from(val_4),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::TNTPrimeEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -1282,7 +1145,7 @@ impl<'mc> TNTPrimeEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1441,41 +1304,6 @@ impl<'mc> JNIInstantiatable<'mc> for BellResonateEvent<'mc> {
 }
 
 impl<'mc> BellResonateEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: Vec<impl Into<crate::entity::LivingEntity<'mc>>>,
-    ) -> Result<crate::event::block::BellResonateEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/Block;Ljava/util/List;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let raw_val_2 = jni.new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg1 {
-            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(v.into().jni_object().clone())
-            });
-            jni.call_method(
-                &raw_val_2,
-                "add",
-                "(Lorg/bukkit/entity/crate::entity::LivingEntity)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_2 = jni::objects::JValueGen::Object(raw_val_2);
-        let cls = jni.find_class("org/bukkit/event/block/BellResonateEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BellResonateEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -1515,7 +1343,7 @@ impl<'mc> BellResonateEvent<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -1561,7 +1389,7 @@ impl<'mc> BellResonateEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1714,44 +1542,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockExplodeEvent<'mc> {
 }
 
 impl<'mc> BlockExplodeEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: Vec<impl Into<crate::block::Block<'mc>>>,
-        arg2: f32,
-    ) -> Result<crate::event::block::BlockExplodeEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/Block;Ljava/util/List;F)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let raw_val_2 = jni.new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg1 {
-            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(v.into().jni_object().clone())
-            });
-            jni.call_method(
-                &raw_val_2,
-                "add",
-                "(Lorg/bukkit/block/crate::block::Block)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_2 = jni::objects::JValueGen::Object(raw_val_2);
-        let val_3 = jni::objects::JValueGen::Float(arg2.into());
-        let cls = jni.find_class("org/bukkit/event/block/BlockExplodeEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockExplodeEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -1838,7 +1628,7 @@ impl<'mc> BlockExplodeEvent<'mc> {
             .call_method(&self.jni_object(), "blockList", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -1884,7 +1674,7 @@ impl<'mc> BlockExplodeEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2208,42 +1998,6 @@ impl<'mc> JNIInstantiatable<'mc> for CauldronLevelChangeEvent<'mc> {
 }
 
 impl<'mc> CauldronLevelChangeEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::entity::Entity<'mc>>,
-        arg2: impl Into<crate::event::block::CauldronLevelChangeEventChangeReason<'mc>>,
-        arg3: impl Into<crate::block::BlockState<'mc>>,
-    ) -> Result<crate::event::block::CauldronLevelChangeEvent<'mc>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("(Lorg/bukkit/block/Block;Lorg/bukkit/entity/Entity;Lorg/bukkit/event/block/CauldronLevelChangeEvent$ChangeReason;Lorg/bukkit/block/BlockState;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
-        });
-        let val_4 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg3.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/block/CauldronLevelChangeEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-                jni::objects::JValueGen::from(val_4),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::CauldronLevelChangeEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -2430,7 +2184,7 @@ impl<'mc> CauldronLevelChangeEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2591,55 +2345,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockMultiPlaceEvent<'mc> {
 }
 
 impl<'mc> BlockMultiPlaceEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: Vec<impl Into<crate::block::BlockState<'mc>>>,
-        arg1: impl Into<crate::block::Block<'mc>>,
-        arg2: impl Into<crate::inventory::ItemStack<'mc>>,
-        arg3: impl Into<crate::entity::Player<'mc>>,
-        arg4: bool,
-    ) -> Result<crate::event::block::BlockMultiPlaceEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/entity/Player;Z)V");
-        let raw_val_1 = jni.new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(v.into().jni_object().clone())
-            });
-            jni.call_method(
-                &raw_val_1,
-                "add",
-                "(Lorg/bukkit/block/crate::block::BlockState)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
-        });
-        let val_4 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg3.into().jni_object().clone())
-        });
-        // -1
-        let val_5 = jni::objects::JValueGen::Bool(arg4.into());
-        let cls = jni.find_class("org/bukkit/event/block/BlockMultiPlaceEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-                jni::objects::JValueGen::from(val_4),
-                jni::objects::JValueGen::from(val_5),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockMultiPlaceEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn replaced_block_states(
@@ -2654,7 +2359,7 @@ impl<'mc> BlockMultiPlaceEvent<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -2867,7 +2572,7 @@ impl<'mc> BlockMultiPlaceEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3144,43 +2849,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockCanBuildEvent<'mc> {
 }
 
 impl<'mc> BlockCanBuildEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::entity::Player<'mc>>,
-        arg2: impl Into<crate::block::data::BlockData<'mc>>,
-        arg3: std::option::Option<bool>,
-    ) -> Result<crate::event::block::BlockCanBuildEvent<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/block/Block;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += "Lorg/bukkit/entity/Player;";
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        args.push(val_2);
-        sig += "Lorg/bukkit/block/data/BlockData;";
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
-        });
-        args.push(val_3);
-        if let Some(a) = arg3 {
-            sig += "Z";
-            // 4
-            let val_4 = jni::objects::JValueGen::Bool(a.into());
-            args.push(val_4);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/event/block/BlockCanBuildEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockCanBuildEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -3321,7 +2989,7 @@ impl<'mc> BlockCanBuildEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3481,38 +3149,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockSpreadEvent<'mc> {
 }
 
 impl<'mc> BlockSpreadEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::block::Block<'mc>>,
-        arg2: impl Into<crate::block::BlockState<'mc>>,
-    ) -> Result<crate::event::block::BlockSpreadEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from(
-            "(Lorg/bukkit/block/Block;Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockState;)V",
-        );
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/block/BlockSpreadEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockSpreadEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -3625,7 +3261,7 @@ impl<'mc> BlockSpreadEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3780,38 +3416,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockDamageAbortEvent<'mc> {
 }
 
 impl<'mc> BlockDamageAbortEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::entity::Player<'mc>>,
-        arg1: impl Into<crate::block::Block<'mc>>,
-        arg2: impl Into<crate::inventory::ItemStack<'mc>>,
-    ) -> Result<crate::event::block::BlockDamageAbortEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from(
-            "(Lorg/bukkit/entity/Player;Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;)V",
-        );
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/block/BlockDamageAbortEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockDamageAbortEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -3901,7 +3505,7 @@ impl<'mc> BlockDamageAbortEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -4015,7 +3619,7 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockDamageAbortEvent<'
     }
 }
 /// Called when a block is formed or spreads based on world conditions.
-/// <p>Use <a href="BlockSpreadEvent.html" title="class in org.bukkit.event.block"><code>BlockSpreadEvent</code></a> to catch blocks that actually spread and don't just "randomly" form.</p>
+/// <p>Use <a title="class in org.bukkit.event.block" href="BlockSpreadEvent.html"><code>BlockSpreadEvent</code></a> to catch blocks that actually spread and don't just "randomly" form.</p>
 /// <p>Examples:</p>
 /// <ul>
 /// <li>Snow forming due to a snow storm.</li>
@@ -4063,31 +3667,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockFormEvent<'mc> {
 }
 
 impl<'mc> BlockFormEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::block::BlockState<'mc>>,
-    ) -> Result<crate::event::block::BlockFormEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockState;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/block/BlockFormEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockFormEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -4188,7 +3767,7 @@ impl<'mc> BlockFormEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -4469,47 +4048,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockPistonRetractEvent<'mc> {
 }
 
 impl<'mc> BlockPistonRetractEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: Vec<impl Into<crate::block::Block<'mc>>>,
-        arg2: impl Into<crate::block::BlockFace<'mc>>,
-    ) -> Result<crate::event::block::BlockPistonRetractEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig =
-            String::from("(Lorg/bukkit/block/Block;Ljava/util/List;Lorg/bukkit/block/BlockFace;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let raw_val_2 = jni.new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg1 {
-            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(v.into().jni_object().clone())
-            });
-            jni.call_method(
-                &raw_val_2,
-                "add",
-                "(Lorg/bukkit/block/crate::block::Block)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_2 = jni::objects::JValueGen::Object(raw_val_2);
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/block/BlockPistonRetractEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockPistonRetractEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -4531,7 +4069,7 @@ impl<'mc> BlockPistonRetractEvent<'mc> {
             .call_method(&self.jni_object(), "getBlocks", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -4665,7 +4203,7 @@ impl<'mc> BlockPistonRetractEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -5093,46 +4631,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockPistonExtendEvent<'mc> {
 }
 
 impl<'mc> BlockPistonExtendEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: Vec<impl Into<crate::block::Block<'mc>>>,
-        arg2: impl Into<crate::block::BlockFace<'mc>>,
-    ) -> Result<crate::event::block::BlockPistonExtendEvent<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/block/Block;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += "Ljava/util/List;";
-        let raw_val_2 = jni.new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg1 {
-            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(v.into().jni_object().clone())
-            });
-            jni.call_method(
-                &raw_val_2,
-                "add",
-                "(Lorg/bukkit/block/crate::block::Block)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_2 = jni::objects::JValueGen::Object(raw_val_2);
-        args.push(val_2);
-        sig += "Lorg/bukkit/block/BlockFace;";
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
-        });
-        args.push(val_3);
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/event/block/BlockPistonExtendEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockPistonExtendEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -5154,7 +4652,7 @@ impl<'mc> BlockPistonExtendEvent<'mc> {
             .call_method(&self.jni_object(), "getBlocks", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -5283,7 +4781,7 @@ impl<'mc> BlockPistonExtendEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -5397,7 +4895,7 @@ impl<'mc> Into<crate::event::block::BlockPistonEvent<'mc>> for BlockPistonExtend
         )
     }
 }
-/// Called with the block changes resulting from a player fertilizing a given block with bonemeal. Will be called after the applicable <a href="../world/StructureGrowEvent.html" title="class in org.bukkit.event.world"><code>StructureGrowEvent</code></a>.
+/// Called with the block changes resulting from a player fertilizing a given block with bonemeal. Will be called after the applicable <a title="class in org.bukkit.event.world" href="../world/StructureGrowEvent.html"><code>StructureGrowEvent</code></a>.
 pub struct BlockFertilizeEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -5438,47 +4936,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockFertilizeEvent<'mc> {
 }
 
 impl<'mc> BlockFertilizeEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::entity::Player<'mc>>,
-        arg2: Vec<impl Into<crate::block::BlockState<'mc>>>,
-    ) -> Result<crate::event::block::BlockFertilizeEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig =
-            String::from("(Lorg/bukkit/block/Block;Lorg/bukkit/entity/Player;Ljava/util/List;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let raw_val_3 = jni.new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg2 {
-            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(v.into().jni_object().clone())
-            });
-            jni.call_method(
-                &raw_val_3,
-                "add",
-                "(Lorg/bukkit/block/crate::block::BlockState)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_3 = jni::objects::JValueGen::Object(raw_val_3);
-        let cls = jni.find_class("org/bukkit/event/block/BlockFertilizeEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockFertilizeEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -5522,7 +4979,7 @@ impl<'mc> BlockFertilizeEvent<'mc> {
             .call_method(&self.jni_object(), "getBlocks", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -5598,7 +5055,7 @@ impl<'mc> BlockFertilizeEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -5757,34 +5214,6 @@ impl<'mc> JNIInstantiatable<'mc> for BrewingStartEvent<'mc> {
 }
 
 impl<'mc> BrewingStartEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::inventory::ItemStack<'mc>>,
-        arg2: i32,
-    ) -> Result<crate::event::block::BrewingStartEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;I)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        let cls = jni.find_class("org/bukkit/event/block/BrewingStartEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BrewingStartEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -5888,7 +5317,7 @@ impl<'mc> BrewingStartEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -6005,7 +5434,7 @@ impl<'mc> Into<crate::event::block::InventoryBlockStartEvent<'mc>> for BrewingSt
 /// Used when:
 /// <ul>
 /// <li>A Furnace starts smelting <a href="../inventory/FurnaceStartSmeltEvent.html" title="class in org.bukkit.event.inventory"><code>FurnaceStartSmeltEvent</code></a></li>
-/// <li>A Brewing-Stand starts brewing <a title="class in org.bukkit.event.block" href="BrewingStartEvent.html"><code>BrewingStartEvent</code></a></li>
+/// <li>A Brewing-Stand starts brewing <a href="BrewingStartEvent.html" title="class in org.bukkit.event.block"><code>BrewingStartEvent</code></a></li>
 /// <li>A Campfire starts cooking <a href="CampfireStartEvent.html" title="class in org.bukkit.event.block"><code>CampfireStartEvent</code></a></li>
 /// </ul>
 pub struct InventoryBlockStartEvent<'mc>(
@@ -6049,32 +5478,6 @@ impl<'mc> JNIInstantiatable<'mc> for InventoryBlockStartEvent<'mc> {
 }
 
 impl<'mc> InventoryBlockStartEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::inventory::ItemStack<'mc>>,
-    ) -> Result<crate::event::block::InventoryBlockStartEvent<'mc>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("(Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/block/InventoryBlockStartEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::InventoryBlockStartEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -6150,7 +5553,7 @@ impl<'mc> InventoryBlockStartEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -6314,31 +5717,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockGrowEvent<'mc> {
 }
 
 impl<'mc> BlockGrowEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::block::BlockState<'mc>>,
-    ) -> Result<crate::event::block::BlockGrowEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockState;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/block/BlockGrowEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockGrowEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -6441,7 +5819,7 @@ impl<'mc> BlockGrowEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -6603,36 +5981,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockDispenseArmorEvent<'mc> {
 }
 
 impl<'mc> BlockDispenseArmorEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::inventory::ItemStack<'mc>>,
-        arg2: impl Into<crate::entity::LivingEntity<'mc>>,
-    ) -> Result<crate::event::block::BlockDispenseArmorEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/entity/LivingEntity;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/block/BlockDispenseArmorEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockDispenseArmorEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn tarentity(
@@ -6661,16 +6009,6 @@ impl<'mc> BlockDispenseArmorEvent<'mc> {
     }
     //
 
-    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
     pub fn item(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
@@ -6680,6 +6018,16 @@ impl<'mc> BlockDispenseArmorEvent<'mc> {
         crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    //
+
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
     }
     //
 
@@ -6797,7 +6145,7 @@ impl<'mc> BlockDispenseArmorEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -6951,36 +6299,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockCookEvent<'mc> {
 }
 
 impl<'mc> BlockCookEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::inventory::ItemStack<'mc>>,
-        arg2: impl Into<crate::inventory::ItemStack<'mc>>,
-    ) -> Result<crate::event::block::BlockCookEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/inventory/ItemStack;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/block/BlockCookEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockCookEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -6990,6 +6308,18 @@ impl<'mc> BlockCookEvent<'mc> {
                 .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
+    pub fn source(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getSource", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -7014,18 +6344,6 @@ impl<'mc> BlockCookEvent<'mc> {
                 .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
-    }
-    //
-
-    pub fn source(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getSource", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -7114,7 +6432,7 @@ impl<'mc> BlockCookEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -7273,31 +6591,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockPistonEvent<'mc> {
 }
 
 impl<'mc> BlockPistonEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::block::BlockFace<'mc>>,
-    ) -> Result<crate::event::block::BlockPistonEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockFace;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/block/BlockPistonEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockPistonEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7410,7 +6703,7 @@ impl<'mc> BlockPistonEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -7578,31 +6871,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockFadeEvent<'mc> {
 }
 
 impl<'mc> BlockFadeEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::block::BlockState<'mc>>,
-    ) -> Result<crate::event::block::BlockFadeEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockState;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/block/BlockFadeEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockFadeEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -7705,7 +6973,7 @@ impl<'mc> BlockFadeEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -7865,61 +7133,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockPlaceEvent<'mc> {
 }
 
 impl<'mc> BlockPlaceEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::block::BlockState<'mc>>,
-        arg2: impl Into<crate::block::Block<'mc>>,
-        arg3: impl Into<crate::inventory::ItemStack<'mc>>,
-        arg4: impl Into<crate::entity::Player<'mc>>,
-        arg5: bool,
-        arg6: std::option::Option<impl Into<crate::inventory::EquipmentSlot<'mc>>>,
-    ) -> Result<crate::event::block::BlockPlaceEvent<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/block/Block;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += "Lorg/bukkit/block/BlockState;";
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        args.push(val_2);
-        sig += "Lorg/bukkit/block/Block;";
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
-        });
-        args.push(val_3);
-        sig += "Lorg/bukkit/inventory/ItemStack;";
-        let val_4 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg3.into().jni_object().clone())
-        });
-        args.push(val_4);
-        sig += "Lorg/bukkit/entity/Player;";
-        let val_5 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg4.into().jni_object().clone())
-        });
-        args.push(val_5);
-        sig += "Z";
-        // 7
-        let val_6 = jni::objects::JValueGen::Bool(arg5.into());
-        args.push(val_6);
-        if let Some(a) = arg6 {
-            sig += "Lorg/bukkit/inventory/EquipmentSlot;";
-            let val_7 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_7);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/event/block/BlockPlaceEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockPlaceEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -8128,7 +7341,7 @@ impl<'mc> BlockPlaceEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -8293,38 +7506,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockPhysicsEvent<'mc> {
 }
 
 impl<'mc> BlockPhysicsEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::block::data::BlockData<'mc>>,
-        arg2: std::option::Option<impl Into<crate::block::Block<'mc>>>,
-    ) -> Result<crate::event::block::BlockPhysicsEvent<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/block/Block;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += "Lorg/bukkit/block/data/BlockData;";
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        args.push(val_2);
-        if let Some(a) = arg2 {
-            sig += "Lorg/bukkit/block/Block;";
-            let val_3 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_3);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/event/block/BlockPhysicsEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockPhysicsEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -8452,7 +7633,7 @@ impl<'mc> BlockPhysicsEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -8574,7 +7755,7 @@ impl<'mc> Into<crate::event::block::BlockEvent<'mc>> for BlockPhysicsEvent<'mc> 
 /// Called when a block is formed by entities.
 /// <p>Examples:</p>
 /// <ul>
-/// <li>Snow formed by a <a href="../../entity/Snowman.html" title="interface in org.bukkit.entity"><code>Snowman</code></a>.</li>
+/// <li>Snow formed by a <a title="interface in org.bukkit.entity" href="../../entity/Snowman.html"><code>Snowman</code></a>.</li>
 /// <li>Frosted Ice formed by the Frost Walker enchantment.</li>
 /// </ul>
 pub struct EntityBlockFormEvent<'mc>(
@@ -8617,38 +7798,6 @@ impl<'mc> JNIInstantiatable<'mc> for EntityBlockFormEvent<'mc> {
 }
 
 impl<'mc> EntityBlockFormEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::entity::Entity<'mc>>,
-        arg1: impl Into<crate::block::Block<'mc>>,
-        arg2: impl Into<crate::block::BlockState<'mc>>,
-    ) -> Result<crate::event::block::EntityBlockFormEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from(
-            "(Lorg/bukkit/entity/Entity;Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockState;)V",
-        );
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/block/EntityBlockFormEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::EntityBlockFormEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
@@ -8761,7 +7910,7 @@ impl<'mc> EntityBlockFormEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -8919,41 +8068,6 @@ impl<'mc> JNIInstantiatable<'mc> for SpongeAbsorbEvent<'mc> {
 }
 
 impl<'mc> SpongeAbsorbEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: Vec<impl Into<crate::block::BlockState<'mc>>>,
-    ) -> Result<crate::event::block::SpongeAbsorbEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/Block;Ljava/util/List;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let raw_val_2 = jni.new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg1 {
-            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(v.into().jni_object().clone())
-            });
-            jni.call_method(
-                &raw_val_2,
-                "add",
-                "(Lorg/bukkit/block/crate::block::BlockState)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_2 = jni::objects::JValueGen::Object(raw_val_2);
-        let cls = jni.find_class("org/bukkit/event/block/SpongeAbsorbEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::SpongeAbsorbEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -8985,7 +8099,7 @@ impl<'mc> SpongeAbsorbEvent<'mc> {
             .call_method(&self.jni_object(), "getBlocks", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -9061,7 +8175,7 @@ impl<'mc> SpongeAbsorbEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -9218,29 +8332,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockExpEvent<'mc> {
 }
 
 impl<'mc> BlockExpEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: i32,
-    ) -> Result<crate::event::block::BlockExpEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/Block;I)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let cls = jni.find_class("org/bukkit/event/block/BlockExpEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockExpEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -9329,7 +8420,7 @@ impl<'mc> BlockExpEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -9483,39 +8574,6 @@ impl<'mc> JNIInstantiatable<'mc> for SignChangeEvent<'mc> {
 }
 
 impl<'mc> SignChangeEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::entity::Player<'mc>>,
-        arg2: Vec<impl Into<String>>,
-        arg3: std::option::Option<impl Into<crate::block::sign::Side<'mc>>>,
-    ) -> Result<crate::event::block::SignChangeEvent<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/block/Block;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += "Lorg/bukkit/entity/Player;";
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        args.push(val_2);
-        if let Some(a) = arg3 {
-            sig += "Lorg/bukkit/block/sign/Side;";
-            let val_4 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_4);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/event/block/SignChangeEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::SignChangeEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -9691,7 +8749,7 @@ impl<'mc> SignChangeEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -9851,24 +8909,6 @@ impl<'mc> JNIInstantiatable<'mc> for LeavesDecayEvent<'mc> {
 }
 
 impl<'mc> LeavesDecayEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-    ) -> Result<crate::event::block::LeavesDecayEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/Block;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/block/LeavesDecayEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::LeavesDecayEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -9959,7 +8999,7 @@ impl<'mc> LeavesDecayEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -10119,30 +9159,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockFromToEvent<'mc> {
 }
 
 impl<'mc> BlockFromToEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::block::Block<'mc>>,
-    ) -> Result<crate::event::block::BlockFromToEvent<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/block/Block;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += "Lorg/bukkit/block/Block;";
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        args.push(val_2);
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/event/block/BlockFromToEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockFromToEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -10270,7 +9286,7 @@ impl<'mc> BlockFromToEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -10431,38 +9447,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockShearEntityEvent<'mc> {
 }
 
 impl<'mc> BlockShearEntityEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::entity::Entity<'mc>>,
-        arg2: impl Into<crate::inventory::ItemStack<'mc>>,
-    ) -> Result<crate::event::block::BlockShearEntityEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from(
-            "(Lorg/bukkit/block/Block;Lorg/bukkit/entity/Entity;Lorg/bukkit/inventory/ItemStack;)V",
-        );
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/block/BlockShearEntityEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockShearEntityEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -10577,7 +9561,7 @@ impl<'mc> BlockShearEntityEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -10738,31 +9722,6 @@ impl<'mc> JNIInstantiatable<'mc> for FluidLevelChangeEvent<'mc> {
 }
 
 impl<'mc> FluidLevelChangeEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::block::data::BlockData<'mc>>,
-    ) -> Result<crate::event::block::FluidLevelChangeEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/Block;Lorg/bukkit/block/data/BlockData;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/block/FluidLevelChangeEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::FluidLevelChangeEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -10886,7 +9845,7 @@ impl<'mc> FluidLevelChangeEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -11046,32 +10005,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockBurnEvent<'mc> {
 }
 
 impl<'mc> BlockBurnEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: std::option::Option<impl Into<crate::block::Block<'mc>>>,
-    ) -> Result<crate::event::block::BlockBurnEvent<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/block/Block;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/block/Block;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/event/block/BlockBurnEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockBurnEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -11177,7 +10110,7 @@ impl<'mc> BlockBurnEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -11337,38 +10270,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockDispenseEvent<'mc> {
 }
 
 impl<'mc> BlockDispenseEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::inventory::ItemStack<'mc>>,
-        arg2: impl Into<crate::util::Vector<'mc>>,
-    ) -> Result<crate::event::block::BlockDispenseEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from(
-            "(Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/util/Vector;)V",
-        );
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/block/BlockDispenseEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockDispenseEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -11383,16 +10284,6 @@ impl<'mc> BlockDispenseEvent<'mc> {
     }
     //
 
-    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
     pub fn item(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
@@ -11402,6 +10293,16 @@ impl<'mc> BlockDispenseEvent<'mc> {
         crate::inventory::ItemStack::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    //
+
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
     }
     //
 
@@ -11521,7 +10422,7 @@ impl<'mc> BlockDispenseEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -11678,38 +10579,6 @@ impl<'mc> JNIInstantiatable<'mc> for BellRingEvent<'mc> {
 }
 
 impl<'mc> BellRingEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::block::BlockFace<'mc>>,
-        arg2: impl Into<crate::entity::Entity<'mc>>,
-    ) -> Result<crate::event::block::BellRingEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from(
-            "(Lorg/bukkit/block/Block;Lorg/bukkit/block/BlockFace;Lorg/bukkit/entity/Entity;)V",
-        );
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/block/BellRingEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BellRingEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -11837,7 +10706,7 @@ impl<'mc> BellRingEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -11997,40 +10866,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockDamageEvent<'mc> {
 }
 
 impl<'mc> BlockDamageEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::entity::Player<'mc>>,
-        arg1: impl Into<crate::block::Block<'mc>>,
-        arg2: impl Into<crate::inventory::ItemStack<'mc>>,
-        arg3: bool,
-    ) -> Result<crate::event::block::BlockDamageEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/entity/Player;Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Z)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
-        });
-        // -1
-        let val_4 = jni::objects::JValueGen::Bool(arg3.into());
-        let cls = jni.find_class("org/bukkit/event/block/BlockDamageEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-                jni::objects::JValueGen::from(val_4),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockDamageEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -12173,7 +11008,7 @@ impl<'mc> BlockDamageEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -12332,36 +11167,6 @@ impl<'mc> JNIInstantiatable<'mc> for CampfireStartEvent<'mc> {
 }
 
 impl<'mc> CampfireStartEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::inventory::ItemStack<'mc>>,
-        arg2: impl Into<crate::inventory::CampfireRecipe<'mc>>,
-    ) -> Result<crate::event::block::CampfireStartEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/inventory/CampfireRecipe;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/block/CampfireStartEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::CampfireStartEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -12479,7 +11284,7 @@ impl<'mc> CampfireStartEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -12640,31 +11445,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockBreakEvent<'mc> {
 }
 
 impl<'mc> BlockBreakEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::entity::Player<'mc>>,
-    ) -> Result<crate::event::block::BlockBreakEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/Block;Lorg/bukkit/entity/Player;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/block/BlockBreakEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockBreakEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12706,7 +11486,7 @@ impl<'mc> BlockBreakEvent<'mc> {
     }
     //
 
-    /// Sets whether or not the block will attempt to drop items as it normally would. If and only if this is false then <a title="class in org.bukkit.event.block" href="BlockDropItemEvent.html"><code>BlockDropItemEvent</code></a> will not be called after this event.
+    /// Sets whether or not the block will attempt to drop items as it normally would. If and only if this is false then <a href="BlockDropItemEvent.html" title="class in org.bukkit.event.block"><code>BlockDropItemEvent</code></a> will not be called after this event.
     pub fn set_drop_items(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
         // -1
@@ -12817,7 +11597,7 @@ impl<'mc> BlockBreakEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -12976,32 +11756,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockRedstoneEvent<'mc> {
 }
 
 impl<'mc> BlockRedstoneEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: i32,
-        arg2: i32,
-    ) -> Result<crate::event::block::BlockRedstoneEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/Block;II)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        let cls = jni.find_class("org/bukkit/event/block/BlockRedstoneEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockRedstoneEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -13100,7 +11854,7 @@ impl<'mc> BlockRedstoneEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -13394,44 +12148,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockIgniteEvent<'mc> {
 }
 
 impl<'mc> BlockIgniteEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::event::block::BlockIgniteEventIgniteCause<'mc>>,
-        arg2: impl Into<crate::entity::Entity<'mc>>,
-        arg3: std::option::Option<impl Into<crate::block::Block<'mc>>>,
-    ) -> Result<crate::event::block::BlockIgniteEvent<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/block/Block;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += "Lorg/bukkit/event/block/BlockIgniteEvent$IgniteCause;";
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        args.push(val_2);
-        sig += "Lorg/bukkit/entity/Entity;";
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
-        });
-        args.push(val_3);
-        if let Some(a) = arg3 {
-            sig += "Lorg/bukkit/block/Block;";
-            let val_4 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_4);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/event/block/BlockIgniteEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockIgniteEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -13594,7 +12310,7 @@ impl<'mc> BlockIgniteEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -13751,37 +12467,6 @@ impl<'mc> JNIInstantiatable<'mc> for NotePlayEvent<'mc> {
 }
 
 impl<'mc> NotePlayEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-        arg1: impl Into<crate::Instrument<'mc>>,
-        arg2: impl Into<crate::Note<'mc>>,
-    ) -> Result<crate::event::block::NotePlayEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig =
-            String::from("(Lorg/bukkit/block/Block;Lorg/bukkit/Instrument;Lorg/bukkit/Note;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/block/NotePlayEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::NotePlayEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -13947,7 +12632,7 @@ impl<'mc> NotePlayEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -14104,24 +12789,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockEvent<'mc> {
 }
 
 impl<'mc> BlockEvent<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-    ) -> Result<crate::event::block::BlockEvent<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/block/Block;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/event/block/BlockEvent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::event::block::BlockEvent::from_raw(&jni, res)
-    }
     //
 
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
@@ -14172,7 +12839,7 @@ impl<'mc> BlockEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

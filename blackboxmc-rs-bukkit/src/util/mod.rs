@@ -102,7 +102,7 @@ impl<'mc> NumberConversions<'mc> {
     }
     //
 
-    pub fn check_finite(
+    pub fn check_finite_with_double(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: f64,
         arg1: impl Into<String>,
@@ -259,7 +259,7 @@ impl<'mc> NumberConversions<'mc> {
     }
     //
 
-    pub fn is_finite(
+    pub fn is_finite_with_float(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: f32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -277,7 +277,7 @@ impl<'mc> NumberConversions<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -422,52 +422,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockIterator<'mc> {
 }
 
 impl<'mc> BlockIterator<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::World<'mc>>,
-        arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
-        arg2: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
-        arg3: std::option::Option<f64>,
-        arg4: std::option::Option<i32>,
-    ) -> Result<crate::util::BlockIterator<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/World;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/util/Vector;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "Lorg/bukkit/util/Vector;";
-            let val_3 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_3);
-        }
-        if let Some(a) = arg3 {
-            sig += "D";
-            let val_4 = jni::objects::JValueGen::Double(a.into());
-            args.push(val_4);
-        }
-        if let Some(a) = arg4 {
-            sig += "I";
-            let val_5 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_5);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/util/BlockIterator");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::util::BlockIterator::from_raw(&jni, res)
-    }
     //
 
     pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
@@ -504,7 +458,7 @@ impl<'mc> BlockIterator<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -604,7 +558,7 @@ impl<'mc> BlockIterator<'mc> {
 
     pub fn for_each_remaining(
         &self,
-        arg0: impl Into<blackboxmc_java::function::JavaConsumer<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::function::JavaConsumer<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Consumer;)V");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
@@ -630,10 +584,10 @@ impl<'mc> std::string::ToString for BlockIterator<'mc> {
     }
 }
 
-impl<'mc> Into<blackboxmc_java::JavaIterator<'mc>> for BlockIterator<'mc> {
-    fn into(self) -> blackboxmc_java::JavaIterator<'mc> {
-        blackboxmc_java::JavaIterator::from_raw(&self.jni_ref(), self.1)
-            .expect("Error converting BlockIterator into blackboxmc_java::JavaIterator")
+impl<'mc> Into<blackboxmc_java::util::JavaIterator<'mc>> for BlockIterator<'mc> {
+    fn into(self) -> blackboxmc_java::util::JavaIterator<'mc> {
+        blackboxmc_java::util::JavaIterator::from_raw(&self.jni_ref(), self.1)
+            .expect("Error converting BlockIterator into blackboxmc_java::util::JavaIterator")
     }
 }
 /// Represents an arbitrary affine transformation.
@@ -676,34 +630,6 @@ impl<'mc> JNIInstantiatable<'mc> for Transformation<'mc> {
 }
 
 impl<'mc> Transformation<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: jni::objects::JObject<'mc>,
-        arg1: jni::objects::JObject<'mc>,
-        arg2: jni::objects::JObject<'mc>,
-        arg3: jni::objects::JObject<'mc>,
-    ) -> Result<crate::util::Transformation<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/joml/Vector3f;";
-        let val_1 = jni::objects::JValueGen::Object(arg0);
-        args.push(val_1);
-        sig += "Lorg/joml/Quaternionf;";
-        let val_2 = jni::objects::JValueGen::Object(arg1);
-        args.push(val_2);
-        sig += "Lorg/joml/Vector3f;";
-        let val_3 = jni::objects::JValueGen::Object(arg2);
-        args.push(val_3);
-        sig += "Lorg/joml/Quaternionf;";
-        let val_4 = jni::objects::JValueGen::Object(arg3);
-        args.push(val_4);
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/util/Transformation");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::util::Transformation::from_raw(&jni, res)
-    }
     //
 
     pub fn translation(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -791,7 +717,7 @@ impl<'mc> Transformation<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -897,40 +823,6 @@ impl<'mc> JNIInstantiatable<'mc> for RayTraceResult<'mc> {
 }
 
 impl<'mc> RayTraceResult<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::util::Vector<'mc>>,
-        arg1: std::option::Option<impl Into<crate::block::Block<'mc>>>,
-        arg2: std::option::Option<impl Into<crate::block::BlockFace<'mc>>>,
-    ) -> Result<crate::util::RayTraceResult<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/util/Vector;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/block/Block;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "Lorg/bukkit/block/BlockFace;";
-            let val_3 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_3);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/util/RayTraceResult");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::util::RayTraceResult::from_raw(&jni, res)
-    }
     //
 
     pub fn hit_position(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
@@ -1038,7 +930,7 @@ impl<'mc> RayTraceResult<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1186,28 +1078,6 @@ impl<'mc> JNIInstantiatable<'mc> for ChatPaginatorChatPage<'mc> {
 }
 
 impl<'mc> ChatPaginatorChatPage<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: Vec<impl Into<String>>,
-        arg1: i32,
-        arg2: i32,
-    ) -> Result<crate::util::ChatPaginatorChatPage<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;II)V");
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        let cls = jni.find_class("org/bukkit/util/ChatPaginator$ChatPage");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::util::ChatPaginatorChatPage::from_raw(&jni, res)
-    }
     //
 
     //
@@ -1232,7 +1102,7 @@ impl<'mc> ChatPaginatorChatPage<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1412,7 +1282,7 @@ impl<'mc> VoxelShape<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
         let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
@@ -1600,58 +1470,10 @@ impl<'mc> JNIInstantiatable<'mc> for BoundingBox<'mc> {
 }
 
 impl<'mc> BoundingBox<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<f64>,
-        arg1: std::option::Option<f64>,
-        arg2: std::option::Option<f64>,
-        arg3: std::option::Option<f64>,
-        arg4: std::option::Option<f64>,
-        arg5: std::option::Option<f64>,
-    ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "D";
-            let val_1 = jni::objects::JValueGen::Double(a.into());
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "D";
-            let val_2 = jni::objects::JValueGen::Double(a.into());
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "D";
-            let val_3 = jni::objects::JValueGen::Double(a.into());
-            args.push(val_3);
-        }
-        if let Some(a) = arg3 {
-            sig += "D";
-            let val_4 = jni::objects::JValueGen::Double(a.into());
-            args.push(val_4);
-        }
-        if let Some(a) = arg4 {
-            sig += "D";
-            let val_5 = jni::objects::JValueGen::Double(a.into());
-            args.push(val_5);
-        }
-        if let Some(a) = arg5 {
-            sig += "D";
-            let val_6 = jni::objects::JValueGen::Double(a.into());
-            args.push(val_6);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/util/BoundingBox");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::util::BoundingBox::from_raw(&jni, res)
-    }
     //@NotNull
 
     /// Expands this bounding box to contain (or border) the specified position.
-    pub fn union(
+    pub fn union_with_double(
         &self,
         arg0: f64,
         arg1: std::option::Option<f64>,
@@ -1693,13 +1515,15 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1707,7 +1531,7 @@ impl<'mc> BoundingBox<'mc> {
 
     pub fn deserialize(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<blackboxmc_java::JavaMap<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::JavaMap<'mc>>,
     ) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Map;)Lorg/bukkit/util/BoundingBox;");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
@@ -1885,7 +1709,7 @@ impl<'mc> BoundingBox<'mc> {
 
     /// Expands this bounding box in the specified direction.
     /// <p>Negative values will expand the bounding box in the negative direction, positive values will expand it in the positive direction. The magnitudes of the direction components determine the corresponding amounts of expansion.</p>
-    pub fn expand_directional(
+    pub fn expand_directional_with_double(
         &self,
         arg0: f64,
         arg1: std::option::Option<f64>,
@@ -1938,7 +1762,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn overlaps(
+    pub fn overlaps_with_vector(
         &self,
         arg0: impl Into<crate::util::Vector<'mc>>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
@@ -2053,7 +1877,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn of(
+    pub fn of_with_vector(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::util::Vector<'mc>>,
         arg1: std::option::Option<f64>,
@@ -2094,7 +1918,7 @@ impl<'mc> BoundingBox<'mc> {
 
     /// Checks if this bounding box contains the specified position.
     /// <p>Positions exactly on the minimum borders of the bounding box are considered to be inside the bounding box, while positions exactly on the maximum borders are considered to be outside. This allows bounding boxes to reside directly next to each other with positions always only residing in exactly one of them.</p>
-    pub fn contains(
+    pub fn contains_with_double(
         &self,
         arg0: f64,
         arg1: std::option::Option<f64>,
@@ -2147,7 +1971,7 @@ impl<'mc> BoundingBox<'mc> {
 
     /// Expands this bounding box by the given values in the corresponding directions.
     /// <p>Negative values will shrink the bounding box in the corresponding direction. Shrinking will be limited to the point where the affected opposite faces would meet if the they shrank at uniform speeds.</p>
-    pub fn expand(
+    pub fn expand_with_double(
         &self,
         arg0: f64,
         arg1: std::option::Option<f64>,
@@ -2198,7 +2022,7 @@ impl<'mc> BoundingBox<'mc> {
     //@NotNull
 
     /// Shifts this bounding box by the given amounts.
-    pub fn shift(
+    pub fn shift_with_double(
         &self,
         arg0: f64,
         arg1: std::option::Option<f64>,
@@ -2267,7 +2091,7 @@ impl<'mc> BoundingBox<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2377,41 +2201,11 @@ impl<'mc> JNIInstantiatable<'mc> for BlockVector<'mc> {
 }
 
 impl<'mc> BlockVector<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<i32>,
-        arg2: std::option::Option<i32>,
-    ) -> Result<crate::util::BlockVector<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "I";
-            let val_3 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_3);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/util/BlockVector");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::util::BlockVector::from_raw(&jni, res)
-    }
     //
 
-    pub fn deserialize(
+    pub fn deserialize_with_map(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<blackboxmc_java::JavaMap<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::JavaMap<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -2479,7 +2273,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //@NotNull
 
-    pub fn multiply(
+    pub fn multiply_with_double(
         &self,
         arg0: f64,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
@@ -2529,7 +2323,10 @@ impl<'mc> BlockVector<'mc> {
     }
     //@NotNull
 
-    pub fn set_x(&self, arg0: i32) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn set_x_with_int(
+        &self,
+        arg0: i32,
+    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
@@ -2556,7 +2353,10 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn set_y(&self, arg0: f64) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn set_y_with_double(
+        &self,
+        arg0: f64,
+    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "D";
@@ -2583,7 +2383,10 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn set_z(&self, arg0: f64) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn set_z_with_double(
+        &self,
+        arg0: f64,
+    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "D";
@@ -2670,13 +2473,15 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -2987,7 +2792,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn to_location(
+    pub fn to_location_with_world(
         &self,
         arg0: impl Into<crate::World<'mc>>,
         arg1: std::option::Option<f32>,
@@ -3055,7 +2860,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //@NotNull
 
-    pub fn to_vector3i(
+    pub fn to_vector3i_with_int(
         &self,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -3150,7 +2955,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn from_joml(
+    pub fn from_joml_with_vector3d(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
@@ -3298,7 +3103,7 @@ impl<'mc> BlockVector<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3407,30 +3212,6 @@ impl<'mc> JNIInstantiatable<'mc> for EulerAngle<'mc> {
 }
 
 impl<'mc> EulerAngle<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: f64,
-        arg1: f64,
-        arg2: f64,
-    ) -> Result<crate::util::EulerAngle<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(DDD)V");
-        let val_1 = jni::objects::JValueGen::Double(arg0.into());
-        let val_2 = jni::objects::JValueGen::Double(arg1.into());
-        let val_3 = jni::objects::JValueGen::Double(arg2.into());
-        let cls = jni.find_class("org/bukkit/util/EulerAngle");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::util::EulerAngle::from_raw(&jni, res)
-    }
     //
 
     pub fn x(&self) -> Result<f64, Box<dyn std::error::Error>> {
@@ -3606,7 +3387,7 @@ impl<'mc> EulerAngle<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3763,7 +3544,7 @@ impl<'mc> StringUtil<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3920,7 +3701,7 @@ impl<'mc> ChatPaginator<'mc> {
     }
     //
 
-    pub fn paginate(
+    pub fn paginate_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
         arg1: i32,
@@ -3959,7 +3740,7 @@ impl<'mc> ChatPaginator<'mc> {
 
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -4104,36 +3885,6 @@ impl<'mc> JNIInstantiatable<'mc> for Vector<'mc> {
 }
 
 impl<'mc> Vector<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<f32>,
-        arg1: std::option::Option<f32>,
-        arg2: std::option::Option<f32>,
-    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "F";
-            let val_1 = jni::objects::JValueGen::Float(a.into());
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "F";
-            let val_2 = jni::objects::JValueGen::Float(a.into());
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "F";
-            let val_3 = jni::objects::JValueGen::Float(a.into());
-            args.push(val_3);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/util/Vector");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::util::Vector::from_raw(&jni, res)
-    }
     //
 
     pub fn is_normalized(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4147,7 +3898,7 @@ impl<'mc> Vector<'mc> {
     //@NotNull
 
     /// Performs scalar multiplication, multiplying all components with a scalar.
-    pub fn multiply(
+    pub fn multiply_with_double(
         &self,
         arg0: f64,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
@@ -4198,7 +3949,10 @@ impl<'mc> Vector<'mc> {
     //@NotNull
 
     /// Set the X component.
-    pub fn set_x(&self, arg0: i32) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn set_x_with_int(
+        &self,
+        arg0: i32,
+    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
@@ -4226,7 +3980,10 @@ impl<'mc> Vector<'mc> {
     //
 
     /// Set the Y component.
-    pub fn set_y(&self, arg0: f64) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn set_y_with_double(
+        &self,
+        arg0: f64,
+    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "D";
@@ -4254,7 +4011,10 @@ impl<'mc> Vector<'mc> {
     //
 
     /// Set the Z component.
-    pub fn set_z(&self, arg0: f64) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
+    pub fn set_z_with_double(
+        &self,
+        arg0: f64,
+    ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "D";
@@ -4341,13 +4101,15 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -4355,7 +4117,7 @@ impl<'mc> Vector<'mc> {
 
     pub fn deserialize(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<blackboxmc_java::JavaMap<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::JavaMap<'mc>>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Map;)Lorg/bukkit/util/Vector;");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
@@ -4686,7 +4448,7 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn to_location(
+    pub fn to_location_with_world(
         &self,
         arg0: impl Into<crate::World<'mc>>,
         arg1: std::option::Option<f32>,
@@ -4755,7 +4517,7 @@ impl<'mc> Vector<'mc> {
     //@NotNull
 
     /// Get this vector as a JOML <code>Vector3i</code>.
-    pub fn to_vector3i(
+    pub fn to_vector3i_with_int(
         &self,
         arg0: std::option::Option<i32>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -4850,7 +4612,7 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn from_joml(
+    pub fn from_joml_with_vector3d(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
@@ -5039,7 +4801,7 @@ impl<'mc> Vector<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -5185,7 +4947,7 @@ impl<'mc> FileUtil<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

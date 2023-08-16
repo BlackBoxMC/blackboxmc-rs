@@ -181,7 +181,7 @@ impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -587,7 +587,7 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
     }
     //
 
-    pub fn to_primitive(
+    pub fn to_primitive_with_boolean(
         &self,
         arg0: bool,
         arg1: impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>,
@@ -615,7 +615,7 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
     }
     //
 
-    pub fn from_primitive(
+    pub fn from_primitive_with_object(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>,
@@ -639,7 +639,7 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -795,13 +795,13 @@ impl<'mc> JNIInstantiatable<'mc> for PersistentDataContainer<'mc> {
 impl<'mc> PersistentDataContainer<'mc> {
     //
 
-    pub fn keys(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn keys(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getKeys", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }

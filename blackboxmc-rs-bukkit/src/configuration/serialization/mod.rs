@@ -51,7 +51,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
 
     pub fn deserialize(
         &self,
-        arg0: impl Into<blackboxmc_java::JavaMap<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::JavaMap<'mc>>,
     ) -> Result<
         crate::configuration::serialization::ConfigurationSerializable<'mc>,
         Box<dyn std::error::Error>,
@@ -98,7 +98,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
     }
     //
 
-    pub fn register_class(
+    pub fn register_class_with_class(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JClass<'mc>,
         arg1: std::option::Option<impl Into<String>>,
@@ -124,7 +124,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
     }
     //
 
-    pub fn unregister_class(
+    pub fn unregister_class_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -144,9 +144,9 @@ impl<'mc> ConfigurationSerialization<'mc> {
     }
     //
 
-    pub fn deserialize_object(
+    pub fn deserialize_object_with_map(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<blackboxmc_java::JavaMap<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::JavaMap<'mc>>,
         arg1: std::option::Option<jni::objects::JClass<'mc>>,
     ) -> Result<
         crate::configuration::serialization::ConfigurationSerializable<'mc>,
@@ -196,7 +196,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -306,9 +306,9 @@ impl<'mc> std::string::ToString for ConfigurationSerialization<'mc> {
 /// Represents an object that may be serialized.
 /// <p>These objects MUST implement one of the following, in addition to the methods as defined by this interface:</p>
 /// <ul>
-/// <li>A static method "deserialize" that accepts a single <a class="external-link" title="class or interface in java.util" href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html"><code>Map</code></a>&lt; <a title="class or interface in java.lang" href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" class="external-link"><code>String</code></a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link"><code>Object</code></a>&gt; and returns the class.</li>
-/// <li>A static method "valueOf" that accepts a single <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html" title="class or interface in java.util" class="external-link"><code>Map</code></a>&lt;<a class="external-link" title="class or interface in java.lang" href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html"><code>String</code></a>, <a title="class or interface in java.lang" href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" class="external-link"><code>Object</code></a>&gt; and returns the class.</li>
-/// <li>A constructor that accepts a single <a title="class or interface in java.util" href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html" class="external-link"><code>Map</code></a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a>, <a title="class or interface in java.lang" class="external-link" href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html"><code>Object</code></a>&gt;.</li>
+/// <li>A static method "deserialize" that accepts a single <a href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html" title="class or interface in java.util" class="external-link"><code>Map</code></a>&lt; <a class="external-link" title="class or interface in java.lang" href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html"><code>String</code></a>, <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" title="class or interface in java.lang" class="external-link"><code>Object</code></a>&gt; and returns the class.</li>
+/// <li>A static method "valueOf" that accepts a single <a title="class or interface in java.util" class="external-link" href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html"><code>Map</code></a>&lt;<a title="class or interface in java.lang" class="external-link" href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html"><code>String</code></a>, <a title="class or interface in java.lang" href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" class="external-link"><code>Object</code></a>&gt; and returns the class.</li>
+/// <li>A constructor that accepts a single <a class="external-link" href="https://docs.oracle.com/javase/8/docs/api/java/util/Map.html" title="class or interface in java.util"><code>Map</code></a>&lt;<a href="https://docs.oracle.com/javase/8/docs/api/java/lang/String.html" class="external-link" title="class or interface in java.lang"><code>String</code></a>, <a title="class or interface in java.lang" href="https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html" class="external-link"><code>Object</code></a>&gt;.</li>
 /// </ul> In addition to implementing this interface, you must register the class with <a href="ConfigurationSerialization.html#registerClass(java.lang.Class)"><code>ConfigurationSerialization.registerClass(Class)</code></a>.
 ///
 /// This is a representation of an abstract class.
@@ -367,20 +367,22 @@ impl<'mc> ConfigurationSerializable<'mc> {
     }
     //
 
-    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
 }
-/// Represents an "alias" that a <a href="ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a> may be stored as. If this is not present on a <a href="ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a> class, it will use the fully qualified name of the class.
+/// Represents an "alias" that a <a href="ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a> may be stored as. If this is not present on a <a title="interface in org.bukkit.configuration.serialization" href="ConfigurationSerializable.html"><code>ConfigurationSerializable</code></a> class, it will use the fully qualified name of the class.
 /// <p>This value will be stored in the configuration so that the configuration deserialization can determine what type it is.</p>
-/// <p>Using this annotation on any other class than a <a title="interface in org.bukkit.configuration.serialization" href="ConfigurationSerializable.html"><code>ConfigurationSerializable</code></a> will have no effect.</p>
+/// <p>Using this annotation on any other class than a <a href="ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a> will have no effect.</p>
 ///
 /// This is a representation of an abstract class.
 pub struct SerializableAs<'mc>(
@@ -502,7 +504,7 @@ impl<'mc> std::string::ToString for SerializableAs<'mc> {
     }
 }
 
-/// Applies to a <a href="ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a> that will delegate all deserialization to another <a title="interface in org.bukkit.configuration.serialization" href="ConfigurationSerializable.html"><code>ConfigurationSerializable</code></a>.
+/// Applies to a <a title="interface in org.bukkit.configuration.serialization" href="ConfigurationSerializable.html"><code>ConfigurationSerializable</code></a> that will delegate all deserialization to another <a href="ConfigurationSerializable.html" title="interface in org.bukkit.configuration.serialization"><code>ConfigurationSerializable</code></a>.
 ///
 /// This is a representation of an abstract class.
 pub struct DelegateDeserialization<'mc>(

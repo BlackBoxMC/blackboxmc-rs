@@ -47,7 +47,7 @@ impl<'mc> JNIInstantiatable<'mc> for ProjectileSource<'mc> {
 impl<'mc> ProjectileSource<'mc> {
     //
 
-    pub fn launch_projectile(
+    pub fn launch_projectile_with_class(
         &self,
         arg0: jni::objects::JClass<'mc>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,
@@ -132,7 +132,7 @@ impl<'mc> BlockProjectileSource<'mc> {
     }
     //
 
-    pub fn launch_projectile(
+    pub fn launch_projectile_with_class(
         &self,
         arg0: jni::objects::JClass<'mc>,
         arg1: std::option::Option<impl Into<crate::util::Vector<'mc>>>,

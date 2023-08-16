@@ -52,7 +52,7 @@ impl<'mc> Palette<'mc> {
             .call_method(&self.jni_object(), "getBlocks", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -136,6 +136,20 @@ impl<'mc> StructureManager<'mc> {
     }
     //
 
+    pub fn structures(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getStructures", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn register_structure(
         &self,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
@@ -185,7 +199,7 @@ impl<'mc> StructureManager<'mc> {
     }
     //
 
-    pub fn load_structure(
+    pub fn load_structure_with_namespaced_key(
         &self,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
         arg1: std::option::Option<bool>,
@@ -214,15 +228,17 @@ impl<'mc> StructureManager<'mc> {
     }
     //
 
-    pub fn save_structure(
+    pub fn save_structure_with_namespaced_key(
         &self,
-        arg0: jni::objects::JObject<'mc>,
+        arg0: impl Into<crate::NamespacedKey<'mc>>,
         arg1: std::option::Option<impl Into<crate::structure::Structure<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Ljava/io/OutputStream;";
-        let val_1 = jni::objects::JValueGen::Object(arg0);
+        sig += "Lorg/bukkit/NamespacedKey;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Lorg/bukkit/structure/Structure;";
@@ -240,7 +256,7 @@ impl<'mc> StructureManager<'mc> {
     }
     //
 
-    pub fn delete_structure(
+    pub fn delete_structure_with_namespaced_key(
         &self,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
         arg1: std::option::Option<bool>,
@@ -300,18 +316,6 @@ impl<'mc> StructureManager<'mc> {
     }
     //
 
-    pub fn structures(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Map;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getStructures", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
     pub fn copy(
         &self,
         arg0: impl Into<crate::structure::Structure<'mc>>,
@@ -334,7 +338,7 @@ impl<'mc> StructureManager<'mc> {
     }
 }
 /// Represents a structure.
-/// <p>A structure is a mutable template of captured blocks and entities that can be copied back into the world. The <a title="interface in org.bukkit.structure" href="StructureManager.html"><code>StructureManager</code></a>, retrieved via <a href="../Server.html#getStructureManager()"><code>Server.getStructureManager()</code></a>, allows you to create new structures, load existing structures, and save structures.</p>
+/// <p>A structure is a mutable template of captured blocks and entities that can be copied back into the world. The <a href="StructureManager.html" title="interface in org.bukkit.structure"><code>StructureManager</code></a>, retrieved via <a href="../Server.html#getStructureManager()"><code>Server.getStructureManager()</code></a>, allows you to create new structures, load existing structures, and save structures.</p>
 /// <p>In order for a structure to be usable by structure blocks, it needs to be null <a href="StructureManager.html#registerStructure(org.bukkit.NamespacedKey,org.bukkit.structure.Structure)"><code>registered</code></a> with the <a href="StructureManager.html" title="interface in org.bukkit.structure"><code>StructureManager</code></a>, or located in the primary world folder, a DataPack, or the server's own default resources, so that the StructureManager can find it.</p>
 ///
 /// This is a representation of an abstract class.
@@ -384,7 +388,7 @@ impl<'mc> Structure<'mc> {
                 .call_method(&self.jni_object(), "getEntities", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -413,7 +417,7 @@ impl<'mc> Structure<'mc> {
                 .call_method(&self.jni_object(), "getPalettes", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -433,7 +437,7 @@ impl<'mc> Structure<'mc> {
     }
     //
 
-    pub fn place(
+    pub fn place_with_region_accessor(
         &self,
         arg0: impl Into<crate::RegionAccessor<'mc>>,
         arg1: impl Into<crate::util::BlockVector<'mc>>,
@@ -442,7 +446,7 @@ impl<'mc> Structure<'mc> {
         arg4: impl Into<crate::block::structure::Mirror<'mc>>,
         arg5: i32,
         arg6: f32,
-        arg7: std::option::Option<impl Into<blackboxmc_java::JavaRandom<'mc>>>,
+        arg7: std::option::Option<impl Into<blackboxmc_java::util::JavaRandom<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -492,7 +496,7 @@ impl<'mc> Structure<'mc> {
     }
     //
 
-    pub fn fill(
+    pub fn fill_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: impl Into<crate::util::BlockVector<'mc>>,

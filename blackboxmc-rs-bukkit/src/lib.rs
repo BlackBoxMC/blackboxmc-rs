@@ -281,9 +281,9 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn get_world(
+    pub fn get_world_with_uuid(
         &self,
-        arg0: impl Into<blackboxmc_java::JavaUUID<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
     ) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -303,16 +303,41 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn simulation_distance(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
+    pub fn initial_enabled_packs(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "getSimulationDistance",
+            "getInitialEnabledPacks",
             sig.as_str(),
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let size = list.size()?;
+        for i in 0..=size {
+            let obj = list.get(i)?;
+            new_vec.push(
+                self.jni_ref()
+                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
+                    .to_string_lossy()
+                    .to_string(),
+            );
+        }
+        Ok(new_vec)
+    }
+    //
+
+    pub fn generate_structures(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getGenerateStructures",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
     }
     //
 
@@ -328,7 +353,7 @@ impl<'mc> Server<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
         let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
@@ -348,16 +373,43 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn generate_structures(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+    /// Set the maximum amount of players allowed to be logged in at once.
+    pub fn set_max_players(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
-            "getGenerateStructures",
+            "setMaxPlayers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn initial_disabled_packs(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getInitialDisabledPacks",
             sig.as_str(),
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let size = list.size()?;
+        for i in 0..=size {
+            let obj = list.get(i)?;
+            new_vec.push(
+                self.jni_ref()
+                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
+                    .to_string_lossy()
+                    .to_string(),
+            );
+        }
+        Ok(new_vec)
     }
     //
 
@@ -370,6 +422,19 @@ impl<'mc> Server<'mc> {
         crate::ServerSpigot::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    //
+
+    pub fn simulation_distance(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getSimulationDistance",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
     }
     //
 
@@ -506,21 +571,6 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    /// Set the maximum amount of players allowed to be logged in at once.
-    pub fn set_max_players(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setMaxPlayers",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn view_distance(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
@@ -586,56 +636,6 @@ impl<'mc> Server<'mc> {
                 .call_method(&self.jni_object(), "getAllowNether", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
-    }
-    //
-
-    pub fn initial_enabled_packs(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/List;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getInitialEnabledPacks",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
-            new_vec.push(
-                self.jni_ref()
-                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
-                    .to_string_lossy()
-                    .to_string(),
-            );
-        }
-        Ok(new_vec)
-    }
-    //
-
-    pub fn initial_disabled_packs(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/List;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getInitialDisabledPacks",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
-            new_vec.push(
-                self.jni_ref()
-                    .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
-                    .to_string_lossy()
-                    .to_string(),
-            );
-        }
-        Ok(new_vec)
     }
     //
 
@@ -775,7 +775,7 @@ impl<'mc> Server<'mc> {
 
     pub fn whitelisted_players(
         &self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -784,7 +784,7 @@ impl<'mc> Server<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -960,16 +960,16 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn get_player(
+    pub fn get_player_with_string(
         &self,
-        arg0: impl Into<blackboxmc_java::JavaUUID<'mc>>,
+        arg0: impl Into<String>,
     ) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Ljava/util/UUID;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
         args.push(val_1);
         sig += ")Lorg/bukkit/entity/Player;";
         let res = self
@@ -1019,7 +1019,7 @@ impl<'mc> Server<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -1067,7 +1067,7 @@ impl<'mc> Server<'mc> {
             .call_method(&self.jni_object(), "getWorlds", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -1098,7 +1098,7 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn unload_world(
+    pub fn unload_world_with_world(
         &self,
         arg0: impl Into<crate::World<'mc>>,
         arg1: bool,
@@ -1140,7 +1140,7 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn create_explorer_map(
+    pub fn create_explorer_map_with_world(
         &self,
         arg0: impl Into<crate::World<'mc>>,
         arg1: impl Into<crate::Location<'mc>>,
@@ -1289,7 +1289,7 @@ impl<'mc> Server<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -1354,13 +1354,13 @@ impl<'mc> Server<'mc> {
 
     pub fn recipe_iterator(
         &self,
-    ) -> Result<blackboxmc_java::JavaIterator<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "recipeIterator", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaIterator::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaIterator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1407,7 +1407,7 @@ impl<'mc> Server<'mc> {
 
     pub fn command_aliases(
         &self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1416,7 +1416,7 @@ impl<'mc> Server<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1516,7 +1516,7 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn get_offline_player(
+    pub fn get_offline_player_with_string(
         &self,
         arg0: impl Into<String>,
     ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
@@ -1538,9 +1538,9 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn create_player_profile(
+    pub fn create_player_profile_with_uuid(
         &self,
-        arg0: impl Into<blackboxmc_java::JavaUUID<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
     ) -> Result<crate::profile::PlayerProfile<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1571,19 +1571,21 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn ipbans(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn ipbans(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getIPBans", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     //
 
-    pub fn ban_ip(
+    pub fn ban_ip_with_inet_address(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1601,7 +1603,7 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn unban_ip(
+    pub fn unban_ip_with_inet_address(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1621,7 +1623,7 @@ impl<'mc> Server<'mc> {
 
     pub fn banned_players(
         &self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1630,7 +1632,7 @@ impl<'mc> Server<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1657,13 +1659,15 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn operators(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn operators(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getOperators", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1761,7 +1765,7 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn create_inventory(
+    pub fn create_inventory_with_inventory_holder(
         &self,
         arg0: impl Into<crate::inventory::InventoryHolder<'mc>>,
         arg1: impl Into<crate::event::inventory::InventoryType<'mc>>,
@@ -2066,7 +2070,7 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn load_server_icon(
+    pub fn load_server_icon_with_file(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<crate::util::CachedServerIcon<'mc>, Box<dyn std::error::Error>> {
@@ -2112,7 +2116,7 @@ impl<'mc> Server<'mc> {
     }
     //
 
-    pub fn create_boss_bar(
+    pub fn create_boss_bar_with_namespaced_key(
         &self,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
         arg1: impl Into<String>,
@@ -2155,13 +2159,13 @@ impl<'mc> Server<'mc> {
 
     pub fn boss_bars(
         &self,
-    ) -> Result<blackboxmc_java::JavaIterator<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getBossBars", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaIterator::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaIterator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -2188,7 +2192,7 @@ impl<'mc> Server<'mc> {
 
     pub fn get_entity(
         &self,
-        arg0: impl Into<blackboxmc_java::JavaUUID<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
     ) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/UUID;)Lorg/bukkit/entity/Entity;");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
@@ -2230,7 +2234,7 @@ impl<'mc> Server<'mc> {
 
     pub fn advancement_iterator(
         &self,
-    ) -> Result<blackboxmc_java::JavaIterator<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2239,13 +2243,13 @@ impl<'mc> Server<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaIterator::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaIterator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     //
 
-    pub fn create_block_data(
+    pub fn create_block_data_with_material(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -2299,7 +2303,7 @@ impl<'mc> Server<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -2383,13 +2387,13 @@ impl<'mc> Server<'mc> {
 
     pub fn logger(
         &self,
-    ) -> Result<blackboxmc_java::logging::JavaLogger<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::logging::JavaLogger<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/Logger;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getLogger", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::logging::JavaLogger::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::logging::JavaLogger::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -2460,7 +2464,7 @@ impl<'mc> Server<'mc> {
 
     pub fn listening_plugin_channels(
         &self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2469,7 +2473,7 @@ impl<'mc> Server<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -2555,7 +2559,7 @@ impl<'mc> ServerSpigot<'mc> {
     }
     //
 
-    pub fn broadcast(
+    pub fn broadcast_with_base_component(
         &self,
         arg0: impl Into<blackboxmc_bungee::bungee::api::chat::BaseComponent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2575,7 +2579,7 @@ impl<'mc> ServerSpigot<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3134,13 +3138,15 @@ impl<'mc> Raid<'mc> {
     }
     //
 
-    pub fn heroes(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn heroes(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getHeroes", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -3153,7 +3159,7 @@ impl<'mc> Raid<'mc> {
                 .call_method(&self.jni_object(), "getRaiders", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -3256,7 +3262,7 @@ impl<'mc> UnsafeValues<'mc> {
     }
     //
 
-    pub fn get_translation_key(
+    pub fn get_translation_key_with_entity_type(
         &self,
         arg0: impl Into<crate::entity::EntityType<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -3314,7 +3320,7 @@ impl<'mc> UnsafeValues<'mc> {
     }
     //
 
-    pub fn from_legacy(
+    pub fn from_legacy_with_material(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<i8>,
@@ -3620,16 +3626,6 @@ impl<'mc> JNIInstantiatable<'mc> for World<'mc> {
 impl<'mc> World<'mc> {
     //
 
-    pub fn time(&self) -> Result<i64, Box<dyn std::error::Error>> {
-        let sig = String::from("()J");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getTime", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j()?)
-    }
-    //
-
     /// Sets the relative in-game time on the server.
     /// <p>The relative time is analogous to hours * 1000</p>
     /// <p>Note that setting the relative time below the current relative time will actually move the clock forward a day. If you require to rewind time, please see <a href="#setFullTime(long)"><code>setFullTime(long)</code></a></p>
@@ -3644,6 +3640,16 @@ impl<'mc> World<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    //
+
+    pub fn time(&self) -> Result<i64, Box<dyn std::error::Error>> {
+        let sig = String::from("()J");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getTime", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.j()?)
     }
     //@Deprecated
 
@@ -3681,26 +3687,13 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn simulation_distance(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getSimulationDistance",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    //
-
-    pub fn get_nearby_entities(
+    pub fn get_nearby_entities_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: std::option::Option<f64>,
         arg2: std::option::Option<f64>,
         arg3: std::option::Option<f64>,
-        arg4: std::option::Option<impl Into<blackboxmc_java::function::JavaPredicate<'mc>>>,
+        arg4: std::option::Option<impl Into<blackboxmc_java::util::function::JavaPredicate<'mc>>>,
     ) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -3737,7 +3730,7 @@ impl<'mc> World<'mc> {
                 .call_method(&self.jni_object(), "getNearbyEntities", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
         let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
@@ -3747,7 +3740,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn play_effect(
+    pub fn play_effect_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: impl Into<crate::Effect<'mc>>,
@@ -3793,10 +3786,23 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //
+
+    pub fn simulation_distance(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getSimulationDistance",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
     //@NotNull
 
     /// Gets the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the given coordinates
-    pub fn get_chunk_at(
+    pub fn get_chunk_at_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -3829,8 +3835,8 @@ impl<'mc> World<'mc> {
     }
     //@NotNull
 
-    /// Gets the <a href="block/Block.html" title="interface in org.bukkit.block"><code>Block</code></a> at the given coordinates
-    pub fn get_block_at(
+    /// Gets the <a title="interface in org.bukkit.block" href="block/Block.html"><code>Block</code></a> at the given coordinates
+    pub fn get_block_at_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -3862,7 +3868,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn ray_trace_blocks(
+    pub fn ray_trace_blocks_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: impl Into<crate::util::Vector<'mc>>,
@@ -3917,7 +3923,7 @@ impl<'mc> World<'mc> {
         arg3: impl Into<crate::FluidCollisionMode<'mc>>,
         arg4: bool,
         arg5: f64,
-        arg6: impl Into<blackboxmc_java::function::JavaPredicate<'mc>>,
+        arg6: impl Into<blackboxmc_java::util::function::JavaPredicate<'mc>>,
     ) -> Result<crate::util::RayTraceResult<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/Location;Lorg/bukkit/util/Vector;DLorg/bukkit/FluidCollisionMode;ZDLjava/util/function/Predicate;)Lorg/bukkit/util/RayTraceResult;");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
@@ -3957,7 +3963,7 @@ impl<'mc> World<'mc> {
     }
     //@NotNull
 
-    pub fn get_biome(
+    pub fn get_biome_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -4002,7 +4008,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn set_biome(
+    pub fn set_biome_with_int(
         &self,
         arg0: i32,
         arg1: i32,
@@ -4038,12 +4044,12 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn generate_tree(
+    pub fn generate_tree_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
-        arg1: impl Into<blackboxmc_java::JavaRandom<'mc>>,
+        arg1: impl Into<blackboxmc_java::util::JavaRandom<'mc>>,
         arg2: std::option::Option<impl Into<crate::TreeType<'mc>>>,
-        arg3: std::option::Option<impl Into<blackboxmc_java::function::JavaPredicate<'mc>>>,
+        arg3: std::option::Option<impl Into<blackboxmc_java::util::function::JavaPredicate<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -4087,7 +4093,7 @@ impl<'mc> World<'mc> {
                 .call_method(&self.jni_object(), "getEntities", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -4109,7 +4115,7 @@ impl<'mc> World<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -4119,7 +4125,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn get_entities_by_class(
+    pub fn get_entities_by_class_with_classs(
         &self,
         arg0: Vec<jni::objects::JClass<'mc>>,
     ) -> Result<Vec<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
@@ -4134,7 +4140,7 @@ impl<'mc> World<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
         let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
@@ -4157,7 +4163,7 @@ impl<'mc> World<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
         let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
@@ -4223,7 +4229,7 @@ impl<'mc> World<'mc> {
 
     pub fn plugin_chunk_tickets(
         &self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4232,7 +4238,7 @@ impl<'mc> World<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -4484,7 +4490,7 @@ impl<'mc> World<'mc> {
     /// Gets the temperature for the given block coordinates.
     /// <p>It is safe to run this method when the block does not exist, it will not create the block.</p>
     /// <p>This method will return the raw temperature without adjusting for block height effects.</p>
-    pub fn get_temperature(
+    pub fn get_temperature_with_int(
         &self,
         arg0: i32,
         arg1: i32,
@@ -4514,7 +4520,7 @@ impl<'mc> World<'mc> {
 
     /// Gets the humidity for the given block coordinates.
     /// <p>It is safe to run this method when the block does not exist, it will not create the block.</p>
-    pub fn get_humidity(
+    pub fn get_humidity_with_int(
         &self,
         arg0: i32,
         arg1: i32,
@@ -4542,7 +4548,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn drop_item(
+    pub fn drop_item_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
@@ -4585,7 +4591,7 @@ impl<'mc> World<'mc> {
                 .call_method(&self.jni_object(), "getPlayers", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -4595,7 +4601,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn drop_item_naturally(
+    pub fn drop_item_naturally_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: impl Into<crate::inventory::ItemStack<'mc>>,
@@ -4643,7 +4649,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn spawn_particle(
+    pub fn spawn_particle_with_particle(
         &self,
         arg0: impl Into<crate::Particle<'mc>>,
         arg1: f64,
@@ -4720,7 +4726,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn play_sound(
+    pub fn play_sound_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: impl Into<crate::Sound<'mc>>,
@@ -4762,7 +4768,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn get_game_rule_value(
+    pub fn get_game_rule_value_with_string(
         &self,
         arg0: impl Into<String>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -4830,7 +4836,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn get_highest_block_at(
+    pub fn get_highest_block_at_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -4864,8 +4870,8 @@ impl<'mc> World<'mc> {
     }
     //
 
-    /// Checks if the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates is loaded
-    pub fn is_chunk_loaded(
+    /// Checks if the <a title="interface in org.bukkit" href="Chunk.html"><code>Chunk</code></a> at the specified coordinates is loaded
+    pub fn is_chunk_loaded_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -4891,9 +4897,9 @@ impl<'mc> World<'mc> {
 
     //
 
-    /// Loads the <a title="interface in org.bukkit" href="Chunk.html"><code>Chunk</code></a> at the specified coordinates.
+    /// Loads the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates.
     /// <p><b>This method will keep the specified chunk loaded until one of the unload methods is manually called. Callers are advised to instead use getChunkAt which will only temporarily load the requested chunk.</b></p>
-    pub fn load_chunk(
+    pub fn load_chunk_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -4924,7 +4930,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    /// Checks if the <a title="interface in org.bukkit" href="Chunk.html"><code>Chunk</code></a> at the specified coordinates is generated
+    /// Checks if the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates is generated
     pub fn is_chunk_generated(
         &self,
         arg0: i32,
@@ -4954,7 +4960,7 @@ impl<'mc> World<'mc> {
     /// </div>
     /// This method was added to facilitate chunk garbage collection. As of the current Minecraft version chunks are now strictly managed and will not be loaded for more than 1 tick unless they are in use.
     ///
-    /// Checks if the <a title="interface in org.bukkit" href="Chunk.html"><code>Chunk</code></a> at the specified coordinates is loaded and in use by one or more players
+    /// Checks if the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates is loaded and in use by one or more players
     pub fn is_chunk_in_use(
         &self,
         arg0: i32,
@@ -4977,8 +4983,8 @@ impl<'mc> World<'mc> {
     }
     //
 
-    /// Safely unloads and optionally saves the <a title="interface in org.bukkit" href="Chunk.html"><code>Chunk</code></a> at the specified coordinates.
-    pub fn unload_chunk(
+    /// Safely unloads and optionally saves the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates.
+    pub fn unload_chunk_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -5009,7 +5015,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    /// Safely queues the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates for unloading.
+    /// Safely queues the <a title="interface in org.bukkit" href="Chunk.html"><code>Chunk</code></a> at the specified coordinates for unloading.
     pub fn unload_chunk_request(
         &self,
         arg0: i32,
@@ -5039,7 +5045,7 @@ impl<'mc> World<'mc> {
     /// </div>
     /// regenerating a single chunk is not likely to produce the same chunk as before as terrain decoration may be spread across chunks. Use of this method should be avoided as it is known to produce buggy results.
     ///
-    /// Regenerates the <a title="interface in org.bukkit" href="Chunk.html"><code>Chunk</code></a> at the specified coordinates
+    /// Regenerates the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates
     pub fn regenerate_chunk(
         &self,
         arg0: i32,
@@ -5152,7 +5158,7 @@ impl<'mc> World<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
         let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
@@ -5181,7 +5187,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn spawn_arrow(
+    pub fn spawn_arrow_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: impl Into<crate::util::Vector<'mc>>,
@@ -5265,13 +5271,13 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn ray_trace_entities(
+    pub fn ray_trace_entities_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: impl Into<crate::util::Vector<'mc>>,
         arg2: f64,
         arg3: std::option::Option<f64>,
-        arg4: std::option::Option<impl Into<blackboxmc_java::function::JavaPredicate<'mc>>>,
+        arg4: std::option::Option<impl Into<blackboxmc_java::util::function::JavaPredicate<'mc>>>,
     ) -> Result<crate::util::RayTraceResult<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -5327,7 +5333,7 @@ impl<'mc> World<'mc> {
     //
 
     /// Sets the spawn location of the world
-    pub fn set_spawn_location(
+    pub fn set_spawn_location_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -5545,7 +5551,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn create_explosion(
+    pub fn create_explosion_with_double(
         &self,
         arg0: f64,
         arg1: f64,
@@ -5636,7 +5642,7 @@ impl<'mc> World<'mc> {
                 .call_method(&self.jni_object(), "getPopulators", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -5649,7 +5655,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn spawn_falling_block(
+    pub fn spawn_falling_block_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: impl Into<crate::Material<'mc>>,
@@ -6444,7 +6450,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn locate_nearest_structure(
+    pub fn locate_nearest_structure_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: impl Into<crate::StructureType<'mc>>,
@@ -6517,7 +6523,7 @@ impl<'mc> World<'mc> {
             .call_method(&self.jni_object(), "getRaids", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -6546,13 +6552,13 @@ impl<'mc> World<'mc> {
 
     pub fn feature_flags(
         &self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getFeatureFlags", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -6568,7 +6574,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn set_type(
+    pub fn set_type_with_int(
         &self,
         arg0: i32,
         arg1: i32,
@@ -6604,7 +6610,7 @@ impl<'mc> World<'mc> {
     }
     //@NotNull
 
-    pub fn get_block_data(
+    pub fn get_block_data_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -6636,7 +6642,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn set_block_data(
+    pub fn set_block_data_with_int(
         &self,
         arg0: i32,
         arg1: i32,
@@ -6672,7 +6678,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn get_highest_block_yat(
+    pub fn get_highest_block_yat_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -6707,7 +6713,7 @@ impl<'mc> World<'mc> {
     }
     //@NotNull
 
-    pub fn get_block_state(
+    pub fn get_block_state_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -6739,7 +6745,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn spawn_entity(
+    pub fn spawn_entity_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: impl Into<crate::entity::EntityType<'mc>>,
@@ -6774,7 +6780,7 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn spawn(
+    pub fn spawn_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: jni::objects::JClass<'mc>,
@@ -6817,7 +6823,7 @@ impl<'mc> World<'mc> {
 
     //@NotNull
 
-    pub fn get_type(
+    pub fn get_type_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -6872,13 +6878,13 @@ impl<'mc> World<'mc> {
     }
     //
 
-    pub fn uid(&self) -> Result<blackboxmc_java::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+    pub fn uid(&self) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/UUID;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getUID", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaUUID::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaUUID::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -6972,7 +6978,7 @@ impl<'mc> World<'mc> {
 
     pub fn listening_plugin_channels(
         &self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6981,7 +6987,7 @@ impl<'mc> World<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -7029,7 +7035,7 @@ impl<'mc> World<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -7603,29 +7609,6 @@ impl<'mc> JNIInstantiatable<'mc> for ParticleDustOptions<'mc> {
 }
 
 impl<'mc> ParticleDustOptions<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Color<'mc>>,
-        arg1: f32,
-    ) -> Result<crate::ParticleDustOptions<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/Color;F)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Float(arg1.into());
-        let cls = jni.find_class("org/bukkit/Particle$DustOptions");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::ParticleDustOptions::from_raw(&jni, res)
-    }
     //
 
     pub fn color(&self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
@@ -7650,7 +7633,7 @@ impl<'mc> ParticleDustOptions<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -7797,34 +7780,6 @@ impl<'mc> JNIInstantiatable<'mc> for ParticleDustTransition<'mc> {
 }
 
 impl<'mc> ParticleDustTransition<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Color<'mc>>,
-        arg1: impl Into<crate::Color<'mc>>,
-        arg2: f32,
-    ) -> Result<crate::ParticleDustTransition<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/Color;Lorg/bukkit/Color;F)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Float(arg2.into());
-        let cls = jni.find_class("org/bukkit/Particle$DustTransition");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::ParticleDustTransition::from_raw(&jni, res)
-    }
     //
 
     pub fn to_color(&self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
@@ -7861,7 +7816,7 @@ impl<'mc> ParticleDustTransition<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -9146,7 +9101,7 @@ impl<'mc> GameEvent<'mc> {
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
         let mut new_vec = Vec::new();
-        let col = blackboxmc_java::JavaCollection::from_raw(&jni, res.l()?)?;
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&jni, res.l()?)?;
         let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
@@ -9168,7 +9123,7 @@ impl<'mc> GameEvent<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -9323,13 +9278,15 @@ impl<'mc> JNIInstantiatable<'mc> for OfflinePlayer<'mc> {
 impl<'mc> OfflinePlayer<'mc> {
     //
 
-    pub fn unique_id(&self) -> Result<blackboxmc_java::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+    pub fn unique_id(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/UUID;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getUniqueId", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaUUID::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaUUID::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -9414,7 +9371,7 @@ impl<'mc> OfflinePlayer<'mc> {
     }
     //
 
-    pub fn ban(
+    pub fn ban_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: jni::objects::JObject<'mc>,
@@ -9502,7 +9459,7 @@ impl<'mc> OfflinePlayer<'mc> {
     }
     //
 
-    pub fn increment_statistic(
+    pub fn increment_statistic_with_statistic(
         &self,
         arg0: impl Into<crate::Statistic<'mc>>,
         arg1: std::option::Option<impl Into<crate::entity::EntityType<'mc>>>,
@@ -9539,7 +9496,7 @@ impl<'mc> OfflinePlayer<'mc> {
     }
     //
 
-    pub fn decrement_statistic(
+    pub fn decrement_statistic_with_statistic(
         &self,
         arg0: impl Into<crate::Statistic<'mc>>,
         arg1: std::option::Option<impl Into<crate::Material<'mc>>>,
@@ -9576,7 +9533,7 @@ impl<'mc> OfflinePlayer<'mc> {
     }
     //
 
-    pub fn set_statistic(
+    pub fn set_statistic_with_statistic(
         &self,
         arg0: impl Into<crate::Statistic<'mc>>,
         arg1: impl Into<crate::Material<'mc>>,
@@ -9608,7 +9565,7 @@ impl<'mc> OfflinePlayer<'mc> {
     }
     //
 
-    pub fn get_statistic(
+    pub fn get_statistic_with_statistic(
         &self,
         arg0: impl Into<crate::Statistic<'mc>>,
         arg1: std::option::Option<impl Into<crate::entity::EntityType<'mc>>>,
@@ -9675,13 +9632,15 @@ impl<'mc> OfflinePlayer<'mc> {
     }
     //
 
-    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -9809,7 +9768,7 @@ impl<'mc> WorldSpigot<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -10498,13 +10457,15 @@ impl<'mc> JNIInstantiatable<'mc> for Color<'mc> {
 impl<'mc> Color<'mc> {
     //
 
-    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -10512,7 +10473,7 @@ impl<'mc> Color<'mc> {
 
     pub fn deserialize(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<blackboxmc_java::JavaMap<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::JavaMap<'mc>>,
     ) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Map;)Lorg/bukkit/Color;");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
@@ -10533,7 +10494,7 @@ impl<'mc> Color<'mc> {
     //@NotNull
 
     /// Creates a new Color object from a red, green, and blue
-    pub fn from_rgb(
+    pub fn from_rgb_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -10565,7 +10526,7 @@ impl<'mc> Color<'mc> {
     //@NotNull
 
     /// Creates a new Color object from an alpha, red, green, and blue
-    pub fn from_argb(
+    pub fn from_argb_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -10603,7 +10564,7 @@ impl<'mc> Color<'mc> {
     //@NotNull
 
     /// Creates a new Color object from a blue, green, and red
-    pub fn from_bgr(
+    pub fn from_bgr_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -10844,7 +10805,7 @@ impl<'mc> Color<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -17797,7 +17758,7 @@ impl<'mc> Chunk<'mc> {
     //
 
     /// Unloads and optionally saves the Chunk
-    pub fn unload(
+    pub fn unload_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -18023,7 +17984,7 @@ impl<'mc> Chunk<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
         let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
@@ -18087,7 +18048,7 @@ impl<'mc> Chunk<'mc> {
     //
 
     /// Loads the chunk.
-    pub fn load(
+    pub fn load_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -18108,7 +18069,7 @@ impl<'mc> Chunk<'mc> {
     }
     //
 
-    pub fn contains(
+    pub fn contains_with_block_data(
         &self,
         arg0: impl Into<crate::block::data::BlockData<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -18472,24 +18433,6 @@ impl<'mc> JNIInstantiatable<'mc> for VibrationDestinationBlockDestination<'mc> {
 }
 
 impl<'mc> VibrationDestinationBlockDestination<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::block::Block<'mc>>,
-    ) -> Result<crate::VibrationDestinationBlockDestination<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/block/Block;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/Vibration$Destination$BlockDestination");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::VibrationDestinationBlockDestination::from_raw(&jni, res)
-    }
     //
 
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
@@ -18516,7 +18459,7 @@ impl<'mc> VibrationDestinationBlockDestination<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -19154,37 +19097,6 @@ impl<'mc> JNIInstantiatable<'mc> for Note<'mc> {
 }
 
 impl<'mc> Note<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: i32,
-        arg1: std::option::Option<impl Into<crate::NoteTone<'mc>>>,
-        arg2: std::option::Option<bool>,
-    ) -> Result<crate::Note<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/Note$Tone;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "Z";
-            // 2
-            let val_3 = jni::objects::JValueGen::Bool(a.into());
-            args.push(val_3);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/Note");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::Note::from_raw(&jni, res)
-    }
     //
 
     pub fn is_sharped(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -19389,7 +19301,7 @@ impl<'mc> Note<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -20130,7 +20042,7 @@ impl<'mc> Effect<'mc> {
 /// </tbody>
 /// </table>
 /// <p>Unsaved information is not automatically written to the implementation's ban list, instead, the <a href="#save()"><code>save()</code></a> method must be called to write the changes to the ban list. If this ban entry has expired (such as from an unban) and is no longer found in the list, the <a href="#save()"><code>save()</code></a> call will re-add it to the list, therefore banning the victim specified.</p>
-/// <p>Likewise, changes to the associated <a title="interface in org.bukkit" href="BanList.html"><code>BanList</code></a> or other entries may or may not be reflected in this entry.</p>
+/// <p>Likewise, changes to the associated <a href="BanList.html" title="interface in org.bukkit"><code>BanList</code></a> or other entries may or may not be reflected in this entry.</p>
 ///
 /// This is a representation of an abstract class.
 pub struct BanEntry<'mc>(
@@ -20172,27 +20084,15 @@ impl<'mc> JNIInstantiatable<'mc> for BanEntry<'mc> {
 impl<'mc> BanEntry<'mc> {
     //
 
-    pub fn reason(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getReason", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    //
-
-    pub fn expiration(&self) -> Result<blackboxmc_java::JavaDate<'mc>, Box<dyn std::error::Error>> {
+    pub fn expiration(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaDate<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Date;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getExpiration", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaDate::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaDate::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -20212,6 +20112,20 @@ impl<'mc> BanEntry<'mc> {
     }
     //
 
+    pub fn reason(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getReason", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //
+
     pub fn ban_target(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res =
@@ -20222,13 +20136,15 @@ impl<'mc> BanEntry<'mc> {
     }
     //
 
-    pub fn created(&self) -> Result<blackboxmc_java::JavaDate<'mc>, Box<dyn std::error::Error>> {
+    pub fn created(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaDate<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Date;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getCreated", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaDate::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaDate::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -20236,7 +20152,7 @@ impl<'mc> BanEntry<'mc> {
 
     pub fn set_created(
         &self,
-        arg0: impl Into<blackboxmc_java::JavaDate<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::JavaDate<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Date;)V");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
@@ -20271,7 +20187,7 @@ impl<'mc> BanEntry<'mc> {
 
     pub fn set_expiration(
         &self,
-        arg0: impl Into<blackboxmc_java::JavaDate<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::JavaDate<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Date;)V");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
@@ -20505,16 +20421,16 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    pub fn get_world(
+    pub fn get_world_with_uuid(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
     ) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Ljava/lang/String;";
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            jni.new_string(arg0.into())?,
-        ));
+        sig += "Ljava/util/UUID;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         args.push(val_1);
         sig += ")Lorg/bukkit/World;";
         let cls = jni.find_class("org/bukkit/World");
@@ -20526,15 +20442,38 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    pub fn simulation_distance(
+    pub fn initial_enabled_packs(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let cls = jni.find_class("int");
+    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let cls = jni.find_class("java/util/List");
         let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "getSimulationDistance", sig.as_str(), vec![]);
+        let res = jni.call_static_method(cls, "getInitialEnabledPacks", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
-        Ok(res.i()?)
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&jni, res.l()?)?;
+        let size = list.size()?;
+        for i in 0..=size {
+            let obj = list.get(i)?;
+            new_vec.push(
+                jni.get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
+                    .to_string_lossy()
+                    .to_string(),
+            );
+        }
+        Ok(new_vec)
+    }
+    //
+
+    pub fn generate_structures(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let cls = jni.find_class("boolean");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "getGenerateStructures", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        Ok(res.z()?)
     }
     //
 
@@ -20547,7 +20486,7 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "getOnlinePlayers", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
         let mut new_vec = Vec::new();
-        let col = blackboxmc_java::JavaCollection::from_raw(&jni, res.l()?)?;
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&jni, res.l()?)?;
         let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
@@ -20569,15 +20508,46 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    pub fn generate_structures(
+    /// Set the maximum amount of players allowed to be logged in at once.
+    pub fn set_max_players(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let cls = jni.find_class("boolean");
+        arg0: i32,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let cls = jni.find_class("void");
         let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "getGenerateStructures", sig.as_str(), vec![]);
+        let res = jni.call_static_method(
+            cls,
+            "setMaxPlayers",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
         let res = jni.translate_error(res)?;
-        Ok(res.z()?)
+        Ok(())
+    }
+    //
+
+    pub fn initial_disabled_packs(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/List;");
+        let cls = jni.find_class("java/util/List");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "getInitialDisabledPacks", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let list = blackboxmc_java::util::JavaList::from_raw(&jni, res.l()?)?;
+        let size = list.size()?;
+        for i in 0..=size {
+            let obj = list.get(i)?;
+            new_vec.push(
+                jni.get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
+                    .to_string_lossy()
+                    .to_string(),
+            );
+        }
+        Ok(new_vec)
     }
     //
 
@@ -20604,6 +20574,18 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::ServerSpigot::from_raw(&jni, obj)
+    }
+    //
+
+    pub fn simulation_distance(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let cls = jni.find_class("int");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "getSimulationDistance", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        Ok(res.i()?)
     }
     //
 
@@ -20737,26 +20719,6 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    /// Set the maximum amount of players allowed to be logged in at once.
-    pub fn set_max_players(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: i32,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let cls = jni.find_class("void");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "setMaxPlayers",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn view_distance(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -20832,52 +20794,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "getAllowNether", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
-    }
-    //
-
-    pub fn initial_enabled_packs(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/List;");
-        let cls = jni.find_class("java/util/List");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "getInitialEnabledPacks", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&jni, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
-            new_vec.push(
-                jni.get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
-                    .to_string_lossy()
-                    .to_string(),
-            );
-        }
-        Ok(new_vec)
-    }
-    //
-
-    pub fn initial_disabled_packs(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/List;");
-        let cls = jni.find_class("java/util/List");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "getInitialDisabledPacks", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&jni, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
-            new_vec.push(
-                jni.get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
-                    .to_string_lossy()
-                    .to_string(),
-            );
-        }
-        Ok(new_vec)
     }
     //
 
@@ -21020,14 +20936,14 @@ impl<'mc> Bukkit<'mc> {
 
     pub fn whitelisted_players(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let cls = jni.find_class("java/util/Set");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "getWhitelistedPlayers", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
-        blackboxmc_java::JavaSet::from_raw(&jni, obj)
+        blackboxmc_java::util::JavaSet::from_raw(&jni, obj)
     }
     //
 
@@ -21202,7 +21118,7 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    pub fn get_player(
+    pub fn get_player_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
     ) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
@@ -21263,7 +21179,7 @@ impl<'mc> Bukkit<'mc> {
         );
         let res = jni.translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&jni, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&jni, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -21308,7 +21224,7 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.call_static_method(cls, "getWorlds", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&jni, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&jni, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -21340,7 +21256,7 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    pub fn unload_world(
+    pub fn unload_world_with_world(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::World<'mc>>,
         arg1: bool,
@@ -21378,7 +21294,7 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    pub fn create_explorer_map(
+    pub fn create_explorer_map_with_world(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::World<'mc>>,
         arg1: impl Into<crate::Location<'mc>>,
@@ -21537,7 +21453,7 @@ impl<'mc> Bukkit<'mc> {
         );
         let res = jni.translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&jni, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&jni, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -21604,14 +21520,14 @@ impl<'mc> Bukkit<'mc> {
 
     pub fn recipe_iterator(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<blackboxmc_java::JavaIterator<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let cls = jni.find_class("java/util/Iterator");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "recipeIterator", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
-        blackboxmc_java::JavaIterator::from_raw(&jni, obj)
+        blackboxmc_java::util::JavaIterator::from_raw(&jni, obj)
     }
     //
 
@@ -21662,14 +21578,14 @@ impl<'mc> Bukkit<'mc> {
 
     pub fn command_aliases(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let cls = jni.find_class("java/util/Map");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "getCommandAliases", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
-        blackboxmc_java::JavaMap::from_raw(&jni, obj)
+        blackboxmc_java::util::JavaMap::from_raw(&jni, obj)
     }
     //
 
@@ -21777,7 +21693,7 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    pub fn get_offline_player(
+    pub fn get_offline_player_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
     ) -> Result<crate::OfflinePlayer<'mc>, Box<dyn std::error::Error>> {
@@ -21798,9 +21714,9 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    pub fn create_player_profile(
+    pub fn create_player_profile_with_uuid(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<blackboxmc_java::JavaUUID<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
     ) -> Result<crate::profile::PlayerProfile<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -21829,18 +21745,18 @@ impl<'mc> Bukkit<'mc> {
 
     pub fn ipbans(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let cls = jni.find_class("java/util/Set");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "getIPBans", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
-        blackboxmc_java::JavaSet::from_raw(&jni, obj)
+        blackboxmc_java::util::JavaSet::from_raw(&jni, obj)
     }
     //
 
-    pub fn ban_ip(
+    pub fn ban_ip_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -21860,7 +21776,7 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    pub fn unban_ip(
+    pub fn unban_ip_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -21882,14 +21798,14 @@ impl<'mc> Bukkit<'mc> {
 
     pub fn banned_players(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let cls = jni.find_class("java/util/Set");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "getBannedPlayers", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
-        blackboxmc_java::JavaSet::from_raw(&jni, obj)
+        blackboxmc_java::util::JavaSet::from_raw(&jni, obj)
     }
     //
 
@@ -21917,14 +21833,14 @@ impl<'mc> Bukkit<'mc> {
 
     pub fn operators(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let cls = jni.find_class("java/util/Set");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "getOperators", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
-        blackboxmc_java::JavaSet::from_raw(&jni, obj)
+        blackboxmc_java::util::JavaSet::from_raw(&jni, obj)
     }
     //
 
@@ -22015,7 +21931,7 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    pub fn create_inventory(
+    pub fn create_inventory_with_inventory_holder(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::inventory::InventoryHolder<'mc>>,
         arg1: i32,
@@ -22316,7 +22232,7 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    pub fn load_server_icon(
+    pub fn load_server_icon_with_buffered_image(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<crate::util::CachedServerIcon<'mc>, Box<dyn std::error::Error>> {
@@ -22368,7 +22284,7 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    pub fn create_boss_bar(
+    pub fn create_boss_bar_with_namespaced_key(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
         arg1: impl Into<String>,
@@ -22410,14 +22326,14 @@ impl<'mc> Bukkit<'mc> {
 
     pub fn boss_bars(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<blackboxmc_java::JavaIterator<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let cls = jni.find_class("java/util/Iterator");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "getBossBars", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
-        blackboxmc_java::JavaIterator::from_raw(&jni, obj)
+        blackboxmc_java::util::JavaIterator::from_raw(&jni, obj)
     }
     //
 
@@ -22444,7 +22360,7 @@ impl<'mc> Bukkit<'mc> {
 
     pub fn get_entity(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<blackboxmc_java::JavaUUID<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
     ) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/UUID;)Lorg/bukkit/entity/Entity;");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
@@ -22488,18 +22404,18 @@ impl<'mc> Bukkit<'mc> {
 
     pub fn advancement_iterator(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<blackboxmc_java::JavaIterator<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let cls = jni.find_class("java/util/Iterator");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "advancementIterator", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
-        blackboxmc_java::JavaIterator::from_raw(&jni, obj)
+        blackboxmc_java::util::JavaIterator::from_raw(&jni, obj)
     }
     //
 
-    pub fn create_block_data(
+    pub fn create_block_data_with_material(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::Material<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -22554,7 +22470,7 @@ impl<'mc> Bukkit<'mc> {
         );
         let res = jni.translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&jni, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&jni, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -22660,14 +22576,14 @@ impl<'mc> Bukkit<'mc> {
 
     pub fn logger(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<blackboxmc_java::logging::JavaLogger<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::logging::JavaLogger<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/logging/Logger;");
         let cls = jni.find_class("java/util/logging/Logger");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "getLogger", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
-        blackboxmc_java::logging::JavaLogger::from_raw(&jni, obj)
+        blackboxmc_java::util::logging::JavaLogger::from_raw(&jni, obj)
     }
     //
 
@@ -22711,7 +22627,7 @@ impl<'mc> Bukkit<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -22859,7 +22775,7 @@ impl<'mc> ChatColor<'mc> {
     //@Nullable
 
     /// Gets the color represented by the specified color code
-    pub fn get_by_char(
+    pub fn get_by_char_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: u16,
     ) -> Result<Option<crate::ChatColor<'mc>>, Box<dyn std::error::Error>> {
@@ -23070,7 +22986,7 @@ impl<'mc> JNIInstantiatable<'mc> for BanList<'mc> {
 impl<'mc> BanList<'mc> {
     //
 
-    pub fn get_ban_entry(
+    pub fn get_ban_entry_with_object(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<crate::BanEntry<'mc>, Box<dyn std::error::Error>> {
@@ -23090,11 +23006,11 @@ impl<'mc> BanList<'mc> {
     }
     //
 
-    pub fn add_ban(
+    pub fn add_ban_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: impl Into<String>,
-        arg2: impl Into<blackboxmc_java::JavaDate<'mc>>,
+        arg2: impl Into<blackboxmc_java::util::JavaDate<'mc>>,
         arg3: impl Into<String>,
     ) -> Result<crate::BanEntry<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -23130,19 +23046,21 @@ impl<'mc> BanList<'mc> {
     }
     //
 
-    pub fn ban_entries(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn ban_entries(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getBanEntries", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     //
 
-    pub fn is_banned(
+    pub fn is_banned_with_object(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -23160,7 +23078,10 @@ impl<'mc> BanList<'mc> {
     }
     //
 
-    pub fn pardon(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn pardon_with_string(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "Ljava/lang/String;";
@@ -23177,13 +23098,15 @@ impl<'mc> BanList<'mc> {
     }
     //
 
-    pub fn entries(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn entries(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getEntries", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -23298,7 +23221,7 @@ impl<'mc> PortalType<'mc> {
         )
     }
 }
-/// Represents a ban-type that a <a title="interface in org.bukkit" href="BanList.html"><code>BanList</code></a> may track.
+/// Represents a ban-type that a <a href="BanList.html" title="interface in org.bukkit"><code>BanList</code></a> may track.
 #[derive(PartialEq, Eq)]
 pub enum BanListTypeEnum {
     Name,
@@ -23577,27 +23500,9 @@ impl<'mc> JNIInstantiatable<'mc> for WorldCreator<'mc> {
 }
 
 impl<'mc> WorldCreator<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<crate::WorldCreator<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            jni.new_string(arg0.into())?,
-        ));
-        let cls = jni.find_class("org/bukkit/WorldCreator");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::WorldCreator::from_raw(&jni, res)
-    }
     //
 
-    pub fn environment(
+    pub fn environment_with_worldenvironment(
         &self,
         arg0: std::option::Option<impl Into<crate::WorldEnvironment<'mc>>>,
     ) -> Result<crate::WorldCreator<'mc>, Box<dyn std::error::Error>> {
@@ -23633,7 +23538,7 @@ impl<'mc> WorldCreator<'mc> {
     }
     //
 
-    pub fn biome_provider(
+    pub fn biome_provider_with_string(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::command::CommandSender<'mc>>>,
@@ -23666,7 +23571,7 @@ impl<'mc> WorldCreator<'mc> {
     //@NotNull
 
     /// Sets whether or not worlds created or loaded with this creator will have structures.
-    pub fn generate_structures(
+    pub fn generate_structures_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
     ) -> Result<crate::WorldCreator<'mc>, Box<dyn std::error::Error>> {
@@ -23692,7 +23597,7 @@ impl<'mc> WorldCreator<'mc> {
     }
     //
 
-    pub fn generator_settings(
+    pub fn generator_settings_with_string(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<crate::WorldCreator<'mc>, Box<dyn std::error::Error>> {
@@ -23717,7 +23622,7 @@ impl<'mc> WorldCreator<'mc> {
     //@NotNull
 
     /// Sets whether the world will be hardcore or not. In a hardcore world the difficulty will be locked to hard.
-    pub fn hardcore(
+    pub fn hardcore_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
     ) -> Result<crate::WorldCreator<'mc>, Box<dyn std::error::Error>> {
@@ -23808,7 +23713,7 @@ impl<'mc> WorldCreator<'mc> {
     }
     //
 
-    pub fn name(
+    pub fn name_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<crate::WorldCreator<'mc>, Box<dyn std::error::Error>> {
@@ -23831,7 +23736,7 @@ impl<'mc> WorldCreator<'mc> {
     }
     //
 
-    pub fn get_type(
+    pub fn get_type_with_world_type(
         &self,
         arg0: std::option::Option<impl Into<crate::WorldType<'mc>>>,
     ) -> Result<crate::WorldCreator<'mc>, Box<dyn std::error::Error>> {
@@ -23855,7 +23760,7 @@ impl<'mc> WorldCreator<'mc> {
     }
     //
 
-    pub fn copy(
+    pub fn copy_with_world(
         &self,
         arg0: impl Into<crate::World<'mc>>,
     ) -> Result<crate::WorldCreator<'mc>, Box<dyn std::error::Error>> {
@@ -23877,7 +23782,7 @@ impl<'mc> WorldCreator<'mc> {
     }
     //
 
-    pub fn generator(
+    pub fn generator_with_string(
         &self,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<impl Into<crate::command::CommandSender<'mc>>>,
@@ -23910,7 +23815,7 @@ impl<'mc> WorldCreator<'mc> {
     //@NotNull
 
     /// Sets the seed that will be used to create this world
-    pub fn seed(
+    pub fn seed_with_long(
         &self,
         arg0: std::option::Option<i64>,
     ) -> Result<crate::WorldCreator<'mc>, Box<dyn std::error::Error>> {
@@ -23932,7 +23837,7 @@ impl<'mc> WorldCreator<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -24565,7 +24470,7 @@ impl<'mc> GameRule<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -24681,19 +24586,6 @@ impl<'mc> JNIInstantiatable<'mc> for ChunkSnapshot<'mc> {
 }
 
 impl<'mc> ChunkSnapshot<'mc> {
-    //
-
-    pub fn capture_full_time(&self) -> Result<i64, Box<dyn std::error::Error>> {
-        let sig = String::from("()J");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getCaptureFullTime",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j()?)
-    }
     //@Deprecated
 
     #[deprecated]
@@ -24726,6 +24618,19 @@ impl<'mc> ChunkSnapshot<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
+    }
+    //
+
+    pub fn capture_full_time(&self) -> Result<i64, Box<dyn std::error::Error>> {
+        let sig = String::from("()J");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getCaptureFullTime",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.j()?)
     }
     //@NotNull
 
@@ -24801,7 +24706,7 @@ impl<'mc> ChunkSnapshot<'mc> {
     //@NotNull
 
     /// Get biome at given coordinates
-    pub fn get_biome(
+    pub fn get_biome_with_int(
         &self,
         arg0: i32,
         arg1: i32,
@@ -24952,7 +24857,7 @@ impl<'mc> ChunkSnapshot<'mc> {
     //
 
     /// Get raw biome temperature at given coordinates
-    pub fn get_raw_biome_temperature(
+    pub fn get_raw_biome_temperature_with_int(
         &self,
         arg0: i32,
         arg1: i32,
@@ -24998,7 +24903,7 @@ impl<'mc> ChunkSnapshot<'mc> {
     }
     //
 
-    pub fn contains(
+    pub fn contains_with_block_data(
         &self,
         arg0: impl Into<crate::block::data::BlockData<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -25090,7 +24995,7 @@ impl<'mc> MusicInstrument<'mc> {
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
         let mut new_vec = Vec::new();
-        let col = blackboxmc_java::JavaCollection::from_raw(&jni, res.l()?)?;
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&jni, res.l()?)?;
         let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
@@ -25112,7 +25017,7 @@ impl<'mc> MusicInstrument<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -25432,7 +25337,7 @@ impl<'mc> FireworkEffectBuilder<'mc> {
     }
     //
 
-    pub fn with_color(
+    pub fn with_color_with_color(
         &self,
         arg0: impl Into<crate::Color<'mc>>,
     ) -> Result<crate::FireworkEffectBuilder<'mc>, Box<dyn std::error::Error>> {
@@ -25454,7 +25359,7 @@ impl<'mc> FireworkEffectBuilder<'mc> {
     }
     //
 
-    pub fn with_fade(
+    pub fn with_fade_with_color(
         &self,
         arg0: impl Into<crate::Color<'mc>>,
     ) -> Result<crate::FireworkEffectBuilder<'mc>, Box<dyn std::error::Error>> {
@@ -25476,7 +25381,7 @@ impl<'mc> FireworkEffectBuilder<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -25742,13 +25647,15 @@ impl<'mc> JNIInstantiatable<'mc> for FireworkEffect<'mc> {
 impl<'mc> FireworkEffect<'mc> {
     //
 
-    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -25756,7 +25663,7 @@ impl<'mc> FireworkEffect<'mc> {
 
     pub fn deserialize(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<blackboxmc_java::JavaMap<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::JavaMap<'mc>>,
     ) -> Result<
         crate::configuration::serialization::ConfigurationSerializable<'mc>,
         Box<dyn std::error::Error>,
@@ -25809,7 +25716,7 @@ impl<'mc> FireworkEffect<'mc> {
             .call_method(&self.jni_object(), "getColors", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -25826,7 +25733,7 @@ impl<'mc> FireworkEffect<'mc> {
                 .call_method(&self.jni_object(), "getFadeColors", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -25916,7 +25823,7 @@ impl<'mc> FireworkEffect<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -26209,7 +26116,7 @@ impl<'mc> std::string::ToString for MinecraftExperimental<'mc> {
     }
 }
 
-/// Represents an object which has a <a href="NamespacedKey.html" title="class in org.bukkit"><code>NamespacedKey</code></a> attached to it.
+/// Represents an object which has a <a title="class in org.bukkit" href="NamespacedKey.html"><code>NamespacedKey</code></a> attached to it.
 ///
 /// This is a representation of an abstract class.
 pub struct Keyed<'mc>(
@@ -33954,30 +33861,6 @@ impl<'mc> JNIInstantiatable<'mc> for NamespacedKey<'mc> {
 }
 
 impl<'mc> NamespacedKey<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::plugin::Plugin<'mc>>,
-        arg1: impl Into<String>,
-    ) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/plugin/Plugin;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += "Ljava/lang/String;";
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            jni.new_string(arg1.into())?,
-        ));
-        args.push(val_2);
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/NamespacedKey");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::NamespacedKey::from_raw(&jni, res)
-    }
     //
 
     pub fn minecraft(
@@ -34029,7 +33912,7 @@ impl<'mc> NamespacedKey<'mc> {
     }
     //
 
-    pub fn from_string(
+    pub fn from_string_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::plugin::Plugin<'mc>>>,
@@ -34114,7 +33997,7 @@ impl<'mc> NamespacedKey<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -34179,7 +34062,7 @@ impl<'mc> std::string::ToString for NamespacedKey<'mc> {
     }
 }
 
-/// A RegionAccessor gives access to getting, modifying and spawning <a href="block/Biome.html" title="enum in org.bukkit.block"><code>Biome</code></a>, <a href="block/BlockState.html" title="interface in org.bukkit.block"><code>BlockState</code></a> and <a href="entity/Entity.html" title="interface in org.bukkit.entity"><code>Entity</code></a>, as well as generating some basic structures.
+/// A RegionAccessor gives access to getting, modifying and spawning <a title="enum in org.bukkit.block" href="block/Biome.html"><code>Biome</code></a>, <a title="interface in org.bukkit.block" href="block/BlockState.html"><code>BlockState</code></a> and <a href="entity/Entity.html" title="interface in org.bukkit.entity"><code>Entity</code></a>, as well as generating some basic structures.
 ///
 /// This is a representation of an abstract class.
 pub struct RegionAccessor<'mc>(
@@ -34223,7 +34106,7 @@ impl<'mc> JNIInstantiatable<'mc> for RegionAccessor<'mc> {
 impl<'mc> RegionAccessor<'mc> {
     //
 
-    pub fn set_type(
+    pub fn set_type_with_int(
         &self,
         arg0: i32,
         arg1: i32,
@@ -34260,7 +34143,7 @@ impl<'mc> RegionAccessor<'mc> {
     //@NotNull
 
     /// Gets the <a title="interface in org.bukkit.block.data" href="block/data/BlockData.html"><code>BlockData</code></a> at the given coordinates.
-    pub fn get_block_data(
+    pub fn get_block_data_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -34292,7 +34175,7 @@ impl<'mc> RegionAccessor<'mc> {
     }
     //
 
-    pub fn set_block_data(
+    pub fn set_block_data_with_int(
         &self,
         arg0: i32,
         arg1: i32,
@@ -34328,7 +34211,7 @@ impl<'mc> RegionAccessor<'mc> {
     }
     //
 
-    pub fn get_highest_block_yat(
+    pub fn get_highest_block_yat_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -34363,8 +34246,8 @@ impl<'mc> RegionAccessor<'mc> {
     }
     //@NotNull
 
-    /// Gets the <a href="block/Biome.html" title="enum in org.bukkit.block"><code>Biome</code></a> at the given coordinates.
-    pub fn get_biome(
+    /// Gets the <a title="enum in org.bukkit.block" href="block/Biome.html"><code>Biome</code></a> at the given coordinates.
+    pub fn get_biome_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -34409,7 +34292,7 @@ impl<'mc> RegionAccessor<'mc> {
     }
     //
 
-    pub fn set_biome(
+    pub fn set_biome_with_int(
         &self,
         arg0: i32,
         arg1: i32,
@@ -34445,8 +34328,8 @@ impl<'mc> RegionAccessor<'mc> {
     }
     //@NotNull
 
-    /// Gets the <a title="interface in org.bukkit.block" href="block/BlockState.html"><code>BlockState</code></a> at the given coordinates.
-    pub fn get_block_state(
+    /// Gets the <a href="block/BlockState.html" title="interface in org.bukkit.block"><code>BlockState</code></a> at the given coordinates.
+    pub fn get_block_state_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -34478,12 +34361,12 @@ impl<'mc> RegionAccessor<'mc> {
     }
     //
 
-    pub fn generate_tree(
+    pub fn generate_tree_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
-        arg1: impl Into<blackboxmc_java::JavaRandom<'mc>>,
+        arg1: impl Into<blackboxmc_java::util::JavaRandom<'mc>>,
         arg2: impl Into<crate::TreeType<'mc>>,
-        arg3: std::option::Option<impl Into<blackboxmc_java::function::JavaPredicate<'mc>>>,
+        arg3: std::option::Option<impl Into<blackboxmc_java::util::function::JavaPredicate<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -34518,7 +34401,7 @@ impl<'mc> RegionAccessor<'mc> {
     }
     //
 
-    pub fn spawn_entity(
+    pub fn spawn_entity_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: impl Into<crate::entity::EntityType<'mc>>,
@@ -34560,7 +34443,7 @@ impl<'mc> RegionAccessor<'mc> {
                 .call_method(&self.jni_object(), "getEntities", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -34582,7 +34465,7 @@ impl<'mc> RegionAccessor<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -34606,7 +34489,7 @@ impl<'mc> RegionAccessor<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
         let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
@@ -34629,7 +34512,7 @@ impl<'mc> RegionAccessor<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
         let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
@@ -34639,7 +34522,7 @@ impl<'mc> RegionAccessor<'mc> {
     }
     //
 
-    pub fn spawn(
+    pub fn spawn_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: jni::objects::JClass<'mc>,
@@ -34683,7 +34566,7 @@ impl<'mc> RegionAccessor<'mc> {
     //@NotNull
 
     /// Gets the type of the block at the given coordinates.
-    pub fn get_type(
+    pub fn get_type_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -34888,7 +34771,7 @@ impl<'mc> WorldBorder<'mc> {
     //
 
     /// Sets the new border center.
-    pub fn set_center(
+    pub fn set_center_with_double(
         &self,
         arg0: f64,
         arg1: std::option::Option<f64>,
@@ -35659,34 +35542,6 @@ impl<'mc> JNIInstantiatable<'mc> for Vibration<'mc> {
 }
 
 impl<'mc> Vibration<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::Location<'mc>>,
-        arg1: impl Into<crate::VibrationDestination<'mc>>,
-        arg2: i32,
-    ) -> Result<crate::Vibration<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/Location;Lorg/bukkit/Vibration$Destination;I)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        let cls = jni.find_class("org/bukkit/Vibration");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::Vibration::from_raw(&jni, res)
-    }
     //
 
     pub fn origin(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
@@ -35725,7 +35580,7 @@ impl<'mc> Vibration<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -35874,7 +35729,7 @@ impl<'mc> JNIInstantiatable<'mc> for RegistrySimpleRegistry<'mc> {
 impl<'mc> RegistrySimpleRegistry<'mc> {
     //
 
-    pub fn get(
+    pub fn get_with_namespaced_key(
         &self,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
     ) -> Result<Self, Box<dyn std::error::Error>> {
@@ -35898,19 +35753,19 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
 
     pub fn iterator(
         &self,
-    ) -> Result<blackboxmc_java::JavaIterator<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "iterator", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaIterator::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaIterator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -36031,7 +35886,7 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
 
     pub fn for_each(
         &self,
-        arg0: impl Into<blackboxmc_java::function::JavaConsumer<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::function::JavaConsumer<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Consumer;)V");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
@@ -45652,7 +45507,7 @@ impl<'mc> Material<'mc> {
         )
     }
 }
-/// Represents a registry of Bukkit objects that may be retrieved by <a title="class in org.bukkit" href="NamespacedKey.html"><code>NamespacedKey</code></a>.
+/// Represents a registry of Bukkit objects that may be retrieved by <a href="NamespacedKey.html" title="class in org.bukkit"><code>NamespacedKey</code></a>.
 ///
 /// This is a representation of an abstract class.
 pub struct Registry<'mc>(
@@ -45738,13 +45593,13 @@ impl<'mc> Registry<'mc> {
 
     pub fn iterator(
         &self,
-    ) -> Result<blackboxmc_java::JavaIterator<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Iterator;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "iterator", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaIterator::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaIterator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -45752,7 +45607,7 @@ impl<'mc> Registry<'mc> {
 
     pub fn for_each(
         &self,
-        arg0: impl Into<blackboxmc_java::function::JavaConsumer<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::function::JavaConsumer<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/function/Consumer;)V");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
@@ -45940,24 +45795,6 @@ impl<'mc> JNIInstantiatable<'mc> for VibrationDestinationEntityDestination<'mc> 
 }
 
 impl<'mc> VibrationDestinationEntityDestination<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::entity::Entity<'mc>>,
-    ) -> Result<crate::VibrationDestinationEntityDestination<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/entity/Entity;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/Vibration$Destination$EntityDestination");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::VibrationDestinationEntityDestination::from_raw(&jni, res)
-    }
     //
 
     pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
@@ -45972,7 +45809,7 @@ impl<'mc> VibrationDestinationEntityDestination<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -46555,7 +46392,7 @@ impl<'mc> StatisticStatistic<'mc> {
         )
     }
 }
-/// Annotation for types, whose nullability is not well defined, so <a title="class or interface in org.jetbrains.annotations" class="external-link" href="https://javadoc.io/doc/org.jetbrains/annotations-java5/24.0.1/org/jetbrains/annotations/NotNull.html"><code>NotNull</code></a> nor <a href="https://javadoc.io/doc/org.jetbrains/annotations-java5/24.0.1/org/jetbrains/annotations/Nullable.html" title="class or interface in org.jetbrains.annotations" class="external-link"><code>Nullable</code></a> is applicable. For example when interface defines a method, whose nullability depends on the implementation.
+/// Annotation for types, whose nullability is not well defined, so <a href="https://javadoc.io/doc/org.jetbrains/annotations-java5/24.0.1/org/jetbrains/annotations/NotNull.html" title="class or interface in org.jetbrains.annotations" class="external-link"><code>NotNull</code></a> nor <a class="external-link" title="class or interface in org.jetbrains.annotations" href="https://javadoc.io/doc/org.jetbrains/annotations-java5/24.0.1/org/jetbrains/annotations/Nullable.html"><code>Nullable</code></a> is applicable. For example when interface defines a method, whose nullability depends on the implementation.
 ///
 /// This is a representation of an abstract class.
 pub struct UndefinedNullability<'mc>(
@@ -57215,7 +57052,7 @@ impl<'mc> BlockChangeDelegate<'mc> {
 }
 /// This class handles the creation and storage of all structure types for Bukkit. Structure Types are the different kinds of structures that can be generated during world/chunk generation. These include Villages, Mineshafts, Mansions, etc.
 ///
-/// The registration of new <a href="StructureType.html" title="class in org.bukkit"><code>StructureType</code></a>s is case-sensitive.
+/// The registration of new <a title="class in org.bukkit" href="StructureType.html"><code>StructureType</code></a>s is case-sensitive.
 pub struct StructureType<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -57282,14 +57119,14 @@ impl<'mc> StructureType<'mc> {
 
     pub fn structure_types(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let cls = jni.find_class("java/util/Map");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "getStructureTypes", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
-        blackboxmc_java::JavaMap::from_raw(&jni, obj)
+        blackboxmc_java::util::JavaMap::from_raw(&jni, obj)
     }
     //
 
@@ -57361,7 +57198,7 @@ impl<'mc> StructureType<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -57783,13 +57620,15 @@ impl<'mc> JNIInstantiatable<'mc> for Tag<'mc> {
 impl<'mc> Tag<'mc> {
     //
 
-    pub fn values(&self) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    pub fn values(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getValues", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -57997,48 +57836,6 @@ impl<'mc> JNIInstantiatable<'mc> for Location<'mc> {
 }
 
 impl<'mc> Location<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::World<'mc>>,
-        arg1: f64,
-        arg2: f64,
-        arg3: f64,
-        arg4: std::option::Option<f32>,
-        arg5: std::option::Option<f32>,
-    ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/World;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += "D";
-        let val_2 = jni::objects::JValueGen::Double(arg1.into());
-        args.push(val_2);
-        sig += "D";
-        let val_3 = jni::objects::JValueGen::Double(arg2.into());
-        args.push(val_3);
-        sig += "D";
-        let val_4 = jni::objects::JValueGen::Double(arg3.into());
-        args.push(val_4);
-        if let Some(a) = arg4 {
-            sig += "F";
-            let val_5 = jni::objects::JValueGen::Float(a.into());
-            args.push(val_5);
-        }
-        if let Some(a) = arg5 {
-            sig += "F";
-            let val_6 = jni::objects::JValueGen::Float(a.into());
-            args.push(val_6);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/Location");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::Location::from_raw(&jni, res)
-    }
     //@NotNull
 
     /// Performs scalar multiplication, multiplying all components with a scalar. Not world-aware.
@@ -58343,7 +58140,7 @@ impl<'mc> Location<'mc> {
     //@NotNull
 
     /// Subtracts the location by another. Not world-aware and orientation independent.
-    pub fn subtract(
+    pub fn subtract_with_double(
         &self,
         arg0: f64,
         arg1: std::option::Option<f64>,
@@ -58426,13 +58223,15 @@ impl<'mc> Location<'mc> {
     }
     //
 
-    pub fn serialize(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -58440,7 +58239,7 @@ impl<'mc> Location<'mc> {
 
     pub fn deserialize(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<blackboxmc_java::JavaMap<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::JavaMap<'mc>>,
     ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/util/Map;)Lorg/bukkit/Location;");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
@@ -58501,7 +58300,7 @@ impl<'mc> Location<'mc> {
     //@NotNull
 
     /// Adds the location by another. Not world-aware.
-    pub fn add(
+    pub fn add_with_double(
         &self,
         arg0: f64,
         arg1: std::option::Option<f64>,
@@ -58628,7 +58427,7 @@ impl<'mc> Location<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

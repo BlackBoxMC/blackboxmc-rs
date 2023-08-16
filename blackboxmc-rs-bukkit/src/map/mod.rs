@@ -3,7 +3,7 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-/// Represents all the map cursors on a <a href="MapCanvas.html" title="interface in org.bukkit.map"><code>MapCanvas</code></a>. Like MapCanvas, a MapCursorCollection is linked to a specific <a title="class in org.bukkit.map" href="MapRenderer.html"><code>MapRenderer</code></a>.
+/// Represents all the map cursors on a <a title="interface in org.bukkit.map" href="MapCanvas.html"><code>MapCanvas</code></a>. Like MapCanvas, a MapCursorCollection is linked to a specific <a title="class in org.bukkit.map" href="MapRenderer.html"><code>MapRenderer</code></a>.
 pub struct MapCursorCollection<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -94,7 +94,7 @@ impl<'mc> MapCursorCollection<'mc> {
     }
     //
 
-    pub fn add_cursor(
+    pub fn add_cursor_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -157,7 +157,7 @@ impl<'mc> MapCursorCollection<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -653,7 +653,7 @@ impl<'mc> MinecraftFont<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1061,49 +1061,6 @@ impl<'mc> JNIInstantiatable<'mc> for MapCursor<'mc> {
 }
 
 impl<'mc> MapCursor<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: i8,
-        arg1: i8,
-        arg2: i8,
-        arg3: impl Into<crate::map::MapCursorType<'mc>>,
-        arg4: bool,
-        arg5: std::option::Option<impl Into<String>>,
-    ) -> Result<crate::map::MapCursor<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "B";
-        let val_1 = jni::objects::JValueGen::Byte(arg0.into());
-        args.push(val_1);
-        sig += "B";
-        let val_2 = jni::objects::JValueGen::Byte(arg1.into());
-        args.push(val_2);
-        sig += "B";
-        let val_3 = jni::objects::JValueGen::Byte(arg2.into());
-        args.push(val_3);
-        sig += "Lorg/bukkit/map/MapCursor$Type;";
-        let val_4 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg3.into().jni_object().clone())
-        });
-        args.push(val_4);
-        sig += "Z";
-        // 6
-        let val_5 = jni::objects::JValueGen::Bool(arg4.into());
-        args.push(val_5);
-        if let Some(a) = arg5 {
-            sig += "Ljava/lang/String;";
-            let val_6 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                jni.new_string(a.into())?,
-            ));
-            args.push(val_6);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/map/MapCursor");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::map::MapCursor::from_raw(&jni, res)
-    }
     //
 
     pub fn set_type(
@@ -1313,7 +1270,7 @@ impl<'mc> MapCursor<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1461,28 +1418,6 @@ impl<'mc> JNIInstantiatable<'mc> for MapFontCharacterSprite<'mc> {
 }
 
 impl<'mc> MapFontCharacterSprite<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: i32,
-        arg1: i32,
-        arg2: Vec<bool>,
-    ) -> Result<crate::map::MapFontCharacterSprite<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(IIZ)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let cls = jni.find_class("org/bukkit/map/MapFont$CharacterSprite");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::map::MapFontCharacterSprite::from_raw(&jni, res)
-    }
     //
 
     pub fn height(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -1524,7 +1459,7 @@ impl<'mc> MapFontCharacterSprite<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1631,7 +1566,7 @@ impl<'mc> std::string::ToString for MapFontCharacterSprite<'mc> {
     }
 }
 
-/// Represents a canvas for drawing to a map. Each canvas is associated with a specific <a href="MapRenderer.html" title="class in org.bukkit.map"><code>MapRenderer</code></a> and represents that renderer's layer on the map.
+/// Represents a canvas for drawing to a map. Each canvas is associated with a specific <a title="class in org.bukkit.map" href="MapRenderer.html"><code>MapRenderer</code></a> and represents that renderer's layer on the map.
 ///
 /// This is a representation of an abstract class.
 pub struct MapCanvas<'mc>(
@@ -2007,25 +1942,6 @@ impl<'mc> MapRenderer<'mc> {
         let obj = unsafe { plugin.new_extendable(address, "MapRenderer", name, lib_name) }?;
         Self::from_raw(env, obj)
     }
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<bool>,
-    ) -> Result<crate::map::MapRenderer<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Z";
-            // 1
-            let val_1 = jni::objects::JValueGen::Bool(a.into());
-            args.push(val_1);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/map/MapRenderer");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::map::MapRenderer::from_raw(&jni, res)
-    }
     //
 
     pub fn is_contextual(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2090,7 +2006,7 @@ impl<'mc> MapRenderer<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2393,7 +2309,7 @@ impl<'mc> MapView<'mc> {
                 .call_method(&self.jni_object(), "getRenderers", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -2664,7 +2580,7 @@ impl<'mc> MapFont<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2923,7 +2839,7 @@ impl<'mc> MapPalette<'mc> {
     /// Magic value
     ///
     /// Get the index of the closest matching color in the palette to the given color.
-    pub fn match_color(
+    pub fn match_color_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -2995,7 +2911,7 @@ impl<'mc> MapPalette<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

@@ -112,27 +112,9 @@ impl<'mc> JNIInstantiatable<'mc> for PermissibleBase<'mc> {
 }
 
 impl<'mc> PermissibleBase<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::permissions::ServerOperator<'mc>>,
-    ) -> Result<crate::permissions::PermissibleBase<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/permissions/ServerOperator;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/permissions/PermissibleBase");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::permissions::PermissibleBase::from_raw(&jni, res)
-    }
     //
 
-    pub fn is_permission_set(
+    pub fn is_permission_set_with_permission(
         &self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -152,7 +134,7 @@ impl<'mc> PermissibleBase<'mc> {
     }
     //
 
-    pub fn has_permission(
+    pub fn has_permission_with_permission(
         &self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -172,7 +154,7 @@ impl<'mc> PermissibleBase<'mc> {
     }
     //
 
-    pub fn add_attachment(
+    pub fn add_attachment_with_plugin(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -249,7 +231,7 @@ impl<'mc> PermissibleBase<'mc> {
 
     pub fn effective_permissions(
         &self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -258,7 +240,7 @@ impl<'mc> PermissibleBase<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -304,7 +286,7 @@ impl<'mc> PermissibleBase<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -575,7 +557,7 @@ impl<'mc> JNIInstantiatable<'mc> for Permissible<'mc> {
 impl<'mc> Permissible<'mc> {
     //
 
-    pub fn is_permission_set(
+    pub fn is_permission_set_with_permission(
         &self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -595,7 +577,7 @@ impl<'mc> Permissible<'mc> {
     }
     //
 
-    pub fn has_permission(
+    pub fn has_permission_with_string(
         &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -615,7 +597,7 @@ impl<'mc> Permissible<'mc> {
     }
     //
 
-    pub fn add_attachment(
+    pub fn add_attachment_with_plugin(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -692,7 +674,7 @@ impl<'mc> Permissible<'mc> {
 
     pub fn effective_permissions(
         &self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -701,7 +683,7 @@ impl<'mc> Permissible<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -775,60 +757,6 @@ impl<'mc> JNIInstantiatable<'mc> for Permission<'mc> {
 }
 
 impl<'mc> Permission<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-        arg1: std::option::Option<impl Into<String>>,
-        arg2: std::option::Option<impl Into<crate::permissions::PermissionDefault<'mc>>>,
-        arg3: std::option::Option<impl Into<blackboxmc_java::JavaMap<'mc>>>,
-    ) -> Result<crate::permissions::Permission<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Ljava/lang/String;";
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            jni.new_string(arg0.into())?,
-        ));
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/String;";
-            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                jni.new_string(a.into())?,
-            ));
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "Lorg/bukkit/permissions/PermissionDefault;";
-            let val_3 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_3);
-        }
-        if let Some(a) = arg3 {
-            sig += "Ljava/util/Map;";
-            let val_4 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_4);
-        }
-        sig += ")V";
-        let cls = jni.find_class("org/bukkit/permissions/Permission");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::permissions::Permission::from_raw(&jni, res)
-    }
-    //
-
-    pub fn children(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Map;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getChildren", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
     //
 
     pub fn set_default(
@@ -847,6 +775,20 @@ impl<'mc> Permission<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    //
+
+    pub fn children(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getChildren", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     //
 
@@ -898,19 +840,19 @@ impl<'mc> Permission<'mc> {
 
     pub fn permissibles(
         &self,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getPermissibles", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaSet::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     //
 
-    pub fn add_parent(
+    pub fn add_parent_with_permission(
         &self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
         arg1: bool,
@@ -937,7 +879,7 @@ impl<'mc> Permission<'mc> {
 
     pub fn load_permissions(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<blackboxmc_java::JavaMap<'mc>>,
+        arg0: impl Into<blackboxmc_java::util::JavaMap<'mc>>,
         arg1: impl Into<String>,
         arg2: impl Into<crate::permissions::PermissionDefault<'mc>>,
     ) -> Result<Vec<crate::permissions::Permission<'mc>>, Box<dyn std::error::Error>> {
@@ -965,7 +907,7 @@ impl<'mc> Permission<'mc> {
         );
         let res = jni.translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&jni, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&jni, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -975,10 +917,10 @@ impl<'mc> Permission<'mc> {
     }
     //
 
-    pub fn load_permission(
+    pub fn load_permission_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
-        arg1: impl Into<blackboxmc_java::JavaMap<'mc>>,
+        arg1: impl Into<blackboxmc_java::util::JavaMap<'mc>>,
         arg2: std::option::Option<impl Into<crate::permissions::PermissionDefault<'mc>>>,
         arg3: std::option::Option<Vec<impl Into<crate::permissions::Permission<'mc>>>>,
     ) -> Result<crate::permissions::Permission<'mc>, Box<dyn std::error::Error>> {
@@ -1069,7 +1011,7 @@ impl<'mc> Permission<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1176,7 +1118,7 @@ impl<'mc> std::string::ToString for Permission<'mc> {
     }
 }
 
-/// Holds information on a permission and which <a title="class in org.bukkit.permissions" href="PermissionAttachment.html"><code>PermissionAttachment</code></a> provides it
+/// Holds information on a permission and which <a href="PermissionAttachment.html" title="class in org.bukkit.permissions"><code>PermissionAttachment</code></a> provides it
 pub struct PermissionAttachmentInfo<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1218,40 +1160,6 @@ impl<'mc> JNIInstantiatable<'mc> for PermissionAttachmentInfo<'mc> {
 }
 
 impl<'mc> PermissionAttachmentInfo<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::permissions::Permissible<'mc>>,
-        arg1: impl Into<String>,
-        arg2: impl Into<crate::permissions::PermissionAttachment<'mc>>,
-        arg3: bool,
-    ) -> Result<crate::permissions::PermissionAttachmentInfo<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/permissions/Permissible;Ljava/lang/String;Lorg/bukkit/permissions/PermissionAttachment;Z)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            jni.new_string(arg1.into())?,
-        ));
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
-        });
-        // -1
-        let val_4 = jni::objects::JValueGen::Bool(arg3.into());
-        let cls = jni.find_class("org/bukkit/permissions/PermissionAttachmentInfo");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-                jni::objects::JValueGen::from(val_4),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::permissions::PermissionAttachmentInfo::from_raw(&jni, res)
-    }
     //
 
     pub fn permission(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1306,7 +1214,7 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1454,34 +1362,9 @@ impl<'mc> JNIInstantiatable<'mc> for PermissionAttachment<'mc> {
 }
 
 impl<'mc> PermissionAttachment<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::plugin::Plugin<'mc>>,
-        arg1: impl Into<crate::permissions::Permissible<'mc>>,
-    ) -> Result<crate::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/plugin/Plugin;Lorg/bukkit/permissions/Permissible;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/permissions/PermissionAttachment");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::permissions::PermissionAttachment::from_raw(&jni, res)
-    }
     //
 
-    pub fn set_permission(
+    pub fn set_permission_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: bool,
@@ -1569,7 +1452,7 @@ impl<'mc> PermissionAttachment<'mc> {
     }
     //
 
-    pub fn unset_permission(
+    pub fn unset_permission_with_string(
         &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1599,19 +1482,21 @@ impl<'mc> PermissionAttachment<'mc> {
     }
     //
 
-    pub fn permissions(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn permissions(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getPermissions", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1718,7 +1603,7 @@ impl<'mc> std::string::ToString for PermissionAttachment<'mc> {
     }
 }
 
-/// Represents a class which is to be notified when a <a title="class in org.bukkit.permissions" href="PermissionAttachment.html"><code>PermissionAttachment</code></a> is removed from a <a href="Permissible.html" title="interface in org.bukkit.permissions"><code>Permissible</code></a>
+/// Represents a class which is to be notified when a <a href="PermissionAttachment.html" title="class in org.bukkit.permissions"><code>PermissionAttachment</code></a> is removed from a <a title="interface in org.bukkit.permissions" href="Permissible.html"><code>Permissible</code></a>
 ///
 /// This is a representation of an abstract class.
 pub struct PermissionRemovedExecutor<'mc>(

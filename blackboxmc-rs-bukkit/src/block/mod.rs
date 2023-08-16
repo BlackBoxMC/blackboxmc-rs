@@ -110,6 +110,18 @@ impl<'mc> Chest<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -138,18 +150,6 @@ impl<'mc> Chest<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -307,7 +307,7 @@ impl<'mc> Chest<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -414,7 +414,7 @@ impl<'mc> Chest<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -872,6 +872,18 @@ impl<'mc> DaylightDetector<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -900,18 +912,6 @@ impl<'mc> DaylightDetector<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -1067,7 +1067,7 @@ impl<'mc> DaylightDetector<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -1174,7 +1174,7 @@ impl<'mc> DaylightDetector<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -1433,6 +1433,18 @@ impl<'mc> Lectern<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -1461,18 +1473,6 @@ impl<'mc> Lectern<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -1630,7 +1630,7 @@ impl<'mc> Lectern<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -1737,7 +1737,7 @@ impl<'mc> Lectern<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -2057,7 +2057,7 @@ impl<'mc> CreatureSpawner<'mc> {
 
     /// Set the maximum number of similar entities that are allowed to be within spawning range of this spawner.
     ///
-    /// Similar entities are entities that are of the same <a title="enum in org.bukkit.entity" href="../entity/EntityType.html"><code>EntityType</code></a>
+    /// Similar entities are entities that are of the same <a href="../entity/EntityType.html" title="enum in org.bukkit.entity"><code>EntityType</code></a>
     pub fn set_max_nearby_entities(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -2145,6 +2145,18 @@ impl<'mc> CreatureSpawner<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -2173,18 +2185,6 @@ impl<'mc> CreatureSpawner<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -2340,7 +2340,7 @@ impl<'mc> CreatureSpawner<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -2447,7 +2447,7 @@ impl<'mc> CreatureSpawner<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -2569,6 +2569,18 @@ impl<'mc> Comparator<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -2597,18 +2609,6 @@ impl<'mc> Comparator<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -2764,7 +2764,7 @@ impl<'mc> Comparator<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -2871,7 +2871,7 @@ impl<'mc> Comparator<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -3024,6 +3024,18 @@ impl<'mc> Container<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -3052,18 +3064,6 @@ impl<'mc> Container<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -3221,7 +3221,7 @@ impl<'mc> Container<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -3328,7 +3328,7 @@ impl<'mc> Container<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -3625,6 +3625,18 @@ impl<'mc> EndGateway<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -3653,18 +3665,6 @@ impl<'mc> EndGateway<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -3820,7 +3820,7 @@ impl<'mc> EndGateway<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -3927,7 +3927,7 @@ impl<'mc> EndGateway<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -4144,13 +4144,13 @@ impl<'mc> BlastFurnace<'mc> {
 
     pub fn recipes_used(
         &self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getRecipesUsed", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -4168,6 +4168,18 @@ impl<'mc> BlastFurnace<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -4201,18 +4213,6 @@ impl<'mc> BlastFurnace<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -4370,7 +4370,7 @@ impl<'mc> BlastFurnace<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -4477,7 +4477,7 @@ impl<'mc> BlastFurnace<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -4855,6 +4855,18 @@ impl<'mc> EnchantingTable<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -4883,18 +4895,6 @@ impl<'mc> EnchantingTable<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -5050,7 +5050,7 @@ impl<'mc> EnchantingTable<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -5157,7 +5157,7 @@ impl<'mc> EnchantingTable<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -5374,6 +5374,18 @@ impl<'mc> ShulkerBox<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -5402,18 +5414,6 @@ impl<'mc> ShulkerBox<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -5571,7 +5571,7 @@ impl<'mc> ShulkerBox<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -5678,7 +5678,7 @@ impl<'mc> ShulkerBox<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -5999,7 +5999,7 @@ impl<'mc> EntityBlockStorage<'mc> {
                 .call_method(&self.jni_object(), "releaseEntities", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -6045,6 +6045,18 @@ impl<'mc> EntityBlockStorage<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -6073,18 +6085,6 @@ impl<'mc> EntityBlockStorage<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -6240,7 +6240,7 @@ impl<'mc> EntityBlockStorage<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -6347,7 +6347,7 @@ impl<'mc> EntityBlockStorage<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -6546,7 +6546,7 @@ impl<'mc> Beehive<'mc> {
                 .call_method(&self.jni_object(), "releaseEntities", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -6592,6 +6592,18 @@ impl<'mc> Beehive<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -6620,18 +6632,6 @@ impl<'mc> Beehive<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -6787,7 +6787,7 @@ impl<'mc> Beehive<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -6894,7 +6894,7 @@ impl<'mc> Beehive<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -6957,7 +6957,7 @@ impl<'mc> Into<crate::block::EntityBlockStorage<'mc>> for Beehive<'mc> {
             .expect("Error converting Beehive into crate::block::EntityBlockStorage")
     }
 }
-/// A side on a decorated pot. Sides are relative to the facing state of a <a title="interface in org.bukkit.block.data.type" href="data/type/DecoratedPot.html"><code>DecoratedPot</code></a>.
+/// A side on a decorated pot. Sides are relative to the facing state of a <a href="data/type/DecoratedPot.html" title="interface in org.bukkit.block.data.type"><code>DecoratedPot</code></a>.
 #[derive(PartialEq, Eq)]
 pub enum DecoratedPotSideEnum {
     Back,
@@ -7135,6 +7135,18 @@ impl<'mc> SculkCatalyst<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -7163,18 +7175,6 @@ impl<'mc> SculkCatalyst<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -7330,7 +7330,7 @@ impl<'mc> SculkCatalyst<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -7437,7 +7437,7 @@ impl<'mc> SculkCatalyst<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -7657,13 +7657,13 @@ impl<'mc> Furnace<'mc> {
 
     pub fn recipes_used(
         &self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getRecipesUsed", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -7681,6 +7681,18 @@ impl<'mc> Furnace<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -7714,18 +7726,6 @@ impl<'mc> Furnace<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -7883,7 +7883,7 @@ impl<'mc> Furnace<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -7990,7 +7990,7 @@ impl<'mc> Furnace<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -8226,6 +8226,18 @@ impl<'mc> Dropper<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -8254,18 +8266,6 @@ impl<'mc> Dropper<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -8423,7 +8423,7 @@ impl<'mc> Dropper<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -8530,7 +8530,7 @@ impl<'mc> Dropper<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -8874,6 +8874,18 @@ impl<'mc> SuspiciousSand<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -8902,18 +8914,6 @@ impl<'mc> SuspiciousSand<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -9069,7 +9069,7 @@ impl<'mc> SuspiciousSand<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -9176,7 +9176,7 @@ impl<'mc> SuspiciousSand<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -9298,6 +9298,18 @@ impl<'mc> Conduit<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -9326,18 +9338,6 @@ impl<'mc> Conduit<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -9493,7 +9493,7 @@ impl<'mc> Conduit<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -9600,7 +9600,7 @@ impl<'mc> Conduit<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -9717,7 +9717,7 @@ impl<'mc> Beacon<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
         let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
@@ -9826,6 +9826,18 @@ impl<'mc> Beacon<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -9854,18 +9866,6 @@ impl<'mc> Beacon<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -10021,7 +10021,7 @@ impl<'mc> Beacon<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -10128,7 +10128,7 @@ impl<'mc> Beacon<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -10320,6 +10320,16 @@ impl<'mc> JNIInstantiatable<'mc> for Block<'mc> {
 impl<'mc> Block<'mc> {
     //
 
+    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
+        let sig = String::from("()B");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.b()?)
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -10329,6 +10339,33 @@ impl<'mc> Block<'mc> {
         crate::World::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    //
+
+    pub fn set_type_with_material(
+        &self,
+        arg0: impl Into<crate::Material<'mc>>,
+        arg1: std::option::Option<bool>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Material;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Z";
+            // 2
+            let val_2 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_2);
+        }
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "setType", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     //
 
@@ -10378,43 +10415,6 @@ impl<'mc> Block<'mc> {
             crate::block::PistonMoveReaction::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
-    }
-    //
-
-    pub fn set_type(
-        &self,
-        arg0: impl Into<crate::Material<'mc>>,
-        arg1: std::option::Option<bool>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/Material;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Z";
-            // 2
-            let val_2 = jni::objects::JValueGen::Bool(a.into());
-            args.push(val_2);
-        }
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "setType", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<i8, Box<dyn std::error::Error>> {
-        let sig = String::from("()B");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.b()?)
     }
     //
 
@@ -10498,7 +10498,7 @@ impl<'mc> Block<'mc> {
     }
     //
 
-    pub fn set_block_data(
+    pub fn set_block_data_with_block_data(
         &self,
         arg0: impl Into<crate::block::data::BlockData<'mc>>,
         arg1: std::option::Option<bool>,
@@ -10640,7 +10640,7 @@ impl<'mc> Block<'mc> {
     //@NotNull
 
     /// Gets the block at the given offsets
-    pub fn get_relative(
+    pub fn get_relative_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -10796,7 +10796,7 @@ impl<'mc> Block<'mc> {
     }
     //
 
-    pub fn break_naturally(
+    pub fn break_naturally_with_item_stack(
         &self,
         arg0: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10837,7 +10837,7 @@ impl<'mc> Block<'mc> {
     }
     //
 
-    pub fn get_drops(
+    pub fn get_drops_with_item_stack(
         &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
         arg1: std::option::Option<impl Into<crate::entity::Entity<'mc>>>,
@@ -10862,7 +10862,7 @@ impl<'mc> Block<'mc> {
             .call_method(&self.jni_object(), "getDrops", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
         let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
@@ -11047,7 +11047,7 @@ impl<'mc> Block<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -11175,7 +11175,7 @@ impl<'mc> JNIInstantiatable<'mc> for Bell<'mc> {
 impl<'mc> Bell<'mc> {
     //
 
-    pub fn ring(
+    pub fn ring_with_entity(
         &self,
         arg0: std::option::Option<impl Into<crate::entity::Entity<'mc>>>,
         arg1: std::option::Option<impl Into<crate::block::BlockFace<'mc>>>,
@@ -11265,6 +11265,18 @@ impl<'mc> Bell<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -11293,18 +11305,6 @@ impl<'mc> Bell<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -11460,7 +11460,7 @@ impl<'mc> Bell<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -11567,7 +11567,7 @@ impl<'mc> Bell<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -11689,6 +11689,18 @@ impl<'mc> Jigsaw<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -11717,18 +11729,6 @@ impl<'mc> Jigsaw<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -11884,7 +11884,7 @@ impl<'mc> Jigsaw<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -11991,7 +11991,7 @@ impl<'mc> Jigsaw<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -12171,6 +12171,18 @@ impl<'mc> Dispenser<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -12199,18 +12211,6 @@ impl<'mc> Dispenser<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -12368,7 +12368,7 @@ impl<'mc> Dispenser<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -12475,7 +12475,7 @@ impl<'mc> Dispenser<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -12825,6 +12825,18 @@ impl<'mc> BrushableBlock<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -12853,18 +12865,6 @@ impl<'mc> BrushableBlock<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -13020,7 +13020,7 @@ impl<'mc> BrushableBlock<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -13127,7 +13127,7 @@ impl<'mc> BrushableBlock<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -13280,6 +13280,18 @@ impl<'mc> SculkShrieker<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -13308,18 +13320,6 @@ impl<'mc> SculkShrieker<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -13475,7 +13475,7 @@ impl<'mc> SculkShrieker<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -13582,7 +13582,7 @@ impl<'mc> SculkShrieker<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -13747,13 +13747,15 @@ impl<'mc> DecoratedPot<'mc> {
     }
     //
 
-    pub fn sherds(&self) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    pub fn sherds(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getSherds", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -13766,7 +13768,7 @@ impl<'mc> DecoratedPot<'mc> {
             .call_method(&self.jni_object(), "getShards", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -13810,6 +13812,18 @@ impl<'mc> DecoratedPot<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -13838,18 +13852,6 @@ impl<'mc> DecoratedPot<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -14005,7 +14007,7 @@ impl<'mc> DecoratedPot<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -14112,7 +14114,7 @@ impl<'mc> DecoratedPot<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -14365,6 +14367,18 @@ impl<'mc> Campfire<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -14393,18 +14407,6 @@ impl<'mc> Campfire<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -14560,7 +14562,7 @@ impl<'mc> Campfire<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -14667,7 +14669,7 @@ impl<'mc> Campfire<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -15242,13 +15244,13 @@ impl<'mc> Smoker<'mc> {
 
     pub fn recipes_used(
         &self,
-    ) -> Result<blackboxmc_java::JavaMap<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Map;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getRecipesUsed", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaMap::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -15266,6 +15268,18 @@ impl<'mc> Smoker<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         crate::persistence::PersistentDataContainer::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -15299,18 +15313,6 @@ impl<'mc> Smoker<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -15468,7 +15470,7 @@ impl<'mc> Smoker<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -15575,7 +15577,7 @@ impl<'mc> Smoker<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -15803,6 +15805,18 @@ impl<'mc> CalibratedSculkSensor<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -15831,18 +15845,6 @@ impl<'mc> CalibratedSculkSensor<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -15998,7 +16000,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -16105,7 +16107,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -16281,7 +16283,7 @@ impl<'mc> Structure<'mc> {
     }
     //
 
-    pub fn set_metadata(
+    pub fn set_metadata_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<crate::metadata::MetadataValue<'mc>>>,
@@ -16325,7 +16327,7 @@ impl<'mc> Structure<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -16405,7 +16407,10 @@ impl<'mc> Structure<'mc> {
     }
     //
 
-    pub fn set_author(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn set_author_with_string(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "Ljava/lang/String;";
@@ -16697,6 +16702,18 @@ impl<'mc> Structure<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -16725,18 +16742,6 @@ impl<'mc> Structure<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -16892,7 +16897,7 @@ impl<'mc> Structure<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -17086,6 +17091,18 @@ impl<'mc> EnderChest<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -17114,18 +17131,6 @@ impl<'mc> EnderChest<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -17281,7 +17286,7 @@ impl<'mc> EnderChest<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -17388,7 +17393,7 @@ impl<'mc> EnderChest<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -17516,6 +17521,18 @@ impl<'mc> Bed<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -17544,18 +17561,6 @@ impl<'mc> Bed<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -17711,7 +17716,7 @@ impl<'mc> Bed<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -17818,7 +17823,7 @@ impl<'mc> Bed<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -18148,6 +18153,18 @@ impl<'mc> Jukebox<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -18176,18 +18193,6 @@ impl<'mc> Jukebox<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -18345,7 +18350,7 @@ impl<'mc> Jukebox<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -18452,7 +18457,7 @@ impl<'mc> Jukebox<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -18974,7 +18979,7 @@ impl<'mc> Banner<'mc> {
                 .call_method(&self.jni_object(), "getPatterns", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -19131,6 +19136,18 @@ impl<'mc> Banner<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -19159,18 +19176,6 @@ impl<'mc> Banner<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -19326,7 +19331,7 @@ impl<'mc> Banner<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -19433,7 +19438,7 @@ impl<'mc> Banner<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -19586,6 +19591,18 @@ impl<'mc> Barrel<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -19614,18 +19631,6 @@ impl<'mc> Barrel<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -19783,7 +19788,7 @@ impl<'mc> Barrel<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -19890,7 +19895,7 @@ impl<'mc> Barrel<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -20232,6 +20237,18 @@ impl<'mc> CommandBlock<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -20260,18 +20277,6 @@ impl<'mc> CommandBlock<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -20427,7 +20432,7 @@ impl<'mc> CommandBlock<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -20534,7 +20539,7 @@ impl<'mc> CommandBlock<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -20687,6 +20692,18 @@ impl<'mc> SculkSensor<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -20715,18 +20732,6 @@ impl<'mc> SculkSensor<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -20882,7 +20887,7 @@ impl<'mc> SculkSensor<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -20989,7 +20994,7 @@ impl<'mc> SculkSensor<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -21302,6 +21307,18 @@ impl<'mc> HangingSign<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -21330,18 +21347,6 @@ impl<'mc> HangingSign<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -21497,7 +21502,7 @@ impl<'mc> HangingSign<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -21604,7 +21609,7 @@ impl<'mc> HangingSign<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -21808,6 +21813,18 @@ impl<'mc> ChiseledBookshelf<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -21836,18 +21853,6 @@ impl<'mc> ChiseledBookshelf<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -22005,7 +22010,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -22112,7 +22117,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -22241,6 +22246,18 @@ impl<'mc> TileState<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -22269,18 +22286,6 @@ impl<'mc> TileState<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -22436,7 +22441,7 @@ impl<'mc> TileState<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -22543,7 +22548,7 @@ impl<'mc> TileState<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -22655,6 +22660,18 @@ impl<'mc> JNIInstantiatable<'mc> for BlockState<'mc> {
 impl<'mc> BlockState<'mc> {
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -22683,18 +22700,6 @@ impl<'mc> BlockState<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -22860,7 +22865,7 @@ impl<'mc> BlockState<'mc> {
     /// <p>Unless force is true, this will not modify the state of a block if it is no longer the same type as it was when this state was taken. It will return false in this eventuality.</p>
     /// <p>If force is true, it will set the type of the block to match the new state, set the state data and then return true.</p>
     /// <p>If applyPhysics is true, it will trigger a physics update on surrounding blocks which could cause them to update or disappear.</p>
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -22967,7 +22972,7 @@ impl<'mc> BlockState<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -23174,6 +23179,18 @@ impl<'mc> BrewingStand<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -23202,18 +23219,6 @@ impl<'mc> BrewingStand<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -23371,7 +23376,7 @@ impl<'mc> BrewingStand<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -23478,7 +23483,7 @@ impl<'mc> BrewingStand<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -23901,6 +23906,18 @@ impl<'mc> Skull<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -23929,18 +23946,6 @@ impl<'mc> Skull<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -24096,7 +24101,7 @@ impl<'mc> Skull<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -24203,7 +24208,7 @@ impl<'mc> Skull<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -24356,6 +24361,18 @@ impl<'mc> Hopper<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -24384,18 +24401,6 @@ impl<'mc> Hopper<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -24553,7 +24558,7 @@ impl<'mc> Hopper<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -24660,7 +24665,7 @@ impl<'mc> Hopper<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -25128,6 +25133,18 @@ impl<'mc> Sign<'mc> {
     }
     //
 
+    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
         let res = self
@@ -25156,18 +25173,6 @@ impl<'mc> Sign<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/material/MaterialData;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getData", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -25323,7 +25328,7 @@ impl<'mc> Sign<'mc> {
     }
     //
 
-    pub fn update(
+    pub fn update_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -25430,7 +25435,7 @@ impl<'mc> Sign<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -25537,24 +25542,6 @@ impl<'mc> JNIInstantiatable<'mc> for DoubleChest<'mc> {
 }
 
 impl<'mc> DoubleChest<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::inventory::DoubleChestInventory<'mc>>,
-    ) -> Result<crate::block::DoubleChest<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/inventory/DoubleChestInventory;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/block/DoubleChest");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::block::DoubleChest::from_raw(&jni, res)
-    }
     //
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
@@ -25653,7 +25640,7 @@ impl<'mc> DoubleChest<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

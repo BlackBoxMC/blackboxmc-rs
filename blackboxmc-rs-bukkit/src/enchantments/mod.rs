@@ -44,24 +44,6 @@ impl<'mc> JNIInstantiatable<'mc> for EnchantmentWrapper<'mc> {
 }
 
 impl<'mc> EnchantmentWrapper<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<crate::enchantments::EnchantmentWrapper<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            jni.new_string(arg0.into())?,
-        ));
-        let cls = jni.find_class("org/bukkit/enchantments/EnchantmentWrapper");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::enchantments::EnchantmentWrapper::from_raw(&jni, res)
-    }
     //
 
     pub fn enchantment(
@@ -342,7 +324,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -453,32 +435,6 @@ impl<'mc> JNIInstantiatable<'mc> for EnchantmentOffer<'mc> {
 }
 
 impl<'mc> EnchantmentOffer<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::enchantments::Enchantment<'mc>>,
-        arg1: i32,
-        arg2: i32,
-    ) -> Result<crate::enchantments::EnchantmentOffer<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/enchantments/Enchantment;II)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        let cls = jni.find_class("org/bukkit/enchantments/EnchantmentOffer");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::enchantments::EnchantmentOffer::from_raw(&jni, res)
-    }
     //
 
     pub fn enchantment(
@@ -567,7 +523,7 @@ impl<'mc> EnchantmentOffer<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -837,7 +793,7 @@ impl<'mc> EnchantmentTarget<'mc> {
 
     //
 
-    pub fn includes(
+    pub fn includes_with_material(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -895,24 +851,6 @@ impl<'mc> JNIInstantiatable<'mc> for Enchantment<'mc> {
 }
 
 impl<'mc> Enchantment<'mc> {
-    pub fn new(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::NamespacedKey<'mc>>,
-    ) -> Result<crate::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/NamespacedKey;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/enchantments/Enchantment");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(
-            cls,
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error_no_gen(res)?;
-        crate::enchantments::Enchantment::from_raw(&jni, res)
-    }
     //
 
     pub fn register_enchantment(
@@ -1179,7 +1117,7 @@ impl<'mc> Enchantment<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

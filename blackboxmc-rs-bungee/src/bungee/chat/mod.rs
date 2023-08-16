@@ -58,7 +58,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
     }
     //
 
-    pub fn serialize(
+    pub fn serialize_with_object(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -84,7 +84,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
     }
     //
 
-    pub fn deserialize(
+    pub fn deserialize_with_json_element(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -112,7 +112,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -288,7 +288,7 @@ impl<'mc> TextComponentSerializer<'mc> {
     }
     //
 
-    pub fn serialize(
+    pub fn serialize_with_object(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -314,7 +314,7 @@ impl<'mc> TextComponentSerializer<'mc> {
     }
     //
 
-    pub fn deserialize(
+    pub fn deserialize_with_json_element(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -342,7 +342,7 @@ impl<'mc> TextComponentSerializer<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -513,7 +513,7 @@ impl<'mc> BaseComponentSerializer<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -674,7 +674,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
     }
     //
 
-    pub fn serialize(
+    pub fn serialize_with_object(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -700,7 +700,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
     }
     //
 
-    pub fn deserialize(
+    pub fn deserialize_with_json_element(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -728,7 +728,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -902,7 +902,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
     }
     //
 
-    pub fn serialize(
+    pub fn serialize_with_object(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -928,7 +928,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
     }
     //
 
-    pub fn deserialize(
+    pub fn deserialize_with_json_element(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -957,7 +957,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1134,7 +1134,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
     }
     //
 
-    pub fn serialize(
+    pub fn serialize_with_object(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -1160,7 +1160,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
     }
     //
 
-    pub fn deserialize(
+    pub fn deserialize_with_json_element(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -1188,7 +1188,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1411,7 +1411,7 @@ impl<'mc> TranslationRegistry<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1529,7 +1529,7 @@ impl<'mc> ComponentSerializer<'mc> {
 
     //
 
-    pub fn deserialize(
+    pub fn deserialize_with_json_element(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
@@ -1557,7 +1557,7 @@ impl<'mc> ComponentSerializer<'mc> {
     }
     //
 
-    pub fn to_string(
+    pub fn to_string_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -1575,7 +1575,7 @@ impl<'mc> ComponentSerializer<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

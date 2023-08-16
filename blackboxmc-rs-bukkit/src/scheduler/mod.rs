@@ -220,7 +220,7 @@ impl<'mc> BukkitScheduler<'mc> {
     }
     //
 
-    pub fn schedule_sync_delayed_task(
+    pub fn schedule_sync_delayed_task_with_plugin(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<crate::scheduler::BukkitRunnable<'mc>>,
@@ -318,7 +318,7 @@ impl<'mc> BukkitScheduler<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -340,7 +340,7 @@ impl<'mc> BukkitScheduler<'mc> {
                 .call_method(&self.jni_object(), "getPendingTasks", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -596,7 +596,7 @@ impl<'mc> BukkitRunnable<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

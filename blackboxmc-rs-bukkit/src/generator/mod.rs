@@ -151,12 +151,22 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
     }
     //
 
-    pub fn set_block(
+    pub fn min_height(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMinHeight", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    //
+
+    pub fn set_block_with_int(
         &self,
         arg0: i32,
         arg1: i32,
         arg2: i32,
-        arg3: impl Into<crate::Material<'mc>>,
+        arg3: impl Into<crate::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -169,7 +179,7 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
         sig += "I";
         let val_3 = jni::objects::JValueGen::Int(arg2.into());
         args.push(val_3);
-        sig += "Lorg/bukkit/Material;";
+        sig += "Lorg/bukkit/material/MaterialData;";
         let val_4 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg3.into().jni_object().clone())
         });
@@ -183,7 +193,7 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
     }
     //
 
-    pub fn set_region(
+    pub fn set_region_with_int(
         &self,
         arg0: i32,
         arg1: i32,
@@ -191,7 +201,7 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
         arg3: i32,
         arg4: i32,
         arg5: i32,
-        arg6: impl Into<crate::Material<'mc>>,
+        arg6: impl Into<crate::material::MaterialData<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -213,7 +223,7 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
         sig += "I";
         let val_6 = jni::objects::JValueGen::Int(arg5.into());
         args.push(val_6);
-        sig += "Lorg/bukkit/Material;";
+        sig += "Lorg/bukkit/material/MaterialData;";
         let val_7 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg6.into().jni_object().clone())
         });
@@ -252,16 +262,6 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
         crate::material::MaterialData::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    //
-
-    pub fn min_height(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getMinHeight", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
     }
     //
 
@@ -378,7 +378,7 @@ impl<'mc> BiomeProvider<'mc> {
     }
     //
 
-    pub fn get_biome(
+    pub fn get_biome_with_world_info(
         &self,
         arg0: impl Into<crate::generator::WorldInfo<'mc>>,
         arg1: i32,
@@ -449,7 +449,7 @@ impl<'mc> BiomeProvider<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -473,7 +473,7 @@ impl<'mc> BiomeProvider<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -629,7 +629,7 @@ impl<'mc> ChunkGeneratorBiomeGrid<'mc> {
 
     /// <span class="deprecated-label">Deprecated.</span>
     /// Get biome at x, z within chunk being generated
-    pub fn get_biome(
+    pub fn get_biome_with_int(
         &self,
         arg0: i32,
         arg1: i32,
@@ -672,7 +672,7 @@ impl<'mc> ChunkGeneratorBiomeGrid<'mc> {
     }
     //
 
-    pub fn set_biome(
+    pub fn set_biome_with_int(
         &self,
         arg0: i32,
         arg1: i32,
@@ -945,8 +945,8 @@ impl<'mc> BiomeParameterPoint<'mc> {
 }
 /// A block populator is responsible for generating a small area of blocks.
 /// <p>For example, generating glowstone inside the nether or generating dungeons full of treasure</p>
-/// <p>A BlockPopulator can be used in combination with a custom <a href="ChunkGenerator.html" title="class in org.bukkit.generator"><code>ChunkGenerator</code></a> by returning it in the method <a href="ChunkGenerator.html#getDefaultPopulators(org.bukkit.World)"><code>ChunkGenerator.getDefaultPopulators(World)</code></a> or by adding it manually to the worlds populator list returned by <a href="../World.html#getPopulators()"><code>World.getPopulators()</code></a>.</p>
-/// <p>When adding a BlockPopulator manually to a world it is recommended to do so during the <a href="../event/world/WorldInitEvent.html" title="class in org.bukkit.event.world"><code>WorldInitEvent</code></a>.</p>
+/// <p>A BlockPopulator can be used in combination with a custom <a title="class in org.bukkit.generator" href="ChunkGenerator.html"><code>ChunkGenerator</code></a> by returning it in the method <a href="ChunkGenerator.html#getDefaultPopulators(org.bukkit.World)"><code>ChunkGenerator.getDefaultPopulators(World)</code></a> or by adding it manually to the worlds populator list returned by <a href="../World.html#getPopulators()"><code>World.getPopulators()</code></a>.</p>
+/// <p>When adding a BlockPopulator manually to a world it is recommended to do so during the <a title="class in org.bukkit.event.world" href="../event/world/WorldInitEvent.html"><code>WorldInitEvent</code></a>.</p>
 pub struct BlockPopulator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1008,10 +1008,10 @@ impl<'mc> BlockPopulator<'mc> {
     }
     //
 
-    pub fn populate(
+    pub fn populate_with_world_info(
         &self,
         arg0: impl Into<crate::generator::WorldInfo<'mc>>,
-        arg1: impl Into<blackboxmc_java::JavaRandom<'mc>>,
+        arg1: impl Into<blackboxmc_java::util::JavaRandom<'mc>>,
         arg2: i32,
         arg3: std::option::Option<i32>,
         arg4: std::option::Option<impl Into<crate::generator::LimitedRegion<'mc>>>,
@@ -1052,7 +1052,7 @@ impl<'mc> BlockPopulator<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1212,7 +1212,7 @@ impl<'mc> LimitedRegion<'mc> {
     //
 
     /// Checks if the given coordinates are in the region.
-    pub fn is_in_region(
+    pub fn is_in_region_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -1251,7 +1251,7 @@ impl<'mc> LimitedRegion<'mc> {
                 .call_method(&self.jni_object(), "getTileEntities", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -1261,7 +1261,7 @@ impl<'mc> LimitedRegion<'mc> {
     }
     //
 
-    pub fn set_type(
+    pub fn set_type_with_int(
         &self,
         arg0: i32,
         arg1: i32,
@@ -1297,7 +1297,7 @@ impl<'mc> LimitedRegion<'mc> {
     }
     //@NotNull
 
-    pub fn get_block_data(
+    pub fn get_block_data_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -1329,7 +1329,7 @@ impl<'mc> LimitedRegion<'mc> {
     }
     //
 
-    pub fn set_block_data(
+    pub fn set_block_data_with_int(
         &self,
         arg0: i32,
         arg1: i32,
@@ -1365,7 +1365,7 @@ impl<'mc> LimitedRegion<'mc> {
     }
     //
 
-    pub fn get_highest_block_yat(
+    pub fn get_highest_block_yat_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -1400,7 +1400,7 @@ impl<'mc> LimitedRegion<'mc> {
     }
     //@NotNull
 
-    pub fn get_biome(
+    pub fn get_biome_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -1445,7 +1445,7 @@ impl<'mc> LimitedRegion<'mc> {
     }
     //
 
-    pub fn set_biome(
+    pub fn set_biome_with_int(
         &self,
         arg0: i32,
         arg1: i32,
@@ -1481,7 +1481,7 @@ impl<'mc> LimitedRegion<'mc> {
     }
     //@NotNull
 
-    pub fn get_block_state(
+    pub fn get_block_state_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -1513,12 +1513,12 @@ impl<'mc> LimitedRegion<'mc> {
     }
     //
 
-    pub fn generate_tree(
+    pub fn generate_tree_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
-        arg1: impl Into<blackboxmc_java::JavaRandom<'mc>>,
+        arg1: impl Into<blackboxmc_java::util::JavaRandom<'mc>>,
         arg2: impl Into<crate::TreeType<'mc>>,
-        arg3: std::option::Option<impl Into<blackboxmc_java::function::JavaPredicate<'mc>>>,
+        arg3: std::option::Option<impl Into<blackboxmc_java::util::function::JavaPredicate<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -1553,7 +1553,7 @@ impl<'mc> LimitedRegion<'mc> {
     }
     //
 
-    pub fn spawn_entity(
+    pub fn spawn_entity_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: impl Into<crate::entity::EntityType<'mc>>,
@@ -1595,7 +1595,7 @@ impl<'mc> LimitedRegion<'mc> {
                 .call_method(&self.jni_object(), "getEntities", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -1617,7 +1617,7 @@ impl<'mc> LimitedRegion<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -1641,7 +1641,7 @@ impl<'mc> LimitedRegion<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
         let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
@@ -1664,7 +1664,7 @@ impl<'mc> LimitedRegion<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let col = blackboxmc_java::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
         let iter = col.iterator()?;
         while iter.has_next()? {
             let obj = iter.next()?;
@@ -1674,7 +1674,7 @@ impl<'mc> LimitedRegion<'mc> {
     }
     //
 
-    pub fn spawn(
+    pub fn spawn_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
         arg1: jni::objects::JClass<'mc>,
@@ -1717,7 +1717,7 @@ impl<'mc> LimitedRegion<'mc> {
 
     //@NotNull
 
-    pub fn get_type(
+    pub fn get_type_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -1819,13 +1819,13 @@ impl<'mc> WorldInfo<'mc> {
     }
     //
 
-    pub fn uid(&self) -> Result<blackboxmc_java::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+    pub fn uid(&self) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/UUID;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getUID", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::JavaUUID::from_raw(&self.jni_ref(), unsafe {
+        blackboxmc_java::util::JavaUUID::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
@@ -1968,7 +1968,7 @@ impl<'mc> ChunkGenerator<'mc> {
     pub fn generate_noise(
         &self,
         arg0: impl Into<crate::generator::WorldInfo<'mc>>,
-        arg1: impl Into<blackboxmc_java::JavaRandom<'mc>>,
+        arg1: impl Into<blackboxmc_java::util::JavaRandom<'mc>>,
         arg2: i32,
         arg3: i32,
         arg4: impl Into<crate::generator::ChunkGeneratorChunkData<'mc>>,
@@ -2005,7 +2005,7 @@ impl<'mc> ChunkGenerator<'mc> {
     pub fn generate_surface(
         &self,
         arg0: impl Into<crate::generator::WorldInfo<'mc>>,
-        arg1: impl Into<blackboxmc_java::JavaRandom<'mc>>,
+        arg1: impl Into<blackboxmc_java::util::JavaRandom<'mc>>,
         arg2: i32,
         arg3: i32,
         arg4: impl Into<crate::generator::ChunkGeneratorChunkData<'mc>>,
@@ -2042,7 +2042,7 @@ impl<'mc> ChunkGenerator<'mc> {
     pub fn generate_bedrock(
         &self,
         arg0: impl Into<crate::generator::WorldInfo<'mc>>,
-        arg1: impl Into<blackboxmc_java::JavaRandom<'mc>>,
+        arg1: impl Into<blackboxmc_java::util::JavaRandom<'mc>>,
         arg2: i32,
         arg3: i32,
         arg4: impl Into<crate::generator::ChunkGeneratorChunkData<'mc>>,
@@ -2079,7 +2079,7 @@ impl<'mc> ChunkGenerator<'mc> {
     pub fn generate_caves(
         &self,
         arg0: impl Into<crate::generator::WorldInfo<'mc>>,
-        arg1: impl Into<blackboxmc_java::JavaRandom<'mc>>,
+        arg1: impl Into<blackboxmc_java::util::JavaRandom<'mc>>,
         arg2: i32,
         arg3: i32,
         arg4: impl Into<crate::generator::ChunkGeneratorChunkData<'mc>>,
@@ -2138,7 +2138,7 @@ impl<'mc> ChunkGenerator<'mc> {
     pub fn get_base_height(
         &self,
         arg0: impl Into<crate::generator::WorldInfo<'mc>>,
-        arg1: impl Into<blackboxmc_java::JavaRandom<'mc>>,
+        arg1: impl Into<blackboxmc_java::util::JavaRandom<'mc>>,
         arg2: i32,
         arg3: i32,
         arg4: impl Into<crate::HeightMap<'mc>>,
@@ -2177,7 +2177,7 @@ impl<'mc> ChunkGenerator<'mc> {
     pub fn generate_chunk_data(
         &self,
         arg0: impl Into<crate::World<'mc>>,
-        arg1: impl Into<blackboxmc_java::JavaRandom<'mc>>,
+        arg1: impl Into<blackboxmc_java::util::JavaRandom<'mc>>,
         arg2: i32,
         arg3: i32,
         arg4: impl Into<crate::generator::ChunkGeneratorBiomeGrid<'mc>>,
@@ -2256,7 +2256,7 @@ impl<'mc> ChunkGenerator<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
-        let list = blackboxmc_java::JavaList::from_raw(&self.0, res.l()?)?;
+        let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
         let size = list.size()?;
         for i in 0..=size {
             let obj = list.get(i)?;
@@ -2269,7 +2269,7 @@ impl<'mc> ChunkGenerator<'mc> {
     pub fn get_fixed_spawn_location(
         &self,
         arg0: impl Into<crate::World<'mc>>,
-        arg1: impl Into<blackboxmc_java::JavaRandom<'mc>>,
+        arg1: impl Into<blackboxmc_java::util::JavaRandom<'mc>>,
     ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Lorg/bukkit/World;Ljava/util/Random;)Lorg/bukkit/Location;");
         let val_1 = jni::objects::JValueGen::Object(unsafe {
@@ -2307,10 +2307,10 @@ impl<'mc> ChunkGenerator<'mc> {
     }
     //
 
-    pub fn should_generate_noise(
+    pub fn should_generate_noise_with_world_info(
         &self,
         arg0: std::option::Option<impl Into<crate::generator::WorldInfo<'mc>>>,
-        arg1: std::option::Option<impl Into<blackboxmc_java::JavaRandom<'mc>>>,
+        arg1: std::option::Option<impl Into<blackboxmc_java::util::JavaRandom<'mc>>>,
         arg2: std::option::Option<i32>,
         arg3: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2352,10 +2352,10 @@ impl<'mc> ChunkGenerator<'mc> {
     }
     //
 
-    pub fn should_generate_surface(
+    pub fn should_generate_surface_with_world_info(
         &self,
         arg0: std::option::Option<impl Into<crate::generator::WorldInfo<'mc>>>,
-        arg1: std::option::Option<impl Into<blackboxmc_java::JavaRandom<'mc>>>,
+        arg1: std::option::Option<impl Into<blackboxmc_java::util::JavaRandom<'mc>>>,
         arg2: std::option::Option<i32>,
         arg3: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2410,10 +2410,10 @@ impl<'mc> ChunkGenerator<'mc> {
     }
     //
 
-    pub fn should_generate_caves(
+    pub fn should_generate_caves_with_world_info(
         &self,
         arg0: std::option::Option<impl Into<crate::generator::WorldInfo<'mc>>>,
-        arg1: std::option::Option<impl Into<blackboxmc_java::JavaRandom<'mc>>>,
+        arg1: std::option::Option<impl Into<blackboxmc_java::util::JavaRandom<'mc>>>,
         arg2: std::option::Option<i32>,
         arg3: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2455,10 +2455,10 @@ impl<'mc> ChunkGenerator<'mc> {
     }
     //
 
-    pub fn should_generate_decorations(
+    pub fn should_generate_decorations_with_world_info(
         &self,
         arg0: std::option::Option<impl Into<crate::generator::WorldInfo<'mc>>>,
-        arg1: std::option::Option<impl Into<blackboxmc_java::JavaRandom<'mc>>>,
+        arg1: std::option::Option<impl Into<blackboxmc_java::util::JavaRandom<'mc>>>,
         arg2: std::option::Option<i32>,
         arg3: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2500,10 +2500,10 @@ impl<'mc> ChunkGenerator<'mc> {
     }
     //
 
-    pub fn should_generate_mobs(
+    pub fn should_generate_mobs_with_world_info(
         &self,
         arg0: std::option::Option<impl Into<crate::generator::WorldInfo<'mc>>>,
-        arg1: std::option::Option<impl Into<blackboxmc_java::JavaRandom<'mc>>>,
+        arg1: std::option::Option<impl Into<blackboxmc_java::util::JavaRandom<'mc>>>,
         arg2: std::option::Option<i32>,
         arg3: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2545,10 +2545,10 @@ impl<'mc> ChunkGenerator<'mc> {
     }
     //
 
-    pub fn should_generate_structures(
+    pub fn should_generate_structures_with_world_info(
         &self,
         arg0: std::option::Option<impl Into<crate::generator::WorldInfo<'mc>>>,
-        arg1: std::option::Option<impl Into<blackboxmc_java::JavaRandom<'mc>>>,
+        arg1: std::option::Option<impl Into<blackboxmc_java::util::JavaRandom<'mc>>>,
         arg2: std::option::Option<i32>,
         arg3: std::option::Option<i32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2590,7 +2590,7 @@ impl<'mc> ChunkGenerator<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

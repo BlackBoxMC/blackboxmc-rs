@@ -3,7 +3,7 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-/// Represents a key used for accessing memory values of a <a href="../LivingEntity.html" title="interface in org.bukkit.entity"><code>LivingEntity</code></a>.
+/// Represents a key used for accessing memory values of a <a title="interface in org.bukkit.entity" href="../LivingEntity.html"><code>LivingEntity</code></a>.
 pub struct MemoryKey<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -77,14 +77,14 @@ impl<'mc> MemoryKey<'mc> {
 
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<blackboxmc_java::JavaSet<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let cls = jni.find_class("java/util/Set");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "values", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
-        blackboxmc_java::JavaSet::from_raw(&jni, obj)
+        blackboxmc_java::util::JavaSet::from_raw(&jni, obj)
     }
     //
 
@@ -100,7 +100,7 @@ impl<'mc> MemoryKey<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

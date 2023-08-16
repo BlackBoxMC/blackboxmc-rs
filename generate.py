@@ -20,14 +20,19 @@ reserved_words = ["as", "break", "const", "continue", "else", "enum", "extern", 
 library_resolves = {
     "net.md_5": "blackboxmc-rs-bungee",
     "org.bukkit": "blackboxmc-rs-bukkit",
-    "java.util": "blackboxmc-rs-java",
-    "java.lang": "blackboxmc-rs-java"
+    "java.util": "blackboxmc-rs-java/src/util",
+    "java.lang": "blackboxmc-rs-java/src/lang",
 }
 
 parsed_classes = {}
 excluded_classes = [
     "org.bukkit.plugin.SimplePluginManager",    # uses stuff that isn't being generated due to that java bug and i don't want to write an entire class binding for something that's getting deprecated anyways.
-    "java.lang.JavaThread", "java.lang.JavaIterable", "java.lang.JavaRunnable", "java.lang.JavaCharSequence", "java.util.regex.JavaMatcher", "java.util.JavaObservable", "java.util.JavaFormatter", "java.lang.JavaException", "java.util.JavaResourceBundle", "java.lang.JavaThrowable",
+    "java.lang.JavaThread", "java.lang.JavaIterable", "java.lang.JavaRunnable", "java.lang.JavaCharSequence", "java.util.regex.JavaMatcher", "java.util.JavaObservable", "java.util.JavaFormatter", "java.lang.JavaException", "java.util.JavaResourceBundle", "java.lang.JavaThrowable", "java.lang.JavaCloneable", "java.lang.JavaComparable", "java.lang.JavaClass", "java.lang.JavaStringBuffer",
+
+    "java.lang.constant",
+    "java.lang.annotation",
+    "java.lang.Number",
+    "java.lang.invoke",
 
     "java.util.concurrent",                     # i want to lessen my workload and binding this is going to be pointless since your only option of multithreading is through BukkitRunnables.
     "java.util.stream",                         # unneeded when java's iterator is bound.
@@ -35,13 +40,14 @@ excluded_classes = [
     "net.md_5.bungee.chat.TranslationRegistry$TranslationProvider",
     "org.bukkit.plugin.SimpleServicesManager",
 
+    "java.util.JavaLocale$Category", "java.util.JavaLocale$FilteringMode",
+
     # dear sweet baby jesus i just want to be done with this and i will remove half of the java.util
     # package if it means fucking getting this done.
     "java.util.PropertyResourceBundle", "java.util.Currency", "java.util.EnumMap", "java.util.Spliterators",
                         "java.util.Spliterators$AbstractIntSpliterator",
                         "java.util.Spliterators$AbstractLongSpliterator", "java.util.Spliterators$AbstractSpliterator",
                         "java.util.SplittableRandom", "java.util.AbstractMap$SimpleImmutableEntry", "java.util.Arrays", "java.util.GregorianCalendar",
-    "java.util.Locale", "java.util.Locale$Builder", "java.util.Locale$LanguageRange",
     "java.util.NavigableMap", "java.util.NavigableSet",
     "java.util.Base64$Decoder", "java.util.Base64$Encoder", "java.util.BitSet",
                         "java.util.Calendar", "java.util.Calendar$Builder", "java.util.Collections",
@@ -71,8 +77,26 @@ bindings = {}
 omitted_classes = []
 enums = []
 
-def library_name_format(libname):
-    return libname.replace("-","_").replace("_rs_","_")
+def library_name_no_extra_paths(libname):
+    return re.sub("\/src\/(.*)","",libname)
+
+def library_name_format(crate_name,library):
+    l1 = library_resolves[crate_name]
+    l2 = library_resolves[library]
+    st1 = re.sub("\/src\/(.*)","::\\1",l1.replace("-","_").replace("_rs_","_"))
+    st2 = re.sub("\/src\/(.*)","",l2.replace("-","_").replace("_rs_","_"))
+    print("OK",st2)
+    if st2.replace("::","") in st1:
+        st1 = st1.replace(st2,"crate")
+    return st1
+
+def library_name_format_to_crate(libname):
+    reg = re.search("\/src\/(.*)",libname)
+    if reg is not None:
+        print("WHAT",reg)
+        return "crate::"+reg.group(1)
+    else:
+        return "crate"
 
 def in_excluded_classes(cl):
     if cl in excluded_classes:
@@ -330,7 +354,7 @@ def return_format_one_liner(val, var_name):
         case "f32": return var_name+".f()?"
         case "f64": return var_name+".d()?"
 
-def return_format(return_group, prefix, static, method, obj_call, func_signature, types, is_trait, options_start_at, is_constructor, nullable):
+def return_format(return_group, prefix, static, method, obj_call, func_signature, types, is_trait, options_start_at, is_constructor, nullable, library):
     if return_group["is_array"]:
         return None
     else:
@@ -383,24 +407,43 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
             val_1 = "self.0"
         val_2 = "unsafe { jni::objects::JObject::from_raw(res.l()"+end_line+".clone()) }"
 
+    # primitive translation should not be done inside the java.lang bindings.
+    skip_primitives = False
+    if "lang" not in library:
+        if is_constructor:
+            skip_primitives = True
+        else:
+            skip_primitives = False
+    if not skip_primitives:
+        match return_group["type_name_resolved"]:
+            case "()" | "u16" | "i8" | "i16" | "bool" | "i32" | "i64" | "f32" | "f64":
+                code.append("Ok(")
+                if nullable:
+                    code.append("Some(")
+                code.append(return_format_one_liner(return_group["type_name_resolved"],"res"))
+                if nullable:
+                    code.append(")")
+                code.append(")")
+                return "\n".join(code)
+            case "String":
+                code.append("Ok(")
+                if nullable:
+                    code.append("Some(")
+                code.append(prefix+
+                            ".get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })"+end_line+
+                            ".to_string_lossy()"+
+                            ".to_string()"
+                )
+                if nullable:
+                    code.append(")")
+                code.append(")")
+                return "\n".join(code)
     match return_group["type_name_resolved"]:
-        case "()" | "u16" | "i8" | "i16" | "bool" | "i32" | "i64" | "f32" | "f64":
+        case "()":
             code.append("Ok(")
             if nullable:
                 code.append("Some(")
             code.append(return_format_one_liner(return_group["type_name_resolved"],"res"))
-            if nullable:
-                code.append(")")
-            code.append(")")
-        case "String":
-            code.append("Ok(")
-            if nullable:
-                code.append("Some(")
-            code.append(prefix+
-                        ".get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })"+end_line+
-                        ".to_string_lossy()"+
-                        ".to_string()"
-            )
             if nullable:
                 code.append(")")
             code.append(")")
@@ -443,14 +486,14 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
             gen = return_group["generics"][0]["type_name_resolved"]
             match return_group["type_name_original"]:
                 case "java.util.Collection":
-                    code.append("let col = blackboxmc_java::JavaCollection::from_raw(&"+
+                    code.append("let col = blackboxmc_java::util::JavaCollection::from_raw(&"+
                                                 prefix+",res.l()"+end_line+")"+end_line+";"+
                                 "let iter = col.iterator()"+end_line+";"+
                                 "        while iter.has_next()"+end_line+" {"+
                                 "            let obj = iter.next()"+end_line+";")
                     normally = gen+"::from_raw(&"+val_1+",obj,)"+end_line
                 case "java.util.List":
-                    code.append("let list = blackboxmc_java::JavaList::from_raw(&"+val_1+", res.l()"+end_line+")"+end_line+";"+
+                    code.append("let list = blackboxmc_java::util::JavaList::from_raw(&"+val_1+", res.l()"+end_line+")"+end_line+";"+
                                 "let size = list.size()"+end_line+";"+
                                 "for i in 0..=size {"+
                                 "let obj = list.get(i)"+end_line+";")
@@ -485,7 +528,7 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
                     code.append("new_vec.push("+normally+");")
             code.append("};Ok(new_vec)")
         case _:
-            if return_group["type_name_resolved"] == "blackboxmc_java::JavaEnum":
+            if return_group["type_name_resolved"] == "blackboxmc_java::lang::JavaEnum":
                 return_group["type_name_resolved"] = "Self"
             if return_group["type_name_resolved"].startswith("&dyn "):
                 what = return_group["type_name_alone"].split("::")
@@ -574,9 +617,39 @@ def correct_question_mark(argname, ty, method, i, returning, library, is_constru
             return None
         return grp
 
+def java_type_to_rust_primitive(ty):
+    type_name_resolved = ""
+    match ty.replace("Java",""):
+        case "void":
+            type_name_resolved = "()"
+        case "char" | "java.lang.Character":
+            type_name_resolved = "u16"
+        case "java.lang.Byte" | "byte":
+            type_name_resolved = "i8"
+        case "java.lang.Short" | "short":
+            type_name_resolved = "i16"
+        case "java.lang.Boolean" | "boolean":
+            type_name_resolved = "bool"
+        case "java.lang.Integer" | "int":
+            type_name_resolved = "i32"
+        case "java.lang.Long" | "long":
+            type_name_resolved = "i64"
+        case "java.lang.Float" | "float":
+            type_name_resolved = "f32"
+        case "java.lang.Double" | "double":
+            type_name_resolved = "f64"
+        case "java.lang.String":
+            type_name_resolved = "String"
+    if type_name_resolved != "":
+        return type_name_resolved
+    else:
+        return None
+
 def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor=False, skip_vec=False):
     if method is not None and not is_constructor:
         if returning:
+            if "genericReturnType" not in method["method"]:
+                return None 
             parameter_type = method["method"]["genericReturnType"]
         else:
             if i <= len(method["method"]["genericParameterTypes"]):
@@ -606,33 +679,23 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
         is_interface = True
 
     type_name_original = ty.replace("Java","")
-    match ty.replace("Java",""):
-        case "void":
-            type_name_resolved = "()"
-        case "char" | "java.lang.Character":
-            type_name_resolved = "u16"
-        case "java.lang.Byte" | "byte":
-            type_name_resolved = "i8"
-        case "java.lang.Short" | "short":
-            type_name_resolved = "i16"
-        case "java.lang.Boolean" | "boolean":
-            type_name_resolved = "bool"
-        case "java.lang.Integer" | "int":
-            type_name_resolved = "i32"
-        case "java.lang.Long" | "long":
-            type_name_resolved = "i64"
-        case "java.lang.Float" | "float":
-            type_name_resolved = "f32"
-        case "java.lang.Double" | "double":
-            type_name_resolved = "f64"
-        case "java.lang.String":
-            type_name_resolved = "String"
-        case "java.lang.Class":
-            type_name_resolved = "jni::objects::JClass"
-        case "java.awt.Color":
-            type_name_resolved = "(u8, u8, u8)"
+    skip_primitives = False
+    if "lang" not in library:
+        if is_constructor:
+            skip_primitives = True
+        else:
+            skip_primitives = False
+
+    if not skip_primitives:
+        t = java_type_to_rust_primitive(ty)
+        if t is not None:
+            type_name_resolved = t
     if type_name_resolved == "jni::objects::JObject":
         match ty:
+            case "java.lang.Class":
+                type_name_resolved = "jni::objects::JClass"
+            case "java.awt.Color":
+                type_name_resolved = "(u8, u8, u8)"
             case "java.lang.Object" | "java.lang.reflect.Type" | "java.awt.Image" | "java.awt.image.BufferedImage":
                 type_name_resolved = "jni::objects::JObject"
             case "java.util.List" | "java.util.Collection":
@@ -667,16 +730,12 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
                     print(type_name_original)
                     usage_unsafe = True
                 else:
-                    if library_name_format(library_resolves[crate_name]) == library_name_format(library_resolves["java.util"]):
+                    if (library_name_format(crate_name,library) == library_name_format("java.util",library)) or (library_name_format(crate_name,library) == library_name_format("java.lang",library)):
                         class_name = "".join(filter(lambda f: f[0].upper() == f[0], ty.split(".")))
                         what = ty
                         ty = ty.replace(class_name, "Java"+class_name)
 
-
-                    if crate_name == library or library is False:
-                        to_replace = "crate"
-                    else:
-                        to_replace = library_name_format(library_resolves[crate_name])
+                    to_replace =  library_name_format(crate_name,library)
 
                     type_name_resolved = ty.replace(
                         crate_name, to_replace).replace(".", "::").replace("-", "_").replace("$", "")
@@ -1016,10 +1075,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             for group_name in method_map:
                 methods = method_map[group_name]
                 if group_name != "":
-                    if len(method_map) >= 2:
-                        new_name = name+"_with_"+group_name.replace("$","").replace("[]","s")
-                    else:
-                        new_name = name
+                    new_name = name+"_with_"+group_name.replace("$","").replace("[]","s")
                 else:
                     new_name = name
                 new_methods[new_name] = {}
@@ -1083,7 +1139,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
         i = 0
         # make the function signature
         for type in types:
-            group = java_type_to_rust(type[0], type[1],method, i, False, library)
+            group = java_type_to_rust(type[0], type[1],method, i, is_constructor, library)
 
             if group is None:
                 should_continue = False
@@ -1174,7 +1230,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             nullable = i[1]
 
         # execute the function.
-        m = return_format(return_group, prefix, static, method, obj_call, func_signature, types, is_trait,options_start_at, is_constructor,nullable)
+        m = return_format(return_group, prefix, static, method, obj_call, func_signature, types, is_trait,options_start_at, is_constructor,nullable,library)
         if m is None:
             continue
         code.append(m)
@@ -1517,21 +1573,28 @@ for library in libraries:
     crate_dir = ""
 
     if library in library_resolves:
-        crate_dir = os.path.join(library_resolves[library], "src")
+        res = library_resolves[library]
+        if "src" in res:
+            crate_dir = res + os.sep
+        else:
+            crate_dir = os.path.join(res, "src")
     else:
         print("Unhandled library "+library +
             ". All libraries must have corresponding rust crates.")
         exit(0)
 
+    root = library_name_no_extra_paths(crate_dir)
+    if "src" not in root:
+        root += os.sep + "src"
+
     # delete and recreate the appropriate directory if it's the first time writing to it
-    if crate_dir not in filled_once:
+    if pathlib.Path(crate_dir).exists():
         shutil.rmtree(crate_dir)
         path = library.replace(".", os.sep)
         pathlib.Path(crate_dir+os.sep +
                     path).mkdir(parents=True, exist_ok=True)
-    else:
-        filled_once.push(crate_dir)
-
+        
+    
     # make the appropriate directory if it doesn't already exist.
     path = library.replace(".", os.sep)
     pathlib.Path(crate_dir+os.sep +
@@ -1577,9 +1640,13 @@ for library in libraries:
 
     file_cache = {}
 
-    mod_rs_folder_populate(crate_dir)
 
-    os.rename(crate_dir+os.sep+"mod.rs", crate_dir+os.sep+"lib.rs")
+    print("PATH:",root)
+
+    if root not in filled_once:
+        mod_rs_folder_populate(root)
+        os.rename(root+os.sep+"mod.rs", root+os.sep+"lib.rs")
+    filled_once.append(root)
 
 # inject any manually written code.
 for filename in os.listdir("additions"):
@@ -1617,6 +1684,8 @@ for i in range(0,4):
     wildcard = "*/*" * i
     for library in library_resolves:
         resolved = library_resolves[library]
-        os.system("rustfmt --unstable-features --skip-children ./"+resolved+"/src/*"+wildcard+".rs")
+        if "src" not in resolved:
+            resolved += "/src"
+        os.system("rustfmt --unstable-features --skip-children ./"+resolved+"/*"+wildcard+".rs")
 
 os.system("cargo fix --allow-dirty --allow-staged --broken-code --jobs "+str(multiprocessing.cpu_count()))

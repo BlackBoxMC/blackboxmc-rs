@@ -142,7 +142,7 @@ impl<'mc> ItemTagType<'mc> {
         Ok(res.l()?)
     }
 }
-/// This interface represents the context in which the <a title="interface in org.bukkit.inventory.meta.tags" href="ItemTagType.html"><code>ItemTagType</code></a> can serialize and deserialize the passed values.
+/// This interface represents the context in which the <a href="ItemTagType.html" title="interface in org.bukkit.inventory.meta.tags"><code>ItemTagType</code></a> can serialize and deserialize the passed values.
 ///
 /// This is a representation of an abstract class.
 pub struct ItemTagAdapterContext<'mc>(
@@ -319,7 +319,7 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
     }
     //
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
