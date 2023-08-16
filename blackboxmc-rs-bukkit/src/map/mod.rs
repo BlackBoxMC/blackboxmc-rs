@@ -1061,6 +1061,49 @@ impl<'mc> JNIInstantiatable<'mc> for MapCursor<'mc> {
 }
 
 impl<'mc> MapCursor<'mc> {
+    pub fn new_with_byte(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: i8,
+        arg1: i8,
+        arg2: i8,
+        arg3: impl Into<crate::map::MapCursorType<'mc>>,
+        arg4: bool,
+        arg5: std::option::Option<impl Into<String>>,
+    ) -> Result<crate::map::MapCursor<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "B";
+        let val_1 = jni::objects::JValueGen::Byte(arg0.into());
+        args.push(val_1);
+        sig += "B";
+        let val_2 = jni::objects::JValueGen::Byte(arg1.into());
+        args.push(val_2);
+        sig += "B";
+        let val_3 = jni::objects::JValueGen::Byte(arg2.into());
+        args.push(val_3);
+        sig += "Lorg/bukkit/map/MapCursor$Type;";
+        let val_4 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg3.into().jni_object().clone())
+        });
+        args.push(val_4);
+        sig += "Z";
+        // 6
+        let val_5 = jni::objects::JValueGen::Bool(arg4.into());
+        args.push(val_5);
+        if let Some(a) = arg5 {
+            sig += "Ljava/lang/String;";
+            let val_6 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                jni.new_string(a.into())?,
+            ));
+            args.push(val_6);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/map/MapCursor");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::map::MapCursor::from_raw(&jni, res)
+    }
     //
 
     pub fn set_type(
@@ -1418,6 +1461,28 @@ impl<'mc> JNIInstantiatable<'mc> for MapFontCharacterSprite<'mc> {
 }
 
 impl<'mc> MapFontCharacterSprite<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: i32,
+        arg1: i32,
+        arg2: Vec<bool>,
+    ) -> Result<crate::map::MapFontCharacterSprite<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(IIZ)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let cls = jni.find_class("org/bukkit/map/MapFont$CharacterSprite");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::map::MapFontCharacterSprite::from_raw(&jni, res)
+    }
     //
 
     pub fn height(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -1941,6 +2006,25 @@ impl<'mc> MapRenderer<'mc> {
     ) -> Result<Self, Box<dyn std::error::Error>> {
         let obj = unsafe { plugin.new_extendable(address, "MapRenderer", name, lib_name) }?;
         Self::from_raw(env, obj)
+    }
+    pub fn new_with_boolean(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<bool>,
+    ) -> Result<crate::map::MapRenderer<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Z";
+            // 1
+            let val_1 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_1);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/map/MapRenderer");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::map::MapRenderer::from_raw(&jni, res)
     }
     //
 

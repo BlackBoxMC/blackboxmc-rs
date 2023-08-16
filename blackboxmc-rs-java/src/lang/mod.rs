@@ -52,6 +52,27 @@ impl<'mc> JNIInstantiatable<'mc> for JavaInteger<'mc> {
 }
 
 impl<'mc> JavaInteger<'mc> {
+    //['since', '9']
+
+    //['forRemoval', 'true']
+
+    #[deprecated]
+    pub fn new_with_int(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: i32,
+    ) -> Result<crate::lang::JavaInteger<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "I";
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        args.push(val_1);
+        sig += ")V";
+        let cls = jni.find_class("java/lang/Integer");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::lang::JavaInteger::from_raw(&jni, res)
+    }
     //
 
     pub fn number_of_leading_zeros(
@@ -833,6 +854,27 @@ impl<'mc> JNIInstantiatable<'mc> for JavaFloat<'mc> {
 }
 
 impl<'mc> JavaFloat<'mc> {
+    //['since', '9']
+
+    //['forRemoval', 'true']
+
+    #[deprecated]
+    pub fn new_with_float(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: f32,
+    ) -> Result<crate::lang::JavaFloat<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "F";
+        let val_1 = jni::objects::JValueGen::Float(arg0.into());
+        args.push(val_1);
+        sig += ")V";
+        let cls = jni.find_class("java/lang/Float");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::lang::JavaFloat::from_raw(&jni, res)
+    }
     //
 
     pub fn equals(
@@ -1418,6 +1460,27 @@ impl<'mc> JNIInstantiatable<'mc> for JavaCharacter<'mc> {
 }
 
 impl<'mc> JavaCharacter<'mc> {
+    //['since', '9']
+
+    //['forRemoval', 'true']
+
+    #[deprecated]
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: u16,
+    ) -> Result<crate::lang::JavaCharacter<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(C)V");
+        let val_1 = jni::objects::JValueGen::Char(arg0.into());
+        let cls = jni.find_class("java/lang/Character");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::lang::JavaCharacter::from_raw(&jni, res)
+    }
     //
 
     pub fn get_name(
@@ -2566,6 +2629,29 @@ impl<'mc> JNIInstantiatable<'mc> for JavaByte<'mc> {
 }
 
 impl<'mc> JavaByte<'mc> {
+    //['since', '9']
+
+    //['forRemoval', 'true']
+
+    #[deprecated]
+    pub fn new_with_string(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<crate::lang::JavaByte<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        args.push(val_1);
+        sig += ")V";
+        let cls = jni.find_class("java/lang/Byte");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::lang::JavaByte::from_raw(&jni, res)
+    }
     //
 
     pub fn equals(
@@ -2948,6 +3034,27 @@ impl<'mc> JNIInstantiatable<'mc> for JavaLong<'mc> {
 }
 
 impl<'mc> JavaLong<'mc> {
+    //['since', '9']
+
+    //['forRemoval', 'true']
+
+    #[deprecated]
+    pub fn new_with_long(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: i64,
+    ) -> Result<crate::lang::JavaLong<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "J";
+        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        args.push(val_1);
+        sig += ")V";
+        let cls = jni.find_class("java/lang/Long");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::lang::JavaLong::from_raw(&jni, res)
+    }
     //
 
     pub fn number_of_leading_zeros(
@@ -3757,6 +3864,42 @@ impl<'mc> JNIInstantiatable<'mc> for JavaString<'mc> {
 }
 
 impl<'mc> JavaString<'mc> {
+    //['since', '1.1']
+
+    //['forRemoval', 'false']
+
+    #[deprecated]
+    pub fn new_with_bytes(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<Vec<i8>>,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<i32>,
+        arg3: std::option::Option<i32>,
+    ) -> Result<crate::lang::JavaString<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "I";
+            let val_3 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_3);
+        }
+        if let Some(a) = arg3 {
+            sig += "I";
+            let val_4 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_4);
+        }
+        sig += ")V";
+        let cls = jni.find_class("java/lang/String");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::lang::JavaString::from_raw(&jni, res)
+    }
     //
 
     pub fn equals(
@@ -4662,6 +4805,29 @@ impl<'mc> JNIInstantiatable<'mc> for JavaBoolean<'mc> {
 }
 
 impl<'mc> JavaBoolean<'mc> {
+    //['since', '9']
+
+    //['forRemoval', 'true']
+
+    #[deprecated]
+    pub fn new_with_string(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<crate::lang::JavaBoolean<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        args.push(val_1);
+        sig += ")V";
+        let cls = jni.find_class("java/lang/Boolean");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::lang::JavaBoolean::from_raw(&jni, res)
+    }
     //
 
     pub fn equals(
@@ -5008,6 +5174,29 @@ impl<'mc> JNIInstantiatable<'mc> for JavaDouble<'mc> {
 }
 
 impl<'mc> JavaDouble<'mc> {
+    //['since', '9']
+
+    //['forRemoval', 'true']
+
+    #[deprecated]
+    pub fn new_with_string(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<crate::lang::JavaDouble<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        args.push(val_1);
+        sig += ")V";
+        let cls = jni.find_class("java/lang/Double");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::lang::JavaDouble::from_raw(&jni, res)
+    }
     //
 
     pub fn equals(
@@ -5508,6 +5697,29 @@ impl<'mc> JNIInstantiatable<'mc> for JavaShort<'mc> {
 }
 
 impl<'mc> JavaShort<'mc> {
+    //['since', '9']
+
+    //['forRemoval', 'true']
+
+    #[deprecated]
+    pub fn new_with_string(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<crate::lang::JavaShort<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        args.push(val_1);
+        sig += ")V";
+        let cls = jni.find_class("java/lang/Short");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::lang::JavaShort::from_raw(&jni, res)
+    }
     //
 
     pub fn equals(

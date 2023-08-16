@@ -964,82 +964,6 @@ impl<'mc> MemorySection<'mc> {
     }
     //
 
-    pub fn set_comments(
-        &self,
-        arg0: impl Into<String>,
-        arg1: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;Ljava/util/List;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let raw_val_2 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg1 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_2,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_2 = jni::objects::JValueGen::Object(raw_val_2);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setComments",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
-    pub fn set_inline_comments(
-        &self,
-        arg0: impl Into<String>,
-        arg1: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;Ljava/util/List;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let raw_val_2 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg1 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_2,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_2 = jni::objects::JValueGen::Object(raw_val_2);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setInlineComments",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
@@ -2212,82 +2136,6 @@ impl<'mc> Configuration<'mc> {
     }
     //
 
-    pub fn set_comments(
-        &self,
-        arg0: impl Into<String>,
-        arg1: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;Ljava/util/List;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let raw_val_2 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg1 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_2,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_2 = jni::objects::JValueGen::Object(raw_val_2);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setComments",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
-    pub fn set_inline_comments(
-        &self,
-        arg0: impl Into<String>,
-        arg1: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;Ljava/util/List;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let raw_val_2 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg1 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_2,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_2 = jni::objects::JValueGen::Object(raw_val_2);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setInlineComments",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
@@ -2635,6 +2483,26 @@ impl<'mc> JNIInstantiatable<'mc> for MemoryConfiguration<'mc> {
 }
 
 impl<'mc> MemoryConfiguration<'mc> {
+    pub fn new_with_configuration(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<impl Into<crate::configuration::Configuration<'mc>>>,
+    ) -> Result<crate::configuration::MemoryConfiguration<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Lorg/bukkit/configuration/Configuration;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/configuration/MemoryConfiguration");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::configuration::MemoryConfiguration::from_raw(&jni, res)
+    }
     //
 
     pub fn add_default(
@@ -3404,82 +3272,6 @@ impl<'mc> MemoryConfiguration<'mc> {
             );
         }
         Ok(new_vec)
-    }
-    //
-
-    pub fn set_comments(
-        &self,
-        arg0: impl Into<String>,
-        arg1: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;Ljava/util/List;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let raw_val_2 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg1 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_2,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_2 = jni::objects::JValueGen::Object(raw_val_2);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setComments",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
-    pub fn set_inline_comments(
-        &self,
-        arg0: impl Into<String>,
-        arg1: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;Ljava/util/List;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let raw_val_2 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg1 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_2,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_2 = jni::objects::JValueGen::Object(raw_val_2);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setInlineComments",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     //
 
@@ -4798,82 +4590,6 @@ impl<'mc> ConfigurationSection<'mc> {
             );
         }
         Ok(new_vec)
-    }
-    //
-
-    pub fn set_comments(
-        &self,
-        arg0: impl Into<String>,
-        arg1: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;Ljava/util/List;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let raw_val_2 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg1 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_2,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_2 = jni::objects::JValueGen::Object(raw_val_2);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setComments",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
-    pub fn set_inline_comments(
-        &self,
-        arg0: impl Into<String>,
-        arg1: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;Ljava/util/List;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let raw_val_2 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg1 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_2,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_2 = jni::objects::JValueGen::Object(raw_val_2);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setInlineComments",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     //
 

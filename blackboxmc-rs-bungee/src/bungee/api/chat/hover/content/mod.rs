@@ -47,6 +47,19 @@ Ok(Self(env.clone(), obj))
     }
     
 impl<'mc> Item<'mc> {
+	pub fn new(jni: &blackboxmc_general::SharedJNIEnv<'mc>,arg0: impl Into<String>,arg1: i32,arg2: impl Into<crate::bungee::api::chat::ItemTag<'mc>>) 
+-> Result<crate::bungee::api::chat::hover::content::Item<'mc>, Box<dyn std::error::Error>>
+
+{let sig = String::from("(Ljava/lang/String;ILnet/md_5/bungee/api/chat/ItemTag;)V");
+let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(jni.new_string(arg0.into())?));
+let val_2 = jni::objects::JValueGen::Int(arg1.into());
+let val_3 = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone())});
+let cls = jni.find_class("net/md_5/bungee/api/chat/hover/content/Item"); let cls = jni.translate_error_with_class(cls)?;
+let res = jni.new_object(cls,
+sig.as_str(),vec![jni::objects::JValueGen::from(val_1),jni::objects::JValueGen::from(val_2),jni::objects::JValueGen::from(val_3)]);
+let res = jni.translate_error_no_gen(res)?;
+crate::bungee::api::chat::hover::content::Item::from_raw(&jni,res
+)}
 //
 
 
@@ -319,6 +332,19 @@ Ok(Self(env.clone(), obj))
     }
     
 impl<'mc> Entity<'mc> {
+	pub fn new(jni: &blackboxmc_general::SharedJNIEnv<'mc>,arg0: impl Into<String>,arg1: impl Into<String>,arg2: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>) 
+-> Result<crate::bungee::api::chat::hover::content::Entity<'mc>, Box<dyn std::error::Error>>
+
+{let sig = String::from("(Ljava/lang/String;Ljava/lang/String;Lnet/md_5/bungee/api/chat/BaseComponent;)V");
+let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(jni.new_string(arg0.into())?));
+let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(jni.new_string(arg1.into())?));
+let val_3 = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from_raw(arg2.into().jni_object().clone())});
+let cls = jni.find_class("net/md_5/bungee/api/chat/hover/content/Entity"); let cls = jni.translate_error_with_class(cls)?;
+let res = jni.new_object(cls,
+sig.as_str(),vec![jni::objects::JValueGen::from(val_1),jni::objects::JValueGen::from(val_2),jni::objects::JValueGen::from(val_3)]);
+let res = jni.translate_error_no_gen(res)?;
+crate::bungee::api::chat::hover::content::Entity::from_raw(&jni,res
+)}
 //
 
 
@@ -1232,6 +1258,21 @@ Ok(Self(env.clone(), obj))
     }
     
 impl<'mc> Text<'mc> {
+	pub fn new_with_string(jni: &blackboxmc_general::SharedJNIEnv<'mc>,arg0: impl Into<String>) 
+-> Result<crate::bungee::api::chat::hover::content::Text<'mc>, Box<dyn std::error::Error>>
+
+{let mut args = Vec::new();
+let mut sig = String::from("(");
+sig += "Ljava/lang/String;";
+let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(jni.new_string(arg0.into())?));
+args.push(val_1);
+sig += ")V";
+let cls = jni.find_class("net/md_5/bungee/api/chat/hover/content/Text"); let cls = jni.translate_error_with_class(cls)?;
+let res = jni.new_object(cls,
+sig.as_str(),args);
+let res = jni.translate_error_no_gen(res)?;
+crate::bungee::api::chat::hover::content::Text::from_raw(&jni,res
+)}
 //
 
 

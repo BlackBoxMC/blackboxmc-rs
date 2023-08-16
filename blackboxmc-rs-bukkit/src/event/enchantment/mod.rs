@@ -44,6 +44,60 @@ impl<'mc> JNIInstantiatable<'mc> for EnchantItemEvent<'mc> {
 }
 
 impl<'mc> EnchantItemEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::entity::Player<'mc>>,
+        arg1: impl Into<crate::inventory::InventoryView<'mc>>,
+        arg2: impl Into<crate::block::Block<'mc>>,
+        arg3: impl Into<crate::inventory::ItemStack<'mc>>,
+        arg4: i32,
+        arg5: impl Into<blackboxmc_java::util::JavaMap<'mc>>,
+        arg6: impl Into<crate::enchantments::Enchantment<'mc>>,
+        arg7: i32,
+        arg8: i32,
+    ) -> Result<crate::event::enchantment::EnchantItemEvent<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/entity/Player;Lorg/bukkit/inventory/InventoryView;Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;ILjava/util/Map;Lorg/bukkit/enchantments/Enchantment;II)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
+        });
+        let val_4 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg3.into().jni_object().clone())
+        });
+        let val_5 = jni::objects::JValueGen::Int(arg4.into());
+        let val_6 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg5.into().jni_object().clone())
+        });
+        let val_7 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg6.into().jni_object().clone())
+        });
+        let val_8 = jni::objects::JValueGen::Int(arg7.into());
+        let val_9 = jni::objects::JValueGen::Int(arg8.into());
+        let cls = jni.find_class("org/bukkit/event/enchantment/EnchantItemEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+                jni::objects::JValueGen::from(val_4),
+                jni::objects::JValueGen::from(val_5),
+                jni::objects::JValueGen::from(val_6),
+                jni::objects::JValueGen::from(val_7),
+                jni::objects::JValueGen::from(val_8),
+                jni::objects::JValueGen::from(val_9),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::enchantment::EnchantItemEvent::from_raw(&jni, res)
+    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -444,6 +498,46 @@ impl<'mc> JNIInstantiatable<'mc> for PrepareItemEnchantEvent<'mc> {
 }
 
 impl<'mc> PrepareItemEnchantEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::entity::Player<'mc>>,
+        arg1: impl Into<crate::inventory::InventoryView<'mc>>,
+        arg2: impl Into<crate::block::Block<'mc>>,
+        arg3: impl Into<crate::inventory::ItemStack<'mc>>,
+        arg4: Vec<impl Into<crate::enchantments::EnchantmentOffer<'mc>>>,
+        arg5: i32,
+    ) -> Result<crate::event::enchantment::PrepareItemEnchantEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("(Lorg/bukkit/entity/Player;Lorg/bukkit/inventory/InventoryView;Lorg/bukkit/block/Block;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/enchantments/EnchantmentOffer;I)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
+        });
+        let val_4 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg3.into().jni_object().clone())
+        });
+        let val_6 = jni::objects::JValueGen::Int(arg5.into());
+        let cls = jni.find_class("org/bukkit/event/enchantment/PrepareItemEnchantEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+                jni::objects::JValueGen::from(val_4),
+                jni::objects::JValueGen::from(val_6),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::enchantment::PrepareItemEnchantEvent::from_raw(&jni, res)
+    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {

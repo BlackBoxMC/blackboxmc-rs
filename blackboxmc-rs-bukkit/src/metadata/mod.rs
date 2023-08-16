@@ -1218,6 +1218,29 @@ impl<'mc> JNIInstantiatable<'mc> for FixedMetadataValue<'mc> {
 }
 
 impl<'mc> FixedMetadataValue<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
+        arg1: jni::objects::JObject<'mc>,
+    ) -> Result<crate::metadata::FixedMetadataValue<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/plugin/Plugin;Ljava/lang/Object;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(arg1);
+        let cls = jni.find_class("org/bukkit/metadata/FixedMetadataValue");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::metadata::FixedMetadataValue::from_raw(&jni, res)
+    }
     //
 
     pub fn invalidate(&self) -> Result<(), Box<dyn std::error::Error>> {

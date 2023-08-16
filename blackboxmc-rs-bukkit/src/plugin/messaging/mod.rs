@@ -229,6 +229,44 @@ impl<'mc> JNIInstantiatable<'mc> for PluginMessageListenerRegistration<'mc> {
 }
 
 impl<'mc> PluginMessageListenerRegistration<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::plugin::messaging::Messenger<'mc>>,
+        arg1: impl Into<crate::plugin::Plugin<'mc>>,
+        arg2: impl Into<String>,
+        arg3: impl Into<crate::plugin::messaging::PluginMessageListener<'mc>>,
+    ) -> Result<
+        crate::plugin::messaging::PluginMessageListenerRegistration<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("(Lorg/bukkit/plugin/messaging/Messenger;Lorg/bukkit/plugin/Plugin;Ljava/lang/String;Lorg/bukkit/plugin/messaging/PluginMessageListener;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg2.into())?,
+        ));
+        let val_4 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg3.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/plugin/messaging/PluginMessageListenerRegistration");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+                jni::objects::JValueGen::from(val_4),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::plugin::messaging::PluginMessageListenerRegistration::from_raw(&jni, res)
+    }
     //
 
     pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {

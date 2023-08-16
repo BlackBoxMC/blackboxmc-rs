@@ -41,6 +41,24 @@ impl<'mc> JNIInstantiatable<'mc> for ReloadCommand<'mc> {
 }
 
 impl<'mc> ReloadCommand<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<crate::command::defaults::ReloadCommand<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        let cls = jni.find_class("org/bukkit/command/defaults/ReloadCommand");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::command::defaults::ReloadCommand::from_raw(&jni, res)
+    }
     //
 
     pub fn tab_complete_with_command_sender(
@@ -217,39 +235,6 @@ impl<'mc> ReloadCommand<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setUsage",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::command::Command::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
-    pub fn set_aliases(
-        &self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)Lorg/bukkit/command/Command;");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setAliases",
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
@@ -648,6 +633,24 @@ impl<'mc> JNIInstantiatable<'mc> for TimingsCommand<'mc> {
 }
 
 impl<'mc> TimingsCommand<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<crate::command::defaults::TimingsCommand<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        let cls = jni.find_class("org/bukkit/command/defaults/TimingsCommand");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::command::defaults::TimingsCommand::from_raw(&jni, res)
+    }
     //
 
     pub fn tab_complete_with_command_sender(
@@ -844,39 +847,6 @@ impl<'mc> TimingsCommand<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setUsage",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::command::Command::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
-    pub fn set_aliases(
-        &self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)Lorg/bukkit/command/Command;");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setAliases",
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
@@ -1429,39 +1399,6 @@ impl<'mc> BukkitCommand<'mc> {
     }
     //
 
-    pub fn set_aliases(
-        &self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)Lorg/bukkit/command/Command;");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setAliases",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::command::Command::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
     pub fn set_permission_message(
         &self,
         arg0: impl Into<String>,
@@ -1879,6 +1816,24 @@ impl<'mc> JNIInstantiatable<'mc> for VersionCommand<'mc> {
 }
 
 impl<'mc> VersionCommand<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<crate::command::defaults::VersionCommand<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        let cls = jni.find_class("org/bukkit/command/defaults/VersionCommand");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::command::defaults::VersionCommand::from_raw(&jni, res)
+    }
     //
 
     pub fn tab_complete_with_command_sender(
@@ -2055,39 +2010,6 @@ impl<'mc> VersionCommand<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setUsage",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::command::Command::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
-    pub fn set_aliases(
-        &self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)Lorg/bukkit/command/Command;");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setAliases",
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
@@ -2679,39 +2601,6 @@ impl<'mc> HelpCommand<'mc> {
     }
     //
 
-    pub fn set_aliases(
-        &self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)Lorg/bukkit/command/Command;");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setAliases",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::command::Command::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
     pub fn set_permission_message(
         &self,
         arg0: impl Into<String>,
@@ -3100,6 +2989,24 @@ impl<'mc> JNIInstantiatable<'mc> for PluginsCommand<'mc> {
 }
 
 impl<'mc> PluginsCommand<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<crate::command::defaults::PluginsCommand<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        let cls = jni.find_class("org/bukkit/command/defaults/PluginsCommand");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::command::defaults::PluginsCommand::from_raw(&jni, res)
+    }
     //
 
     pub fn tab_complete_with_command_sender(
@@ -3276,39 +3183,6 @@ impl<'mc> PluginsCommand<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setUsage",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::command::Command::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
-    pub fn set_aliases(
-        &self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<crate::command::Command<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)Lorg/bukkit/command/Command;");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setAliases",
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );

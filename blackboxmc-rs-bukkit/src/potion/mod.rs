@@ -411,6 +411,38 @@ impl<'mc> JNIInstantiatable<'mc> for PotionData<'mc> {
 }
 
 impl<'mc> PotionData<'mc> {
+    pub fn new_with_potion_type(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::potion::PotionType<'mc>>,
+        arg1: std::option::Option<bool>,
+        arg2: std::option::Option<bool>,
+    ) -> Result<crate::potion::PotionData<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/potion/PotionType;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Z";
+            // 2
+            let val_2 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "Z";
+            // 2
+            let val_3 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_3);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/potion/PotionData");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::potion::PotionData::from_raw(&jni, res)
+    }
     //
 
     pub fn is_upgraded(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -603,6 +635,49 @@ impl<'mc> JNIInstantiatable<'mc> for Potion<'mc> {
 }
 
 impl<'mc> Potion<'mc> {
+    //['since', '']
+
+    //['forRemoval', 'false']
+
+    #[deprecated]
+    pub fn new_with_potion_type(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::potion::PotionType<'mc>>,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<bool>,
+        arg3: std::option::Option<bool>,
+    ) -> Result<crate::potion::Potion<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/potion/PotionType;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "Z";
+            // 2
+            let val_3 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_3);
+        }
+        if let Some(a) = arg3 {
+            sig += "Z";
+            // 2
+            let val_4 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_4);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/potion/Potion");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::potion::Potion::from_raw(&jni, res)
+    }
     //
 
     /// <span class="deprecated-label">Deprecated.</span>
@@ -1059,6 +1134,57 @@ impl<'mc> JNIInstantiatable<'mc> for PotionEffect<'mc> {
 }
 
 impl<'mc> PotionEffect<'mc> {
+    pub fn new_with_potion_effect_type(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::potion::PotionEffectType<'mc>>,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<i32>,
+        arg3: std::option::Option<bool>,
+        arg4: std::option::Option<bool>,
+        arg5: std::option::Option<bool>,
+    ) -> Result<crate::potion::PotionEffect<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/potion/PotionEffectType;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "I";
+            let val_3 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_3);
+        }
+        if let Some(a) = arg3 {
+            sig += "Z";
+            // 2
+            let val_4 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_4);
+        }
+        if let Some(a) = arg4 {
+            sig += "Z";
+            // 2
+            let val_5 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_5);
+        }
+        if let Some(a) = arg5 {
+            sig += "Z";
+            // 2
+            let val_6 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_6);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/potion/PotionEffect");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::potion::PotionEffect::from_raw(&jni, res)
+    }
     //
 
     pub fn serialize(

@@ -353,34 +353,6 @@ impl<'mc> BlockDataMeta<'mc> {
     }
     //
 
-    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
@@ -1060,34 +1032,6 @@ impl<'mc> ArmorMeta<'mc> {
             );
         }
         Ok(new_vec)
-    }
-    //
-
-    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     //
 
@@ -1773,34 +1717,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
             );
         }
         Ok(new_vec)
-    }
-    //
-
-    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     //
 
@@ -2570,34 +2486,6 @@ impl<'mc> SkullMeta<'mc> {
     }
     //
 
-    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
@@ -3287,34 +3175,6 @@ impl<'mc> CompassMeta<'mc> {
             );
         }
         Ok(new_vec)
-    }
-    //
-
-    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     //
 
@@ -4058,34 +3918,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     }
     //
 
-    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
@@ -4593,37 +4425,6 @@ impl<'mc> CrossbowMeta<'mc> {
     }
     //
 
-    pub fn set_charged_projectiles(
-        &self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(v.into().jni_object().clone())
-            });
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Lorg/bukkit/inventory/crate::inventory::ItemStack)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setChargedProjectiles",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn add_charged_projectile(
         &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
@@ -4778,34 +4579,6 @@ impl<'mc> CrossbowMeta<'mc> {
             );
         }
         Ok(new_vec)
-    }
-    //
-
-    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     //
 
@@ -5429,34 +5202,6 @@ impl<'mc> ItemMeta<'mc> {
             );
         }
         Ok(new_vec)
-    }
-    //
-
-    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     //
 
@@ -6147,34 +5892,6 @@ impl<'mc> Repairable<'mc> {
     }
     //
 
-    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
@@ -6713,37 +6430,6 @@ impl<'mc> BannerMeta<'mc> {
     }
     //
 
-    pub fn set_patterns(
-        &self,
-        arg0: Vec<impl Into<crate::block::banner::Pattern<'mc>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(v.into().jni_object().clone())
-            });
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Lorg/bukkit/block/banner/crate::block::banner::Pattern)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setPatterns",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn add_pattern(
         &self,
         arg0: impl Into<crate::block::banner::Pattern<'mc>>,
@@ -6975,34 +6661,6 @@ impl<'mc> BannerMeta<'mc> {
             );
         }
         Ok(new_vec)
-    }
-    //
-
-    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     //
 
@@ -7538,37 +7196,6 @@ impl<'mc> BundleMeta<'mc> {
     }
     //
 
-    pub fn set_items(
-        &self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(v.into().jni_object().clone())
-            });
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Lorg/bukkit/inventory/crate::inventory::ItemStack)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setItems",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
@@ -7704,34 +7331,6 @@ impl<'mc> BundleMeta<'mc> {
             );
         }
         Ok(new_vec)
-    }
-    //
-
-    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     //
 
@@ -8416,34 +8015,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
             );
         }
         Ok(new_vec)
-    }
-    //
-
-    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     //
 
@@ -9157,34 +8728,6 @@ impl<'mc> SpawnEggMeta<'mc> {
     }
     //
 
-    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
@@ -9843,34 +9386,6 @@ impl<'mc> Damageable<'mc> {
             );
         }
         Ok(new_vec)
-    }
-    //
-
-    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     //
 
@@ -10603,34 +10118,6 @@ impl<'mc> FireworkMeta<'mc> {
             );
         }
         Ok(new_vec)
-    }
-    //
-
-    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     //
 
@@ -11467,34 +10954,6 @@ impl<'mc> PotionMeta<'mc> {
     }
     //
 
-    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
@@ -12145,34 +11604,6 @@ impl<'mc> BlockStateMeta<'mc> {
             );
         }
         Ok(new_vec)
-    }
-    //
-
-    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     //
 
@@ -13067,34 +12498,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     }
     //
 
-    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
@@ -13587,37 +12990,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     }
     //
 
-    pub fn set_recipes(
-        &self,
-        arg0: Vec<impl Into<crate::NamespacedKey<'mc>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(v.into().jni_object().clone())
-            });
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Lorg/bukkit/crate::NamespacedKey)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setRecipes",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn add_recipe(
         &self,
         arg0: Vec<impl Into<crate::NamespacedKey<'mc>>>,
@@ -13788,34 +13160,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
             );
         }
         Ok(new_vec)
-    }
-    //
-
-    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     //
 
@@ -14638,34 +13982,6 @@ impl<'mc> MapMeta<'mc> {
     }
     //
 
-    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
@@ -15191,38 +14507,6 @@ impl<'mc> BookMetaSpigot<'mc> {
     }
     //
 
-    pub fn set_pages_with_list(
-        &self,
-        arg0: Vec<impl Into<blackboxmc_bungee::bungee::api::chat::BaseComponent<'mc>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Ljava/util/List;";
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(v.into().jni_object().clone())
-            });
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Lnet/md_5/bungee/api/chat/blackboxmc_bungee::bungee::api::chat::BaseComponent)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        args.push(val_1);
-        sig += ")V";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "setPages", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn add_page(
         &self,
         arg0: Vec<impl Into<blackboxmc_bungee::bungee::api::chat::BaseComponent<'mc>>>,
@@ -15570,34 +14854,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
             );
         }
         Ok(new_vec)
-    }
-    //
-
-    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     //
 
@@ -16268,34 +15524,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
             );
         }
         Ok(new_vec)
-    }
-    //
-
-    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     //
 
@@ -17066,34 +16294,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
             );
         }
         Ok(new_vec)
-    }
-    //
-
-    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     //
 
@@ -17984,34 +17184,6 @@ impl<'mc> BookMeta<'mc> {
     }
     //
 
-    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
@@ -18669,34 +17841,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
             );
         }
         Ok(new_vec)
-    }
-    //
-
-    pub fn set_lore(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLore",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     //
 

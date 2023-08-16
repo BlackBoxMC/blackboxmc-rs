@@ -85,7 +85,6 @@ def library_name_format(crate_name,library):
     l2 = library_resolves[library]
     st1 = re.sub("\/src\/(.*)","::\\1",l1.replace("-","_").replace("_rs_","_"))
     st2 = re.sub("\/src\/(.*)","",l2.replace("-","_").replace("_rs_","_"))
-    print("OK",st2)
     if st2.replace("::","") in st1:
         st1 = st1.replace(st2,"crate")
     return st1
@@ -294,6 +293,9 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
                             "for v in "+new_arg+"{"
                         ]
 
+                        if 0 not in type["generics"]:
+                            return None
+                        
                         t1 = java_type_from_rust(type["generics"][0])["class_name"]
 
                         co = code_format({
@@ -409,7 +411,7 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
 
     # primitive translation should not be done inside the java.lang bindings.
     skip_primitives = False
-    if "lang" not in library:
+    if "lang" in library:
         if is_constructor:
             skip_primitives = True
         else:
@@ -649,8 +651,9 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
     if method is not None and not is_constructor:
         if returning:
             if "genericReturnType" not in method["method"]:
-                return None 
-            parameter_type = method["method"]["genericReturnType"]
+                parameter_type = method["method"]["name"]
+            else:
+                parameter_type = method["method"]["genericReturnType"]
         else:
             if i <= len(method["method"]["genericParameterTypes"]):
                 parameter_type = method["method"]["genericParameterTypes"][i]
@@ -680,7 +683,7 @@ def java_type_to_rust(argname, ty, method, i, returning, library, is_constructor
 
     type_name_original = ty.replace("Java","")
     skip_primitives = False
-    if "lang" not in library:
+    if "lang" in library:
         if is_constructor:
             skip_primitives = True
         else:

@@ -7609,6 +7609,29 @@ impl<'mc> JNIInstantiatable<'mc> for ParticleDustOptions<'mc> {
 }
 
 impl<'mc> ParticleDustOptions<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::Color<'mc>>,
+        arg1: f32,
+    ) -> Result<crate::ParticleDustOptions<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/Color;F)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Float(arg1.into());
+        let cls = jni.find_class("org/bukkit/Particle$DustOptions");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::ParticleDustOptions::from_raw(&jni, res)
+    }
     //
 
     pub fn color(&self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
@@ -7780,6 +7803,34 @@ impl<'mc> JNIInstantiatable<'mc> for ParticleDustTransition<'mc> {
 }
 
 impl<'mc> ParticleDustTransition<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::Color<'mc>>,
+        arg1: impl Into<crate::Color<'mc>>,
+        arg2: f32,
+    ) -> Result<crate::ParticleDustTransition<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/Color;Lorg/bukkit/Color;F)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        let val_3 = jni::objects::JValueGen::Float(arg2.into());
+        let cls = jni.find_class("org/bukkit/Particle$DustTransition");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::ParticleDustTransition::from_raw(&jni, res)
+    }
     //
 
     pub fn to_color(&self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
@@ -18433,6 +18484,24 @@ impl<'mc> JNIInstantiatable<'mc> for VibrationDestinationBlockDestination<'mc> {
 }
 
 impl<'mc> VibrationDestinationBlockDestination<'mc> {
+    pub fn new_with_block(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::block::Block<'mc>>,
+    ) -> Result<crate::VibrationDestinationBlockDestination<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/block/Block;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/Vibration$Destination$BlockDestination");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::VibrationDestinationBlockDestination::from_raw(&jni, res)
+    }
     //
 
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
@@ -19097,6 +19166,37 @@ impl<'mc> JNIInstantiatable<'mc> for Note<'mc> {
 }
 
 impl<'mc> Note<'mc> {
+    pub fn new_with_int(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: i32,
+        arg1: std::option::Option<impl Into<crate::NoteTone<'mc>>>,
+        arg2: std::option::Option<bool>,
+    ) -> Result<crate::Note<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "I";
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/Note$Tone;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "Z";
+            // 2
+            let val_3 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_3);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/Note");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::Note::from_raw(&jni, res)
+    }
     //
 
     pub fn is_sharped(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -23500,6 +23600,24 @@ impl<'mc> JNIInstantiatable<'mc> for WorldCreator<'mc> {
 }
 
 impl<'mc> WorldCreator<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<crate::WorldCreator<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        let cls = jni.find_class("org/bukkit/WorldCreator");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::WorldCreator::from_raw(&jni, res)
+    }
     //
 
     pub fn environment_with_worldenvironment(
@@ -33861,6 +33979,30 @@ impl<'mc> JNIInstantiatable<'mc> for NamespacedKey<'mc> {
 }
 
 impl<'mc> NamespacedKey<'mc> {
+    pub fn new_with_plugin(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
+        arg1: impl Into<String>,
+    ) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/plugin/Plugin;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/NamespacedKey");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::NamespacedKey::from_raw(&jni, res)
+    }
     //
 
     pub fn minecraft(
@@ -35542,6 +35684,34 @@ impl<'mc> JNIInstantiatable<'mc> for Vibration<'mc> {
 }
 
 impl<'mc> Vibration<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::Location<'mc>>,
+        arg1: impl Into<crate::VibrationDestination<'mc>>,
+        arg2: i32,
+    ) -> Result<crate::Vibration<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/Location;Lorg/bukkit/Vibration$Destination;I)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        let val_3 = jni::objects::JValueGen::Int(arg2.into());
+        let cls = jni.find_class("org/bukkit/Vibration");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::Vibration::from_raw(&jni, res)
+    }
     //
 
     pub fn origin(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
@@ -45795,6 +45965,24 @@ impl<'mc> JNIInstantiatable<'mc> for VibrationDestinationEntityDestination<'mc> 
 }
 
 impl<'mc> VibrationDestinationEntityDestination<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<crate::VibrationDestinationEntityDestination<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/entity/Entity;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/Vibration$Destination$EntityDestination");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::VibrationDestinationEntityDestination::from_raw(&jni, res)
+    }
     //
 
     pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
@@ -57836,6 +58024,48 @@ impl<'mc> JNIInstantiatable<'mc> for Location<'mc> {
 }
 
 impl<'mc> Location<'mc> {
+    pub fn new_with_world(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::World<'mc>>,
+        arg1: f64,
+        arg2: f64,
+        arg3: f64,
+        arg4: std::option::Option<f32>,
+        arg5: std::option::Option<f32>,
+    ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/World;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "D";
+        let val_2 = jni::objects::JValueGen::Double(arg1.into());
+        args.push(val_2);
+        sig += "D";
+        let val_3 = jni::objects::JValueGen::Double(arg2.into());
+        args.push(val_3);
+        sig += "D";
+        let val_4 = jni::objects::JValueGen::Double(arg3.into());
+        args.push(val_4);
+        if let Some(a) = arg4 {
+            sig += "F";
+            let val_5 = jni::objects::JValueGen::Float(a.into());
+            args.push(val_5);
+        }
+        if let Some(a) = arg5 {
+            sig += "F";
+            let val_6 = jni::objects::JValueGen::Float(a.into());
+            args.push(val_6);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/Location");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::Location::from_raw(&jni, res)
+    }
     //@NotNull
 
     /// Performs scalar multiplication, multiplying all components with a scalar. Not world-aware.

@@ -303,6 +303,32 @@ impl<'mc> JNIInstantiatable<'mc> for Pattern<'mc> {
 }
 
 impl<'mc> Pattern<'mc> {
+    pub fn new_with_dye_color(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::DyeColor<'mc>>,
+        arg1: std::option::Option<impl Into<crate::block::banner::PatternType<'mc>>>,
+    ) -> Result<crate::block::banner::Pattern<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/DyeColor;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/block/banner/PatternType;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/block/banner/Pattern");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::block::banner::Pattern::from_raw(&jni, res)
+    }
     //
 
     pub fn serialize(

@@ -45,6 +45,32 @@ impl<'mc> JNIInstantiatable<'mc> for RemoteServerCommandEvent<'mc> {
 }
 
 impl<'mc> RemoteServerCommandEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<String>,
+    ) -> Result<crate::event::server::RemoteServerCommandEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("(Lorg/bukkit/command/CommandSender;Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg1.into())?,
+        ));
+        let cls = jni.find_class("org/bukkit/event/server/RemoteServerCommandEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::server::RemoteServerCommandEvent::from_raw(&jni, res)
+    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -315,6 +341,24 @@ impl<'mc> JNIInstantiatable<'mc> for PluginEnableEvent<'mc> {
 }
 
 impl<'mc> PluginEnableEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
+    ) -> Result<crate::event::server::PluginEnableEvent<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/plugin/Plugin;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/event/server/PluginEnableEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::server::PluginEnableEvent::from_raw(&jni, res)
+    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -546,6 +590,31 @@ impl<'mc> JNIInstantiatable<'mc> for ServerCommandEvent<'mc> {
 }
 
 impl<'mc> ServerCommandEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<String>,
+    ) -> Result<crate::event::server::ServerCommandEvent<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/command/CommandSender;Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg1.into())?,
+        ));
+        let cls = jni.find_class("org/bukkit/event/server/ServerCommandEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::server::ServerCommandEvent::from_raw(&jni, res)
+    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -828,6 +897,24 @@ impl<'mc> JNIInstantiatable<'mc> for ServiceUnregisterEvent<'mc> {
 }
 
 impl<'mc> ServiceUnregisterEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::plugin::RegisteredServiceProvider<'mc>>,
+    ) -> Result<crate::event::server::ServiceUnregisterEvent<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/plugin/RegisteredServiceProvider;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/event/server/ServiceUnregisterEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::server::ServiceUnregisterEvent::from_raw(&jni, res)
+    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -1049,6 +1136,37 @@ impl<'mc> JNIInstantiatable<'mc> for BroadcastMessageEvent<'mc> {
 }
 
 impl<'mc> BroadcastMessageEvent<'mc> {
+    pub fn new_with_boolean(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: bool,
+        arg1: impl Into<String>,
+        arg2: std::option::Option<impl Into<blackboxmc_java::util::JavaSet<'mc>>>,
+    ) -> Result<crate::event::server::BroadcastMessageEvent<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Z";
+        // 3
+        let val_1 = jni::objects::JValueGen::Bool(arg0.into());
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        if let Some(a) = arg2 {
+            sig += "Ljava/util/Set;";
+            let val_3 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_3);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/event/server/BroadcastMessageEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::server::BroadcastMessageEvent::from_raw(&jni, res)
+    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -1328,6 +1446,25 @@ impl<'mc> JNIInstantiatable<'mc> for ServerEvent<'mc> {
 }
 
 impl<'mc> ServerEvent<'mc> {
+    pub fn new_with_boolean(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<bool>,
+    ) -> Result<crate::event::server::ServerEvent<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Z";
+            // 1
+            let val_1 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_1);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/event/server/ServerEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::server::ServerEvent::from_raw(&jni, res)
+    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -1623,37 +1760,6 @@ impl<'mc> TabCompleteEvent<'mc> {
     }
     //
 
-    pub fn set_completions(
-        &self,
-        arg0: Vec<impl Into<String>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(v.into())?,
-            ));
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Ljava/lang/String)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setCompletions",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
@@ -1838,6 +1944,24 @@ impl<'mc> JNIInstantiatable<'mc> for PluginDisableEvent<'mc> {
 }
 
 impl<'mc> PluginDisableEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
+    ) -> Result<crate::event::server::PluginDisableEvent<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/plugin/Plugin;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/event/server/PluginDisableEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::server::PluginDisableEvent::from_raw(&jni, res)
+    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -2055,6 +2179,24 @@ impl<'mc> JNIInstantiatable<'mc> for MapInitializeEvent<'mc> {
 }
 
 impl<'mc> MapInitializeEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::map::MapView<'mc>>,
+    ) -> Result<crate::event::server::MapInitializeEvent<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/map/MapView;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/event/server/MapInitializeEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::server::MapInitializeEvent::from_raw(&jni, res)
+    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -2269,6 +2411,24 @@ impl<'mc> JNIInstantiatable<'mc> for ServiceEvent<'mc> {
 }
 
 impl<'mc> ServiceEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::plugin::RegisteredServiceProvider<'mc>>,
+    ) -> Result<crate::event::server::ServiceEvent<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/plugin/RegisteredServiceProvider;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/event/server/ServiceEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::server::ServiceEvent::from_raw(&jni, res)
+    }
     //
 
     pub fn provider(
@@ -2586,6 +2746,24 @@ impl<'mc> JNIInstantiatable<'mc> for ServerLoadEvent<'mc> {
 }
 
 impl<'mc> ServerLoadEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::event::server::ServerLoadEventLoadType<'mc>>,
+    ) -> Result<crate::event::server::ServerLoadEvent<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/event/server/ServerLoadEvent$LoadType;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/event/server/ServerLoadEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::server::ServerLoadEvent::from_raw(&jni, res)
+    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -2820,6 +2998,24 @@ impl<'mc> JNIInstantiatable<'mc> for ServiceRegisterEvent<'mc> {
 }
 
 impl<'mc> ServiceRegisterEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::plugin::RegisteredServiceProvider<'mc>>,
+    ) -> Result<crate::event::server::ServiceRegisterEvent<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/plugin/RegisteredServiceProvider;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/event/server/ServiceRegisterEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::server::ServiceRegisterEvent::from_raw(&jni, res)
+    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -3142,6 +3338,24 @@ impl<'mc> JNIInstantiatable<'mc> for PluginEvent<'mc> {
 }
 
 impl<'mc> PluginEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
+    ) -> Result<crate::event::server::PluginEvent<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/plugin/Plugin;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/event/server/PluginEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::server::PluginEvent::from_raw(&jni, res)
+    }
     //
 
     pub fn plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
@@ -3348,6 +3562,40 @@ impl<'mc> JNIInstantiatable<'mc> for ServerListPingEvent<'mc> {
 }
 
 impl<'mc> ServerListPingEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+        arg1: jni::objects::JObject<'mc>,
+        arg2: impl Into<String>,
+        arg3: i32,
+        arg4: i32,
+    ) -> Result<crate::event::server::ServerListPingEvent<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;Ljava/net/InetAddress;Ljava/lang/String;II)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        let val_2 = jni::objects::JValueGen::Object(arg1);
+        let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg2.into())?,
+        ));
+        let val_4 = jni::objects::JValueGen::Int(arg3.into());
+        let val_5 = jni::objects::JValueGen::Int(arg4.into());
+        let cls = jni.find_class("org/bukkit/event/server/ServerListPingEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+                jni::objects::JValueGen::from(val_4),
+                jni::objects::JValueGen::from(val_5),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::server::ServerListPingEvent::from_raw(&jni, res)
+    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {

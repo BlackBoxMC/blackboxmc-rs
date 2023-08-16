@@ -18992,37 +18992,6 @@ impl<'mc> Banner<'mc> {
     }
     //
 
-    pub fn set_patterns(
-        &self,
-        arg0: Vec<impl Into<crate::block::banner::Pattern<'mc>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(v.into().jni_object().clone())
-            });
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Lorg/bukkit/block/banner/crate::block::banner::Pattern)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setPatterns",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn add_pattern(
         &self,
         arg0: impl Into<crate::block::banner::Pattern<'mc>>,
@@ -25542,6 +25511,24 @@ impl<'mc> JNIInstantiatable<'mc> for DoubleChest<'mc> {
 }
 
 impl<'mc> DoubleChest<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::inventory::DoubleChestInventory<'mc>>,
+    ) -> Result<crate::block::DoubleChest<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/inventory/DoubleChestInventory;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/block/DoubleChest");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::block::DoubleChest::from_raw(&jni, res)
+    }
     //
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {

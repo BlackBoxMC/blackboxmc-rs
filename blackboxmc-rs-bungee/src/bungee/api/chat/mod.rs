@@ -41,6 +41,26 @@ impl<'mc> JNIInstantiatable<'mc> for TextComponent<'mc> {
 }
 
 impl<'mc> TextComponent<'mc> {
+    pub fn new_with_text_component(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<impl Into<crate::bungee::api::chat::TextComponent<'mc>>>,
+    ) -> Result<crate::bungee::api::chat::TextComponent<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Lnet/md_5/bungee/api/chat/TextComponent;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
+        sig += ")V";
+        let cls = jni.find_class("net/md_5/bungee/api/chat/TextComponent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::bungee::api::chat::TextComponent::from_raw(&jni, res)
+    }
     //
 
     //
@@ -634,37 +654,6 @@ impl<'mc> TextComponent<'mc> {
     }
     //
 
-    pub fn set_extra(
-        &self,
-        arg0: Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(v.into().jni_object().clone())
-            });
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Lnet/md_5/bungee/api/chat/crate::bungee::api::chat::BaseComponent)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setExtra",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn extra(
         &self,
     ) -> Result<Vec<crate::bungee::api::chat::BaseComponent<'mc>>, Box<dyn std::error::Error>> {
@@ -1071,6 +1060,25 @@ impl<'mc> JNIInstantiatable<'mc> for HoverEvent<'mc> {
 }
 
 impl<'mc> HoverEvent<'mc> {
+    pub fn new_with_hover_eventaction(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::bungee::api::chat::HoverEventAction<'mc>>,
+        arg1: Vec<impl Into<crate::bungee::api::chat::hover::content::Content<'mc>>>,
+    ) -> Result<crate::bungee::api::chat::HoverEvent<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lnet/md_5/bungee/api/chat/HoverEvent$Action;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")V";
+        let cls = jni.find_class("net/md_5/bungee/api/chat/HoverEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::bungee::api::chat::HoverEvent::from_raw(&jni, res)
+    }
     //
 
     pub fn set_legacy(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
@@ -1832,37 +1840,6 @@ impl<'mc> BaseComponent<'mc> {
     }
     //
 
-    pub fn set_extra(
-        &self,
-        arg0: Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(v.into().jni_object().clone())
-            });
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Lnet/md_5/bungee/api/chat/crate::bungee::api::chat::BaseComponent)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setExtra",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn extra(
         &self,
     ) -> Result<Vec<crate::bungee::api::chat::BaseComponent<'mc>>, Box<dyn std::error::Error>> {
@@ -2086,6 +2063,24 @@ impl<'mc> JNIInstantiatable<'mc> for SelectorComponent<'mc> {
 }
 
 impl<'mc> SelectorComponent<'mc> {
+    pub fn new_with_selector_component(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::bungee::api::chat::SelectorComponent<'mc>>,
+    ) -> Result<crate::bungee::api::chat::SelectorComponent<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lnet/md_5/bungee/api/chat/SelectorComponent;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")V";
+        let cls = jni.find_class("net/md_5/bungee/api/chat/SelectorComponent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::bungee::api::chat::SelectorComponent::from_raw(&jni, res)
+    }
     //
 
     pub fn selector(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2677,37 +2672,6 @@ impl<'mc> SelectorComponent<'mc> {
     }
     //
 
-    pub fn set_extra(
-        &self,
-        arg0: Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(v.into().jni_object().clone())
-            });
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Lnet/md_5/bungee/api/chat/crate::bungee::api::chat::BaseComponent)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setExtra",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn extra(
         &self,
     ) -> Result<Vec<crate::bungee::api::chat::BaseComponent<'mc>>, Box<dyn std::error::Error>> {
@@ -2882,6 +2846,40 @@ impl<'mc> JNIInstantiatable<'mc> for ScoreComponent<'mc> {
 }
 
 impl<'mc> ScoreComponent<'mc> {
+    pub fn new_with_string(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+        arg1: std::option::Option<impl Into<String>>,
+        arg2: std::option::Option<impl Into<String>>,
+    ) -> Result<crate::bungee::api::chat::ScoreComponent<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Ljava/lang/String;";
+            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                jni.new_string(a.into())?,
+            ));
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "Ljava/lang/String;";
+            let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                jni.new_string(a.into())?,
+            ));
+            args.push(val_3);
+        }
+        sig += ")V";
+        let cls = jni.find_class("net/md_5/bungee/api/chat/ScoreComponent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::bungee::api::chat::ScoreComponent::from_raw(&jni, res)
+    }
     //
 
     pub fn set_objective(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
@@ -3533,37 +3531,6 @@ impl<'mc> ScoreComponent<'mc> {
     }
     //
 
-    pub fn set_extra(
-        &self,
-        arg0: Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(v.into().jni_object().clone())
-            });
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Lnet/md_5/bungee/api/chat/crate::bungee::api::chat::BaseComponent)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setExtra",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn extra(
         &self,
     ) -> Result<Vec<crate::bungee::api::chat::BaseComponent<'mc>>, Box<dyn std::error::Error>> {
@@ -3862,6 +3829,31 @@ impl<'mc> JNIInstantiatable<'mc> for ClickEvent<'mc> {
 }
 
 impl<'mc> ClickEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::bungee::api::chat::ClickEventAction<'mc>>,
+        arg1: impl Into<String>,
+    ) -> Result<crate::bungee::api::chat::ClickEvent<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lnet/md_5/bungee/api/chat/ClickEvent$Action;Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg1.into())?,
+        ));
+        let cls = jni.find_class("net/md_5/bungee/api/chat/ClickEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::bungee::api::chat::ClickEvent::from_raw(&jni, res)
+    }
     //
 
     pub fn action(
@@ -4312,36 +4304,27 @@ impl<'mc> JNIInstantiatable<'mc> for TranslatableComponent<'mc> {
 }
 
 impl<'mc> TranslatableComponent<'mc> {
-    //
-
-    pub fn set_with(
-        &self,
-        arg0: Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(v.into().jni_object().clone())
-            });
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Lnet/md_5/bungee/api/chat/crate::bungee::api::chat::BaseComponent)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
+    pub fn new_with_string(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<impl Into<String>>,
+        arg1: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
+    ) -> Result<crate::bungee::api::chat::TranslatableComponent<'mc>, Box<dyn std::error::Error>>
+    {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/lang/String;";
+            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                jni.new_string(a.into())?,
+            ));
+            args.push(val_1);
         }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setWith",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
+        sig += ")V";
+        let cls = jni.find_class("net/md_5/bungee/api/chat/TranslatableComponent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::bungee::api::chat::TranslatableComponent::from_raw(&jni, res)
     }
     //
 
@@ -5020,37 +5003,6 @@ impl<'mc> TranslatableComponent<'mc> {
     }
     //
 
-    pub fn set_extra(
-        &self,
-        arg0: Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(v.into().jni_object().clone())
-            });
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Lnet/md_5/bungee/api/chat/crate::bungee::api::chat::BaseComponent)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setExtra",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn extra(
         &self,
     ) -> Result<Vec<crate::bungee::api::chat::BaseComponent<'mc>>, Box<dyn std::error::Error>> {
@@ -5480,6 +5432,26 @@ impl<'mc> JNIInstantiatable<'mc> for KeybindComponent<'mc> {
 }
 
 impl<'mc> KeybindComponent<'mc> {
+    pub fn new_with_string(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<impl Into<String>>,
+    ) -> Result<crate::bungee::api::chat::KeybindComponent<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/lang/String;";
+            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                jni.new_string(a.into())?,
+            ));
+            args.push(val_1);
+        }
+        sig += ")V";
+        let cls = jni.find_class("net/md_5/bungee/api/chat/KeybindComponent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::bungee::api::chat::KeybindComponent::from_raw(&jni, res)
+    }
     //
 
     pub fn keybind(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -6071,37 +6043,6 @@ impl<'mc> KeybindComponent<'mc> {
     }
     //
 
-    pub fn set_extra(
-        &self,
-        arg0: Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(v.into().jni_object().clone())
-            });
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Lnet/md_5/bungee/api/chat/crate::bungee::api::chat::BaseComponent)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setExtra",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn extra(
         &self,
     ) -> Result<Vec<crate::bungee::api::chat::BaseComponent<'mc>>, Box<dyn std::error::Error>> {
@@ -6400,6 +6341,26 @@ impl<'mc> JNIInstantiatable<'mc> for ComponentBuilder<'mc> {
 }
 
 impl<'mc> ComponentBuilder<'mc> {
+    pub fn new_with_component_builder(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<impl Into<crate::bungee::api::chat::ComponentBuilder<'mc>>>,
+    ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Lnet/md_5/bungee/api/chat/ComponentBuilder;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
+        sig += ")V";
+        let cls = jni.find_class("net/md_5/bungee/api/chat/ComponentBuilder");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::bungee::api::chat::ComponentBuilder::from_raw(&jni, res)
+    }
     //
 
     pub fn font(

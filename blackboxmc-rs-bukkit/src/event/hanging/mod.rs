@@ -172,6 +172,31 @@ impl<'mc> JNIInstantiatable<'mc> for HangingBreakEvent<'mc> {
 }
 
 impl<'mc> HangingBreakEvent<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::entity::Hanging<'mc>>,
+        arg1: impl Into<crate::event::hanging::HangingBreakEventRemoveCause<'mc>>,
+    ) -> Result<crate::event::hanging::HangingBreakEvent<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/entity/Hanging;Lorg/bukkit/event/hanging/HangingBreakEvent$RemoveCause;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/event/hanging/HangingBreakEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::hanging::HangingBreakEvent::from_raw(&jni, res)
+    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
@@ -451,6 +476,41 @@ impl<'mc> JNIInstantiatable<'mc> for HangingBreakByEntityEvent<'mc> {
 }
 
 impl<'mc> HangingBreakByEntityEvent<'mc> {
+    pub fn new_with_hanging(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::entity::Hanging<'mc>>,
+        arg1: impl Into<crate::entity::Entity<'mc>>,
+        arg2: std::option::Option<
+            impl Into<crate::event::hanging::HangingBreakEventRemoveCause<'mc>>,
+        >,
+    ) -> Result<crate::event::hanging::HangingBreakByEntityEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Hanging;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
+        if let Some(a) = arg2 {
+            sig += "Lorg/bukkit/event/hanging/HangingBreakEvent$RemoveCause;";
+            let val_3 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_3);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/event/hanging/HangingBreakByEntityEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::hanging::HangingBreakByEntityEvent::from_raw(&jni, res)
+    }
     //
 
     pub fn remover(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
@@ -850,6 +910,56 @@ impl<'mc> JNIInstantiatable<'mc> for HangingPlaceEvent<'mc> {
 }
 
 impl<'mc> HangingPlaceEvent<'mc> {
+    pub fn new_with_hanging(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::entity::Hanging<'mc>>,
+        arg1: impl Into<crate::entity::Player<'mc>>,
+        arg2: impl Into<crate::block::Block<'mc>>,
+        arg3: impl Into<crate::block::BlockFace<'mc>>,
+        arg4: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+        arg5: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<crate::event::hanging::HangingPlaceEvent<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Hanging;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Lorg/bukkit/entity/Player;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
+        sig += "Lorg/bukkit/block/Block;";
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
+        });
+        args.push(val_3);
+        sig += "Lorg/bukkit/block/BlockFace;";
+        let val_4 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg3.into().jni_object().clone())
+        });
+        args.push(val_4);
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_5 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg4.into().jni_object().clone())
+        });
+        args.push(val_5);
+        if let Some(a) = arg5 {
+            sig += "Lorg/bukkit/inventory/ItemStack;";
+            let val_6 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_6);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/event/hanging/HangingPlaceEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::event::hanging::HangingPlaceEvent::from_raw(&jni, res)
+    }
     //
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {

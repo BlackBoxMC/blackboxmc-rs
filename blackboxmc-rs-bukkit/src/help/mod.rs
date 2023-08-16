@@ -1438,6 +1438,24 @@ impl<'mc> JNIInstantiatable<'mc> for GenericCommandHelpTopic<'mc> {
 }
 
 impl<'mc> GenericCommandHelpTopic<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::command::Command<'mc>>,
+    ) -> Result<crate::help::GenericCommandHelpTopic<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/command/Command;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/help/GenericCommandHelpTopic");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::help::GenericCommandHelpTopic::from_raw(&jni, res)
+    }
     //
 
     pub fn can_see(

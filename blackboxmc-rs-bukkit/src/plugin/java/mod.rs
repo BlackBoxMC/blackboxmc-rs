@@ -43,6 +43,29 @@ impl<'mc> JNIInstantiatable<'mc> for JavaPluginLoader<'mc> {
 }
 
 impl<'mc> JavaPluginLoader<'mc> {
+    //['since', '']
+
+    //['forRemoval', 'false']
+
+    #[deprecated]
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::Server<'mc>>,
+    ) -> Result<crate::plugin::java::JavaPluginLoader<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/Server;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/plugin/java/PluginLoader");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::plugin::java::JavaPluginLoader::from_raw(&jni, res)
+    }
     //
 
     pub fn load_plugin(

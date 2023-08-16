@@ -357,6 +357,24 @@ impl<'mc> JNIInstantiatable<'mc> for ConversationFactory<'mc> {
 }
 
 impl<'mc> ConversationFactory<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
+    ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/plugin/Plugin;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/conversations/ConversationFactory");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::conversations::ConversationFactory::from_raw(&jni, res)
+    }
     //
 
     pub fn with_prefix(
@@ -748,6 +766,32 @@ impl<'mc> JNIInstantiatable<'mc> for InactivityConversationCanceller<'mc> {
 }
 
 impl<'mc> InactivityConversationCanceller<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
+        arg1: i32,
+    ) -> Result<
+        crate::conversations::InactivityConversationCanceller<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("(Lorg/bukkit/plugin/Plugin;I)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let cls = jni.find_class("org/bukkit/conversations/InactivityConversationCanceller");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::conversations::InactivityConversationCanceller::from_raw(&jni, res)
+    }
     //
 
     pub fn set_conversation(
@@ -969,6 +1013,27 @@ impl<'mc> JNIInstantiatable<'mc> for ExactMatchConversationCanceller<'mc> {
 }
 
 impl<'mc> ExactMatchConversationCanceller<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<
+        crate::conversations::ExactMatchConversationCanceller<'mc>,
+        Box<dyn std::error::Error>,
+    > {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        let cls = jni.find_class("org/bukkit/conversations/ExactMatchConversationCanceller");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::conversations::ExactMatchConversationCanceller::from_raw(&jni, res)
+    }
     //
 
     pub fn set_conversation(
@@ -1457,6 +1522,44 @@ impl<'mc> JNIInstantiatable<'mc> for Conversation<'mc> {
 }
 
 impl<'mc> Conversation<'mc> {
+    pub fn new_with_plugin(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
+        arg1: impl Into<crate::conversations::Conversable<'mc>>,
+        arg2: impl Into<crate::conversations::Prompt<'mc>>,
+        arg3: std::option::Option<impl Into<blackboxmc_java::util::JavaMap<'mc>>>,
+    ) -> Result<crate::conversations::Conversation<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/plugin/Plugin;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Lorg/bukkit/conversations/Conversable;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
+        sig += "Lorg/bukkit/conversations/Prompt;";
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
+        });
+        args.push(val_3);
+        if let Some(a) = arg3 {
+            sig += "Ljava/util/Map;";
+            let val_4 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_4);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/conversations/Conversation");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::conversations::Conversation::from_raw(&jni, res)
+    }
     //
 
     pub fn prefix(
@@ -2255,6 +2358,24 @@ impl<'mc> JNIInstantiatable<'mc> for RegexPrompt<'mc> {
 }
 
 impl<'mc> RegexPrompt<'mc> {
+    pub fn new_with_pattern(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<blackboxmc_java::util::regex::JavaPattern<'mc>>,
+    ) -> Result<crate::conversations::RegexPrompt<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/regex/Pattern;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/conversations/RegexPrompt");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::conversations::RegexPrompt::from_raw(&jni, res)
+    }
     //
 
     pub fn blocks_for_input(
@@ -2953,6 +3074,41 @@ impl<'mc> JNIInstantiatable<'mc> for PluginNameConversationPrefix<'mc> {
 }
 
 impl<'mc> PluginNameConversationPrefix<'mc> {
+    pub fn new_with_plugin(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
+        arg1: std::option::Option<impl Into<String>>,
+        arg2: std::option::Option<impl Into<crate::ChatColor<'mc>>>,
+    ) -> Result<crate::conversations::PluginNameConversationPrefix<'mc>, Box<dyn std::error::Error>>
+    {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/plugin/Plugin;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Ljava/lang/String;";
+            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                jni.new_string(a.into())?,
+            ));
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "Lorg/bukkit/ChatColor;";
+            let val_3 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_3);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/conversations/PluginNameConversationPrefix");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::conversations::PluginNameConversationPrefix::from_raw(&jni, res)
+    }
     //
 
     pub fn get_prefix(
@@ -3254,6 +3410,17 @@ impl<'mc> JNIInstantiatable<'mc> for FixedSetPrompt<'mc> {
 }
 
 impl<'mc> FixedSetPrompt<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: Vec<impl Into<String>>,
+    ) -> Result<crate::conversations::FixedSetPrompt<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let cls = jni.find_class("org/bukkit/conversations/FixedSetPrompt");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), vec![]);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::conversations::FixedSetPrompt::from_raw(&jni, res)
+    }
     //
 
     pub fn blocks_for_input(
@@ -3796,6 +3963,33 @@ impl<'mc> JNIInstantiatable<'mc> for ConversationAbandonedEvent<'mc> {
 }
 
 impl<'mc> ConversationAbandonedEvent<'mc> {
+    pub fn new_with_conversation(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::conversations::Conversation<'mc>>,
+        arg1: std::option::Option<impl Into<crate::conversations::ConversationCanceller<'mc>>>,
+    ) -> Result<crate::conversations::ConversationAbandonedEvent<'mc>, Box<dyn std::error::Error>>
+    {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/conversations/Conversation;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/conversations/ConversationCanceller;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/conversations/ConversationAbandonedEvent");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::conversations::ConversationAbandonedEvent::from_raw(&jni, res)
+    }
     //
 
     pub fn graceful_exit(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3994,6 +4188,38 @@ impl<'mc> JNIInstantiatable<'mc> for ConversationContext<'mc> {
 }
 
 impl<'mc> ConversationContext<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
+        arg1: impl Into<crate::conversations::Conversable<'mc>>,
+        arg2: impl Into<blackboxmc_java::util::JavaMap<'mc>>,
+    ) -> Result<crate::conversations::ConversationContext<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from(
+            "(Lorg/bukkit/plugin/Plugin;Lorg/bukkit/conversations/Conversable;Ljava/util/Map;)V",
+        );
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/conversations/ConversationContext");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::conversations::ConversationContext::from_raw(&jni, res)
+    }
     //
 
     pub fn plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
@@ -4225,6 +4451,24 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerNamePrompt<'mc> {
 }
 
 impl<'mc> PlayerNamePrompt<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::plugin::Plugin<'mc>>,
+    ) -> Result<crate::conversations::PlayerNamePrompt<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/plugin/Plugin;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/conversations/PlayerNamePrompt");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::conversations::PlayerNamePrompt::from_raw(&jni, res)
+    }
     //
 
     pub fn blocks_for_input(

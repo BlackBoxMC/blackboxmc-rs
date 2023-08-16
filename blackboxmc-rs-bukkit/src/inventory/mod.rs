@@ -554,6 +554,36 @@ impl<'mc> JNIInstantiatable<'mc> for StonecuttingRecipe<'mc> {
 }
 
 impl<'mc> StonecuttingRecipe<'mc> {
+    pub fn new_with_namespaced_key(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::NamespacedKey<'mc>>,
+        arg1: impl Into<crate::inventory::ItemStack<'mc>>,
+        arg2: impl Into<crate::inventory::RecipeChoice<'mc>>,
+    ) -> Result<crate::inventory::StonecuttingRecipe<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/NamespacedKey;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Lorg/bukkit/inventory/ItemStack;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
+        sig += "Lorg/bukkit/inventory/RecipeChoice;";
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
+        });
+        args.push(val_3);
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/inventory/StonecuttingRecipe");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::inventory::StonecuttingRecipe::from_raw(&jni, res)
+    }
     //
 
     pub fn set_input(
@@ -837,6 +867,61 @@ impl<'mc> JNIInstantiatable<'mc> for FurnaceRecipe<'mc> {
 }
 
 impl<'mc> FurnaceRecipe<'mc> {
+    //['since', '']
+
+    //['forRemoval', 'false']
+
+    #[deprecated]
+    pub fn new_with_namespaced_key(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::NamespacedKey<'mc>>,
+        arg1: impl Into<crate::inventory::ItemStack<'mc>>,
+        arg2: std::option::Option<impl Into<crate::Material<'mc>>>,
+        arg3: std::option::Option<i32>,
+        arg4: std::option::Option<f32>,
+        arg5: std::option::Option<i32>,
+    ) -> Result<crate::inventory::FurnaceRecipe<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/NamespacedKey;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Lorg/bukkit/inventory/ItemStack;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
+        if let Some(a) = arg2 {
+            sig += "Lorg/bukkit/Material;";
+            let val_3 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_3);
+        }
+        if let Some(a) = arg3 {
+            sig += "I";
+            let val_4 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_4);
+        }
+        if let Some(a) = arg4 {
+            sig += "F";
+            let val_5 = jni::objects::JValueGen::Float(a.into());
+            args.push(val_5);
+        }
+        if let Some(a) = arg5 {
+            sig += "I";
+            let val_6 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_6);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/inventory/FurnaceRecipe");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::inventory::FurnaceRecipe::from_raw(&jni, res)
+    }
     //
 
     pub fn set_input_with_material(
@@ -2864,6 +2949,46 @@ impl<'mc> JNIInstantiatable<'mc> for SmithingRecipe<'mc> {
 }
 
 impl<'mc> SmithingRecipe<'mc> {
+    //['since', '']
+
+    //['forRemoval', 'false']
+
+    #[deprecated]
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::NamespacedKey<'mc>>,
+        arg1: impl Into<crate::inventory::ItemStack<'mc>>,
+        arg2: impl Into<crate::inventory::RecipeChoice<'mc>>,
+        arg3: impl Into<crate::inventory::RecipeChoice<'mc>>,
+    ) -> Result<crate::inventory::SmithingRecipe<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/NamespacedKey;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/inventory/RecipeChoice;Lorg/bukkit/inventory/RecipeChoice;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
+        });
+        let val_4 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg3.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/inventory/SmithingRecipe");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+                jni::objects::JValueGen::from(val_4),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::inventory::SmithingRecipe::from_raw(&jni, res)
+    }
     //
 
     pub fn base(&self) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
@@ -4046,6 +4171,44 @@ impl<'mc> JNIInstantiatable<'mc> for CampfireRecipe<'mc> {
 }
 
 impl<'mc> CampfireRecipe<'mc> {
+    pub fn new_with_namespaced_key(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::NamespacedKey<'mc>>,
+        arg1: impl Into<crate::inventory::ItemStack<'mc>>,
+        arg2: impl Into<crate::inventory::RecipeChoice<'mc>>,
+        arg3: f32,
+        arg4: i32,
+    ) -> Result<crate::inventory::CampfireRecipe<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/NamespacedKey;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Lorg/bukkit/inventory/ItemStack;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
+        sig += "Lorg/bukkit/inventory/RecipeChoice;";
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
+        });
+        args.push(val_3);
+        sig += "F";
+        let val_4 = jni::objects::JValueGen::Float(arg3.into());
+        args.push(val_4);
+        sig += "I";
+        let val_5 = jni::objects::JValueGen::Int(arg4.into());
+        args.push(val_5);
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/inventory/CampfireRecipe");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::inventory::CampfireRecipe::from_raw(&jni, res)
+    }
     //
 
     pub fn set_input(
@@ -4419,6 +4582,51 @@ impl<'mc> JNIInstantiatable<'mc> for ItemStack<'mc> {
 }
 
 impl<'mc> ItemStack<'mc> {
+    //['since', '']
+
+    //['forRemoval', 'false']
+
+    #[deprecated]
+    pub fn new_with_material(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::Material<'mc>>,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<i16>,
+        arg3: std::option::Option<i8>,
+    ) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Material;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "S";
+            let val_3 = jni::objects::JValueGen::Short(a.into());
+            args.push(val_3);
+        }
+        if let Some(a) = arg3 {
+            sig += "Ljava/lang/Byte;";
+            let val_4 = jni::objects::JValueGen::Object(jni.new_object(
+                "java/lang/Byte",
+                "(Ljava/Lang/Object)V",
+                vec![a.into()],
+            )?);
+            args.push(val_4);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/inventory/ItemStack");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::inventory::ItemStack::from_raw(&jni, res)
+    }
     //
 
     pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
@@ -5011,6 +5219,24 @@ impl<'mc> JNIInstantiatable<'mc> for RecipeChoiceMaterialChoice<'mc> {
 }
 
 impl<'mc> RecipeChoiceMaterialChoice<'mc> {
+    pub fn new_with_tag(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::Tag<'mc>>,
+    ) -> Result<crate::inventory::RecipeChoiceMaterialChoice<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/Tag;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/inventory/RecipeChoice$MaterialChoice");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::inventory::RecipeChoiceMaterialChoice::from_raw(&jni, res)
+    }
     //
 
     pub fn item_stack(
@@ -6005,6 +6231,19 @@ impl<'mc> JNIInstantiatable<'mc> for RecipeChoiceExactChoice<'mc> {
 }
 
 impl<'mc> RecipeChoiceExactChoice<'mc> {
+    pub fn new_with_item_stacks(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<crate::inventory::RecipeChoiceExactChoice<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/inventory/RecipeChoice$ExactChoice");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::inventory::RecipeChoiceExactChoice::from_raw(&jni, res)
+    }
     //
 
     pub fn item_stack(
@@ -7716,6 +7955,32 @@ impl<'mc> JNIInstantiatable<'mc> for ShapedRecipe<'mc> {
 }
 
 impl<'mc> ShapedRecipe<'mc> {
+    pub fn new_with_namespaced_key(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::NamespacedKey<'mc>>,
+        arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<crate::inventory::ShapedRecipe<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/NamespacedKey;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/inventory/ItemStack;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/inventory/ShapedRecipe");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::inventory::ShapedRecipe::from_raw(&jni, res)
+    }
     //
 
     pub fn shape_with_strings(
@@ -8054,6 +8319,46 @@ impl<'mc> JNIInstantiatable<'mc> for SmithingTransformRecipe<'mc> {
 }
 
 impl<'mc> SmithingTransformRecipe<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::NamespacedKey<'mc>>,
+        arg1: impl Into<crate::inventory::ItemStack<'mc>>,
+        arg2: impl Into<crate::inventory::RecipeChoice<'mc>>,
+        arg3: impl Into<crate::inventory::RecipeChoice<'mc>>,
+        arg4: impl Into<crate::inventory::RecipeChoice<'mc>>,
+    ) -> Result<crate::inventory::SmithingTransformRecipe<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/NamespacedKey;Lorg/bukkit/inventory/ItemStack;Lorg/bukkit/inventory/RecipeChoice;Lorg/bukkit/inventory/RecipeChoice;Lorg/bukkit/inventory/RecipeChoice;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
+        });
+        let val_4 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg3.into().jni_object().clone())
+        });
+        let val_5 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg4.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/inventory/SmithingTransformRecipe");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+                jni::objects::JValueGen::from(val_4),
+                jni::objects::JValueGen::from(val_5),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::inventory::SmithingTransformRecipe::from_raw(&jni, res)
+    }
     //
 
     pub fn template(
@@ -8417,37 +8722,6 @@ impl<'mc> Merchant<'mc> {
             )?);
         }
         Ok(new_vec)
-    }
-    //
-
-    pub fn set_recipes(
-        &self,
-        arg0: Vec<impl Into<crate::inventory::MerchantRecipe<'mc>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(v.into().jni_object().clone())
-            });
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Lorg/bukkit/inventory/crate::inventory::MerchantRecipe)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setRecipes",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     //@NotNull
 
@@ -9938,6 +10212,32 @@ impl<'mc> JNIInstantiatable<'mc> for ShapelessRecipe<'mc> {
 }
 
 impl<'mc> ShapelessRecipe<'mc> {
+    pub fn new_with_namespaced_key(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::NamespacedKey<'mc>>,
+        arg1: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
+    ) -> Result<crate::inventory::ShapelessRecipe<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/NamespacedKey;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/inventory/ItemStack;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/inventory/ShapelessRecipe");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::inventory::ShapelessRecipe::from_raw(&jni, res)
+    }
     //
 
     pub fn add_ingredient_with_int(
@@ -11744,6 +12044,44 @@ impl<'mc> JNIInstantiatable<'mc> for BlastingRecipe<'mc> {
 }
 
 impl<'mc> BlastingRecipe<'mc> {
+    pub fn new_with_namespaced_key(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::NamespacedKey<'mc>>,
+        arg1: impl Into<crate::inventory::ItemStack<'mc>>,
+        arg2: impl Into<crate::inventory::RecipeChoice<'mc>>,
+        arg3: f32,
+        arg4: i32,
+    ) -> Result<crate::inventory::BlastingRecipe<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/NamespacedKey;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Lorg/bukkit/inventory/ItemStack;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
+        sig += "Lorg/bukkit/inventory/RecipeChoice;";
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
+        });
+        args.push(val_3);
+        sig += "F";
+        let val_4 = jni::objects::JValueGen::Float(arg3.into());
+        args.push(val_4);
+        sig += "I";
+        let val_5 = jni::objects::JValueGen::Int(arg4.into());
+        args.push(val_5);
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/inventory/BlastingRecipe");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::inventory::BlastingRecipe::from_raw(&jni, res)
+    }
     //
 
     pub fn set_input(
@@ -12116,6 +12454,44 @@ impl<'mc> JNIInstantiatable<'mc> for SmokingRecipe<'mc> {
 }
 
 impl<'mc> SmokingRecipe<'mc> {
+    pub fn new_with_namespaced_key(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::NamespacedKey<'mc>>,
+        arg1: impl Into<crate::inventory::ItemStack<'mc>>,
+        arg2: impl Into<crate::inventory::RecipeChoice<'mc>>,
+        arg3: f32,
+        arg4: i32,
+    ) -> Result<crate::inventory::SmokingRecipe<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/NamespacedKey;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Lorg/bukkit/inventory/ItemStack;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
+        sig += "Lorg/bukkit/inventory/RecipeChoice;";
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
+        });
+        args.push(val_3);
+        sig += "F";
+        let val_4 = jni::objects::JValueGen::Float(arg3.into());
+        args.push(val_4);
+        sig += "I";
+        let val_5 = jni::objects::JValueGen::Int(arg4.into());
+        args.push(val_5);
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/inventory/SmokingRecipe");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::inventory::SmokingRecipe::from_raw(&jni, res)
+    }
     //
 
     pub fn set_input(
@@ -13014,6 +13390,65 @@ impl<'mc> JNIInstantiatable<'mc> for MerchantRecipe<'mc> {
 }
 
 impl<'mc> MerchantRecipe<'mc> {
+    pub fn new_with_item_stack(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::inventory::ItemStack<'mc>>,
+        arg1: i32,
+        arg2: std::option::Option<i32>,
+        arg3: std::option::Option<bool>,
+        arg4: std::option::Option<i32>,
+        arg5: std::option::Option<f32>,
+        arg6: std::option::Option<i32>,
+        arg7: std::option::Option<i32>,
+    ) -> Result<crate::inventory::MerchantRecipe<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/inventory/ItemStack;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "I";
+        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        args.push(val_2);
+        if let Some(a) = arg2 {
+            sig += "I";
+            let val_3 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_3);
+        }
+        if let Some(a) = arg3 {
+            sig += "Z";
+            // 3
+            let val_4 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_4);
+        }
+        if let Some(a) = arg4 {
+            sig += "I";
+            let val_5 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_5);
+        }
+        if let Some(a) = arg5 {
+            sig += "F";
+            let val_6 = jni::objects::JValueGen::Float(a.into());
+            args.push(val_6);
+        }
+        if let Some(a) = arg6 {
+            sig += "I";
+            let val_7 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_7);
+        }
+        if let Some(a) = arg7 {
+            sig += "I";
+            let val_8 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_8);
+        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/inventory/MerchantRecipe");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::inventory::MerchantRecipe::from_raw(&jni, res)
+    }
     //
 
     pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
@@ -13053,37 +13488,6 @@ impl<'mc> MerchantRecipe<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "removeIngredient",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
-    pub fn set_ingredients(
-        &self,
-        arg0: Vec<impl Into<crate::inventory::ItemStack<'mc>>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/List;)V");
-        let raw_val_1 = self
-            .jni_ref()
-            .new_object("java/util/ArrayList", "()V", vec![])?;
-        for v in arg0 {
-            let map_val_0 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(v.into().jni_object().clone())
-            });
-            self.jni_ref().call_method(
-                &raw_val_1,
-                "add",
-                "(Lorg/bukkit/inventory/crate::inventory::ItemStack)V",
-                vec![jni::objects::JValueGen::from(map_val_0)],
-            )?;
-        }
-        let val_1 = jni::objects::JValueGen::Object(raw_val_1);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setIngredients",
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
@@ -14963,6 +15367,44 @@ impl<'mc> JNIInstantiatable<'mc> for CookingRecipe<'mc> {
 }
 
 impl<'mc> CookingRecipe<'mc> {
+    pub fn new_with_namespaced_key(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::NamespacedKey<'mc>>,
+        arg1: impl Into<crate::inventory::ItemStack<'mc>>,
+        arg2: impl Into<crate::inventory::RecipeChoice<'mc>>,
+        arg3: f32,
+        arg4: i32,
+    ) -> Result<crate::inventory::CookingRecipe<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/NamespacedKey;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Lorg/bukkit/inventory/ItemStack;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
+        sig += "Lorg/bukkit/inventory/RecipeChoice;";
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
+        });
+        args.push(val_3);
+        sig += "F";
+        let val_4 = jni::objects::JValueGen::Float(arg3.into());
+        args.push(val_4);
+        sig += "I";
+        let val_5 = jni::objects::JValueGen::Int(arg4.into());
+        args.push(val_5);
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/inventory/CookingRecipe");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::inventory::CookingRecipe::from_raw(&jni, res)
+    }
     //
 
     pub fn set_input(
@@ -18696,6 +19138,41 @@ impl<'mc> JNIInstantiatable<'mc> for SmithingTrimRecipe<'mc> {
 }
 
 impl<'mc> SmithingTrimRecipe<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::NamespacedKey<'mc>>,
+        arg1: impl Into<crate::inventory::RecipeChoice<'mc>>,
+        arg2: impl Into<crate::inventory::RecipeChoice<'mc>>,
+        arg3: impl Into<crate::inventory::RecipeChoice<'mc>>,
+    ) -> Result<crate::inventory::SmithingTrimRecipe<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/NamespacedKey;Lorg/bukkit/inventory/RecipeChoice;Lorg/bukkit/inventory/RecipeChoice;Lorg/bukkit/inventory/RecipeChoice;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
+        });
+        let val_4 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg3.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/inventory/SmithingTrimRecipe");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+                jni::objects::JValueGen::from(val_4),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::inventory::SmithingTrimRecipe::from_raw(&jni, res)
+    }
     //
 
     pub fn template(

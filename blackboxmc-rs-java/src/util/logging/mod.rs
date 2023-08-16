@@ -694,6 +694,32 @@ impl<'mc> JNIInstantiatable<'mc> for JavaSocketHandler<'mc> {
 }
 
 impl<'mc> JavaSocketHandler<'mc> {
+    pub fn new_with_string(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<impl Into<String>>,
+        arg1: std::option::Option<i32>,
+    ) -> Result<crate::util::logging::JavaSocketHandler<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/lang/String;";
+            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                jni.new_string(a.into())?,
+            ));
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        sig += ")V";
+        let cls = jni.find_class("java/util/logging/SocketHandler");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::util::logging::JavaSocketHandler::from_raw(&jni, res)
+    }
     //
 
     pub fn publish(
@@ -1693,6 +1719,40 @@ impl<'mc> JNIInstantiatable<'mc> for JavaMemoryHandler<'mc> {
 }
 
 impl<'mc> JavaMemoryHandler<'mc> {
+    pub fn new_with_handler(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<impl Into<crate::util::logging::JavaHandler<'mc>>>,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<impl Into<crate::util::logging::JavaLevel<'mc>>>,
+    ) -> Result<crate::util::logging::JavaMemoryHandler<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/util/logging/Handler;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "Ljava/util/logging/Level;";
+            let val_3 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_3);
+        }
+        sig += ")V";
+        let cls = jni.find_class("java/util/logging/MemoryHandler");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::util::logging::JavaMemoryHandler::from_raw(&jni, res)
+    }
     //
 
     pub fn is_loggable(
@@ -3242,6 +3302,31 @@ impl<'mc> JNIInstantiatable<'mc> for JavaLoggingPermission<'mc> {
 }
 
 impl<'mc> JavaLoggingPermission<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+        arg1: impl Into<String>,
+    ) -> Result<crate::util::logging::JavaLoggingPermission<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg1.into())?,
+        ));
+        let cls = jni.find_class("java/util/logging/LoggingPermission");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::util::logging::JavaLoggingPermission::from_raw(&jni, res)
+    }
     //
 
     pub fn new_permission_collection(
@@ -3525,6 +3610,31 @@ impl<'mc> JNIInstantiatable<'mc> for JavaLogRecord<'mc> {
 }
 
 impl<'mc> JavaLogRecord<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::util::logging::JavaLevel<'mc>>,
+        arg1: impl Into<String>,
+    ) -> Result<crate::util::logging::JavaLogRecord<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/logging/Level;Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg1.into())?,
+        ));
+        let cls = jni.find_class("java/util/logging/LogRecord");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(
+            cls,
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = jni.translate_error_no_gen(res)?;
+        crate::util::logging::JavaLogRecord::from_raw(&jni, res)
+    }
     //
 
     pub fn resource_bundle_name(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -4034,6 +4144,32 @@ impl<'mc> JNIInstantiatable<'mc> for JavaStreamHandler<'mc> {
 }
 
 impl<'mc> JavaStreamHandler<'mc> {
+    pub fn new_with_output_stream(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
+        arg1: std::option::Option<impl Into<crate::util::logging::JavaFormatter<'mc>>>,
+    ) -> Result<crate::util::logging::JavaStreamHandler<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/io/OutputStream;";
+            let val_1 = jni::objects::JValueGen::Object(a);
+            args.push(val_1);
+        }
+        if let Some(a) = arg1 {
+            sig += "Ljava/util/logging/Formatter;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")V";
+        let cls = jni.find_class("java/util/logging/StreamHandler");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::util::logging::JavaStreamHandler::from_raw(&jni, res)
+    }
     //
 
     pub fn is_loggable(
