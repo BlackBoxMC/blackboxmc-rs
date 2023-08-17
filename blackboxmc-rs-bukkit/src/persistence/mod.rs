@@ -46,7 +46,7 @@ impl<'mc> JNIInstantiatable<'mc> for PersistentDataHolder<'mc> {
 }
 
 impl<'mc> PersistentDataHolder<'mc> {
-    //
+    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -108,7 +108,7 @@ impl<'mc> JNIInstantiatable<'mc> for PersistentDataTypePrimitivePersistentDataTy
 }
 
 impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
-    //
+    //@NotNull
 
     pub fn primitive_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -121,7 +121,7 @@ impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
+    //@NotNull
 
     pub fn complex_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -291,7 +291,7 @@ impl<'mc> std::string::ToString for PersistentDataTypePrimitivePersistentDataTyp
     }
 }
 
-/// This interface represents the context in which the <a title="interface in org.bukkit.persistence" href="PersistentDataType.html"><code>PersistentDataType</code></a> can serialize and deserialize the passed values.
+/// This interface represents the context in which the <a href="PersistentDataType.html" title="interface in org.bukkit.persistence"><code>PersistentDataType</code></a> can serialize and deserialize the passed values.
 ///
 /// This is a representation of an abstract class.
 pub struct PersistentDataAdapterContext<'mc>(
@@ -335,7 +335,7 @@ impl<'mc> JNIInstantiatable<'mc> for PersistentDataAdapterContext<'mc> {
 }
 
 impl<'mc> PersistentDataAdapterContext<'mc> {
-    //
+    //@NotNull
 
     pub fn new_persistent_data_container(
         &self,
@@ -431,7 +431,7 @@ impl<'mc> PersistentDataType<'mc> {
         let obj = unsafe { plugin.new_extendable(address, "PersistentDataType", name, lib_name) }?;
         Self::from_raw(env, obj)
     }
-    //
+    //@NotNull
 
     pub fn primitive_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -444,7 +444,7 @@ impl<'mc> PersistentDataType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
+    //@NotNull
 
     pub fn complex_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -562,7 +562,7 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::persistence::PersistentDataTypeBooleanPersistentDataType::from_raw(&jni, res)
     }
-    //
+    //@NotNull
 
     pub fn primitive_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -575,7 +575,7 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
+    //@NotNull
 
     pub fn complex_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -793,7 +793,7 @@ impl<'mc> JNIInstantiatable<'mc> for PersistentDataContainer<'mc> {
 }
 
 impl<'mc> PersistentDataContainer<'mc> {
-    //
+    //@NotNull
 
     pub fn keys(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
@@ -832,24 +832,6 @@ impl<'mc> PersistentDataContainer<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
-    }
-    //
-
-    pub fn adapter_context(
-        &self,
-    ) -> Result<crate::persistence::PersistentDataAdapterContext<'mc>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("()Lorg/bukkit/persistence/PersistentDataAdapterContext;");
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getAdapterContext",
-            sig.as_str(),
-            vec![],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::persistence::PersistentDataAdapterContext::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
@@ -963,5 +945,23 @@ impl<'mc> PersistentDataContainer<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
+    }
+    //@NotNull
+
+    pub fn adapter_context(
+        &self,
+    ) -> Result<crate::persistence::PersistentDataAdapterContext<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/persistence/PersistentDataAdapterContext;");
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getAdapterContext",
+            sig.as_str(),
+            vec![],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::persistence::PersistentDataAdapterContext::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
 }

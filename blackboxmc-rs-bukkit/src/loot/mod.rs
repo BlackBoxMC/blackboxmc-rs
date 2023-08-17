@@ -110,7 +110,7 @@ impl<'mc> LootTable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -1024,17 +1024,23 @@ impl<'mc> Lootable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Nullable
 
-    pub fn loot_table(&self) -> Result<crate::loot::LootTable<'mc>, Box<dyn std::error::Error>> {
+    pub fn loot_table(
+        &self,
+    ) -> Result<Option<crate::loot::LootTable<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/loot/LootTable;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getLootTable", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::loot::LootTable::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::loot::LootTable::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
 }
 #[derive(PartialEq, Eq)]
@@ -1787,7 +1793,7 @@ impl<'mc> LootTables<'mc> {
         )
     }
 }
-/// Represents additional information a <a href="LootTable.html" title="interface in org.bukkit.loot"><code>LootTable</code></a> can use to modify it's generated loot.
+/// Represents additional information a <a title="interface in org.bukkit.loot" href="LootTable.html"><code>LootTable</code></a> can use to modify it's generated loot.
 pub struct LootContext<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1849,7 +1855,7 @@ impl<'mc> LootContextBuilder<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::loot::LootContextBuilder::from_raw(&jni, res)
     }
-    //
+    //@NotNull
 
     pub fn build(&self) -> Result<crate::loot::LootContext<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/loot/LootContext;");
@@ -2083,17 +2089,35 @@ impl<'mc> JNIInstantiatable<'mc> for LootContext<'mc> {
 }
 
 impl<'mc> LootContext<'mc> {
-    //
+    //@NotNull
 
-    pub fn killer(&self) -> Result<crate::entity::HumanEntity<'mc>, Box<dyn std::error::Error>> {
+    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/Location;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getLocation", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Location::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //@Nullable
+
+    pub fn killer(
+        &self,
+    ) -> Result<Option<crate::entity::HumanEntity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/HumanEntity;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getKiller", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::entity::HumanEntity::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::entity::HumanEntity::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
     //
 
@@ -2118,29 +2142,23 @@ impl<'mc> LootContext<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
+    //@Nullable
 
-    pub fn looted_entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    pub fn looted_entity(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getLootedEntity", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::entity::Entity::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
-    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/Location;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getLocation", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Location::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::entity::Entity::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
     //
 

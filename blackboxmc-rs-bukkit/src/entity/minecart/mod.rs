@@ -185,7 +185,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn flying_velocity_mod(
         &self,
@@ -221,7 +221,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn derailed_velocity_mod(
         &self,
@@ -276,7 +276,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
+
+    //@NotNull
 
     pub fn display_block(
         &self,
@@ -309,7 +311,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn display_block_data(
         &self,
@@ -372,7 +374,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/Vector;");
@@ -395,6 +397,82 @@ impl<'mc> ExplosiveMinecart<'mc> {
         Ok(res.z()?)
     }
     //
+
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "remove", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isEmpty", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn get_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/Location;)Lorg/bukkit/Location;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLocation",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Location::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //@NotNull
+
+    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/entity/EntityType;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant =
+            self.jni_ref()
+                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = self.jni_ref().translate_error(variant)?;
+        let variant_str = self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::entity::EntityType::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::entity::EntityType::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
+    //
+
+    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isFrozen", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //@NotNull
 
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/BlockFace;");
@@ -419,7 +497,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -486,7 +564,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //
+    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -554,7 +632,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
+    //@NotNull
 
     pub fn bounding_box(
         &self,
@@ -590,16 +668,16 @@ impl<'mc> ExplosiveMinecart<'mc> {
     }
     //
 
-    pub fn teleport_with_entity(
+    pub fn teleport_with_location(
         &self,
-        arg0: impl Into<crate::entity::Entity<'mc>>,
+        arg0: impl Into<crate::Location<'mc>>,
         arg1: std::option::Option<
             impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
         >,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Lorg/bukkit/entity/Entity;";
+        sig += "Lorg/bukkit/Location;";
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
@@ -734,7 +812,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Server;");
@@ -771,17 +849,28 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Deprecated
 
-    pub fn passenger(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    #[deprecated]
+    //@Nullable
+
+    //@NotNull
+
+    pub fn passenger(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getPassenger", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::entity::Entity::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::entity::Entity::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
     //
 
@@ -802,7 +891,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn passengers(
         &self,
@@ -912,11 +1001,12 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Nullable
 
     pub fn last_damage_cause(
         &self,
-    ) -> Result<crate::event::entity::EntityDamageEvent<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<Option<crate::event::entity::EntityDamageEvent<'mc>>, Box<dyn std::error::Error>>
+    {
         let sig = String::from("()Lorg/bukkit/event/entity/EntityDamageEvent;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -925,11 +1015,15 @@ impl<'mc> ExplosiveMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::event::entity::EntityDamageEvent::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::event::entity::EntityDamageEvent::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
-    //
+    //@NotNull
 
     pub fn unique_id(
         &self,
@@ -986,7 +1080,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -1011,7 +1105,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -1039,7 +1133,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn swim_high_speed_splash_sound(
         &self,
@@ -1089,17 +1183,23 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@Nullable
 
-    pub fn vehicle(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getVehicle", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::entity::Entity::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::entity::Entity::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
     //
 
@@ -1144,7 +1244,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Experimental
 
     pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1261,7 +1361,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn scoreboard_tags(
         &self,
@@ -1316,7 +1416,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Pose;");
@@ -1341,7 +1441,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn spawn_category(
         &self,
@@ -1371,7 +1471,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn spigot(
         &self,
@@ -1386,73 +1486,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         crate::command::CommandSenderSpigot::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    //
-
-    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "remove", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
-    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isEmpty", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
-    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/Location;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getLocation", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Location::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
-    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/entity/EntityType;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-    //
-
-    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isFrozen", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
     }
     //
 
@@ -1554,6 +1587,20 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //@NotNull
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     //
 
     pub fn send_message_with_uuid(
@@ -1581,20 +1628,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
             .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
     }
     //
 
@@ -1711,7 +1744,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn effective_permissions(
         &self,
@@ -1753,19 +1786,23 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Nullable
 
-    pub fn custom_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn custom_name(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getCustomName", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            self.jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+                .to_string_lossy()
+                .to_string(),
+        ))
     }
     //
 
@@ -1786,7 +1823,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -1951,7 +1988,7 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn flying_velocity_mod(
         &self,
@@ -1987,7 +2024,7 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn derailed_velocity_mod(
         &self,
@@ -2042,7 +2079,9 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
+
+    //@NotNull
 
     pub fn display_block(
         &self,
@@ -2075,7 +2114,7 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn display_block_data(
         &self,
@@ -2138,7 +2177,7 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/Vector;");
@@ -2161,6 +2200,82 @@ impl<'mc> HopperMinecart<'mc> {
         Ok(res.z()?)
     }
     //
+
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "remove", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isEmpty", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn get_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/Location;)Lorg/bukkit/Location;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLocation",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Location::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //@NotNull
+
+    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/entity/EntityType;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant =
+            self.jni_ref()
+                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = self.jni_ref().translate_error(variant)?;
+        let variant_str = self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::entity::EntityType::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::entity::EntityType::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
+    //
+
+    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isFrozen", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //@NotNull
 
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/BlockFace;");
@@ -2185,7 +2300,7 @@ impl<'mc> HopperMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -2252,7 +2367,7 @@ impl<'mc> HopperMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //
+    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -2320,7 +2435,7 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
+    //@NotNull
 
     pub fn bounding_box(
         &self,
@@ -2356,16 +2471,16 @@ impl<'mc> HopperMinecart<'mc> {
     }
     //
 
-    pub fn teleport_with_entity(
+    pub fn teleport_with_location(
         &self,
-        arg0: impl Into<crate::entity::Entity<'mc>>,
+        arg0: impl Into<crate::Location<'mc>>,
         arg1: std::option::Option<
             impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
         >,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Lorg/bukkit/entity/Entity;";
+        sig += "Lorg/bukkit/Location;";
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
@@ -2500,7 +2615,7 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Server;");
@@ -2537,17 +2652,28 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Deprecated
 
-    pub fn passenger(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    #[deprecated]
+    //@Nullable
+
+    //@NotNull
+
+    pub fn passenger(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getPassenger", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::entity::Entity::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::entity::Entity::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
     //
 
@@ -2568,7 +2694,7 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn passengers(
         &self,
@@ -2678,11 +2804,12 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Nullable
 
     pub fn last_damage_cause(
         &self,
-    ) -> Result<crate::event::entity::EntityDamageEvent<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<Option<crate::event::entity::EntityDamageEvent<'mc>>, Box<dyn std::error::Error>>
+    {
         let sig = String::from("()Lorg/bukkit/event/entity/EntityDamageEvent;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2691,11 +2818,15 @@ impl<'mc> HopperMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::event::entity::EntityDamageEvent::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::event::entity::EntityDamageEvent::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
-    //
+    //@NotNull
 
     pub fn unique_id(
         &self,
@@ -2752,7 +2883,7 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -2777,7 +2908,7 @@ impl<'mc> HopperMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -2805,7 +2936,7 @@ impl<'mc> HopperMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn swim_high_speed_splash_sound(
         &self,
@@ -2855,17 +2986,23 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@Nullable
 
-    pub fn vehicle(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getVehicle", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::entity::Entity::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::entity::Entity::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
     //
 
@@ -2910,7 +3047,7 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Experimental
 
     pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3027,7 +3164,7 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn scoreboard_tags(
         &self,
@@ -3082,7 +3219,7 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Pose;");
@@ -3107,7 +3244,7 @@ impl<'mc> HopperMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn spawn_category(
         &self,
@@ -3137,7 +3274,7 @@ impl<'mc> HopperMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn spigot(
         &self,
@@ -3152,73 +3289,6 @@ impl<'mc> HopperMinecart<'mc> {
         crate::command::CommandSenderSpigot::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    //
-
-    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "remove", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
-    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isEmpty", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
-    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/Location;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getLocation", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Location::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
-    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/entity/EntityType;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-    //
-
-    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isFrozen", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
     }
     //
 
@@ -3320,6 +3390,20 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //@NotNull
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     //
 
     pub fn send_message_with_uuid(
@@ -3347,20 +3431,6 @@ impl<'mc> HopperMinecart<'mc> {
             .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
     }
     //
 
@@ -3477,7 +3547,7 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn effective_permissions(
         &self,
@@ -3519,19 +3589,23 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Nullable
 
-    pub fn custom_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn custom_name(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getCustomName", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            self.jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+                .to_string_lossy()
+                .to_string(),
+        ))
     }
     //
 
@@ -3552,7 +3626,7 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -3569,7 +3643,7 @@ impl<'mc> HopperMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn inventory(
         &self,
@@ -3626,17 +3700,23 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Nullable
 
-    pub fn loot_table(&self) -> Result<crate::loot::LootTable<'mc>, Box<dyn std::error::Error>> {
+    pub fn loot_table(
+        &self,
+    ) -> Result<Option<crate::loot::LootTable<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/loot/LootTable;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getLootTable", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::loot::LootTable::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::loot::LootTable::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
 }
 impl<'mc> Into<crate::entity::Minecart<'mc>> for HopperMinecart<'mc> {
@@ -3657,7 +3737,7 @@ impl<'mc> Into<crate::loot::Lootable<'mc>> for HopperMinecart<'mc> {
             .expect("Error converting HopperMinecart into crate::loot::Lootable")
     }
 }
-/// Represents a minecart with a chest. These types of <a href="../Minecart.html" title="interface in org.bukkit.entity"><code>minecarts</code></a> have their own inventory that can be accessed using methods from the <a title="interface in org.bukkit.inventory" href="../../inventory/InventoryHolder.html"><code>InventoryHolder</code></a> interface.
+/// Represents a minecart with a chest. These types of <a title="interface in org.bukkit.entity" href="../Minecart.html"><code>minecarts</code></a> have their own inventory that can be accessed using methods from the <a title="interface in org.bukkit.inventory" href="../../inventory/InventoryHolder.html"><code>InventoryHolder</code></a> interface.
 ///
 /// This is a representation of an abstract class.
 pub struct StorageMinecart<'mc>(
@@ -3773,7 +3853,7 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn flying_velocity_mod(
         &self,
@@ -3809,7 +3889,7 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn derailed_velocity_mod(
         &self,
@@ -3864,7 +3944,9 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
+
+    //@NotNull
 
     pub fn display_block(
         &self,
@@ -3897,7 +3979,7 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn display_block_data(
         &self,
@@ -3960,7 +4042,7 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/Vector;");
@@ -3983,6 +4065,82 @@ impl<'mc> StorageMinecart<'mc> {
         Ok(res.z()?)
     }
     //
+
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "remove", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isEmpty", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn get_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/Location;)Lorg/bukkit/Location;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLocation",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Location::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //@NotNull
+
+    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/entity/EntityType;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant =
+            self.jni_ref()
+                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = self.jni_ref().translate_error(variant)?;
+        let variant_str = self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::entity::EntityType::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::entity::EntityType::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
+    //
+
+    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isFrozen", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //@NotNull
 
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/BlockFace;");
@@ -4007,7 +4165,7 @@ impl<'mc> StorageMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -4074,7 +4232,7 @@ impl<'mc> StorageMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //
+    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -4142,7 +4300,7 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
+    //@NotNull
 
     pub fn bounding_box(
         &self,
@@ -4178,16 +4336,16 @@ impl<'mc> StorageMinecart<'mc> {
     }
     //
 
-    pub fn teleport_with_entity(
+    pub fn teleport_with_location(
         &self,
-        arg0: impl Into<crate::entity::Entity<'mc>>,
+        arg0: impl Into<crate::Location<'mc>>,
         arg1: std::option::Option<
             impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
         >,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Lorg/bukkit/entity/Entity;";
+        sig += "Lorg/bukkit/Location;";
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
@@ -4322,7 +4480,7 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Server;");
@@ -4359,17 +4517,28 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Deprecated
 
-    pub fn passenger(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    #[deprecated]
+    //@Nullable
+
+    //@NotNull
+
+    pub fn passenger(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getPassenger", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::entity::Entity::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::entity::Entity::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
     //
 
@@ -4390,7 +4559,7 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn passengers(
         &self,
@@ -4500,11 +4669,12 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Nullable
 
     pub fn last_damage_cause(
         &self,
-    ) -> Result<crate::event::entity::EntityDamageEvent<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<Option<crate::event::entity::EntityDamageEvent<'mc>>, Box<dyn std::error::Error>>
+    {
         let sig = String::from("()Lorg/bukkit/event/entity/EntityDamageEvent;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4513,11 +4683,15 @@ impl<'mc> StorageMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::event::entity::EntityDamageEvent::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::event::entity::EntityDamageEvent::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
-    //
+    //@NotNull
 
     pub fn unique_id(
         &self,
@@ -4574,7 +4748,7 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -4599,7 +4773,7 @@ impl<'mc> StorageMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -4627,7 +4801,7 @@ impl<'mc> StorageMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn swim_high_speed_splash_sound(
         &self,
@@ -4677,17 +4851,23 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@Nullable
 
-    pub fn vehicle(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getVehicle", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::entity::Entity::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::entity::Entity::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
     //
 
@@ -4732,7 +4912,7 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Experimental
 
     pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4849,7 +5029,7 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn scoreboard_tags(
         &self,
@@ -4904,7 +5084,7 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Pose;");
@@ -4929,7 +5109,7 @@ impl<'mc> StorageMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn spawn_category(
         &self,
@@ -4959,7 +5139,7 @@ impl<'mc> StorageMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn spigot(
         &self,
@@ -4974,73 +5154,6 @@ impl<'mc> StorageMinecart<'mc> {
         crate::command::CommandSenderSpigot::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    //
-
-    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "remove", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
-    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isEmpty", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
-    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/Location;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getLocation", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Location::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
-    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/entity/EntityType;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-    //
-
-    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isFrozen", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
     }
     //
 
@@ -5142,6 +5255,20 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //@NotNull
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     //
 
     pub fn send_message_with_uuid(
@@ -5169,20 +5296,6 @@ impl<'mc> StorageMinecart<'mc> {
             .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
     }
     //
 
@@ -5299,7 +5412,7 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn effective_permissions(
         &self,
@@ -5341,19 +5454,23 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Nullable
 
-    pub fn custom_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn custom_name(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getCustomName", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            self.jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+                .to_string_lossy()
+                .to_string(),
+        ))
     }
     //
 
@@ -5374,7 +5491,7 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -5391,7 +5508,7 @@ impl<'mc> StorageMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn inventory(
         &self,
@@ -5448,17 +5565,23 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Nullable
 
-    pub fn loot_table(&self) -> Result<crate::loot::LootTable<'mc>, Box<dyn std::error::Error>> {
+    pub fn loot_table(
+        &self,
+    ) -> Result<Option<crate::loot::LootTable<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/loot/LootTable;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getLootTable", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::loot::LootTable::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::loot::LootTable::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
 }
 impl<'mc> Into<crate::entity::Minecart<'mc>> for StorageMinecart<'mc> {
@@ -5479,7 +5602,7 @@ impl<'mc> Into<crate::loot::Lootable<'mc>> for StorageMinecart<'mc> {
             .expect("Error converting StorageMinecart into crate::loot::Lootable")
     }
 }
-/// Represents a Minecart with an <a href="../../block/CreatureSpawner.html" title="interface in org.bukkit.block"><code>entity spawner</code></a> inside it.
+/// Represents a Minecart with an <a title="interface in org.bukkit.block" href="../../block/CreatureSpawner.html"><code>entity spawner</code></a> inside it.
 ///
 /// This is a representation of an abstract class.
 pub struct SpawnerMinecart<'mc>(
@@ -5595,7 +5718,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn flying_velocity_mod(
         &self,
@@ -5631,7 +5754,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn derailed_velocity_mod(
         &self,
@@ -5686,7 +5809,9 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
+
+    //@NotNull
 
     pub fn display_block(
         &self,
@@ -5719,7 +5844,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn display_block_data(
         &self,
@@ -5782,7 +5907,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/Vector;");
@@ -5805,6 +5930,82 @@ impl<'mc> SpawnerMinecart<'mc> {
         Ok(res.z()?)
     }
     //
+
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "remove", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isEmpty", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn get_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/Location;)Lorg/bukkit/Location;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLocation",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Location::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //@NotNull
+
+    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/entity/EntityType;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant =
+            self.jni_ref()
+                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = self.jni_ref().translate_error(variant)?;
+        let variant_str = self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::entity::EntityType::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::entity::EntityType::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
+    //
+
+    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isFrozen", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //@NotNull
 
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/BlockFace;");
@@ -5829,7 +6030,7 @@ impl<'mc> SpawnerMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -5896,7 +6097,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //
+    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -5964,7 +6165,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
+    //@NotNull
 
     pub fn bounding_box(
         &self,
@@ -6000,16 +6201,16 @@ impl<'mc> SpawnerMinecart<'mc> {
     }
     //
 
-    pub fn teleport_with_entity(
+    pub fn teleport_with_location(
         &self,
-        arg0: impl Into<crate::entity::Entity<'mc>>,
+        arg0: impl Into<crate::Location<'mc>>,
         arg1: std::option::Option<
             impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
         >,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Lorg/bukkit/entity/Entity;";
+        sig += "Lorg/bukkit/Location;";
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
@@ -6144,7 +6345,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Server;");
@@ -6181,17 +6382,28 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Deprecated
 
-    pub fn passenger(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    #[deprecated]
+    //@Nullable
+
+    //@NotNull
+
+    pub fn passenger(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getPassenger", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::entity::Entity::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::entity::Entity::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
     //
 
@@ -6212,7 +6424,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn passengers(
         &self,
@@ -6322,11 +6534,12 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Nullable
 
     pub fn last_damage_cause(
         &self,
-    ) -> Result<crate::event::entity::EntityDamageEvent<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<Option<crate::event::entity::EntityDamageEvent<'mc>>, Box<dyn std::error::Error>>
+    {
         let sig = String::from("()Lorg/bukkit/event/entity/EntityDamageEvent;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6335,11 +6548,15 @@ impl<'mc> SpawnerMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::event::entity::EntityDamageEvent::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::event::entity::EntityDamageEvent::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
-    //
+    //@NotNull
 
     pub fn unique_id(
         &self,
@@ -6396,7 +6613,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -6421,7 +6638,7 @@ impl<'mc> SpawnerMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -6449,7 +6666,7 @@ impl<'mc> SpawnerMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn swim_high_speed_splash_sound(
         &self,
@@ -6499,17 +6716,23 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@Nullable
 
-    pub fn vehicle(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getVehicle", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::entity::Entity::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::entity::Entity::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
     //
 
@@ -6554,7 +6777,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Experimental
 
     pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6671,7 +6894,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn scoreboard_tags(
         &self,
@@ -6726,7 +6949,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Pose;");
@@ -6751,7 +6974,7 @@ impl<'mc> SpawnerMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn spawn_category(
         &self,
@@ -6781,7 +7004,7 @@ impl<'mc> SpawnerMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn spigot(
         &self,
@@ -6796,73 +7019,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         crate::command::CommandSenderSpigot::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    //
-
-    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "remove", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
-    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isEmpty", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
-    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/Location;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getLocation", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Location::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
-    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/entity/EntityType;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-    //
-
-    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isFrozen", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
     }
     //
 
@@ -6964,6 +7120,20 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //@NotNull
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     //
 
     pub fn send_message_with_uuid(
@@ -6991,20 +7161,6 @@ impl<'mc> SpawnerMinecart<'mc> {
             .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
     }
     //
 
@@ -7121,7 +7277,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn effective_permissions(
         &self,
@@ -7163,19 +7319,23 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Nullable
 
-    pub fn custom_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn custom_name(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getCustomName", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            self.jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+                .to_string_lossy()
+                .to_string(),
+        ))
     }
     //
 
@@ -7196,7 +7356,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -7278,15 +7438,15 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Nullable
 
-    pub fn fuel(&self) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn fuel(&self) -> Result<Option<i32>, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getFuel", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
+        Ok(Some(res.i()?))
     }
     //
 
@@ -7361,7 +7521,7 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn flying_velocity_mod(
         &self,
@@ -7397,7 +7557,7 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn derailed_velocity_mod(
         &self,
@@ -7452,7 +7612,9 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
+
+    //@NotNull
 
     pub fn display_block(
         &self,
@@ -7485,7 +7647,7 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn display_block_data(
         &self,
@@ -7548,7 +7710,7 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/Vector;");
@@ -7571,6 +7733,82 @@ impl<'mc> PoweredMinecart<'mc> {
         Ok(res.z()?)
     }
     //
+
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "remove", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isEmpty", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn get_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/Location;)Lorg/bukkit/Location;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLocation",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Location::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //@NotNull
+
+    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/entity/EntityType;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant =
+            self.jni_ref()
+                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = self.jni_ref().translate_error(variant)?;
+        let variant_str = self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::entity::EntityType::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::entity::EntityType::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
+    //
+
+    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isFrozen", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //@NotNull
 
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/BlockFace;");
@@ -7595,7 +7833,7 @@ impl<'mc> PoweredMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -7662,7 +7900,7 @@ impl<'mc> PoweredMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //
+    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -7730,7 +7968,7 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
+    //@NotNull
 
     pub fn bounding_box(
         &self,
@@ -7766,16 +8004,16 @@ impl<'mc> PoweredMinecart<'mc> {
     }
     //
 
-    pub fn teleport_with_entity(
+    pub fn teleport_with_location(
         &self,
-        arg0: impl Into<crate::entity::Entity<'mc>>,
+        arg0: impl Into<crate::Location<'mc>>,
         arg1: std::option::Option<
             impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
         >,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Lorg/bukkit/entity/Entity;";
+        sig += "Lorg/bukkit/Location;";
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
@@ -7910,7 +8148,7 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Server;");
@@ -7947,17 +8185,28 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Deprecated
 
-    pub fn passenger(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    #[deprecated]
+    //@Nullable
+
+    //@NotNull
+
+    pub fn passenger(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getPassenger", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::entity::Entity::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::entity::Entity::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
     //
 
@@ -7978,7 +8227,7 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn passengers(
         &self,
@@ -8088,11 +8337,12 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Nullable
 
     pub fn last_damage_cause(
         &self,
-    ) -> Result<crate::event::entity::EntityDamageEvent<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<Option<crate::event::entity::EntityDamageEvent<'mc>>, Box<dyn std::error::Error>>
+    {
         let sig = String::from("()Lorg/bukkit/event/entity/EntityDamageEvent;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8101,11 +8351,15 @@ impl<'mc> PoweredMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::event::entity::EntityDamageEvent::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::event::entity::EntityDamageEvent::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
-    //
+    //@NotNull
 
     pub fn unique_id(
         &self,
@@ -8162,7 +8416,7 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -8187,7 +8441,7 @@ impl<'mc> PoweredMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -8215,7 +8469,7 @@ impl<'mc> PoweredMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn swim_high_speed_splash_sound(
         &self,
@@ -8265,17 +8519,23 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@Nullable
 
-    pub fn vehicle(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getVehicle", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::entity::Entity::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::entity::Entity::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
     //
 
@@ -8320,7 +8580,7 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Experimental
 
     pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8437,7 +8697,7 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn scoreboard_tags(
         &self,
@@ -8492,7 +8752,7 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Pose;");
@@ -8517,7 +8777,7 @@ impl<'mc> PoweredMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn spawn_category(
         &self,
@@ -8547,7 +8807,7 @@ impl<'mc> PoweredMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn spigot(
         &self,
@@ -8562,73 +8822,6 @@ impl<'mc> PoweredMinecart<'mc> {
         crate::command::CommandSenderSpigot::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    //
-
-    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "remove", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
-    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isEmpty", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
-    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/Location;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getLocation", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Location::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
-    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/entity/EntityType;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-    //
-
-    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isFrozen", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
     }
     //
 
@@ -8730,6 +8923,20 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //@NotNull
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     //
 
     pub fn send_message_with_uuid(
@@ -8757,20 +8964,6 @@ impl<'mc> PoweredMinecart<'mc> {
             .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
     }
     //
 
@@ -8887,7 +9080,7 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn effective_permissions(
         &self,
@@ -8929,19 +9122,23 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Nullable
 
-    pub fn custom_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn custom_name(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getCustomName", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            self.jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+                .to_string_lossy()
+                .to_string(),
+        ))
     }
     //
 
@@ -8962,7 +9159,7 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -8986,7 +9183,7 @@ impl<'mc> Into<crate::entity::Minecart<'mc>> for PoweredMinecart<'mc> {
             .expect("Error converting PoweredMinecart into crate::entity::Minecart")
     }
 }
-/// Represents a minecart that can have certain <a href="../Entity.html" title="interface in org.bukkit.entity"><code>entities</code></a> as passengers. Normal passengers include all <a href="../LivingEntity.html" title="interface in org.bukkit.entity"><code>living entities</code></a> with the exception of <a title="interface in org.bukkit.entity" href="../IronGolem.html"><code>iron golems</code></a>. Non-player entities that meet normal passenger criteria automatically mount these minecarts when close enough.
+/// Represents a minecart that can have certain <a title="interface in org.bukkit.entity" href="../Entity.html"><code>entities</code></a> as passengers. Normal passengers include all <a title="interface in org.bukkit.entity" href="../LivingEntity.html"><code>living entities</code></a> with the exception of <a title="interface in org.bukkit.entity" href="../IronGolem.html"><code>iron golems</code></a>. Non-player entities that meet normal passenger criteria automatically mount these minecarts when close enough.
 ///
 /// This is a representation of an abstract class.
 pub struct RideableMinecart<'mc>(
@@ -9102,7 +9299,7 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn flying_velocity_mod(
         &self,
@@ -9138,7 +9335,7 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn derailed_velocity_mod(
         &self,
@@ -9193,7 +9390,9 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
+
+    //@NotNull
 
     pub fn display_block(
         &self,
@@ -9226,7 +9425,7 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn display_block_data(
         &self,
@@ -9289,7 +9488,7 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/Vector;");
@@ -9312,6 +9511,82 @@ impl<'mc> RideableMinecart<'mc> {
         Ok(res.z()?)
     }
     //
+
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "remove", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isEmpty", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn get_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/Location;)Lorg/bukkit/Location;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLocation",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Location::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //@NotNull
+
+    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/entity/EntityType;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant =
+            self.jni_ref()
+                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = self.jni_ref().translate_error(variant)?;
+        let variant_str = self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::entity::EntityType::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::entity::EntityType::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
+    //
+
+    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isFrozen", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //@NotNull
 
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/BlockFace;");
@@ -9336,7 +9611,7 @@ impl<'mc> RideableMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -9403,7 +9678,7 @@ impl<'mc> RideableMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //
+    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -9471,7 +9746,7 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
+    //@NotNull
 
     pub fn bounding_box(
         &self,
@@ -9507,16 +9782,16 @@ impl<'mc> RideableMinecart<'mc> {
     }
     //
 
-    pub fn teleport_with_entity(
+    pub fn teleport_with_location(
         &self,
-        arg0: impl Into<crate::entity::Entity<'mc>>,
+        arg0: impl Into<crate::Location<'mc>>,
         arg1: std::option::Option<
             impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
         >,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Lorg/bukkit/entity/Entity;";
+        sig += "Lorg/bukkit/Location;";
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
@@ -9651,7 +9926,7 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Server;");
@@ -9688,17 +9963,28 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Deprecated
 
-    pub fn passenger(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    #[deprecated]
+    //@Nullable
+
+    //@NotNull
+
+    pub fn passenger(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getPassenger", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::entity::Entity::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::entity::Entity::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
     //
 
@@ -9719,7 +10005,7 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn passengers(
         &self,
@@ -9829,11 +10115,12 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Nullable
 
     pub fn last_damage_cause(
         &self,
-    ) -> Result<crate::event::entity::EntityDamageEvent<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<Option<crate::event::entity::EntityDamageEvent<'mc>>, Box<dyn std::error::Error>>
+    {
         let sig = String::from("()Lorg/bukkit/event/entity/EntityDamageEvent;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9842,11 +10129,15 @@ impl<'mc> RideableMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::event::entity::EntityDamageEvent::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::event::entity::EntityDamageEvent::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
-    //
+    //@NotNull
 
     pub fn unique_id(
         &self,
@@ -9903,7 +10194,7 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -9928,7 +10219,7 @@ impl<'mc> RideableMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -9956,7 +10247,7 @@ impl<'mc> RideableMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn swim_high_speed_splash_sound(
         &self,
@@ -10006,17 +10297,23 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@Nullable
 
-    pub fn vehicle(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getVehicle", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::entity::Entity::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::entity::Entity::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
     //
 
@@ -10061,7 +10358,7 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Experimental
 
     pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -10178,7 +10475,7 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn scoreboard_tags(
         &self,
@@ -10233,7 +10530,7 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Pose;");
@@ -10258,7 +10555,7 @@ impl<'mc> RideableMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn spawn_category(
         &self,
@@ -10288,7 +10585,7 @@ impl<'mc> RideableMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn spigot(
         &self,
@@ -10303,73 +10600,6 @@ impl<'mc> RideableMinecart<'mc> {
         crate::command::CommandSenderSpigot::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    //
-
-    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "remove", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
-    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isEmpty", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
-    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/Location;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getLocation", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Location::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
-    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/entity/EntityType;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-    //
-
-    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isFrozen", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
     }
     //
 
@@ -10471,6 +10701,20 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //@NotNull
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     //
 
     pub fn send_message_with_uuid(
@@ -10498,20 +10742,6 @@ impl<'mc> RideableMinecart<'mc> {
             .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
     }
     //
 
@@ -10628,7 +10858,7 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn effective_permissions(
         &self,
@@ -10670,19 +10900,23 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Nullable
 
-    pub fn custom_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn custom_name(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getCustomName", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            self.jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+                .to_string_lossy()
+                .to_string(),
+        ))
     }
     //
 
@@ -10703,7 +10937,7 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -10772,6 +11006,22 @@ impl<'mc> JNIInstantiatable<'mc> for CommandMinecart<'mc> {
 impl<'mc> CommandMinecart<'mc> {
     //
 
+    pub fn set_name(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)V");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setName",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //@NotNull
+
     pub fn command(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
@@ -10794,22 +11044,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "setCommand",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
-    pub fn set_name(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)V");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setName",
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
@@ -10889,7 +11123,7 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn flying_velocity_mod(
         &self,
@@ -10925,7 +11159,7 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn derailed_velocity_mod(
         &self,
@@ -10980,7 +11214,9 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
+
+    //@NotNull
 
     pub fn display_block(
         &self,
@@ -11013,7 +11249,7 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn display_block_data(
         &self,
@@ -11076,7 +11312,7 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/Vector;");
@@ -11099,6 +11335,82 @@ impl<'mc> CommandMinecart<'mc> {
         Ok(res.z()?)
     }
     //
+
+    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "remove", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isEmpty", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn get_location(
+        &self,
+        arg0: impl Into<crate::Location<'mc>>,
+    ) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/Location;)Lorg/bukkit/Location;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getLocation",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::Location::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //@NotNull
+
+    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/entity/EntityType;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant =
+            self.jni_ref()
+                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = self.jni_ref().translate_error(variant)?;
+        let variant_str = self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::entity::EntityType::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::entity::EntityType::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
+    //
+
+    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isFrozen", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //@NotNull
 
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/BlockFace;");
@@ -11123,7 +11435,7 @@ impl<'mc> CommandMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -11190,7 +11502,7 @@ impl<'mc> CommandMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //
+    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -11258,7 +11570,7 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
+    //@NotNull
 
     pub fn bounding_box(
         &self,
@@ -11294,16 +11606,16 @@ impl<'mc> CommandMinecart<'mc> {
     }
     //
 
-    pub fn teleport_with_entity(
+    pub fn teleport_with_location(
         &self,
-        arg0: impl Into<crate::entity::Entity<'mc>>,
+        arg0: impl Into<crate::Location<'mc>>,
         arg1: std::option::Option<
             impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
         >,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Lorg/bukkit/entity/Entity;";
+        sig += "Lorg/bukkit/Location;";
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
@@ -11438,7 +11750,7 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Server;");
@@ -11475,17 +11787,28 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Deprecated
 
-    pub fn passenger(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    #[deprecated]
+    //@Nullable
+
+    //@NotNull
+
+    pub fn passenger(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getPassenger", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::entity::Entity::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::entity::Entity::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
     //
 
@@ -11506,7 +11829,7 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn passengers(
         &self,
@@ -11616,11 +11939,12 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Nullable
 
     pub fn last_damage_cause(
         &self,
-    ) -> Result<crate::event::entity::EntityDamageEvent<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<Option<crate::event::entity::EntityDamageEvent<'mc>>, Box<dyn std::error::Error>>
+    {
         let sig = String::from("()Lorg/bukkit/event/entity/EntityDamageEvent;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11629,11 +11953,15 @@ impl<'mc> CommandMinecart<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::event::entity::EntityDamageEvent::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::event::entity::EntityDamageEvent::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
-    //
+    //@NotNull
 
     pub fn unique_id(
         &self,
@@ -11690,7 +12018,7 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -11715,7 +12043,7 @@ impl<'mc> CommandMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -11743,7 +12071,7 @@ impl<'mc> CommandMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn swim_high_speed_splash_sound(
         &self,
@@ -11793,17 +12121,23 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@Nullable
 
-    pub fn vehicle(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
+    pub fn vehicle(
+        &self,
+    ) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getVehicle", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::entity::Entity::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::entity::Entity::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
     //
 
@@ -11848,7 +12182,7 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Experimental
 
     pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11965,7 +12299,7 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn scoreboard_tags(
         &self,
@@ -12020,7 +12354,7 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Pose;");
@@ -12045,7 +12379,7 @@ impl<'mc> CommandMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn spawn_category(
         &self,
@@ -12075,7 +12409,7 @@ impl<'mc> CommandMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn spigot(
         &self,
@@ -12090,73 +12424,6 @@ impl<'mc> CommandMinecart<'mc> {
         crate::command::CommandSenderSpigot::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    //
-
-    pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "remove", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
-    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isEmpty", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
-    pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/Location;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getLocation", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::Location::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
-    pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/entity/EntityType;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::entity::EntityType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::entity::EntityType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-    //
-
-    pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isFrozen", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
     }
     //
 
@@ -12258,6 +12525,20 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
+    //@NotNull
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     //
 
     pub fn send_message_with_uuid(
@@ -12285,20 +12566,6 @@ impl<'mc> CommandMinecart<'mc> {
             .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
     }
     //
 
@@ -12415,7 +12682,7 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn effective_permissions(
         &self,
@@ -12457,19 +12724,23 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Nullable
 
-    pub fn custom_name(&self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn custom_name(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getCustomName", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            self.jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+                .to_string_lossy()
+                .to_string(),
+        ))
     }
     //
 
@@ -12490,7 +12761,7 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn persistent_data_container(
         &self,

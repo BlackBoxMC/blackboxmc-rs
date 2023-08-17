@@ -3,7 +3,7 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-/// A simple wrapper for ease of selecting <a title="class in org.bukkit.enchantments" href="Enchantment.html"><code>Enchantment</code></a>s
+/// A simple wrapper for ease of selecting <a href="Enchantment.html" title="class in org.bukkit.enchantments"><code>Enchantment</code></a>s
 pub struct EnchantmentWrapper<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -62,7 +62,21 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::enchantments::EnchantmentWrapper::from_raw(&jni, res)
     }
-    //
+    //@NotNull
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //@NotNull
 
     pub fn enchantment(
         &self,
@@ -115,7 +129,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn item_target(
         &self,
@@ -152,7 +166,9 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@Deprecated
+
+    #[deprecated]
 
     pub fn is_cursed(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -183,17 +199,81 @@ impl<'mc> EnchantmentWrapper<'mc> {
     }
     //
 
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/Object;)Z");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "equals",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    #[doc(hidden)]
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
             .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(self
             .jni_ref()
             .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
             .to_string_lossy()
             .to_string())
+    }
+    //
+
+    //
+
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    //@NotNull
+
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/NamespacedKey;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getKey", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::NamespacedKey::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
+    pub fn get_by_name(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<crate::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)Lorg/bukkit/enchantments/Enchantment;");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        let cls = jni.find_class("org/bukkit/enchantments/Enchantment");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "getByName",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::enchantments::Enchantment::from_raw(&jni, obj)
     }
     //
 
@@ -261,84 +341,6 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = jni.call_static_method(cls, "isAcceptingRegistrations", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
-    }
-    //
-
-    pub fn equals(
-        &self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Object;)Z");
-        let val_1 = jni::objects::JValueGen::Object(arg0);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
-    #[doc(hidden)]
-    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    //
-
-    //
-
-    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    //
-
-    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/NamespacedKey;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getKey", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::NamespacedKey::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
-    pub fn get_by_name(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<crate::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)Lorg/bukkit/enchantments/Enchantment;");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            jni.new_string(arg0.into())?,
-        ));
-        let cls = jni.find_class("org/bukkit/enchantments/Enchantment");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "getByName",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::enchantments::Enchantment::from_raw(&jni, obj)
     }
     //
 
@@ -479,7 +481,7 @@ impl<'mc> EnchantmentOffer<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::enchantments::EnchantmentOffer::from_raw(&jni, res)
     }
-    //
+    //@NotNull
 
     pub fn enchantment(
         &self,
@@ -837,6 +839,8 @@ impl<'mc> EnchantmentTarget<'mc> {
 
     //
 
+    //
+
     pub fn includes_with_material(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
@@ -855,7 +859,6 @@ impl<'mc> EnchantmentTarget<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 }
 /// The various type of enchantments that may be added to armour or weapons
 pub struct Enchantment<'mc>(
@@ -912,6 +915,98 @@ impl<'mc> Enchantment<'mc> {
         );
         let res = jni.translate_error_no_gen(res)?;
         crate::enchantments::Enchantment::from_raw(&jni, res)
+    }
+    //@NotNull
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //
+
+    pub fn equals(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/Object;)Z");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "equals",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    #[doc(hidden)]
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //
+
+    //
+
+    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    //@NotNull
+
+    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/NamespacedKey;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getKey", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::NamespacedKey::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
+    pub fn get_by_name(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<crate::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)Lorg/bukkit/enchantments/Enchantment;");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        let cls = jni.find_class("org/bukkit/enchantments/Enchantment");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "getByName",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::enchantments::Enchantment::from_raw(&jni, obj)
     }
     //
 
@@ -1007,7 +1102,7 @@ impl<'mc> Enchantment<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn item_target(
         &self,
@@ -1044,7 +1139,9 @@ impl<'mc> Enchantment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@Deprecated
+
+    #[deprecated]
 
     pub fn is_cursed(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1084,98 +1181,6 @@ impl<'mc> Enchantment<'mc> {
         let res = jni.call_static_method(cls, "isAcceptingRegistrations", sig.as_str(), vec![]);
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
-    }
-    //
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    //
-
-    pub fn equals(
-        &self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Object;)Z");
-        let val_1 = jni::objects::JValueGen::Object(arg0);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "equals",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
-    #[doc(hidden)]
-    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    //
-
-    //
-
-    pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    //
-
-    pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/NamespacedKey;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getKey", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::NamespacedKey::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
-    pub fn get_by_name(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<crate::enchantments::Enchantment<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)Lorg/bukkit/enchantments/Enchantment;");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            jni.new_string(arg0.into())?,
-        ));
-        let cls = jni.find_class("org/bukkit/enchantments/Enchantment");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "getByName",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::enchantments::Enchantment::from_raw(&jni, obj)
     }
     //
 

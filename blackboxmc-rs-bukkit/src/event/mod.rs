@@ -53,13 +53,13 @@ impl<'mc> HandlerList<'mc> {
     }
     //
 
-    pub fn unregister_with_listener(
+    pub fn unregister_with_registered_listener(
         &self,
-        arg0: impl Into<crate::event::Listener<'mc>>,
+        arg0: impl Into<crate::plugin::RegisteredListener<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Lorg/bukkit/event/Listener;";
+        sig += "Lorg/bukkit/plugin/RegisteredListener;";
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
@@ -68,6 +68,25 @@ impl<'mc> HandlerList<'mc> {
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "unregister", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn register(
+        &self,
+        arg0: impl Into<crate::plugin::RegisteredListener<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/plugin/RegisteredListener;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "register",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -137,7 +156,7 @@ impl<'mc> HandlerList<'mc> {
         let obj = res.l()?;
         blackboxmc_java::util::JavaArrayList::from_raw(&jni, obj)
     }
-    //
+    //@NotNull
 
     pub fn handler_lists(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -149,25 +168,6 @@ impl<'mc> HandlerList<'mc> {
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         blackboxmc_java::util::JavaArrayList::from_raw(&jni, obj)
-    }
-    //
-
-    pub fn register(
-        &self,
-        arg0: impl Into<crate::plugin::RegisteredListener<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/plugin/RegisteredListener;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "register",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
     //
 
@@ -427,16 +427,6 @@ impl<'mc> JNIInstantiatable<'mc> for EventHandler<'mc> {
 impl<'mc> EventHandler<'mc> {
     //
 
-    pub fn ignore_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "ignoreCancelled", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
     pub fn priority(&self) -> Result<crate::event::EventPriority<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/EventPriority;");
         let res = self
@@ -459,6 +449,16 @@ impl<'mc> EventHandler<'mc> {
             crate::event::EventPriority::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
+    }
+    //
+
+    pub fn ignore_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "ignoreCancelled", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
     }
     //
 
@@ -523,7 +523,7 @@ impl<'mc> std::string::ToString for EventHandler<'mc> {
     }
 }
 
-/// Represents an event. All events require a static method named getHandlerList() which returns the same <a href="HandlerList.html" title="class in org.bukkit.event"><code>HandlerList</code></a> as <a href="#getHandlers()"><code>getHandlers()</code></a>.
+/// Represents an event. All events require a static method named getHandlerList() which returns the same <a title="class in org.bukkit.event" href="HandlerList.html"><code>HandlerList</code></a> as <a href="#getHandlers()"><code>getHandlers()</code></a>.
 pub struct Event<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -692,7 +692,7 @@ impl<'mc> Event<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::event::Event::from_raw(&jni, res)
     }
-    //
+    //@NotNull
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
@@ -704,7 +704,7 @@ impl<'mc> Event<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");

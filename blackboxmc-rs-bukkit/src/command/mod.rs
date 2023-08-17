@@ -59,7 +59,7 @@ impl<'mc> CommandSenderSpigot<'mc> {
         &self,
         arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
         arg1: std::option::Option<
-            Vec<impl Into<blackboxmc_bungee::bungee::api::chat::BaseComponent<'mc>>>,
+            impl Into<blackboxmc_bungee::bungee::api::chat::BaseComponent<'mc>>,
         >,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -69,6 +69,13 @@ impl<'mc> CommandSenderSpigot<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lnet/md_5/bungee/api/chat/BaseComponent;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
         sig += ")V";
         let res = self
             .jni_ref()
@@ -228,7 +235,21 @@ impl<'mc> JNIInstantiatable<'mc> for RemoteConsoleCommandSender<'mc> {
 }
 
 impl<'mc> RemoteConsoleCommandSender<'mc> {
-    //
+    //@NotNull
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //@NotNull
 
     pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Server;");
@@ -240,7 +261,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn spigot(
         &self,
@@ -281,20 +302,6 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
             .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
     }
     //
 
@@ -411,7 +418,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn effective_permissions(
         &self,
@@ -521,6 +528,66 @@ impl<'mc> SimpleCommandMap<'mc> {
     }
     //
 
+    pub fn dispatch(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/command/CommandSender;Ljava/lang/String;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "dispatch",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn register_with_string(
+        &self,
+        arg0: impl Into<String>,
+        arg1: impl Into<String>,
+        arg2: std::option::Option<impl Into<crate::command::Command<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        if let Some(a) = arg2 {
+            sig += "Lorg/bukkit/command/Command;";
+            let val_3 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_3);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "register", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
     pub fn clear_commands(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res =
@@ -596,7 +663,7 @@ impl<'mc> SimpleCommandMap<'mc> {
         }
         Ok(new_vec)
     }
-    //
+    //@NotNull
 
     pub fn commands(
         &self,
@@ -640,66 +707,6 @@ impl<'mc> SimpleCommandMap<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn dispatch(
-        &self,
-        arg0: impl Into<crate::command::CommandSender<'mc>>,
-        arg1: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/command/CommandSender;Ljava/lang/String;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg1.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "dispatch",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
-    pub fn register_with_string(
-        &self,
-        arg0: impl Into<String>,
-        arg1: impl Into<String>,
-        arg2: std::option::Option<impl Into<crate::command::Command<'mc>>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Ljava/lang/String;";
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        args.push(val_1);
-        sig += "Ljava/lang/String;";
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg1.into())?,
-        ));
-        args.push(val_2);
-        if let Some(a) = arg2 {
-            sig += "Lorg/bukkit/command/Command;";
-            let val_3 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_3);
-        }
-        sig += ")Z";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "register", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
     }
     //
 
@@ -907,20 +914,6 @@ impl<'mc> FormattedCommandAlias<'mc> {
     }
     //
 
-    pub fn permission(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getPermission", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    //
-
     pub fn unregister(
         &self,
         arg0: impl Into<crate::command::CommandMap<'mc>>,
@@ -932,6 +925,100 @@ impl<'mc> FormattedCommandAlias<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "unregister",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //@Nullable
+
+    //@Nullable
+
+    pub fn permission(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPermission", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            self.jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+                .to_string_lossy()
+                .to_string(),
+        ))
+    }
+    //@NotNull
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //
+
+    #[doc(hidden)]
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //
+
+    pub fn is_registered(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isRegistered", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn register(
+        &self,
+        arg0: impl Into<crate::command::CommandMap<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/command/CommandMap;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "register",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn set_name(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)Z");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setName",
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
@@ -957,7 +1044,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn description(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1081,7 +1168,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn aliases(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -1119,7 +1206,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn label(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1171,9 +1258,9 @@ impl<'mc> FormattedCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@Nullable
 
-    pub fn permission_message(&self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn permission_message(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1182,13 +1269,17 @@ impl<'mc> FormattedCommandAlias<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            self.jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+                .to_string_lossy()
+                .to_string(),
+        ))
     }
-    //
+    //@NotNull
 
     pub fn usage(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1234,80 +1325,6 @@ impl<'mc> FormattedCommandAlias<'mc> {
         let res = jni.call_static_method(cls, "broadcastCommandMessage", sig.as_str(), args);
         let res = jni.translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    //
-
-    #[doc(hidden)]
-    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    //
-
-    pub fn is_registered(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isRegistered", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
-    pub fn register(
-        &self,
-        arg0: impl Into<crate::command::CommandMap<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/command/CommandMap;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "register",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
-    pub fn set_name(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)Z");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setName",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
     }
     //
 
@@ -1631,7 +1648,21 @@ impl<'mc> JNIInstantiatable<'mc> for ConsoleCommandSender<'mc> {
 }
 
 impl<'mc> ConsoleCommandSender<'mc> {
-    //
+    //@NotNull
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //@NotNull
 
     pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Server;");
@@ -1643,7 +1674,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn spigot(
         &self,
@@ -1684,20 +1715,6 @@ impl<'mc> ConsoleCommandSender<'mc> {
             .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
     }
     //
 
@@ -1814,7 +1831,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn effective_permissions(
         &self,
@@ -1855,6 +1872,16 @@ impl<'mc> ConsoleCommandSender<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
+    }
+    //
+
+    pub fn is_conversing(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isConversing", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
     }
     //
 
@@ -1924,16 +1951,6 @@ impl<'mc> ConsoleCommandSender<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn is_conversing(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isConversing", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
     }
     //
 
@@ -2020,7 +2037,7 @@ impl<'mc> JNIInstantiatable<'mc> for PluginIdentifiableCommand<'mc> {
 }
 
 impl<'mc> PluginIdentifiableCommand<'mc> {
-    //
+    //@NotNull
 
     pub fn plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
@@ -2073,20 +2090,6 @@ impl<'mc> JNIInstantiatable<'mc> for Command<'mc> {
 impl<'mc> Command<'mc> {
     //
 
-    pub fn permission(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getPermission", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    //
-
     pub fn unregister(
         &self,
         arg0: impl Into<crate::command::CommandMap<'mc>>,
@@ -2098,6 +2101,129 @@ impl<'mc> Command<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "unregister",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //@Nullable
+
+    //@Nullable
+
+    pub fn permission(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPermission", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            self.jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+                .to_string_lossy()
+                .to_string(),
+        ))
+    }
+    //@NotNull
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //
+
+    #[doc(hidden)]
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //
+
+    pub fn is_registered(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isRegistered", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn register(
+        &self,
+        arg0: impl Into<crate::command::CommandMap<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/command/CommandMap;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "register",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn execute(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<String>,
+        arg2: Vec<impl Into<String>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from(
+            "(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Ljava/lang/String;)Z",
+        );
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "execute",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn set_name(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)Z");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setName",
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
@@ -2123,7 +2249,7 @@ impl<'mc> Command<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn description(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2247,7 +2373,7 @@ impl<'mc> Command<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn aliases(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -2285,7 +2411,7 @@ impl<'mc> Command<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn label(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2337,9 +2463,9 @@ impl<'mc> Command<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@Nullable
 
-    pub fn permission_message(&self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn permission_message(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2348,13 +2474,17 @@ impl<'mc> Command<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            self.jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+                .to_string_lossy()
+                .to_string(),
+        ))
     }
-    //
+    //@NotNull
 
     pub fn usage(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2400,109 +2530,6 @@ impl<'mc> Command<'mc> {
         let res = jni.call_static_method(cls, "broadcastCommandMessage", sig.as_str(), args);
         let res = jni.translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    //
-
-    #[doc(hidden)]
-    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    //
-
-    pub fn is_registered(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isRegistered", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
-    pub fn register(
-        &self,
-        arg0: impl Into<crate::command::CommandMap<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/command/CommandMap;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "register",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
-    pub fn execute(
-        &self,
-        arg0: impl Into<crate::command::CommandSender<'mc>>,
-        arg1: impl Into<String>,
-        arg2: Vec<impl Into<String>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from(
-            "(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Ljava/lang/String;)Z",
-        );
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg1.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "execute",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
-    pub fn set_name(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)Z");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setName",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
     }
     //
 
@@ -2659,8 +2686,6 @@ impl<'mc> MultipleCommandAlias<'mc> {
     }
     //
 
-    //
-
     pub fn execute(
         &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
@@ -2688,20 +2713,8 @@ impl<'mc> MultipleCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
-    pub fn permission(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getPermission", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
     //
 
     pub fn unregister(
@@ -2715,6 +2728,100 @@ impl<'mc> MultipleCommandAlias<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "unregister",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //@Nullable
+
+    //@Nullable
+
+    pub fn permission(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPermission", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            self.jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+                .to_string_lossy()
+                .to_string(),
+        ))
+    }
+    //@NotNull
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //
+
+    #[doc(hidden)]
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //
+
+    pub fn is_registered(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isRegistered", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn register(
+        &self,
+        arg0: impl Into<crate::command::CommandMap<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/command/CommandMap;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "register",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn set_name(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)Z");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setName",
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
@@ -2740,7 +2847,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn description(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2864,7 +2971,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn aliases(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -2902,7 +3009,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn label(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2954,9 +3061,9 @@ impl<'mc> MultipleCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@Nullable
 
-    pub fn permission_message(&self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn permission_message(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2965,13 +3072,17 @@ impl<'mc> MultipleCommandAlias<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            self.jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+                .to_string_lossy()
+                .to_string(),
+        ))
     }
-    //
+    //@NotNull
 
     pub fn usage(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3017,80 +3128,6 @@ impl<'mc> MultipleCommandAlias<'mc> {
         let res = jni.call_static_method(cls, "broadcastCommandMessage", sig.as_str(), args);
         let res = jni.translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    //
-
-    #[doc(hidden)]
-    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    //
-
-    pub fn is_registered(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isRegistered", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
-    pub fn register(
-        &self,
-        arg0: impl Into<crate::command::CommandMap<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/command/CommandMap;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "register",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
-    pub fn set_name(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)Z");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setName",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
     }
     //
 
@@ -3422,7 +3459,7 @@ impl<'mc> JNIInstantiatable<'mc> for ProxiedCommandSender<'mc> {
 }
 
 impl<'mc> ProxiedCommandSender<'mc> {
-    //
+    //@NotNull
 
     pub fn caller(&self) -> Result<crate::command::CommandSender<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/command/CommandSender;");
@@ -3434,7 +3471,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn callee(&self) -> Result<crate::command::CommandSender<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/command/CommandSender;");
@@ -3446,7 +3483,21 @@ impl<'mc> ProxiedCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //@NotNull
 
     pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Server;");
@@ -3458,7 +3509,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn spigot(
         &self,
@@ -3499,20 +3550,6 @@ impl<'mc> ProxiedCommandSender<'mc> {
             .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
     }
     //
 
@@ -3629,7 +3666,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn effective_permissions(
         &self,
@@ -3857,7 +3894,21 @@ impl<'mc> JNIInstantiatable<'mc> for CommandSender<'mc> {
 }
 
 impl<'mc> CommandSender<'mc> {
-    //
+    //@NotNull
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //@NotNull
 
     pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Server;");
@@ -3869,7 +3920,7 @@ impl<'mc> CommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn spigot(
         &self,
@@ -3910,20 +3961,6 @@ impl<'mc> CommandSender<'mc> {
             .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
     }
     //
 
@@ -4040,7 +4077,7 @@ impl<'mc> CommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn effective_permissions(
         &self,
@@ -4131,6 +4168,66 @@ impl<'mc> JNIInstantiatable<'mc> for CommandMap<'mc> {
 impl<'mc> CommandMap<'mc> {
     //
 
+    pub fn dispatch(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<String>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/command/CommandSender;Ljava/lang/String;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "dispatch",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn register_with_string(
+        &self,
+        arg0: impl Into<String>,
+        arg1: impl Into<String>,
+        arg2: std::option::Option<impl Into<crate::command::Command<'mc>>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        if let Some(a) = arg2 {
+            sig += "Lorg/bukkit/command/Command;";
+            let val_3 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_3);
+        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "register", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
     pub fn clear_commands(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res =
@@ -4206,66 +4303,6 @@ impl<'mc> CommandMap<'mc> {
         }
         Ok(new_vec)
     }
-    //
-
-    pub fn dispatch(
-        &self,
-        arg0: impl Into<crate::command::CommandSender<'mc>>,
-        arg1: impl Into<String>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/command/CommandSender;Ljava/lang/String;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg1.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "dispatch",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
-    pub fn register_with_string(
-        &self,
-        arg0: impl Into<String>,
-        arg1: impl Into<String>,
-        arg2: std::option::Option<impl Into<crate::command::Command<'mc>>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Ljava/lang/String;";
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        args.push(val_1);
-        sig += "Ljava/lang/String;";
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg1.into())?,
-        ));
-        args.push(val_2);
-        if let Some(a) = arg2 {
-            sig += "Lorg/bukkit/command/Command;";
-            let val_3 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_3);
-        }
-        sig += ")Z";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "register", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
 }
 /// Represents a <a title="class in org.bukkit.command" href="Command.html"><code>Command</code></a> belonging to a plugin
 pub struct PluginCommand<'mc>(
@@ -4305,6 +4342,50 @@ impl<'mc> JNIInstantiatable<'mc> for PluginCommand<'mc> {
 }
 
 impl<'mc> PluginCommand<'mc> {
+    //
+
+    #[doc(hidden)]
+    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //
+
+    pub fn execute(
+        &self,
+        arg0: impl Into<crate::command::CommandSender<'mc>>,
+        arg1: impl Into<String>,
+        arg2: Vec<impl Into<String>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from(
+            "(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Ljava/lang/String;)Z",
+        );
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "execute",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
     //
 
     pub fn tab_complete_with_command_sender(
@@ -4352,7 +4433,7 @@ impl<'mc> PluginCommand<'mc> {
         }
         Ok(new_vec)
     }
-    //
+    //@NotNull
 
     pub fn plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
@@ -4364,7 +4445,7 @@ impl<'mc> PluginCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn executor(
         &self,
@@ -4397,19 +4478,23 @@ impl<'mc> PluginCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Nullable
 
     pub fn tab_completer(
         &self,
-    ) -> Result<crate::command::TabCompleter<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<Option<crate::command::TabCompleter<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/command/TabCompleter;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getTabCompleter", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::command::TabCompleter::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::command::TabCompleter::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
     //
 
@@ -4432,64 +4517,6 @@ impl<'mc> PluginCommand<'mc> {
     }
     //
 
-    #[doc(hidden)]
-    pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "toString", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    //
-
-    pub fn execute(
-        &self,
-        arg0: impl Into<crate::command::CommandSender<'mc>>,
-        arg1: impl Into<String>,
-        arg2: Vec<impl Into<String>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from(
-            "(Lorg/bukkit/command/CommandSender;Ljava/lang/String;Ljava/lang/String;)Z",
-        );
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg1.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "execute",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
-    pub fn permission(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getPermission", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    //
-
     pub fn unregister(
         &self,
         arg0: impl Into<crate::command::CommandMap<'mc>>,
@@ -4501,6 +4528,85 @@ impl<'mc> PluginCommand<'mc> {
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "unregister",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //@Nullable
+
+    //@Nullable
+
+    pub fn permission(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPermission", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            self.jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+                .to_string_lossy()
+                .to_string(),
+        ))
+    }
+    //@NotNull
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //
+
+    pub fn is_registered(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isRegistered", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn register(
+        &self,
+        arg0: impl Into<crate::command::CommandMap<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Lorg/bukkit/command/CommandMap;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "register",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn set_name(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)Z");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setName",
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
@@ -4526,7 +4632,7 @@ impl<'mc> PluginCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn description(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -4603,7 +4709,7 @@ impl<'mc> PluginCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn aliases(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -4641,7 +4747,7 @@ impl<'mc> PluginCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn label(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -4693,9 +4799,9 @@ impl<'mc> PluginCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@Nullable
 
-    pub fn permission_message(&self) -> Result<String, Box<dyn std::error::Error>> {
+    pub fn permission_message(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4704,13 +4810,17 @@ impl<'mc> PluginCommand<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            self.jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+                .to_string_lossy()
+                .to_string(),
+        ))
     }
-    //
+    //@NotNull
 
     pub fn usage(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -4756,65 +4866,6 @@ impl<'mc> PluginCommand<'mc> {
         let res = jni.call_static_method(cls, "broadcastCommandMessage", sig.as_str(), args);
         let res = jni.translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    //
-
-    pub fn is_registered(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isRegistered", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
-    pub fn register(
-        &self,
-        arg0: impl Into<crate::command::CommandMap<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/command/CommandMap;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "register",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
-    pub fn set_name(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)Z");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setName",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
     }
     //
 
@@ -4964,7 +5015,9 @@ impl<'mc> JNIInstantiatable<'mc> for BlockCommandSender<'mc> {
 }
 
 impl<'mc> BlockCommandSender<'mc> {
-    //
+    //@NotNull
+
+    //@NotNull
 
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/Block;");
@@ -4976,7 +5029,21 @@ impl<'mc> BlockCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //@NotNull
 
     pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Server;");
@@ -4988,7 +5055,7 @@ impl<'mc> BlockCommandSender<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn spigot(
         &self,
@@ -5029,20 +5096,6 @@ impl<'mc> BlockCommandSender<'mc> {
             .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
     }
     //
 
@@ -5159,7 +5212,7 @@ impl<'mc> BlockCommandSender<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn effective_permissions(
         &self,

@@ -3,7 +3,7 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-/// Provides access to the textures stored inside a <a href="PlayerProfile.html" title="interface in org.bukkit.profile"><code>PlayerProfile</code></a>.
+/// Provides access to the textures stored inside a <a title="interface in org.bukkit.profile" href="PlayerProfile.html"><code>PlayerProfile</code></a>.
 /// <p>Modifying the textures immediately invalidates and clears any previously present attributes that are specific to official player profiles, such as the <a href="#getTimestamp()"><code>timestamp</code></a> and <a href="#isSigned()"><code>signature</code></a>.</p>
 ///
 /// This is a representation of an abstract class.
@@ -48,16 +48,6 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerTextures<'mc> {
 impl<'mc> PlayerTextures<'mc> {
     //
 
-    pub fn is_signed(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isSigned", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
     pub fn timestamp(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
         let res =
@@ -68,12 +58,47 @@ impl<'mc> PlayerTextures<'mc> {
     }
     //
 
-    pub fn skin(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn is_signed(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isSigned", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "clear", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isEmpty", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //@Nullable
+
+    //@NotNull
+
+    pub fn skin(&self) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/net/URL;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getSkin", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
         Ok(res.l()?)
     }
     //
@@ -102,7 +127,7 @@ impl<'mc> PlayerTextures<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn skin_model(
         &self,
@@ -129,14 +154,17 @@ impl<'mc> PlayerTextures<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@Nullable
 
-    pub fn cape(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn cape(&self) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/net/URL;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getCape", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
         Ok(res.l()?)
     }
     //
@@ -155,26 +183,6 @@ impl<'mc> PlayerTextures<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "clear", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
-    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isEmpty", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
     }
 }
 /// The different Minecraft skin models.
@@ -332,7 +340,33 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerProfile<'mc> {
 }
 
 impl<'mc> PlayerProfile<'mc> {
-    //
+    //@NotNull
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //@NotNull
+
+    pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += ")Ljava/lang/Object;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "clone", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //@NotNull
 
     pub fn unique_id(
         &self,
@@ -346,7 +380,7 @@ impl<'mc> PlayerProfile<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn textures(
         &self,
@@ -389,35 +423,7 @@ impl<'mc> PlayerProfile<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    //
-
-    pub fn clone(&self) -> Result<crate::profile::PlayerProfile<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Lorg/bukkit/profile/PlayerProfile;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "clone", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::profile::PlayerProfile::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
+    //@NotNull
 
     pub fn serialize(
         &self,

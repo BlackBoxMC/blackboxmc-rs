@@ -3,7 +3,7 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-/// This event is called when a command is received over RCON. See the javadocs of <a title="class in org.bukkit.event.server" href="ServerCommandEvent.html"><code>ServerCommandEvent</code></a> for more information.
+/// This event is called when a command is received over RCON. See the javadocs of <a href="ServerCommandEvent.html" title="class in org.bukkit.event.server"><code>ServerCommandEvent</code></a> for more information.
 pub struct RemoteServerCommandEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -71,7 +71,7 @@ impl<'mc> RemoteServerCommandEvent<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::event::server::RemoteServerCommandEvent::from_raw(&jni, res)
     }
-    //
+    //@NotNull
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
@@ -83,7 +83,7 @@ impl<'mc> RemoteServerCommandEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn handler_list(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -106,7 +106,7 @@ impl<'mc> RemoteServerCommandEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn command(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -151,7 +151,7 @@ impl<'mc> RemoteServerCommandEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn sender(&self) -> Result<crate::command::CommandSender<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/command/CommandSender;");
@@ -163,7 +163,7 @@ impl<'mc> RemoteServerCommandEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -359,7 +359,7 @@ impl<'mc> PluginEnableEvent<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::event::server::PluginEnableEvent::from_raw(&jni, res)
     }
-    //
+    //@NotNull
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
@@ -371,7 +371,7 @@ impl<'mc> PluginEnableEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn handler_list(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -384,7 +384,7 @@ impl<'mc> PluginEnableEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //
+    //@NotNull
 
     pub fn plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
@@ -396,7 +396,7 @@ impl<'mc> PluginEnableEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -617,6 +617,16 @@ impl<'mc> ServerCommandEvent<'mc> {
     }
     //
 
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //@NotNull
+
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
@@ -627,17 +637,7 @@ impl<'mc> ServerCommandEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
-    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
+    //@NotNull
 
     pub fn command(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -684,7 +684,7 @@ impl<'mc> ServerCommandEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn handler_list(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -697,7 +697,7 @@ impl<'mc> ServerCommandEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //
+    //@NotNull
 
     pub fn sender(&self) -> Result<crate::command::CommandSender<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/command/CommandSender;");
@@ -709,7 +709,7 @@ impl<'mc> ServerCommandEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -915,7 +915,7 @@ impl<'mc> ServiceUnregisterEvent<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::event::server::ServiceUnregisterEvent::from_raw(&jni, res)
     }
-    //
+    //@NotNull
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
@@ -927,7 +927,7 @@ impl<'mc> ServiceUnregisterEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn handler_list(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -940,7 +940,7 @@ impl<'mc> ServiceUnregisterEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //
+    //@NotNull
 
     pub fn provider(
         &self,
@@ -954,7 +954,7 @@ impl<'mc> ServiceUnregisterEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1169,6 +1169,16 @@ impl<'mc> BroadcastMessageEvent<'mc> {
     }
     //
 
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //@NotNull
+
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
@@ -1179,15 +1189,19 @@ impl<'mc> BroadcastMessageEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
-    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+    pub fn message(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
-                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
+                .call_method(&self.jni_object(), "getMessage", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     //
 
@@ -1222,7 +1236,7 @@ impl<'mc> BroadcastMessageEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn handler_list(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1235,7 +1249,11 @@ impl<'mc> BroadcastMessageEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //
+    //@NotNull
+
+    //@Deprecated
+
+    #[deprecated]
 
     pub fn recipients(
         &self,
@@ -1249,21 +1267,7 @@ impl<'mc> BroadcastMessageEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
-    pub fn message(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getMessage", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    //
+    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1465,7 +1469,7 @@ impl<'mc> ServerEvent<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::event::server::ServerEvent::from_raw(&jni, res)
     }
-    //
+    //@NotNull
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
@@ -1477,7 +1481,7 @@ impl<'mc> ServerEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1616,7 +1620,7 @@ impl<'mc> Into<crate::event::Event<'mc>> for ServerEvent<'mc> {
             .expect("Error converting ServerEvent into crate::event::Event")
     }
 }
-/// Called when a <a href="../../command/CommandSender.html" title="interface in org.bukkit.command"><code>CommandSender</code></a> of any description (ie: player or console) attempts to tab complete.
+/// Called when a <a title="interface in org.bukkit.command" href="../../command/CommandSender.html"><code>CommandSender</code></a> of any description (ie: player or console) attempts to tab complete.
 ///
 /// Note that due to client changes, if the sender is a Player, this event will only begin to fire once command arguments are specified, not commands themselves. Plugins wishing to remove commands from tab completion are advised to ensure the client does not have permission for the relevant commands, or use <a title="class in org.bukkit.event.player" href="../player/PlayerCommandSendEvent.html"><code>PlayerCommandSendEvent</code></a>.
 pub struct TabCompleteEvent<'mc>(
@@ -1660,15 +1664,13 @@ impl<'mc> JNIInstantiatable<'mc> for TabCompleteEvent<'mc> {
 impl<'mc> TabCompleteEvent<'mc> {
     //
 
-    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
         let res =
             self.jni_ref()
-                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
+                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.z()?)
     }
     //
 
@@ -1684,15 +1686,17 @@ impl<'mc> TabCompleteEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
+    //@NotNull
 
-    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
+    pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
             self.jni_ref()
-                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
+                .call_method(&self.jni_object(), "getHandlers", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
+        crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     //
 
@@ -1711,7 +1715,7 @@ impl<'mc> TabCompleteEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn handler_list(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1724,7 +1728,7 @@ impl<'mc> TabCompleteEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //
+    //@NotNull
 
     pub fn sender(&self) -> Result<crate::command::CommandSender<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/command/CommandSender;");
@@ -1736,7 +1740,7 @@ impl<'mc> TabCompleteEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn completions(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -1758,7 +1762,7 @@ impl<'mc> TabCompleteEvent<'mc> {
         }
         Ok(new_vec)
     }
-    //
+    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1962,7 +1966,7 @@ impl<'mc> PluginDisableEvent<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::event::server::PluginDisableEvent::from_raw(&jni, res)
     }
-    //
+    //@NotNull
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
@@ -1974,7 +1978,7 @@ impl<'mc> PluginDisableEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn handler_list(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1987,7 +1991,7 @@ impl<'mc> PluginDisableEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //
+    //@NotNull
 
     pub fn plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
@@ -1999,7 +2003,7 @@ impl<'mc> PluginDisableEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2197,7 +2201,7 @@ impl<'mc> MapInitializeEvent<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::event::server::MapInitializeEvent::from_raw(&jni, res)
     }
-    //
+    //@NotNull
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
@@ -2209,7 +2213,7 @@ impl<'mc> MapInitializeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn map(&self) -> Result<crate::map::MapView<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/map/MapView;");
@@ -2221,7 +2225,7 @@ impl<'mc> MapInitializeEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn handler_list(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2234,7 +2238,7 @@ impl<'mc> MapInitializeEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //
+    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2429,7 +2433,7 @@ impl<'mc> ServiceEvent<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::event::server::ServiceEvent::from_raw(&jni, res)
     }
-    //
+    //@NotNull
 
     pub fn provider(
         &self,
@@ -2443,7 +2447,7 @@ impl<'mc> ServiceEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
@@ -2455,7 +2459,7 @@ impl<'mc> ServiceEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2764,7 +2768,7 @@ impl<'mc> ServerLoadEvent<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::event::server::ServerLoadEvent::from_raw(&jni, res)
     }
-    //
+    //@NotNull
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
@@ -2776,20 +2780,7 @@ impl<'mc> ServerLoadEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
-    pub fn handler_list(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
-        let cls = jni.find_class("org/bukkit/event/HandlerList");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::event::HandlerList::from_raw(&jni, obj)
-    }
-    //
+    //@NotNull
 
     pub fn get_type(
         &self,
@@ -2817,7 +2808,20 @@ impl<'mc> ServerLoadEvent<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
+
+    pub fn handler_list(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/event/HandlerList;");
+        let cls = jni.find_class("org/bukkit/event/HandlerList");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "getHandlerList", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::event::HandlerList::from_raw(&jni, obj)
+    }
+    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3016,7 +3020,7 @@ impl<'mc> ServiceRegisterEvent<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::event::server::ServiceRegisterEvent::from_raw(&jni, res)
     }
-    //
+    //@NotNull
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
@@ -3028,7 +3032,7 @@ impl<'mc> ServiceRegisterEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn handler_list(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3041,7 +3045,7 @@ impl<'mc> ServiceRegisterEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //
+    //@NotNull
 
     pub fn provider(
         &self,
@@ -3055,7 +3059,7 @@ impl<'mc> ServiceRegisterEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3356,7 +3360,7 @@ impl<'mc> PluginEvent<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::event::server::PluginEvent::from_raw(&jni, res)
     }
-    //
+    //@NotNull
 
     pub fn plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
@@ -3368,7 +3372,7 @@ impl<'mc> PluginEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
@@ -3380,7 +3384,7 @@ impl<'mc> PluginEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3596,7 +3600,7 @@ impl<'mc> ServerListPingEvent<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::event::server::ServerListPingEvent::from_raw(&jni, res)
     }
-    //
+    //@NotNull
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
@@ -3607,6 +3611,35 @@ impl<'mc> ServerListPingEvent<'mc> {
         crate::event::HandlerList::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    //@NotNull
+
+    pub fn iterator(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Iterator;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "iterator", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaIterator::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //@Nullable
+
+    pub fn address(
+        &self,
+    ) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/net/InetAddress;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getAddress", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(res.l()?)
     }
     //
 
@@ -3633,7 +3666,9 @@ impl<'mc> ServerListPingEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Deprecated
+
+    #[deprecated]
 
     pub fn should_send_chat_previews(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3646,7 +3681,7 @@ impl<'mc> ServerListPingEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn motd(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3676,7 +3711,7 @@ impl<'mc> ServerListPingEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn handler_list(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3689,7 +3724,7 @@ impl<'mc> ServerListPingEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //
+    //@NotNull
 
     pub fn hostname(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3732,31 +3767,7 @@ impl<'mc> ServerListPingEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
-
-    pub fn iterator(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaIterator<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Iterator;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "iterator", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaIterator::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
-    pub fn address(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/net/InetAddress;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getAddress", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
+    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");

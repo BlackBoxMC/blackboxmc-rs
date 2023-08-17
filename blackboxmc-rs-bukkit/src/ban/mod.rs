@@ -85,6 +85,20 @@ impl<'mc> ProfileBanList<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
+    //@NotNull
+
+    pub fn entries(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEntries", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     //
 
     pub fn get_ban_entry_with_object(
@@ -105,7 +119,10 @@ impl<'mc> ProfileBanList<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@Deprecated
+
+    #[deprecated]
+    //@NotNull
 
     pub fn ban_entries(
         &self,
@@ -157,20 +174,6 @@ impl<'mc> ProfileBanList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
-
-    pub fn entries(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Set;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getEntries", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
 }
 impl<'mc> Into<crate::BanList<'mc>> for ProfileBanList<'mc> {
     fn into(self) -> crate::BanList<'mc> {
@@ -218,6 +221,20 @@ impl<'mc> JNIInstantiatable<'mc> for IpBanList<'mc> {
 }
 
 impl<'mc> IpBanList<'mc> {
+    //@NotNull
+
+    pub fn entries(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Set;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getEntries", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
     //
 
     pub fn get_ban_entry_with_object(
@@ -278,7 +295,10 @@ impl<'mc> IpBanList<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@Deprecated
+
+    #[deprecated]
+    //@NotNull
 
     pub fn ban_entries(
         &self,
@@ -329,20 +349,6 @@ impl<'mc> IpBanList<'mc> {
             .call_method(&self.jni_object(), "pardon", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn entries(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Set;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getEntries", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
 }
 impl<'mc> Into<crate::BanList<'mc>> for IpBanList<'mc> {

@@ -482,7 +482,7 @@ impl<'mc> RespawnPhase<'mc> {
         )
     }
 }
-/// Represents a custom <a href="BossBar.html" title="interface in org.bukkit.boss"><code>BossBar</code></a> that has a <a href="../NamespacedKey.html" title="class in org.bukkit"><code>NamespacedKey</code></a>
+/// Represents a custom <a title="interface in org.bukkit.boss" href="BossBar.html"><code>BossBar</code></a> that has a <a href="../NamespacedKey.html" title="class in org.bukkit"><code>NamespacedKey</code></a>
 ///
 /// This is a representation of an abstract class.
 pub struct KeyedBossBar<'mc>(
@@ -562,6 +562,16 @@ impl<'mc> KeyedBossBar<'mc> {
     }
     //
 
+    pub fn remove_all(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "removeAll", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
     pub fn is_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
@@ -585,14 +595,17 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Nullable
 
-    pub fn color(&self) -> Result<crate::boss::BarColor<'mc>, Box<dyn std::error::Error>> {
+    pub fn color(&self) -> Result<Option<crate::boss::BarColor<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/boss/BarColor;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getColor", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
         let variant =
             self.jni_ref()
@@ -603,14 +616,14 @@ impl<'mc> KeyedBossBar<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::boss::BarColor::from_raw(
+        Ok(Some(crate::boss::BarColor::from_raw(
             &self.jni_ref(),
             raw_obj,
             crate::boss::BarColor::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        )?))
     }
-    //
+    //@NotNull
 
     pub fn title(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -624,7 +637,10 @@ impl<'mc> KeyedBossBar<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
+    //@Deprecated
+
+    #[deprecated]
+    //@NotNull
 
     pub fn players(&self) -> Result<Vec<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -695,7 +711,7 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn style(&self) -> Result<crate::boss::BarStyle<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/boss/BarStyle;");
@@ -801,7 +817,9 @@ impl<'mc> KeyedBossBar<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
+    //@Deprecated
+
+    #[deprecated]
 
     pub fn show(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -811,7 +829,9 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Deprecated
+
+    #[deprecated]
 
     pub fn hide(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -821,17 +841,7 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
-
-    pub fn remove_all(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "removeAll", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
+    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -936,6 +946,16 @@ impl<'mc> BossBar<'mc> {
     }
     //
 
+    pub fn remove_all(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "removeAll", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
     pub fn is_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
@@ -960,14 +980,17 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Nullable
 
-    pub fn color(&self) -> Result<crate::boss::BarColor<'mc>, Box<dyn std::error::Error>> {
+    pub fn color(&self) -> Result<Option<crate::boss::BarColor<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/boss/BarColor;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getColor", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
         let variant =
             self.jni_ref()
@@ -978,14 +1001,14 @@ impl<'mc> BossBar<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::boss::BarColor::from_raw(
+        Ok(Some(crate::boss::BarColor::from_raw(
             &self.jni_ref(),
             raw_obj,
             crate::boss::BarColor::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
+        )?))
     }
-    //
+    //@NotNull
 
     pub fn title(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -999,7 +1022,10 @@ impl<'mc> BossBar<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
+    //@Deprecated
+
+    #[deprecated]
+    //@NotNull
 
     pub fn players(&self) -> Result<Vec<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -1070,7 +1096,7 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn style(&self) -> Result<crate::boss::BarStyle<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/boss/BarStyle;");
@@ -1177,7 +1203,9 @@ impl<'mc> BossBar<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
+    //@Deprecated
+
+    #[deprecated]
 
     pub fn show(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1187,23 +1215,15 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@Deprecated
+
+    #[deprecated]
 
     pub fn hide(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "hide", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
-    pub fn remove_all(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "removeAll", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -1248,35 +1268,47 @@ impl<'mc> JNIInstantiatable<'mc> for DragonBattle<'mc> {
 }
 
 impl<'mc> DragonBattle<'mc> {
-    //
+    //@Nullable
 
-    pub fn boss_bar(&self) -> Result<crate::boss::BossBar<'mc>, Box<dyn std::error::Error>> {
+    pub fn boss_bar(
+        &self,
+    ) -> Result<Option<crate::boss::BossBar<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/boss/BossBar;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getBossBar", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::boss::BossBar::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::boss::BossBar::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
-    //
+    //@Nullable
 
     pub fn ender_dragon(
         &self,
-    ) -> Result<crate::entity::EnderDragon<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<Option<crate::entity::EnderDragon<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/EnderDragon;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getEnderDragon", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::entity::EnderDragon::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::entity::EnderDragon::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
-    //
+    //@Nullable
 
-    pub fn end_portal_location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
+    pub fn end_portal_location(
+        &self,
+    ) -> Result<Option<crate::Location<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1285,9 +1317,12 @@ impl<'mc> DragonBattle<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::Location::from_raw(&self.jni_ref(), unsafe {
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::Location::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        })?))
     }
     //
 
@@ -1318,7 +1353,7 @@ impl<'mc> DragonBattle<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn respawn_phase(
         &self,

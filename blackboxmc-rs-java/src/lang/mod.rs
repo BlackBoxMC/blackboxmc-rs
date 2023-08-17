@@ -3815,7 +3815,7 @@ impl<'mc> JavaLong<'mc> {
 /// string concatenation and conversion, see Gosling, Joy, and Steele,
 /// <i>The Java Language Specification</i>.
 /// </p><p> Unless otherwise noted, passing a <tt>null</tt> argument to a constructor
-/// or method in this class will cause a <a title="class in java.lang" href="../../java/lang/NullPointerException.html"><code>NullPointerException</code></a> to be
+/// or method in this class will cause a <a href="../../java/lang/NullPointerException.html" title="class in java.lang"><code>NullPointerException</code></a> to be
 /// thrown.
 /// </p><p>A <code>String</code> represents a string in the UTF-16 format
 /// in which <em>supplementary characters</em> are represented by <em>surrogate

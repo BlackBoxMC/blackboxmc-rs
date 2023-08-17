@@ -337,6 +337,32 @@ impl<'mc> JNIInstantiatable<'mc> for HelpTopicComparator<'mc> {
 impl<'mc> HelpTopicComparator<'mc> {
     //
 
+    pub fn compare_with_help_topic(
+        &self,
+        arg0: impl Into<crate::help::HelpTopic<'mc>>,
+        arg1: impl Into<crate::help::HelpTopic<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/help/HelpTopic;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Lorg/bukkit/help/HelpTopic;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
+        sig += ")I";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "compare", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    //@NotNull
+
     pub fn topic_name_comparator_instance(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::help::HelpTopicComparatorTopicNameComparator<'mc>, Box<dyn std::error::Error>>
@@ -349,7 +375,7 @@ impl<'mc> HelpTopicComparator<'mc> {
         let obj = res.l()?;
         crate::help::HelpTopicComparatorTopicNameComparator::from_raw(&jni, obj)
     }
-    //
+    //@NotNull
 
     pub fn help_topic_comparator_instance(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -361,28 +387,6 @@ impl<'mc> HelpTopicComparator<'mc> {
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::help::HelpTopicComparator::from_raw(&jni, obj)
-    }
-    //
-
-    pub fn compare_with_object(
-        &self,
-        arg0: jni::objects::JObject<'mc>,
-        arg1: jni::objects::JObject<'mc>,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Ljava/lang/Object;";
-        let val_1 = jni::objects::JValueGen::Object(arg0);
-        args.push(val_1);
-        sig += "Ljava/lang/Object;";
-        let val_2 = jni::objects::JValueGen::Object(arg1);
-        args.push(val_2);
-        sig += ")I";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "compare", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
     }
     //
 
@@ -607,9 +611,9 @@ impl<'mc> Into<blackboxmc_java::util::JavaComparator<'mc>> for HelpTopicComparat
         )
     }
 }
-/// A HelpTopicFactory is used to create custom <a href="HelpTopic.html" title="class in org.bukkit.help"><code>HelpTopic</code></a> objects from commands that inherit from a common base class or have executors that inherit from a common base class. You can use a custom HelpTopic to change the way all the commands in your plugin display in the help. If your plugin implements a complex permissions system, a custom help topic may also be appropriate.
+/// A HelpTopicFactory is used to create custom <a title="class in org.bukkit.help" href="HelpTopic.html"><code>HelpTopic</code></a> objects from commands that inherit from a common base class or have executors that inherit from a common base class. You can use a custom HelpTopic to change the way all the commands in your plugin display in the help. If your plugin implements a complex permissions system, a custom help topic may also be appropriate.
 /// <p>To automatically bind your plugin's commands to your custom HelpTopic implementation, first make sure all your commands or executors derive from a custom base class (it doesn't have to do anything). Next implement a custom HelpTopicFactory that accepts your custom command base class and instantiates an instance of your custom HelpTopic from it. Finally, register your HelpTopicFactory against your command base class using the <a href="HelpMap.html#registerHelpTopicFactory(java.lang.Class,org.bukkit.help.HelpTopicFactory)"><code>HelpMap.registerHelpTopicFactory(Class, HelpTopicFactory)</code></a> method.</p>
-/// <p>As the help system iterates over all registered commands to make help topics, it first checks to see if there is a HelpTopicFactory registered for the command's base class. If so, the factory is used to make a help topic rather than a generic help topic. If no factory is found for the command's base class and the command derives from <a title="class in org.bukkit.command" href="../command/PluginCommand.html"><code>PluginCommand</code></a>, then the type of the command's executor is inspected looking for a registered HelpTopicFactory. Finally, if no factory is found, a generic help topic is created for the command.</p>
+/// <p>As the help system iterates over all registered commands to make help topics, it first checks to see if there is a HelpTopicFactory registered for the command's base class. If so, the factory is used to make a help topic rather than a generic help topic. If no factory is found for the command's base class and the command derives from <a href="../command/PluginCommand.html" title="class in org.bukkit.command"><code>PluginCommand</code></a>, then the type of the command's executor is inspected looking for a registered HelpTopicFactory. Finally, if no factory is found, a generic help topic is created for the command.</p>
 ///
 /// This is a representation of an abstract class.
 pub struct HelpTopicFactory<'mc>(
@@ -743,6 +747,20 @@ impl<'mc> HelpTopic<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::help::HelpTopic::from_raw(&jni, res)
     }
+    //@NotNull
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     //
 
     pub fn can_see(
@@ -778,7 +796,7 @@ impl<'mc> HelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn short_text(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -840,20 +858,6 @@ impl<'mc> HelpTopic<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
     }
     //
 
@@ -968,7 +972,7 @@ impl<'mc> std::string::ToString for HelpTopic<'mc> {
 /// <ol>
 /// <li>General topics are loaded from the help.yml</li>
 /// <li>Plugins load and optionally call <code>addTopic()</code></li>
-/// <li>Registered plugin commands are processed by <a title="interface in org.bukkit.help" href="HelpTopicFactory.html"><code>HelpTopicFactory</code></a> objects to create topics</li>
+/// <li>Registered plugin commands are processed by <a href="HelpTopicFactory.html" title="interface in org.bukkit.help"><code>HelpTopicFactory</code></a> objects to create topics</li>
 /// <li>Topic contents are amended as directed in help.yml</li>
 /// </ol>
 ///
@@ -1012,6 +1016,16 @@ impl<'mc> JNIInstantiatable<'mc> for HelpMap<'mc> {
 impl<'mc> HelpMap<'mc> {
     //
 
+    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "clear", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
     pub fn get_help_topic(
         &self,
         arg0: impl Into<String>,
@@ -1031,7 +1045,7 @@ impl<'mc> HelpMap<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn help_topics(
         &self,
@@ -1093,7 +1107,7 @@ impl<'mc> HelpMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn ignored_plugins(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -1117,16 +1131,6 @@ impl<'mc> HelpMap<'mc> {
             );
         }
         Ok(new_vec)
-    }
-    //
-
-    pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "clear", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
     }
 }
 /// This help topic generates a list of other help topics. This class is useful for adding your own index help topics. To enforce a particular order, use a sorted collection.
@@ -1228,7 +1232,21 @@ impl<'mc> IndexHelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
+    //@NotNull
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //@NotNull
 
     pub fn short_text(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1267,20 +1285,6 @@ impl<'mc> IndexHelpTopic<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
     }
     //
 
@@ -1475,6 +1479,20 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
+    //@NotNull
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
     //
 
     pub fn amend_can_see(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
@@ -1491,7 +1509,7 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn short_text(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1553,20 +1571,6 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
     }
     //
 

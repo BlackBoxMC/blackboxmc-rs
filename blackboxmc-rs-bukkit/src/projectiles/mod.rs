@@ -118,7 +118,9 @@ impl<'mc> JNIInstantiatable<'mc> for BlockProjectileSource<'mc> {
 }
 
 impl<'mc> BlockProjectileSource<'mc> {
-    //
+    //@NotNull
+
+    //@NotNull
 
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/Block;");

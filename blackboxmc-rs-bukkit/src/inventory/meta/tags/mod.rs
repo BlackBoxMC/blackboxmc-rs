@@ -70,7 +70,7 @@ impl<'mc> JNIInstantiatable<'mc> for ItemTagType<'mc> {
 }
 
 impl<'mc> ItemTagType<'mc> {
-    //
+    //@NotNull
 
     pub fn primitive_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -83,7 +83,7 @@ impl<'mc> ItemTagType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
+    //@NotNull
 
     pub fn complex_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -186,7 +186,7 @@ impl<'mc> JNIInstantiatable<'mc> for ItemTagAdapterContext<'mc> {
 }
 
 impl<'mc> ItemTagAdapterContext<'mc> {
-    //
+    //@NotNull
 
     pub fn new_tag_container(
         &self,
@@ -246,7 +246,7 @@ impl<'mc> JNIInstantiatable<'mc> for ItemTagTypePrimitiveTagType<'mc> {
 }
 
 impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
-    //
+    //@NotNull
 
     pub fn primitive_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -259,7 +259,7 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
+    //@NotNull
 
     pub fn complex_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -477,6 +477,16 @@ impl<'mc> JNIInstantiatable<'mc> for CustomItemTagContainer<'mc> {
 impl<'mc> CustomItemTagContainer<'mc> {
     //
 
+    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isEmpty", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //@NotNull
+
     pub fn adapter_context(
         &self,
     ) -> Result<crate::inventory::meta::tags::ItemTagAdapterContext<'mc>, Box<dyn std::error::Error>>
@@ -594,15 +604,5 @@ impl<'mc> CustomItemTagContainer<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isEmpty", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
     }
 }

@@ -56,7 +56,7 @@ impl<'mc> AdvancementProgress<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn advancement(
         &self,
@@ -129,7 +129,7 @@ impl<'mc> AdvancementProgress<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn remaining_criteria(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Collection;");
@@ -154,7 +154,7 @@ impl<'mc> AdvancementProgress<'mc> {
         }
         Ok(new_vec)
     }
-    //
+    //@NotNull
 
     pub fn awarded_criteria(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Collection;");
@@ -338,6 +338,43 @@ impl<'mc> JNIInstantiatable<'mc> for AdvancementDisplay<'mc> {
 impl<'mc> AdvancementDisplay<'mc> {
     //
 
+    pub fn is_hidden(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "isHidden", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //@NotNull
+
+    pub fn get_type(
+        &self,
+    ) -> Result<crate::advancement::AdvancementDisplayType<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/advancement/AdvancementDisplayType;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant =
+            self.jni_ref()
+                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = self.jni_ref().translate_error(variant)?;
+        let variant_str = self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::advancement::AdvancementDisplayType::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::advancement::AdvancementDisplayType::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
+    //
+
     pub fn x(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
         let res = self
@@ -356,7 +393,7 @@ impl<'mc> AdvancementDisplay<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
+    //@NotNull
 
     pub fn description(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -370,7 +407,7 @@ impl<'mc> AdvancementDisplay<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
+    //@NotNull
 
     pub fn title(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -384,7 +421,7 @@ impl<'mc> AdvancementDisplay<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
+    //@NotNull
 
     pub fn icon(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
@@ -418,43 +455,6 @@ impl<'mc> AdvancementDisplay<'mc> {
         );
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
-    }
-    //
-
-    pub fn is_hidden(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "isHidden", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
-    pub fn get_type(
-        &self,
-    ) -> Result<crate::advancement::AdvancementDisplayType<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/advancement/AdvancementDisplayType;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getType", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::advancement::AdvancementDisplayType::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::advancement::AdvancementDisplayType::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
     }
 }
 /// Represents an advancement that may be awarded to a player. This class is not reference safe as the underlying advancement may be reloaded.
@@ -497,7 +497,7 @@ impl<'mc> JNIInstantiatable<'mc> for Advancement<'mc> {
 }
 
 impl<'mc> Advancement<'mc> {
-    //
+    //@NotNull
 
     pub fn criteria(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Collection;");
@@ -519,21 +519,26 @@ impl<'mc> Advancement<'mc> {
         }
         Ok(new_vec)
     }
-    //
+    //@Nullable
 
     pub fn display(
         &self,
-    ) -> Result<crate::advancement::AdvancementDisplay<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<Option<crate::advancement::AdvancementDisplay<'mc>>, Box<dyn std::error::Error>>
+    {
         let sig = String::from("()Lorg/bukkit/advancement/AdvancementDisplay;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getDisplay", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::advancement::AdvancementDisplay::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::advancement::AdvancementDisplay::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
-    //
+    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");

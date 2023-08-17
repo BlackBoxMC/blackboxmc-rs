@@ -185,7 +185,7 @@ impl<'mc> PluginMessageListener<'mc> {
         Ok(())
     }
 }
-/// Contains information about a <a href="../Plugin.html" title="interface in org.bukkit.plugin"><code>Plugin</code></a>s registration to a plugin channel.
+/// Contains information about a <a title="interface in org.bukkit.plugin" href="../Plugin.html"><code>Plugin</code></a>s registration to a plugin channel.
 pub struct PluginMessageListenerRegistration<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -279,47 +279,6 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
     }
     //
 
-    pub fn channel(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getChannel", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    //
-
-    pub fn listener(
-        &self,
-    ) -> Result<crate::plugin::messaging::PluginMessageListener<'mc>, Box<dyn std::error::Error>>
-    {
-        let sig = String::from("()Lorg/bukkit/plugin/messaging/PluginMessageListener;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getListener", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::plugin::messaging::PluginMessageListener::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
-    pub fn plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getPlugin", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::plugin::Plugin::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
     pub fn equals(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -344,6 +303,47 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
             .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
+    }
+    //@NotNull
+
+    pub fn channel(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getChannel", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //@NotNull
+
+    pub fn listener(
+        &self,
+    ) -> Result<crate::plugin::messaging::PluginMessageListener<'mc>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/plugin/messaging/PluginMessageListener;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getListener", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::plugin::messaging::PluginMessageListener::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //@NotNull
+
+    pub fn plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getPlugin", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::plugin::Plugin::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     //
 
@@ -622,7 +622,7 @@ impl<'mc> Messenger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn outgoing_channels(
         &self,
@@ -639,7 +639,7 @@ impl<'mc> Messenger<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn incoming_channels(
         &self,
@@ -1037,21 +1037,17 @@ impl<'mc> StandardMessenger<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
-    pub fn get_incoming_channels(
+    pub fn incoming_channels(
         &self,
-        arg0: impl Into<crate::plugin::Plugin<'mc>>,
     ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Lorg/bukkit/plugin/Plugin;)Ljava/util/Set;");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
+        let sig = String::from("()Ljava/util/Set;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
             "getIncomingChannels",
             sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
+            vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
         blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
@@ -1431,7 +1427,7 @@ impl<'mc> PluginMessageRecipient<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn listening_plugin_channels(
         &self,

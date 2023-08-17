@@ -82,6 +82,50 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
     }
     //@NotNull
 
+    //@NotNull
+
+    /// Get the type of the block at x, y, z. Getting blocks outside the chunk's bounds returns air.
+    /// Get the type and data of the block at x, y, z. Getting blocks outside the chunk's bounds returns air.
+    pub fn get_type(
+        &self,
+        arg0: i32,
+        arg1: i32,
+        arg2: i32,
+    ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(III)Lorg/bukkit/Material;");
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_3 = jni::objects::JValueGen::Int(arg2.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getType",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+            ],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant =
+            self.jni_ref()
+                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = self.jni_ref().translate_error(variant)?;
+        let variant_str = self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::Material::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::Material::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
+    //@NotNull
+
     /// Get the type and data of the block at x, y, z. Getting blocks outside the chunk's bounds returns air.
     pub fn get_block_data(
         &self,
@@ -151,22 +195,12 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
     }
     //
 
-    pub fn min_height(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getMinHeight", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    //
-
     pub fn set_block_with_int(
         &self,
         arg0: i32,
         arg1: i32,
         arg2: i32,
-        arg3: impl Into<crate::material::MaterialData<'mc>>,
+        arg3: impl Into<crate::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -179,7 +213,7 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
         sig += "I";
         let val_3 = jni::objects::JValueGen::Int(arg2.into());
         args.push(val_3);
-        sig += "Lorg/bukkit/material/MaterialData;";
+        sig += "Lorg/bukkit/Material;";
         let val_4 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg3.into().jni_object().clone())
         });
@@ -201,7 +235,7 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
         arg3: i32,
         arg4: i32,
         arg5: i32,
-        arg6: impl Into<crate::material::MaterialData<'mc>>,
+        arg6: impl Into<crate::Material<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -223,7 +257,7 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
         sig += "I";
         let val_6 = jni::objects::JValueGen::Int(arg5.into());
         args.push(val_6);
-        sig += "Lorg/bukkit/material/MaterialData;";
+        sig += "Lorg/bukkit/Material;";
         let val_7 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg6.into().jni_object().clone())
         });
@@ -265,6 +299,16 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
     }
     //
 
+    pub fn min_height(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMinHeight", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    //
+
     pub fn max_height(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res =
@@ -272,50 +316,6 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
                 .call_method(&self.jni_object(), "getMaxHeight", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
-    }
-    //@NotNull
-
-    //@NotNull
-
-    /// Get the type of the block at x, y, z. Getting blocks outside the chunk's bounds returns air.
-    /// Get the type and data of the block at x, y, z. Getting blocks outside the chunk's bounds returns air.
-    pub fn get_type(
-        &self,
-        arg0: i32,
-        arg1: i32,
-        arg2: i32,
-    ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(III)Lorg/bukkit/Material;");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getType",
-            sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-            ],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
     }
 }
 /// Class for providing biomes.
@@ -945,8 +945,8 @@ impl<'mc> BiomeParameterPoint<'mc> {
 }
 /// A block populator is responsible for generating a small area of blocks.
 /// <p>For example, generating glowstone inside the nether or generating dungeons full of treasure</p>
-/// <p>A BlockPopulator can be used in combination with a custom <a title="class in org.bukkit.generator" href="ChunkGenerator.html"><code>ChunkGenerator</code></a> by returning it in the method <a href="ChunkGenerator.html#getDefaultPopulators(org.bukkit.World)"><code>ChunkGenerator.getDefaultPopulators(World)</code></a> or by adding it manually to the worlds populator list returned by <a href="../World.html#getPopulators()"><code>World.getPopulators()</code></a>.</p>
-/// <p>When adding a BlockPopulator manually to a world it is recommended to do so during the <a title="class in org.bukkit.event.world" href="../event/world/WorldInitEvent.html"><code>WorldInitEvent</code></a>.</p>
+/// <p>A BlockPopulator can be used in combination with a custom <a href="ChunkGenerator.html" title="class in org.bukkit.generator"><code>ChunkGenerator</code></a> by returning it in the method <a href="ChunkGenerator.html#getDefaultPopulators(org.bukkit.World)"><code>ChunkGenerator.getDefaultPopulators(World)</code></a> or by adding it manually to the worlds populator list returned by <a href="../World.html#getPopulators()"><code>World.getPopulators()</code></a>.</p>
+/// <p>When adding a BlockPopulator manually to a world it is recommended to do so during the <a href="../event/world/WorldInitEvent.html" title="class in org.bukkit.event.world"><code>WorldInitEvent</code></a>.</p>
 pub struct BlockPopulator<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1240,7 +1240,7 @@ impl<'mc> LimitedRegion<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn tile_entities(
         &self,
@@ -1258,6 +1258,53 @@ impl<'mc> LimitedRegion<'mc> {
             new_vec.push(crate::block::BlockState::from_raw(&self.jni_ref(), obj)?);
         }
         Ok(new_vec)
+    }
+    //@NotNull
+
+    //@NotNull
+
+    pub fn get_type_with_int(
+        &self,
+        arg0: i32,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<i32>,
+    ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "I";
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "I";
+            let val_3 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_3);
+        }
+        sig += ")Lorg/bukkit/Material;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getType", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant =
+            self.jni_ref()
+                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = self.jni_ref().translate_error(variant)?;
+        let variant_str = self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::Material::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::Material::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
     }
     //
 
@@ -1586,7 +1633,7 @@ impl<'mc> LimitedRegion<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn entities(&self) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -1603,7 +1650,7 @@ impl<'mc> LimitedRegion<'mc> {
         }
         Ok(new_vec)
     }
-    //
+    //@NotNull
 
     pub fn living_entities(
         &self,
@@ -1713,53 +1760,6 @@ impl<'mc> LimitedRegion<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //@NotNull
-
-    pub fn get_type_with_int(
-        &self,
-        arg0: i32,
-        arg1: std::option::Option<i32>,
-        arg2: std::option::Option<i32>,
-    ) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "I";
-            let val_3 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_3);
-        }
-        sig += ")Lorg/bukkit/Material;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getType", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant =
-            self.jni_ref()
-                .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::Material::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::Material::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
 }
 impl<'mc> Into<crate::RegionAccessor<'mc>> for LimitedRegion<'mc> {
     fn into(self) -> crate::RegionAccessor<'mc> {
@@ -1817,7 +1817,21 @@ impl<'mc> WorldInfo<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
+    //@NotNull
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //@NotNull
 
     pub fn uid(&self) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/UUID;");
@@ -1829,7 +1843,7 @@ impl<'mc> WorldInfo<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn environment(&self) -> Result<crate::WorldEnvironment<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World$Environment;");
@@ -1873,20 +1887,6 @@ impl<'mc> WorldInfo<'mc> {
                 .call_method(&self.jni_object(), "getMaxHeight", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
-    }
-    //
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
     }
 }
 /// A chunk generator is responsible for the initial shaping of an entire chunk. For example, the nether chunk generator should shape netherrack and soulsand. A chunk is generated in multiple steps, those steps are always in the same order. Between those steps however an unlimited time may pass. This means, a chunk may generated until the surface step and continue with the bedrock step after one or multiple server restarts or even after multiple Minecraft versions. The order of generation is as follows
@@ -2292,7 +2292,9 @@ impl<'mc> ChunkGenerator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@Deprecated
+
+    #[deprecated]
 
     pub fn is_parallel_capable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2395,7 +2397,9 @@ impl<'mc> ChunkGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@Deprecated
+
+    #[deprecated]
 
     pub fn should_generate_bedrock(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");

@@ -9,7 +9,7 @@ use color_eyre::eyre::Result;
 /// <p>An application can increase the capacity of an <tt>ArrayList</tt> instance before adding a large number of elements using the <tt>ensureCapacity</tt> operation. This may reduce the amount of incremental reallocation.</p>
 /// <p><strong>Note that this implementation is not synchronized.</strong> If multiple threads access an <tt>ArrayList</tt> instance concurrently, and at least one of the threads modifies the list structurally, it <i>must</i> be synchronized externally. (A structural modification is any operation that adds or deletes one or more elements, or explicitly resizes the backing array; merely setting the value of an element is not a structural modification.) This is typically accomplished by synchronizing on some object that naturally encapsulates the list. If no such object exists, the list should be "wrapped" using the <a href="../../java/util/Collections.html#synchronizedList-java.util.List-"><code>Collections.synchronizedList</code></a> method. This is best done at creation time, to prevent accidental unsynchronized access to the list:</p>
 /// <pre> List list = Collections.synchronizedList(new ArrayList(...));</pre>
-/// <p><a name="fail-fast"> The iterators returned by this class's </a><a href="../../java/util/ArrayList.html#iterator--"><code>iterator</code></a> and <a href="../../java/util/ArrayList.html#listIterator-int-"><code>listIterator</code></a> methods are <em>fail-fast</em>: if the list is structurally modified at any time after the iterator is created, in any way except through the iterator's own <a href="../../java/util/ListIterator.html#remove--"><code>remove</code></a> or <a href="../../java/util/ListIterator.html#add-E-"><code>add</code></a> methods, the iterator will throw a <a title="class in java.util" href="../../java/util/ConcurrentModificationException.html"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
+/// <p><a name="fail-fast"> The iterators returned by this class's </a><a href="../../java/util/ArrayList.html#iterator--"><code>iterator</code></a> and <a href="../../java/util/ArrayList.html#listIterator-int-"><code>listIterator</code></a> methods are <em>fail-fast</em>: if the list is structurally modified at any time after the iterator is created, in any way except through the iterator's own <a href="../../java/util/ListIterator.html#remove--"><code>remove</code></a> or <a href="../../java/util/ListIterator.html#add-E-"><code>add</code></a> methods, the iterator will throw a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
 /// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <code>ConcurrentModificationException</code> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 pub struct JavaArrayList<'mc>(
@@ -1140,7 +1140,7 @@ impl<'mc> Into<crate::util::JavaMap<'mc>> for JavaAbstractMap<'mc> {
             .expect("Error converting JavaAbstractMap into crate::util::JavaMap")
     }
 }
-/// A <a title="interface in java.util" href="../../java/util/NavigableSet.html"><code>NavigableSet</code></a> implementation based on a <a href="../../java/util/TreeMap.html" title="class in java.util"><code>TreeMap</code></a>. The elements are ordered using their <a title="interface in java.lang" href="../../java/lang/Comparable.html">natural ordering</a>, or by a <a href="../../java/util/Comparator.html" title="interface in java.util"><code>Comparator</code></a> provided at set creation time, depending on which constructor is used.
+/// A <a title="interface in java.util" href="../../java/util/NavigableSet.html"><code>NavigableSet</code></a> implementation based on a <a title="class in java.util" href="../../java/util/TreeMap.html"><code>TreeMap</code></a>. The elements are ordered using their <a title="interface in java.lang" href="../../java/lang/Comparable.html">natural ordering</a>, or by a <a href="../../java/util/Comparator.html" title="interface in java.util"><code>Comparator</code></a> provided at set creation time, depending on which constructor is used.
 /// <p>This implementation provides guaranteed log(n) time cost for the basic operations (<code>add</code>, <code>remove</code> and <code>contains</code>).</p>
 /// <p>Note that the ordering maintained by a set (whether or not an explicit comparator is provided) must be <i>consistent with equals</i> if it is to correctly implement the <code>Set</code> interface. (See <code>Comparable</code> or <code>Comparator</code> for a precise definition of <i>consistent with equals</i>.) This is so because the <code>Set</code> interface is defined in terms of the <code>equals</code> operation, but a <code>TreeSet</code> instance performs all element comparisons using its <code>compareTo</code> (or <code>compare</code>) method, so two elements that are deemed equal by this method are, from the standpoint of the set, equal. The behavior of a set <i>is</i> well-defined even if its ordering is inconsistent with equals; it just fails to obey the general contract of the <code>Set</code> interface.</p>
 /// <p><strong>Note that this implementation is not synchronized.</strong> If multiple threads access a tree set concurrently, and at least one of the threads modifies the set, it <i>must</i> be synchronized externally. This is typically accomplished by synchronizing on some object that naturally encapsulates the set. If no such object exists, the set should be "wrapped" using the <a href="../../java/util/Collections.html#synchronizedSortedSet-java.util.SortedSet-"><code>Collections.synchronizedSortedSet</code></a> method. This is best done at creation time, to prevent accidental unsynchronized access to the set:</p>
@@ -1207,6 +1207,40 @@ impl<'mc> JavaTreeSet<'mc> {
     }
     //
 
+    pub fn ceiling(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/Object;)Ljava/lang/Object;");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "ceiling",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn higher(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/Object;)Ljava/lang/Object;");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "higher",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
     pub fn poll_first(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
@@ -1241,40 +1275,6 @@ impl<'mc> JavaTreeSet<'mc> {
         crate::util::JavaIterator::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    //
-
-    pub fn ceiling(
-        &self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Object;)Ljava/lang/Object;");
-        let val_1 = jni::objects::JValueGen::Object(arg0);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "ceiling",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn higher(
-        &self,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Object;)Ljava/lang/Object;");
-        let val_1 = jni::objects::JValueGen::Object(arg0);
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "higher",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
     }
     //
 
@@ -1670,9 +1670,9 @@ impl<'mc> Into<crate::util::JavaAbstractSet<'mc>> for JavaTreeSet<'mc> {
 }
 /// The <code>Vector</code> class implements a growable array of objects. Like an array, it contains components that can be accessed using an integer index. However, the size of a <code>Vector</code> can grow or shrink as needed to accommodate adding and removing items after the <code>Vector</code> has been created.
 /// <p>Each vector tries to optimize storage management by maintaining a <code>capacity</code> and a <code>capacityIncrement</code>. The <code>capacity</code> is always at least as large as the vector size; it is usually larger because as components are added to the vector, the vector's storage increases in chunks the size of <code>capacityIncrement</code>. An application can increase the capacity of a vector before inserting a large number of components; this reduces the amount of incremental reallocation.</p>
-/// <p><a name="fail-fast"> The iterators returned by this class's </a><a href="../../java/util/Vector.html#iterator--"><code>iterator</code></a> and <a href="../../java/util/Vector.html#listIterator-int-"><code>listIterator</code></a> methods are <em>fail-fast</em>: if the vector is structurally modified at any time after the iterator is created, in any way except through the iterator's own <a href="../../java/util/ListIterator.html#remove--"><code>remove</code></a> or <a href="../../java/util/ListIterator.html#add-E-"><code>add</code></a> methods, the iterator will throw a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future. The <a href="../../java/util/Enumeration.html" title="interface in java.util"><code>Enumerations</code></a> returned by the <a href="../../java/util/Vector.html#elements--"><code>elements</code></a> method are <em>not</em> fail-fast.</p>
+/// <p><a name="fail-fast"> The iterators returned by this class's </a><a href="../../java/util/Vector.html#iterator--"><code>iterator</code></a> and <a href="../../java/util/Vector.html#listIterator-int-"><code>listIterator</code></a> methods are <em>fail-fast</em>: if the vector is structurally modified at any time after the iterator is created, in any way except through the iterator's own <a href="../../java/util/ListIterator.html#remove--"><code>remove</code></a> or <a href="../../java/util/ListIterator.html#add-E-"><code>add</code></a> methods, the iterator will throw a <a title="class in java.util" href="../../java/util/ConcurrentModificationException.html"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future. The <a title="interface in java.util" href="../../java/util/Enumeration.html"><code>Enumerations</code></a> returned by the <a href="../../java/util/Vector.html#elements--"><code>elements</code></a> method are <em>not</em> fail-fast.</p>
 /// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <code>ConcurrentModificationException</code> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
-/// <p>As of the Java 2 platform v1.2, this class was retrofitted to implement the <a href="../../java/util/List.html" title="interface in java.util"><code>List</code></a> interface, making it a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>. Unlike the new collection implementations, <code>Vector</code> is synchronized. If a thread-safe implementation is not needed, it is recommended to use <a href="../../java/util/ArrayList.html" title="class in java.util"><code>ArrayList</code></a> in place of <code>Vector</code>.</p>
+/// <p>As of the Java 2 platform v1.2, this class was retrofitted to implement the <a title="interface in java.util" href="../../java/util/List.html"><code>List</code></a> interface, making it a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>. Unlike the new collection implementations, <code>Vector</code> is synchronized. If a thread-safe implementation is not needed, it is recommended to use <a title="class in java.util" href="../../java/util/ArrayList.html"><code>ArrayList</code></a> in place of <code>Vector</code>.</p>
 pub struct JavaVector<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1733,6 +1733,33 @@ impl<'mc> JavaVector<'mc> {
         let res = jni.new_object(cls, sig.as_str(), args);
         let res = jni.translate_error_no_gen(res)?;
         crate::util::JavaVector::from_raw(&jni, res)
+    }
+    //
+
+    pub fn set_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(I)V");
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setSize",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn copy_into(
+        &self,
+        arg0: Vec<jni::objects::JObject<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/Object;)V");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "copyInto", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     //
 
@@ -1856,33 +1883,6 @@ impl<'mc> JavaVector<'mc> {
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
-    pub fn set_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(I)V");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setSize",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
-    pub fn copy_into(
-        &self,
-        arg0: Vec<jni::objects::JObject<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Object;)V");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "copyInto", sig.as_str(), vec![]);
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
@@ -2528,7 +2528,7 @@ impl<'mc> JavaRandomAccess<'mc> {}
 /// <p>All general-purpose map implementation classes should provide two "standard" constructors: a void (no arguments) constructor which creates an empty map, and a constructor with a single argument of type <tt>Map</tt>, which creates a new map with the same key-value mappings as its argument. In effect, the latter constructor allows the user to copy any map, producing an equivalent map of the desired class. There is no way to enforce this recommendation (as interfaces cannot contain constructors) but all of the general-purpose map implementations in the JDK comply.</p>
 /// <p>The "destructive" methods contained in this interface, that is, the methods that modify the map on which they operate, are specified to throw <tt>UnsupportedOperationException</tt> if this map does not support the operation. If this is the case, these methods may, but are not required to, throw an <tt>UnsupportedOperationException</tt> if the invocation would have no effect on the map. For example, invoking the <a href="../../java/util/Map.html#putAll-java.util.Map-"><code>putAll(Map)</code></a> method on an unmodifiable map may, but is not required to, throw the exception if the map whose mappings are to be "superimposed" is empty.</p>
 /// <p>Some map implementations have restrictions on the keys and values they may contain. For example, some implementations prohibit null keys and values, and some have restrictions on the types of their keys. Attempting to insert an ineligible key or value throws an unchecked exception, typically <tt>NullPointerException</tt> or <tt>ClassCastException</tt>. Attempting to query the presence of an ineligible key or value may throw an exception, or it may simply return false; some implementations will exhibit the former behavior and some will exhibit the latter. More generally, attempting an operation on an ineligible key or value whose completion would not result in the insertion of an ineligible element into the map may throw an exception or it may succeed, at the option of the implementation. Such exceptions are marked as "optional" in the specification for this interface.</p>
-/// <p>Many methods in Collections Framework interfaces are defined in terms of the <a href="../../java/lang/Object.html#equals-java.lang.Object-"><code>equals</code></a> method. For example, the specification for the <a href="../../java/util/Map.html#containsKey-java.lang.Object-"><code>containsKey(Object key)</code></a> method says: "returns <tt>true</tt> if and only if this map contains a mapping for a key <tt>k</tt> such that <tt>(key==null ? k==null : key.equals(k))</tt>." This specification should <i>not</i> be construed to imply that invoking <tt>Map.containsKey</tt> with a non-null argument <tt>key</tt> will cause <tt>key.equals(k)</tt> to be invoked for any key <tt>k</tt>. Implementations are free to implement optimizations whereby the <tt>equals</tt> invocation is avoided, for example, by first comparing the hash codes of the two keys. (The <a href="../../java/lang/Object.html#hashCode--"><code>Object.hashCode()</code></a> specification guarantees that two objects with unequal hash codes cannot be equal.) More generally, implementations of the various Collections Framework interfaces are free to take advantage of the specified behavior of underlying <a href="../../java/lang/Object.html" title="class in java.lang"><code>Object</code></a> methods wherever the implementor deems it appropriate.</p>
+/// <p>Many methods in Collections Framework interfaces are defined in terms of the <a href="../../java/lang/Object.html#equals-java.lang.Object-"><code>equals</code></a> method. For example, the specification for the <a href="../../java/util/Map.html#containsKey-java.lang.Object-"><code>containsKey(Object key)</code></a> method says: "returns <tt>true</tt> if and only if this map contains a mapping for a key <tt>k</tt> such that <tt>(key==null ? k==null : key.equals(k))</tt>." This specification should <i>not</i> be construed to imply that invoking <tt>Map.containsKey</tt> with a non-null argument <tt>key</tt> will cause <tt>key.equals(k)</tt> to be invoked for any key <tt>k</tt>. Implementations are free to implement optimizations whereby the <tt>equals</tt> invocation is avoided, for example, by first comparing the hash codes of the two keys. (The <a href="../../java/lang/Object.html#hashCode--"><code>Object.hashCode()</code></a> specification guarantees that two objects with unequal hash codes cannot be equal.) More generally, implementations of the various Collections Framework interfaces are free to take advantage of the specified behavior of underlying <a title="class in java.lang" href="../../java/lang/Object.html"><code>Object</code></a> methods wherever the implementor deems it appropriate.</p>
 /// <p>Some map operations which perform recursive traversal of the map may fail with an exception for self-referential instances where the map directly or indirectly contains itself. This includes the <code>clone()</code>, <code>equals()</code>, <code>hashCode()</code> and <code>toString()</code> methods. Implementations may optionally handle the self-referential scenario, however most current implementations do not do so.</p>
 /// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 ///
@@ -3195,7 +3195,7 @@ impl<'mc> JavaMap<'mc> {
 /// <p>The behavior of the <tt>WeakHashMap</tt> class depends in part upon the actions of the garbage collector, so several familiar (though not required) <tt>Map</tt> invariants do not hold for this class. Because the garbage collector may discard keys at any time, a <tt>WeakHashMap</tt> may behave as though an unknown thread is silently removing entries. In particular, even if you synchronize on a <tt>WeakHashMap</tt> instance and invoke none of its mutator methods, it is possible for the <tt>size</tt> method to return smaller values over time, for the <tt>isEmpty</tt> method to return <tt>false</tt> and then <tt>true</tt>, for the <tt>containsKey</tt> method to return <tt>true</tt> and later <tt>false</tt> for a given key, for the <tt>get</tt> method to return a value for a given key but later return <tt>null</tt>, for the <tt>put</tt> method to return <tt>null</tt> and the <tt>remove</tt> method to return <tt>false</tt> for a key that previously appeared to be in the map, and for successive examinations of the key set, the value collection, and the entry set to yield successively smaller numbers of elements.</p>
 /// <p>Each key object in a <tt>WeakHashMap</tt> is stored indirectly as the referent of a weak reference. Therefore a key will automatically be removed only after the weak references to it, both inside and outside of the map, have been cleared by the garbage collector.</p>
 /// <p><strong>Implementation note:</strong> The value objects in a <tt>WeakHashMap</tt> are held by ordinary strong references. Thus care should be taken to ensure that value objects do not strongly refer to their own keys, either directly or indirectly, since that will prevent the keys from being discarded. Note that a value object may refer indirectly to its key via the <tt>WeakHashMap</tt> itself; that is, a value object may strongly refer to some other key object whose associated value object, in turn, strongly refers to the key of the first value object. If the values in the map do not rely on the map holding strong references to them, one way to deal with this is to wrap values themselves within <tt>WeakReferences</tt> before inserting, as in: <tt>m.put(key, new WeakReference(value))</tt>, and then unwrapping upon each <tt>get</tt>.</p>
-/// <p>The iterators returned by the <tt>iterator</tt> method of the collections returned by all of this class's "collection view methods" are <i>fail-fast</i>: if the map is structurally modified at any time after the iterator is created, in any way except through the iterator's own <tt>remove</tt> method, the iterator will throw a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
+/// <p>The iterators returned by the <tt>iterator</tt> method of the collections returned by all of this class's "collection view methods" are <i>fail-fast</i>: if the map is structurally modified at any time after the iterator is created, in any way except through the iterator's own <tt>remove</tt> method, the iterator will throw a <a title="class in java.util" href="../../java/util/ConcurrentModificationException.html"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
 /// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <tt>ConcurrentModificationException</tt> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 pub struct JavaWeakHashMap<'mc>(
@@ -4160,7 +4160,7 @@ impl<'mc> Into<crate::util::JavaCollection<'mc>> for JavaSet<'mc> {
 /// <li><a name="mime"><b>MIME</b></a>
 /// <p>Uses the "The Base64 Alphabet" as specified in Table 1 of RFC 2045 for encoding and decoding operation. The encoded output must be represented in lines of no more than 76 characters each and uses a carriage return <code>'\r'</code> followed immediately by a linefeed <code>'\n'</code> as the line separator. No line separator is added to the end of the encoded output. All line separators or other characters not found in the base64 alphabet table are ignored in decoding operation.</p></li>
 /// </ul>
-/// <p>Unless otherwise noted, passing a <code>null</code> argument to a method of this class will cause a <a href="../../java/lang/NullPointerException.html" title="class in java.lang"><code>NullPointerException</code></a> to be thrown.</p>
+/// <p>Unless otherwise noted, passing a <code>null</code> argument to a method of this class will cause a <a title="class in java.lang" href="../../java/lang/NullPointerException.html"><code>NullPointerException</code></a> to be thrown.</p>
 pub struct JavaBase64<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -4657,7 +4657,7 @@ impl<'mc> Into<crate::util::JavaCollection<'mc>> for JavaAbstractCollection<'mc>
             .expect("Error converting JavaAbstractCollection into crate::util::JavaCollection")
     }
 }
-/// This class provides skeletal implementations of some <a href="../../java/util/Queue.html" title="interface in java.util"><code>Queue</code></a> operations. The implementations in this class are appropriate when the base implementation does <em>not</em> allow <tt>null</tt> elements. Methods <a href="../../java/util/AbstractQueue.html#add-E-"><code>add</code></a>, <a href="../../java/util/AbstractQueue.html#remove--"><code>remove</code></a>, and <a href="../../java/util/AbstractQueue.html#element--"><code>element</code></a> are based on <a href="../../java/util/Queue.html#offer-E-"><code>offer</code></a>, <a href="../../java/util/Queue.html#poll--"><code>poll</code></a>, and <a href="../../java/util/Queue.html#peek--"><code>peek</code></a>, respectively, but throw exceptions instead of indicating failure via <tt>false</tt> or <tt>null</tt> returns.
+/// This class provides skeletal implementations of some <a title="interface in java.util" href="../../java/util/Queue.html"><code>Queue</code></a> operations. The implementations in this class are appropriate when the base implementation does <em>not</em> allow <tt>null</tt> elements. Methods <a href="../../java/util/AbstractQueue.html#add-E-"><code>add</code></a>, <a href="../../java/util/AbstractQueue.html#remove--"><code>remove</code></a>, and <a href="../../java/util/AbstractQueue.html#element--"><code>element</code></a> are based on <a href="../../java/util/Queue.html#offer-E-"><code>offer</code></a>, <a href="../../java/util/Queue.html#poll--"><code>poll</code></a>, and <a href="../../java/util/Queue.html#peek--"><code>peek</code></a>, respectively, but throw exceptions instead of indicating failure via <tt>false</tt> or <tt>null</tt> returns.
 /// <p>A <tt>Queue</tt> implementation that extends this class must minimally define a method <a href="../../java/util/Queue.html#offer-E-"><code>Queue.offer(E)</code></a> which does not permit insertion of <tt>null</tt> elements, along with methods <a href="../../java/util/Queue.html#peek--"><code>Queue.peek()</code></a>, <a href="../../java/util/Queue.html#poll--"><code>Queue.poll()</code></a>, <a href="../../java/util/Collection.html#size--"><code>Collection.size()</code></a>, and <a href="../../java/util/Collection.html#iterator--"><code>Collection.iterator()</code></a>. Typically, additional methods will be overridden as well. If these requirements cannot be met, consider instead subclassing <a href="../../java/util/AbstractCollection.html" title="class in java.util"><code>AbstractCollection</code></a>.</p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 pub struct JavaAbstractQueue<'mc>(
@@ -5357,7 +5357,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaEventListener<'mc> {
 
 impl<'mc> JavaEventListener<'mc> {}
 /// A collection designed for holding elements prior to processing. Besides basic <a href="../../java/util/Collection.html" title="interface in java.util"><code>Collection</code></a> operations, queues provide additional insertion, extraction, and inspection operations. Each of these methods exists in two forms: one throws an exception if the operation fails, the other returns a special value (either <code>null</code> or <code>false</code>, depending on the operation). The latter form of the insert operation is designed specifically for use with capacity-restricted <code>Queue</code> implementations; in most implementations, insert operations cannot fail.
-/// <table border="" cellpadding="3" cellspacing="1">
+/// <table cellpadding="3" border="" cellspacing="1">
 /// <caption>
 /// Summary of Queue methods
 /// </caption>
@@ -5827,7 +5827,7 @@ impl<'mc> JavaEnumeration<'mc> {
 /// }</code></pre>
 /// <p>The iterators returned by the <tt>iterator</tt> method of the collections returned by all of this class's "collection view methods" are <em>fail-fast</em>: if the Hashtable is structurally modified at any time after the iterator is created, in any way except through the iterator's own <tt>remove</tt> method, the iterator will throw a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future. The Enumerations returned by Hashtable's keys and elements methods are <em>not</em> fail-fast.</p>
 /// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <tt>ConcurrentModificationException</tt> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
-/// <p>As of the Java 2 platform v1.2, this class was retrofitted to implement the <a href="../../java/util/Map.html" title="interface in java.util"><code>Map</code></a> interface, making it a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>. Unlike the new collection implementations, <code>Hashtable</code> is synchronized. If a thread-safe implementation is not needed, it is recommended to use <a href="../../java/util/HashMap.html" title="class in java.util"><code>HashMap</code></a> in place of <code>Hashtable</code>. If a thread-safe highly-concurrent implementation is desired, then it is recommended to use <a href="../../java/util/concurrent/ConcurrentHashMap.html" title="class in java.util.concurrent"><code>ConcurrentHashMap</code></a> in place of <code>Hashtable</code>.</p>
+/// <p>As of the Java 2 platform v1.2, this class was retrofitted to implement the <a href="../../java/util/Map.html" title="interface in java.util"><code>Map</code></a> interface, making it a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>. Unlike the new collection implementations, <code>Hashtable</code> is synchronized. If a thread-safe implementation is not needed, it is recommended to use <a title="class in java.util" href="../../java/util/HashMap.html"><code>HashMap</code></a> in place of <code>Hashtable</code>. If a thread-safe highly-concurrent implementation is desired, then it is recommended to use <a href="../../java/util/concurrent/ConcurrentHashMap.html" title="class in java.util.concurrent"><code>ConcurrentHashMap</code></a> in place of <code>Hashtable</code>.</p>
 pub struct JavaHashtable<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -6848,16 +6848,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaOptionalInt<'mc> {
 impl<'mc> JavaOptionalInt<'mc> {
     //
 
-    pub fn as_int(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getAsInt", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    //
-
     pub fn or_else_get(
         &self,
         arg0: impl Into<crate::util::function::JavaIntSupplier<'mc>>,
@@ -6877,22 +6867,13 @@ impl<'mc> JavaOptionalInt<'mc> {
     }
     //
 
-    pub fn if_present(
-        &self,
-        arg0: impl Into<crate::util::function::JavaIntConsumer<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/function/IntConsumer;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "ifPresent",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
+    pub fn as_int(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getAsInt", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
     }
     //
 
@@ -7027,6 +7008,25 @@ impl<'mc> JavaOptionalInt<'mc> {
     }
     //
 
+    pub fn if_present(
+        &self,
+        arg0: impl Into<crate::util::function::JavaIntConsumer<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/function/IntConsumer;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "ifPresent",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
     pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
@@ -7082,12 +7082,12 @@ impl<'mc> std::string::ToString for JavaOptionalInt<'mc> {
     }
 }
 
-/// A Red-Black tree based <a href="../../java/util/NavigableMap.html" title="interface in java.util"><code>NavigableMap</code></a> implementation. The map is sorted according to the <a href="../../java/lang/Comparable.html" title="interface in java.lang">natural ordering</a> of its keys, or by a <a href="../../java/util/Comparator.html" title="interface in java.util"><code>Comparator</code></a> provided at map creation time, depending on which constructor is used.
+/// A Red-Black tree based <a title="interface in java.util" href="../../java/util/NavigableMap.html"><code>NavigableMap</code></a> implementation. The map is sorted according to the <a title="interface in java.lang" href="../../java/lang/Comparable.html">natural ordering</a> of its keys, or by a <a title="interface in java.util" href="../../java/util/Comparator.html"><code>Comparator</code></a> provided at map creation time, depending on which constructor is used.
 /// <p>This implementation provides guaranteed log(n) time cost for the <code>containsKey</code>, <code>get</code>, <code>put</code> and <code>remove</code> operations. Algorithms are adaptations of those in Cormen, Leiserson, and Rivest's <em>Introduction to Algorithms</em>.</p>
 /// <p>Note that the ordering maintained by a tree map, like any sorted map, and whether or not an explicit comparator is provided, must be <em>consistent with <code>equals</code></em> if this sorted map is to correctly implement the <code>Map</code> interface. (See <code>Comparable</code> or <code>Comparator</code> for a precise definition of <em>consistent with equals</em>.) This is so because the <code>Map</code> interface is defined in terms of the <code>equals</code> operation, but a sorted map performs all key comparisons using its <code>compareTo</code> (or <code>compare</code>) method, so two keys that are deemed equal by this method are, from the standpoint of the sorted map, equal. The behavior of a sorted map <em>is</em> well-defined even if its ordering is inconsistent with <code>equals</code>; it just fails to obey the general contract of the <code>Map</code> interface.</p>
 /// <p><strong>Note that this implementation is not synchronized.</strong> If multiple threads access a map concurrently, and at least one of the threads modifies the map structurally, it <em>must</em> be synchronized externally. (A structural modification is any operation that adds or deletes one or more mappings; merely changing the value associated with an existing key is not a structural modification.) This is typically accomplished by synchronizing on some object that naturally encapsulates the map. If no such object exists, the map should be "wrapped" using the <a href="../../java/util/Collections.html#synchronizedSortedMap-java.util.SortedMap-"><code>Collections.synchronizedSortedMap</code></a> method. This is best done at creation time, to prevent accidental unsynchronized access to the map:</p>
 /// <pre> SortedMap m = Collections.synchronizedSortedMap(new TreeMap(...));</pre>
-/// <p>The iterators returned by the <code>iterator</code> method of the collections returned by all of this class's "collection view methods" are <em>fail-fast</em>: if the map is structurally modified at any time after the iterator is created, in any way except through the iterator's own <code>remove</code> method, the iterator will throw a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
+/// <p>The iterators returned by the <code>iterator</code> method of the collections returned by all of this class's "collection view methods" are <em>fail-fast</em>: if the map is structurally modified at any time after the iterator is created, in any way except through the iterator's own <code>remove</code> method, the iterator will throw a <a title="class in java.util" href="../../java/util/ConcurrentModificationException.html"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
 /// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <code>ConcurrentModificationException</code> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <em>the fail-fast behavior of iterators should be used only to detect bugs.</em></p>
 /// <p>All <code>Map.Entry</code> pairs returned by methods in this class and its views represent snapshots of mappings at the time they were produced. They do <strong>not</strong> support the <code>Entry.setValue</code> method. (Note however that it is possible to change mappings in the associated map using <code>put</code>.)</p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
@@ -7128,19 +7128,12 @@ impl<'mc> JNIInstantiatable<'mc> for JavaTreeMap<'mc> {
 }
 
 impl<'mc> JavaTreeMap<'mc> {
-    pub fn new_with_comparator(
+    pub fn new_with_sorted_map(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::util::JavaComparator<'mc>>>,
+        arg0: std::option::Option<impl Into<crate::util::JavaSortedMap<'mc>>>,
     ) -> Result<crate::util::JavaTreeMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/util/Comparator;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
         sig += ")V";
         let cls = jni.find_class("java/util/TreeMap");
         let cls = jni.translate_error_with_class(cls)?;
@@ -7355,16 +7348,6 @@ impl<'mc> JavaTreeMap<'mc> {
         crate::util::JavaMapEntry::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    //
-
-    pub fn first_key(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/Object;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "firstKey", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
     }
     //
 
@@ -7754,6 +7737,16 @@ impl<'mc> JavaTreeMap<'mc> {
     }
     //
 
+    pub fn first_key(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/Object;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "firstKey", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
     pub fn equals(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -7892,7 +7885,7 @@ impl<'mc> Into<crate::util::JavaAbstractMap<'mc>> for JavaTreeMap<'mc> {
 /// A linear collection that supports element insertion and removal at both ends. The name <i>deque</i> is short for "double ended queue" and is usually pronounced "deck". Most <code>Deque</code> implementations place no fixed limits on the number of elements they may contain, but this interface supports capacity-restricted deques as well as those with no fixed size limit.
 /// <p>This interface defines methods to access the elements at both ends of the deque. Methods are provided to insert, remove, and examine the element. Each of these methods exists in two forms: one throws an exception if the operation fails, the other returns a special value (either <code>null</code> or <code>false</code>, depending on the operation). The latter form of the insert operation is designed specifically for use with capacity-restricted <code>Deque</code> implementations; in most implementations, insert operations cannot fail.</p>
 /// <p>The twelve methods described above are summarized in the following table:</p>
-/// <table border="" cellpadding="3" cellspacing="1">
+/// <table cellspacing="1" border="" cellpadding="3">
 /// <caption>
 /// Summary of Deque methods
 /// </caption>
@@ -7900,7 +7893,7 @@ impl<'mc> Into<crate::util::JavaAbstractMap<'mc>> for JavaTreeMap<'mc> {
 /// <tr>
 /// <td></td>
 /// <td align="CENTER" colspan="2"><b>First Element (Head)</b></td>
-/// <td align="CENTER" colspan="2"><b>Last Element (Tail)</b></td>
+/// <td colspan="2" align="CENTER"><b>Last Element (Tail)</b></td>
 /// </tr>
 /// <tr>
 /// <td></td>
@@ -7932,7 +7925,7 @@ impl<'mc> Into<crate::util::JavaAbstractMap<'mc>> for JavaTreeMap<'mc> {
 /// </tr>
 /// </tbody>
 /// </table>
-/// <p>This interface extends the <a title="interface in java.util" href="../../java/util/Queue.html"><code>Queue</code></a> interface. When a deque is used as a queue, FIFO (First-In-First-Out) behavior results. Elements are added at the end of the deque and removed from the beginning. The methods inherited from the <code>Queue</code> interface are precisely equivalent to <code>Deque</code> methods as indicated in the following table:</p>
+/// <p>This interface extends the <a href="../../java/util/Queue.html" title="interface in java.util"><code>Queue</code></a> interface. When a deque is used as a queue, FIFO (First-In-First-Out) behavior results. Elements are added at the end of the deque and removed from the beginning. The methods inherited from the <code>Queue</code> interface are precisely equivalent to <code>Deque</code> methods as indicated in the following table:</p>
 /// <table border="" cellpadding="3" cellspacing="1">
 /// <caption>
 /// Comparison of Queue and Deque methods
@@ -7969,7 +7962,7 @@ impl<'mc> Into<crate::util::JavaAbstractMap<'mc>> for JavaTreeMap<'mc> {
 /// </tbody>
 /// </table>
 /// <p>Deques can also be used as LIFO (Last-In-First-Out) stacks. This interface should be used in preference to the legacy <a title="class in java.util" href="../../java/util/Stack.html"><code>Stack</code></a> class. When a deque is used as a stack, elements are pushed and popped from the beginning of the deque. Stack methods are precisely equivalent to <code>Deque</code> methods as indicated in the table below:</p>
-/// <table cellspacing="1" cellpadding="3" border="">
+/// <table cellpadding="3" cellspacing="1" border="">
 /// <caption>
 /// Comparison of Stack and Deque methods
 /// </caption>
@@ -7994,7 +7987,7 @@ impl<'mc> Into<crate::util::JavaAbstractMap<'mc>> for JavaTreeMap<'mc> {
 /// </table>
 /// <p>Note that the <a href="../../java/util/Deque.html#peek--"><code>peek</code></a> method works equally well when a deque is used as a queue or a stack; in either case, elements are drawn from the beginning of the deque.</p>
 /// <p>This interface provides two methods to remove interior elements, <a href="../../java/util/Deque.html#removeFirstOccurrence-java.lang.Object-"><code>removeFirstOccurrence</code></a> and <a href="../../java/util/Deque.html#removeLastOccurrence-java.lang.Object-"><code>removeLastOccurrence</code></a>.</p>
-/// <p>Unlike the <a title="interface in java.util" href="../../java/util/List.html"><code>List</code></a> interface, this interface does not provide support for indexed access to elements.</p>
+/// <p>Unlike the <a href="../../java/util/List.html" title="interface in java.util"><code>List</code></a> interface, this interface does not provide support for indexed access to elements.</p>
 /// <p>While <code>Deque</code> implementations are not strictly required to prohibit the insertion of null elements, they are strongly encouraged to do so. Users of any <code>Deque</code> implementations that do allow null elements are strongly encouraged <i>not</i> to take advantage of the ability to insert nulls. This is so because <code>null</code> is used as a special return value by various methods to indicated that the deque is empty.</p>
 /// <p><code>Deque</code> implementations generally do not define element-based versions of the <code>equals</code> and <code>hashCode</code> methods, but instead inherit the identity-based versions from class <code>Object</code>.</p>
 /// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
@@ -8553,10 +8546,10 @@ impl<'mc> Into<crate::util::JavaQueue<'mc>> for JavaDeque<'mc> {
             .expect("Error converting JavaDeque into crate::util::JavaQueue")
     }
 }
-/// The <tt>Formattable</tt> interface must be implemented by any class that needs to perform custom formatting using the <tt>'s'</tt> conversion specifier of <a title="class in java.util" href="../../java/util/Formatter.html"><code>Formatter</code></a>. This interface allows basic control for formatting arbitrary objects. For example, the following class prints out different representations of a stock's name depending on the flags and length constraints: <code>import java.nio.CharBuffer; import java.util.Formatter; import java.util.Formattable; import java.util.Locale; import static java.util.FormattableFlags.*; ... public class StockName implements Formattable { private String symbol, companyName, frenchCompanyName; public StockName(String symbol, String companyName, String frenchCompanyName) { ... } ... public void formatTo(Formatter fmt, int f, int width, int precision) { StringBuilder sb = new StringBuilder(); // decide form of name String name = companyName; if (fmt.locale().equals(Locale.FRANCE)) name = frenchCompanyName; boolean alternate = (f &amp; ALTERNATE) == ALTERNATE; boolean usesymbol = alternate || (precision != -1 &amp;&amp; precision &lt; 10); String out = (usesymbol ? symbol : name); // apply precision if (precision == -1 || out.length() &lt; precision) { // write it all sb.append(out); } else { sb.append(out.substring(0, precision - 1)).append('*'); } // apply width and justification int len = sb.length(); if (len &lt; width) for (int i = 0; i &lt; width - len; i++) if ((f &amp; LEFT_JUSTIFY) == LEFT_JUSTIFY) sb.append(' '); else sb.insert(0, ' '); fmt.format(sb.toString()); } public String toString() { return String.format("%s - %s", symbol, companyName); } } </code>
+/// The <tt>Formattable</tt> interface must be implemented by any class that needs to perform custom formatting using the <tt>'s'</tt> conversion specifier of <a href="../../java/util/Formatter.html" title="class in java.util"><code>Formatter</code></a>. This interface allows basic control for formatting arbitrary objects. For example, the following class prints out different representations of a stock's name depending on the flags and length constraints: <code>import java.nio.CharBuffer; import java.util.Formatter; import java.util.Formattable; import java.util.Locale; import static java.util.FormattableFlags.*; ... public class StockName implements Formattable { private String symbol, companyName, frenchCompanyName; public StockName(String symbol, String companyName, String frenchCompanyName) { ... } ... public void formatTo(Formatter fmt, int f, int width, int precision) { StringBuilder sb = new StringBuilder(); // decide form of name String name = companyName; if (fmt.locale().equals(Locale.FRANCE)) name = frenchCompanyName; boolean alternate = (f &amp; ALTERNATE) == ALTERNATE; boolean usesymbol = alternate || (precision != -1 &amp;&amp; precision &lt; 10); String out = (usesymbol ? symbol : name); // apply precision if (precision == -1 || out.length() &lt; precision) { // write it all sb.append(out); } else { sb.append(out.substring(0, precision - 1)).append('*'); } // apply width and justification int len = sb.length(); if (len &lt; width) for (int i = 0; i &lt; width - len; i++) if ((f &amp; LEFT_JUSTIFY) == LEFT_JUSTIFY) sb.append(' '); else sb.insert(0, ' '); fmt.format(sb.toString()); } public String toString() { return String.format("%s - %s", symbol, companyName); } } </code>
 /// <p>When used in conjunction with the <a href="../../java/util/Formatter.html" title="class in java.util"><code>Formatter</code></a>, the above class produces the following output for various format strings. <code>Formatter fmt = new Formatter(); StockName sn = new StockName("HUGE", "Huge Fruit, Inc.", "Fruit Titanesque, Inc."); fmt.format("%s", sn); // -&gt; "Huge Fruit, Inc." fmt.format("%s", sn.toString()); // -&gt; "HUGE - Huge Fruit, Inc." fmt.format("%#s", sn); // -&gt; "HUGE" fmt.format("%-10.8s", sn); // -&gt; "HUGE " fmt.format("%.12s", sn); // -&gt; "Huge Fruit,*" fmt.format(Locale.FRANCE, "%25s", sn); // -&gt; " Fruit Titanesque, Inc." </code></p>
 /// <p>Formattables are not necessarily safe for multithreaded access. Thread safety is optional and may be enforced by classes that extend and implement this interface.</p>
-/// <p>Unless otherwise specified, passing a <tt>null</tt> argument to any method in this interface will cause a <a href="../../java/lang/NullPointerException.html" title="class in java.lang"><code>NullPointerException</code></a> to be thrown.</p>
+/// <p>Unless otherwise specified, passing a <tt>null</tt> argument to any method in this interface will cause a <a title="class in java.lang" href="../../java/lang/NullPointerException.html"><code>NullPointerException</code></a> to be thrown.</p>
 ///
 /// This is a representation of an abstract class.
 pub struct JavaFormattable<'mc>(
@@ -8642,16 +8635,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaOptionalDouble<'mc> {
 impl<'mc> JavaOptionalDouble<'mc> {
     //
 
-    pub fn as_double(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getAsDouble", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    //
-
     pub fn or_else_get(
         &self,
         arg0: impl Into<crate::util::function::JavaDoubleSupplier<'mc>>,
@@ -8671,22 +8654,13 @@ impl<'mc> JavaOptionalDouble<'mc> {
     }
     //
 
-    pub fn if_present(
-        &self,
-        arg0: impl Into<crate::util::function::JavaDoubleConsumer<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/function/DoubleConsumer;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "ifPresent",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
+    pub fn as_double(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getAsDouble", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
     }
     //
 
@@ -8821,6 +8795,25 @@ impl<'mc> JavaOptionalDouble<'mc> {
     }
     //
 
+    pub fn if_present(
+        &self,
+        arg0: impl Into<crate::util::function::JavaDoubleConsumer<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/function/DoubleConsumer;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "ifPresent",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
     pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
@@ -8920,16 +8913,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaOptionalLong<'mc> {
 impl<'mc> JavaOptionalLong<'mc> {
     //
 
-    pub fn as_long(&self) -> Result<i64, Box<dyn std::error::Error>> {
-        let sig = String::from("()J");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getAsLong", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j()?)
-    }
-    //
-
     pub fn or_else_get(
         &self,
         arg0: impl Into<crate::util::function::JavaLongSupplier<'mc>>,
@@ -8949,22 +8932,13 @@ impl<'mc> JavaOptionalLong<'mc> {
     }
     //
 
-    pub fn if_present(
-        &self,
-        arg0: impl Into<crate::util::function::JavaLongConsumer<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/function/LongConsumer;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "ifPresent",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
+    pub fn as_long(&self) -> Result<i64, Box<dyn std::error::Error>> {
+        let sig = String::from("()J");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getAsLong", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.j()?)
     }
     //
 
@@ -9099,6 +9073,25 @@ impl<'mc> JavaOptionalLong<'mc> {
     }
     //
 
+    pub fn if_present(
+        &self,
+        arg0: impl Into<crate::util::function::JavaLongConsumer<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/function/LongConsumer;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "ifPresent",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
     pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
@@ -9155,7 +9148,7 @@ impl<'mc> std::string::ToString for JavaOptionalLong<'mc> {
 }
 
 /// <p>Hash table and linked list implementation of the <tt>Set</tt> interface, with predictable iteration order. This implementation differs from <tt>HashSet</tt> in that it maintains a doubly-linked list running through all of its entries. This linked list defines the iteration ordering, which is the order in which elements were inserted into the set (<i>insertion-order</i>). Note that insertion order is <i>not</i> affected if an element is <i>re-inserted</i> into the set. (An element <tt>e</tt> is reinserted into a set <tt>s</tt> if <tt>s.add(e)</tt> is invoked when <tt>s.contains(e)</tt> would return <tt>true</tt> immediately prior to the invocation.)</p>
-/// <p>This implementation spares its clients from the unspecified, generally chaotic ordering provided by <a href="../../java/util/HashSet.html" title="class in java.util"><code>HashSet</code></a>, without incurring the increased cost associated with <a title="class in java.util" href="../../java/util/TreeSet.html"><code>TreeSet</code></a>. It can be used to produce a copy of a set that has the same order as the original, regardless of the original set's implementation:</p>
+/// <p>This implementation spares its clients from the unspecified, generally chaotic ordering provided by <a title="class in java.util" href="../../java/util/HashSet.html"><code>HashSet</code></a>, without incurring the increased cost associated with <a href="../../java/util/TreeSet.html" title="class in java.util"><code>TreeSet</code></a>. It can be used to produce a copy of a set that has the same order as the original, regardless of the original set's implementation:</p>
 /// <pre> void foo(Set s) {
 /// Set copy = new LinkedHashSet(s);
 /// ...
@@ -9629,7 +9622,7 @@ impl<'mc> Into<crate::util::JavaHashSet<'mc>> for JavaLinkedHashSet<'mc> {
 /// <dd>
 /// Example: key="u"/value="ca-japanese" (Japanese Calendar), key="x"/value="java-1-7"
 /// </dd>
-/// </dl><b>Note:</b> Although BCP 47 requires field values to be registered in the IANA Language Subtag Registry, the <code>Locale</code> class does not provide any validation features. The <code>Builder</code> only checks if an individual field satisfies the syntactic requirement (is well-formed), but does not validate the value itself. See <a title="class in java.util" href="../../java/util/Locale.Builder.html"><code>Locale.Builder</code></a> for details.
+/// </dl><b>Note:</b> Although BCP 47 requires field values to be registered in the IANA Language Subtag Registry, the <code>Locale</code> class does not provide any validation features. The <code>Builder</code> only checks if an individual field satisfies the syntactic requirement (is well-formed), but does not validate the value itself. See <a href="../../java/util/Locale.Builder.html" title="class in java.util"><code>Locale.Builder</code></a> for details.
 /// <h3><a name="def_locale_extension">Unicode locale/language extension</a></h3>
 /// <p>UTS#35, "Unicode Locale Data Markup Language" defines optional attributes and keywords to override or refine the default behavior associated with a locale. A keyword is represented by a pair of key and type. For example, "nu-thai" indicates that Thai local digits (value:"thai") should be used for formatting numbers (key:"nu").</p>
 /// <p>The keywords are mapped to a BCP 47 extension value using the extension key 'u' (<a href="../../java/util/Locale.html#UNICODE_LOCALE_EXTENSION"><code>UNICODE_LOCALE_EXTENSION</code></a>). The above example, "nu-thai", becomes the extension "u-nu-thai".code</p>
@@ -9639,7 +9632,7 @@ impl<'mc> Into<crate::util::JavaHashSet<'mc>> for JavaLinkedHashSet<'mc> {
 /// <h4>Creating a Locale</h4>
 /// <p>There are several different ways to create a <code>Locale</code> object.</p>
 /// <h5>Builder</h5>
-/// <p>Using <a title="class in java.util" href="../../java/util/Locale.Builder.html"><code>Locale.Builder</code></a> you can construct a <code>Locale</code> object that conforms to BCP 47 syntax.</p>
+/// <p>Using <a href="../../java/util/Locale.Builder.html" title="class in java.util"><code>Locale.Builder</code></a> you can construct a <code>Locale</code> object that conforms to BCP 47 syntax.</p>
 /// <h5>Constructors</h5>
 /// <p>The <code>Locale</code> class provides three constructors:</p>
 /// <blockquote>
@@ -9659,10 +9652,10 @@ impl<'mc> Into<crate::util::JavaHashSet<'mc>> for JavaLinkedHashSet<'mc> {
 /// <h4><a name="LocaleMatching">Locale Matching</a></h4>
 /// <p>If an application or a system is internationalized and provides localized resources for multiple locales, it sometimes needs to find one or more locales (or language tags) which meet each user's specific preferences. Note that a term "language tag" is used interchangeably with "locale" in this locale matching documentation.</p>
 /// <p>In order to do matching a user's preferred locales to a set of language tags, <a href="http://tools.ietf.org/html/rfc4647">RFC 4647 Matching of Language Tags</a> defines two mechanisms: filtering and lookup. <em>Filtering</em> is used to get all matching locales, whereas <em>lookup</em> is to choose the best matching locale. Matching is done case-insensitively. These matching mechanisms are described in the following sections.</p>
-/// <p>A user's preference is called a <em>Language Priority List</em> and is expressed as a list of language ranges. There are syntactically two types of language ranges: basic and extended. See <a href="../../java/util/Locale.LanguageRange.html" title="class in java.util"><code>Locale.LanguageRange</code></a> for details.</p>
+/// <p>A user's preference is called a <em>Language Priority List</em> and is expressed as a list of language ranges. There are syntactically two types of language ranges: basic and extended. See <a title="class in java.util" href="../../java/util/Locale.LanguageRange.html"><code>Locale.LanguageRange</code></a> for details.</p>
 /// <h5>Filtering</h5>
 /// <p>The filtering operation returns all matching language tags. It is defined in RFC 4647 as follows: "In filtering, each language range represents the least specific language tag (that is, the language tag with fewest number of subtags) that is an acceptable match. All of the language tags in the matching set of tags will have an equal or greater number of subtags than the language range. Every non-wildcard subtag in the language range will appear in every one of the matching language tags."</p>
-/// <p>There are two types of filtering: filtering for basic language ranges (called "basic filtering") and filtering for extended language ranges (called "extended filtering"). They may return different results by what kind of language ranges are included in the given Language Priority List. <a title="enum in java.util" href="../../java/util/Locale.FilteringMode.html"><code>Locale.FilteringMode</code></a> is a parameter to specify how filtering should be done.</p>
+/// <p>There are two types of filtering: filtering for basic language ranges (called "basic filtering") and filtering for extended language ranges (called "extended filtering"). They may return different results by what kind of language ranges are included in the given Language Priority List. <a href="../../java/util/Locale.FilteringMode.html" title="enum in java.util"><code>Locale.FilteringMode</code></a> is a parameter to specify how filtering should be done.</p>
 /// <h5>Lookup</h5>
 /// <p>The lookup operation returns the best matching language tags. It is defined in RFC 4647 as follows: "By contrast with filtering, each language range represents the most specific tag that is an acceptable match. The first matching tag found, according to the user's priority, is considered the closest match and is the item returned."</p>
 /// <p>For example, if a Language Priority List consists of two language ranges, <code>"zh-Hant-TW"</code> and <code>"en-US"</code>, in prioritized order, lookup method progressively searches the language tags below in order to find the best matching language tag.</p>
@@ -9675,7 +9668,7 @@ impl<'mc> Into<crate::util::JavaHashSet<'mc>> for JavaLinkedHashSet<'mc> {
 /// </pre>
 /// </blockquote> If there is a language tag which matches completely to a language range above, the language tag is returned.
 /// <p><code>"*"</code> is the special language range, and it is ignored in lookup.</p>
-/// <p>If multiple language tags match as a result of the subtag <code>'*'</code> included in a language range, the first matching language tag returned by an <a title="interface in java.util" href="../../java/util/Iterator.html"><code>Iterator</code></a> over a <a title="interface in java.util" href="../../java/util/Collection.html"><code>Collection</code></a> of language tags is treated as the best matching one.</p>
+/// <p>If multiple language tags match as a result of the subtag <code>'*'</code> included in a language range, the first matching language tag returned by an <a title="interface in java.util" href="../../java/util/Iterator.html"><code>Iterator</code></a> over a <a href="../../java/util/Collection.html" title="interface in java.util"><code>Collection</code></a> of language tags is treated as the best matching one.</p>
 /// <h4>Use of Locale</h4>
 /// <p>Once you've created a <code>Locale</code> you can query it for information about itself. Use <code>getCountry</code> to get the country (or region) code and <code>getLanguage</code> to get the language code. You can use <code>getDisplayCountry</code> to get the name of the country suitable for displaying to the user. Similarly, you can use <code>getDisplayLanguage</code> to get the name of the language suitable for displaying to the user. Interestingly, the <code>getDisplayXXX</code> methods are themselves locale-sensitive and have two versions: one that uses the default <a href="../../java/util/Locale.Category.html#DISPLAY"><code>DISPLAY</code></a> locale and one that uses the locale specified as an argument.</p>
 /// <p>The Java Platform provides a number of classes that perform locale-sensitive operations. For example, the <code>NumberFormat</code> class formats numbers, currency, and percentages in a locale-sensitive manner. Classes such as <code>NumberFormat</code> have several convenience methods for creating a default object of that type. For example, the <code>NumberFormat</code> class provides these three convenience methods for creating a default <code>NumberFormat</code> object:</p>
@@ -10143,20 +10136,6 @@ impl<'mc> JavaLocale<'mc> {
     }
     //
 
-    pub fn language(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getLanguage", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    //
-
     pub fn equals(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -10235,6 +10214,20 @@ impl<'mc> JavaLocale<'mc> {
         let res = jni.translate_error(res)?;
         let obj = res.l()?;
         crate::util::JavaLocale::from_raw(&jni, obj)
+    }
+    //
+
+    pub fn language(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getLanguage", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
     }
     //
 
@@ -10931,17 +10924,15 @@ impl<'mc> JNIInstantiatable<'mc> for JavaIdentityHashMap<'mc> {
 }
 
 impl<'mc> JavaIdentityHashMap<'mc> {
-    pub fn new_with_map(
+    pub fn new_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::util::JavaMap<'mc>>>,
+        arg0: std::option::Option<i32>,
     ) -> Result<crate::util::JavaIdentityHashMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
-            sig += "Ljava/util/Map;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
+            sig += "I";
+            let val_1 = jni::objects::JValueGen::Int(a.into());
             args.push(val_1);
         }
         sig += ")V";
@@ -11467,7 +11458,7 @@ impl<'mc> Into<crate::util::JavaAbstractMap<'mc>> for JavaIdentityHashMap<'mc> {
     }
 }
 /// <p>Hash table and linked list implementation of the <tt>Map</tt> interface, with predictable iteration order. This implementation differs from <tt>HashMap</tt> in that it maintains a doubly-linked list running through all of its entries. This linked list defines the iteration ordering, which is normally the order in which keys were inserted into the map (<i>insertion-order</i>). Note that insertion order is not affected if a key is <i>re-inserted</i> into the map. (A key <tt>k</tt> is reinserted into a map <tt>m</tt> if <tt>m.put(k, v)</tt> is invoked when <tt>m.containsKey(k)</tt> would return <tt>true</tt> immediately prior to the invocation.)</p>
-/// <p>This implementation spares its clients from the unspecified, generally chaotic ordering provided by <a title="class in java.util" href="../../java/util/HashMap.html"><code>HashMap</code></a> (and <a title="class in java.util" href="../../java/util/Hashtable.html"><code>Hashtable</code></a>), without incurring the increased cost associated with <a title="class in java.util" href="../../java/util/TreeMap.html"><code>TreeMap</code></a>. It can be used to produce a copy of a map that has the same order as the original, regardless of the original map's implementation:</p>
+/// <p>This implementation spares its clients from the unspecified, generally chaotic ordering provided by <a title="class in java.util" href="../../java/util/HashMap.html"><code>HashMap</code></a> (and <a href="../../java/util/Hashtable.html" title="class in java.util"><code>Hashtable</code></a>), without incurring the increased cost associated with <a href="../../java/util/TreeMap.html" title="class in java.util"><code>TreeMap</code></a>. It can be used to produce a copy of a map that has the same order as the original, regardless of the original map's implementation:</p>
 /// <pre> void foo(Map m) {
 /// Map copy = new LinkedHashMap(m);
 /// ...
@@ -11479,7 +11470,7 @@ impl<'mc> Into<crate::util::JavaAbstractMap<'mc>> for JavaIdentityHashMap<'mc> {
 /// <p>A linked hash map has two parameters that affect its performance: <i>initial capacity</i> and <i>load factor</i>. They are defined precisely as for <tt>HashMap</tt>. Note, however, that the penalty for choosing an excessively high value for initial capacity is less severe for this class than for <tt>HashMap</tt>, as iteration times for this class are unaffected by capacity.</p>
 /// <p><strong>Note that this implementation is not synchronized.</strong> If multiple threads access a linked hash map concurrently, and at least one of the threads modifies the map structurally, it <em>must</em> be synchronized externally. This is typically accomplished by synchronizing on some object that naturally encapsulates the map. If no such object exists, the map should be "wrapped" using the <a href="../../java/util/Collections.html#synchronizedMap-java.util.Map-"><code>Collections.synchronizedMap</code></a> method. This is best done at creation time, to prevent accidental unsynchronized access to the map:</p>
 /// <pre> Map m = Collections.synchronizedMap(new LinkedHashMap(...));</pre> A structural modification is any operation that adds or deletes one or more mappings or, in the case of access-ordered linked hash maps, affects iteration order. In insertion-ordered linked hash maps, merely changing the value associated with a key that is already contained in the map is not a structural modification. <strong>In access-ordered linked hash maps, merely querying the map with <tt>get</tt> is a structural modification. </strong>)
-/// <p>The iterators returned by the <tt>iterator</tt> method of the collections returned by all of this class's collection view methods are <em>fail-fast</em>: if the map is structurally modified at any time after the iterator is created, in any way except through the iterator's own <tt>remove</tt> method, the iterator will throw a <a title="class in java.util" href="../../java/util/ConcurrentModificationException.html"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
+/// <p>The iterators returned by the <tt>iterator</tt> method of the collections returned by all of this class's collection view methods are <em>fail-fast</em>: if the map is structurally modified at any time after the iterator is created, in any way except through the iterator's own <tt>remove</tt> method, the iterator will throw a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
 /// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <tt>ConcurrentModificationException</tt> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
 /// <p>The spliterators returned by the spliterator method of the collections returned by all of this class's collection view methods are <em><a href="Spliterator.html#binding">late-binding</a></em>, <em>fail-fast</em>, and additionally report <a href="../../java/util/Spliterator.html#ORDERED"><code>Spliterator.ORDERED</code></a>.</p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
@@ -12598,11 +12589,11 @@ impl<'mc> Into<crate::util::JavaAbstractList<'mc>> for JavaAbstractSequentialLis
         )
     }
 }
-/// A comparison function, which imposes a <i>total ordering</i> on some collection of objects. Comparators can be passed to a sort method (such as <a href="../../java/util/Collections.html#sort-java.util.List-java.util.Comparator-"><code>Collections.sort</code></a> or <a href="../../java/util/Arrays.html#sort-T:A-java.util.Comparator-"><code>Arrays.sort</code></a>) to allow precise control over the sort order. Comparators can also be used to control the order of certain data structures (such as <a title="interface in java.util" href="../../java/util/SortedSet.html"><code>sorted sets</code></a> or <a href="../../java/util/SortedMap.html" title="interface in java.util"><code>sorted maps</code></a>), or to provide an ordering for collections of objects that don't have a <a href="../../java/lang/Comparable.html" title="interface in java.lang"><code>natural ordering</code></a>.
+/// A comparison function, which imposes a <i>total ordering</i> on some collection of objects. Comparators can be passed to a sort method (such as <a href="../../java/util/Collections.html#sort-java.util.List-java.util.Comparator-"><code>Collections.sort</code></a> or <a href="../../java/util/Arrays.html#sort-T:A-java.util.Comparator-"><code>Arrays.sort</code></a>) to allow precise control over the sort order. Comparators can also be used to control the order of certain data structures (such as <a href="../../java/util/SortedSet.html" title="interface in java.util"><code>sorted sets</code></a> or <a href="../../java/util/SortedMap.html" title="interface in java.util"><code>sorted maps</code></a>), or to provide an ordering for collections of objects that don't have a <a title="interface in java.lang" href="../../java/lang/Comparable.html"><code>natural ordering</code></a>.
 /// <p>The ordering imposed by a comparator <tt>c</tt> on a set of elements <tt>S</tt> is said to be <i>consistent with equals</i> if and only if <tt>c.compare(e1, e2)==0</tt> has the same boolean value as <tt>e1.equals(e2)</tt> for every <tt>e1</tt> and <tt>e2</tt> in <tt>S</tt>.</p>
 /// <p>Caution should be exercised when using a comparator capable of imposing an ordering inconsistent with equals to order a sorted set (or sorted map). Suppose a sorted set (or sorted map) with an explicit comparator <tt>c</tt> is used with elements (or keys) drawn from a set <tt>S</tt>. If the ordering imposed by <tt>c</tt> on <tt>S</tt> is inconsistent with equals, the sorted set (or sorted map) will behave "strangely." In particular the sorted set (or sorted map) will violate the general contract for set (or map), which is defined in terms of <tt>equals</tt>.</p>
 /// <p>For example, suppose one adds two elements <code>a</code> and <code>b</code> such that <code>(a.equals(b) &amp;&amp; c.compare(a, b) != 0)</code> to an empty <code>TreeSet</code> with comparator <code>c</code>. The second <code>add</code> operation will return true (and the size of the tree set will increase) because <code>a</code> and <code>b</code> are not equivalent from the tree set's perspective, even though this is contrary to the specification of the <a href="../../java/util/Set.html#add-E-"><code>Set.add</code></a> method.</p>
-/// <p>Note: It is generally a good idea for comparators to also implement <tt>java.io.Serializable</tt>, as they may be used as ordering methods in serializable data structures (like <a href="../../java/util/TreeSet.html" title="class in java.util"><code>TreeSet</code></a>, <a title="class in java.util" href="../../java/util/TreeMap.html"><code>TreeMap</code></a>). In order for the data structure to serialize successfully, the comparator (if provided) must implement <tt>Serializable</tt>.</p>
+/// <p>Note: It is generally a good idea for comparators to also implement <tt>java.io.Serializable</tt>, as they may be used as ordering methods in serializable data structures (like <a title="class in java.util" href="../../java/util/TreeSet.html"><code>TreeSet</code></a>, <a href="../../java/util/TreeMap.html" title="class in java.util"><code>TreeMap</code></a>). In order for the data structure to serialize successfully, the comparator (if provided) must implement <tt>Serializable</tt>.</p>
 /// <p>For the mathematically inclined, the <i>relation</i> that defines the <i>imposed ordering</i> that a given comparator <tt>c</tt> imposes on a given set of objects <tt>S</tt> is:</p>
 /// <pre> {(x, y) such that c.compare(x, y) &lt;= 0}.
 /// </pre> The <i>quotient</i> for this total order is:
@@ -12966,8 +12957,8 @@ impl<'mc> JavaComparator<'mc> {
 /// <p>If two instances of <code>Random</code> are created with the same seed, and the same sequence of method calls is made for each, they will generate and return identical sequences of numbers. In order to guarantee this property, particular algorithms are specified for the class <code>Random</code>. Java implementations must use all the algorithms shown here for the class <code>Random</code>, for the sake of absolute portability of Java code. However, subclasses of class <code>Random</code> are permitted to use other algorithms, so long as they adhere to the general contracts for all the methods.</p>
 /// <p>The algorithms implemented by class <code>Random</code> use a <code>protected</code> utility method that on each invocation can supply up to 32 pseudorandomly generated bits.</p>
 /// <p>Many applications will find the method <a href="../../java/lang/Math.html#random--"><code>Math.random()</code></a> simpler to use.</p>
-/// <p>Instances of <code>java.util.Random</code> are threadsafe. However, the concurrent use of the same <code>java.util.Random</code> instance across threads may encounter contention and consequent poor performance. Consider instead using <a title="class in java.util.concurrent" href="../../java/util/concurrent/ThreadLocalRandom.html"><code>ThreadLocalRandom</code></a> in multithreaded designs.</p>
-/// <p>Instances of <code>java.util.Random</code> are not cryptographically secure. Consider instead using <a href="../../java/security/SecureRandom.html" title="class in java.security"><code>SecureRandom</code></a> to get a cryptographically secure pseudo-random number generator for use by security-sensitive applications.</p>
+/// <p>Instances of <code>java.util.Random</code> are threadsafe. However, the concurrent use of the same <code>java.util.Random</code> instance across threads may encounter contention and consequent poor performance. Consider instead using <a href="../../java/util/concurrent/ThreadLocalRandom.html" title="class in java.util.concurrent"><code>ThreadLocalRandom</code></a> in multithreaded designs.</p>
+/// <p>Instances of <code>java.util.Random</code> are not cryptographically secure. Consider instead using <a title="class in java.security" href="../../java/security/SecureRandom.html"><code>SecureRandom</code></a> to get a cryptographically secure pseudo-random number generator for use by security-sensitive applications.</p>
 pub struct JavaRandom<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -14005,41 +13996,6 @@ impl<'mc> JavaUUID<'mc> {
     }
     //
 
-    pub fn random_uuid(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-    ) -> Result<crate::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/UUID;");
-        let cls = jni.find_class("java/util/UUID");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "randomUUID", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::util::JavaUUID::from_raw(&jni, obj)
-    }
-    //
-
-    pub fn from_string(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-    ) -> Result<crate::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)Ljava/util/UUID;");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            jni.new_string(arg0.into())?,
-        ));
-        let cls = jni.find_class("java/util/UUID");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "fromString",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::util::JavaUUID::from_raw(&jni, obj)
-    }
-    //
-
     pub fn equals(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -14092,16 +14048,14 @@ impl<'mc> JavaUUID<'mc> {
     }
     //
 
-    pub fn compare_to_with_uuid(
+    pub fn compare_to_with_object(
         &self,
-        arg0: impl Into<crate::util::JavaUUID<'mc>>,
+        arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Ljava/util/UUID;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
+        sig += "Ljava/lang/Object;";
+        let val_1 = jni::objects::JValueGen::Object(arg0);
         args.push(val_1);
         sig += ")I";
         let res = self
@@ -14129,6 +14083,41 @@ impl<'mc> JavaUUID<'mc> {
             .call_method(&self.jni_object(), "node", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
+    }
+    //
+
+    pub fn random_uuid(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+    ) -> Result<crate::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/UUID;");
+        let cls = jni.find_class("java/util/UUID");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "randomUUID", sig.as_str(), vec![]);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::util::JavaUUID::from_raw(&jni, obj)
+    }
+    //
+
+    pub fn from_string(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<String>,
+    ) -> Result<crate::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)Ljava/util/UUID;");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg0.into())?,
+        ));
+        let cls = jni.find_class("java/util/UUID");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "fromString",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::util::JavaUUID::from_raw(&jni, obj)
     }
     //
 
@@ -14191,7 +14180,7 @@ impl<'mc> std::string::ToString for JavaUUID<'mc> {
 /// <p>This class offers constant time performance for the basic operations (<tt>add</tt>, <tt>remove</tt>, <tt>contains</tt> and <tt>size</tt>), assuming the hash function disperses the elements properly among the buckets. Iterating over this set requires time proportional to the sum of the <tt>HashSet</tt> instance's size (the number of elements) plus the "capacity" of the backing <tt>HashMap</tt> instance (the number of buckets). Thus, it's very important not to set the initial capacity too high (or the load factor too low) if iteration performance is important.</p>
 /// <p><strong>Note that this implementation is not synchronized.</strong> If multiple threads access a hash set concurrently, and at least one of the threads modifies the set, it <i>must</i> be synchronized externally. This is typically accomplished by synchronizing on some object that naturally encapsulates the set. If no such object exists, the set should be "wrapped" using the <a href="../../java/util/Collections.html#synchronizedSet-java.util.Set-"><code>Collections.synchronizedSet</code></a> method. This is best done at creation time, to prevent accidental unsynchronized access to the set:</p>
 /// <pre> Set s = Collections.synchronizedSet(new HashSet(...));</pre>
-/// <p>The iterators returned by this class's <tt>iterator</tt> method are <i>fail-fast</i>: if the set is modified at any time after the iterator is created, in any way except through the iterator's own <tt>remove</tt> method, the Iterator throws a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
+/// <p>The iterators returned by this class's <tt>iterator</tt> method are <i>fail-fast</i>: if the set is modified at any time after the iterator is created, in any way except through the iterator's own <tt>remove</tt> method, the Iterator throws a <a title="class in java.util" href="../../java/util/ConcurrentModificationException.html"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
 /// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <tt>ConcurrentModificationException</tt> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 pub struct JavaHashSet<'mc>(
@@ -14585,10 +14574,10 @@ impl<'mc> Into<crate::util::JavaAbstractSet<'mc>> for JavaHashSet<'mc> {
             .expect("Error converting JavaHashSet into crate::util::JavaAbstractSet")
     }
 }
-/// This class provides a skeletal implementation of the <a title="interface in java.util" href="../../java/util/List.html"><code>List</code></a> interface to minimize the effort required to implement this interface backed by a "random access" data store (such as an array). For sequential access data (such as a linked list), <a title="class in java.util" href="../../java/util/AbstractSequentialList.html"><code>AbstractSequentialList</code></a> should be used in preference to this class.
+/// This class provides a skeletal implementation of the <a href="../../java/util/List.html" title="interface in java.util"><code>List</code></a> interface to minimize the effort required to implement this interface backed by a "random access" data store (such as an array). For sequential access data (such as a linked list), <a title="class in java.util" href="../../java/util/AbstractSequentialList.html"><code>AbstractSequentialList</code></a> should be used in preference to this class.
 /// <p>To implement an unmodifiable list, the programmer needs only to extend this class and provide implementations for the <a href="../../java/util/AbstractList.html#get-int-"><code>get(int)</code></a> and <a href="../../java/util/List.html#size--"><code>size()</code></a> methods.</p>
 /// <p>To implement a modifiable list, the programmer must additionally override the <a href="../../java/util/AbstractList.html#set-int-E-"><code>set(int, E)</code></a> method (which otherwise throws an <code>UnsupportedOperationException</code>). If the list is variable-size the programmer must additionally override the <a href="../../java/util/AbstractList.html#add-int-E-"><code>add(int, E)</code></a> and <a href="../../java/util/AbstractList.html#remove-int-"><code>remove(int)</code></a> methods.</p>
-/// <p>The programmer should generally provide a void (no argument) and collection constructor, as per the recommendation in the <a href="../../java/util/Collection.html" title="interface in java.util"><code>Collection</code></a> interface specification.</p>
+/// <p>The programmer should generally provide a void (no argument) and collection constructor, as per the recommendation in the <a title="interface in java.util" href="../../java/util/Collection.html"><code>Collection</code></a> interface specification.</p>
 /// <p>Unlike the other abstract collection implementations, the programmer does <i>not</i> have to provide an iterator implementation; the iterator and list iterator are implemented by this class, on top of the "random access" methods: <a href="../../java/util/AbstractList.html#get-int-"><code>get(int)</code></a>, <a href="../../java/util/AbstractList.html#set-int-E-"><code>set(int, E)</code></a>, <a href="../../java/util/AbstractList.html#add-int-E-"><code>add(int, E)</code></a> and <a href="../../java/util/AbstractList.html#remove-int-"><code>remove(int)</code></a>.</p>
 /// <p>The documentation for each non-abstract method in this class describes its implementation in detail. Each of these methods may be overridden if the collection being implemented admits a more efficient implementation.</p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
@@ -15202,45 +15191,6 @@ impl<'mc> JavaOptional<'mc> {
     }
     //
 
-    pub fn of_nullable(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: jni::objects::JObject<'mc>,
-    ) -> Result<crate::util::JavaOptional<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/Object;)Ljava/util/Optional;");
-        let val_1 = jni::objects::JValueGen::Object(arg0);
-        let cls = jni.find_class("java/util/Optional");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "ofNullable",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::util::JavaOptional::from_raw(&jni, obj)
-    }
-    //
-
-    pub fn if_present(
-        &self,
-        arg0: impl Into<crate::util::function::JavaConsumer<'mc>>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/function/Consumer;)V");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "ifPresent",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn get(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
@@ -15445,6 +15395,45 @@ impl<'mc> JavaOptional<'mc> {
             .call_method(&self.jni_object(), "orElseThrow", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
+    }
+    //
+
+    pub fn of_nullable(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<crate::util::JavaOptional<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/Object;)Ljava/util/Optional;");
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        let cls = jni.find_class("java/util/Optional");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "ofNullable",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::util::JavaOptional::from_raw(&jni, obj)
+    }
+    //
+
+    pub fn if_present(
+        &self,
+        arg0: impl Into<crate::util::function::JavaConsumer<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/function/Consumer;)V");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "ifPresent",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
     //
 
@@ -16776,7 +16765,7 @@ impl<'mc> std::string::ToString for JavaLocaleLanguageRange<'mc> {
 /// <p>The "destructive" methods contained in this interface, that is, the methods that modify the collection on which they operate, are specified to throw <tt>UnsupportedOperationException</tt> if this collection does not support the operation. If this is the case, these methods may, but are not required to, throw an <tt>UnsupportedOperationException</tt> if the invocation would have no effect on the collection. For example, invoking the <a href="../../java/util/Collection.html#addAll-java.util.Collection-"><code>addAll(Collection)</code></a> method on an unmodifiable collection may, but is not required to, throw the exception if the collection to be added is empty.</p>
 /// <p><a name="optional-restrictions"> Some collection implementations have restrictions on the elements that they may contain.</a> For example, some implementations prohibit null elements, and some have restrictions on the types of their elements. Attempting to add an ineligible element throws an unchecked exception, typically <tt>NullPointerException</tt> or <tt>ClassCastException</tt>. Attempting to query the presence of an ineligible element may throw an exception, or it may simply return false; some implementations will exhibit the former behavior and some will exhibit the latter. More generally, attempting an operation on an ineligible element whose completion would not result in the insertion of an ineligible element into the collection may throw an exception or it may succeed, at the option of the implementation. Such exceptions are marked as "optional" in the specification for this interface.</p>
 /// <p>It is up to each collection to determine its own synchronization policy. In the absence of a stronger guarantee by the implementation, undefined behavior may result from the invocation of any method on a collection that is being mutated by another thread; this includes direct invocations, passing the collection to a method that might perform invocations, and using an existing iterator to examine the collection.</p>
-/// <p>Many methods in Collections Framework interfaces are defined in terms of the <a href="../../java/lang/Object.html#equals-java.lang.Object-"><code>equals</code></a> method. For example, the specification for the <a href="../../java/util/Collection.html#contains-java.lang.Object-"><code>contains(Object o)</code></a> method says: "returns <tt>true</tt> if and only if this collection contains at least one element <tt>e</tt> such that <tt>(o==null ? e==null : o.equals(e))</tt>." This specification should <i>not</i> be construed to imply that invoking <tt>Collection.contains</tt> with a non-null argument <tt>o</tt> will cause <tt>o.equals(e)</tt> to be invoked for any element <tt>e</tt>. Implementations are free to implement optimizations whereby the <tt>equals</tt> invocation is avoided, for example, by first comparing the hash codes of the two elements. (The <a href="../../java/lang/Object.html#hashCode--"><code>Object.hashCode()</code></a> specification guarantees that two objects with unequal hash codes cannot be equal.) More generally, implementations of the various Collections Framework interfaces are free to take advantage of the specified behavior of underlying <a href="../../java/lang/Object.html" title="class in java.lang"><code>Object</code></a> methods wherever the implementor deems it appropriate.</p>
+/// <p>Many methods in Collections Framework interfaces are defined in terms of the <a href="../../java/lang/Object.html#equals-java.lang.Object-"><code>equals</code></a> method. For example, the specification for the <a href="../../java/util/Collection.html#contains-java.lang.Object-"><code>contains(Object o)</code></a> method says: "returns <tt>true</tt> if and only if this collection contains at least one element <tt>e</tt> such that <tt>(o==null ? e==null : o.equals(e))</tt>." This specification should <i>not</i> be construed to imply that invoking <tt>Collection.contains</tt> with a non-null argument <tt>o</tt> will cause <tt>o.equals(e)</tt> to be invoked for any element <tt>e</tt>. Implementations are free to implement optimizations whereby the <tt>equals</tt> invocation is avoided, for example, by first comparing the hash codes of the two elements. (The <a href="../../java/lang/Object.html#hashCode--"><code>Object.hashCode()</code></a> specification guarantees that two objects with unequal hash codes cannot be equal.) More generally, implementations of the various Collections Framework interfaces are free to take advantage of the specified behavior of underlying <a title="class in java.lang" href="../../java/lang/Object.html"><code>Object</code></a> methods wherever the implementor deems it appropriate.</p>
 /// <p>Some collection operations which perform recursive traversal of the collection may fail with an exception for self-referential instances where the collection directly or indirectly contains itself. This includes the <code>clone()</code>, <code>equals()</code>, <code>hashCode()</code> and <code>toString()</code> methods. Implementations may optionally handle the self-referential scenario, however most current implementations do not do so.</p>
 /// <p>This interface is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 ///
@@ -17102,23 +17091,13 @@ impl<'mc> JNIInstantiatable<'mc> for JavaPrimitiveIteratorOfInt<'mc> {
 impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
     //
 
-    pub fn next_int(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "nextInt", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    //
-
-    pub fn for_each_remaining_with_int_consumer(
+    pub fn for_each_remaining_with_consumer(
         &self,
-        arg0: impl Into<crate::util::function::JavaIntConsumer<'mc>>,
+        arg0: impl Into<crate::util::function::JavaConsumer<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Ljava/util/function/IntConsumer;";
+        sig += "Ljava/util/function/Consumer;";
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
@@ -17132,15 +17111,25 @@ impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
     }
     //
 
-    pub fn next(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn next(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += ")Ljava/lang/Object;";
+        sig += ")Ljava/lang/Integer;";
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "next", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
+        Ok(res.i()?)
+    }
+    //
+
+    pub fn next_int(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "nextInt", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
     }
     //
 
@@ -17269,7 +17258,7 @@ impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
         Ok(res.z()?)
     }
 }
-/// An iterator over a collection. <code>Iterator</code> takes the place of <a href="../../java/util/Enumeration.html" title="interface in java.util"><code>Enumeration</code></a> in the Java Collections Framework. Iterators differ from enumerations in two ways:
+/// An iterator over a collection. <code>Iterator</code> takes the place of <a title="interface in java.util" href="../../java/util/Enumeration.html"><code>Enumeration</code></a> in the Java Collections Framework. Iterators differ from enumerations in two ways:
 /// <ul>
 /// <li>Iterators allow the caller to remove elements from the underlying collection during the iteration with well-defined semantics.</li>
 /// <li>Method names have been improved.</li>
@@ -17364,7 +17353,7 @@ impl<'mc> JavaIterator<'mc> {
         Ok(res.l()?)
     }
 }
-/// A base type for primitive specializations of <code>Iterator</code>. Specialized subtypes are provided for <a href="../../java/util/PrimitiveIterator.OfInt.html" title="interface in java.util"><code>int</code></a>, <a title="interface in java.util" href="../../java/util/PrimitiveIterator.OfLong.html"><code>long</code></a>, and <a href="../../java/util/PrimitiveIterator.OfDouble.html" title="interface in java.util"><code>double</code></a> values.
+/// A base type for primitive specializations of <code>Iterator</code>. Specialized subtypes are provided for <a href="../../java/util/PrimitiveIterator.OfInt.html" title="interface in java.util"><code>int</code></a>, <a href="../../java/util/PrimitiveIterator.OfLong.html" title="interface in java.util"><code>long</code></a>, and <a title="interface in java.util" href="../../java/util/PrimitiveIterator.OfDouble.html"><code>double</code></a> values.
 /// <p>The specialized subtype default implementations of <a href="../../java/util/Iterator.html#next--"><code>Iterator.next()</code></a> and <a href="../../java/util/Iterator.html#forEachRemaining-java.util.function.Consumer-"><code>Iterator.forEachRemaining(java.util.function.Consumer)</code></a> box primitive values to instances of their corresponding wrapper class. Such boxing may offset any advantages gained when using the primitive specializations. To avoid boxing, the corresponding primitive-based methods should be used. For example, <a href="../../java/util/PrimitiveIterator.OfInt.html#nextInt--"><code>PrimitiveIterator.OfInt.nextInt()</code></a> and <a href="../../java/util/PrimitiveIterator.OfInt.html#forEachRemaining-java.util.function.IntConsumer-"><code>PrimitiveIterator.OfInt.forEachRemaining(java.util.function.IntConsumer)</code></a> should be used in preference to <a href="../../java/util/PrimitiveIterator.OfInt.html#next--"><code>PrimitiveIterator.OfInt.next()</code></a> and <a href="../../java/util/PrimitiveIterator.OfInt.html#forEachRemaining-java.util.function.Consumer-"><code>PrimitiveIterator.OfInt.forEachRemaining(java.util.function.Consumer)</code></a>.</p>
 /// <p>Iteration of primitive values using boxing-based methods <a href="../../java/util/Iterator.html#next--"><code>next()</code></a> and <a href="../../java/util/Iterator.html#forEachRemaining-java.util.function.Consumer-"><code>forEachRemaining()</code></a>, does not affect the order in which the values, transformed to boxed values, are encountered.</p>
 ///
@@ -17508,52 +17497,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaMapEntry<'mc> {
 impl<'mc> JavaMapEntry<'mc> {
     //
 
-    pub fn comparing_by_key_with_comparator(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::util::JavaComparator<'mc>>>,
-    ) -> Result<crate::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/util/Comparator;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
-        sig += ")Ljava/util/Comparator;";
-        let cls = jni.find_class("java/util/Comparator");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "comparingByKey", sig.as_str(), args);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::util::JavaComparator::from_raw(&jni, obj)
-    }
-    //
-
-    pub fn comparing_by_value_with_comparator(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::util::JavaComparator<'mc>>>,
-    ) -> Result<crate::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/util/Comparator;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
-        sig += ")Ljava/util/Comparator;";
-        let cls = jni.find_class("java/util/Comparator");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "comparingByValue", sig.as_str(), args);
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::util::JavaComparator::from_raw(&jni, obj)
-    }
-    //
-
     pub fn equals(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -17638,9 +17581,55 @@ impl<'mc> JavaMapEntry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
+    //
+
+    pub fn comparing_by_key_with_comparator(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<impl Into<crate::util::JavaComparator<'mc>>>,
+    ) -> Result<crate::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/util/Comparator;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
+        sig += ")Ljava/util/Comparator;";
+        let cls = jni.find_class("java/util/Comparator");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "comparingByKey", sig.as_str(), args);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::util::JavaComparator::from_raw(&jni, obj)
+    }
+    //
+
+    pub fn comparing_by_value_with_comparator(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<impl Into<crate::util::JavaComparator<'mc>>>,
+    ) -> Result<crate::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/util/Comparator;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
+        sig += ")Ljava/util/Comparator;";
+        let cls = jni.find_class("java/util/Comparator");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "comparingByValue", sig.as_str(), args);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::util::JavaComparator::from_raw(&jni, obj)
+    }
 }
 /// A specialized <a title="interface in java.util" href="../../java/util/Set.html"><code>Set</code></a> implementation for use with enum types. All of the elements in an enum set must come from a single enum type that is specified, explicitly or implicitly, when the set is created. Enum sets are represented internally as bit vectors. This representation is extremely compact and efficient. The space and time performance of this class should be good enough to allow its use as a high-quality, typesafe alternative to traditional <tt>int</tt>-based "bit flags." Even bulk operations (such as <tt>containsAll</tt> and <tt>retainAll</tt>) should run very quickly if their argument is also an enum set.
-/// <p>The iterator returned by the <tt>iterator</tt> method traverses the elements in their <i>natural order</i> (the order in which the enum constants are declared). The returned iterator is <i>weakly consistent</i>: it will never throw <a title="class in java.util" href="../../java/util/ConcurrentModificationException.html"><code>ConcurrentModificationException</code></a> and it may or may not show the effects of any modifications to the set that occur while the iteration is in progress.</p>
+/// <p>The iterator returned by the <tt>iterator</tt> method traverses the elements in their <i>natural order</i> (the order in which the enum constants are declared). The returned iterator is <i>weakly consistent</i>: it will never throw <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a> and it may or may not show the effects of any modifications to the set that occur while the iteration is in progress.</p>
 /// <p>Null elements are not permitted. Attempts to insert a null element will throw <a title="class in java.lang" href="../../java/lang/NullPointerException.html"><code>NullPointerException</code></a>. Attempts to test for the presence of a null element or to remove one will, however, function properly.</p>
 /// <p>Like most collection implementations, <tt>EnumSet</tt> is not synchronized. If multiple threads access an enum set concurrently, and at least one of the threads modifies the set, it should be synchronized externally. This is typically accomplished by synchronizing on some object that naturally encapsulates the enum set. If no such object exists, the set should be "wrapped" using the <a href="../../java/util/Collections.html#synchronizedSet-java.util.Set-"><code>Collections.synchronizedSet(java.util.Set&lt;T&gt;)</code></a> method. This is best done at creation time, to prevent accidental unsynchronized access:</p>
 /// <pre> Set&lt;MyEnum&gt; s = Collections.synchronizedSet(EnumSet.noneOf(MyEnum.class));
@@ -17697,6 +17686,27 @@ impl<'mc> JavaEnumSet<'mc> {
         crate::util::JavaEnumSet::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
+    }
+    //
+
+    pub fn copy_of_with_collection(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::util::JavaCollection<'mc>>,
+    ) -> Result<crate::util::JavaEnumSet<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/Collection;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Ljava/util/EnumSet;";
+        let cls = jni.find_class("java/util/EnumSet");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "copyOf", sig.as_str(), args);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::util::JavaEnumSet::from_raw(&jni, obj)
     }
     //
 
@@ -18127,30 +18137,6 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn date(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getDate", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    //
-
-    pub fn set_time(&self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("(J)V");
-        let val_1 = jni::objects::JValueGen::Long(arg0.into());
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setTime",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn set_date(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -18316,79 +18302,27 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
-    pub fn time(&self) -> Result<i64, Box<dyn std::error::Error>> {
-        let sig = String::from("()J");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getTime", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.j()?)
-    }
-    //
-
-    pub fn year(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getYear", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    //
-
-    pub fn seconds(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let sig = String::from("()I");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getSeconds", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.i()?)
-    }
-    //
-
-    pub fn to_instant(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/time/Instant;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "toInstant", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
-    }
-    //
-
-    pub fn utc(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: i32,
-        arg1: i32,
-        arg2: i32,
-        arg3: i32,
-        arg4: i32,
-        arg5: i32,
-    ) -> Result<i64, Box<dyn std::error::Error>> {
-        let sig = String::from("(IIIIII)J");
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
-        let val_5 = jni::objects::JValueGen::Int(arg4.into());
-        let val_6 = jni::objects::JValueGen::Int(arg5.into());
-        let cls = jni.find_class("long");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "UTC",
+    pub fn set_time(&self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("(J)V");
+        let val_1 = jni::objects::JValueGen::Long(arg0.into());
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setTime",
             sig.as_str(),
-            vec![
-                jni::objects::JValueGen::from(val_1),
-                jni::objects::JValueGen::from(val_2),
-                jni::objects::JValueGen::from(val_3),
-                jni::objects::JValueGen::from(val_4),
-                jni::objects::JValueGen::from(val_5),
-                jni::objects::JValueGen::from(val_6),
-            ],
+            vec![jni::objects::JValueGen::from(val_1)],
         );
-        let res = jni.translate_error(res)?;
-        Ok(res.j()?)
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //
+
+    pub fn date(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getDate", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
     }
     //
 
@@ -18410,44 +18344,6 @@ impl<'mc> JavaDate<'mc> {
         );
         let res = jni.translate_error(res)?;
         Ok(res.j()?)
-    }
-    //
-
-    pub fn before(
-        &self,
-        arg0: impl Into<crate::util::JavaDate<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/Date;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "before",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
-    pub fn after(
-        &self,
-        arg0: impl Into<crate::util::JavaDate<'mc>>,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/Date;)Z");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "after",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
     }
     //
 
@@ -18541,6 +18437,120 @@ impl<'mc> JavaDate<'mc> {
     }
     //
 
+    pub fn before(
+        &self,
+        arg0: impl Into<crate::util::JavaDate<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/Date;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "before",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn after(
+        &self,
+        arg0: impl Into<crate::util::JavaDate<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/Date;)Z");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "after",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //
+
+    pub fn time(&self) -> Result<i64, Box<dyn std::error::Error>> {
+        let sig = String::from("()J");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getTime", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.j()?)
+    }
+    //
+
+    pub fn year(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getYear", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    //
+
+    pub fn seconds(&self) -> Result<i32, Box<dyn std::error::Error>> {
+        let sig = String::from("()I");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getSeconds", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+    //
+
+    pub fn to_instant(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/time/Instant;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "toInstant", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //
+
+    pub fn utc(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: i32,
+        arg1: i32,
+        arg2: i32,
+        arg3: i32,
+        arg4: i32,
+        arg5: i32,
+    ) -> Result<i64, Box<dyn std::error::Error>> {
+        let sig = String::from("(IIIIII)J");
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        let val_3 = jni::objects::JValueGen::Int(arg2.into());
+        let val_4 = jni::objects::JValueGen::Int(arg3.into());
+        let val_5 = jni::objects::JValueGen::Int(arg4.into());
+        let val_6 = jni::objects::JValueGen::Int(arg5.into());
+        let cls = jni.find_class("long");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "UTC",
+            sig.as_str(),
+            vec![
+                jni::objects::JValueGen::from(val_1),
+                jni::objects::JValueGen::from(val_2),
+                jni::objects::JValueGen::from(val_3),
+                jni::objects::JValueGen::from(val_4),
+                jni::objects::JValueGen::from(val_5),
+                jni::objects::JValueGen::from(val_6),
+            ],
+        );
+        let res = jni.translate_error(res)?;
+        Ok(res.j()?)
+    }
+    //
+
     pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
@@ -18596,11 +18606,11 @@ impl<'mc> std::string::ToString for JavaDate<'mc> {
     }
 }
 
-/// Resizable-array implementation of the <a title="interface in java.util" href="../../java/util/Deque.html"><code>Deque</code></a> interface. Array deques have no capacity restrictions; they grow as necessary to support usage. They are not thread-safe; in the absence of external synchronization, they do not support concurrent access by multiple threads. Null elements are prohibited. This class is likely to be faster than <a href="../../java/util/Stack.html" title="class in java.util"><code>Stack</code></a> when used as a stack, and faster than <a title="class in java.util" href="../../java/util/LinkedList.html"><code>LinkedList</code></a> when used as a queue.
+/// Resizable-array implementation of the <a href="../../java/util/Deque.html" title="interface in java.util"><code>Deque</code></a> interface. Array deques have no capacity restrictions; they grow as necessary to support usage. They are not thread-safe; in the absence of external synchronization, they do not support concurrent access by multiple threads. Null elements are prohibited. This class is likely to be faster than <a title="class in java.util" href="../../java/util/Stack.html"><code>Stack</code></a> when used as a stack, and faster than <a title="class in java.util" href="../../java/util/LinkedList.html"><code>LinkedList</code></a> when used as a queue.
 /// <p>Most <code>ArrayDeque</code> operations run in amortized constant time. Exceptions include <a href="../../java/util/ArrayDeque.html#remove-java.lang.Object-"><code>remove</code></a>, <a href="../../java/util/ArrayDeque.html#removeFirstOccurrence-java.lang.Object-"><code>removeFirstOccurrence</code></a>, <a href="../../java/util/ArrayDeque.html#removeLastOccurrence-java.lang.Object-"><code>removeLastOccurrence</code></a>, <a href="../../java/util/ArrayDeque.html#contains-java.lang.Object-"><code>contains</code></a>, <a href="../../java/util/ArrayDeque.html#iterator--"><code>iterator.remove()</code></a>, and the bulk operations, all of which run in linear time.</p>
-/// <p>The iterators returned by this class's <code>iterator</code> method are <i>fail-fast</i>: If the deque is modified at any time after the iterator is created, in any way except through the iterator's own <code>remove</code> method, the iterator will generally throw a <a title="class in java.util" href="../../java/util/ConcurrentModificationException.html"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
+/// <p>The iterators returned by this class's <code>iterator</code> method are <i>fail-fast</i>: If the deque is modified at any time after the iterator is created, in any way except through the iterator's own <code>remove</code> method, the iterator will generally throw a <a href="../../java/util/ConcurrentModificationException.html" title="class in java.util"><code>ConcurrentModificationException</code></a>. Thus, in the face of concurrent modification, the iterator fails quickly and cleanly, rather than risking arbitrary, non-deterministic behavior at an undetermined time in the future.</p>
 /// <p>Note that the fail-fast behavior of an iterator cannot be guaranteed as it is, generally speaking, impossible to make any hard guarantees in the presence of unsynchronized concurrent modification. Fail-fast iterators throw <code>ConcurrentModificationException</code> on a best-effort basis. Therefore, it would be wrong to write a program that depended on this exception for its correctness: <i>the fail-fast behavior of iterators should be used only to detect bugs.</i></p>
-/// <p>This class and its iterator implement all of the <em>optional</em> methods of the <a href="../../java/util/Collection.html" title="interface in java.util"><code>Collection</code></a> and <a href="../../java/util/Iterator.html" title="interface in java.util"><code>Iterator</code></a> interfaces.</p>
+/// <p>This class and its iterator implement all of the <em>optional</em> methods of the <a href="../../java/util/Collection.html" title="interface in java.util"><code>Collection</code></a> and <a title="interface in java.util" href="../../java/util/Iterator.html"><code>Iterator</code></a> interfaces.</p>
 /// <p>This class is a member of the <a href="../../../technotes/guides/collections/index.html"> Java Collections Framework</a>.</p>
 pub struct JavaArrayDeque<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
@@ -19311,23 +19321,13 @@ impl<'mc> JNIInstantiatable<'mc> for JavaPrimitiveIteratorOfDouble<'mc> {
 impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
     //
 
-    pub fn next_double(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "nextDouble", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    //
-
-    pub fn for_each_remaining_with_double_consumer(
+    pub fn for_each_remaining_with_consumer(
         &self,
-        arg0: impl Into<crate::util::function::JavaDoubleConsumer<'mc>>,
+        arg0: impl Into<crate::util::function::JavaConsumer<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Ljava/util/function/DoubleConsumer;";
+        sig += "Ljava/util/function/Consumer;";
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
@@ -19341,15 +19341,25 @@ impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
     }
     //
 
-    pub fn next(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+    pub fn next(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += ")Ljava/lang/Object;";
+        sig += ")Ljava/lang/Double;";
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "next", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
+        Ok(res.d()?)
+    }
+    //
+
+    pub fn next_double(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "nextDouble", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
     }
     //
 
@@ -19428,6 +19438,27 @@ impl<'mc> JavaLocaleBuilder<'mc> {
         let res = jni.new_object(cls, sig.as_str(), vec![]);
         let res = jni.translate_error_no_gen(res)?;
         crate::util::JavaLocaleBuilder::from_raw(&jni, res)
+    }
+    //
+
+    pub fn set_language_tag(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<crate::util::JavaLocaleBuilder<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/lang/String;)Ljava/util/Locale$Builder;");
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "setLanguageTag",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::JavaLocaleBuilder::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     //
 
@@ -19583,27 +19614,6 @@ impl<'mc> JavaLocaleBuilder<'mc> {
     }
     //
 
-    pub fn set_language_tag(
-        &self,
-        arg0: impl Into<String>,
-    ) -> Result<crate::util::JavaLocaleBuilder<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/lang/String;)Ljava/util/Locale$Builder;");
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "setLanguageTag",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::JavaLocaleBuilder::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
     pub fn set_locale(
         &self,
         arg0: impl Into<crate::util::JavaLocale<'mc>>,
@@ -19618,6 +19628,18 @@ impl<'mc> JavaLocaleBuilder<'mc> {
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::JavaLocaleBuilder::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
+    pub fn clear(&self) -> Result<crate::util::JavaLocaleBuilder<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Locale$Builder;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "clear", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::util::JavaLocaleBuilder::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
@@ -19672,18 +19694,6 @@ impl<'mc> JavaLocaleBuilder<'mc> {
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
-        let res = self.jni_ref().translate_error(res)?;
-        crate::util::JavaLocaleBuilder::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
-    pub fn clear(&self) -> Result<crate::util::JavaLocaleBuilder<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Locale$Builder;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "clear", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         crate::util::JavaLocaleBuilder::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())

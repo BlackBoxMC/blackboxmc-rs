@@ -73,17 +73,21 @@ impl<'mc> BukkitTask<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@Nullable
 
-    pub fn owner(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
+    pub fn owner(&self) -> Result<Option<crate::plugin::Plugin<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getOwner", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::plugin::Plugin::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::plugin::Plugin::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
     //
 
@@ -137,17 +141,21 @@ impl<'mc> JNIInstantiatable<'mc> for BukkitWorker<'mc> {
 }
 
 impl<'mc> BukkitWorker<'mc> {
-    //
+    //@Nullable
 
-    pub fn owner(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
+    pub fn owner(&self) -> Result<Option<crate::plugin::Plugin<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getOwner", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::plugin::Plugin::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::plugin::Plugin::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
     //
 
@@ -304,7 +312,7 @@ impl<'mc> BukkitScheduler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn active_workers(
         &self,
@@ -329,7 +337,7 @@ impl<'mc> BukkitScheduler<'mc> {
         }
         Ok(new_vec)
     }
-    //
+    //@NotNull
 
     pub fn pending_tasks(
         &self,

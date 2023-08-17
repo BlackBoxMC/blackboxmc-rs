@@ -41,19 +41,22 @@ impl<'mc> JNIInstantiatable<'mc> for RaidEvent<'mc> {
 }
 
 impl<'mc> RaidEvent<'mc> {
-    //
+    //@Nullable
 
-    pub fn raid(&self) -> Result<crate::Raid<'mc>, Box<dyn std::error::Error>> {
+    pub fn raid(&self) -> Result<Option<crate::Raid<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Raid;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getRaid", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::Raid::from_raw(&self.jni_ref(), unsafe {
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::Raid::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        })?))
     }
-    //
+    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -65,7 +68,7 @@ impl<'mc> RaidEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
@@ -77,7 +80,7 @@ impl<'mc> RaidEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -256,7 +259,7 @@ impl<'mc> JNIInstantiatable<'mc> for RaidSpawnWaveEvent<'mc> {
 }
 
 impl<'mc> RaidSpawnWaveEvent<'mc> {
-    //
+    //@NotNull
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
@@ -268,7 +271,7 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn raiders(&self) -> Result<Vec<crate::entity::Raider<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -285,7 +288,7 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
         }
         Ok(new_vec)
     }
-    //
+    //@NotNull
 
     pub fn handler_list(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -298,31 +301,40 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //
+    //@Nullable
 
-    pub fn patrol_leader(&self) -> Result<crate::entity::Raider<'mc>, Box<dyn std::error::Error>> {
+    pub fn patrol_leader(
+        &self,
+    ) -> Result<Option<crate::entity::Raider<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Raider;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getPatrolLeader", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::entity::Raider::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::entity::Raider::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
-    //
+    //@Nullable
 
-    pub fn raid(&self) -> Result<crate::Raid<'mc>, Box<dyn std::error::Error>> {
+    pub fn raid(&self) -> Result<Option<crate::Raid<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Raid;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getRaid", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::Raid::from_raw(&self.jni_ref(), unsafe {
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::Raid::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        })?))
     }
-    //
+    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -334,7 +346,7 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -473,7 +485,7 @@ impl<'mc> Into<crate::event::raid::RaidEvent<'mc>> for RaidSpawnWaveEvent<'mc> {
             .expect("Error converting RaidSpawnWaveEvent into crate::event::raid::RaidEvent")
     }
 }
-/// Called when a <a href="../../Raid.html" title="interface in org.bukkit"><code>Raid</code></a> is triggered (e.g: a player with Bad Omen effect enters a village).
+/// Called when a <a title="interface in org.bukkit" href="../../Raid.html"><code>Raid</code></a> is triggered (e.g: a player with Bad Omen effect enters a village).
 pub struct RaidTriggerEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -545,6 +557,16 @@ impl<'mc> RaidTriggerEvent<'mc> {
     }
     //
 
+    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //@NotNull
+
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
@@ -555,27 +577,23 @@ impl<'mc> RaidTriggerEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
-    pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "isCancelled", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
+    //@Nullable
 
-    pub fn player(&self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
+    pub fn player(&self) -> Result<Option<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Player;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getPlayer", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::entity::Player::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::entity::Player::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
     //
 
@@ -594,7 +612,7 @@ impl<'mc> RaidTriggerEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn handler_list(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -607,19 +625,22 @@ impl<'mc> RaidTriggerEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //
+    //@Nullable
 
-    pub fn raid(&self) -> Result<crate::Raid<'mc>, Box<dyn std::error::Error>> {
+    pub fn raid(&self) -> Result<Option<crate::Raid<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Raid;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getRaid", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::Raid::from_raw(&self.jni_ref(), unsafe {
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::Raid::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        })?))
     }
-    //
+    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -631,7 +652,7 @@ impl<'mc> RaidTriggerEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -776,7 +797,7 @@ impl<'mc> Into<crate::event::raid::RaidEvent<'mc>> for RaidTriggerEvent<'mc> {
             .expect("Error converting RaidTriggerEvent into crate::event::raid::RaidEvent")
     }
 }
-/// This event is called when a <a href="../../Raid.html" title="interface in org.bukkit"><code>Raid</code></a> was complete with a clear result.
+/// This event is called when a <a title="interface in org.bukkit" href="../../Raid.html"><code>Raid</code></a> was complete with a clear result.
 pub struct RaidFinishEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -816,7 +837,7 @@ impl<'mc> JNIInstantiatable<'mc> for RaidFinishEvent<'mc> {
 }
 
 impl<'mc> RaidFinishEvent<'mc> {
-    //
+    //@NotNull
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
@@ -828,7 +849,7 @@ impl<'mc> RaidFinishEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn handler_list(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -841,7 +862,7 @@ impl<'mc> RaidFinishEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //
+    //@NotNull
 
     pub fn winners(&self) -> Result<Vec<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -858,19 +879,22 @@ impl<'mc> RaidFinishEvent<'mc> {
         }
         Ok(new_vec)
     }
-    //
+    //@Nullable
 
-    pub fn raid(&self) -> Result<crate::Raid<'mc>, Box<dyn std::error::Error>> {
+    pub fn raid(&self) -> Result<Option<crate::Raid<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Raid;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getRaid", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::Raid::from_raw(&self.jni_ref(), unsafe {
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::Raid::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        })?))
     }
-    //
+    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -882,7 +906,7 @@ impl<'mc> RaidFinishEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1021,7 +1045,7 @@ impl<'mc> Into<crate::event::raid::RaidEvent<'mc>> for RaidFinishEvent<'mc> {
             .expect("Error converting RaidFinishEvent into crate::event::raid::RaidEvent")
     }
 }
-/// Called when a <a href="../../Raid.html" title="interface in org.bukkit"><code>Raid</code></a> is stopped.
+/// Called when a <a title="interface in org.bukkit" href="../../Raid.html"><code>Raid</code></a> is stopped.
 pub struct RaidStopEvent<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1214,7 +1238,38 @@ impl<'mc> RaidStopEvent<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::event::raid::RaidStopEvent::from_raw(&jni, res)
     }
-    //
+    //@Nullable
+
+    pub fn reason(
+        &self,
+    ) -> Result<Option<crate::event::raid::RaidStopEventReason<'mc>>, Box<dyn std::error::Error>>
+    {
+        let sig = String::from("()Lorg/bukkit/event/raid/RaidStopEvent$Reason;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getReason", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant = self
+            .0
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = self.jni_ref().translate_error(variant)?;
+        let variant_str = self
+            .0
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        Ok(Some(crate::event::raid::RaidStopEventReason::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::event::raid::RaidStopEventReason::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )?))
+    }
+    //@NotNull
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
@@ -1226,34 +1281,7 @@ impl<'mc> RaidStopEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
-    pub fn reason(
-        &self,
-    ) -> Result<crate::event::raid::RaidStopEventReason<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/event/raid/RaidStopEvent$Reason;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getReason", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::event::raid::RaidStopEventReason::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::event::raid::RaidStopEventReason::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-    //
+    //@NotNull
 
     pub fn handler_list(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1266,19 +1294,22 @@ impl<'mc> RaidStopEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //
+    //@Nullable
 
-    pub fn raid(&self) -> Result<crate::Raid<'mc>, Box<dyn std::error::Error>> {
+    pub fn raid(&self) -> Result<Option<crate::Raid<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Raid;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getRaid", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::Raid::from_raw(&self.jni_ref(), unsafe {
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::Raid::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        })?))
     }
-    //
+    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -1290,7 +1321,7 @@ impl<'mc> RaidStopEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");

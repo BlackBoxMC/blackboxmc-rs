@@ -68,34 +68,6 @@ impl<'mc> ArmorTrim<'mc> {
     }
     //
 
-    pub fn material(
-        &self,
-    ) -> Result<crate::inventory::meta::trim::TrimMaterial<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/meta/trim/TrimMaterial;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::meta::trim::TrimMaterial::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
-    pub fn pattern(
-        &self,
-    ) -> Result<crate::inventory::meta::trim::TrimPattern<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/inventory/meta/trim/TrimPattern;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getPattern", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::inventory::meta::trim::TrimPattern::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
     pub fn equals(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -120,6 +92,36 @@ impl<'mc> ArmorTrim<'mc> {
             .call_method(&self.jni_object(), "hashCode", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
+    }
+    //@NotNull
+
+    pub fn material(
+        &self,
+    ) -> Result<crate::inventory::meta::trim::TrimMaterial<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/trim/TrimMaterial;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getMaterial", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::meta::trim::TrimMaterial::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //@NotNull
+
+    //@NotNull
+
+    pub fn pattern(
+        &self,
+    ) -> Result<crate::inventory::meta::trim::TrimPattern<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/inventory/meta/trim/TrimPattern;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPattern", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::inventory::meta::trim::TrimPattern::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     //
 
@@ -203,7 +205,7 @@ impl<'mc> std::string::ToString for ArmorTrim<'mc> {
     }
 }
 
-/// Represents a material that may be used in an <a href="ArmorTrim.html" title="class in org.bukkit.inventory.meta.trim"><code>ArmorTrim</code></a>.
+/// Represents a material that may be used in an <a title="class in org.bukkit.inventory.meta.trim" href="ArmorTrim.html"><code>ArmorTrim</code></a>.
 ///
 /// This is a representation of an abstract class.
 pub struct TrimMaterial<'mc>(
@@ -244,7 +246,7 @@ impl<'mc> JNIInstantiatable<'mc> for TrimMaterial<'mc> {
 }
 
 impl<'mc> TrimMaterial<'mc> {
-    //
+    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -304,7 +306,7 @@ impl<'mc> JNIInstantiatable<'mc> for TrimPattern<'mc> {
 }
 
 impl<'mc> TrimPattern<'mc> {
-    //
+    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");

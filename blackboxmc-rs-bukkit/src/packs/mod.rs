@@ -159,7 +159,7 @@ impl<'mc> JNIInstantiatable<'mc> for DataPack<'mc> {
 }
 
 impl<'mc> DataPack<'mc> {
-    //
+    //@NotNull
 
     pub fn source(&self) -> Result<crate::packs::DataPackSource<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/packs/DataPack$Source;");
@@ -184,7 +184,7 @@ impl<'mc> DataPack<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn description(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -198,7 +198,7 @@ impl<'mc> DataPack<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
+    //@NotNull
 
     pub fn requested_features(
         &self,
@@ -215,7 +215,7 @@ impl<'mc> DataPack<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn title(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -259,7 +259,7 @@ impl<'mc> DataPack<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
+    //@NotNull
 
     pub fn compatibility(
         &self,
@@ -289,7 +289,7 @@ impl<'mc> DataPack<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
+    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -376,7 +376,7 @@ impl<'mc> DataPackManager<'mc> {
         }
         Ok(new_vec)
     }
-    //
+    //@NotNull
 
     pub fn data_packs(
         &self,

@@ -233,6 +233,16 @@ impl<'mc> MetadataValue<'mc> {
     }
     //
 
+    pub fn value(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/Object;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "value", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.l()?)
+    }
+    //@NotNull
+
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
@@ -255,17 +265,23 @@ impl<'mc> MetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
+    //@Nullable
 
-    pub fn owning_plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
+    pub fn owning_plugin(
+        &self,
+    ) -> Result<Option<crate::plugin::Plugin<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getOwningPlugin", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::plugin::Plugin::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::plugin::Plugin::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
     //
 
@@ -336,16 +352,6 @@ impl<'mc> MetadataValue<'mc> {
             .call_method(&self.jni_object(), "asBoolean", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
-    }
-    //
-
-    pub fn value(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/Object;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "value", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.l()?)
     }
 }
 /// This interface is implemented by all objects that can provide metadata about themselves.
@@ -948,16 +954,6 @@ impl<'mc> JNIInstantiatable<'mc> for LazyMetadataValue<'mc> {
 impl<'mc> LazyMetadataValue<'mc> {
     //
 
-    pub fn invalidate(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "invalidate", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn value(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
@@ -967,6 +963,16 @@ impl<'mc> LazyMetadataValue<'mc> {
         Ok(res.l()?)
     }
     //
+
+    pub fn invalidate(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "invalidate", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -990,17 +996,23 @@ impl<'mc> LazyMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
+    //@Nullable
 
-    pub fn owning_plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
+    pub fn owning_plugin(
+        &self,
+    ) -> Result<Option<crate::plugin::Plugin<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getOwningPlugin", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::plugin::Plugin::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::plugin::Plugin::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
     //
 
@@ -1243,16 +1255,6 @@ impl<'mc> FixedMetadataValue<'mc> {
     }
     //
 
-    pub fn invalidate(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "invalidate", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn value(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
@@ -1262,6 +1264,16 @@ impl<'mc> FixedMetadataValue<'mc> {
         Ok(res.l()?)
     }
     //
+
+    pub fn invalidate(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "invalidate", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1285,17 +1297,23 @@ impl<'mc> FixedMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
+    //@Nullable
 
-    pub fn owning_plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
+    pub fn owning_plugin(
+        &self,
+    ) -> Result<Option<crate::plugin::Plugin<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getOwningPlugin", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::plugin::Plugin::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::plugin::Plugin::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
     //
 
@@ -1513,7 +1531,7 @@ impl<'mc> JNIInstantiatable<'mc> for MetadataValueAdapter<'mc> {
 }
 
 impl<'mc> MetadataValueAdapter<'mc> {
-    //
+    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1537,17 +1555,23 @@ impl<'mc> MetadataValueAdapter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
+    //@Nullable
 
-    pub fn owning_plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
+    pub fn owning_plugin(
+        &self,
+    ) -> Result<Option<crate::plugin::Plugin<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getOwningPlugin", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        crate::plugin::Plugin::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(crate::plugin::Plugin::from_raw(
+            &self.jni_ref(),
+            unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
+        )?))
     }
     //
 
@@ -1709,16 +1733,6 @@ impl<'mc> MetadataValueAdapter<'mc> {
     }
     //
 
-    pub fn invalidate(&self) -> Result<(), Box<dyn std::error::Error>> {
-        let sig = String::from("()V");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "invalidate", sig.as_str(), vec![]);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
-    }
-    //
-
     pub fn value(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
@@ -1726,6 +1740,16 @@ impl<'mc> MetadataValueAdapter<'mc> {
             .call_method(&self.jni_object(), "value", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
+    }
+    //
+
+    pub fn invalidate(&self) -> Result<(), Box<dyn std::error::Error>> {
+        let sig = String::from("()V");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "invalidate", sig.as_str(), vec![]);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
 }
 

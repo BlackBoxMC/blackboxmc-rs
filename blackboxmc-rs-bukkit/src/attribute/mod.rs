@@ -262,7 +262,51 @@ impl<'mc> JNIInstantiatable<'mc> for AttributeInstance<'mc> {
 }
 
 impl<'mc> AttributeInstance<'mc> {
+    //@NotNull
+
+    pub fn modifiers(
+        &self,
+    ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Collection;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getModifiers", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let mut new_vec = Vec::new();
+        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
+        let iter = col.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            new_vec.push(crate::attribute::AttributeModifier::from_raw(
+                &self.jni_ref(),
+                obj,
+            )?);
+        }
+        Ok(new_vec)
+    }
+    //@Deprecated
+
+    #[deprecated]
+
+    pub fn value(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getValue", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
     //
+
+    pub fn default_value(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getDefaultValue", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+    //@NotNull
 
     pub fn attribute(
         &self,
@@ -351,48 +395,6 @@ impl<'mc> AttributeInstance<'mc> {
         );
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn modifiers(
-        &self,
-    ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Collection;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getModifiers", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        let mut new_vec = Vec::new();
-        let col = blackboxmc_java::util::JavaCollection::from_raw(&self.jni_ref(), res.l()?)?;
-        let iter = col.iterator()?;
-        while iter.has_next()? {
-            let obj = iter.next()?;
-            new_vec.push(crate::attribute::AttributeModifier::from_raw(
-                &self.jni_ref(),
-                obj,
-            )?);
-        }
-        Ok(new_vec)
-    }
-    //
-
-    pub fn value(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getValue", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    //
-
-    pub fn default_value(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getDefaultValue", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
     }
 }
 #[derive(PartialEq, Eq)]
@@ -708,94 +710,7 @@ impl<'mc> AttributeModifier<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::attribute::AttributeModifier::from_raw(&jni, res)
     }
-    //
-
-    pub fn unique_id(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/UUID;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getUniqueId", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaUUID::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
-    pub fn serialize(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Map;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-    //
-
-    pub fn deserialize(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<blackboxmc_java::util::JavaMap<'mc>>,
-    ) -> Result<crate::attribute::AttributeModifier<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("(Ljava/util/Map;)Lorg/bukkit/attribute/AttributeModifier;");
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        let cls = jni.find_class("org/bukkit/attribute/AttributeModifier");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(
-            cls,
-            "deserialize",
-            sig.as_str(),
-            vec![jni::objects::JValueGen::from(val_1)],
-        );
-        let res = jni.translate_error(res)?;
-        let obj = res.l()?;
-        crate::attribute::AttributeModifier::from_raw(&jni, obj)
-    }
-    //
-
-    pub fn amount(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let sig = String::from("()D");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getAmount", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.d()?)
-    }
-    //
-
-    pub fn operation(
-        &self,
-    ) -> Result<crate::attribute::AttributeModifierOperation<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/attribute/AttributeModifier$Operation;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getOperation", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::attribute::AttributeModifierOperation::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::attribute::AttributeModifierOperation::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
-    }
-    //
+    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -851,13 +766,105 @@ impl<'mc> AttributeModifier<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
+    //@Nullable
 
-    pub fn slot(&self) -> Result<crate::inventory::EquipmentSlot<'mc>, Box<dyn std::error::Error>> {
+    pub fn slot(
+        &self,
+    ) -> Result<Option<crate::inventory::EquipmentSlot<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/EquipmentSlot;");
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "getSlot", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant = self
+            .0
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = self.jni_ref().translate_error(variant)?;
+        let variant_str = self
+            .0
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        Ok(Some(crate::inventory::EquipmentSlot::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::inventory::EquipmentSlot::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )?))
+    }
+    //@NotNull
+
+    pub fn unique_id(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/UUID;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getUniqueId", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaUUID::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //@NotNull
+
+    pub fn serialize(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "serialize", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
+    pub fn deserialize(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<blackboxmc_java::util::JavaMap<'mc>>,
+    ) -> Result<crate::attribute::AttributeModifier<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("(Ljava/util/Map;)Lorg/bukkit/attribute/AttributeModifier;");
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        let cls = jni.find_class("org/bukkit/attribute/AttributeModifier");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(
+            cls,
+            "deserialize",
+            sig.as_str(),
+            vec![jni::objects::JValueGen::from(val_1)],
+        );
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::attribute::AttributeModifier::from_raw(&jni, obj)
+    }
+    //
+
+    pub fn amount(&self) -> Result<f64, Box<dyn std::error::Error>> {
+        let sig = String::from("()D");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getAmount", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.d()?)
+    }
+    //@NotNull
+
+    pub fn operation(
+        &self,
+    ) -> Result<crate::attribute::AttributeModifierOperation<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/attribute/AttributeModifier$Operation;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getOperation", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
         let variant = self
@@ -869,10 +876,10 @@ impl<'mc> AttributeModifier<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        crate::inventory::EquipmentSlot::from_raw(
+        crate::attribute::AttributeModifierOperation::from_raw(
             &self.jni_ref(),
             raw_obj,
-            crate::inventory::EquipmentSlot::from_string(variant_str)
+            crate::attribute::AttributeModifierOperation::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }

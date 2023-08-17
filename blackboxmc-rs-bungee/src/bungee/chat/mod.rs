@@ -58,16 +58,18 @@ impl<'mc> SelectorComponentSerializer<'mc> {
     }
     //
 
-    pub fn serialize_with_object(
+    pub fn serialize_with_selector_component(
         &self,
-        arg0: jni::objects::JObject<'mc>,
+        arg0: impl Into<crate::bungee::api::chat::SelectorComponent<'mc>>,
         arg1: jni::objects::JObject<'mc>,
         arg2: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Ljava/lang/Object;";
-        let val_1 = jni::objects::JValueGen::Object(arg0);
+        sig += "Lnet/md_5/bungee/api/chat/SelectorComponent;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         args.push(val_1);
         sig += "Ljava/lang/reflect/Type;";
         let val_2 = jni::objects::JValueGen::Object(arg1);
@@ -89,7 +91,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: jni::objects::JObject<'mc>,
-    ) -> Result<crate::bungee::api::chat::SelectorComponent<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "Lcom/google/gson/JsonElement;";
@@ -101,14 +103,12 @@ impl<'mc> SelectorComponentSerializer<'mc> {
         sig += "Lcom/google/gson/JsonDeserializationContext;";
         let val_3 = jni::objects::JValueGen::Object(arg2);
         args.push(val_3);
-        sig += ")Lnet/md_5/bungee/api/chat/SelectorComponent;";
+        sig += ")Ljava/lang/Object;";
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "deserialize", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
-        crate::bungee::api::chat::SelectorComponent::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l()?)
     }
     //
 
@@ -288,16 +288,18 @@ impl<'mc> TextComponentSerializer<'mc> {
     }
     //
 
-    pub fn serialize_with_object(
+    pub fn serialize_with_text_component(
         &self,
-        arg0: jni::objects::JObject<'mc>,
+        arg0: impl Into<crate::bungee::api::chat::TextComponent<'mc>>,
         arg1: jni::objects::JObject<'mc>,
         arg2: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Ljava/lang/Object;";
-        let val_1 = jni::objects::JValueGen::Object(arg0);
+        sig += "Lnet/md_5/bungee/api/chat/TextComponent;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         args.push(val_1);
         sig += "Ljava/lang/reflect/Type;";
         let val_2 = jni::objects::JValueGen::Object(arg1);
@@ -319,7 +321,7 @@ impl<'mc> TextComponentSerializer<'mc> {
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: jni::objects::JObject<'mc>,
-    ) -> Result<crate::bungee::api::chat::TextComponent<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "Lcom/google/gson/JsonElement;";
@@ -331,14 +333,12 @@ impl<'mc> TextComponentSerializer<'mc> {
         sig += "Lcom/google/gson/JsonDeserializationContext;";
         let val_3 = jni::objects::JValueGen::Object(arg2);
         args.push(val_3);
-        sig += ")Lnet/md_5/bungee/api/chat/TextComponent;";
+        sig += ")Ljava/lang/Object;";
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "deserialize", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
-        crate::bungee::api::chat::TextComponent::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l()?)
     }
     //
 
@@ -674,16 +674,18 @@ impl<'mc> ScoreComponentSerializer<'mc> {
     }
     //
 
-    pub fn serialize_with_object(
+    pub fn serialize_with_score_component(
         &self,
-        arg0: jni::objects::JObject<'mc>,
+        arg0: impl Into<crate::bungee::api::chat::ScoreComponent<'mc>>,
         arg1: jni::objects::JObject<'mc>,
         arg2: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Ljava/lang/Object;";
-        let val_1 = jni::objects::JValueGen::Object(arg0);
+        sig += "Lnet/md_5/bungee/api/chat/ScoreComponent;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         args.push(val_1);
         sig += "Ljava/lang/reflect/Type;";
         let val_2 = jni::objects::JValueGen::Object(arg1);
@@ -705,7 +707,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: jni::objects::JObject<'mc>,
-    ) -> Result<crate::bungee::api::chat::ScoreComponent<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "Lcom/google/gson/JsonElement;";
@@ -717,14 +719,12 @@ impl<'mc> ScoreComponentSerializer<'mc> {
         sig += "Lcom/google/gson/JsonDeserializationContext;";
         let val_3 = jni::objects::JValueGen::Object(arg2);
         args.push(val_3);
-        sig += ")Lnet/md_5/bungee/api/chat/ScoreComponent;";
+        sig += ")Ljava/lang/Object;";
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "deserialize", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
-        crate::bungee::api::chat::ScoreComponent::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l()?)
     }
     //
 
@@ -902,16 +902,18 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
     }
     //
 
-    pub fn serialize_with_object(
+    pub fn serialize_with_translatable_component(
         &self,
-        arg0: jni::objects::JObject<'mc>,
+        arg0: impl Into<crate::bungee::api::chat::TranslatableComponent<'mc>>,
         arg1: jni::objects::JObject<'mc>,
         arg2: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Ljava/lang/Object;";
-        let val_1 = jni::objects::JValueGen::Object(arg0);
+        sig += "Lnet/md_5/bungee/api/chat/TranslatableComponent;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         args.push(val_1);
         sig += "Ljava/lang/reflect/Type;";
         let val_2 = jni::objects::JValueGen::Object(arg1);
@@ -933,8 +935,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: jni::objects::JObject<'mc>,
-    ) -> Result<crate::bungee::api::chat::TranslatableComponent<'mc>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "Lcom/google/gson/JsonElement;";
@@ -946,14 +947,12 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
         sig += "Lcom/google/gson/JsonDeserializationContext;";
         let val_3 = jni::objects::JValueGen::Object(arg2);
         args.push(val_3);
-        sig += ")Lnet/md_5/bungee/api/chat/TranslatableComponent;";
+        sig += ")Ljava/lang/Object;";
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "deserialize", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
-        crate::bungee::api::chat::TranslatableComponent::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l()?)
     }
     //
 
@@ -1134,16 +1133,18 @@ impl<'mc> KeybindComponentSerializer<'mc> {
     }
     //
 
-    pub fn serialize_with_object(
+    pub fn serialize_with_keybind_component(
         &self,
-        arg0: jni::objects::JObject<'mc>,
+        arg0: impl Into<crate::bungee::api::chat::KeybindComponent<'mc>>,
         arg1: jni::objects::JObject<'mc>,
         arg2: jni::objects::JObject<'mc>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Ljava/lang/Object;";
-        let val_1 = jni::objects::JValueGen::Object(arg0);
+        sig += "Lnet/md_5/bungee/api/chat/KeybindComponent;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
         args.push(val_1);
         sig += "Ljava/lang/reflect/Type;";
         let val_2 = jni::objects::JValueGen::Object(arg1);
@@ -1165,7 +1166,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
         arg0: jni::objects::JObject<'mc>,
         arg1: jni::objects::JObject<'mc>,
         arg2: jni::objects::JObject<'mc>,
-    ) -> Result<crate::bungee::api::chat::KeybindComponent<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "Lcom/google/gson/JsonElement;";
@@ -1177,14 +1178,12 @@ impl<'mc> KeybindComponentSerializer<'mc> {
         sig += "Lcom/google/gson/JsonDeserializationContext;";
         let val_3 = jni::objects::JValueGen::Object(arg2);
         args.push(val_3);
-        sig += ")Lnet/md_5/bungee/api/chat/KeybindComponent;";
+        sig += ")Ljava/lang/Object;";
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "deserialize", sig.as_str(), args);
         let res = self.jni_ref().translate_error(res)?;
-        crate::bungee::api::chat::KeybindComponent::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        Ok(res.l()?)
     }
     //
 
@@ -1529,6 +1528,31 @@ impl<'mc> ComponentSerializer<'mc> {
 
     //
 
+    pub fn to_string_with_base_component(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Lnet/md_5/bungee/api/chat/BaseComponent;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
+        sig += ")Ljava/lang/String;";
+        let cls = jni.find_class("java/lang/String");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "toString", sig.as_str(), args);
+        let res = jni.translate_error(res)?;
+        Ok(jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //
+
     pub fn deserialize_with_json_element(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -1554,24 +1578,6 @@ impl<'mc> ComponentSerializer<'mc> {
         crate::bungee::api::chat::BaseComponent::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    //
-
-    pub fn to_string_with_base_components(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>>,
-    ) -> Result<String, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += ")Ljava/lang/String;";
-        let cls = jni.find_class("java/lang/String");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "toString", sig.as_str(), args);
-        let res = jni.translate_error(res)?;
-        Ok(jni
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
     }
     //
 

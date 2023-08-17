@@ -3,7 +3,7 @@ use blackboxmc_general::JNIInstantiatable;
 use blackboxmc_general::JNIInstantiatableEnum;
 use blackboxmc_general::JNIRaw;
 use color_eyre::eyre::Result;
-/// Represents an object that may become a server operator, such as a <a href="../entity/Player.html" title="interface in org.bukkit.entity"><code>Player</code></a>
+/// Represents an object that may become a server operator, such as a <a title="interface in org.bukkit.entity" href="../entity/Player.html"><code>Player</code></a>
 ///
 /// This is a representation of an abstract class.
 pub struct ServerOperator<'mc>(
@@ -132,16 +132,16 @@ impl<'mc> PermissibleBase<'mc> {
     }
     //
 
-    pub fn is_permission_set_with_permission(
+    pub fn is_permission_set_with_string(
         &self,
-        arg0: impl Into<crate::permissions::Permission<'mc>>,
+        arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Lorg/bukkit/permissions/Permission;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
         args.push(val_1);
         sig += ")Z";
         let res =
@@ -245,7 +245,7 @@ impl<'mc> PermissibleBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn effective_permissions(
         &self,
@@ -688,7 +688,7 @@ impl<'mc> Permissible<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn effective_permissions(
         &self,
@@ -737,7 +737,7 @@ impl<'mc> Into<crate::permissions::ServerOperator<'mc>> for Permissible<'mc> {
             .expect("Error converting Permissible into crate::permissions::ServerOperator")
     }
 }
-/// Represents a unique permission that may be attached to a <a href="Permissible.html" title="interface in org.bukkit.permissions"><code>Permissible</code></a>
+/// Represents a unique permission that may be attached to a <a title="interface in org.bukkit.permissions" href="Permissible.html"><code>Permissible</code></a>
 pub struct Permission<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -836,7 +836,7 @@ impl<'mc> Permission<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn children(
         &self,
@@ -850,7 +850,48 @@ impl<'mc> Permission<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
+
+    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/lang/String;");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(self
+            .jni_ref()
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+    //@NotNull
+
+    pub fn default(
+        &self,
+    ) -> Result<crate::permissions::PermissionDefault<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Lorg/bukkit/permissions/PermissionDefault;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getDefault", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
+        let variant = self
+            .0
+            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
+        let variant = self.jni_ref().translate_error(variant)?;
+        let variant_str = self
+            .0
+            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
+            .to_string_lossy()
+            .to_string();
+        crate::permissions::PermissionDefault::from_raw(
+            &self.jni_ref(),
+            raw_obj,
+            crate::permissions::PermissionDefault::from_string(variant_str)
+                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
+        )
+    }
+    //@NotNull
 
     pub fn description(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -896,7 +937,7 @@ impl<'mc> Permission<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn permissibles(
         &self,
@@ -912,28 +953,30 @@ impl<'mc> Permission<'mc> {
     }
     //
 
-    pub fn add_parent_with_permission(
+    pub fn add_parent_with_string(
         &self,
-        arg0: impl Into<crate::permissions::Permission<'mc>>,
+        arg0: impl Into<String>,
         arg1: bool,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    ) -> Result<crate::permissions::Permission<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Lorg/bukkit/permissions/Permission;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
         args.push(val_1);
         sig += "Z";
         // 3
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         args.push(val_2);
-        sig += ")V";
+        sig += ")Lorg/bukkit/permissions/Permission;";
         let res = self
             .jni_ref()
             .call_method(&self.jni_object(), "addParent", sig.as_str(), args);
-        self.jni_ref().translate_error(res)?;
-        Ok(())
+        let res = self.jni_ref().translate_error(res)?;
+        crate::permissions::Permission::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
     }
     //
 
@@ -974,47 +1017,6 @@ impl<'mc> Permission<'mc> {
             new_vec.push(crate::permissions::Permission::from_raw(&jni, obj)?);
         }
         Ok(new_vec)
-    }
-    //
-
-    pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/lang/String;");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getName", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
-    }
-    //
-
-    pub fn default(
-        &self,
-    ) -> Result<crate::permissions::PermissionDefault<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Lorg/bukkit/permissions/PermissionDefault;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getDefault", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };
-        let variant = self
-            .0
-            .call_method(&raw_obj, "toString", "()Ljava/lang/String;", vec![]);
-        let variant = self.jni_ref().translate_error(variant)?;
-        let variant_str = self
-            .0
-            .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
-            .to_string_lossy()
-            .to_string();
-        crate::permissions::PermissionDefault::from_raw(
-            &self.jni_ref(),
-            raw_obj,
-            crate::permissions::PermissionDefault::from_string(variant_str)
-                .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
-        )
     }
     //
 
@@ -1201,21 +1203,39 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::permissions::PermissionAttachmentInfo::from_raw(&jni, res)
     }
-    //
+    //@Nullable
 
-    pub fn permission(&self) -> Result<String, Box<dyn std::error::Error>> {
+    //@Nullable
+
+    pub fn permission(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
             self.jni_ref()
                 .call_method(&self.jni_object(), "getPermission", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
-        Ok(self
-            .jni_ref()
-            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
-            .to_string_lossy()
-            .to_string())
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            self.jni_ref()
+                .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+                .to_string_lossy()
+                .to_string(),
+        ))
     }
-    //
+    //@Deprecated
+
+    #[deprecated]
+
+    pub fn value(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "getValue", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //@NotNull
 
     pub fn attachment(
         &self,
@@ -1229,7 +1249,7 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@NotNull
 
     pub fn permissible(
         &self,
@@ -1242,16 +1262,6 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
         crate::permissions::Permissible::from_raw(&self.jni_ref(), unsafe {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
-    }
-    //
-
-    pub fn value(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "getValue", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
     }
     //
 
@@ -1362,7 +1372,7 @@ impl<'mc> std::string::ToString for PermissionAttachmentInfo<'mc> {
     }
 }
 
-/// Holds information about a permission attachment on a <a title="interface in org.bukkit.permissions" href="Permissible.html"><code>Permissible</code></a> object
+/// Holds information about a permission attachment on a <a href="Permissible.html" title="interface in org.bukkit.permissions"><code>Permissible</code></a> object
 pub struct PermissionAttachment<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
@@ -1430,6 +1440,30 @@ impl<'mc> PermissionAttachment<'mc> {
     }
     //
 
+    pub fn remove(&self) -> Result<bool, Box<dyn std::error::Error>> {
+        let sig = String::from("()Z");
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "remove", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+    //@NotNull
+
+    pub fn permissions(
+        &self,
+    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
+        let sig = String::from("()Ljava/util/Map;");
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "getPermissions", sig.as_str(), vec![]);
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+    //
+
     pub fn set_permission_with_string(
         &self,
         arg0: impl Into<String>,
@@ -1453,7 +1487,7 @@ impl<'mc> PermissionAttachment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
@@ -1465,12 +1499,14 @@ impl<'mc> PermissionAttachment<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
+    //@Nullable
 
     pub fn removal_callback(
         &self,
-    ) -> Result<crate::permissions::PermissionRemovedExecutor<'mc>, Box<dyn std::error::Error>>
-    {
+    ) -> Result<
+        Option<crate::permissions::PermissionRemovedExecutor<'mc>>,
+        Box<dyn std::error::Error>,
+    > {
         let sig = String::from("()Lorg/bukkit/permissions/PermissionRemovedExecutor;");
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1479,9 +1515,14 @@ impl<'mc> PermissionAttachment<'mc> {
             vec![],
         );
         let res = self.jni_ref().translate_error(res)?;
-        crate::permissions::PermissionRemovedExecutor::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
+        if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
+            return Ok(None);
+        }
+        Ok(Some(
+            crate::permissions::PermissionRemovedExecutor::from_raw(&self.jni_ref(), unsafe {
+                jni::objects::JObject::from_raw(res.l()?.clone())
+            })?,
+        ))
     }
     //
 
@@ -1502,7 +1543,7 @@ impl<'mc> PermissionAttachment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
+    //@NotNull
 
     pub fn permissible(
         &self,
@@ -1535,30 +1576,6 @@ impl<'mc> PermissionAttachment<'mc> {
                 .call_method(&self.jni_object(), "unsetPermission", sig.as_str(), args);
         self.jni_ref().translate_error(res)?;
         Ok(())
-    }
-    //
-
-    pub fn remove(&self) -> Result<bool, Box<dyn std::error::Error>> {
-        let sig = String::from("()Z");
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "remove", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        Ok(res.z()?)
-    }
-    //
-
-    pub fn permissions(
-        &self,
-    ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
-        let sig = String::from("()Ljava/util/Map;");
-        let res =
-            self.jni_ref()
-                .call_method(&self.jni_object(), "getPermissions", sig.as_str(), vec![]);
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaMap::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
     }
     //
 
