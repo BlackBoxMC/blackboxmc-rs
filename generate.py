@@ -295,7 +295,7 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
 
                         if 0 not in type["generics"]:
                             return None
-                        
+
                         t1 = java_type_from_rust(type["generics"][0])["class_name"]
 
                         co = code_format({
@@ -872,13 +872,13 @@ def gen_jniraw_impl(name, is_enum, mod_path, full_name):
         fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
             self.0.clone()
         }
-        
+
         fn jni_object(&self) -> jni::objects::JObject<'mc> {
             unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
         }
     }
     """)
-                          
+
     if is_enum:
         impl_signature.append("""
     impl<'mc> JNIInstantiatableEnum<'mc> for """+name+"""<'mc> {
@@ -924,8 +924,8 @@ def gen_jniraw_impl(name, is_enum, mod_path, full_name):
         }
     }
     """)
-                
-        
+
+
     for impl in impl_signature:
         file_cache[mod_path].append(impl)
 
@@ -1083,6 +1083,9 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
                     new_name = name
                 new_methods[new_name] = {}
                 new_methods[new_name]["method"] = methods[len(methods)-1]
+                if "@Deprecated" in new_methods[new_name]["method"]["annotations"]:
+                    if "@Deprecated" in methods[0]["annotations"]:
+                        new_methods[new_name]["method"]["annotations"].remove("@Deprecated")
                 new_methods[new_name]["original_name"] = k
         else:
             new_methods[name] = {}
@@ -1407,7 +1410,7 @@ def parse_classes(library, val, classes):
         file_cache[mod_path].append("       return &self.2;")
         file_cache[mod_path].append("   }")
         file_cache[mod_path].append("}")
-        
+
 
         if "classes" in val:
             for cl in val["classes"]:
@@ -1468,7 +1471,7 @@ def parse_classes(library, val, classes):
                 parse_classes(library,cl, classes)
 
         gen_jniraw_impl(name, False, mod_path, full_name)
-        
+
         file_cache[mod_path].append("impl<'mc> "+name+"<'mc> {")
 
         if "constructors" in val:
@@ -1596,8 +1599,8 @@ for library in libraries:
         path = library.replace(".", os.sep)
         pathlib.Path(crate_dir+os.sep +
                     path).mkdir(parents=True, exist_ok=True)
-        
-    
+
+
     # make the appropriate directory if it doesn't already exist.
     path = library.replace(".", os.sep)
     pathlib.Path(crate_dir+os.sep +

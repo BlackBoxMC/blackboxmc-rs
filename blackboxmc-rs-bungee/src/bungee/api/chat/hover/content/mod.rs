@@ -10,7 +10,7 @@ pub struct Item<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate
         fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
             self.0.clone()
         }
-        
+
         fn jni_object(&self) -> jni::objects::JObject<'mc> {
             unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
         }
@@ -295,7 +295,7 @@ pub struct Entity<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(cra
         fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
             self.0.clone()
         }
-        
+
         fn jni_object(&self) -> jni::objects::JObject<'mc> {
             unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
         }
@@ -580,7 +580,7 @@ pub struct ItemSerializer<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
         fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
             self.0.clone()
         }
-        
+
         fn jni_object(&self) -> jni::objects::JObject<'mc> {
             unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
         }
@@ -802,7 +802,7 @@ pub struct TextSerializer<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
         fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
             self.0.clone()
         }
-        
+
         fn jni_object(&self) -> jni::objects::JObject<'mc> {
             unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
         }
@@ -1024,7 +1024,7 @@ pub struct Content<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(cr
         fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
             self.0.clone()
         }
-        
+
         fn jni_object(&self) -> jni::objects::JObject<'mc> {
             unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
         }
@@ -1221,7 +1221,7 @@ pub struct Text<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc>, pub(crate
         fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
             self.0.clone()
         }
-        
+
         fn jni_object(&self) -> jni::objects::JObject<'mc> {
             unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
         }
@@ -1442,7 +1442,7 @@ pub struct EntitySerializer<'mc>(pub(crate) blackboxmc_general::SharedJNIEnv<'mc
         fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
             self.0.clone()
         }
-        
+
         fn jni_object(&self) -> jni::objects::JObject<'mc> {
             unsafe { jni::objects::JObject::from_raw(self.1.clone()) }
         }
