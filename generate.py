@@ -27,7 +27,7 @@ library_resolves = {
 parsed_classes = {}
 excluded_classes = [
     "org.bukkit.plugin.SimplePluginManager",    # uses stuff that isn't being generated due to that java bug and i don't want to write an entire class binding for something that's getting deprecated anyways.
-    "java.lang.JavaThread", "java.lang.JavaIterable", "java.lang.JavaRunnable", "java.lang.JavaCharSequence", "java.util.regex.JavaMatcher", "java.util.JavaObservable", "java.util.JavaFormatter", "java.lang.JavaException", "java.util.JavaResourceBundle", "java.lang.JavaThrowable", "java.lang.JavaCloneable", "java.lang.JavaComparable", "java.lang.JavaClass", "java.lang.JavaStringBuffer",
+    "java.lang.JavaThread", "java.lang.JavaIterable", "java.lang.JavaRunnable", "java.lang.JavaCharSequence", "java.util.regex.JavaMatcher", "java.util.JavaObservable", "java.util.JavaFormatter", "java.lang.JavaException", "java.util.JavaResourceBundle", "java.lang.JavaThrowable", "java.lang.JavaCloneable", "java.lang.JavaComparable", "java.lang.JavaClass", "java.lang.JavaStringBuffer","java.lang.JavaStringBuilder",
 
     "java.lang.constant",
     "java.lang.annotation",
