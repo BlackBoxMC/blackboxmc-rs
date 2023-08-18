@@ -153,8 +153,6 @@ impl<'mc> JNIInstantiatable<'mc> for ChatColor<'mc> {
 }
 
 impl<'mc> ChatColor<'mc> {
-    //
-
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -169,7 +167,6 @@ impl<'mc> ChatColor<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn equals(
         &self,
@@ -186,7 +183,6 @@ impl<'mc> ChatColor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -201,9 +197,6 @@ impl<'mc> ChatColor<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
-
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -213,7 +206,6 @@ impl<'mc> ChatColor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn of_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -234,7 +226,6 @@ impl<'mc> ChatColor<'mc> {
         let obj = res.l()?;
         crate::bungee::api::ChatColor::from_raw(&jni, obj)
     }
-    //
 
     pub fn ordinal(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -244,7 +235,6 @@ impl<'mc> ChatColor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn color(&self) -> Result<(u8, u8, u8), Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/awt/Color;");
@@ -275,7 +265,6 @@ impl<'mc> ChatColor<'mc> {
         let b = self.jni_ref().translate_error(b)?.i()? as u8;
         Ok((r, g, b))
     }
-    //
 
     pub fn get_by_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -295,7 +284,6 @@ impl<'mc> ChatColor<'mc> {
         let obj = res.l()?;
         crate::bungee::api::ChatColor::from_raw(&jni, obj)
     }
-    //
 
     pub fn strip_color(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -319,7 +307,6 @@ impl<'mc> ChatColor<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn translate_alternate_color_codes(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -348,7 +335,6 @@ impl<'mc> ChatColor<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -374,7 +360,6 @@ impl<'mc> ChatColor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -384,7 +369,6 @@ impl<'mc> ChatColor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -394,7 +378,6 @@ impl<'mc> ChatColor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");

@@ -47,8 +47,6 @@ impl<'mc> JNIInstantiatable<'mc> for ConfigurationSerialization<'mc> {
 }
 
 impl<'mc> ConfigurationSerialization<'mc> {
-    //
-
     pub fn deserialize(
         &self,
         arg0: impl Into<blackboxmc_java::util::JavaMap<'mc>>,
@@ -74,7 +72,6 @@ impl<'mc> ConfigurationSerialization<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
-    //
 
     pub fn get_alias(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -96,7 +93,6 @@ impl<'mc> ConfigurationSerialization<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn register_class_with_class(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -122,7 +118,6 @@ impl<'mc> ConfigurationSerialization<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn unregister_class_with_class(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -140,7 +135,6 @@ impl<'mc> ConfigurationSerialization<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn deserialize_object_with_map(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -171,7 +165,6 @@ impl<'mc> ConfigurationSerialization<'mc> {
         let obj = res.l()?;
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&jni, obj)
     }
-    //
 
     pub fn get_class_by_alias(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -192,7 +185,6 @@ impl<'mc> ConfigurationSerialization<'mc> {
         let res = jni.translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -218,7 +210,6 @@ impl<'mc> ConfigurationSerialization<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -235,7 +226,6 @@ impl<'mc> ConfigurationSerialization<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -250,7 +240,6 @@ impl<'mc> ConfigurationSerialization<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -260,7 +249,6 @@ impl<'mc> ConfigurationSerialization<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -270,7 +258,6 @@ impl<'mc> ConfigurationSerialization<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -280,7 +267,6 @@ impl<'mc> ConfigurationSerialization<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -363,7 +349,6 @@ impl<'mc> ConfigurationSerializable<'mc> {
         let obj = unsafe { plugin.new_extendable(address, "ConfigSerializable", name, lib_name) }?;
         Self::from_raw(env, obj)
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -425,8 +410,6 @@ impl<'mc> JNIInstantiatable<'mc> for SerializableAs<'mc> {
 }
 
 impl<'mc> SerializableAs<'mc> {
-    //
-
     pub fn value(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
@@ -439,7 +422,6 @@ impl<'mc> SerializableAs<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn equals(
         &self,
@@ -456,7 +438,6 @@ impl<'mc> SerializableAs<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -471,7 +452,6 @@ impl<'mc> SerializableAs<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -481,7 +461,6 @@ impl<'mc> SerializableAs<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn annotation_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -548,8 +527,6 @@ impl<'mc> JNIInstantiatable<'mc> for DelegateDeserialization<'mc> {
 }
 
 impl<'mc> DelegateDeserialization<'mc> {
-    //
-
     pub fn value(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
@@ -558,7 +535,6 @@ impl<'mc> DelegateDeserialization<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn equals(
         &self,
@@ -575,7 +551,6 @@ impl<'mc> DelegateDeserialization<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -590,7 +565,6 @@ impl<'mc> DelegateDeserialization<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -600,7 +574,6 @@ impl<'mc> DelegateDeserialization<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn annotation_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");

@@ -261,7 +261,7 @@ def code_format(type, prefix, n, var_prefix="val", arg="", class_name="", option
                 v = java_type_from_rust(type)
                 match(type["type_name_original"]):
                     case "boolean":
-                        res.append("// "+str(options_start_at)+"\nlet "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Bool("+new_arg+".into());")
+                        res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Bool("+new_arg+".into());")
                     case "byte":
                         res.append("let "+var_prefix+"_"+str(n)+" = jni::objects::JValueGen::Byte("+new_arg+".into());")
                     case "char":
@@ -450,10 +450,16 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
                 code.append(")")
             code.append(")")
         case "jni::objects::JObject":
+            code.append("Ok(")
+            if nullable:
+                code.append("Some(")
             if is_constructor:
-                code.append("Ok(res)")
+                code.append("res")
             else:
-                code.append("Ok(res.l()?)")
+                code.append("res.l()?")
+            if nullable:
+                code.append(")")
+            code.append(")")
         case "jni::objects::JClass":
             code.append("Ok(")
             if nullable:
@@ -1230,15 +1236,25 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             continue
 
         nullable = False
+        impl_signature_canidate = []
+        if "comment" in method["method"]:
+            comment_raw = method["method"]["comment"].replace("\n","")
+        else:
+            comment_raw = ""
         if "annotations" in method["method"]:
-            i = parse_annotations(method["method"]["annotations"])
-            impl_signature += i[0]
+            print("COMMENT",comment_raw)
+            i = parse_annotations(method["method"]["annotations"],comment_raw)
+            impl_signature_canidate = i[0]
             nullable = i[1]
+            if i[2] is not None:
+                method["method"]["comment"] = i[2]
 
         # execute the function.
         m = return_format(return_group, prefix, static, method, obj_call, func_signature, types, is_trait,options_start_at, is_constructor,nullable,library)
         if m is None:
             continue
+
+        impl_signature += impl_signature_canidate
         code.append(m)
 
         func_signature_resolved = ""
@@ -1259,6 +1275,8 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
 
             generic_letters += group["generic_letters"]
             generic_args += group["generic_args"]
+
+
 
 
         return_type = func_signature_format(return_group,j,True)
@@ -1370,7 +1388,7 @@ def parse_classes(library, val, classes):
                 val_proper = "Variant"+val_proper
             if "annotations" in val:
                 if v in val["annotations"]:
-                    file_cache[mod_path] += parse_annotations(val["annotations"][v])[0]
+                    file_cache[mod_path] += parse_annotations(val["annotations"][v],"")[0]
             file_cache[mod_path].append("\t"+val_proper+",")
 
 
@@ -1532,16 +1550,38 @@ def parse_into_impl(val,name,mod_path):
     file_cache[mod_path].append("   }\n"+
                             "}")
 
+dep_comment_regex = "<div class=\"deprecation-comment\">(.*?)<\/div>"
 
-def parse_annotations(annotations):
+def add_deprecated(arr,comment):
+    if "deprecation-comment" in comment:
+        html_parsed_with_regex_lmao = re.search(dep_comment_regex,comment)
+        if html_parsed_with_regex_lmao is not None:
+            comm = html_parsed_with_regex_lmao.group(1)
+            while "  " in comm:
+                comm = comm.replace("  "," ")
+            if comm.startswith(" "):
+                comm = comm[1:]
+            if comm.endswith(" "):
+                comm = comm[:len(comm)]
+            comment = comment.replace(comm,"") # idk why the code below doesn't catch this but ok
+            arr.append("#[deprecated(\""+comm.replace("\"","'")+"\")]")
+        else:
+            arr.append("#[deprecated]")
+    else:
+        arr.append("#[deprecated]")
+    comment = re.sub(dep_comment_regex,"",comment)
+    comment = re.sub("<span class=\"deprecated-label\">(.*?)<\/span>","",comment)
+    return comment
+
+def parse_annotations(annotations,comment):
     strings = []
     nullable = False
+    new_comment = None
     for annotation in annotations:
-        strings.append("//"+str(annotation)+"\n")
         if(len(annotation) >= 3):
             match(annotation):
                 case "@Deprecated":
-                    strings.append("#[deprecated]")
+                    new_comment = add_deprecated(strings,comment)
                 case "@Experimental":
                     nop = 0
                 case "@Nullable":
@@ -1549,8 +1589,8 @@ def parse_annotations(annotations):
         elif(len(annotation) == 2):
             match(annotation[0]):
                 case "forRemoval":
-                    strings.append("#[deprecated]")
-    return (strings,nullable)
+                    new_comment = add_deprecated(strings,comment)
+    return (strings,nullable,new_comment)
 # what we first want to do is collect any interfaces.
 for library in libraries:
     packages = libraries[library]

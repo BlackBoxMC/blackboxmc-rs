@@ -45,8 +45,6 @@ impl<'mc> JNIInstantiatable<'mc> for ServerOperator<'mc> {
 }
 
 impl<'mc> ServerOperator<'mc> {
-    //
-
     pub fn is_op(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
@@ -55,12 +53,9 @@ impl<'mc> ServerOperator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets the operator status of this object
     pub fn set_op(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -130,7 +125,6 @@ impl<'mc> PermissibleBase<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::permissions::PermissibleBase::from_raw(&jni, res)
     }
-    //
 
     pub fn is_permission_set_with_string(
         &self,
@@ -150,7 +144,6 @@ impl<'mc> PermissibleBase<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_permission_with_permission(
         &self,
@@ -170,7 +163,6 @@ impl<'mc> PermissibleBase<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_attachment_with_plugin(
         &self,
@@ -195,7 +187,6 @@ impl<'mc> PermissibleBase<'mc> {
         }
         if let Some(a) = arg2 {
             sig += "Z";
-            // 2
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -213,7 +204,6 @@ impl<'mc> PermissibleBase<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn remove_attachment(
         &self,
@@ -232,7 +222,6 @@ impl<'mc> PermissibleBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn recalculate_permissions(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -245,7 +234,6 @@ impl<'mc> PermissibleBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn effective_permissions(
         &self,
@@ -262,7 +250,6 @@ impl<'mc> PermissibleBase<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_op(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -272,13 +259,10 @@ impl<'mc> PermissibleBase<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="ServerOperator.html#setOp(boolean)">ServerOperator</a></code></span>
     /// Sets the operator status of this object
     pub fn set_op(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -289,7 +273,6 @@ impl<'mc> PermissibleBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn clear_permissions(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -302,7 +285,6 @@ impl<'mc> PermissibleBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -328,7 +310,6 @@ impl<'mc> PermissibleBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -345,7 +326,6 @@ impl<'mc> PermissibleBase<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -360,7 +340,6 @@ impl<'mc> PermissibleBase<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -370,7 +349,6 @@ impl<'mc> PermissibleBase<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -380,7 +358,6 @@ impl<'mc> PermissibleBase<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -390,7 +367,6 @@ impl<'mc> PermissibleBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -573,8 +549,6 @@ impl<'mc> JNIInstantiatable<'mc> for Permissible<'mc> {
 }
 
 impl<'mc> Permissible<'mc> {
-    //
-
     pub fn is_permission_set_with_permission(
         &self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
@@ -593,7 +567,6 @@ impl<'mc> Permissible<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_permission_with_string(
         &self,
@@ -613,7 +586,6 @@ impl<'mc> Permissible<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_attachment_with_plugin(
         &self,
@@ -638,7 +610,6 @@ impl<'mc> Permissible<'mc> {
         }
         if let Some(a) = arg2 {
             sig += "Z";
-            // 2
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -656,7 +627,6 @@ impl<'mc> Permissible<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn remove_attachment(
         &self,
@@ -675,7 +645,6 @@ impl<'mc> Permissible<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn recalculate_permissions(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -688,7 +657,6 @@ impl<'mc> Permissible<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn effective_permissions(
         &self,
@@ -705,7 +673,6 @@ impl<'mc> Permissible<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_op(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -715,11 +682,9 @@ impl<'mc> Permissible<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_op(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -817,7 +782,6 @@ impl<'mc> Permission<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::permissions::Permission::from_raw(&jni, res)
     }
-    //
 
     pub fn set_default(
         &self,
@@ -836,7 +800,6 @@ impl<'mc> Permission<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn children(
         &self,
@@ -850,7 +813,6 @@ impl<'mc> Permission<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -864,7 +826,6 @@ impl<'mc> Permission<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn default(
         &self,
@@ -891,7 +852,6 @@ impl<'mc> Permission<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn description(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -905,7 +865,6 @@ impl<'mc> Permission<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn recalculate_permissibles(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -918,7 +877,6 @@ impl<'mc> Permission<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_description(
         &self,
@@ -937,7 +895,6 @@ impl<'mc> Permission<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn permissibles(
         &self,
@@ -951,7 +908,6 @@ impl<'mc> Permission<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_parent_with_string(
         &self,
@@ -966,7 +922,6 @@ impl<'mc> Permission<'mc> {
         ));
         args.push(val_1);
         sig += "Z";
-        // 3
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         args.push(val_2);
         sig += ")Lorg/bukkit/permissions/Permission;";
@@ -978,7 +933,6 @@ impl<'mc> Permission<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn load_permissions(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1018,7 +972,6 @@ impl<'mc> Permission<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1044,7 +997,6 @@ impl<'mc> Permission<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1061,7 +1013,6 @@ impl<'mc> Permission<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1076,7 +1027,6 @@ impl<'mc> Permission<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1086,7 +1036,6 @@ impl<'mc> Permission<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1096,7 +1045,6 @@ impl<'mc> Permission<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1106,7 +1054,6 @@ impl<'mc> Permission<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1186,7 +1133,6 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
         let val_3 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
         });
-        // -1
         let val_4 = jni::objects::JValueGen::Bool(arg3.into());
         let cls = jni.find_class("org/bukkit/permissions/PermissionAttachmentInfo");
         let cls = jni.translate_error_with_class(cls)?;
@@ -1203,9 +1149,6 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::permissions::PermissionAttachmentInfo::from_raw(&jni, res)
     }
-    //@Nullable
-
-    //@Nullable
 
     pub fn permission(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1223,8 +1166,6 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
                 .to_string(),
         ))
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn value(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1235,7 +1176,6 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn attachment(
         &self,
@@ -1249,7 +1189,6 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn permissible(
         &self,
@@ -1263,7 +1202,6 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1289,7 +1227,6 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1306,7 +1243,6 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1321,7 +1257,6 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1331,7 +1266,6 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1341,7 +1275,6 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1351,7 +1284,6 @@ impl<'mc> PermissionAttachmentInfo<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1438,7 +1370,6 @@ impl<'mc> PermissionAttachment<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::permissions::PermissionAttachment::from_raw(&jni, res)
     }
-    //
 
     pub fn remove(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1448,7 +1379,6 @@ impl<'mc> PermissionAttachment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn permissions(
         &self,
@@ -1462,7 +1392,6 @@ impl<'mc> PermissionAttachment<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_permission_with_string(
         &self,
@@ -1477,7 +1406,6 @@ impl<'mc> PermissionAttachment<'mc> {
         ));
         args.push(val_1);
         sig += "Z";
-        // 3
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         args.push(val_2);
         sig += ")V";
@@ -1487,7 +1415,6 @@ impl<'mc> PermissionAttachment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
@@ -1499,7 +1426,6 @@ impl<'mc> PermissionAttachment<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn removal_callback(
         &self,
@@ -1524,7 +1450,6 @@ impl<'mc> PermissionAttachment<'mc> {
             })?,
         ))
     }
-    //
 
     pub fn set_removal_callback(
         &self,
@@ -1543,7 +1468,6 @@ impl<'mc> PermissionAttachment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn permissible(
         &self,
@@ -1557,7 +1481,6 @@ impl<'mc> PermissionAttachment<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn unset_permission_with_string(
         &self,
@@ -1577,7 +1500,6 @@ impl<'mc> PermissionAttachment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1603,7 +1525,6 @@ impl<'mc> PermissionAttachment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1620,7 +1541,6 @@ impl<'mc> PermissionAttachment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1635,7 +1555,6 @@ impl<'mc> PermissionAttachment<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1645,7 +1564,6 @@ impl<'mc> PermissionAttachment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1655,7 +1573,6 @@ impl<'mc> PermissionAttachment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1665,7 +1582,6 @@ impl<'mc> PermissionAttachment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1730,8 +1646,6 @@ impl<'mc> JNIInstantiatable<'mc> for PermissionRemovedExecutor<'mc> {
 }
 
 impl<'mc> PermissionRemovedExecutor<'mc> {
-    //
-
     pub fn attachment_removed(
         &self,
         arg0: impl Into<crate::permissions::PermissionAttachment<'mc>>,

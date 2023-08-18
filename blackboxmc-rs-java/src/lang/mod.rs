@@ -52,11 +52,8 @@ impl<'mc> JNIInstantiatable<'mc> for JavaInteger<'mc> {
 }
 
 impl<'mc> JavaInteger<'mc> {
-    //['since', '9']
-
-    //['forRemoval', 'true']
-
     #[deprecated]
+
     pub fn new_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
@@ -73,7 +70,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::lang::JavaInteger::from_raw(&jni, res)
     }
-    //
 
     pub fn number_of_leading_zeros(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -92,7 +88,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn number_of_trailing_zeros(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -111,7 +106,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn bit_count(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -130,7 +124,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn equals(
         &self,
@@ -147,7 +140,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn to_string_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -176,7 +168,6 @@ impl<'mc> JavaInteger<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -196,7 +187,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn min(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -220,7 +210,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn max(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -244,7 +233,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn signum(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -263,7 +251,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn reverse_bytes(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -282,7 +269,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn compare_to_with_object(
         &self,
@@ -300,7 +286,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn compare(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -324,7 +309,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn byte_value(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let sig = String::from("()B");
@@ -334,7 +318,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b()?)
     }
-    //
 
     pub fn short_value(&self) -> Result<i16, Box<dyn std::error::Error>> {
         let sig = String::from("()S");
@@ -344,7 +327,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.s()?)
     }
-    //
 
     pub fn int_value(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -354,7 +336,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn long_value(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
@@ -364,7 +345,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn float_value(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -374,7 +354,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn double_value(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -384,7 +363,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn to_hex_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -406,7 +384,6 @@ impl<'mc> JavaInteger<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn decode(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -427,7 +404,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn describe_constable(
         &self,
@@ -444,7 +420,6 @@ impl<'mc> JavaInteger<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn reverse(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -463,7 +438,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn to_unsigned_long(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -482,7 +456,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn sum(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -506,7 +479,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn compare_unsigned(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -530,7 +502,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn to_unsigned_string_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -557,7 +528,6 @@ impl<'mc> JavaInteger<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn get_integer_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -583,7 +553,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn to_octal_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -605,7 +574,6 @@ impl<'mc> JavaInteger<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn to_binary_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -627,7 +595,6 @@ impl<'mc> JavaInteger<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn divide_unsigned(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -651,7 +618,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn remainder_unsigned(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -675,7 +641,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn highest_one_bit(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -694,7 +659,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn lowest_one_bit(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -713,7 +677,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn rotate_left(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -737,7 +700,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn rotate_right(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -761,7 +723,6 @@ impl<'mc> JavaInteger<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -787,7 +748,6 @@ impl<'mc> JavaInteger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -797,7 +757,6 @@ impl<'mc> JavaInteger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -854,11 +813,8 @@ impl<'mc> JNIInstantiatable<'mc> for JavaFloat<'mc> {
 }
 
 impl<'mc> JavaFloat<'mc> {
-    //['since', '9']
-
-    //['forRemoval', 'true']
-
     #[deprecated]
+
     pub fn new_with_float(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: f32,
@@ -875,7 +831,6 @@ impl<'mc> JavaFloat<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::lang::JavaFloat::from_raw(&jni, res)
     }
-    //
 
     pub fn equals(
         &self,
@@ -892,7 +847,6 @@ impl<'mc> JavaFloat<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn to_string_with_float(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -915,7 +869,6 @@ impl<'mc> JavaFloat<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code_with_float(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -935,7 +888,6 @@ impl<'mc> JavaFloat<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn min(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -959,7 +911,6 @@ impl<'mc> JavaFloat<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn max(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -983,7 +934,6 @@ impl<'mc> JavaFloat<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn float_to_raw_int_bits(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1002,7 +952,6 @@ impl<'mc> JavaFloat<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn float_to_int_bits(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1021,7 +970,6 @@ impl<'mc> JavaFloat<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn int_bits_to_float(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1040,7 +988,6 @@ impl<'mc> JavaFloat<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn compare_to_with_object(
         &self,
@@ -1058,7 +1005,6 @@ impl<'mc> JavaFloat<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn compare(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1082,7 +1028,6 @@ impl<'mc> JavaFloat<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn byte_value(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let sig = String::from("()B");
@@ -1092,7 +1037,6 @@ impl<'mc> JavaFloat<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b()?)
     }
-    //
 
     pub fn short_value(&self) -> Result<i16, Box<dyn std::error::Error>> {
         let sig = String::from("()S");
@@ -1102,7 +1046,6 @@ impl<'mc> JavaFloat<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.s()?)
     }
-    //
 
     pub fn int_value(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1112,7 +1055,6 @@ impl<'mc> JavaFloat<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn long_value(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
@@ -1122,7 +1064,6 @@ impl<'mc> JavaFloat<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn float_value(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -1132,7 +1073,6 @@ impl<'mc> JavaFloat<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn double_value(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -1142,7 +1082,6 @@ impl<'mc> JavaFloat<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn to_hex_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1164,7 +1103,6 @@ impl<'mc> JavaFloat<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn describe_constable(
         &self,
@@ -1181,7 +1119,6 @@ impl<'mc> JavaFloat<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_na_n_with_float(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1201,7 +1138,6 @@ impl<'mc> JavaFloat<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn sum(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1225,7 +1161,6 @@ impl<'mc> JavaFloat<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn parse_float(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1246,7 +1181,6 @@ impl<'mc> JavaFloat<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn is_infinite_with_float(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1266,7 +1200,6 @@ impl<'mc> JavaFloat<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_finite(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1285,7 +1218,6 @@ impl<'mc> JavaFloat<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1311,7 +1243,6 @@ impl<'mc> JavaFloat<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1321,7 +1252,6 @@ impl<'mc> JavaFloat<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1460,11 +1390,8 @@ impl<'mc> JNIInstantiatable<'mc> for JavaCharacter<'mc> {
 }
 
 impl<'mc> JavaCharacter<'mc> {
-    //['since', '9']
-
-    //['forRemoval', 'true']
-
     #[deprecated]
+
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: u16,
@@ -1481,7 +1408,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::lang::JavaCharacter::from_raw(&jni, res)
     }
-    //
 
     pub fn get_name(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1503,7 +1429,6 @@ impl<'mc> JavaCharacter<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn is_java_identifier_start_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1521,7 +1446,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_java_identifier_part_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1539,7 +1463,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn equals(
         &self,
@@ -1556,7 +1479,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn to_string_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1579,7 +1501,6 @@ impl<'mc> JavaCharacter<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1599,7 +1520,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn reverse_bytes(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1618,7 +1538,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.c()?)
     }
-    //
 
     pub fn compare_to_with_character(&self, arg0: u16) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1637,7 +1556,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_digit_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1655,7 +1573,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_lower_case_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1673,7 +1590,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_upper_case_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1691,7 +1607,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_whitespace_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1709,7 +1624,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn compare(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1733,7 +1647,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn char_value(&self) -> Result<u16, Box<dyn std::error::Error>> {
         let sig = String::from("()C");
@@ -1743,7 +1656,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.c()?)
     }
-    //
 
     pub fn to_chars_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1768,7 +1680,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_high_surrogate(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1787,7 +1698,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_low_surrogate(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1806,7 +1716,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_surrogate(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1825,7 +1734,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_supplementary_code_point(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1844,7 +1752,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn high_surrogate(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1863,7 +1770,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.c()?)
     }
-    //
 
     pub fn low_surrogate(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1882,7 +1788,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.c()?)
     }
-    //
 
     pub fn to_code_point(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1906,7 +1811,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn code_point_at_with_chars(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1931,7 +1835,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn code_point_before_with_chars(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1956,7 +1859,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn offset_by_code_points_with_chars(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1991,7 +1893,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn to_lower_case_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2009,7 +1910,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.c()?)
     }
-    //
 
     pub fn to_upper_case_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2027,7 +1927,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_bmp_code_point(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2046,7 +1945,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn describe_constable(
         &self,
@@ -2063,7 +1961,6 @@ impl<'mc> JavaCharacter<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_type_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2081,7 +1978,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_letter_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2099,7 +1995,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_letter_or_digit_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2117,7 +2012,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_valid_code_point(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2136,7 +2030,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_title_case_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2154,7 +2047,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_defined_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2172,7 +2064,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_ideographic(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2191,7 +2082,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unicode_identifier_start_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2209,7 +2099,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unicode_identifier_part_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2227,7 +2116,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_identifier_ignorable_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2245,7 +2133,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn to_title_case_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2263,7 +2150,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.c()?)
     }
-    //
 
     pub fn digit_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2285,7 +2171,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn get_numeric_value_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2303,7 +2188,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_space_char_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2321,7 +2205,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_isocontrol_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2339,7 +2222,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_directionality_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2357,7 +2239,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.b()?)
     }
-    //
 
     pub fn is_mirrored_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2375,7 +2256,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_surrogate_pair(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2399,7 +2279,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn char_count(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2418,7 +2297,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_java_letter(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2437,7 +2315,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_java_letter_or_digit(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2456,7 +2333,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_alphabetic(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2475,7 +2351,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_space(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2494,7 +2369,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn for_digit(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2518,7 +2392,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.c()?)
     }
-    //
 
     pub fn code_point_of(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2539,7 +2412,6 @@ impl<'mc> JavaCharacter<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -2565,7 +2437,6 @@ impl<'mc> JavaCharacter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2575,7 +2446,6 @@ impl<'mc> JavaCharacter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2629,11 +2499,8 @@ impl<'mc> JNIInstantiatable<'mc> for JavaByte<'mc> {
 }
 
 impl<'mc> JavaByte<'mc> {
-    //['since', '9']
-
-    //['forRemoval', 'true']
-
     #[deprecated]
+
     pub fn new_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
@@ -2652,7 +2519,6 @@ impl<'mc> JavaByte<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::lang::JavaByte::from_raw(&jni, res)
     }
-    //
 
     pub fn equals(
         &self,
@@ -2669,7 +2535,6 @@ impl<'mc> JavaByte<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn to_string_with_byte(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2692,7 +2557,6 @@ impl<'mc> JavaByte<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code_with_byte(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2712,7 +2576,6 @@ impl<'mc> JavaByte<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn compare_to_with_object(
         &self,
@@ -2730,7 +2593,6 @@ impl<'mc> JavaByte<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn compare(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2754,7 +2616,6 @@ impl<'mc> JavaByte<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn byte_value(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let sig = String::from("()B");
@@ -2764,7 +2625,6 @@ impl<'mc> JavaByte<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b()?)
     }
-    //
 
     pub fn short_value(&self) -> Result<i16, Box<dyn std::error::Error>> {
         let sig = String::from("()S");
@@ -2774,7 +2634,6 @@ impl<'mc> JavaByte<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.s()?)
     }
-    //
 
     pub fn int_value(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2784,7 +2643,6 @@ impl<'mc> JavaByte<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn long_value(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
@@ -2794,7 +2652,6 @@ impl<'mc> JavaByte<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn float_value(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -2804,7 +2661,6 @@ impl<'mc> JavaByte<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn double_value(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -2814,7 +2670,6 @@ impl<'mc> JavaByte<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn decode(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2835,7 +2690,6 @@ impl<'mc> JavaByte<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.b()?)
     }
-    //
 
     pub fn describe_constable(
         &self,
@@ -2852,7 +2706,6 @@ impl<'mc> JavaByte<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn to_unsigned_long(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2871,7 +2724,6 @@ impl<'mc> JavaByte<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn to_unsigned_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2890,7 +2742,6 @@ impl<'mc> JavaByte<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn parse_byte_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2916,7 +2767,6 @@ impl<'mc> JavaByte<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.b()?)
     }
-    //
 
     pub fn compare_unsigned(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2940,7 +2790,6 @@ impl<'mc> JavaByte<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -2966,7 +2815,6 @@ impl<'mc> JavaByte<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2976,7 +2824,6 @@ impl<'mc> JavaByte<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3034,11 +2881,8 @@ impl<'mc> JNIInstantiatable<'mc> for JavaLong<'mc> {
 }
 
 impl<'mc> JavaLong<'mc> {
-    //['since', '9']
-
-    //['forRemoval', 'true']
-
     #[deprecated]
+
     pub fn new_with_long(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i64,
@@ -3055,7 +2899,6 @@ impl<'mc> JavaLong<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::lang::JavaLong::from_raw(&jni, res)
     }
-    //
 
     pub fn number_of_leading_zeros(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3074,7 +2917,6 @@ impl<'mc> JavaLong<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn number_of_trailing_zeros(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3093,7 +2935,6 @@ impl<'mc> JavaLong<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn bit_count(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3112,7 +2953,6 @@ impl<'mc> JavaLong<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn equals(
         &self,
@@ -3129,7 +2969,6 @@ impl<'mc> JavaLong<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn to_string_with_long(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3158,7 +2997,6 @@ impl<'mc> JavaLong<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code_with_long(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3178,7 +3016,6 @@ impl<'mc> JavaLong<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn min(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3202,7 +3039,6 @@ impl<'mc> JavaLong<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn max(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3226,7 +3062,6 @@ impl<'mc> JavaLong<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn signum(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3245,7 +3080,6 @@ impl<'mc> JavaLong<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn reverse_bytes(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3264,7 +3098,6 @@ impl<'mc> JavaLong<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn compare_to_with_long(&self, arg0: i64) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -3283,7 +3116,6 @@ impl<'mc> JavaLong<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn get_long_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3313,7 +3145,6 @@ impl<'mc> JavaLong<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn compare(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3337,7 +3168,6 @@ impl<'mc> JavaLong<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn byte_value(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let sig = String::from("()B");
@@ -3347,7 +3177,6 @@ impl<'mc> JavaLong<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b()?)
     }
-    //
 
     pub fn short_value(&self) -> Result<i16, Box<dyn std::error::Error>> {
         let sig = String::from("()S");
@@ -3357,7 +3186,6 @@ impl<'mc> JavaLong<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.s()?)
     }
-    //
 
     pub fn int_value(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -3367,7 +3195,6 @@ impl<'mc> JavaLong<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn long_value(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
@@ -3377,7 +3204,6 @@ impl<'mc> JavaLong<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn float_value(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -3387,7 +3213,6 @@ impl<'mc> JavaLong<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn double_value(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -3397,7 +3222,6 @@ impl<'mc> JavaLong<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn to_hex_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3419,7 +3243,6 @@ impl<'mc> JavaLong<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn decode(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3440,7 +3263,6 @@ impl<'mc> JavaLong<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn describe_constable(
         &self,
@@ -3457,7 +3279,6 @@ impl<'mc> JavaLong<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn reverse(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3476,7 +3297,6 @@ impl<'mc> JavaLong<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn sum(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3500,7 +3320,6 @@ impl<'mc> JavaLong<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn compare_unsigned(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3524,7 +3343,6 @@ impl<'mc> JavaLong<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn to_unsigned_string_with_long(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3551,7 +3369,6 @@ impl<'mc> JavaLong<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn to_octal_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3573,7 +3390,6 @@ impl<'mc> JavaLong<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn to_binary_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3595,7 +3411,6 @@ impl<'mc> JavaLong<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn divide_unsigned(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3619,7 +3434,6 @@ impl<'mc> JavaLong<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn remainder_unsigned(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3643,7 +3457,6 @@ impl<'mc> JavaLong<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn highest_one_bit(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3662,7 +3475,6 @@ impl<'mc> JavaLong<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn lowest_one_bit(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3681,7 +3493,6 @@ impl<'mc> JavaLong<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn rotate_left(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3705,7 +3516,6 @@ impl<'mc> JavaLong<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn rotate_right(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3729,7 +3539,6 @@ impl<'mc> JavaLong<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -3755,7 +3564,6 @@ impl<'mc> JavaLong<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3765,7 +3573,6 @@ impl<'mc> JavaLong<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3864,11 +3671,8 @@ impl<'mc> JNIInstantiatable<'mc> for JavaString<'mc> {
 }
 
 impl<'mc> JavaString<'mc> {
-    //['since', '1.1']
-
-    //['forRemoval', 'false']
-
     #[deprecated]
+
     pub fn new_with_bytes(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<Vec<i8>>,
@@ -3900,7 +3704,6 @@ impl<'mc> JavaString<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::lang::JavaString::from_raw(&jni, res)
     }
-    //
 
     pub fn equals(
         &self,
@@ -3917,7 +3720,6 @@ impl<'mc> JavaString<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn length(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -3927,7 +3729,6 @@ impl<'mc> JavaString<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -3942,7 +3743,6 @@ impl<'mc> JavaString<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -3952,7 +3752,6 @@ impl<'mc> JavaString<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn get_chars(
         &self,
@@ -3978,7 +3777,6 @@ impl<'mc> JavaString<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn compare_to_with_object(
         &self,
@@ -3996,7 +3794,6 @@ impl<'mc> JavaString<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn index_of_with_int(
         &self,
@@ -4020,7 +3817,6 @@ impl<'mc> JavaString<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn char_at(&self, arg0: i32) -> Result<u16, Box<dyn std::error::Error>> {
         let sig = String::from("(I)C");
@@ -4034,7 +3830,6 @@ impl<'mc> JavaString<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.c()?)
     }
-    //
 
     pub fn code_point_at(&self, arg0: i32) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(I)I");
@@ -4048,7 +3843,6 @@ impl<'mc> JavaString<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn code_point_before(&self, arg0: i32) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(I)I");
@@ -4062,7 +3856,6 @@ impl<'mc> JavaString<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn code_point_count(
         &self,
@@ -4084,7 +3877,6 @@ impl<'mc> JavaString<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn offset_by_code_points(
         &self,
@@ -4106,9 +3898,6 @@ impl<'mc> JavaString<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
-    //
 
     pub fn region_matches_with_boolean(
         &self,
@@ -4121,7 +3910,6 @@ impl<'mc> JavaString<'mc> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "Z";
-        // 5
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         args.push(val_1);
         sig += "I";
@@ -4147,7 +3935,6 @@ impl<'mc> JavaString<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn starts_with_with_string(
         &self,
@@ -4173,7 +3960,6 @@ impl<'mc> JavaString<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn last_index_of_with_int(
         &self,
@@ -4197,7 +3983,6 @@ impl<'mc> JavaString<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn substring_with_int(
         &self,
@@ -4225,7 +4010,6 @@ impl<'mc> JavaString<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4235,7 +4019,6 @@ impl<'mc> JavaString<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn matches(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -4251,7 +4034,6 @@ impl<'mc> JavaString<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn replace_first(
         &self,
@@ -4281,7 +4063,6 @@ impl<'mc> JavaString<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn replace_all(
         &self,
@@ -4311,9 +4092,6 @@ impl<'mc> JavaString<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
-
-    //
 
     pub fn to_lower_case_with_locale(
         &self,
@@ -4339,7 +4117,6 @@ impl<'mc> JavaString<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn to_upper_case_with_locale(
         &self,
@@ -4365,7 +4142,6 @@ impl<'mc> JavaString<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn trim(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -4379,7 +4155,6 @@ impl<'mc> JavaString<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn strip(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -4393,7 +4168,6 @@ impl<'mc> JavaString<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn strip_leading(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -4407,7 +4181,6 @@ impl<'mc> JavaString<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn strip_trailing(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -4421,7 +4194,6 @@ impl<'mc> JavaString<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn repeat(&self, arg0: i32) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/String;");
@@ -4439,7 +4211,6 @@ impl<'mc> JavaString<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn is_blank(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4449,9 +4220,6 @@ impl<'mc> JavaString<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
-    //
 
     pub fn format_with_locale(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4481,7 +4249,6 @@ impl<'mc> JavaString<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn equals_ignore_case(
         &self,
@@ -4500,7 +4267,6 @@ impl<'mc> JavaString<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn compare_to_ignore_case(
         &self,
@@ -4519,7 +4285,6 @@ impl<'mc> JavaString<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn ends_with(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -4535,7 +4300,6 @@ impl<'mc> JavaString<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn concat(&self, arg0: impl Into<String>) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Ljava/lang/String;");
@@ -4555,7 +4319,6 @@ impl<'mc> JavaString<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn indent(&self, arg0: i32) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/String;");
@@ -4573,7 +4336,6 @@ impl<'mc> JavaString<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn strip_indent(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -4587,7 +4349,6 @@ impl<'mc> JavaString<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn translate_escapes(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -4604,7 +4365,6 @@ impl<'mc> JavaString<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn transform(
         &self,
@@ -4623,7 +4383,6 @@ impl<'mc> JavaString<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn formatted(
         &self,
@@ -4640,7 +4399,6 @@ impl<'mc> JavaString<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn copy_value_of_with_chars(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4670,7 +4428,6 @@ impl<'mc> JavaString<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn intern(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -4684,7 +4441,6 @@ impl<'mc> JavaString<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn describe_constable(
         &self,
@@ -4701,7 +4457,6 @@ impl<'mc> JavaString<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -4727,7 +4482,6 @@ impl<'mc> JavaString<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -4737,7 +4491,6 @@ impl<'mc> JavaString<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -4805,11 +4558,8 @@ impl<'mc> JNIInstantiatable<'mc> for JavaBoolean<'mc> {
 }
 
 impl<'mc> JavaBoolean<'mc> {
-    //['since', '9']
-
-    //['forRemoval', 'true']
-
     #[deprecated]
+
     pub fn new_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
@@ -4828,7 +4578,6 @@ impl<'mc> JavaBoolean<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::lang::JavaBoolean::from_raw(&jni, res)
     }
-    //
 
     pub fn equals(
         &self,
@@ -4845,7 +4594,6 @@ impl<'mc> JavaBoolean<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn to_string_with_boolean(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4855,7 +4603,6 @@ impl<'mc> JavaBoolean<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "Z";
-            // 1
             let val_1 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_1);
         }
@@ -4869,7 +4616,6 @@ impl<'mc> JavaBoolean<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code_with_boolean(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4879,7 +4625,6 @@ impl<'mc> JavaBoolean<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "Z";
-            // 1
             let val_1 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_1);
         }
@@ -4890,7 +4635,6 @@ impl<'mc> JavaBoolean<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn compare_to_with_object(
         &self,
@@ -4908,7 +4652,6 @@ impl<'mc> JavaBoolean<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn get_boolean(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4929,7 +4672,6 @@ impl<'mc> JavaBoolean<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn compare(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4937,9 +4679,7 @@ impl<'mc> JavaBoolean<'mc> {
         arg1: bool,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(ZZ)I");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
-        // -1
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
@@ -4955,7 +4695,6 @@ impl<'mc> JavaBoolean<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn boolean_value(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4965,7 +4704,6 @@ impl<'mc> JavaBoolean<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn describe_constable(
         &self,
@@ -4982,7 +4720,6 @@ impl<'mc> JavaBoolean<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn parse_boolean(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5003,7 +4740,6 @@ impl<'mc> JavaBoolean<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn logical_and(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5011,9 +4747,7 @@ impl<'mc> JavaBoolean<'mc> {
         arg1: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(ZZ)Z");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
-        // -1
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let cls = jni.find_class("boolean");
         let cls = jni.translate_error_with_class(cls)?;
@@ -5029,7 +4763,6 @@ impl<'mc> JavaBoolean<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn logical_or(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5037,9 +4770,7 @@ impl<'mc> JavaBoolean<'mc> {
         arg1: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(ZZ)Z");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
-        // -1
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let cls = jni.find_class("boolean");
         let cls = jni.translate_error_with_class(cls)?;
@@ -5055,7 +4786,6 @@ impl<'mc> JavaBoolean<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn logical_xor(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5063,9 +4793,7 @@ impl<'mc> JavaBoolean<'mc> {
         arg1: bool,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(ZZ)Z");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
-        // -1
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let cls = jni.find_class("boolean");
         let cls = jni.translate_error_with_class(cls)?;
@@ -5081,7 +4809,6 @@ impl<'mc> JavaBoolean<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -5107,7 +4834,6 @@ impl<'mc> JavaBoolean<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -5117,7 +4843,6 @@ impl<'mc> JavaBoolean<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -5174,11 +4899,8 @@ impl<'mc> JNIInstantiatable<'mc> for JavaDouble<'mc> {
 }
 
 impl<'mc> JavaDouble<'mc> {
-    //['since', '9']
-
-    //['forRemoval', 'true']
-
     #[deprecated]
+
     pub fn new_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
@@ -5197,7 +4919,6 @@ impl<'mc> JavaDouble<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::lang::JavaDouble::from_raw(&jni, res)
     }
-    //
 
     pub fn equals(
         &self,
@@ -5214,7 +4935,6 @@ impl<'mc> JavaDouble<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn to_string_with_double(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5237,7 +4957,6 @@ impl<'mc> JavaDouble<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code_with_double(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5257,7 +4976,6 @@ impl<'mc> JavaDouble<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn min(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5281,7 +4999,6 @@ impl<'mc> JavaDouble<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn max(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5305,7 +5022,6 @@ impl<'mc> JavaDouble<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn double_to_raw_long_bits(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5324,7 +5040,6 @@ impl<'mc> JavaDouble<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn double_to_long_bits(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5343,7 +5058,6 @@ impl<'mc> JavaDouble<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn long_bits_to_double(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5362,7 +5076,6 @@ impl<'mc> JavaDouble<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn compare_to_with_object(
         &self,
@@ -5380,7 +5093,6 @@ impl<'mc> JavaDouble<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn compare(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5404,7 +5116,6 @@ impl<'mc> JavaDouble<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn byte_value(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let sig = String::from("()B");
@@ -5414,7 +5125,6 @@ impl<'mc> JavaDouble<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b()?)
     }
-    //
 
     pub fn short_value(&self) -> Result<i16, Box<dyn std::error::Error>> {
         let sig = String::from("()S");
@@ -5424,7 +5134,6 @@ impl<'mc> JavaDouble<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.s()?)
     }
-    //
 
     pub fn int_value(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -5434,7 +5143,6 @@ impl<'mc> JavaDouble<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn long_value(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
@@ -5444,7 +5152,6 @@ impl<'mc> JavaDouble<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn float_value(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -5454,7 +5161,6 @@ impl<'mc> JavaDouble<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn double_value(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -5464,7 +5170,6 @@ impl<'mc> JavaDouble<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn to_hex_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5486,7 +5191,6 @@ impl<'mc> JavaDouble<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn describe_constable(
         &self,
@@ -5503,7 +5207,6 @@ impl<'mc> JavaDouble<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_na_n_with_double(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5523,7 +5226,6 @@ impl<'mc> JavaDouble<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn sum(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5547,7 +5249,6 @@ impl<'mc> JavaDouble<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn is_infinite_with_double(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5567,7 +5268,6 @@ impl<'mc> JavaDouble<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_finite(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5586,7 +5286,6 @@ impl<'mc> JavaDouble<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn parse_double(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5607,7 +5306,6 @@ impl<'mc> JavaDouble<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -5633,7 +5331,6 @@ impl<'mc> JavaDouble<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -5643,7 +5340,6 @@ impl<'mc> JavaDouble<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -5697,11 +5393,8 @@ impl<'mc> JNIInstantiatable<'mc> for JavaShort<'mc> {
 }
 
 impl<'mc> JavaShort<'mc> {
-    //['since', '9']
-
-    //['forRemoval', 'true']
-
     #[deprecated]
+
     pub fn new_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
@@ -5720,7 +5413,6 @@ impl<'mc> JavaShort<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::lang::JavaShort::from_raw(&jni, res)
     }
-    //
 
     pub fn equals(
         &self,
@@ -5737,7 +5429,6 @@ impl<'mc> JavaShort<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn to_string_with_short(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5760,7 +5451,6 @@ impl<'mc> JavaShort<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code_with_short(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5780,7 +5470,6 @@ impl<'mc> JavaShort<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn reverse_bytes(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5799,7 +5488,6 @@ impl<'mc> JavaShort<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.s()?)
     }
-    //
 
     pub fn compare_to_with_object(
         &self,
@@ -5817,7 +5505,6 @@ impl<'mc> JavaShort<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn compare(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5841,7 +5528,6 @@ impl<'mc> JavaShort<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn byte_value(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let sig = String::from("()B");
@@ -5851,7 +5537,6 @@ impl<'mc> JavaShort<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b()?)
     }
-    //
 
     pub fn short_value(&self) -> Result<i16, Box<dyn std::error::Error>> {
         let sig = String::from("()S");
@@ -5861,7 +5546,6 @@ impl<'mc> JavaShort<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.s()?)
     }
-    //
 
     pub fn int_value(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -5871,7 +5555,6 @@ impl<'mc> JavaShort<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn long_value(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
@@ -5881,7 +5564,6 @@ impl<'mc> JavaShort<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn float_value(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -5891,7 +5573,6 @@ impl<'mc> JavaShort<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn double_value(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -5901,7 +5582,6 @@ impl<'mc> JavaShort<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn decode(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5922,7 +5602,6 @@ impl<'mc> JavaShort<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.s()?)
     }
-    //
 
     pub fn describe_constable(
         &self,
@@ -5939,7 +5618,6 @@ impl<'mc> JavaShort<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn to_unsigned_long(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5958,7 +5636,6 @@ impl<'mc> JavaShort<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn to_unsigned_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5977,7 +5654,6 @@ impl<'mc> JavaShort<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn compare_unsigned(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -6001,7 +5677,6 @@ impl<'mc> JavaShort<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn parse_short_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -6027,7 +5702,6 @@ impl<'mc> JavaShort<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.s()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -6053,7 +5727,6 @@ impl<'mc> JavaShort<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -6063,7 +5736,6 @@ impl<'mc> JavaShort<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");

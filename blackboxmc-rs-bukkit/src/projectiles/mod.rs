@@ -45,8 +45,6 @@ impl<'mc> JNIInstantiatable<'mc> for ProjectileSource<'mc> {
 }
 
 impl<'mc> ProjectileSource<'mc> {
-    //
-
     pub fn launch_projectile_with_class(
         &self,
         arg0: jni::objects::JClass<'mc>,
@@ -118,10 +116,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockProjectileSource<'mc> {
 }
 
 impl<'mc> BlockProjectileSource<'mc> {
-    //@NotNull
-
-    //@NotNull
-
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/Block;");
         let res = self
@@ -132,7 +126,6 @@ impl<'mc> BlockProjectileSource<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn launch_projectile_with_class(
         &self,

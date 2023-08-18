@@ -41,8 +41,6 @@ impl<'mc> JNIInstantiatable<'mc> for RaidEvent<'mc> {
 }
 
 impl<'mc> RaidEvent<'mc> {
-    //@Nullable
-
     pub fn raid(&self) -> Result<Option<crate::Raid<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Raid;");
         let res = self
@@ -56,7 +54,6 @@ impl<'mc> RaidEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })?))
     }
-    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -68,7 +65,6 @@ impl<'mc> RaidEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
@@ -80,7 +76,6 @@ impl<'mc> RaidEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -94,7 +89,6 @@ impl<'mc> RaidEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -104,7 +98,6 @@ impl<'mc> RaidEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -130,7 +123,6 @@ impl<'mc> RaidEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -147,7 +139,6 @@ impl<'mc> RaidEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -162,7 +153,6 @@ impl<'mc> RaidEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -172,7 +162,6 @@ impl<'mc> RaidEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -182,7 +171,6 @@ impl<'mc> RaidEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -192,7 +180,6 @@ impl<'mc> RaidEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -259,8 +246,6 @@ impl<'mc> JNIInstantiatable<'mc> for RaidSpawnWaveEvent<'mc> {
 }
 
 impl<'mc> RaidSpawnWaveEvent<'mc> {
-    //@NotNull
-
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
@@ -271,7 +256,6 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn raiders(&self) -> Result<Vec<crate::entity::Raider<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -288,7 +272,6 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn handler_list(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -301,7 +284,6 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //@Nullable
 
     pub fn patrol_leader(
         &self,
@@ -319,7 +301,6 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@Nullable
 
     pub fn raid(&self) -> Result<Option<crate::Raid<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Raid;");
@@ -334,7 +315,6 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })?))
     }
-    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -346,7 +326,6 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -360,7 +339,6 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -370,7 +348,6 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -396,7 +373,6 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -413,7 +389,6 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -428,7 +403,6 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -438,7 +412,6 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -448,7 +421,6 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -458,7 +430,6 @@ impl<'mc> RaidSpawnWaveEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -555,7 +526,6 @@ impl<'mc> RaidTriggerEvent<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::event::raid::RaidTriggerEvent::from_raw(&jni, res)
     }
-    //
 
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -565,7 +535,6 @@ impl<'mc> RaidTriggerEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
@@ -577,9 +546,6 @@ impl<'mc> RaidTriggerEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //@Nullable
 
     pub fn player(&self) -> Result<Option<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Player;");
@@ -595,13 +561,10 @@ impl<'mc> RaidTriggerEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
-
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Cancellable.html#setCancelled(boolean)">Cancellable</a></code></span>
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -612,7 +575,6 @@ impl<'mc> RaidTriggerEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn handler_list(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -625,7 +587,6 @@ impl<'mc> RaidTriggerEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //@Nullable
 
     pub fn raid(&self) -> Result<Option<crate::Raid<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Raid;");
@@ -640,7 +601,6 @@ impl<'mc> RaidTriggerEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })?))
     }
-    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -652,7 +612,6 @@ impl<'mc> RaidTriggerEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -666,7 +625,6 @@ impl<'mc> RaidTriggerEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -676,7 +634,6 @@ impl<'mc> RaidTriggerEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -702,7 +659,6 @@ impl<'mc> RaidTriggerEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -719,7 +675,6 @@ impl<'mc> RaidTriggerEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -734,7 +689,6 @@ impl<'mc> RaidTriggerEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -744,7 +698,6 @@ impl<'mc> RaidTriggerEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -754,7 +707,6 @@ impl<'mc> RaidTriggerEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -764,7 +716,6 @@ impl<'mc> RaidTriggerEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -837,8 +788,6 @@ impl<'mc> JNIInstantiatable<'mc> for RaidFinishEvent<'mc> {
 }
 
 impl<'mc> RaidFinishEvent<'mc> {
-    //@NotNull
-
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
         let res =
@@ -849,7 +798,6 @@ impl<'mc> RaidFinishEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn handler_list(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -862,7 +810,6 @@ impl<'mc> RaidFinishEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn winners(&self) -> Result<Vec<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -879,7 +826,6 @@ impl<'mc> RaidFinishEvent<'mc> {
         }
         Ok(new_vec)
     }
-    //@Nullable
 
     pub fn raid(&self) -> Result<Option<crate::Raid<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Raid;");
@@ -894,7 +840,6 @@ impl<'mc> RaidFinishEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })?))
     }
-    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -906,7 +851,6 @@ impl<'mc> RaidFinishEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -920,7 +864,6 @@ impl<'mc> RaidFinishEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -930,7 +873,6 @@ impl<'mc> RaidFinishEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -956,7 +898,6 @@ impl<'mc> RaidFinishEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -973,7 +914,6 @@ impl<'mc> RaidFinishEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -988,7 +928,6 @@ impl<'mc> RaidFinishEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -998,7 +937,6 @@ impl<'mc> RaidFinishEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1008,7 +946,6 @@ impl<'mc> RaidFinishEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1018,7 +955,6 @@ impl<'mc> RaidFinishEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1170,8 +1106,6 @@ impl<'mc> RaidStopEventReason<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-
-    //
 }
 
 impl<'mc> JNIRaw<'mc> for RaidStopEvent<'mc> {
@@ -1238,7 +1172,6 @@ impl<'mc> RaidStopEvent<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::event::raid::RaidStopEvent::from_raw(&jni, res)
     }
-    //@Nullable
 
     pub fn reason(
         &self,
@@ -1269,7 +1202,6 @@ impl<'mc> RaidStopEvent<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )?))
     }
-    //@NotNull
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
@@ -1281,7 +1213,6 @@ impl<'mc> RaidStopEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn handler_list(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1294,7 +1225,6 @@ impl<'mc> RaidStopEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    //@Nullable
 
     pub fn raid(&self) -> Result<Option<crate::Raid<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Raid;");
@@ -1309,7 +1239,6 @@ impl<'mc> RaidStopEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })?))
     }
-    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -1321,7 +1250,6 @@ impl<'mc> RaidStopEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1335,7 +1263,6 @@ impl<'mc> RaidStopEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1345,7 +1272,6 @@ impl<'mc> RaidStopEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1371,7 +1297,6 @@ impl<'mc> RaidStopEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1388,7 +1313,6 @@ impl<'mc> RaidStopEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1403,7 +1327,6 @@ impl<'mc> RaidStopEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1413,7 +1336,6 @@ impl<'mc> RaidStopEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1423,7 +1345,6 @@ impl<'mc> RaidStopEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1433,7 +1354,6 @@ impl<'mc> RaidStopEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");

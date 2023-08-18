@@ -120,8 +120,6 @@ impl<'mc> BookMetaGeneration<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-
-    //
 }
 
 ///
@@ -163,8 +161,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockDataMeta<'mc> {
 }
 
 impl<'mc> BlockDataMeta<'mc> {
-    //
-
     pub fn get_block_data(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
@@ -184,7 +180,6 @@ impl<'mc> BlockDataMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_block_data(
         &self,
@@ -203,7 +198,6 @@ impl<'mc> BlockDataMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_block_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -213,7 +207,6 @@ impl<'mc> BlockDataMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -227,7 +220,6 @@ impl<'mc> BlockDataMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -239,7 +231,6 @@ impl<'mc> BlockDataMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -253,7 +244,6 @@ impl<'mc> BlockDataMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -263,7 +253,6 @@ impl<'mc> BlockDataMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -282,7 +271,6 @@ impl<'mc> BlockDataMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -295,7 +283,6 @@ impl<'mc> BlockDataMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -312,7 +299,6 @@ impl<'mc> BlockDataMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_localized_name(
         &self,
@@ -331,7 +317,6 @@ impl<'mc> BlockDataMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -341,7 +326,6 @@ impl<'mc> BlockDataMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -366,7 +350,6 @@ impl<'mc> BlockDataMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -379,7 +362,6 @@ impl<'mc> BlockDataMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -392,7 +374,6 @@ impl<'mc> BlockDataMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Integer;)V");
@@ -410,7 +391,6 @@ impl<'mc> BlockDataMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -420,7 +400,6 @@ impl<'mc> BlockDataMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_enchant(
         &self,
@@ -439,7 +418,6 @@ impl<'mc> BlockDataMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_enchant_level(
         &self,
@@ -458,7 +436,6 @@ impl<'mc> BlockDataMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn enchants(
         &self,
@@ -472,7 +449,6 @@ impl<'mc> BlockDataMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchant(
         &self,
@@ -485,7 +461,6 @@ impl<'mc> BlockDataMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -500,7 +475,6 @@ impl<'mc> BlockDataMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_enchant(
         &self,
@@ -519,7 +493,6 @@ impl<'mc> BlockDataMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_enchant(
         &self,
@@ -538,7 +511,6 @@ impl<'mc> BlockDataMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_item_flags(
         &self,
@@ -551,7 +523,6 @@ impl<'mc> BlockDataMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item_flags(
         &self,
@@ -564,7 +535,6 @@ impl<'mc> BlockDataMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_flags(
         &self,
@@ -578,7 +548,6 @@ impl<'mc> BlockDataMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_item_flag(
         &self,
@@ -597,7 +566,6 @@ impl<'mc> BlockDataMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -607,11 +575,9 @@ impl<'mc> BlockDataMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -622,7 +588,6 @@ impl<'mc> BlockDataMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -635,7 +600,6 @@ impl<'mc> BlockDataMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_attribute_modifiers_with_attribute(
         &self,
@@ -668,7 +632,6 @@ impl<'mc> BlockDataMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_attribute_modifier(
         &self,
@@ -696,7 +659,6 @@ impl<'mc> BlockDataMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_attribute_modifiers(
         &self,
@@ -713,7 +675,6 @@ impl<'mc> BlockDataMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_attribute_modifier_with_attribute(
         &self,
@@ -744,10 +705,6 @@ impl<'mc> BlockDataMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn custom_tag_container(
@@ -766,8 +723,6 @@ impl<'mc> BlockDataMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -782,7 +737,6 @@ impl<'mc> BlockDataMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -796,7 +750,6 @@ impl<'mc> BlockDataMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -861,8 +814,6 @@ impl<'mc> JNIInstantiatable<'mc> for ArmorMeta<'mc> {
 }
 
 impl<'mc> ArmorMeta<'mc> {
-    //@NotNull
-
     pub fn clone(
         &self,
     ) -> Result<crate::inventory::meta::ArmorMeta<'mc>, Box<dyn std::error::Error>> {
@@ -877,7 +828,6 @@ impl<'mc> ArmorMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_trim(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -887,7 +837,6 @@ impl<'mc> ArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_trim(
         &self,
@@ -906,7 +855,6 @@ impl<'mc> ArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn trim(
         &self,
@@ -925,7 +873,6 @@ impl<'mc> ArmorMeta<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@NotNull
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -939,7 +886,6 @@ impl<'mc> ArmorMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -953,7 +899,6 @@ impl<'mc> ArmorMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -963,7 +908,6 @@ impl<'mc> ArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -982,7 +926,6 @@ impl<'mc> ArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -995,7 +938,6 @@ impl<'mc> ArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1012,7 +954,6 @@ impl<'mc> ArmorMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_localized_name(
         &self,
@@ -1031,7 +972,6 @@ impl<'mc> ArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1041,7 +981,6 @@ impl<'mc> ArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -1066,7 +1005,6 @@ impl<'mc> ArmorMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1079,7 +1017,6 @@ impl<'mc> ArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1092,7 +1029,6 @@ impl<'mc> ArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Integer;)V");
@@ -1110,7 +1046,6 @@ impl<'mc> ArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1120,7 +1055,6 @@ impl<'mc> ArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_enchant(
         &self,
@@ -1139,7 +1073,6 @@ impl<'mc> ArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_enchant_level(
         &self,
@@ -1158,7 +1091,6 @@ impl<'mc> ArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn enchants(
         &self,
@@ -1172,7 +1104,6 @@ impl<'mc> ArmorMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchant(
         &self,
@@ -1185,7 +1116,6 @@ impl<'mc> ArmorMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1200,7 +1130,6 @@ impl<'mc> ArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_enchant(
         &self,
@@ -1219,7 +1148,6 @@ impl<'mc> ArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_enchant(
         &self,
@@ -1238,7 +1166,6 @@ impl<'mc> ArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_item_flags(
         &self,
@@ -1251,7 +1178,6 @@ impl<'mc> ArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item_flags(
         &self,
@@ -1264,7 +1190,6 @@ impl<'mc> ArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_flags(
         &self,
@@ -1278,7 +1203,6 @@ impl<'mc> ArmorMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_item_flag(
         &self,
@@ -1297,7 +1221,6 @@ impl<'mc> ArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1307,11 +1230,9 @@ impl<'mc> ArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1322,7 +1243,6 @@ impl<'mc> ArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1335,7 +1255,6 @@ impl<'mc> ArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_attribute_modifiers_with_attribute(
         &self,
@@ -1368,7 +1287,6 @@ impl<'mc> ArmorMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_attribute_modifier(
         &self,
@@ -1396,7 +1314,6 @@ impl<'mc> ArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_attribute_modifiers(
         &self,
@@ -1413,7 +1330,6 @@ impl<'mc> ArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_attribute_modifier_with_attribute(
         &self,
@@ -1444,10 +1360,6 @@ impl<'mc> ArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn custom_tag_container(
@@ -1466,8 +1378,6 @@ impl<'mc> ArmorMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -1482,7 +1392,6 @@ impl<'mc> ArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -1496,7 +1405,6 @@ impl<'mc> ArmorMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -1563,8 +1471,6 @@ impl<'mc> JNIInstantiatable<'mc> for AxolotlBucketMeta<'mc> {
 }
 
 impl<'mc> AxolotlBucketMeta<'mc> {
-    //@NotNull
-
     pub fn variant(
         &self,
     ) -> Result<crate::entity::AxolotlVariant<'mc>, Box<dyn std::error::Error>> {
@@ -1590,7 +1496,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1602,7 +1507,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn set_variant(
         &self,
@@ -1621,7 +1525,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_variant(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1631,7 +1534,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1645,7 +1547,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1659,7 +1560,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1669,7 +1569,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -1688,7 +1587,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1701,7 +1599,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1718,7 +1615,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_localized_name(
         &self,
@@ -1737,7 +1633,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1747,7 +1642,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -1772,7 +1666,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1785,7 +1678,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1798,7 +1690,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Integer;)V");
@@ -1816,7 +1707,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1826,7 +1716,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_enchant(
         &self,
@@ -1845,7 +1734,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_enchant_level(
         &self,
@@ -1864,7 +1752,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn enchants(
         &self,
@@ -1878,7 +1765,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchant(
         &self,
@@ -1891,7 +1777,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1906,7 +1791,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_enchant(
         &self,
@@ -1925,7 +1809,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_enchant(
         &self,
@@ -1944,7 +1827,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_item_flags(
         &self,
@@ -1957,7 +1839,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item_flags(
         &self,
@@ -1970,7 +1851,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_flags(
         &self,
@@ -1984,7 +1864,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_item_flag(
         &self,
@@ -2003,7 +1882,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2013,11 +1891,9 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2028,7 +1904,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2041,7 +1916,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_attribute_modifiers_with_attribute(
         &self,
@@ -2074,7 +1948,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_attribute_modifier(
         &self,
@@ -2102,7 +1975,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_attribute_modifiers(
         &self,
@@ -2119,7 +1991,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_attribute_modifier_with_attribute(
         &self,
@@ -2150,10 +2021,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn custom_tag_container(
@@ -2172,8 +2039,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -2188,7 +2053,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -2202,7 +2066,6 @@ impl<'mc> AxolotlBucketMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -2266,8 +2129,6 @@ impl<'mc> JNIInstantiatable<'mc> for SkullMeta<'mc> {
 }
 
 impl<'mc> SkullMeta<'mc> {
-    //
-
     pub fn set_owner(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
@@ -2282,7 +2143,6 @@ impl<'mc> SkullMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn clone(
         &self,
@@ -2298,7 +2158,6 @@ impl<'mc> SkullMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn owner(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2316,7 +2175,6 @@ impl<'mc> SkullMeta<'mc> {
                 .to_string(),
         ))
     }
-    //
 
     pub fn has_owner(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2326,7 +2184,6 @@ impl<'mc> SkullMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn owning_player(
         &self,
@@ -2344,7 +2201,6 @@ impl<'mc> SkullMeta<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_owning_player(
         &self,
@@ -2363,7 +2219,6 @@ impl<'mc> SkullMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn owner_profile(
         &self,
@@ -2381,7 +2236,6 @@ impl<'mc> SkullMeta<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_owner_profile(
         &self,
@@ -2400,7 +2254,6 @@ impl<'mc> SkullMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn note_block_sound(
         &self,
@@ -2421,7 +2274,6 @@ impl<'mc> SkullMeta<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_note_block_sound(
         &self,
@@ -2440,7 +2292,6 @@ impl<'mc> SkullMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2454,7 +2305,6 @@ impl<'mc> SkullMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2468,7 +2318,6 @@ impl<'mc> SkullMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2478,7 +2327,6 @@ impl<'mc> SkullMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -2497,7 +2345,6 @@ impl<'mc> SkullMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2510,7 +2357,6 @@ impl<'mc> SkullMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2527,7 +2373,6 @@ impl<'mc> SkullMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_localized_name(
         &self,
@@ -2546,7 +2391,6 @@ impl<'mc> SkullMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2556,7 +2400,6 @@ impl<'mc> SkullMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -2581,7 +2424,6 @@ impl<'mc> SkullMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2594,7 +2436,6 @@ impl<'mc> SkullMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2607,7 +2448,6 @@ impl<'mc> SkullMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Integer;)V");
@@ -2625,7 +2465,6 @@ impl<'mc> SkullMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2635,7 +2474,6 @@ impl<'mc> SkullMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_enchant(
         &self,
@@ -2654,7 +2492,6 @@ impl<'mc> SkullMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_enchant_level(
         &self,
@@ -2673,7 +2510,6 @@ impl<'mc> SkullMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn enchants(
         &self,
@@ -2687,7 +2523,6 @@ impl<'mc> SkullMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchant(
         &self,
@@ -2700,7 +2535,6 @@ impl<'mc> SkullMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2715,7 +2549,6 @@ impl<'mc> SkullMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_enchant(
         &self,
@@ -2734,7 +2567,6 @@ impl<'mc> SkullMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_enchant(
         &self,
@@ -2753,7 +2585,6 @@ impl<'mc> SkullMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_item_flags(
         &self,
@@ -2766,7 +2597,6 @@ impl<'mc> SkullMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item_flags(
         &self,
@@ -2779,7 +2609,6 @@ impl<'mc> SkullMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_flags(
         &self,
@@ -2793,7 +2622,6 @@ impl<'mc> SkullMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_item_flag(
         &self,
@@ -2812,7 +2640,6 @@ impl<'mc> SkullMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2822,11 +2649,9 @@ impl<'mc> SkullMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2837,7 +2662,6 @@ impl<'mc> SkullMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2850,7 +2674,6 @@ impl<'mc> SkullMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_attribute_modifiers_with_attribute(
         &self,
@@ -2883,7 +2706,6 @@ impl<'mc> SkullMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_attribute_modifier(
         &self,
@@ -2911,7 +2733,6 @@ impl<'mc> SkullMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_attribute_modifiers(
         &self,
@@ -2928,7 +2749,6 @@ impl<'mc> SkullMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_attribute_modifier_with_attribute(
         &self,
@@ -2959,10 +2779,6 @@ impl<'mc> SkullMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn custom_tag_container(
@@ -2981,8 +2797,6 @@ impl<'mc> SkullMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -2997,7 +2811,6 @@ impl<'mc> SkullMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -3011,7 +2824,6 @@ impl<'mc> SkullMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -3075,8 +2887,6 @@ impl<'mc> JNIInstantiatable<'mc> for CompassMeta<'mc> {
 }
 
 impl<'mc> CompassMeta<'mc> {
-    //@NotNull
-
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -3087,7 +2897,6 @@ impl<'mc> CompassMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn has_lodestone(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3097,7 +2906,6 @@ impl<'mc> CompassMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lodestone(&self) -> Result<Option<crate::Location<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -3112,7 +2920,6 @@ impl<'mc> CompassMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })?))
     }
-    //
 
     pub fn set_lodestone(
         &self,
@@ -3131,7 +2938,6 @@ impl<'mc> CompassMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_lodestone_tracked(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3144,12 +2950,9 @@ impl<'mc> CompassMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets if this compass is tracking a specific lodestone. If true the compass will only work if there is a lodestone at the tracked location.
     pub fn set_lodestone_tracked(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3160,7 +2963,6 @@ impl<'mc> CompassMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3174,7 +2976,6 @@ impl<'mc> CompassMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3188,7 +2989,6 @@ impl<'mc> CompassMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3198,7 +2998,6 @@ impl<'mc> CompassMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -3217,7 +3016,6 @@ impl<'mc> CompassMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3230,7 +3028,6 @@ impl<'mc> CompassMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3247,7 +3044,6 @@ impl<'mc> CompassMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_localized_name(
         &self,
@@ -3266,7 +3062,6 @@ impl<'mc> CompassMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3276,7 +3071,6 @@ impl<'mc> CompassMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -3301,7 +3095,6 @@ impl<'mc> CompassMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3314,7 +3107,6 @@ impl<'mc> CompassMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -3327,7 +3119,6 @@ impl<'mc> CompassMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Integer;)V");
@@ -3345,7 +3136,6 @@ impl<'mc> CompassMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3355,7 +3145,6 @@ impl<'mc> CompassMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_enchant(
         &self,
@@ -3374,7 +3163,6 @@ impl<'mc> CompassMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_enchant_level(
         &self,
@@ -3393,7 +3181,6 @@ impl<'mc> CompassMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn enchants(
         &self,
@@ -3407,7 +3194,6 @@ impl<'mc> CompassMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchant(
         &self,
@@ -3420,7 +3206,6 @@ impl<'mc> CompassMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3435,7 +3220,6 @@ impl<'mc> CompassMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_enchant(
         &self,
@@ -3454,7 +3238,6 @@ impl<'mc> CompassMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_enchant(
         &self,
@@ -3473,7 +3256,6 @@ impl<'mc> CompassMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_item_flags(
         &self,
@@ -3486,7 +3268,6 @@ impl<'mc> CompassMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item_flags(
         &self,
@@ -3499,7 +3280,6 @@ impl<'mc> CompassMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_flags(
         &self,
@@ -3513,7 +3293,6 @@ impl<'mc> CompassMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_item_flag(
         &self,
@@ -3532,7 +3311,6 @@ impl<'mc> CompassMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3542,11 +3320,9 @@ impl<'mc> CompassMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3557,7 +3333,6 @@ impl<'mc> CompassMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3570,7 +3345,6 @@ impl<'mc> CompassMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_attribute_modifiers_with_attribute(
         &self,
@@ -3603,7 +3377,6 @@ impl<'mc> CompassMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_attribute_modifier(
         &self,
@@ -3631,7 +3404,6 @@ impl<'mc> CompassMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_attribute_modifiers(
         &self,
@@ -3648,7 +3420,6 @@ impl<'mc> CompassMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_attribute_modifier_with_attribute(
         &self,
@@ -3679,10 +3450,6 @@ impl<'mc> CompassMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn custom_tag_container(
@@ -3701,8 +3468,6 @@ impl<'mc> CompassMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -3717,7 +3482,6 @@ impl<'mc> CompassMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -3731,7 +3495,6 @@ impl<'mc> CompassMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -3798,8 +3561,6 @@ impl<'mc> JNIInstantiatable<'mc> for SuspiciousStewMeta<'mc> {
 }
 
 impl<'mc> SuspiciousStewMeta<'mc> {
-    //@NotNull
-
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -3810,7 +3571,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn has_custom_effects(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3823,7 +3583,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn custom_effects(
         &self,
@@ -3845,7 +3604,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_custom_effect(
         &self,
@@ -3856,7 +3614,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
-        // -1
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3870,7 +3627,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_custom_effect(
         &self,
@@ -3889,7 +3645,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_custom_effect(
         &self,
@@ -3908,7 +3663,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn clear_custom_effects(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3921,7 +3675,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3935,7 +3688,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3949,7 +3701,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3959,7 +3710,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -3978,7 +3728,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3991,7 +3740,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -4008,7 +3756,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_localized_name(
         &self,
@@ -4027,7 +3774,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4037,7 +3783,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -4062,7 +3807,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4075,7 +3819,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4088,7 +3831,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Integer;)V");
@@ -4106,7 +3848,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4116,7 +3857,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_enchant(
         &self,
@@ -4135,7 +3875,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_enchant_level(
         &self,
@@ -4154,7 +3893,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn enchants(
         &self,
@@ -4168,7 +3906,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchant(
         &self,
@@ -4181,7 +3918,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4196,7 +3932,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_enchant(
         &self,
@@ -4215,7 +3950,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_enchant(
         &self,
@@ -4234,7 +3968,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_item_flags(
         &self,
@@ -4247,7 +3980,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item_flags(
         &self,
@@ -4260,7 +3992,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_flags(
         &self,
@@ -4274,7 +4005,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_item_flag(
         &self,
@@ -4293,7 +4023,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4303,11 +4032,9 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4318,7 +4045,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4331,7 +4057,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_attribute_modifiers_with_attribute(
         &self,
@@ -4364,7 +4089,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_attribute_modifier(
         &self,
@@ -4392,7 +4116,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_attribute_modifiers(
         &self,
@@ -4409,7 +4132,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_attribute_modifier_with_attribute(
         &self,
@@ -4440,10 +4162,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn custom_tag_container(
@@ -4462,8 +4180,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -4478,7 +4194,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -4492,7 +4207,6 @@ impl<'mc> SuspiciousStewMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -4556,8 +4270,6 @@ impl<'mc> JNIInstantiatable<'mc> for CrossbowMeta<'mc> {
 }
 
 impl<'mc> CrossbowMeta<'mc> {
-    //
-
     pub fn has_charged_projectiles(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self.jni_ref().call_method(
@@ -4569,7 +4281,6 @@ impl<'mc> CrossbowMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn charged_projectiles(
         &self,
@@ -4591,7 +4302,6 @@ impl<'mc> CrossbowMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_charged_projectile(
         &self,
@@ -4610,7 +4320,6 @@ impl<'mc> CrossbowMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -4624,7 +4333,6 @@ impl<'mc> CrossbowMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -4636,7 +4344,6 @@ impl<'mc> CrossbowMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -4650,7 +4357,6 @@ impl<'mc> CrossbowMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4660,7 +4366,6 @@ impl<'mc> CrossbowMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -4679,7 +4384,6 @@ impl<'mc> CrossbowMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4692,7 +4396,6 @@ impl<'mc> CrossbowMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -4709,7 +4412,6 @@ impl<'mc> CrossbowMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_localized_name(
         &self,
@@ -4728,7 +4430,6 @@ impl<'mc> CrossbowMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4738,7 +4439,6 @@ impl<'mc> CrossbowMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -4763,7 +4463,6 @@ impl<'mc> CrossbowMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4776,7 +4475,6 @@ impl<'mc> CrossbowMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4789,7 +4487,6 @@ impl<'mc> CrossbowMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Integer;)V");
@@ -4807,7 +4504,6 @@ impl<'mc> CrossbowMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4817,7 +4513,6 @@ impl<'mc> CrossbowMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_enchant(
         &self,
@@ -4836,7 +4531,6 @@ impl<'mc> CrossbowMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_enchant_level(
         &self,
@@ -4855,7 +4549,6 @@ impl<'mc> CrossbowMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn enchants(
         &self,
@@ -4869,7 +4562,6 @@ impl<'mc> CrossbowMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchant(
         &self,
@@ -4882,7 +4574,6 @@ impl<'mc> CrossbowMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4897,7 +4588,6 @@ impl<'mc> CrossbowMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_enchant(
         &self,
@@ -4916,7 +4606,6 @@ impl<'mc> CrossbowMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_enchant(
         &self,
@@ -4935,7 +4624,6 @@ impl<'mc> CrossbowMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_item_flags(
         &self,
@@ -4948,7 +4636,6 @@ impl<'mc> CrossbowMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item_flags(
         &self,
@@ -4961,7 +4648,6 @@ impl<'mc> CrossbowMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_flags(
         &self,
@@ -4975,7 +4661,6 @@ impl<'mc> CrossbowMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_item_flag(
         &self,
@@ -4994,7 +4679,6 @@ impl<'mc> CrossbowMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5004,11 +4688,9 @@ impl<'mc> CrossbowMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5019,7 +4701,6 @@ impl<'mc> CrossbowMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5032,7 +4713,6 @@ impl<'mc> CrossbowMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_attribute_modifiers_with_attribute(
         &self,
@@ -5065,7 +4745,6 @@ impl<'mc> CrossbowMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_attribute_modifier(
         &self,
@@ -5093,7 +4772,6 @@ impl<'mc> CrossbowMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_attribute_modifiers(
         &self,
@@ -5110,7 +4788,6 @@ impl<'mc> CrossbowMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_attribute_modifier_with_attribute(
         &self,
@@ -5141,10 +4818,6 @@ impl<'mc> CrossbowMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn custom_tag_container(
@@ -5163,8 +4836,6 @@ impl<'mc> CrossbowMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -5179,7 +4850,6 @@ impl<'mc> CrossbowMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -5193,7 +4863,6 @@ impl<'mc> CrossbowMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -5258,8 +4927,6 @@ impl<'mc> JNIInstantiatable<'mc> for ItemMeta<'mc> {
 }
 
 impl<'mc> ItemMeta<'mc> {
-    //@NotNull
-
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
@@ -5272,7 +4939,6 @@ impl<'mc> ItemMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -5284,7 +4950,6 @@ impl<'mc> ItemMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -5298,7 +4963,6 @@ impl<'mc> ItemMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5308,7 +4972,6 @@ impl<'mc> ItemMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -5327,7 +4990,6 @@ impl<'mc> ItemMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5340,7 +5002,6 @@ impl<'mc> ItemMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -5357,7 +5018,6 @@ impl<'mc> ItemMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_localized_name(
         &self,
@@ -5376,7 +5036,6 @@ impl<'mc> ItemMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5386,7 +5045,6 @@ impl<'mc> ItemMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -5411,7 +5069,6 @@ impl<'mc> ItemMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5424,7 +5081,6 @@ impl<'mc> ItemMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -5437,7 +5093,6 @@ impl<'mc> ItemMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Integer;)V");
@@ -5455,7 +5110,6 @@ impl<'mc> ItemMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5465,7 +5119,6 @@ impl<'mc> ItemMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_enchant(
         &self,
@@ -5484,7 +5137,6 @@ impl<'mc> ItemMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_enchant_level(
         &self,
@@ -5503,7 +5155,6 @@ impl<'mc> ItemMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn enchants(
         &self,
@@ -5517,7 +5168,6 @@ impl<'mc> ItemMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchant(
         &self,
@@ -5530,7 +5180,6 @@ impl<'mc> ItemMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5545,7 +5194,6 @@ impl<'mc> ItemMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_enchant(
         &self,
@@ -5564,7 +5212,6 @@ impl<'mc> ItemMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_enchant(
         &self,
@@ -5583,7 +5230,6 @@ impl<'mc> ItemMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_item_flags(
         &self,
@@ -5596,7 +5242,6 @@ impl<'mc> ItemMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item_flags(
         &self,
@@ -5609,7 +5254,6 @@ impl<'mc> ItemMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_flags(
         &self,
@@ -5623,7 +5267,6 @@ impl<'mc> ItemMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_item_flag(
         &self,
@@ -5642,7 +5285,6 @@ impl<'mc> ItemMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5652,12 +5294,9 @@ impl<'mc> ItemMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets the unbreakable tag. An unbreakable item will not lose durability.
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5668,7 +5307,6 @@ impl<'mc> ItemMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5681,7 +5319,6 @@ impl<'mc> ItemMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_attribute_modifiers_with_attribute(
         &self,
@@ -5714,7 +5351,6 @@ impl<'mc> ItemMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_attribute_modifier(
         &self,
@@ -5742,7 +5378,6 @@ impl<'mc> ItemMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_attribute_modifiers(
         &self,
@@ -5759,7 +5394,6 @@ impl<'mc> ItemMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_attribute_modifier_with_attribute(
         &self,
@@ -5790,10 +5424,6 @@ impl<'mc> ItemMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn custom_tag_container(
@@ -5812,15 +5442,7 @@ impl<'mc> ItemMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// internal use only
-    /// </div>
-    /// internal use only
-    ///
+    #[deprecated("internal use only ")]
     /// Internal use only! Do not use under any circumstances!
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -5834,7 +5456,6 @@ impl<'mc> ItemMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -5848,7 +5469,6 @@ impl<'mc> ItemMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -5919,8 +5539,6 @@ impl<'mc> JNIInstantiatable<'mc> for Repairable<'mc> {
 }
 
 impl<'mc> Repairable<'mc> {
-    //@NotNull
-
     pub fn clone(
         &self,
     ) -> Result<crate::inventory::meta::Repairable<'mc>, Box<dyn std::error::Error>> {
@@ -5935,7 +5553,6 @@ impl<'mc> Repairable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn repair_cost(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -5945,8 +5562,6 @@ impl<'mc> Repairable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Sets the repair penalty
     pub fn set_repair_cost(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -5960,7 +5575,6 @@ impl<'mc> Repairable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_repair_cost(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5970,7 +5584,6 @@ impl<'mc> Repairable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -5984,7 +5597,6 @@ impl<'mc> Repairable<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -5998,7 +5610,6 @@ impl<'mc> Repairable<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6008,7 +5619,6 @@ impl<'mc> Repairable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -6027,7 +5637,6 @@ impl<'mc> Repairable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6040,7 +5649,6 @@ impl<'mc> Repairable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -6057,7 +5665,6 @@ impl<'mc> Repairable<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_localized_name(
         &self,
@@ -6076,7 +5683,6 @@ impl<'mc> Repairable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6086,7 +5692,6 @@ impl<'mc> Repairable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -6111,7 +5716,6 @@ impl<'mc> Repairable<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6124,7 +5728,6 @@ impl<'mc> Repairable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -6137,7 +5740,6 @@ impl<'mc> Repairable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Integer;)V");
@@ -6155,7 +5757,6 @@ impl<'mc> Repairable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6165,7 +5766,6 @@ impl<'mc> Repairable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_enchant(
         &self,
@@ -6184,7 +5784,6 @@ impl<'mc> Repairable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_enchant_level(
         &self,
@@ -6203,7 +5802,6 @@ impl<'mc> Repairable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn enchants(
         &self,
@@ -6217,7 +5815,6 @@ impl<'mc> Repairable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchant(
         &self,
@@ -6230,7 +5827,6 @@ impl<'mc> Repairable<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6245,7 +5841,6 @@ impl<'mc> Repairable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_enchant(
         &self,
@@ -6264,7 +5859,6 @@ impl<'mc> Repairable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_enchant(
         &self,
@@ -6283,7 +5877,6 @@ impl<'mc> Repairable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_item_flags(
         &self,
@@ -6296,7 +5889,6 @@ impl<'mc> Repairable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item_flags(
         &self,
@@ -6309,7 +5901,6 @@ impl<'mc> Repairable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_flags(
         &self,
@@ -6323,7 +5914,6 @@ impl<'mc> Repairable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_item_flag(
         &self,
@@ -6342,7 +5932,6 @@ impl<'mc> Repairable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6352,11 +5941,9 @@ impl<'mc> Repairable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6367,7 +5954,6 @@ impl<'mc> Repairable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6380,7 +5966,6 @@ impl<'mc> Repairable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_attribute_modifiers_with_attribute(
         &self,
@@ -6413,7 +5998,6 @@ impl<'mc> Repairable<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_attribute_modifier(
         &self,
@@ -6441,7 +6025,6 @@ impl<'mc> Repairable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_attribute_modifiers(
         &self,
@@ -6458,7 +6041,6 @@ impl<'mc> Repairable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_attribute_modifier_with_attribute(
         &self,
@@ -6489,10 +6071,6 @@ impl<'mc> Repairable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn custom_tag_container(
@@ -6511,8 +6089,6 @@ impl<'mc> Repairable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -6527,7 +6103,6 @@ impl<'mc> Repairable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -6541,7 +6116,6 @@ impl<'mc> Repairable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -6605,10 +6179,7 @@ impl<'mc> JNIInstantiatable<'mc> for BannerMeta<'mc> {
 }
 
 impl<'mc> BannerMeta<'mc> {
-    //@Deprecated
-
     #[deprecated]
-    //@Nullable
 
     pub fn base_color(&self) -> Result<Option<crate::DyeColor<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/DyeColor;");
@@ -6636,7 +6207,6 @@ impl<'mc> BannerMeta<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )?))
     }
-    //
 
     pub fn set_base_color(
         &self,
@@ -6655,7 +6225,6 @@ impl<'mc> BannerMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn patterns(
         &self,
@@ -6677,7 +6246,6 @@ impl<'mc> BannerMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_pattern(
         &self,
@@ -6696,8 +6264,6 @@ impl<'mc> BannerMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
     /// Returns the pattern at the specified index
     pub fn get_pattern(
         &self,
@@ -6716,8 +6282,6 @@ impl<'mc> BannerMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     /// Removes the pattern at the specified index
     pub fn remove_pattern(
         &self,
@@ -6736,7 +6300,6 @@ impl<'mc> BannerMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_pattern(
         &self,
@@ -6760,7 +6323,6 @@ impl<'mc> BannerMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn number_of_patterns(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -6773,7 +6335,6 @@ impl<'mc> BannerMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -6787,7 +6348,6 @@ impl<'mc> BannerMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -6799,7 +6359,6 @@ impl<'mc> BannerMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -6813,7 +6372,6 @@ impl<'mc> BannerMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6823,7 +6381,6 @@ impl<'mc> BannerMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -6842,7 +6399,6 @@ impl<'mc> BannerMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6855,7 +6411,6 @@ impl<'mc> BannerMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -6872,7 +6427,6 @@ impl<'mc> BannerMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_localized_name(
         &self,
@@ -6891,7 +6445,6 @@ impl<'mc> BannerMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6901,7 +6454,6 @@ impl<'mc> BannerMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -6926,7 +6478,6 @@ impl<'mc> BannerMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6939,7 +6490,6 @@ impl<'mc> BannerMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -6952,7 +6502,6 @@ impl<'mc> BannerMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Integer;)V");
@@ -6970,7 +6519,6 @@ impl<'mc> BannerMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6980,7 +6528,6 @@ impl<'mc> BannerMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_enchant(
         &self,
@@ -6999,7 +6546,6 @@ impl<'mc> BannerMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_enchant_level(
         &self,
@@ -7018,7 +6564,6 @@ impl<'mc> BannerMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn enchants(
         &self,
@@ -7032,7 +6577,6 @@ impl<'mc> BannerMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchant(
         &self,
@@ -7045,7 +6589,6 @@ impl<'mc> BannerMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7060,7 +6603,6 @@ impl<'mc> BannerMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_enchant(
         &self,
@@ -7079,7 +6621,6 @@ impl<'mc> BannerMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_enchant(
         &self,
@@ -7098,7 +6639,6 @@ impl<'mc> BannerMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_item_flags(
         &self,
@@ -7111,7 +6651,6 @@ impl<'mc> BannerMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item_flags(
         &self,
@@ -7124,7 +6663,6 @@ impl<'mc> BannerMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_flags(
         &self,
@@ -7138,7 +6676,6 @@ impl<'mc> BannerMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_item_flag(
         &self,
@@ -7157,7 +6694,6 @@ impl<'mc> BannerMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -7167,11 +6703,9 @@ impl<'mc> BannerMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7182,7 +6716,6 @@ impl<'mc> BannerMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -7195,7 +6728,6 @@ impl<'mc> BannerMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_attribute_modifiers_with_attribute(
         &self,
@@ -7228,7 +6760,6 @@ impl<'mc> BannerMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_attribute_modifier(
         &self,
@@ -7256,7 +6787,6 @@ impl<'mc> BannerMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_attribute_modifiers(
         &self,
@@ -7273,7 +6803,6 @@ impl<'mc> BannerMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_attribute_modifier_with_attribute(
         &self,
@@ -7304,10 +6833,6 @@ impl<'mc> BannerMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn custom_tag_container(
@@ -7326,8 +6851,6 @@ impl<'mc> BannerMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -7342,7 +6865,6 @@ impl<'mc> BannerMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -7356,7 +6878,6 @@ impl<'mc> BannerMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -7420,8 +6941,6 @@ impl<'mc> JNIInstantiatable<'mc> for BundleMeta<'mc> {
 }
 
 impl<'mc> BundleMeta<'mc> {
-    //
-
     pub fn add_item(
         &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
@@ -7439,7 +6958,6 @@ impl<'mc> BundleMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_items(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -7449,7 +6967,6 @@ impl<'mc> BundleMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn items(
         &self,
@@ -7468,7 +6985,6 @@ impl<'mc> BundleMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -7482,7 +6998,6 @@ impl<'mc> BundleMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -7494,7 +7009,6 @@ impl<'mc> BundleMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -7508,7 +7022,6 @@ impl<'mc> BundleMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -7518,7 +7031,6 @@ impl<'mc> BundleMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -7537,7 +7049,6 @@ impl<'mc> BundleMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -7550,7 +7061,6 @@ impl<'mc> BundleMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -7567,7 +7077,6 @@ impl<'mc> BundleMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_localized_name(
         &self,
@@ -7586,7 +7095,6 @@ impl<'mc> BundleMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -7596,7 +7104,6 @@ impl<'mc> BundleMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -7621,7 +7128,6 @@ impl<'mc> BundleMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -7634,7 +7140,6 @@ impl<'mc> BundleMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -7647,7 +7152,6 @@ impl<'mc> BundleMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Integer;)V");
@@ -7665,7 +7169,6 @@ impl<'mc> BundleMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -7675,7 +7178,6 @@ impl<'mc> BundleMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_enchant(
         &self,
@@ -7694,7 +7196,6 @@ impl<'mc> BundleMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_enchant_level(
         &self,
@@ -7713,7 +7214,6 @@ impl<'mc> BundleMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn enchants(
         &self,
@@ -7727,7 +7227,6 @@ impl<'mc> BundleMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchant(
         &self,
@@ -7740,7 +7239,6 @@ impl<'mc> BundleMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7755,7 +7253,6 @@ impl<'mc> BundleMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_enchant(
         &self,
@@ -7774,7 +7271,6 @@ impl<'mc> BundleMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_enchant(
         &self,
@@ -7793,7 +7289,6 @@ impl<'mc> BundleMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_item_flags(
         &self,
@@ -7806,7 +7301,6 @@ impl<'mc> BundleMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item_flags(
         &self,
@@ -7819,7 +7313,6 @@ impl<'mc> BundleMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_flags(
         &self,
@@ -7833,7 +7326,6 @@ impl<'mc> BundleMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_item_flag(
         &self,
@@ -7852,7 +7344,6 @@ impl<'mc> BundleMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -7862,11 +7353,9 @@ impl<'mc> BundleMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7877,7 +7366,6 @@ impl<'mc> BundleMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -7890,7 +7378,6 @@ impl<'mc> BundleMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_attribute_modifiers_with_attribute(
         &self,
@@ -7923,7 +7410,6 @@ impl<'mc> BundleMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_attribute_modifier(
         &self,
@@ -7951,7 +7437,6 @@ impl<'mc> BundleMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_attribute_modifiers(
         &self,
@@ -7968,7 +7453,6 @@ impl<'mc> BundleMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_attribute_modifier_with_attribute(
         &self,
@@ -7999,10 +7483,6 @@ impl<'mc> BundleMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn custom_tag_container(
@@ -8021,8 +7501,6 @@ impl<'mc> BundleMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -8037,7 +7515,6 @@ impl<'mc> BundleMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -8051,7 +7528,6 @@ impl<'mc> BundleMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -8118,8 +7594,6 @@ impl<'mc> JNIInstantiatable<'mc> for ColorableArmorMeta<'mc> {
 }
 
 impl<'mc> ColorableArmorMeta<'mc> {
-    //@NotNull
-
     pub fn clone(
         &self,
     ) -> Result<crate::inventory::meta::ColorableArmorMeta<'mc>, Box<dyn std::error::Error>> {
@@ -8134,7 +7608,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_trim(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8144,7 +7617,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_trim(
         &self,
@@ -8163,7 +7635,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn trim(
         &self,
@@ -8182,7 +7653,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@NotNull
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -8196,7 +7666,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -8210,7 +7679,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8220,7 +7688,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -8239,7 +7706,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8252,7 +7718,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -8269,7 +7734,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_localized_name(
         &self,
@@ -8288,7 +7752,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8298,7 +7761,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -8323,7 +7785,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8336,7 +7797,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -8349,7 +7809,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Integer;)V");
@@ -8367,7 +7826,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8377,7 +7835,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_enchant(
         &self,
@@ -8396,7 +7853,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_enchant_level(
         &self,
@@ -8415,7 +7871,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn enchants(
         &self,
@@ -8429,7 +7884,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchant(
         &self,
@@ -8442,7 +7896,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8457,7 +7910,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_enchant(
         &self,
@@ -8476,7 +7928,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_enchant(
         &self,
@@ -8495,7 +7946,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_item_flags(
         &self,
@@ -8508,7 +7958,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item_flags(
         &self,
@@ -8521,7 +7970,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_flags(
         &self,
@@ -8535,7 +7983,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_item_flag(
         &self,
@@ -8554,7 +8001,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8564,11 +8010,9 @@ impl<'mc> ColorableArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8579,7 +8023,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8592,7 +8035,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_attribute_modifiers_with_attribute(
         &self,
@@ -8625,7 +8067,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_attribute_modifier(
         &self,
@@ -8653,7 +8094,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_attribute_modifiers(
         &self,
@@ -8670,7 +8110,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_attribute_modifier_with_attribute(
         &self,
@@ -8701,10 +8140,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn custom_tag_container(
@@ -8723,8 +8158,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -8739,7 +8172,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -8753,7 +8185,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -8770,7 +8201,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_color(
         &self,
@@ -8789,7 +8219,6 @@ impl<'mc> ColorableArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn color(&self) -> Result<Option<crate::Color<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Color;");
@@ -8858,8 +8287,6 @@ impl<'mc> JNIInstantiatable<'mc> for SpawnEggMeta<'mc> {
 }
 
 impl<'mc> SpawnEggMeta<'mc> {
-    //@NotNull
-
     pub fn clone(
         &self,
     ) -> Result<crate::inventory::meta::SpawnEggMeta<'mc>, Box<dyn std::error::Error>> {
@@ -8874,7 +8301,6 @@ impl<'mc> SpawnEggMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn spawned_type(
         &self,
@@ -8901,7 +8327,6 @@ impl<'mc> SpawnEggMeta<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_spawned_type(
         &self,
@@ -8920,7 +8345,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -8934,7 +8358,6 @@ impl<'mc> SpawnEggMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -8948,7 +8371,6 @@ impl<'mc> SpawnEggMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8958,7 +8380,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -8977,7 +8398,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8990,7 +8410,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -9007,7 +8426,6 @@ impl<'mc> SpawnEggMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_localized_name(
         &self,
@@ -9026,7 +8444,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9036,7 +8453,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -9061,7 +8477,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9074,7 +8489,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -9087,7 +8501,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Integer;)V");
@@ -9105,7 +8518,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9115,7 +8527,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_enchant(
         &self,
@@ -9134,7 +8545,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_enchant_level(
         &self,
@@ -9153,7 +8563,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn enchants(
         &self,
@@ -9167,7 +8576,6 @@ impl<'mc> SpawnEggMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchant(
         &self,
@@ -9180,7 +8588,6 @@ impl<'mc> SpawnEggMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9195,7 +8602,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_enchant(
         &self,
@@ -9214,7 +8620,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_enchant(
         &self,
@@ -9233,7 +8638,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_item_flags(
         &self,
@@ -9246,7 +8650,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item_flags(
         &self,
@@ -9259,7 +8662,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_flags(
         &self,
@@ -9273,7 +8675,6 @@ impl<'mc> SpawnEggMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_item_flag(
         &self,
@@ -9292,7 +8693,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9302,11 +8702,9 @@ impl<'mc> SpawnEggMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9317,7 +8715,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9330,7 +8727,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_attribute_modifiers_with_attribute(
         &self,
@@ -9363,7 +8759,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_attribute_modifier(
         &self,
@@ -9391,7 +8786,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_attribute_modifiers(
         &self,
@@ -9408,7 +8802,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_attribute_modifier_with_attribute(
         &self,
@@ -9439,10 +8832,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn custom_tag_container(
@@ -9461,8 +8850,6 @@ impl<'mc> SpawnEggMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -9477,7 +8864,6 @@ impl<'mc> SpawnEggMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -9491,7 +8877,6 @@ impl<'mc> SpawnEggMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -9555,8 +8940,6 @@ impl<'mc> JNIInstantiatable<'mc> for Damageable<'mc> {
 }
 
 impl<'mc> Damageable<'mc> {
-    //@NotNull
-
     pub fn clone(
         &self,
     ) -> Result<crate::inventory::meta::Damageable<'mc>, Box<dyn std::error::Error>> {
@@ -9571,8 +8954,6 @@ impl<'mc> Damageable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
     /// Sets the damage
     pub fn set_damage(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -9586,7 +8967,6 @@ impl<'mc> Damageable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn damage(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -9596,7 +8976,6 @@ impl<'mc> Damageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn has_damage(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9606,7 +8985,6 @@ impl<'mc> Damageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -9620,7 +8998,6 @@ impl<'mc> Damageable<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -9634,7 +9011,6 @@ impl<'mc> Damageable<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9644,7 +9020,6 @@ impl<'mc> Damageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -9663,7 +9038,6 @@ impl<'mc> Damageable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9676,7 +9050,6 @@ impl<'mc> Damageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -9693,7 +9066,6 @@ impl<'mc> Damageable<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_localized_name(
         &self,
@@ -9712,7 +9084,6 @@ impl<'mc> Damageable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9722,7 +9093,6 @@ impl<'mc> Damageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -9747,7 +9117,6 @@ impl<'mc> Damageable<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9760,7 +9129,6 @@ impl<'mc> Damageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -9773,7 +9141,6 @@ impl<'mc> Damageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Integer;)V");
@@ -9791,7 +9158,6 @@ impl<'mc> Damageable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9801,7 +9167,6 @@ impl<'mc> Damageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_enchant(
         &self,
@@ -9820,7 +9185,6 @@ impl<'mc> Damageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_enchant_level(
         &self,
@@ -9839,7 +9203,6 @@ impl<'mc> Damageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn enchants(
         &self,
@@ -9853,7 +9216,6 @@ impl<'mc> Damageable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchant(
         &self,
@@ -9866,7 +9228,6 @@ impl<'mc> Damageable<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9881,7 +9242,6 @@ impl<'mc> Damageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_enchant(
         &self,
@@ -9900,7 +9260,6 @@ impl<'mc> Damageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_enchant(
         &self,
@@ -9919,7 +9278,6 @@ impl<'mc> Damageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_item_flags(
         &self,
@@ -9932,7 +9290,6 @@ impl<'mc> Damageable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item_flags(
         &self,
@@ -9945,7 +9302,6 @@ impl<'mc> Damageable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_flags(
         &self,
@@ -9959,7 +9315,6 @@ impl<'mc> Damageable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_item_flag(
         &self,
@@ -9978,7 +9333,6 @@ impl<'mc> Damageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9988,11 +9342,9 @@ impl<'mc> Damageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10003,7 +9355,6 @@ impl<'mc> Damageable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -10016,7 +9367,6 @@ impl<'mc> Damageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_attribute_modifiers_with_attribute(
         &self,
@@ -10049,7 +9399,6 @@ impl<'mc> Damageable<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_attribute_modifier(
         &self,
@@ -10077,7 +9426,6 @@ impl<'mc> Damageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_attribute_modifiers(
         &self,
@@ -10094,7 +9442,6 @@ impl<'mc> Damageable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_attribute_modifier_with_attribute(
         &self,
@@ -10125,10 +9472,6 @@ impl<'mc> Damageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn custom_tag_container(
@@ -10147,8 +9490,6 @@ impl<'mc> Damageable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -10163,7 +9504,6 @@ impl<'mc> Damageable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -10177,7 +9517,6 @@ impl<'mc> Damageable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -10241,8 +9580,6 @@ impl<'mc> JNIInstantiatable<'mc> for FireworkMeta<'mc> {
 }
 
 impl<'mc> FireworkMeta<'mc> {
-    //@NotNull
-
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -10253,7 +9590,6 @@ impl<'mc> FireworkMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //@NotNull
 
     pub fn effects(&self) -> Result<Vec<crate::FireworkEffect<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -10270,7 +9606,6 @@ impl<'mc> FireworkMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn power(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -10280,8 +9615,6 @@ impl<'mc> FireworkMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Sets the approximate power of the firework. Each level of power is half a second of flight time.
     pub fn set_power(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -10295,7 +9628,6 @@ impl<'mc> FireworkMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn add_effect(
         &self,
@@ -10314,7 +9646,6 @@ impl<'mc> FireworkMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn effects_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -10324,8 +9655,6 @@ impl<'mc> FireworkMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Remove an effect from this firework.
     pub fn remove_effect(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -10339,7 +9668,6 @@ impl<'mc> FireworkMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn clear_effects(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -10349,7 +9677,6 @@ impl<'mc> FireworkMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_effects(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -10359,7 +9686,6 @@ impl<'mc> FireworkMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -10373,7 +9699,6 @@ impl<'mc> FireworkMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -10387,7 +9712,6 @@ impl<'mc> FireworkMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -10397,7 +9721,6 @@ impl<'mc> FireworkMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -10416,7 +9739,6 @@ impl<'mc> FireworkMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -10429,7 +9751,6 @@ impl<'mc> FireworkMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -10446,7 +9767,6 @@ impl<'mc> FireworkMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_localized_name(
         &self,
@@ -10465,7 +9785,6 @@ impl<'mc> FireworkMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -10475,7 +9794,6 @@ impl<'mc> FireworkMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -10500,7 +9818,6 @@ impl<'mc> FireworkMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -10513,7 +9830,6 @@ impl<'mc> FireworkMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -10526,7 +9842,6 @@ impl<'mc> FireworkMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Integer;)V");
@@ -10544,7 +9859,6 @@ impl<'mc> FireworkMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -10554,7 +9868,6 @@ impl<'mc> FireworkMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_enchant(
         &self,
@@ -10573,7 +9886,6 @@ impl<'mc> FireworkMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_enchant_level(
         &self,
@@ -10592,7 +9904,6 @@ impl<'mc> FireworkMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn enchants(
         &self,
@@ -10606,7 +9917,6 @@ impl<'mc> FireworkMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchant(
         &self,
@@ -10619,7 +9929,6 @@ impl<'mc> FireworkMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10634,7 +9943,6 @@ impl<'mc> FireworkMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_enchant(
         &self,
@@ -10653,7 +9961,6 @@ impl<'mc> FireworkMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_enchant(
         &self,
@@ -10672,7 +9979,6 @@ impl<'mc> FireworkMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_item_flags(
         &self,
@@ -10685,7 +9991,6 @@ impl<'mc> FireworkMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item_flags(
         &self,
@@ -10698,7 +10003,6 @@ impl<'mc> FireworkMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_flags(
         &self,
@@ -10712,7 +10016,6 @@ impl<'mc> FireworkMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_item_flag(
         &self,
@@ -10731,7 +10034,6 @@ impl<'mc> FireworkMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -10741,11 +10043,9 @@ impl<'mc> FireworkMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10756,7 +10056,6 @@ impl<'mc> FireworkMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -10769,7 +10068,6 @@ impl<'mc> FireworkMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_attribute_modifiers_with_attribute(
         &self,
@@ -10802,7 +10100,6 @@ impl<'mc> FireworkMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_attribute_modifier(
         &self,
@@ -10830,7 +10127,6 @@ impl<'mc> FireworkMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_attribute_modifiers(
         &self,
@@ -10847,7 +10143,6 @@ impl<'mc> FireworkMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_attribute_modifier_with_attribute(
         &self,
@@ -10878,10 +10173,6 @@ impl<'mc> FireworkMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn custom_tag_container(
@@ -10900,8 +10191,6 @@ impl<'mc> FireworkMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -10916,7 +10205,6 @@ impl<'mc> FireworkMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -10930,7 +10218,6 @@ impl<'mc> FireworkMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -10994,8 +10281,6 @@ impl<'mc> JNIInstantiatable<'mc> for PotionMeta<'mc> {
 }
 
 impl<'mc> PotionMeta<'mc> {
-    //
-
     pub fn set_color(
         &self,
         arg0: impl Into<crate::Color<'mc>>,
@@ -11013,7 +10298,6 @@ impl<'mc> PotionMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn clone(
         &self,
@@ -11029,7 +10313,6 @@ impl<'mc> PotionMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn color(&self) -> Result<Option<crate::Color<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Color;");
@@ -11044,7 +10327,6 @@ impl<'mc> PotionMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })?))
     }
-    //
 
     pub fn has_custom_effects(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11057,7 +10339,6 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn custom_effects(
         &self,
@@ -11079,7 +10360,6 @@ impl<'mc> PotionMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_custom_effect(
         &self,
@@ -11090,7 +10370,6 @@ impl<'mc> PotionMeta<'mc> {
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
-        // -1
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11104,7 +10383,6 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_custom_effect(
         &self,
@@ -11123,7 +10401,6 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_custom_effect(
         &self,
@@ -11142,7 +10419,6 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn clear_custom_effects(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11155,7 +10431,6 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_base_potion_data(
         &self,
@@ -11174,7 +10449,6 @@ impl<'mc> PotionMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn base_potion_data(
         &self,
@@ -11191,7 +10465,6 @@ impl<'mc> PotionMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_main_effect(
         &self,
@@ -11210,7 +10483,6 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_color(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11220,7 +10492,6 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -11234,7 +10505,6 @@ impl<'mc> PotionMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -11248,7 +10518,6 @@ impl<'mc> PotionMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11258,7 +10527,6 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -11277,7 +10545,6 @@ impl<'mc> PotionMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11290,7 +10557,6 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -11307,7 +10573,6 @@ impl<'mc> PotionMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_localized_name(
         &self,
@@ -11326,7 +10591,6 @@ impl<'mc> PotionMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11336,7 +10600,6 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -11361,7 +10624,6 @@ impl<'mc> PotionMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11374,7 +10636,6 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -11387,7 +10648,6 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Integer;)V");
@@ -11405,7 +10665,6 @@ impl<'mc> PotionMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11415,7 +10674,6 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_enchant(
         &self,
@@ -11434,7 +10692,6 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_enchant_level(
         &self,
@@ -11453,7 +10710,6 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn enchants(
         &self,
@@ -11467,7 +10723,6 @@ impl<'mc> PotionMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchant(
         &self,
@@ -11480,7 +10735,6 @@ impl<'mc> PotionMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11495,7 +10749,6 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_enchant(
         &self,
@@ -11514,7 +10767,6 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_enchant(
         &self,
@@ -11533,7 +10785,6 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_item_flags(
         &self,
@@ -11546,7 +10797,6 @@ impl<'mc> PotionMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item_flags(
         &self,
@@ -11559,7 +10809,6 @@ impl<'mc> PotionMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_flags(
         &self,
@@ -11573,7 +10822,6 @@ impl<'mc> PotionMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_item_flag(
         &self,
@@ -11592,7 +10840,6 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11602,11 +10849,9 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11617,7 +10862,6 @@ impl<'mc> PotionMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11630,7 +10874,6 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_attribute_modifiers_with_attribute(
         &self,
@@ -11663,7 +10906,6 @@ impl<'mc> PotionMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_attribute_modifier(
         &self,
@@ -11691,7 +10933,6 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_attribute_modifiers(
         &self,
@@ -11708,7 +10949,6 @@ impl<'mc> PotionMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_attribute_modifier_with_attribute(
         &self,
@@ -11739,10 +10979,6 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn custom_tag_container(
@@ -11761,8 +10997,6 @@ impl<'mc> PotionMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -11777,7 +11011,6 @@ impl<'mc> PotionMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -11791,7 +11024,6 @@ impl<'mc> PotionMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -11857,8 +11089,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockStateMeta<'mc> {
 }
 
 impl<'mc> BlockStateMeta<'mc> {
-    //@NotNull
-
     pub fn block_state(&self) -> Result<crate::block::BlockState<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/BlockState;");
         let res =
@@ -11869,7 +11099,6 @@ impl<'mc> BlockStateMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_block_state(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11879,7 +11108,6 @@ impl<'mc> BlockStateMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_block_state(
         &self,
@@ -11898,7 +11126,6 @@ impl<'mc> BlockStateMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -11912,7 +11139,6 @@ impl<'mc> BlockStateMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -11924,7 +11150,6 @@ impl<'mc> BlockStateMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -11938,7 +11163,6 @@ impl<'mc> BlockStateMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11948,7 +11172,6 @@ impl<'mc> BlockStateMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -11967,7 +11190,6 @@ impl<'mc> BlockStateMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11980,7 +11202,6 @@ impl<'mc> BlockStateMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -11997,7 +11218,6 @@ impl<'mc> BlockStateMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_localized_name(
         &self,
@@ -12016,7 +11236,6 @@ impl<'mc> BlockStateMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -12026,7 +11245,6 @@ impl<'mc> BlockStateMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -12051,7 +11269,6 @@ impl<'mc> BlockStateMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -12064,7 +11281,6 @@ impl<'mc> BlockStateMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -12077,7 +11293,6 @@ impl<'mc> BlockStateMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Integer;)V");
@@ -12095,7 +11310,6 @@ impl<'mc> BlockStateMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -12105,7 +11319,6 @@ impl<'mc> BlockStateMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_enchant(
         &self,
@@ -12124,7 +11337,6 @@ impl<'mc> BlockStateMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_enchant_level(
         &self,
@@ -12143,7 +11355,6 @@ impl<'mc> BlockStateMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn enchants(
         &self,
@@ -12157,7 +11368,6 @@ impl<'mc> BlockStateMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchant(
         &self,
@@ -12170,7 +11380,6 @@ impl<'mc> BlockStateMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12185,7 +11394,6 @@ impl<'mc> BlockStateMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_enchant(
         &self,
@@ -12204,7 +11412,6 @@ impl<'mc> BlockStateMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_enchant(
         &self,
@@ -12223,7 +11430,6 @@ impl<'mc> BlockStateMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_item_flags(
         &self,
@@ -12236,7 +11442,6 @@ impl<'mc> BlockStateMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item_flags(
         &self,
@@ -12249,7 +11454,6 @@ impl<'mc> BlockStateMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_flags(
         &self,
@@ -12263,7 +11467,6 @@ impl<'mc> BlockStateMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_item_flag(
         &self,
@@ -12282,7 +11485,6 @@ impl<'mc> BlockStateMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -12292,11 +11494,9 @@ impl<'mc> BlockStateMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12307,7 +11507,6 @@ impl<'mc> BlockStateMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -12320,7 +11519,6 @@ impl<'mc> BlockStateMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_attribute_modifiers_with_attribute(
         &self,
@@ -12353,7 +11551,6 @@ impl<'mc> BlockStateMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_attribute_modifier(
         &self,
@@ -12381,7 +11578,6 @@ impl<'mc> BlockStateMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_attribute_modifiers(
         &self,
@@ -12398,7 +11594,6 @@ impl<'mc> BlockStateMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_attribute_modifier_with_attribute(
         &self,
@@ -12429,10 +11624,6 @@ impl<'mc> BlockStateMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn custom_tag_container(
@@ -12451,8 +11642,6 @@ impl<'mc> BlockStateMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -12467,7 +11656,6 @@ impl<'mc> BlockStateMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -12481,7 +11669,6 @@ impl<'mc> BlockStateMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -12663,8 +11850,6 @@ impl<'mc> JNIInstantiatable<'mc> for EnchantmentStorageMeta<'mc> {
 }
 
 impl<'mc> EnchantmentStorageMeta<'mc> {
-    //@NotNull
-
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -12675,7 +11860,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn has_stored_enchant(
         &self,
@@ -12694,7 +11878,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_stored_enchant_level(
         &self,
@@ -12713,7 +11896,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn stored_enchants(
         &self,
@@ -12730,7 +11912,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_stored_enchant(
         &self,
@@ -12743,7 +11924,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12758,7 +11938,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_stored_enchant(
         &self,
@@ -12777,7 +11956,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_stored_enchant(
         &self,
@@ -12796,7 +11974,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_stored_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -12809,7 +11986,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -12823,7 +11999,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -12837,7 +12012,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -12847,7 +12021,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -12866,7 +12039,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -12879,7 +12051,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -12896,7 +12067,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_localized_name(
         &self,
@@ -12915,7 +12085,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -12925,7 +12094,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -12950,7 +12118,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -12963,7 +12130,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -12976,7 +12142,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Integer;)V");
@@ -12994,7 +12159,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -13004,7 +12168,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_enchant(
         &self,
@@ -13023,7 +12186,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_enchant_level(
         &self,
@@ -13042,7 +12204,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn enchants(
         &self,
@@ -13056,7 +12217,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchant(
         &self,
@@ -13069,7 +12229,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13084,7 +12243,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_enchant(
         &self,
@@ -13103,7 +12261,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_enchant(
         &self,
@@ -13122,7 +12279,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_item_flags(
         &self,
@@ -13135,7 +12291,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item_flags(
         &self,
@@ -13148,7 +12303,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_flags(
         &self,
@@ -13162,7 +12316,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_item_flag(
         &self,
@@ -13181,7 +12334,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -13191,11 +12343,9 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13206,7 +12356,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -13219,7 +12368,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_attribute_modifiers_with_attribute(
         &self,
@@ -13252,7 +12400,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_attribute_modifier(
         &self,
@@ -13280,7 +12427,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_attribute_modifiers(
         &self,
@@ -13297,7 +12443,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_attribute_modifier_with_attribute(
         &self,
@@ -13328,10 +12473,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn custom_tag_container(
@@ -13350,8 +12491,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -13366,7 +12505,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -13380,7 +12518,6 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -13447,8 +12584,6 @@ impl<'mc> JNIInstantiatable<'mc> for KnowledgeBookMeta<'mc> {
 }
 
 impl<'mc> KnowledgeBookMeta<'mc> {
-    //@NotNull
-
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -13459,7 +12594,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //@NotNull
 
     pub fn recipes(&self) -> Result<Vec<crate::NamespacedKey<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -13476,7 +12610,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_recipe(
         &self,
@@ -13489,7 +12622,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_recipes(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -13499,7 +12631,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -13513,7 +12644,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -13527,7 +12657,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -13537,7 +12666,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -13556,7 +12684,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -13569,7 +12696,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -13586,7 +12712,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_localized_name(
         &self,
@@ -13605,7 +12730,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -13615,7 +12739,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -13640,7 +12763,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -13653,7 +12775,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -13666,7 +12787,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Integer;)V");
@@ -13684,7 +12804,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -13694,7 +12813,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_enchant(
         &self,
@@ -13713,7 +12831,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_enchant_level(
         &self,
@@ -13732,7 +12849,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn enchants(
         &self,
@@ -13746,7 +12862,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchant(
         &self,
@@ -13759,7 +12874,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13774,7 +12888,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_enchant(
         &self,
@@ -13793,7 +12906,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_enchant(
         &self,
@@ -13812,7 +12924,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_item_flags(
         &self,
@@ -13825,7 +12936,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item_flags(
         &self,
@@ -13838,7 +12948,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_flags(
         &self,
@@ -13852,7 +12961,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_item_flag(
         &self,
@@ -13871,7 +12979,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -13881,11 +12988,9 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13896,7 +13001,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -13909,7 +13013,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_attribute_modifiers_with_attribute(
         &self,
@@ -13942,7 +13045,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_attribute_modifier(
         &self,
@@ -13970,7 +13072,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_attribute_modifiers(
         &self,
@@ -13987,7 +13088,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_attribute_modifier_with_attribute(
         &self,
@@ -14018,10 +13118,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn custom_tag_container(
@@ -14040,8 +13136,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -14056,7 +13150,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -14070,7 +13163,6 @@ impl<'mc> KnowledgeBookMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -14134,8 +13226,6 @@ impl<'mc> JNIInstantiatable<'mc> for MapMeta<'mc> {
 }
 
 impl<'mc> MapMeta<'mc> {
-    //
-
     pub fn set_color(
         &self,
         arg0: impl Into<crate::Color<'mc>>,
@@ -14153,7 +13243,6 @@ impl<'mc> MapMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn clone(
         &self,
@@ -14169,7 +13258,6 @@ impl<'mc> MapMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn color(&self) -> Result<Option<crate::Color<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Color;");
@@ -14184,7 +13272,6 @@ impl<'mc> MapMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })?))
     }
-    //
 
     pub fn has_color(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -14194,7 +13281,6 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn map_view(&self) -> Result<crate::map::MapView<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/map/MapView;");
@@ -14206,8 +13292,6 @@ impl<'mc> MapMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn has_map_id(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14218,8 +13302,6 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn map_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -14230,15 +13312,7 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// These methods are poor API: They rely on the caller to pass in an only an integer property, and have poorly defined implementation behavior if that integer is not a valid map (the current implementation for example will generate a new map with a different ID). The xxxMapView family of methods should be used instead.
-    /// </div>
-    /// These methods are poor API: They rely on the caller to pass in an only an integer property, and have poorly defined implementation behavior if that integer is not a valid map (the current implementation for example will generate a new map with a different ID). The xxxMapView family of methods should be used instead.
-    ///
+    #[deprecated("These methods are poor API: They rely on the caller to pass in an only an integer property, and have poorly defined implementation behavior if that integer is not a valid map (the current implementation for example will generate a new map with a different ID). The xxxMapView family of methods should be used instead. ")]
     /// Sets the map ID. This is used to determine what map is displayed.
     pub fn set_map_id(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -14252,7 +13326,6 @@ impl<'mc> MapMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_map_view(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -14262,7 +13335,6 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_map_view(
         &self,
@@ -14281,7 +13353,6 @@ impl<'mc> MapMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_scaling(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -14291,12 +13362,9 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets if this map is scaling or not.
     pub fn set_scaling(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14307,8 +13375,6 @@ impl<'mc> MapMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn has_location_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14319,10 +13385,7 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Deprecated
-
     #[deprecated]
-    //@Nullable
 
     pub fn location_name(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -14340,7 +13403,6 @@ impl<'mc> MapMeta<'mc> {
                 .to_string(),
         ))
     }
-    //
 
     pub fn set_location_name(
         &self,
@@ -14359,7 +13421,6 @@ impl<'mc> MapMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -14373,7 +13434,6 @@ impl<'mc> MapMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -14387,7 +13447,6 @@ impl<'mc> MapMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -14397,7 +13456,6 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -14416,7 +13474,6 @@ impl<'mc> MapMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -14429,7 +13486,6 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -14446,7 +13502,6 @@ impl<'mc> MapMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_localized_name(
         &self,
@@ -14465,7 +13520,6 @@ impl<'mc> MapMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -14475,7 +13529,6 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -14500,7 +13553,6 @@ impl<'mc> MapMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -14513,7 +13565,6 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -14526,7 +13577,6 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Integer;)V");
@@ -14544,7 +13594,6 @@ impl<'mc> MapMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -14554,7 +13603,6 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_enchant(
         &self,
@@ -14573,7 +13621,6 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_enchant_level(
         &self,
@@ -14592,7 +13639,6 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn enchants(
         &self,
@@ -14606,7 +13652,6 @@ impl<'mc> MapMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchant(
         &self,
@@ -14619,7 +13664,6 @@ impl<'mc> MapMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14634,7 +13678,6 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_enchant(
         &self,
@@ -14653,7 +13696,6 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_enchant(
         &self,
@@ -14672,7 +13714,6 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_item_flags(
         &self,
@@ -14685,7 +13726,6 @@ impl<'mc> MapMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item_flags(
         &self,
@@ -14698,7 +13738,6 @@ impl<'mc> MapMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_flags(
         &self,
@@ -14712,7 +13751,6 @@ impl<'mc> MapMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_item_flag(
         &self,
@@ -14731,7 +13769,6 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -14741,11 +13778,9 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14756,7 +13791,6 @@ impl<'mc> MapMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -14769,7 +13803,6 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_attribute_modifiers_with_attribute(
         &self,
@@ -14802,7 +13835,6 @@ impl<'mc> MapMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_attribute_modifier(
         &self,
@@ -14830,7 +13862,6 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_attribute_modifiers(
         &self,
@@ -14847,7 +13878,6 @@ impl<'mc> MapMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_attribute_modifier_with_attribute(
         &self,
@@ -14878,10 +13908,6 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn custom_tag_container(
@@ -14900,8 +13926,6 @@ impl<'mc> MapMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -14916,7 +13940,6 @@ impl<'mc> MapMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -14930,7 +13953,6 @@ impl<'mc> MapMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -15004,9 +14026,6 @@ impl<'mc> BookMetaSpigot<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::inventory::meta::BookMetaSpigot::from_raw(&jni, res)
     }
-    //@NotNull
-
-    //
 
     pub fn set_page(
         &self,
@@ -15024,7 +14043,6 @@ impl<'mc> BookMetaSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn pages(
         &self,
@@ -15047,7 +14065,6 @@ impl<'mc> BookMetaSpigot<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn set_pages_with_base_componentss(
         &self,
@@ -15062,7 +14079,6 @@ impl<'mc> BookMetaSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn add_page(
         &self,
@@ -15075,7 +14091,6 @@ impl<'mc> BookMetaSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -15101,7 +14116,6 @@ impl<'mc> BookMetaSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -15118,7 +14132,6 @@ impl<'mc> BookMetaSpigot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -15133,7 +14146,6 @@ impl<'mc> BookMetaSpigot<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -15143,7 +14155,6 @@ impl<'mc> BookMetaSpigot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -15153,7 +14164,6 @@ impl<'mc> BookMetaSpigot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -15163,7 +14173,6 @@ impl<'mc> BookMetaSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -15227,8 +14236,6 @@ impl<'mc> JNIInstantiatable<'mc> for LeatherArmorMeta<'mc> {
 }
 
 impl<'mc> LeatherArmorMeta<'mc> {
-    //
-
     pub fn set_color(
         &self,
         arg0: impl Into<crate::Color<'mc>>,
@@ -15246,7 +14253,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn clone(
         &self,
@@ -15262,7 +14268,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn color(&self) -> Result<Option<crate::Color<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Color;");
@@ -15277,7 +14282,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })?))
     }
-    //@NotNull
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -15291,7 +14295,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -15305,7 +14308,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -15315,7 +14317,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -15334,7 +14335,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -15347,7 +14347,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -15364,7 +14363,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_localized_name(
         &self,
@@ -15383,7 +14381,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -15393,7 +14390,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -15418,7 +14414,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -15431,7 +14426,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -15444,7 +14438,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Integer;)V");
@@ -15462,7 +14455,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -15472,7 +14464,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_enchant(
         &self,
@@ -15491,7 +14482,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_enchant_level(
         &self,
@@ -15510,7 +14500,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn enchants(
         &self,
@@ -15524,7 +14513,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchant(
         &self,
@@ -15537,7 +14525,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15552,7 +14539,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_enchant(
         &self,
@@ -15571,7 +14557,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_enchant(
         &self,
@@ -15590,7 +14575,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_item_flags(
         &self,
@@ -15603,7 +14587,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item_flags(
         &self,
@@ -15616,7 +14599,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_flags(
         &self,
@@ -15630,7 +14612,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_item_flag(
         &self,
@@ -15649,7 +14630,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -15659,11 +14639,9 @@ impl<'mc> LeatherArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15674,7 +14652,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -15687,7 +14664,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_attribute_modifiers_with_attribute(
         &self,
@@ -15720,7 +14696,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_attribute_modifier(
         &self,
@@ -15748,7 +14723,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_attribute_modifiers(
         &self,
@@ -15765,7 +14739,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_attribute_modifier_with_attribute(
         &self,
@@ -15796,10 +14769,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn custom_tag_container(
@@ -15818,8 +14787,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -15834,7 +14801,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -15848,7 +14814,6 @@ impl<'mc> LeatherArmorMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -15915,8 +14880,6 @@ impl<'mc> JNIInstantiatable<'mc> for FireworkEffectMeta<'mc> {
 }
 
 impl<'mc> FireworkEffectMeta<'mc> {
-    //@NotNull
-
     pub fn clone(
         &self,
     ) -> Result<crate::inventory::meta::FireworkEffectMeta<'mc>, Box<dyn std::error::Error>> {
@@ -15931,7 +14894,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_effect(
         &self,
@@ -15950,7 +14912,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_effect(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -15960,7 +14921,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn effect(&self) -> Result<Option<crate::FireworkEffect<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/FireworkEffect;");
@@ -15976,7 +14936,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@NotNull
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -15990,7 +14949,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -16004,7 +14962,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -16014,7 +14971,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -16033,7 +14989,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -16046,7 +15001,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -16063,7 +15017,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_localized_name(
         &self,
@@ -16082,7 +15035,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -16092,7 +15044,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -16117,7 +15068,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -16130,7 +15080,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -16143,7 +15092,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Integer;)V");
@@ -16161,7 +15109,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -16171,7 +15118,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_enchant(
         &self,
@@ -16190,7 +15136,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_enchant_level(
         &self,
@@ -16209,7 +15154,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn enchants(
         &self,
@@ -16223,7 +15167,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchant(
         &self,
@@ -16236,7 +15179,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16251,7 +15193,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_enchant(
         &self,
@@ -16270,7 +15211,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_enchant(
         &self,
@@ -16289,7 +15229,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_item_flags(
         &self,
@@ -16302,7 +15241,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item_flags(
         &self,
@@ -16315,7 +15253,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_flags(
         &self,
@@ -16329,7 +15266,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_item_flag(
         &self,
@@ -16348,7 +15284,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -16358,11 +15293,9 @@ impl<'mc> FireworkEffectMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16373,7 +15306,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -16386,7 +15318,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_attribute_modifiers_with_attribute(
         &self,
@@ -16419,7 +15350,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_attribute_modifier(
         &self,
@@ -16447,7 +15377,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_attribute_modifiers(
         &self,
@@ -16464,7 +15393,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_attribute_modifier_with_attribute(
         &self,
@@ -16495,10 +15423,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn custom_tag_container(
@@ -16517,8 +15441,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -16533,7 +15455,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -16547,7 +15468,6 @@ impl<'mc> FireworkEffectMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -16615,8 +15535,6 @@ impl<'mc> JNIInstantiatable<'mc> for TropicalFishBucketMeta<'mc> {
 }
 
 impl<'mc> TropicalFishBucketMeta<'mc> {
-    //@NotNull
-
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -16627,9 +15545,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //@NotNull
-
-    //@NotNull
 
     pub fn pattern(
         &self,
@@ -16656,7 +15571,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_pattern(
         &self,
@@ -16675,7 +15589,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn pattern_color(&self) -> Result<crate::DyeColor<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/DyeColor;");
@@ -16700,7 +15613,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_pattern_color(
         &self,
@@ -16719,7 +15631,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn body_color(&self) -> Result<crate::DyeColor<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/DyeColor;");
@@ -16744,7 +15655,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_body_color(
         &self,
@@ -16763,7 +15673,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_variant(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -16773,7 +15682,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -16787,7 +15695,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -16801,7 +15708,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -16811,7 +15717,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -16830,7 +15735,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -16843,7 +15747,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -16860,7 +15763,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_localized_name(
         &self,
@@ -16879,7 +15781,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -16889,7 +15790,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -16914,7 +15814,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -16927,7 +15826,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -16940,7 +15838,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Integer;)V");
@@ -16958,7 +15855,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -16968,7 +15864,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_enchant(
         &self,
@@ -16987,7 +15882,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_enchant_level(
         &self,
@@ -17006,7 +15900,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn enchants(
         &self,
@@ -17020,7 +15913,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchant(
         &self,
@@ -17033,7 +15925,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -17048,7 +15939,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_enchant(
         &self,
@@ -17067,7 +15957,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_enchant(
         &self,
@@ -17086,7 +15975,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_item_flags(
         &self,
@@ -17099,7 +15987,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item_flags(
         &self,
@@ -17112,7 +15999,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_flags(
         &self,
@@ -17126,7 +16012,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_item_flag(
         &self,
@@ -17145,7 +16030,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -17155,11 +16039,9 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -17170,7 +16052,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -17183,7 +16064,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_attribute_modifiers_with_attribute(
         &self,
@@ -17216,7 +16096,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_attribute_modifier(
         &self,
@@ -17244,7 +16123,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_attribute_modifiers(
         &self,
@@ -17261,7 +16139,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_attribute_modifier_with_attribute(
         &self,
@@ -17292,10 +16169,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn custom_tag_container(
@@ -17314,8 +16187,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -17330,7 +16201,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -17344,7 +16214,6 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -17408,8 +16277,6 @@ impl<'mc> JNIInstantiatable<'mc> for BookMeta<'mc> {
 }
 
 impl<'mc> BookMeta<'mc> {
-    //@NotNull
-
     pub fn clone(
         &self,
     ) -> Result<crate::inventory::meta::BookMeta<'mc>, Box<dyn std::error::Error>> {
@@ -17424,7 +16291,6 @@ impl<'mc> BookMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn spigot(
         &self,
@@ -17438,8 +16304,6 @@ impl<'mc> BookMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     /// Gets the specified page in the book. The given page must exist.
     /// <p>Pages are 1-indexed.</p>
     pub fn get_page(&self, arg0: i32) -> Result<String, Box<dyn std::error::Error>> {
@@ -17458,7 +16322,6 @@ impl<'mc> BookMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_page(
         &self,
@@ -17482,7 +16345,6 @@ impl<'mc> BookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn title(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -17496,7 +16358,6 @@ impl<'mc> BookMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn author(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -17510,7 +16371,6 @@ impl<'mc> BookMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_author(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -17526,7 +16386,6 @@ impl<'mc> BookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn pages(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -17548,7 +16407,6 @@ impl<'mc> BookMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_page(&self, arg0: Vec<impl Into<String>>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -17558,7 +16416,6 @@ impl<'mc> BookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_title(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -17574,7 +16431,6 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_title(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -17584,7 +16440,6 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_author(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -17594,7 +16449,6 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_generation(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -17604,7 +16458,6 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn generation(
         &self,
@@ -17635,7 +16488,6 @@ impl<'mc> BookMeta<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )?))
     }
-    //
 
     pub fn set_generation(
         &self,
@@ -17654,7 +16506,6 @@ impl<'mc> BookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_pages(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -17664,7 +16515,6 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn page_count(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -17674,7 +16524,6 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -17688,7 +16537,6 @@ impl<'mc> BookMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -17702,7 +16550,6 @@ impl<'mc> BookMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -17712,7 +16559,6 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -17731,7 +16577,6 @@ impl<'mc> BookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -17744,7 +16589,6 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -17761,7 +16605,6 @@ impl<'mc> BookMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_localized_name(
         &self,
@@ -17780,7 +16623,6 @@ impl<'mc> BookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -17790,7 +16632,6 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -17815,7 +16656,6 @@ impl<'mc> BookMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -17828,7 +16668,6 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -17841,7 +16680,6 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Integer;)V");
@@ -17859,7 +16697,6 @@ impl<'mc> BookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -17869,7 +16706,6 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_enchant(
         &self,
@@ -17888,7 +16724,6 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_enchant_level(
         &self,
@@ -17907,7 +16742,6 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn enchants(
         &self,
@@ -17921,7 +16755,6 @@ impl<'mc> BookMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchant(
         &self,
@@ -17934,7 +16767,6 @@ impl<'mc> BookMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -17949,7 +16781,6 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_enchant(
         &self,
@@ -17968,7 +16799,6 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_enchant(
         &self,
@@ -17987,7 +16817,6 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_item_flags(
         &self,
@@ -18000,7 +16829,6 @@ impl<'mc> BookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item_flags(
         &self,
@@ -18013,7 +16841,6 @@ impl<'mc> BookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_flags(
         &self,
@@ -18027,7 +16854,6 @@ impl<'mc> BookMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_item_flag(
         &self,
@@ -18046,7 +16872,6 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -18056,11 +16881,9 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18071,7 +16894,6 @@ impl<'mc> BookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -18084,7 +16906,6 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_attribute_modifiers_with_attribute(
         &self,
@@ -18117,7 +16938,6 @@ impl<'mc> BookMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_attribute_modifier(
         &self,
@@ -18145,7 +16965,6 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_attribute_modifiers(
         &self,
@@ -18162,7 +16981,6 @@ impl<'mc> BookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_attribute_modifier_with_attribute(
         &self,
@@ -18193,10 +17011,6 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn custom_tag_container(
@@ -18215,8 +17029,6 @@ impl<'mc> BookMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -18231,7 +17043,6 @@ impl<'mc> BookMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -18245,7 +17056,6 @@ impl<'mc> BookMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -18312,8 +17122,6 @@ impl<'mc> JNIInstantiatable<'mc> for MusicInstrumentMeta<'mc> {
 }
 
 impl<'mc> MusicInstrumentMeta<'mc> {
-    //@NotNull
-
     pub fn clone(
         &self,
     ) -> Result<crate::inventory::meta::MusicInstrumentMeta<'mc>, Box<dyn std::error::Error>> {
@@ -18328,7 +17136,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn instrument(
         &self,
@@ -18346,7 +17153,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_instrument(
         &self,
@@ -18365,7 +17171,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -18379,7 +17184,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -18393,7 +17197,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn has_display_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -18403,7 +17206,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -18422,7 +17224,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_localized_name(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -18435,7 +17236,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -18452,7 +17252,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_localized_name(
         &self,
@@ -18471,7 +17270,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_lore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -18481,7 +17279,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn lore(&self) -> Result<Option<Vec<String>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -18506,7 +17303,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -18519,7 +17315,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn custom_model_data(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -18532,7 +17327,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_custom_model_data(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Integer;)V");
@@ -18550,7 +17344,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_enchants(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -18560,7 +17353,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_enchant(
         &self,
@@ -18579,7 +17371,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_enchant_level(
         &self,
@@ -18598,7 +17389,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn enchants(
         &self,
@@ -18612,7 +17402,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchant(
         &self,
@@ -18625,7 +17414,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18640,7 +17428,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_enchant(
         &self,
@@ -18659,7 +17446,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_conflicting_enchant(
         &self,
@@ -18678,7 +17464,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_item_flags(
         &self,
@@ -18691,7 +17476,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item_flags(
         &self,
@@ -18704,7 +17488,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_flags(
         &self,
@@ -18718,7 +17501,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_item_flag(
         &self,
@@ -18737,7 +17519,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_unbreakable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -18747,11 +17528,9 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_unbreakable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18762,7 +17541,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_attribute_modifiers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -18775,7 +17553,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_attribute_modifiers_with_attribute(
         &self,
@@ -18808,7 +17585,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_attribute_modifier(
         &self,
@@ -18836,7 +17612,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_attribute_modifiers(
         &self,
@@ -18853,7 +17628,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_attribute_modifier_with_attribute(
         &self,
@@ -18884,10 +17658,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn custom_tag_container(
@@ -18906,8 +17676,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -18922,7 +17690,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -18936,7 +17703,6 @@ impl<'mc> MusicInstrumentMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,

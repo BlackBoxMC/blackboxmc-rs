@@ -47,8 +47,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaIntSupplier<'mc> {
 }
 
 impl<'mc> JavaIntSupplier<'mc> {
-    //
-
     pub fn as_int(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
@@ -102,8 +100,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaDoubleToLongFunction<'mc> {
 }
 
 impl<'mc> JavaDoubleToLongFunction<'mc> {
-    //
-
     pub fn apply_as_long(&self, arg0: f64) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(D)J");
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
@@ -160,8 +156,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaIntUnaryOperator<'mc> {
 }
 
 impl<'mc> JavaIntUnaryOperator<'mc> {
-    //
-
     pub fn and_then(
         &self,
         arg0: impl Into<crate::util::function::JavaIntUnaryOperator<'mc>>,
@@ -183,7 +177,6 @@ impl<'mc> JavaIntUnaryOperator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn identity(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -196,7 +189,6 @@ impl<'mc> JavaIntUnaryOperator<'mc> {
         let obj = res.l()?;
         crate::util::function::JavaIntUnaryOperator::from_raw(&jni, obj)
     }
-    //
 
     pub fn apply_as_int(&self, arg0: i32) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(I)I");
@@ -210,7 +202,6 @@ impl<'mc> JavaIntUnaryOperator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn compose(
         &self,
@@ -278,8 +269,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaIntToDoubleFunction<'mc> {
 }
 
 impl<'mc> JavaIntToDoubleFunction<'mc> {
-    //
-
     pub fn apply_as_double(&self, arg0: i32) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("(I)D");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -337,8 +326,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaObjDoubleConsumer<'mc> {
 }
 
 impl<'mc> JavaObjDoubleConsumer<'mc> {
-    //
-
     pub fn accept(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -401,8 +388,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaPredicate<'mc> {
 }
 
 impl<'mc> JavaPredicate<'mc> {
-    //
-
     pub fn is_equal(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
@@ -421,7 +406,6 @@ impl<'mc> JavaPredicate<'mc> {
         let obj = res.l()?;
         crate::util::function::JavaPredicate::from_raw(&jni, obj)
     }
-    //
 
     pub fn negate(
         &self,
@@ -435,7 +419,6 @@ impl<'mc> JavaPredicate<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn and(
         &self,
@@ -456,7 +439,6 @@ impl<'mc> JavaPredicate<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn not(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -478,7 +460,6 @@ impl<'mc> JavaPredicate<'mc> {
         let obj = res.l()?;
         crate::util::function::JavaPredicate::from_raw(&jni, obj)
     }
-    //
 
     pub fn or(
         &self,
@@ -499,7 +480,6 @@ impl<'mc> JavaPredicate<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn test(
         &self,
@@ -558,8 +538,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaFunction<'mc> {
 }
 
 impl<'mc> JavaFunction<'mc> {
-    //
-
     pub fn and_then(
         &self,
         arg0: impl Into<crate::util::function::JavaFunction<'mc>>,
@@ -579,7 +557,6 @@ impl<'mc> JavaFunction<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn apply(
         &self,
@@ -596,7 +573,6 @@ impl<'mc> JavaFunction<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn identity(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -609,7 +585,6 @@ impl<'mc> JavaFunction<'mc> {
         let obj = res.l()?;
         crate::util::function::JavaFunction::from_raw(&jni, obj)
     }
-    //
 
     pub fn compose(
         &self,
@@ -674,8 +649,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaToLongFunction<'mc> {
 }
 
 impl<'mc> JavaToLongFunction<'mc> {
-    //
-
     pub fn apply_as_long(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -733,8 +706,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaConsumer<'mc> {
 }
 
 impl<'mc> JavaConsumer<'mc> {
-    //
-
     pub fn and_then(
         &self,
         arg0: impl Into<crate::util::function::JavaConsumer<'mc>>,
@@ -754,7 +725,6 @@ impl<'mc> JavaConsumer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn accept(
         &self,
@@ -815,8 +785,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaToIntBiFunction<'mc> {
 }
 
 impl<'mc> JavaToIntBiFunction<'mc> {
-    //
-
     pub fn apply_as_int(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -881,8 +849,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaObjLongConsumer<'mc> {
 }
 
 impl<'mc> JavaObjLongConsumer<'mc> {
-    //
-
     pub fn accept(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -948,8 +914,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaLongToIntFunction<'mc> {
 }
 
 impl<'mc> JavaLongToIntFunction<'mc> {
-    //
-
     pub fn apply_as_int(&self, arg0: i64) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(J)I");
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
@@ -1005,8 +969,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaSupplier<'mc> {
 }
 
 impl<'mc> JavaSupplier<'mc> {
-    //
-
     pub fn get(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
@@ -1059,8 +1021,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaUnaryOperator<'mc> {
 }
 
 impl<'mc> JavaUnaryOperator<'mc> {
-    //
-
     pub fn identity(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::util::function::JavaUnaryOperator<'mc>, Box<dyn std::error::Error>> {
@@ -1072,7 +1032,6 @@ impl<'mc> JavaUnaryOperator<'mc> {
         let obj = res.l()?;
         crate::util::function::JavaUnaryOperator::from_raw(&jni, obj)
     }
-    //
 
     pub fn and_then(
         &self,
@@ -1093,7 +1052,6 @@ impl<'mc> JavaUnaryOperator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn apply(
         &self,
@@ -1110,7 +1068,6 @@ impl<'mc> JavaUnaryOperator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn compose(
         &self,
@@ -1181,8 +1138,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaObjIntConsumer<'mc> {
 }
 
 impl<'mc> JavaObjIntConsumer<'mc> {
-    //
-
     pub fn accept(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -1247,8 +1202,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaBinaryOperator<'mc> {
 }
 
 impl<'mc> JavaBinaryOperator<'mc> {
-    //
-
     pub fn max_by(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::util::JavaComparator<'mc>>,
@@ -1269,7 +1222,6 @@ impl<'mc> JavaBinaryOperator<'mc> {
         let obj = res.l()?;
         crate::util::function::JavaBinaryOperator::from_raw(&jni, obj)
     }
-    //
 
     pub fn min_by(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1291,7 +1243,6 @@ impl<'mc> JavaBinaryOperator<'mc> {
         let obj = res.l()?;
         crate::util::function::JavaBinaryOperator::from_raw(&jni, obj)
     }
-    //
 
     pub fn and_then(
         &self,
@@ -1312,7 +1263,6 @@ impl<'mc> JavaBinaryOperator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn apply(
         &self,
@@ -1386,8 +1336,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaBooleanSupplier<'mc> {
 }
 
 impl<'mc> JavaBooleanSupplier<'mc> {
-    //
-
     pub fn as_boolean(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
@@ -1440,8 +1388,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaToDoubleFunction<'mc> {
 }
 
 impl<'mc> JavaToDoubleFunction<'mc> {
-    //
-
     pub fn apply_as_double(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -1502,8 +1448,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaDoubleUnaryOperator<'mc> {
 }
 
 impl<'mc> JavaDoubleUnaryOperator<'mc> {
-    //
-
     pub fn and_then(
         &self,
         arg0: impl Into<crate::util::function::JavaDoubleUnaryOperator<'mc>>,
@@ -1526,7 +1470,6 @@ impl<'mc> JavaDoubleUnaryOperator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn identity(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1540,7 +1483,6 @@ impl<'mc> JavaDoubleUnaryOperator<'mc> {
         let obj = res.l()?;
         crate::util::function::JavaDoubleUnaryOperator::from_raw(&jni, obj)
     }
-    //
 
     pub fn apply_as_double(&self, arg0: f64) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("(D)D");
@@ -1554,7 +1496,6 @@ impl<'mc> JavaDoubleUnaryOperator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn compose(
         &self,
@@ -1623,8 +1564,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaLongBinaryOperator<'mc> {
 }
 
 impl<'mc> JavaLongBinaryOperator<'mc> {
-    //
-
     pub fn apply_as_long(&self, arg0: i64, arg1: i64) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(JJ)J");
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
@@ -1685,8 +1624,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaIntPredicate<'mc> {
 }
 
 impl<'mc> JavaIntPredicate<'mc> {
-    //
-
     pub fn negate(
         &self,
     ) -> Result<crate::util::function::JavaIntPredicate<'mc>, Box<dyn std::error::Error>> {
@@ -1699,7 +1636,6 @@ impl<'mc> JavaIntPredicate<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn and(
         &self,
@@ -1721,7 +1657,6 @@ impl<'mc> JavaIntPredicate<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn or(
         &self,
@@ -1743,7 +1678,6 @@ impl<'mc> JavaIntPredicate<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn test(&self, arg0: i32) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Z");
@@ -1801,8 +1735,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaDoublePredicate<'mc> {
 }
 
 impl<'mc> JavaDoublePredicate<'mc> {
-    //
-
     pub fn negate(
         &self,
     ) -> Result<crate::util::function::JavaDoublePredicate<'mc>, Box<dyn std::error::Error>> {
@@ -1815,7 +1747,6 @@ impl<'mc> JavaDoublePredicate<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn and(
         &self,
@@ -1838,7 +1769,6 @@ impl<'mc> JavaDoublePredicate<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn or(
         &self,
@@ -1861,7 +1791,6 @@ impl<'mc> JavaDoublePredicate<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn test(&self, arg0: f64) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(D)Z");
@@ -1920,8 +1849,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaToDoubleBiFunction<'mc> {
 }
 
 impl<'mc> JavaToDoubleBiFunction<'mc> {
-    //
-
     pub fn apply_as_double(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -1986,8 +1913,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaLongPredicate<'mc> {
 }
 
 impl<'mc> JavaLongPredicate<'mc> {
-    //
-
     pub fn negate(
         &self,
     ) -> Result<crate::util::function::JavaLongPredicate<'mc>, Box<dyn std::error::Error>> {
@@ -2000,7 +1925,6 @@ impl<'mc> JavaLongPredicate<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn and(
         &self,
@@ -2022,7 +1946,6 @@ impl<'mc> JavaLongPredicate<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn or(
         &self,
@@ -2044,7 +1967,6 @@ impl<'mc> JavaLongPredicate<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn test(&self, arg0: i64) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(J)Z");
@@ -2102,8 +2024,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaIntConsumer<'mc> {
 }
 
 impl<'mc> JavaIntConsumer<'mc> {
-    //
-
     pub fn and_then(
         &self,
         arg0: impl Into<crate::util::function::JavaIntConsumer<'mc>>,
@@ -2124,7 +2044,6 @@ impl<'mc> JavaIntConsumer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn accept(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -2183,8 +2102,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaLongToDoubleFunction<'mc> {
 }
 
 impl<'mc> JavaLongToDoubleFunction<'mc> {
-    //
-
     pub fn apply_as_double(&self, arg0: i64) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("(J)D");
         let val_1 = jni::objects::JValueGen::Long(arg0.into());
@@ -2241,8 +2158,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaDoubleFunction<'mc> {
 }
 
 impl<'mc> JavaDoubleFunction<'mc> {
-    //
-
     pub fn apply(
         &self,
         arg0: f64,
@@ -2302,8 +2217,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaLongConsumer<'mc> {
 }
 
 impl<'mc> JavaLongConsumer<'mc> {
-    //
-
     pub fn and_then(
         &self,
         arg0: impl Into<crate::util::function::JavaLongConsumer<'mc>>,
@@ -2324,7 +2237,6 @@ impl<'mc> JavaLongConsumer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn accept(&self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(J)V");
@@ -2382,8 +2294,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaDoubleConsumer<'mc> {
 }
 
 impl<'mc> JavaDoubleConsumer<'mc> {
-    //
-
     pub fn and_then(
         &self,
         arg0: impl Into<crate::util::function::JavaDoubleConsumer<'mc>>,
@@ -2405,7 +2315,6 @@ impl<'mc> JavaDoubleConsumer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn accept(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
@@ -2464,8 +2373,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaDoubleBinaryOperator<'mc> {
 }
 
 impl<'mc> JavaDoubleBinaryOperator<'mc> {
-    //
-
     pub fn apply_as_double(&self, arg0: f64, arg1: f64) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("(DD)D");
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
@@ -2526,8 +2433,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaLongFunction<'mc> {
 }
 
 impl<'mc> JavaLongFunction<'mc> {
-    //
-
     pub fn apply(
         &self,
         arg0: i64,
@@ -2587,8 +2492,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaBiFunction<'mc> {
 }
 
 impl<'mc> JavaBiFunction<'mc> {
-    //
-
     pub fn and_then(
         &self,
         arg0: impl Into<crate::util::function::JavaFunction<'mc>>,
@@ -2608,7 +2511,6 @@ impl<'mc> JavaBiFunction<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn apply(
         &self,
@@ -2675,8 +2577,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaDoubleSupplier<'mc> {
 }
 
 impl<'mc> JavaDoubleSupplier<'mc> {
-    //
-
     pub fn as_double(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
@@ -2729,8 +2629,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaIntFunction<'mc> {
 }
 
 impl<'mc> JavaIntFunction<'mc> {
-    //
-
     pub fn apply(
         &self,
         arg0: i32,
@@ -2791,8 +2689,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaIntBinaryOperator<'mc> {
 }
 
 impl<'mc> JavaIntBinaryOperator<'mc> {
-    //
-
     pub fn apply_as_int(&self, arg0: i32, arg1: i32) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(II)I");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -2854,8 +2750,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaLongUnaryOperator<'mc> {
 }
 
 impl<'mc> JavaLongUnaryOperator<'mc> {
-    //
-
     pub fn and_then(
         &self,
         arg0: impl Into<crate::util::function::JavaLongUnaryOperator<'mc>>,
@@ -2877,7 +2771,6 @@ impl<'mc> JavaLongUnaryOperator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn identity(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2890,7 +2783,6 @@ impl<'mc> JavaLongUnaryOperator<'mc> {
         let obj = res.l()?;
         crate::util::function::JavaLongUnaryOperator::from_raw(&jni, obj)
     }
-    //
 
     pub fn apply_as_long(&self, arg0: i64) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(J)J");
@@ -2904,7 +2796,6 @@ impl<'mc> JavaLongUnaryOperator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn compose(
         &self,
@@ -2972,8 +2863,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaIntToLongFunction<'mc> {
 }
 
 impl<'mc> JavaIntToLongFunction<'mc> {
-    //
-
     pub fn apply_as_long(&self, arg0: i32) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("(I)J");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -3030,8 +2919,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaToIntFunction<'mc> {
 }
 
 impl<'mc> JavaToIntFunction<'mc> {
-    //
-
     pub fn apply_as_int(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -3092,8 +2979,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaLongSupplier<'mc> {
 }
 
 impl<'mc> JavaLongSupplier<'mc> {
-    //
-
     pub fn as_long(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
         let res = self
@@ -3146,8 +3031,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaToLongBiFunction<'mc> {
 }
 
 impl<'mc> JavaToLongBiFunction<'mc> {
-    //
-
     pub fn apply_as_long(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -3247,7 +3130,6 @@ impl<'mc> JavaBiConsumer<'mc> {
 
         Self::from_raw(&env, obj)
     }
-    //
 
     pub fn and_then(
         &self,
@@ -3268,7 +3150,6 @@ impl<'mc> JavaBiConsumer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn accept(
         &self,
@@ -3334,8 +3215,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaBiPredicate<'mc> {
 }
 
 impl<'mc> JavaBiPredicate<'mc> {
-    //
-
     pub fn negate(
         &self,
     ) -> Result<crate::util::function::JavaBiPredicate<'mc>, Box<dyn std::error::Error>> {
@@ -3348,7 +3227,6 @@ impl<'mc> JavaBiPredicate<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn and(
         &self,
@@ -3370,7 +3248,6 @@ impl<'mc> JavaBiPredicate<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn or(
         &self,
@@ -3392,7 +3269,6 @@ impl<'mc> JavaBiPredicate<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn test(
         &self,
@@ -3459,8 +3335,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaDoubleToIntFunction<'mc> {
 }
 
 impl<'mc> JavaDoubleToIntFunction<'mc> {
-    //
-
     pub fn apply_as_int(&self, arg0: f64) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(D)I");
         let val_1 = jni::objects::JValueGen::Double(arg0.into());

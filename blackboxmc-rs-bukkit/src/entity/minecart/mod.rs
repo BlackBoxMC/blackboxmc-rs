@@ -46,8 +46,6 @@ impl<'mc> JNIInstantiatable<'mc> for ExplosiveMinecart<'mc> {
 }
 
 impl<'mc> ExplosiveMinecart<'mc> {
-    //
-
     /// Set the fuse ticks of this minecart. If the fuse ticks are set to a non-zero value, this will ignite the explosive.
     pub fn set_fuse_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -61,7 +59,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn fuse_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -71,7 +68,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn ignite(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -81,7 +77,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_ignited(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -91,8 +86,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Immediately explode this minecart with the given power.
     pub fn explode_with_double(
         &self,
@@ -112,7 +105,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_damage(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
@@ -126,7 +118,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn damage(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -136,7 +127,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn max_speed(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -146,7 +136,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn set_max_speed(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
@@ -160,7 +149,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_slow_when_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -170,11 +158,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_slow_when_empty(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -185,7 +171,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn flying_velocity_mod(
         &self,
@@ -202,7 +187,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_flying_velocity_mod(
         &self,
@@ -221,7 +205,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn derailed_velocity_mod(
         &self,
@@ -238,7 +221,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_derailed_velocity_mod(
         &self,
@@ -257,7 +239,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_display_block(
         &self,
@@ -276,9 +257,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@NotNull
 
     pub fn display_block(
         &self,
@@ -292,7 +270,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_display_block_data(
         &self,
@@ -311,7 +288,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn display_block_data(
         &self,
@@ -328,7 +304,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_display_block_offset(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -342,7 +317,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn display_block_offset(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -355,7 +329,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_velocity(
         &self,
@@ -374,7 +347,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/Vector;");
@@ -386,7 +358,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -396,7 +367,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -406,7 +376,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -416,7 +385,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_location(
         &self,
@@ -437,7 +405,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/EntityType;");
@@ -462,7 +429,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -472,7 +438,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/BlockFace;");
@@ -497,7 +462,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -509,7 +473,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_silent(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -519,7 +482,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn portal_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -532,7 +494,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn get_nearby_entities(
         &self,
@@ -564,7 +525,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -594,7 +554,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(FF)V");
@@ -612,7 +571,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn height(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -622,7 +580,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn width(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -632,7 +589,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //@NotNull
 
     pub fn bounding_box(
         &self,
@@ -646,7 +602,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_on_ground(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -656,7 +611,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_in_water(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -666,7 +620,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn teleport_with_location(
         &self,
@@ -696,7 +649,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn entity_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -706,7 +658,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -716,7 +667,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn max_fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -726,7 +676,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_fire_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -740,11 +689,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_visual_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -755,7 +702,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_visual_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -765,7 +711,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -775,7 +720,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn max_freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -788,7 +732,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_freeze_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -802,7 +745,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_dead(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -812,7 +754,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Server;");
@@ -824,7 +765,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_persistent(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -834,11 +774,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_persistent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -849,12 +787,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
     #[deprecated]
-    //@Nullable
-
-    //@NotNull
 
     pub fn passenger(
         &self,
@@ -872,7 +805,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_passenger(
         &self,
@@ -891,7 +823,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn passengers(
         &self,
@@ -910,7 +841,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_passenger(
         &self,
@@ -929,7 +859,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_passenger(
         &self,
@@ -948,7 +877,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn eject(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -958,7 +886,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn fall_distance(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -968,7 +895,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn set_fall_distance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
@@ -982,7 +908,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_last_damage_cause(
         &self,
@@ -1001,7 +926,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn last_damage_cause(
         &self,
@@ -1023,7 +947,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@NotNull
 
     pub fn unique_id(
         &self,
@@ -1037,7 +960,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn ticks_lived(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1047,7 +969,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_ticks_lived(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -1061,7 +982,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn play_effect(
         &self,
@@ -1080,7 +1000,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -1105,7 +1024,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -1133,7 +1051,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn swim_high_speed_splash_sound(
         &self,
@@ -1163,7 +1080,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1173,7 +1089,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn leave_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1183,7 +1098,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn vehicle(
         &self,
@@ -1201,11 +1115,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_custom_name_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1216,7 +1128,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_custom_name_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1229,11 +1140,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Experimental
 
     pub fn set_visible_by_default(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1244,7 +1153,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Experimental
 
     pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1257,11 +1165,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_glowing(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1272,7 +1178,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_glowing(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1282,11 +1187,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_invulnerable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1297,7 +1200,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_invulnerable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1307,11 +1209,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_silent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1322,7 +1222,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_gravity(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1332,11 +1231,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_gravity(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1347,7 +1244,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_portal_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -1361,7 +1257,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn scoreboard_tags(
         &self,
@@ -1378,7 +1273,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_scoreboard_tag(
         &self,
@@ -1397,7 +1291,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_scoreboard_tag(
         &self,
@@ -1416,7 +1309,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Pose;");
@@ -1441,7 +1333,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn spawn_category(
         &self,
@@ -1471,7 +1362,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn spigot(
         &self,
@@ -1487,7 +1377,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_metadata(
         &self,
@@ -1513,7 +1402,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_metadata(
         &self,
@@ -1542,7 +1430,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_metadata(
         &self,
@@ -1561,7 +1448,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_metadata(
         &self,
@@ -1587,7 +1473,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1601,7 +1486,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn send_message_with_uuid(
         &self,
@@ -1629,7 +1513,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_permission_set_with_permission(
         &self,
@@ -1649,7 +1532,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_permission_with_string(
         &self,
@@ -1669,7 +1551,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_attachment_with_plugin(
         &self,
@@ -1694,7 +1575,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         }
         if let Some(a) = arg2 {
             sig += "Z";
-            // 2
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -1712,7 +1592,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn remove_attachment(
         &self,
@@ -1731,7 +1610,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn recalculate_permissions(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1744,7 +1622,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn effective_permissions(
         &self,
@@ -1761,7 +1638,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_op(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1771,11 +1647,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_op(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1786,7 +1660,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn custom_name(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1804,7 +1677,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
                 .to_string(),
         ))
     }
-    //
 
     pub fn set_custom_name(
         &self,
@@ -1823,7 +1695,6 @@ impl<'mc> ExplosiveMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -1889,8 +1760,6 @@ impl<'mc> JNIInstantiatable<'mc> for HopperMinecart<'mc> {
 }
 
 impl<'mc> HopperMinecart<'mc> {
-    //
-
     pub fn is_enabled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
@@ -1899,12 +1768,9 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets whether this Minecart will pick up items.
     pub fn set_enabled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1915,7 +1781,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_damage(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
@@ -1929,7 +1794,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn damage(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -1939,7 +1803,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn max_speed(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -1949,7 +1812,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn set_max_speed(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
@@ -1963,7 +1825,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_slow_when_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1973,11 +1834,9 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_slow_when_empty(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1988,7 +1847,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn flying_velocity_mod(
         &self,
@@ -2005,7 +1863,6 @@ impl<'mc> HopperMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_flying_velocity_mod(
         &self,
@@ -2024,7 +1881,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn derailed_velocity_mod(
         &self,
@@ -2041,7 +1897,6 @@ impl<'mc> HopperMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_derailed_velocity_mod(
         &self,
@@ -2060,7 +1915,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_display_block(
         &self,
@@ -2079,9 +1933,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@NotNull
 
     pub fn display_block(
         &self,
@@ -2095,7 +1946,6 @@ impl<'mc> HopperMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_display_block_data(
         &self,
@@ -2114,7 +1964,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn display_block_data(
         &self,
@@ -2131,7 +1980,6 @@ impl<'mc> HopperMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_display_block_offset(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -2145,7 +1993,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn display_block_offset(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2158,7 +2005,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_velocity(
         &self,
@@ -2177,7 +2023,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/Vector;");
@@ -2189,7 +2034,6 @@ impl<'mc> HopperMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2199,7 +2043,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2209,7 +2052,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2219,7 +2061,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_location(
         &self,
@@ -2240,7 +2081,6 @@ impl<'mc> HopperMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/EntityType;");
@@ -2265,7 +2105,6 @@ impl<'mc> HopperMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2275,7 +2114,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/BlockFace;");
@@ -2300,7 +2138,6 @@ impl<'mc> HopperMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -2312,7 +2149,6 @@ impl<'mc> HopperMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_silent(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2322,7 +2158,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn portal_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2335,7 +2170,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn get_nearby_entities(
         &self,
@@ -2367,7 +2201,6 @@ impl<'mc> HopperMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -2397,7 +2230,6 @@ impl<'mc> HopperMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(FF)V");
@@ -2415,7 +2247,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn height(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -2425,7 +2256,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn width(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -2435,7 +2265,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //@NotNull
 
     pub fn bounding_box(
         &self,
@@ -2449,7 +2278,6 @@ impl<'mc> HopperMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_on_ground(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2459,7 +2287,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_in_water(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2469,7 +2296,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn teleport_with_location(
         &self,
@@ -2499,7 +2325,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn entity_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2509,7 +2334,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2519,7 +2343,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn max_fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2529,7 +2352,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_fire_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -2543,11 +2365,9 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_visual_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2558,7 +2378,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_visual_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2568,7 +2387,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2578,7 +2396,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn max_freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2591,7 +2408,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_freeze_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -2605,7 +2421,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_dead(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2615,7 +2430,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Server;");
@@ -2627,7 +2441,6 @@ impl<'mc> HopperMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_persistent(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2637,11 +2450,9 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_persistent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2652,12 +2463,7 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
     #[deprecated]
-    //@Nullable
-
-    //@NotNull
 
     pub fn passenger(
         &self,
@@ -2675,7 +2481,6 @@ impl<'mc> HopperMinecart<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_passenger(
         &self,
@@ -2694,7 +2499,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn passengers(
         &self,
@@ -2713,7 +2517,6 @@ impl<'mc> HopperMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_passenger(
         &self,
@@ -2732,7 +2535,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_passenger(
         &self,
@@ -2751,7 +2553,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn eject(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2761,7 +2562,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn fall_distance(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -2771,7 +2571,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn set_fall_distance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
@@ -2785,7 +2584,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_last_damage_cause(
         &self,
@@ -2804,7 +2602,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn last_damage_cause(
         &self,
@@ -2826,7 +2623,6 @@ impl<'mc> HopperMinecart<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@NotNull
 
     pub fn unique_id(
         &self,
@@ -2840,7 +2636,6 @@ impl<'mc> HopperMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn ticks_lived(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2850,7 +2645,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_ticks_lived(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -2864,7 +2658,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn play_effect(
         &self,
@@ -2883,7 +2676,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -2908,7 +2700,6 @@ impl<'mc> HopperMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -2936,7 +2727,6 @@ impl<'mc> HopperMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn swim_high_speed_splash_sound(
         &self,
@@ -2966,7 +2756,6 @@ impl<'mc> HopperMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2976,7 +2765,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn leave_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2986,7 +2774,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn vehicle(
         &self,
@@ -3004,11 +2791,9 @@ impl<'mc> HopperMinecart<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_custom_name_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3019,7 +2804,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_custom_name_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3032,11 +2816,9 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Experimental
 
     pub fn set_visible_by_default(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3047,7 +2829,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Experimental
 
     pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3060,11 +2841,9 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_glowing(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3075,7 +2854,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_glowing(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3085,11 +2863,9 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_invulnerable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3100,7 +2876,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_invulnerable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3110,11 +2885,9 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_silent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3125,7 +2898,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_gravity(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3135,11 +2907,9 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_gravity(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3150,7 +2920,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_portal_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -3164,7 +2933,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn scoreboard_tags(
         &self,
@@ -3181,7 +2949,6 @@ impl<'mc> HopperMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_scoreboard_tag(
         &self,
@@ -3200,7 +2967,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_scoreboard_tag(
         &self,
@@ -3219,7 +2985,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Pose;");
@@ -3244,7 +3009,6 @@ impl<'mc> HopperMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn spawn_category(
         &self,
@@ -3274,7 +3038,6 @@ impl<'mc> HopperMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn spigot(
         &self,
@@ -3290,7 +3053,6 @@ impl<'mc> HopperMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_metadata(
         &self,
@@ -3316,7 +3078,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_metadata(
         &self,
@@ -3345,7 +3106,6 @@ impl<'mc> HopperMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_metadata(
         &self,
@@ -3364,7 +3124,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_metadata(
         &self,
@@ -3390,7 +3149,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3404,7 +3162,6 @@ impl<'mc> HopperMinecart<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn send_message_with_uuid(
         &self,
@@ -3432,7 +3189,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_permission_set_with_permission(
         &self,
@@ -3452,7 +3208,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_permission_with_string(
         &self,
@@ -3472,7 +3227,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_attachment_with_plugin(
         &self,
@@ -3497,7 +3251,6 @@ impl<'mc> HopperMinecart<'mc> {
         }
         if let Some(a) = arg2 {
             sig += "Z";
-            // 2
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -3515,7 +3268,6 @@ impl<'mc> HopperMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn remove_attachment(
         &self,
@@ -3534,7 +3286,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn recalculate_permissions(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3547,7 +3298,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn effective_permissions(
         &self,
@@ -3564,7 +3314,6 @@ impl<'mc> HopperMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_op(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3574,11 +3323,9 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_op(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3589,7 +3336,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn custom_name(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3607,7 +3353,6 @@ impl<'mc> HopperMinecart<'mc> {
                 .to_string(),
         ))
     }
-    //
 
     pub fn set_custom_name(
         &self,
@@ -3626,7 +3371,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -3643,7 +3387,6 @@ impl<'mc> HopperMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn inventory(
         &self,
@@ -3657,7 +3400,6 @@ impl<'mc> HopperMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn seed(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
@@ -3667,7 +3409,6 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn set_seed(&self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(J)V");
@@ -3681,7 +3422,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_loot_table(
         &self,
@@ -3700,7 +3440,6 @@ impl<'mc> HopperMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn loot_table(
         &self,
@@ -3780,8 +3519,6 @@ impl<'mc> JNIInstantiatable<'mc> for StorageMinecart<'mc> {
 }
 
 impl<'mc> StorageMinecart<'mc> {
-    //
-
     pub fn set_damage(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
@@ -3794,7 +3531,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn damage(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -3804,7 +3540,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn max_speed(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -3814,7 +3549,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn set_max_speed(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
@@ -3828,7 +3562,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_slow_when_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3838,11 +3571,9 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_slow_when_empty(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3853,7 +3584,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn flying_velocity_mod(
         &self,
@@ -3870,7 +3600,6 @@ impl<'mc> StorageMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_flying_velocity_mod(
         &self,
@@ -3889,7 +3618,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn derailed_velocity_mod(
         &self,
@@ -3906,7 +3634,6 @@ impl<'mc> StorageMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_derailed_velocity_mod(
         &self,
@@ -3925,7 +3652,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_display_block(
         &self,
@@ -3944,9 +3670,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@NotNull
 
     pub fn display_block(
         &self,
@@ -3960,7 +3683,6 @@ impl<'mc> StorageMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_display_block_data(
         &self,
@@ -3979,7 +3701,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn display_block_data(
         &self,
@@ -3996,7 +3717,6 @@ impl<'mc> StorageMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_display_block_offset(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -4010,7 +3730,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn display_block_offset(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4023,7 +3742,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_velocity(
         &self,
@@ -4042,7 +3760,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/Vector;");
@@ -4054,7 +3771,6 @@ impl<'mc> StorageMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4064,7 +3780,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -4074,7 +3789,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4084,7 +3798,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_location(
         &self,
@@ -4105,7 +3818,6 @@ impl<'mc> StorageMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/EntityType;");
@@ -4130,7 +3842,6 @@ impl<'mc> StorageMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4140,7 +3851,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/BlockFace;");
@@ -4165,7 +3875,6 @@ impl<'mc> StorageMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -4177,7 +3886,6 @@ impl<'mc> StorageMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_silent(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4187,7 +3895,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn portal_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4200,7 +3907,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn get_nearby_entities(
         &self,
@@ -4232,7 +3938,6 @@ impl<'mc> StorageMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -4262,7 +3967,6 @@ impl<'mc> StorageMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(FF)V");
@@ -4280,7 +3984,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn height(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -4290,7 +3993,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn width(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -4300,7 +4002,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //@NotNull
 
     pub fn bounding_box(
         &self,
@@ -4314,7 +4015,6 @@ impl<'mc> StorageMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_on_ground(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4324,7 +4024,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_in_water(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4334,7 +4033,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn teleport_with_location(
         &self,
@@ -4364,7 +4062,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn entity_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4374,7 +4071,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4384,7 +4080,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn max_fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4394,7 +4089,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_fire_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -4408,11 +4102,9 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_visual_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4423,7 +4115,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_visual_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4433,7 +4124,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4443,7 +4133,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn max_freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4456,7 +4145,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_freeze_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -4470,7 +4158,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_dead(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4480,7 +4167,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Server;");
@@ -4492,7 +4178,6 @@ impl<'mc> StorageMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_persistent(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4502,11 +4187,9 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_persistent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4517,12 +4200,7 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
     #[deprecated]
-    //@Nullable
-
-    //@NotNull
 
     pub fn passenger(
         &self,
@@ -4540,7 +4218,6 @@ impl<'mc> StorageMinecart<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_passenger(
         &self,
@@ -4559,7 +4236,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn passengers(
         &self,
@@ -4578,7 +4254,6 @@ impl<'mc> StorageMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_passenger(
         &self,
@@ -4597,7 +4272,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_passenger(
         &self,
@@ -4616,7 +4290,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn eject(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4626,7 +4299,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn fall_distance(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -4636,7 +4308,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn set_fall_distance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
@@ -4650,7 +4321,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_last_damage_cause(
         &self,
@@ -4669,7 +4339,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn last_damage_cause(
         &self,
@@ -4691,7 +4360,6 @@ impl<'mc> StorageMinecart<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@NotNull
 
     pub fn unique_id(
         &self,
@@ -4705,7 +4373,6 @@ impl<'mc> StorageMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn ticks_lived(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4715,7 +4382,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_ticks_lived(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -4729,7 +4395,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn play_effect(
         &self,
@@ -4748,7 +4413,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -4773,7 +4437,6 @@ impl<'mc> StorageMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -4801,7 +4464,6 @@ impl<'mc> StorageMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn swim_high_speed_splash_sound(
         &self,
@@ -4831,7 +4493,6 @@ impl<'mc> StorageMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4841,7 +4502,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn leave_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4851,7 +4511,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn vehicle(
         &self,
@@ -4869,11 +4528,9 @@ impl<'mc> StorageMinecart<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_custom_name_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4884,7 +4541,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_custom_name_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4897,11 +4553,9 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Experimental
 
     pub fn set_visible_by_default(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4912,7 +4566,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Experimental
 
     pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4925,11 +4578,9 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_glowing(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4940,7 +4591,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_glowing(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4950,11 +4600,9 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_invulnerable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4965,7 +4613,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_invulnerable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4975,11 +4622,9 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_silent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4990,7 +4635,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_gravity(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5000,11 +4644,9 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_gravity(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5015,7 +4657,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_portal_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -5029,7 +4670,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn scoreboard_tags(
         &self,
@@ -5046,7 +4686,6 @@ impl<'mc> StorageMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_scoreboard_tag(
         &self,
@@ -5065,7 +4704,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_scoreboard_tag(
         &self,
@@ -5084,7 +4722,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Pose;");
@@ -5109,7 +4746,6 @@ impl<'mc> StorageMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn spawn_category(
         &self,
@@ -5139,7 +4775,6 @@ impl<'mc> StorageMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn spigot(
         &self,
@@ -5155,7 +4790,6 @@ impl<'mc> StorageMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_metadata(
         &self,
@@ -5181,7 +4815,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_metadata(
         &self,
@@ -5210,7 +4843,6 @@ impl<'mc> StorageMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_metadata(
         &self,
@@ -5229,7 +4861,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_metadata(
         &self,
@@ -5255,7 +4886,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -5269,7 +4899,6 @@ impl<'mc> StorageMinecart<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn send_message_with_uuid(
         &self,
@@ -5297,7 +4926,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_permission_set_with_permission(
         &self,
@@ -5317,7 +4945,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_permission_with_string(
         &self,
@@ -5337,7 +4964,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_attachment_with_plugin(
         &self,
@@ -5362,7 +4988,6 @@ impl<'mc> StorageMinecart<'mc> {
         }
         if let Some(a) = arg2 {
             sig += "Z";
-            // 2
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -5380,7 +5005,6 @@ impl<'mc> StorageMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn remove_attachment(
         &self,
@@ -5399,7 +5023,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn recalculate_permissions(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -5412,7 +5035,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn effective_permissions(
         &self,
@@ -5429,7 +5051,6 @@ impl<'mc> StorageMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_op(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5439,11 +5060,9 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_op(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5454,7 +5073,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn custom_name(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -5472,7 +5090,6 @@ impl<'mc> StorageMinecart<'mc> {
                 .to_string(),
         ))
     }
-    //
 
     pub fn set_custom_name(
         &self,
@@ -5491,7 +5108,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -5508,7 +5124,6 @@ impl<'mc> StorageMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn inventory(
         &self,
@@ -5522,7 +5137,6 @@ impl<'mc> StorageMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn seed(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
@@ -5532,7 +5146,6 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn set_seed(&self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(J)V");
@@ -5546,7 +5159,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_loot_table(
         &self,
@@ -5565,7 +5177,6 @@ impl<'mc> StorageMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn loot_table(
         &self,
@@ -5645,8 +5256,6 @@ impl<'mc> JNIInstantiatable<'mc> for SpawnerMinecart<'mc> {
 }
 
 impl<'mc> SpawnerMinecart<'mc> {
-    //
-
     pub fn set_damage(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
@@ -5659,7 +5268,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn damage(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -5669,7 +5277,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn max_speed(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -5679,7 +5286,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn set_max_speed(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
@@ -5693,7 +5299,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_slow_when_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5703,11 +5308,9 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_slow_when_empty(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5718,7 +5321,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn flying_velocity_mod(
         &self,
@@ -5735,7 +5337,6 @@ impl<'mc> SpawnerMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_flying_velocity_mod(
         &self,
@@ -5754,7 +5355,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn derailed_velocity_mod(
         &self,
@@ -5771,7 +5371,6 @@ impl<'mc> SpawnerMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_derailed_velocity_mod(
         &self,
@@ -5790,7 +5389,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_display_block(
         &self,
@@ -5809,9 +5407,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@NotNull
 
     pub fn display_block(
         &self,
@@ -5825,7 +5420,6 @@ impl<'mc> SpawnerMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_display_block_data(
         &self,
@@ -5844,7 +5438,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn display_block_data(
         &self,
@@ -5861,7 +5454,6 @@ impl<'mc> SpawnerMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_display_block_offset(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -5875,7 +5467,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn display_block_offset(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -5888,7 +5479,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_velocity(
         &self,
@@ -5907,7 +5497,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/Vector;");
@@ -5919,7 +5508,6 @@ impl<'mc> SpawnerMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5929,7 +5517,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -5939,7 +5526,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5949,7 +5535,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_location(
         &self,
@@ -5970,7 +5555,6 @@ impl<'mc> SpawnerMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/EntityType;");
@@ -5995,7 +5579,6 @@ impl<'mc> SpawnerMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6005,7 +5588,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/BlockFace;");
@@ -6030,7 +5612,6 @@ impl<'mc> SpawnerMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -6042,7 +5623,6 @@ impl<'mc> SpawnerMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_silent(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6052,7 +5632,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn portal_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -6065,7 +5644,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn get_nearby_entities(
         &self,
@@ -6097,7 +5675,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -6127,7 +5704,6 @@ impl<'mc> SpawnerMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(FF)V");
@@ -6145,7 +5721,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn height(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -6155,7 +5730,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn width(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -6165,7 +5739,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //@NotNull
 
     pub fn bounding_box(
         &self,
@@ -6179,7 +5752,6 @@ impl<'mc> SpawnerMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_on_ground(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6189,7 +5761,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_in_water(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6199,7 +5770,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn teleport_with_location(
         &self,
@@ -6229,7 +5799,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn entity_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -6239,7 +5808,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -6249,7 +5817,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn max_fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -6259,7 +5826,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_fire_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -6273,11 +5839,9 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_visual_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6288,7 +5852,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_visual_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6298,7 +5861,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -6308,7 +5870,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn max_freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -6321,7 +5882,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_freeze_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -6335,7 +5895,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_dead(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6345,7 +5904,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Server;");
@@ -6357,7 +5915,6 @@ impl<'mc> SpawnerMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_persistent(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6367,11 +5924,9 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_persistent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6382,12 +5937,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
     #[deprecated]
-    //@Nullable
-
-    //@NotNull
 
     pub fn passenger(
         &self,
@@ -6405,7 +5955,6 @@ impl<'mc> SpawnerMinecart<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_passenger(
         &self,
@@ -6424,7 +5973,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn passengers(
         &self,
@@ -6443,7 +5991,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_passenger(
         &self,
@@ -6462,7 +6009,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_passenger(
         &self,
@@ -6481,7 +6027,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn eject(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6491,7 +6036,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn fall_distance(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -6501,7 +6045,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn set_fall_distance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
@@ -6515,7 +6058,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_last_damage_cause(
         &self,
@@ -6534,7 +6076,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn last_damage_cause(
         &self,
@@ -6556,7 +6097,6 @@ impl<'mc> SpawnerMinecart<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@NotNull
 
     pub fn unique_id(
         &self,
@@ -6570,7 +6110,6 @@ impl<'mc> SpawnerMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn ticks_lived(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -6580,7 +6119,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_ticks_lived(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -6594,7 +6132,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn play_effect(
         &self,
@@ -6613,7 +6150,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -6638,7 +6174,6 @@ impl<'mc> SpawnerMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -6666,7 +6201,6 @@ impl<'mc> SpawnerMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn swim_high_speed_splash_sound(
         &self,
@@ -6696,7 +6230,6 @@ impl<'mc> SpawnerMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6706,7 +6239,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn leave_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6716,7 +6248,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn vehicle(
         &self,
@@ -6734,11 +6265,9 @@ impl<'mc> SpawnerMinecart<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_custom_name_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6749,7 +6278,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_custom_name_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6762,11 +6290,9 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Experimental
 
     pub fn set_visible_by_default(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6777,7 +6303,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Experimental
 
     pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6790,11 +6315,9 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_glowing(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6805,7 +6328,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_glowing(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6815,11 +6337,9 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_invulnerable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6830,7 +6350,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_invulnerable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6840,11 +6359,9 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_silent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6855,7 +6372,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_gravity(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6865,11 +6381,9 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_gravity(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6880,7 +6394,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_portal_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -6894,7 +6407,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn scoreboard_tags(
         &self,
@@ -6911,7 +6423,6 @@ impl<'mc> SpawnerMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_scoreboard_tag(
         &self,
@@ -6930,7 +6441,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_scoreboard_tag(
         &self,
@@ -6949,7 +6459,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Pose;");
@@ -6974,7 +6483,6 @@ impl<'mc> SpawnerMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn spawn_category(
         &self,
@@ -7004,7 +6512,6 @@ impl<'mc> SpawnerMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn spigot(
         &self,
@@ -7020,7 +6527,6 @@ impl<'mc> SpawnerMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_metadata(
         &self,
@@ -7046,7 +6552,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_metadata(
         &self,
@@ -7075,7 +6580,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_metadata(
         &self,
@@ -7094,7 +6598,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_metadata(
         &self,
@@ -7120,7 +6623,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -7134,7 +6636,6 @@ impl<'mc> SpawnerMinecart<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn send_message_with_uuid(
         &self,
@@ -7162,7 +6663,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_permission_set_with_permission(
         &self,
@@ -7182,7 +6682,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_permission_with_string(
         &self,
@@ -7202,7 +6701,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_attachment_with_plugin(
         &self,
@@ -7227,7 +6725,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         }
         if let Some(a) = arg2 {
             sig += "Z";
-            // 2
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -7245,7 +6742,6 @@ impl<'mc> SpawnerMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn remove_attachment(
         &self,
@@ -7264,7 +6760,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn recalculate_permissions(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -7277,7 +6772,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn effective_permissions(
         &self,
@@ -7294,7 +6788,6 @@ impl<'mc> SpawnerMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_op(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -7304,11 +6797,9 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_op(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7319,7 +6810,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn custom_name(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -7337,7 +6827,6 @@ impl<'mc> SpawnerMinecart<'mc> {
                 .to_string(),
         ))
     }
-    //
 
     pub fn set_custom_name(
         &self,
@@ -7356,7 +6845,6 @@ impl<'mc> SpawnerMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -7423,8 +6911,6 @@ impl<'mc> JNIInstantiatable<'mc> for PoweredMinecart<'mc> {
 }
 
 impl<'mc> PoweredMinecart<'mc> {
-    //
-
     /// Set the number of ticks until the minecart runs out of fuel.
     pub fn set_fuel(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -7438,7 +6924,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn fuel(&self) -> Result<Option<i32>, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -7448,7 +6933,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(Some(res.i()?))
     }
-    //
 
     pub fn set_damage(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
@@ -7462,7 +6946,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn damage(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -7472,7 +6955,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn max_speed(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -7482,7 +6964,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn set_max_speed(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
@@ -7496,7 +6977,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_slow_when_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -7506,11 +6986,9 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_slow_when_empty(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7521,7 +6999,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn flying_velocity_mod(
         &self,
@@ -7538,7 +7015,6 @@ impl<'mc> PoweredMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_flying_velocity_mod(
         &self,
@@ -7557,7 +7033,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn derailed_velocity_mod(
         &self,
@@ -7574,7 +7049,6 @@ impl<'mc> PoweredMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_derailed_velocity_mod(
         &self,
@@ -7593,7 +7067,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_display_block(
         &self,
@@ -7612,9 +7085,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@NotNull
 
     pub fn display_block(
         &self,
@@ -7628,7 +7098,6 @@ impl<'mc> PoweredMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_display_block_data(
         &self,
@@ -7647,7 +7116,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn display_block_data(
         &self,
@@ -7664,7 +7132,6 @@ impl<'mc> PoweredMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_display_block_offset(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -7678,7 +7145,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn display_block_offset(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -7691,7 +7157,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_velocity(
         &self,
@@ -7710,7 +7175,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/Vector;");
@@ -7722,7 +7186,6 @@ impl<'mc> PoweredMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -7732,7 +7195,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -7742,7 +7204,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -7752,7 +7213,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_location(
         &self,
@@ -7773,7 +7233,6 @@ impl<'mc> PoweredMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/EntityType;");
@@ -7798,7 +7257,6 @@ impl<'mc> PoweredMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -7808,7 +7266,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/BlockFace;");
@@ -7833,7 +7290,6 @@ impl<'mc> PoweredMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -7845,7 +7301,6 @@ impl<'mc> PoweredMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_silent(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -7855,7 +7310,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn portal_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -7868,7 +7322,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn get_nearby_entities(
         &self,
@@ -7900,7 +7353,6 @@ impl<'mc> PoweredMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -7930,7 +7382,6 @@ impl<'mc> PoweredMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(FF)V");
@@ -7948,7 +7399,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn height(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -7958,7 +7408,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn width(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -7968,7 +7417,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //@NotNull
 
     pub fn bounding_box(
         &self,
@@ -7982,7 +7430,6 @@ impl<'mc> PoweredMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_on_ground(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -7992,7 +7439,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_in_water(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8002,7 +7448,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn teleport_with_location(
         &self,
@@ -8032,7 +7477,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn entity_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -8042,7 +7486,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -8052,7 +7495,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn max_fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -8062,7 +7504,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_fire_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -8076,11 +7517,9 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_visual_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8091,7 +7530,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_visual_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8101,7 +7539,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -8111,7 +7548,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn max_freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -8124,7 +7560,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_freeze_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -8138,7 +7573,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_dead(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8148,7 +7582,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Server;");
@@ -8160,7 +7593,6 @@ impl<'mc> PoweredMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_persistent(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8170,11 +7602,9 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_persistent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8185,12 +7615,7 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
     #[deprecated]
-    //@Nullable
-
-    //@NotNull
 
     pub fn passenger(
         &self,
@@ -8208,7 +7633,6 @@ impl<'mc> PoweredMinecart<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_passenger(
         &self,
@@ -8227,7 +7651,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn passengers(
         &self,
@@ -8246,7 +7669,6 @@ impl<'mc> PoweredMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_passenger(
         &self,
@@ -8265,7 +7687,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_passenger(
         &self,
@@ -8284,7 +7705,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn eject(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8294,7 +7714,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn fall_distance(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -8304,7 +7723,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn set_fall_distance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
@@ -8318,7 +7736,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_last_damage_cause(
         &self,
@@ -8337,7 +7754,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn last_damage_cause(
         &self,
@@ -8359,7 +7775,6 @@ impl<'mc> PoweredMinecart<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@NotNull
 
     pub fn unique_id(
         &self,
@@ -8373,7 +7788,6 @@ impl<'mc> PoweredMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn ticks_lived(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -8383,7 +7797,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_ticks_lived(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -8397,7 +7810,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn play_effect(
         &self,
@@ -8416,7 +7828,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -8441,7 +7852,6 @@ impl<'mc> PoweredMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -8469,7 +7879,6 @@ impl<'mc> PoweredMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn swim_high_speed_splash_sound(
         &self,
@@ -8499,7 +7908,6 @@ impl<'mc> PoweredMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8509,7 +7917,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn leave_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8519,7 +7926,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn vehicle(
         &self,
@@ -8537,11 +7943,9 @@ impl<'mc> PoweredMinecart<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_custom_name_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8552,7 +7956,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_custom_name_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8565,11 +7968,9 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Experimental
 
     pub fn set_visible_by_default(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8580,7 +7981,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Experimental
 
     pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8593,11 +7993,9 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_glowing(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8608,7 +8006,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_glowing(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8618,11 +8015,9 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_invulnerable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8633,7 +8028,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_invulnerable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8643,11 +8037,9 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_silent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8658,7 +8050,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_gravity(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8668,11 +8059,9 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_gravity(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8683,7 +8072,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_portal_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -8697,7 +8085,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn scoreboard_tags(
         &self,
@@ -8714,7 +8101,6 @@ impl<'mc> PoweredMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_scoreboard_tag(
         &self,
@@ -8733,7 +8119,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_scoreboard_tag(
         &self,
@@ -8752,7 +8137,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Pose;");
@@ -8777,7 +8161,6 @@ impl<'mc> PoweredMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn spawn_category(
         &self,
@@ -8807,7 +8190,6 @@ impl<'mc> PoweredMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn spigot(
         &self,
@@ -8823,7 +8205,6 @@ impl<'mc> PoweredMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_metadata(
         &self,
@@ -8849,7 +8230,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_metadata(
         &self,
@@ -8878,7 +8258,6 @@ impl<'mc> PoweredMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_metadata(
         &self,
@@ -8897,7 +8276,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_metadata(
         &self,
@@ -8923,7 +8301,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -8937,7 +8314,6 @@ impl<'mc> PoweredMinecart<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn send_message_with_uuid(
         &self,
@@ -8965,7 +8341,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_permission_set_with_permission(
         &self,
@@ -8985,7 +8360,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_permission_with_string(
         &self,
@@ -9005,7 +8379,6 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_attachment_with_plugin(
         &self,
@@ -9030,7 +8403,6 @@ impl<'mc> PoweredMinecart<'mc> {
         }
         if let Some(a) = arg2 {
             sig += "Z";
-            // 2
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -9048,7 +8420,6 @@ impl<'mc> PoweredMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn remove_attachment(
         &self,
@@ -9067,7 +8438,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn recalculate_permissions(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -9080,7 +8450,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn effective_permissions(
         &self,
@@ -9097,7 +8466,6 @@ impl<'mc> PoweredMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_op(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9107,11 +8475,9 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_op(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9122,7 +8488,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn custom_name(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -9140,7 +8505,6 @@ impl<'mc> PoweredMinecart<'mc> {
                 .to_string(),
         ))
     }
-    //
 
     pub fn set_custom_name(
         &self,
@@ -9159,7 +8523,6 @@ impl<'mc> PoweredMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -9226,8 +8589,6 @@ impl<'mc> JNIInstantiatable<'mc> for RideableMinecart<'mc> {
 }
 
 impl<'mc> RideableMinecart<'mc> {
-    //
-
     pub fn set_damage(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
@@ -9240,7 +8601,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn damage(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -9250,7 +8610,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn max_speed(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -9260,7 +8619,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn set_max_speed(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
@@ -9274,7 +8632,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_slow_when_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9284,11 +8641,9 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_slow_when_empty(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9299,7 +8654,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn flying_velocity_mod(
         &self,
@@ -9316,7 +8670,6 @@ impl<'mc> RideableMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_flying_velocity_mod(
         &self,
@@ -9335,7 +8688,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn derailed_velocity_mod(
         &self,
@@ -9352,7 +8704,6 @@ impl<'mc> RideableMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_derailed_velocity_mod(
         &self,
@@ -9371,7 +8722,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_display_block(
         &self,
@@ -9390,9 +8740,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@NotNull
 
     pub fn display_block(
         &self,
@@ -9406,7 +8753,6 @@ impl<'mc> RideableMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_display_block_data(
         &self,
@@ -9425,7 +8771,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn display_block_data(
         &self,
@@ -9442,7 +8787,6 @@ impl<'mc> RideableMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_display_block_offset(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -9456,7 +8800,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn display_block_offset(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -9469,7 +8812,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_velocity(
         &self,
@@ -9488,7 +8830,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/Vector;");
@@ -9500,7 +8841,6 @@ impl<'mc> RideableMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9510,7 +8850,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -9520,7 +8859,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9530,7 +8868,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_location(
         &self,
@@ -9551,7 +8888,6 @@ impl<'mc> RideableMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/EntityType;");
@@ -9576,7 +8912,6 @@ impl<'mc> RideableMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9586,7 +8921,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/BlockFace;");
@@ -9611,7 +8945,6 @@ impl<'mc> RideableMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -9623,7 +8956,6 @@ impl<'mc> RideableMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_silent(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9633,7 +8965,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn portal_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -9646,7 +8977,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn get_nearby_entities(
         &self,
@@ -9678,7 +9008,6 @@ impl<'mc> RideableMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -9708,7 +9037,6 @@ impl<'mc> RideableMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(FF)V");
@@ -9726,7 +9054,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn height(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -9736,7 +9063,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn width(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -9746,7 +9072,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //@NotNull
 
     pub fn bounding_box(
         &self,
@@ -9760,7 +9085,6 @@ impl<'mc> RideableMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_on_ground(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9770,7 +9094,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_in_water(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9780,7 +9103,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn teleport_with_location(
         &self,
@@ -9810,7 +9132,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn entity_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -9820,7 +9141,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -9830,7 +9150,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn max_fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -9840,7 +9159,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_fire_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -9854,11 +9172,9 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_visual_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9869,7 +9185,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_visual_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9879,7 +9194,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -9889,7 +9203,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn max_freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -9902,7 +9215,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_freeze_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -9916,7 +9228,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_dead(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9926,7 +9237,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Server;");
@@ -9938,7 +9248,6 @@ impl<'mc> RideableMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_persistent(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9948,11 +9257,9 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_persistent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9963,12 +9270,7 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
     #[deprecated]
-    //@Nullable
-
-    //@NotNull
 
     pub fn passenger(
         &self,
@@ -9986,7 +9288,6 @@ impl<'mc> RideableMinecart<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_passenger(
         &self,
@@ -10005,7 +9306,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn passengers(
         &self,
@@ -10024,7 +9324,6 @@ impl<'mc> RideableMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_passenger(
         &self,
@@ -10043,7 +9342,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_passenger(
         &self,
@@ -10062,7 +9360,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn eject(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -10072,7 +9369,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn fall_distance(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -10082,7 +9378,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn set_fall_distance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
@@ -10096,7 +9391,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_last_damage_cause(
         &self,
@@ -10115,7 +9409,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn last_damage_cause(
         &self,
@@ -10137,7 +9430,6 @@ impl<'mc> RideableMinecart<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@NotNull
 
     pub fn unique_id(
         &self,
@@ -10151,7 +9443,6 @@ impl<'mc> RideableMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn ticks_lived(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -10161,7 +9452,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_ticks_lived(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -10175,7 +9465,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn play_effect(
         &self,
@@ -10194,7 +9483,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -10219,7 +9507,6 @@ impl<'mc> RideableMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -10247,7 +9534,6 @@ impl<'mc> RideableMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn swim_high_speed_splash_sound(
         &self,
@@ -10277,7 +9563,6 @@ impl<'mc> RideableMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -10287,7 +9572,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn leave_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -10297,7 +9581,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn vehicle(
         &self,
@@ -10315,11 +9598,9 @@ impl<'mc> RideableMinecart<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_custom_name_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10330,7 +9611,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_custom_name_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -10343,11 +9623,9 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Experimental
 
     pub fn set_visible_by_default(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10358,7 +9636,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Experimental
 
     pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -10371,11 +9648,9 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_glowing(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10386,7 +9661,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_glowing(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -10396,11 +9670,9 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_invulnerable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10411,7 +9683,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_invulnerable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -10421,11 +9692,9 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_silent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10436,7 +9705,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_gravity(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -10446,11 +9714,9 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_gravity(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10461,7 +9727,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_portal_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -10475,7 +9740,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn scoreboard_tags(
         &self,
@@ -10492,7 +9756,6 @@ impl<'mc> RideableMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_scoreboard_tag(
         &self,
@@ -10511,7 +9774,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_scoreboard_tag(
         &self,
@@ -10530,7 +9792,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Pose;");
@@ -10555,7 +9816,6 @@ impl<'mc> RideableMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn spawn_category(
         &self,
@@ -10585,7 +9845,6 @@ impl<'mc> RideableMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn spigot(
         &self,
@@ -10601,7 +9860,6 @@ impl<'mc> RideableMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_metadata(
         &self,
@@ -10627,7 +9885,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_metadata(
         &self,
@@ -10656,7 +9913,6 @@ impl<'mc> RideableMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_metadata(
         &self,
@@ -10675,7 +9931,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_metadata(
         &self,
@@ -10701,7 +9956,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -10715,7 +9969,6 @@ impl<'mc> RideableMinecart<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn send_message_with_uuid(
         &self,
@@ -10743,7 +9996,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_permission_set_with_permission(
         &self,
@@ -10763,7 +10015,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_permission_with_string(
         &self,
@@ -10783,7 +10034,6 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_attachment_with_plugin(
         &self,
@@ -10808,7 +10058,6 @@ impl<'mc> RideableMinecart<'mc> {
         }
         if let Some(a) = arg2 {
             sig += "Z";
-            // 2
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -10826,7 +10075,6 @@ impl<'mc> RideableMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn remove_attachment(
         &self,
@@ -10845,7 +10093,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn recalculate_permissions(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -10858,7 +10105,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn effective_permissions(
         &self,
@@ -10875,7 +10121,6 @@ impl<'mc> RideableMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_op(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -10885,11 +10130,9 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_op(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10900,7 +10143,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn custom_name(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -10918,7 +10160,6 @@ impl<'mc> RideableMinecart<'mc> {
                 .to_string(),
         ))
     }
-    //
 
     pub fn set_custom_name(
         &self,
@@ -10937,7 +10178,6 @@ impl<'mc> RideableMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -11004,8 +10244,6 @@ impl<'mc> JNIInstantiatable<'mc> for CommandMinecart<'mc> {
 }
 
 impl<'mc> CommandMinecart<'mc> {
-    //
-
     pub fn set_name(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
@@ -11020,7 +10258,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn command(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -11034,7 +10271,6 @@ impl<'mc> CommandMinecart<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_command(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -11050,7 +10286,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_damage(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
@@ -11064,7 +10299,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn damage(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -11074,7 +10308,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn max_speed(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -11084,7 +10317,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn set_max_speed(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
@@ -11098,7 +10330,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_slow_when_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11108,11 +10339,9 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_slow_when_empty(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11123,7 +10352,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn flying_velocity_mod(
         &self,
@@ -11140,7 +10368,6 @@ impl<'mc> CommandMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_flying_velocity_mod(
         &self,
@@ -11159,7 +10386,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn derailed_velocity_mod(
         &self,
@@ -11176,7 +10402,6 @@ impl<'mc> CommandMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_derailed_velocity_mod(
         &self,
@@ -11195,7 +10420,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_display_block(
         &self,
@@ -11214,9 +10438,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@NotNull
 
     pub fn display_block(
         &self,
@@ -11230,7 +10451,6 @@ impl<'mc> CommandMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_display_block_data(
         &self,
@@ -11249,7 +10469,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn display_block_data(
         &self,
@@ -11266,7 +10485,6 @@ impl<'mc> CommandMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_display_block_offset(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -11280,7 +10498,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn display_block_offset(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -11293,7 +10510,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_velocity(
         &self,
@@ -11312,7 +10528,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn velocity(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/Vector;");
@@ -11324,7 +10539,6 @@ impl<'mc> CommandMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11334,7 +10548,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -11344,7 +10557,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11354,7 +10566,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_location(
         &self,
@@ -11375,7 +10586,6 @@ impl<'mc> CommandMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(&self) -> Result<crate::entity::EntityType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/EntityType;");
@@ -11400,7 +10610,6 @@ impl<'mc> CommandMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_frozen(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11410,7 +10619,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/BlockFace;");
@@ -11435,7 +10643,6 @@ impl<'mc> CommandMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -11447,7 +10654,6 @@ impl<'mc> CommandMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_silent(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11457,7 +10663,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn portal_cooldown(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -11470,7 +10675,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn get_nearby_entities(
         &self,
@@ -11502,7 +10706,6 @@ impl<'mc> CommandMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -11532,7 +10735,6 @@ impl<'mc> CommandMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_rotation(&self, arg0: f32, arg1: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(FF)V");
@@ -11550,7 +10752,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn height(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -11560,7 +10761,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn width(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -11570,7 +10770,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //@NotNull
 
     pub fn bounding_box(
         &self,
@@ -11584,7 +10783,6 @@ impl<'mc> CommandMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_on_ground(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11594,7 +10792,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_in_water(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11604,7 +10801,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn teleport_with_location(
         &self,
@@ -11634,7 +10830,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn entity_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -11644,7 +10839,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -11654,7 +10848,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn max_fire_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -11664,7 +10857,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_fire_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -11678,11 +10870,9 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_visual_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11693,7 +10883,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_visual_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11703,7 +10892,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -11713,7 +10901,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn max_freeze_ticks(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -11726,7 +10913,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_freeze_ticks(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -11740,7 +10926,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_dead(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11750,7 +10935,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Server;");
@@ -11762,7 +10946,6 @@ impl<'mc> CommandMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_persistent(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11772,11 +10955,9 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_persistent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11787,12 +10968,7 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
     #[deprecated]
-    //@Nullable
-
-    //@NotNull
 
     pub fn passenger(
         &self,
@@ -11810,7 +10986,6 @@ impl<'mc> CommandMinecart<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_passenger(
         &self,
@@ -11829,7 +11004,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn passengers(
         &self,
@@ -11848,7 +11022,6 @@ impl<'mc> CommandMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_passenger(
         &self,
@@ -11867,7 +11040,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_passenger(
         &self,
@@ -11886,7 +11058,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn eject(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11896,7 +11067,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn fall_distance(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -11906,7 +11076,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn set_fall_distance(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
@@ -11920,7 +11089,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_last_damage_cause(
         &self,
@@ -11939,7 +11107,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn last_damage_cause(
         &self,
@@ -11961,7 +11128,6 @@ impl<'mc> CommandMinecart<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@NotNull
 
     pub fn unique_id(
         &self,
@@ -11975,7 +11141,6 @@ impl<'mc> CommandMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn ticks_lived(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -11985,7 +11150,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_ticks_lived(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -11999,7 +11163,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn play_effect(
         &self,
@@ -12018,7 +11181,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn swim_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -12043,7 +11205,6 @@ impl<'mc> CommandMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn swim_splash_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -12071,7 +11232,6 @@ impl<'mc> CommandMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn swim_high_speed_splash_sound(
         &self,
@@ -12101,7 +11261,6 @@ impl<'mc> CommandMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_inside_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -12111,7 +11270,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn leave_vehicle(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -12121,7 +11279,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn vehicle(
         &self,
@@ -12139,11 +11296,9 @@ impl<'mc> CommandMinecart<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_custom_name_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12154,7 +11309,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_custom_name_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -12167,11 +11321,9 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Experimental
 
     pub fn set_visible_by_default(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12182,7 +11334,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Experimental
 
     pub fn is_visible_by_default(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -12195,11 +11346,9 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_glowing(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12210,7 +11359,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_glowing(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -12220,11 +11368,9 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_invulnerable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12235,7 +11381,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_invulnerable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -12245,11 +11390,9 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_silent(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12260,7 +11403,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_gravity(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -12270,11 +11412,9 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_gravity(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12285,7 +11425,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_portal_cooldown(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -12299,7 +11438,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn scoreboard_tags(
         &self,
@@ -12316,7 +11454,6 @@ impl<'mc> CommandMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_scoreboard_tag(
         &self,
@@ -12335,7 +11472,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_scoreboard_tag(
         &self,
@@ -12354,7 +11490,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn pose(&self) -> Result<crate::entity::Pose<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Pose;");
@@ -12379,7 +11514,6 @@ impl<'mc> CommandMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn spawn_category(
         &self,
@@ -12409,7 +11543,6 @@ impl<'mc> CommandMinecart<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn spigot(
         &self,
@@ -12425,7 +11558,6 @@ impl<'mc> CommandMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_metadata(
         &self,
@@ -12451,7 +11583,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_metadata(
         &self,
@@ -12480,7 +11611,6 @@ impl<'mc> CommandMinecart<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_metadata(
         &self,
@@ -12499,7 +11629,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_metadata(
         &self,
@@ -12525,7 +11654,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -12539,7 +11667,6 @@ impl<'mc> CommandMinecart<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn send_message_with_uuid(
         &self,
@@ -12567,7 +11694,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_permission_set_with_permission(
         &self,
@@ -12587,7 +11713,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_permission_with_string(
         &self,
@@ -12607,7 +11732,6 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_attachment_with_plugin(
         &self,
@@ -12632,7 +11756,6 @@ impl<'mc> CommandMinecart<'mc> {
         }
         if let Some(a) = arg2 {
             sig += "Z";
-            // 2
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -12650,7 +11773,6 @@ impl<'mc> CommandMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn remove_attachment(
         &self,
@@ -12669,7 +11791,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn recalculate_permissions(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -12682,7 +11803,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn effective_permissions(
         &self,
@@ -12699,7 +11819,6 @@ impl<'mc> CommandMinecart<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_op(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -12709,11 +11828,9 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_op(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12724,7 +11841,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn custom_name(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -12742,7 +11858,6 @@ impl<'mc> CommandMinecart<'mc> {
                 .to_string(),
         ))
     }
-    //
 
     pub fn set_custom_name(
         &self,
@@ -12761,7 +11876,6 @@ impl<'mc> CommandMinecart<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,

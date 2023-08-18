@@ -54,7 +54,6 @@ impl<'mc> JavaErrorManager<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::util::logging::JavaErrorManager::from_raw(&jni, res)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -80,7 +79,6 @@ impl<'mc> JavaErrorManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -97,7 +95,6 @@ impl<'mc> JavaErrorManager<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -112,7 +109,6 @@ impl<'mc> JavaErrorManager<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -122,7 +118,6 @@ impl<'mc> JavaErrorManager<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -132,7 +127,6 @@ impl<'mc> JavaErrorManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -205,7 +199,6 @@ impl<'mc> JavaXMLFormatter<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::util::logging::JavaXMLFormatter::from_raw(&jni, res)
     }
-    //
 
     pub fn get_head(
         &self,
@@ -228,7 +221,6 @@ impl<'mc> JavaXMLFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn get_tail(
         &self,
@@ -251,7 +243,6 @@ impl<'mc> JavaXMLFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn format(
         &self,
@@ -274,7 +265,6 @@ impl<'mc> JavaXMLFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn format_message(
         &self,
@@ -297,7 +287,6 @@ impl<'mc> JavaXMLFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -323,7 +312,6 @@ impl<'mc> JavaXMLFormatter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -340,7 +328,6 @@ impl<'mc> JavaXMLFormatter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -355,7 +342,6 @@ impl<'mc> JavaXMLFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -365,7 +351,6 @@ impl<'mc> JavaXMLFormatter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -375,7 +360,6 @@ impl<'mc> JavaXMLFormatter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -442,8 +426,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaFormatter<'mc> {
 }
 
 impl<'mc> JavaFormatter<'mc> {
-    //
-
     pub fn get_head(
         &self,
         arg0: impl Into<crate::util::logging::JavaHandler<'mc>>,
@@ -465,7 +447,6 @@ impl<'mc> JavaFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn get_tail(
         &self,
@@ -488,7 +469,6 @@ impl<'mc> JavaFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn format_message(
         &self,
@@ -511,7 +491,6 @@ impl<'mc> JavaFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn format(
         &self,
@@ -534,7 +513,6 @@ impl<'mc> JavaFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -560,7 +538,6 @@ impl<'mc> JavaFormatter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -577,7 +554,6 @@ impl<'mc> JavaFormatter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -592,7 +568,6 @@ impl<'mc> JavaFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -602,7 +577,6 @@ impl<'mc> JavaFormatter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -612,7 +586,6 @@ impl<'mc> JavaFormatter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -720,7 +693,6 @@ impl<'mc> JavaSocketHandler<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::util::logging::JavaSocketHandler::from_raw(&jni, res)
     }
-    //
 
     pub fn close(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -730,7 +702,6 @@ impl<'mc> JavaSocketHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn publish(
         &self,
@@ -749,7 +720,6 @@ impl<'mc> JavaSocketHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_encoding(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -765,7 +735,6 @@ impl<'mc> JavaSocketHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_loggable(
         &self,
@@ -784,7 +753,6 @@ impl<'mc> JavaSocketHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn flush(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -794,7 +762,6 @@ impl<'mc> JavaSocketHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn filter(
         &self,
@@ -808,7 +775,6 @@ impl<'mc> JavaSocketHandler<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_formatter(
         &self,
@@ -827,7 +793,6 @@ impl<'mc> JavaSocketHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn formatter(
         &self,
@@ -841,7 +806,6 @@ impl<'mc> JavaSocketHandler<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_error_manager(
         &self,
@@ -860,7 +824,6 @@ impl<'mc> JavaSocketHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn error_manager(
         &self,
@@ -874,7 +837,6 @@ impl<'mc> JavaSocketHandler<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_filter(
         &self,
@@ -893,7 +855,6 @@ impl<'mc> JavaSocketHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_level(
         &self,
@@ -912,7 +873,6 @@ impl<'mc> JavaSocketHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn encoding(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -926,7 +886,6 @@ impl<'mc> JavaSocketHandler<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn level(
         &self,
@@ -940,7 +899,6 @@ impl<'mc> JavaSocketHandler<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -966,7 +924,6 @@ impl<'mc> JavaSocketHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -983,7 +940,6 @@ impl<'mc> JavaSocketHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -998,7 +954,6 @@ impl<'mc> JavaSocketHandler<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1008,7 +963,6 @@ impl<'mc> JavaSocketHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1018,7 +972,6 @@ impl<'mc> JavaSocketHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1097,7 +1050,6 @@ impl<'mc> JavaSimpleFormatter<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::util::logging::JavaSimpleFormatter::from_raw(&jni, res)
     }
-    //
 
     pub fn format(
         &self,
@@ -1120,7 +1072,6 @@ impl<'mc> JavaSimpleFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn get_head(
         &self,
@@ -1143,7 +1094,6 @@ impl<'mc> JavaSimpleFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn get_tail(
         &self,
@@ -1166,7 +1116,6 @@ impl<'mc> JavaSimpleFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn format_message(
         &self,
@@ -1189,7 +1138,6 @@ impl<'mc> JavaSimpleFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1215,7 +1163,6 @@ impl<'mc> JavaSimpleFormatter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1232,7 +1179,6 @@ impl<'mc> JavaSimpleFormatter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1247,7 +1193,6 @@ impl<'mc> JavaSimpleFormatter<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1257,7 +1202,6 @@ impl<'mc> JavaSimpleFormatter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1267,7 +1211,6 @@ impl<'mc> JavaSimpleFormatter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1334,8 +1277,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaHandler<'mc> {
 }
 
 impl<'mc> JavaHandler<'mc> {
-    //
-
     pub fn filter(
         &self,
     ) -> Result<crate::util::logging::JavaFilter<'mc>, Box<dyn std::error::Error>> {
@@ -1348,7 +1289,6 @@ impl<'mc> JavaHandler<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_formatter(
         &self,
@@ -1367,7 +1307,6 @@ impl<'mc> JavaHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn formatter(
         &self,
@@ -1381,7 +1320,6 @@ impl<'mc> JavaHandler<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_encoding(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -1397,7 +1335,6 @@ impl<'mc> JavaHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_error_manager(
         &self,
@@ -1416,7 +1353,6 @@ impl<'mc> JavaHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn error_manager(
         &self,
@@ -1430,7 +1366,6 @@ impl<'mc> JavaHandler<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_filter(
         &self,
@@ -1449,7 +1384,6 @@ impl<'mc> JavaHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_loggable(
         &self,
@@ -1468,7 +1402,6 @@ impl<'mc> JavaHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_level(
         &self,
@@ -1487,7 +1420,6 @@ impl<'mc> JavaHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn flush(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1497,7 +1429,6 @@ impl<'mc> JavaHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn close(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1507,7 +1438,6 @@ impl<'mc> JavaHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn publish(
         &self,
@@ -1526,7 +1456,6 @@ impl<'mc> JavaHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn encoding(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1540,7 +1469,6 @@ impl<'mc> JavaHandler<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn level(
         &self,
@@ -1554,7 +1482,6 @@ impl<'mc> JavaHandler<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1580,7 +1507,6 @@ impl<'mc> JavaHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1597,7 +1523,6 @@ impl<'mc> JavaHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1612,7 +1537,6 @@ impl<'mc> JavaHandler<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1622,7 +1546,6 @@ impl<'mc> JavaHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1632,7 +1555,6 @@ impl<'mc> JavaHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1753,7 +1675,6 @@ impl<'mc> JavaMemoryHandler<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::util::logging::JavaMemoryHandler::from_raw(&jni, res)
     }
-    //
 
     pub fn push(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1763,7 +1684,6 @@ impl<'mc> JavaMemoryHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_push_level(
         &self,
@@ -1782,7 +1702,6 @@ impl<'mc> JavaMemoryHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn push_level(
         &self,
@@ -1796,7 +1715,6 @@ impl<'mc> JavaMemoryHandler<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_loggable(
         &self,
@@ -1815,7 +1733,6 @@ impl<'mc> JavaMemoryHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn flush(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1825,7 +1742,6 @@ impl<'mc> JavaMemoryHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn close(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1835,7 +1751,6 @@ impl<'mc> JavaMemoryHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn publish(
         &self,
@@ -1854,7 +1769,6 @@ impl<'mc> JavaMemoryHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn filter(
         &self,
@@ -1868,7 +1782,6 @@ impl<'mc> JavaMemoryHandler<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_formatter(
         &self,
@@ -1887,7 +1800,6 @@ impl<'mc> JavaMemoryHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn formatter(
         &self,
@@ -1901,7 +1813,6 @@ impl<'mc> JavaMemoryHandler<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_encoding(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -1917,7 +1828,6 @@ impl<'mc> JavaMemoryHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_error_manager(
         &self,
@@ -1936,7 +1846,6 @@ impl<'mc> JavaMemoryHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn error_manager(
         &self,
@@ -1950,7 +1859,6 @@ impl<'mc> JavaMemoryHandler<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_filter(
         &self,
@@ -1969,7 +1877,6 @@ impl<'mc> JavaMemoryHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_level(
         &self,
@@ -1988,7 +1895,6 @@ impl<'mc> JavaMemoryHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn encoding(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2002,7 +1908,6 @@ impl<'mc> JavaMemoryHandler<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn level(
         &self,
@@ -2016,7 +1921,6 @@ impl<'mc> JavaMemoryHandler<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -2042,7 +1946,6 @@ impl<'mc> JavaMemoryHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -2059,7 +1962,6 @@ impl<'mc> JavaMemoryHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2074,7 +1976,6 @@ impl<'mc> JavaMemoryHandler<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2084,7 +1985,6 @@ impl<'mc> JavaMemoryHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2094,7 +1994,6 @@ impl<'mc> JavaMemoryHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2204,8 +2103,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaLogger<'mc> {
 }
 
 impl<'mc> JavaLogger<'mc> {
-    //
-
     pub fn config_with_supplier(
         &self,
         arg0: impl Into<crate::util::function::JavaSupplier<'mc>>,
@@ -2224,7 +2121,6 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn warning_with_supplier(
         &self,
@@ -2244,7 +2140,6 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn filter(
         &self,
@@ -2258,7 +2153,6 @@ impl<'mc> JavaLogger<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn anonymous_logger(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2271,7 +2165,6 @@ impl<'mc> JavaLogger<'mc> {
         let obj = res.l()?;
         crate::util::logging::JavaLogger::from_raw(&jni, obj)
     }
-    //
 
     pub fn resource_bundle_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2288,7 +2181,6 @@ impl<'mc> JavaLogger<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_filter(
         &self,
@@ -2307,7 +2199,6 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_loggable(
         &self,
@@ -2326,9 +2217,6 @@ impl<'mc> JavaLogger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
-    //
 
     pub fn use_parent_handlers(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2341,7 +2229,6 @@ impl<'mc> JavaLogger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_handler(
         &self,
@@ -2360,7 +2247,6 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_handler(
         &self,
@@ -2379,11 +2265,9 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_use_parent_handlers(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2394,7 +2278,6 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn global(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2407,7 +2290,6 @@ impl<'mc> JavaLogger<'mc> {
         let obj = res.l()?;
         crate::util::logging::JavaLogger::from_raw(&jni, obj)
     }
-    //
 
     pub fn entering_with_string(
         &self,
@@ -2434,7 +2316,6 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn exiting_with_string(
         &self,
@@ -2466,7 +2347,6 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn severe_with_supplier(
         &self,
@@ -2486,7 +2366,6 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn fine_with_supplier(
         &self,
@@ -2506,7 +2385,6 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn finer_with_supplier(
         &self,
@@ -2526,7 +2404,6 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn finest_with_string(
         &self,
@@ -2546,7 +2423,6 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_level(
         &self,
@@ -2565,7 +2441,6 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2579,7 +2454,6 @@ impl<'mc> JavaLogger<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn log_with_level(
         &self,
@@ -2613,7 +2487,6 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn info_with_supplier(
         &self,
@@ -2633,7 +2506,6 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn parent(
         &self,
@@ -2647,7 +2519,6 @@ impl<'mc> JavaLogger<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_logger_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2676,7 +2547,6 @@ impl<'mc> JavaLogger<'mc> {
         let obj = res.l()?;
         crate::util::logging::JavaLogger::from_raw(&jni, obj)
     }
-    //
 
     pub fn set_parent(
         &self,
@@ -2695,7 +2565,6 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn level(
         &self,
@@ -2709,7 +2578,6 @@ impl<'mc> JavaLogger<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -2735,7 +2603,6 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -2752,7 +2619,6 @@ impl<'mc> JavaLogger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2767,7 +2633,6 @@ impl<'mc> JavaLogger<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2777,7 +2642,6 @@ impl<'mc> JavaLogger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2787,7 +2651,6 @@ impl<'mc> JavaLogger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2876,7 +2739,6 @@ impl<'mc> JavaConsoleHandler<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::util::logging::JavaConsoleHandler::from_raw(&jni, res)
     }
-    //
 
     pub fn close(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2886,7 +2748,6 @@ impl<'mc> JavaConsoleHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn publish(
         &self,
@@ -2905,7 +2766,6 @@ impl<'mc> JavaConsoleHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_encoding(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -2921,7 +2781,6 @@ impl<'mc> JavaConsoleHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_loggable(
         &self,
@@ -2940,7 +2799,6 @@ impl<'mc> JavaConsoleHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn flush(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2950,7 +2808,6 @@ impl<'mc> JavaConsoleHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn filter(
         &self,
@@ -2964,7 +2821,6 @@ impl<'mc> JavaConsoleHandler<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_formatter(
         &self,
@@ -2983,7 +2839,6 @@ impl<'mc> JavaConsoleHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn formatter(
         &self,
@@ -2997,7 +2852,6 @@ impl<'mc> JavaConsoleHandler<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_error_manager(
         &self,
@@ -3016,7 +2870,6 @@ impl<'mc> JavaConsoleHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn error_manager(
         &self,
@@ -3030,7 +2883,6 @@ impl<'mc> JavaConsoleHandler<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_filter(
         &self,
@@ -3049,7 +2901,6 @@ impl<'mc> JavaConsoleHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_level(
         &self,
@@ -3068,7 +2919,6 @@ impl<'mc> JavaConsoleHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn encoding(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3082,7 +2932,6 @@ impl<'mc> JavaConsoleHandler<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn level(
         &self,
@@ -3096,7 +2945,6 @@ impl<'mc> JavaConsoleHandler<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -3122,7 +2970,6 @@ impl<'mc> JavaConsoleHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -3139,7 +2986,6 @@ impl<'mc> JavaConsoleHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -3154,7 +3000,6 @@ impl<'mc> JavaConsoleHandler<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -3164,7 +3009,6 @@ impl<'mc> JavaConsoleHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3174,7 +3018,6 @@ impl<'mc> JavaConsoleHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3270,7 +3113,6 @@ impl<'mc> JavaLoggingPermission<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::util::logging::JavaLoggingPermission::from_raw(&jni, res)
     }
-    //
 
     pub fn equals(
         &self,
@@ -3287,7 +3129,6 @@ impl<'mc> JavaLoggingPermission<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -3297,7 +3138,6 @@ impl<'mc> JavaLoggingPermission<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn implies(
         &self,
@@ -3314,7 +3154,6 @@ impl<'mc> JavaLoggingPermission<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn actions(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3328,7 +3167,6 @@ impl<'mc> JavaLoggingPermission<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn new_permission_collection(
         &self,
@@ -3343,7 +3181,6 @@ impl<'mc> JavaLoggingPermission<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3357,7 +3194,6 @@ impl<'mc> JavaLoggingPermission<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -3372,7 +3208,6 @@ impl<'mc> JavaLoggingPermission<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn check_guard(
         &self,
@@ -3389,7 +3224,6 @@ impl<'mc> JavaLoggingPermission<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -3415,7 +3249,6 @@ impl<'mc> JavaLoggingPermission<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3425,7 +3258,6 @@ impl<'mc> JavaLoggingPermission<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3487,8 +3319,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaFilter<'mc> {
 }
 
 impl<'mc> JavaFilter<'mc> {
-    //
-
     pub fn is_loggable(
         &self,
         arg0: impl Into<crate::util::logging::JavaLogRecord<'mc>>,
@@ -3578,7 +3408,6 @@ impl<'mc> JavaLogRecord<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::util::logging::JavaLogRecord::from_raw(&jni, res)
     }
-    //
 
     pub fn set_instant(
         &self,
@@ -3595,7 +3424,6 @@ impl<'mc> JavaLogRecord<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_millis(&self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(J)V");
@@ -3609,7 +3437,6 @@ impl<'mc> JavaLogRecord<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn millis(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
@@ -3619,7 +3446,6 @@ impl<'mc> JavaLogRecord<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn sequence_number(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
@@ -3632,7 +3458,6 @@ impl<'mc> JavaLogRecord<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn set_sequence_number(&self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(J)V");
@@ -3646,7 +3471,6 @@ impl<'mc> JavaLogRecord<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn source_class_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3663,7 +3487,6 @@ impl<'mc> JavaLogRecord<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn source_method_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3680,7 +3503,6 @@ impl<'mc> JavaLogRecord<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn thread_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -3690,7 +3512,6 @@ impl<'mc> JavaLogRecord<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_thread_id(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -3704,7 +3525,6 @@ impl<'mc> JavaLogRecord<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn long_thread_id(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
@@ -3714,7 +3534,6 @@ impl<'mc> JavaLogRecord<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn set_long_thread_id(
         &self,
@@ -3733,7 +3552,6 @@ impl<'mc> JavaLogRecord<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn instant(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/time/Instant;");
@@ -3743,7 +3561,6 @@ impl<'mc> JavaLogRecord<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn resource_bundle_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3760,7 +3577,6 @@ impl<'mc> JavaLogRecord<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_logger_name(
         &self,
@@ -3779,7 +3595,6 @@ impl<'mc> JavaLogRecord<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_resource_bundle_name(
         &self,
@@ -3798,7 +3613,6 @@ impl<'mc> JavaLogRecord<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_parameters(
         &self,
@@ -3811,7 +3625,6 @@ impl<'mc> JavaLogRecord<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_source_class_name(
         &self,
@@ -3830,7 +3643,6 @@ impl<'mc> JavaLogRecord<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_source_method_name(
         &self,
@@ -3849,7 +3661,6 @@ impl<'mc> JavaLogRecord<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_level(
         &self,
@@ -3868,7 +3679,6 @@ impl<'mc> JavaLogRecord<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn message(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3882,9 +3692,6 @@ impl<'mc> JavaLogRecord<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
-
-    //
 
     pub fn logger_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3898,7 +3705,6 @@ impl<'mc> JavaLogRecord<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn level(
         &self,
@@ -3912,7 +3718,6 @@ impl<'mc> JavaLogRecord<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_message(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -3928,7 +3733,6 @@ impl<'mc> JavaLogRecord<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -3954,7 +3758,6 @@ impl<'mc> JavaLogRecord<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -3971,7 +3774,6 @@ impl<'mc> JavaLogRecord<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -3986,7 +3788,6 @@ impl<'mc> JavaLogRecord<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -3996,7 +3797,6 @@ impl<'mc> JavaLogRecord<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -4006,7 +3806,6 @@ impl<'mc> JavaLogRecord<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -4113,7 +3912,6 @@ impl<'mc> JavaStreamHandler<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::util::logging::JavaStreamHandler::from_raw(&jni, res)
     }
-    //
 
     pub fn set_encoding(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -4129,7 +3927,6 @@ impl<'mc> JavaStreamHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_loggable(
         &self,
@@ -4148,7 +3945,6 @@ impl<'mc> JavaStreamHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn flush(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -4158,7 +3954,6 @@ impl<'mc> JavaStreamHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn close(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -4168,7 +3963,6 @@ impl<'mc> JavaStreamHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn publish(
         &self,
@@ -4187,7 +3981,6 @@ impl<'mc> JavaStreamHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn filter(
         &self,
@@ -4201,7 +3994,6 @@ impl<'mc> JavaStreamHandler<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_formatter(
         &self,
@@ -4220,7 +4012,6 @@ impl<'mc> JavaStreamHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn formatter(
         &self,
@@ -4234,7 +4025,6 @@ impl<'mc> JavaStreamHandler<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_error_manager(
         &self,
@@ -4253,7 +4043,6 @@ impl<'mc> JavaStreamHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn error_manager(
         &self,
@@ -4267,7 +4056,6 @@ impl<'mc> JavaStreamHandler<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_filter(
         &self,
@@ -4286,7 +4074,6 @@ impl<'mc> JavaStreamHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_level(
         &self,
@@ -4305,7 +4092,6 @@ impl<'mc> JavaStreamHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn encoding(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -4319,7 +4105,6 @@ impl<'mc> JavaStreamHandler<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn level(
         &self,
@@ -4333,7 +4118,6 @@ impl<'mc> JavaStreamHandler<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -4359,7 +4143,6 @@ impl<'mc> JavaStreamHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -4376,7 +4159,6 @@ impl<'mc> JavaStreamHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -4391,7 +4173,6 @@ impl<'mc> JavaStreamHandler<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4401,7 +4182,6 @@ impl<'mc> JavaStreamHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -4411,7 +4191,6 @@ impl<'mc> JavaStreamHandler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -4488,8 +4267,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaLevel<'mc> {
 }
 
 impl<'mc> JavaLevel<'mc> {
-    //
-
     pub fn resource_bundle_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
@@ -4505,7 +4282,6 @@ impl<'mc> JavaLevel<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn parse(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4527,7 +4303,6 @@ impl<'mc> JavaLevel<'mc> {
         let obj = res.l()?;
         crate::util::logging::JavaLevel::from_raw(&jni, obj)
     }
-    //
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -4541,7 +4316,6 @@ impl<'mc> JavaLevel<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn equals(
         &self,
@@ -4558,7 +4332,6 @@ impl<'mc> JavaLevel<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -4573,7 +4346,6 @@ impl<'mc> JavaLevel<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4583,7 +4355,6 @@ impl<'mc> JavaLevel<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn int_value(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4593,7 +4364,6 @@ impl<'mc> JavaLevel<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn localized_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -4610,7 +4380,6 @@ impl<'mc> JavaLevel<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -4636,7 +4405,6 @@ impl<'mc> JavaLevel<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -4646,7 +4414,6 @@ impl<'mc> JavaLevel<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");

@@ -46,8 +46,6 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerTextures<'mc> {
 }
 
 impl<'mc> PlayerTextures<'mc> {
-    //
-
     pub fn timestamp(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
         let res =
@@ -56,7 +54,6 @@ impl<'mc> PlayerTextures<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn is_signed(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -66,7 +63,6 @@ impl<'mc> PlayerTextures<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -76,7 +72,6 @@ impl<'mc> PlayerTextures<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -86,9 +81,6 @@ impl<'mc> PlayerTextures<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
-
-    //@NotNull
 
     pub fn skin(&self) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/net/URL;");
@@ -99,9 +91,8 @@ impl<'mc> PlayerTextures<'mc> {
         if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
             return Ok(None);
         }
-        Ok(res.l()?)
+        Ok(Some(res.l()?))
     }
-    //
 
     pub fn set_skin_with_url(
         &self,
@@ -127,7 +118,6 @@ impl<'mc> PlayerTextures<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn skin_model(
         &self,
@@ -154,7 +144,6 @@ impl<'mc> PlayerTextures<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@Nullable
 
     pub fn cape(&self) -> Result<Option<jni::objects::JObject<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/net/URL;");
@@ -165,9 +154,8 @@ impl<'mc> PlayerTextures<'mc> {
         if unsafe { jni::objects::JObject::from_raw(res.as_jni().l) }.is_null() {
             return Ok(None);
         }
-        Ok(res.l()?)
+        Ok(Some(res.l()?))
     }
-    //
 
     pub fn set_cape(
         &self,
@@ -295,8 +283,6 @@ impl<'mc> PlayerTexturesSkinModel<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-
-    //
 }
 /// A player profile.
 /// <p>A player profile always provides a unique id, a non-empty name, or both. Its unique id and name are immutable, but other properties (such as its textures) can be altered.</p>
@@ -340,8 +326,6 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerProfile<'mc> {
 }
 
 impl<'mc> PlayerProfile<'mc> {
-    //@NotNull
-
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
@@ -354,7 +338,6 @@ impl<'mc> PlayerProfile<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -366,7 +349,6 @@ impl<'mc> PlayerProfile<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //@NotNull
 
     pub fn unique_id(
         &self,
@@ -380,7 +362,6 @@ impl<'mc> PlayerProfile<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn textures(
         &self,
@@ -394,7 +375,6 @@ impl<'mc> PlayerProfile<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_textures(
         &self,
@@ -413,7 +393,6 @@ impl<'mc> PlayerProfile<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_complete(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -423,7 +402,6 @@ impl<'mc> PlayerProfile<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn serialize(
         &self,

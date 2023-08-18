@@ -59,7 +59,6 @@ impl<'mc> ReloadCommand<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::command::defaults::ReloadCommand::from_raw(&jni, res)
     }
-    //
 
     pub fn execute(
         &self,
@@ -88,7 +87,6 @@ impl<'mc> ReloadCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn tab_complete_with_command_sender(
         &self,
@@ -135,7 +133,6 @@ impl<'mc> ReloadCommand<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn unregister(
         &self,
@@ -154,9 +151,6 @@ impl<'mc> ReloadCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
-
-    //@Nullable
 
     pub fn permission(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -174,7 +168,6 @@ impl<'mc> ReloadCommand<'mc> {
                 .to_string(),
         ))
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -188,7 +181,6 @@ impl<'mc> ReloadCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -203,7 +195,6 @@ impl<'mc> ReloadCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn is_registered(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -213,7 +204,6 @@ impl<'mc> ReloadCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn register(
         &self,
@@ -232,7 +222,6 @@ impl<'mc> ReloadCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_name(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -248,7 +237,6 @@ impl<'mc> ReloadCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_permission(
         &self,
@@ -267,7 +255,6 @@ impl<'mc> ReloadCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn description(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -281,7 +268,6 @@ impl<'mc> ReloadCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_description(
         &self,
@@ -302,7 +288,6 @@ impl<'mc> ReloadCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_usage(
         &self,
@@ -323,7 +308,6 @@ impl<'mc> ReloadCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_permission_message(
         &self,
@@ -344,7 +328,6 @@ impl<'mc> ReloadCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn aliases(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -366,7 +349,6 @@ impl<'mc> ReloadCommand<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn set_label(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -382,7 +364,6 @@ impl<'mc> ReloadCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn label(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -396,7 +377,6 @@ impl<'mc> ReloadCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn test_permission_silent(
         &self,
@@ -415,7 +395,6 @@ impl<'mc> ReloadCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn test_permission(
         &self,
@@ -434,7 +413,6 @@ impl<'mc> ReloadCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn permission_message(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -455,7 +433,6 @@ impl<'mc> ReloadCommand<'mc> {
                 .to_string(),
         ))
     }
-    //@NotNull
 
     pub fn usage(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -469,7 +446,6 @@ impl<'mc> ReloadCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn broadcast_command_message_with_command_sender(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -491,7 +467,6 @@ impl<'mc> ReloadCommand<'mc> {
         args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Z";
-            // 3
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -502,7 +477,6 @@ impl<'mc> ReloadCommand<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -528,7 +502,6 @@ impl<'mc> ReloadCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -545,7 +518,6 @@ impl<'mc> ReloadCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -555,7 +527,6 @@ impl<'mc> ReloadCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -565,7 +536,6 @@ impl<'mc> ReloadCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -575,7 +545,6 @@ impl<'mc> ReloadCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -661,7 +630,6 @@ impl<'mc> TimingsCommand<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::command::defaults::TimingsCommand::from_raw(&jni, res)
     }
-    //
 
     pub fn execute(
         &self,
@@ -690,7 +658,6 @@ impl<'mc> TimingsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn tab_complete_with_command_sender(
         &self,
@@ -737,7 +704,6 @@ impl<'mc> TimingsCommand<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn execute_spigot_timings(
         &self,
@@ -757,7 +723,6 @@ impl<'mc> TimingsCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn unregister(
         &self,
@@ -776,9 +741,6 @@ impl<'mc> TimingsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
-
-    //@Nullable
 
     pub fn permission(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -796,7 +758,6 @@ impl<'mc> TimingsCommand<'mc> {
                 .to_string(),
         ))
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -810,7 +771,6 @@ impl<'mc> TimingsCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -825,7 +785,6 @@ impl<'mc> TimingsCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn is_registered(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -835,7 +794,6 @@ impl<'mc> TimingsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn register(
         &self,
@@ -854,7 +812,6 @@ impl<'mc> TimingsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_name(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -870,7 +827,6 @@ impl<'mc> TimingsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_permission(
         &self,
@@ -889,7 +845,6 @@ impl<'mc> TimingsCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn description(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -903,7 +858,6 @@ impl<'mc> TimingsCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_description(
         &self,
@@ -924,7 +878,6 @@ impl<'mc> TimingsCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_usage(
         &self,
@@ -945,7 +898,6 @@ impl<'mc> TimingsCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_permission_message(
         &self,
@@ -966,7 +918,6 @@ impl<'mc> TimingsCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn aliases(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -988,7 +939,6 @@ impl<'mc> TimingsCommand<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn set_label(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -1004,7 +954,6 @@ impl<'mc> TimingsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn label(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1018,7 +967,6 @@ impl<'mc> TimingsCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn test_permission_silent(
         &self,
@@ -1037,7 +985,6 @@ impl<'mc> TimingsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn test_permission(
         &self,
@@ -1056,7 +1003,6 @@ impl<'mc> TimingsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn permission_message(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1077,7 +1023,6 @@ impl<'mc> TimingsCommand<'mc> {
                 .to_string(),
         ))
     }
-    //@NotNull
 
     pub fn usage(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1091,7 +1036,6 @@ impl<'mc> TimingsCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn broadcast_command_message_with_command_sender(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1113,7 +1057,6 @@ impl<'mc> TimingsCommand<'mc> {
         args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Z";
-            // 3
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -1124,7 +1067,6 @@ impl<'mc> TimingsCommand<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1150,7 +1092,6 @@ impl<'mc> TimingsCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1167,7 +1108,6 @@ impl<'mc> TimingsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1177,7 +1117,6 @@ impl<'mc> TimingsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1187,7 +1126,6 @@ impl<'mc> TimingsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1197,7 +1135,6 @@ impl<'mc> TimingsCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1262,8 +1199,6 @@ impl<'mc> JNIInstantiatable<'mc> for BukkitCommand<'mc> {
 }
 
 impl<'mc> BukkitCommand<'mc> {
-    //
-
     pub fn unregister(
         &self,
         arg0: impl Into<crate::command::CommandMap<'mc>>,
@@ -1281,9 +1216,6 @@ impl<'mc> BukkitCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
-
-    //@Nullable
 
     pub fn permission(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1301,7 +1233,6 @@ impl<'mc> BukkitCommand<'mc> {
                 .to_string(),
         ))
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1315,7 +1246,6 @@ impl<'mc> BukkitCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1330,7 +1260,6 @@ impl<'mc> BukkitCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn is_registered(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1340,7 +1269,6 @@ impl<'mc> BukkitCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn register(
         &self,
@@ -1359,7 +1287,6 @@ impl<'mc> BukkitCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn execute(
         &self,
@@ -1388,7 +1315,6 @@ impl<'mc> BukkitCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_name(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -1404,7 +1330,6 @@ impl<'mc> BukkitCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_permission(
         &self,
@@ -1423,7 +1348,6 @@ impl<'mc> BukkitCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn description(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1437,7 +1361,6 @@ impl<'mc> BukkitCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn tab_complete_with_command_sender(
         &self,
@@ -1484,7 +1407,6 @@ impl<'mc> BukkitCommand<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn set_description(
         &self,
@@ -1505,7 +1427,6 @@ impl<'mc> BukkitCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_usage(
         &self,
@@ -1526,7 +1447,6 @@ impl<'mc> BukkitCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_permission_message(
         &self,
@@ -1547,7 +1467,6 @@ impl<'mc> BukkitCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn aliases(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -1569,7 +1488,6 @@ impl<'mc> BukkitCommand<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn set_label(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -1585,7 +1503,6 @@ impl<'mc> BukkitCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn label(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1599,7 +1516,6 @@ impl<'mc> BukkitCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn test_permission_silent(
         &self,
@@ -1618,7 +1534,6 @@ impl<'mc> BukkitCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn test_permission(
         &self,
@@ -1637,7 +1552,6 @@ impl<'mc> BukkitCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn permission_message(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1658,7 +1572,6 @@ impl<'mc> BukkitCommand<'mc> {
                 .to_string(),
         ))
     }
-    //@NotNull
 
     pub fn usage(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1672,7 +1585,6 @@ impl<'mc> BukkitCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn broadcast_command_message_with_command_sender(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1694,7 +1606,6 @@ impl<'mc> BukkitCommand<'mc> {
         args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Z";
-            // 3
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -1705,7 +1616,6 @@ impl<'mc> BukkitCommand<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1731,7 +1641,6 @@ impl<'mc> BukkitCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1748,7 +1657,6 @@ impl<'mc> BukkitCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1758,7 +1666,6 @@ impl<'mc> BukkitCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1768,7 +1675,6 @@ impl<'mc> BukkitCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1778,7 +1684,6 @@ impl<'mc> BukkitCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1864,7 +1769,6 @@ impl<'mc> VersionCommand<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::command::defaults::VersionCommand::from_raw(&jni, res)
     }
-    //
 
     pub fn execute(
         &self,
@@ -1893,7 +1797,6 @@ impl<'mc> VersionCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn tab_complete_with_command_sender(
         &self,
@@ -1940,7 +1843,6 @@ impl<'mc> VersionCommand<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn unregister(
         &self,
@@ -1959,9 +1861,6 @@ impl<'mc> VersionCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
-
-    //@Nullable
 
     pub fn permission(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1979,7 +1878,6 @@ impl<'mc> VersionCommand<'mc> {
                 .to_string(),
         ))
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1993,7 +1891,6 @@ impl<'mc> VersionCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2008,7 +1905,6 @@ impl<'mc> VersionCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn is_registered(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2018,7 +1914,6 @@ impl<'mc> VersionCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn register(
         &self,
@@ -2037,7 +1932,6 @@ impl<'mc> VersionCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_name(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -2053,7 +1947,6 @@ impl<'mc> VersionCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_permission(
         &self,
@@ -2072,7 +1965,6 @@ impl<'mc> VersionCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn description(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2086,7 +1978,6 @@ impl<'mc> VersionCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_description(
         &self,
@@ -2107,7 +1998,6 @@ impl<'mc> VersionCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_usage(
         &self,
@@ -2128,7 +2018,6 @@ impl<'mc> VersionCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_permission_message(
         &self,
@@ -2149,7 +2038,6 @@ impl<'mc> VersionCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn aliases(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -2171,7 +2059,6 @@ impl<'mc> VersionCommand<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn set_label(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -2187,7 +2074,6 @@ impl<'mc> VersionCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn label(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2201,7 +2087,6 @@ impl<'mc> VersionCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn test_permission_silent(
         &self,
@@ -2220,7 +2105,6 @@ impl<'mc> VersionCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn test_permission(
         &self,
@@ -2239,7 +2123,6 @@ impl<'mc> VersionCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn permission_message(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2260,7 +2143,6 @@ impl<'mc> VersionCommand<'mc> {
                 .to_string(),
         ))
     }
-    //@NotNull
 
     pub fn usage(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2274,7 +2156,6 @@ impl<'mc> VersionCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn broadcast_command_message_with_command_sender(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2296,7 +2177,6 @@ impl<'mc> VersionCommand<'mc> {
         args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Z";
-            // 3
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -2307,7 +2187,6 @@ impl<'mc> VersionCommand<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -2333,7 +2212,6 @@ impl<'mc> VersionCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -2350,7 +2228,6 @@ impl<'mc> VersionCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2360,7 +2237,6 @@ impl<'mc> VersionCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -2370,7 +2246,6 @@ impl<'mc> VersionCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2380,7 +2255,6 @@ impl<'mc> VersionCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2455,7 +2329,6 @@ impl<'mc> HelpCommand<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::command::defaults::HelpCommand::from_raw(&jni, res)
     }
-    //
 
     pub fn execute(
         &self,
@@ -2484,7 +2357,6 @@ impl<'mc> HelpCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn tab_complete_with_command_sender(
         &self,
@@ -2531,7 +2403,6 @@ impl<'mc> HelpCommand<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn unregister(
         &self,
@@ -2550,9 +2421,6 @@ impl<'mc> HelpCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
-
-    //@Nullable
 
     pub fn permission(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2570,7 +2438,6 @@ impl<'mc> HelpCommand<'mc> {
                 .to_string(),
         ))
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2584,7 +2451,6 @@ impl<'mc> HelpCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2599,7 +2465,6 @@ impl<'mc> HelpCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn is_registered(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2609,7 +2474,6 @@ impl<'mc> HelpCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn register(
         &self,
@@ -2628,7 +2492,6 @@ impl<'mc> HelpCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_name(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -2644,7 +2507,6 @@ impl<'mc> HelpCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_permission(
         &self,
@@ -2663,7 +2525,6 @@ impl<'mc> HelpCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn description(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2677,7 +2538,6 @@ impl<'mc> HelpCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_description(
         &self,
@@ -2698,7 +2558,6 @@ impl<'mc> HelpCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_usage(
         &self,
@@ -2719,7 +2578,6 @@ impl<'mc> HelpCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_permission_message(
         &self,
@@ -2740,7 +2598,6 @@ impl<'mc> HelpCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn aliases(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -2762,7 +2619,6 @@ impl<'mc> HelpCommand<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn set_label(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -2778,7 +2634,6 @@ impl<'mc> HelpCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn label(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2792,7 +2647,6 @@ impl<'mc> HelpCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn test_permission_silent(
         &self,
@@ -2811,7 +2665,6 @@ impl<'mc> HelpCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn test_permission(
         &self,
@@ -2830,7 +2683,6 @@ impl<'mc> HelpCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn permission_message(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2851,7 +2703,6 @@ impl<'mc> HelpCommand<'mc> {
                 .to_string(),
         ))
     }
-    //@NotNull
 
     pub fn usage(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2865,7 +2716,6 @@ impl<'mc> HelpCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn broadcast_command_message_with_command_sender(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2887,7 +2737,6 @@ impl<'mc> HelpCommand<'mc> {
         args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Z";
-            // 3
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -2898,7 +2747,6 @@ impl<'mc> HelpCommand<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -2924,7 +2772,6 @@ impl<'mc> HelpCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -2941,7 +2788,6 @@ impl<'mc> HelpCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2951,7 +2797,6 @@ impl<'mc> HelpCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -2961,7 +2806,6 @@ impl<'mc> HelpCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2971,7 +2815,6 @@ impl<'mc> HelpCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3057,7 +2900,6 @@ impl<'mc> PluginsCommand<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::command::defaults::PluginsCommand::from_raw(&jni, res)
     }
-    //
 
     pub fn execute(
         &self,
@@ -3086,7 +2928,6 @@ impl<'mc> PluginsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn tab_complete_with_command_sender(
         &self,
@@ -3133,7 +2974,6 @@ impl<'mc> PluginsCommand<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn unregister(
         &self,
@@ -3152,9 +2992,6 @@ impl<'mc> PluginsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
-
-    //@Nullable
 
     pub fn permission(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3172,7 +3009,6 @@ impl<'mc> PluginsCommand<'mc> {
                 .to_string(),
         ))
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3186,7 +3022,6 @@ impl<'mc> PluginsCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -3201,7 +3036,6 @@ impl<'mc> PluginsCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn is_registered(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3211,7 +3045,6 @@ impl<'mc> PluginsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn register(
         &self,
@@ -3230,7 +3063,6 @@ impl<'mc> PluginsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_name(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -3246,7 +3078,6 @@ impl<'mc> PluginsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_permission(
         &self,
@@ -3265,7 +3096,6 @@ impl<'mc> PluginsCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn description(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3279,7 +3109,6 @@ impl<'mc> PluginsCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_description(
         &self,
@@ -3300,7 +3129,6 @@ impl<'mc> PluginsCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_usage(
         &self,
@@ -3321,7 +3149,6 @@ impl<'mc> PluginsCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_permission_message(
         &self,
@@ -3342,7 +3169,6 @@ impl<'mc> PluginsCommand<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn aliases(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -3364,7 +3190,6 @@ impl<'mc> PluginsCommand<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn set_label(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -3380,7 +3205,6 @@ impl<'mc> PluginsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn label(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3394,7 +3218,6 @@ impl<'mc> PluginsCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn test_permission_silent(
         &self,
@@ -3413,7 +3236,6 @@ impl<'mc> PluginsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn test_permission(
         &self,
@@ -3432,7 +3254,6 @@ impl<'mc> PluginsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn permission_message(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3453,7 +3274,6 @@ impl<'mc> PluginsCommand<'mc> {
                 .to_string(),
         ))
     }
-    //@NotNull
 
     pub fn usage(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3467,7 +3287,6 @@ impl<'mc> PluginsCommand<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn broadcast_command_message_with_command_sender(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3489,7 +3308,6 @@ impl<'mc> PluginsCommand<'mc> {
         args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Z";
-            // 3
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -3500,7 +3318,6 @@ impl<'mc> PluginsCommand<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -3526,7 +3343,6 @@ impl<'mc> PluginsCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -3543,7 +3359,6 @@ impl<'mc> PluginsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -3553,7 +3368,6 @@ impl<'mc> PluginsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -3563,7 +3377,6 @@ impl<'mc> PluginsCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3573,7 +3386,6 @@ impl<'mc> PluginsCommand<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");

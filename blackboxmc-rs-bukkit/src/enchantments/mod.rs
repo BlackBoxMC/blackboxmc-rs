@@ -62,7 +62,6 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::enchantments::EnchantmentWrapper::from_raw(&jni, res)
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -76,7 +75,6 @@ impl<'mc> EnchantmentWrapper<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn enchantment(
         &self,
@@ -90,7 +88,6 @@ impl<'mc> EnchantmentWrapper<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn start_level(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -100,7 +97,6 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn max_level(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -110,7 +106,6 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn can_enchant_item(
         &self,
@@ -129,7 +124,6 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn item_target(
         &self,
@@ -156,7 +150,6 @@ impl<'mc> EnchantmentWrapper<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_treasure(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -166,8 +159,6 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn is_cursed(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -178,7 +169,6 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn conflicts_with(
         &self,
@@ -197,7 +187,6 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn equals(
         &self,
@@ -214,7 +203,6 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -229,9 +217,6 @@ impl<'mc> EnchantmentWrapper<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
-
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -241,7 +226,6 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -253,7 +237,6 @@ impl<'mc> EnchantmentWrapper<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_by_name(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -275,7 +258,6 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let obj = res.l()?;
         crate::enchantments::Enchantment::from_raw(&jni, obj)
     }
-    //
 
     pub fn register_enchantment(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -296,7 +278,6 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_by_key(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -318,7 +299,6 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let obj = res.l()?;
         crate::enchantments::Enchantment::from_raw(&jni, obj)
     }
-    //
 
     pub fn stop_accepting_registrations(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -330,7 +310,6 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_accepting_registrations(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -342,7 +321,6 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -368,7 +346,6 @@ impl<'mc> EnchantmentWrapper<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -378,7 +355,6 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -388,7 +364,6 @@ impl<'mc> EnchantmentWrapper<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -481,7 +456,6 @@ impl<'mc> EnchantmentOffer<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::enchantments::EnchantmentOffer::from_raw(&jni, res)
     }
-    //@NotNull
 
     pub fn enchantment(
         &self,
@@ -495,7 +469,6 @@ impl<'mc> EnchantmentOffer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_enchantment(
         &self,
@@ -514,7 +487,6 @@ impl<'mc> EnchantmentOffer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn enchantment_level(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -527,8 +499,6 @@ impl<'mc> EnchantmentOffer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Sets the level of the enchantment.
     pub fn set_enchantment_level(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -542,7 +512,6 @@ impl<'mc> EnchantmentOffer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn cost(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -552,8 +521,6 @@ impl<'mc> EnchantmentOffer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Sets the cost (minimum level) which is displayed as a number on the right hand side of the enchantment offer.
     pub fn set_cost(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -567,7 +534,6 @@ impl<'mc> EnchantmentOffer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -593,7 +559,6 @@ impl<'mc> EnchantmentOffer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -610,7 +575,6 @@ impl<'mc> EnchantmentOffer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -625,7 +589,6 @@ impl<'mc> EnchantmentOffer<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -635,7 +598,6 @@ impl<'mc> EnchantmentOffer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -645,7 +607,6 @@ impl<'mc> EnchantmentOffer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -655,7 +616,6 @@ impl<'mc> EnchantmentOffer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -837,10 +797,6 @@ impl<'mc> EnchantmentTarget<'mc> {
         )
     }
 
-    //
-
-    //
-
     pub fn includes_with_material(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
@@ -916,7 +872,6 @@ impl<'mc> Enchantment<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::enchantments::Enchantment::from_raw(&jni, res)
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -930,7 +885,6 @@ impl<'mc> Enchantment<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn equals(
         &self,
@@ -947,7 +901,6 @@ impl<'mc> Enchantment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -962,9 +915,6 @@ impl<'mc> Enchantment<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
-
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -974,7 +924,6 @@ impl<'mc> Enchantment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -986,7 +935,6 @@ impl<'mc> Enchantment<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_by_name(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1008,7 +956,6 @@ impl<'mc> Enchantment<'mc> {
         let obj = res.l()?;
         crate::enchantments::Enchantment::from_raw(&jni, obj)
     }
-    //
 
     pub fn register_enchantment(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1029,7 +976,6 @@ impl<'mc> Enchantment<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_by_key(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1051,7 +997,6 @@ impl<'mc> Enchantment<'mc> {
         let obj = res.l()?;
         crate::enchantments::Enchantment::from_raw(&jni, obj)
     }
-    //
 
     pub fn start_level(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1061,7 +1006,6 @@ impl<'mc> Enchantment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn max_level(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1071,7 +1015,6 @@ impl<'mc> Enchantment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn can_enchant_item(
         &self,
@@ -1090,7 +1033,6 @@ impl<'mc> Enchantment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn stop_accepting_registrations(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1102,7 +1044,6 @@ impl<'mc> Enchantment<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_target(
         &self,
@@ -1129,7 +1070,6 @@ impl<'mc> Enchantment<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_treasure(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1139,8 +1079,6 @@ impl<'mc> Enchantment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn is_cursed(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1151,7 +1089,6 @@ impl<'mc> Enchantment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn conflicts_with(
         &self,
@@ -1170,7 +1107,6 @@ impl<'mc> Enchantment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_accepting_registrations(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1182,7 +1118,6 @@ impl<'mc> Enchantment<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1208,7 +1143,6 @@ impl<'mc> Enchantment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1218,7 +1152,6 @@ impl<'mc> Enchantment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1228,7 +1161,6 @@ impl<'mc> Enchantment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");

@@ -52,8 +52,6 @@ impl<'mc> JNIInstantiatable<'mc> for HelpTopicComparatorTopicNameComparator<'mc>
 }
 
 impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
-    //
-
     pub fn compare_with_object(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -74,8 +72,6 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
@@ -100,8 +96,6 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
-
     pub fn equals(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -117,8 +111,6 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -132,8 +124,6 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
-
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
@@ -142,8 +132,6 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
@@ -152,8 +140,6 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
-
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
@@ -162,8 +148,6 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
-
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
@@ -172,8 +156,6 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
-
     pub fn then_comparing_with_function(
         &self,
         arg0: impl Into<blackboxmc_java::util::function::JavaFunction<'mc>>,
@@ -202,8 +184,6 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
     pub fn reversed(
         &self,
     ) -> Result<blackboxmc_java::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
@@ -216,8 +196,6 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
     pub fn then_comparing_int(
         &self,
         arg0: impl Into<blackboxmc_java::util::function::JavaToIntFunction<'mc>>,
@@ -237,8 +215,6 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
     pub fn then_comparing_long(
         &self,
         arg0: impl Into<blackboxmc_java::util::function::JavaToLongFunction<'mc>>,
@@ -258,8 +234,6 @@ impl<'mc> HelpTopicComparatorTopicNameComparator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
     pub fn then_comparing_double(
         &self,
         arg0: impl Into<blackboxmc_java::util::function::JavaToDoubleFunction<'mc>>,
@@ -335,8 +309,6 @@ impl<'mc> JNIInstantiatable<'mc> for HelpTopicComparator<'mc> {
 }
 
 impl<'mc> HelpTopicComparator<'mc> {
-    //
-
     pub fn compare_with_help_topic(
         &self,
         arg0: impl Into<crate::help::HelpTopic<'mc>>,
@@ -361,7 +333,6 @@ impl<'mc> HelpTopicComparator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn topic_name_comparator_instance(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -375,7 +346,6 @@ impl<'mc> HelpTopicComparator<'mc> {
         let obj = res.l()?;
         crate::help::HelpTopicComparatorTopicNameComparator::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn help_topic_comparator_instance(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -388,7 +358,6 @@ impl<'mc> HelpTopicComparator<'mc> {
         let obj = res.l()?;
         crate::help::HelpTopicComparator::from_raw(&jni, obj)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -414,7 +383,6 @@ impl<'mc> HelpTopicComparator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -431,7 +399,6 @@ impl<'mc> HelpTopicComparator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -446,7 +413,6 @@ impl<'mc> HelpTopicComparator<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -456,7 +422,6 @@ impl<'mc> HelpTopicComparator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -466,7 +431,6 @@ impl<'mc> HelpTopicComparator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -476,7 +440,6 @@ impl<'mc> HelpTopicComparator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -486,7 +449,6 @@ impl<'mc> HelpTopicComparator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn then_comparing_with_function(
         &self,
@@ -516,7 +478,6 @@ impl<'mc> HelpTopicComparator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn reversed(
         &self,
@@ -530,7 +491,6 @@ impl<'mc> HelpTopicComparator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn then_comparing_int(
         &self,
@@ -551,7 +511,6 @@ impl<'mc> HelpTopicComparator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn then_comparing_long(
         &self,
@@ -572,7 +531,6 @@ impl<'mc> HelpTopicComparator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn then_comparing_double(
         &self,
@@ -665,7 +623,6 @@ impl<'mc> HelpTopicFactory<'mc> {
         let obj = unsafe { plugin.new_extendable(address, "HelpTopicFactory", name, lib_name) }?;
         Self::from_raw(env, obj)
     }
-    //
 
     pub fn create_topic(
         &self,
@@ -747,7 +704,6 @@ impl<'mc> HelpTopic<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::help::HelpTopic::from_raw(&jni, res)
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -761,7 +717,6 @@ impl<'mc> HelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn can_see(
         &self,
@@ -780,7 +735,6 @@ impl<'mc> HelpTopic<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn amend_can_see(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -796,7 +750,6 @@ impl<'mc> HelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn short_text(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -810,7 +763,6 @@ impl<'mc> HelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn get_full_text(
         &self,
@@ -833,7 +785,6 @@ impl<'mc> HelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn amend_topic(
         &self,
@@ -859,7 +810,6 @@ impl<'mc> HelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -885,7 +835,6 @@ impl<'mc> HelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -902,7 +851,6 @@ impl<'mc> HelpTopic<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -917,7 +865,6 @@ impl<'mc> HelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -927,7 +874,6 @@ impl<'mc> HelpTopic<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -937,7 +883,6 @@ impl<'mc> HelpTopic<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -947,7 +892,6 @@ impl<'mc> HelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1014,8 +958,6 @@ impl<'mc> JNIInstantiatable<'mc> for HelpMap<'mc> {
 }
 
 impl<'mc> HelpMap<'mc> {
-    //
-
     pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
@@ -1024,7 +966,6 @@ impl<'mc> HelpMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_help_topic(
         &self,
@@ -1045,7 +986,6 @@ impl<'mc> HelpMap<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn help_topics(
         &self,
@@ -1064,7 +1004,6 @@ impl<'mc> HelpMap<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_topic(
         &self,
@@ -1083,7 +1022,6 @@ impl<'mc> HelpMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn register_help_topic_factory(
         &self,
@@ -1107,7 +1045,6 @@ impl<'mc> HelpMap<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn ignored_plugins(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -1174,8 +1111,6 @@ impl<'mc> JNIInstantiatable<'mc> for IndexHelpTopic<'mc> {
 }
 
 impl<'mc> IndexHelpTopic<'mc> {
-    //
-
     pub fn can_see(
         &self,
         arg0: impl Into<crate::command::CommandSender<'mc>>,
@@ -1193,7 +1128,6 @@ impl<'mc> IndexHelpTopic<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn amend_can_see(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -1209,7 +1143,6 @@ impl<'mc> IndexHelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_full_text(
         &self,
@@ -1232,7 +1165,6 @@ impl<'mc> IndexHelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1246,7 +1178,6 @@ impl<'mc> IndexHelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn short_text(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1260,7 +1191,6 @@ impl<'mc> IndexHelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn amend_topic(
         &self,
@@ -1286,7 +1216,6 @@ impl<'mc> IndexHelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1312,7 +1241,6 @@ impl<'mc> IndexHelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1329,7 +1257,6 @@ impl<'mc> IndexHelpTopic<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1344,7 +1271,6 @@ impl<'mc> IndexHelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1354,7 +1280,6 @@ impl<'mc> IndexHelpTopic<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1364,7 +1289,6 @@ impl<'mc> IndexHelpTopic<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1374,7 +1298,6 @@ impl<'mc> IndexHelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1460,7 +1383,6 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::help::GenericCommandHelpTopic::from_raw(&jni, res)
     }
-    //
 
     pub fn can_see(
         &self,
@@ -1479,7 +1401,6 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1493,7 +1414,6 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn amend_can_see(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -1509,7 +1429,6 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn short_text(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1523,7 +1442,6 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn get_full_text(
         &self,
@@ -1546,7 +1464,6 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn amend_topic(
         &self,
@@ -1572,7 +1489,6 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1598,7 +1514,6 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1615,7 +1530,6 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1630,7 +1544,6 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1640,7 +1553,6 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1650,7 +1562,6 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1660,7 +1571,6 @@ impl<'mc> GenericCommandHelpTopic<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");

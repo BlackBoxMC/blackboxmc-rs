@@ -60,8 +60,6 @@ sig.as_str(),vec![jni::objects::JValueGen::from(val_1),jni::objects::JValueGen::
 let res = jni.translate_error_no_gen(res)?;
 crate::bungee::api::chat::hover::content::Item::from_raw(&jni,res
 )}
-//
-
 
 	pub fn count(&self) 
 -> Result<i32, Box<dyn std::error::Error>>
@@ -73,8 +71,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 res.i()?
 )}
-//
-
 
 	pub fn tag(&self) 
 -> Result<crate::bungee::api::chat::ItemTag<'mc>, Box<dyn std::error::Error>>
@@ -85,8 +81,6 @@ let res =
 self.jni_ref().translate_error(res)?;
 crate::bungee::api::chat::ItemTag::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
 )}
-//
-
 
 	pub fn equals(&self,arg0: jni::objects::JObject<'mc>) 
 -> Result<bool, Box<dyn std::error::Error>>
@@ -99,8 +93,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 res.z()?
 )}
-//
-
 
 #[doc(hidden)]
 	pub fn internal_to_string(&self) 
@@ -113,8 +105,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?.to_string_lossy().to_string()
 )}
-//
-
 
 	pub fn hash_code(&self) 
 -> Result<i32, Box<dyn std::error::Error>>
@@ -126,8 +116,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 res.i()?
 )}
-//
-
 
 	pub fn id(&self) 
 -> Result<String, Box<dyn std::error::Error>>
@@ -139,8 +127,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?.to_string_lossy().to_string()
 )}
-//
-
 
 	pub fn required_action(&self) 
 -> Result<crate::bungee::api::chat::HoverEventAction<'mc>, Box<dyn std::error::Error>>
@@ -153,8 +139,6 @@ let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };let v
 crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),raw_obj
 , crate::bungee::api::chat::HoverEventAction::from_string(variant_str).ok_or(eyre::eyre!("String gaven for variant was invalid"))?
 )}
-//
-
 
 	pub fn set_tag(&self,arg0: impl Into<crate::bungee::api::chat::ItemTag<'mc>>) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -166,8 +150,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
-//
-
 
 	pub fn set_id(&self,arg0: impl Into<String>) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -179,8 +161,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
-//
-
 
 	pub fn set_count(&self,arg0: i32) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -192,8 +172,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
-//
-
 
 	pub fn assert_action(&self,arg0: impl Into<crate::bungee::api::chat::HoverEventAction<'mc>>) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -205,8 +183,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
-//
-
 
 	pub fn wait_with_long(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -229,8 +205,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
-//
-
 
 	pub fn class(&self) 
 -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>>
@@ -242,8 +216,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 unsafe {jni::objects::JClass::from_raw(res.as_jni().l)}
 )}
-//
-
 
 	pub fn notify(&self) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -254,8 +226,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
-//
-
 
 	pub fn notify_all(&self) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -345,8 +315,6 @@ sig.as_str(),vec![jni::objects::JValueGen::from(val_1),jni::objects::JValueGen::
 let res = jni.translate_error_no_gen(res)?;
 crate::bungee::api::chat::hover::content::Entity::from_raw(&jni,res
 )}
-//
-
 
 	pub fn name(&self) 
 -> Result<crate::bungee::api::chat::BaseComponent<'mc>, Box<dyn std::error::Error>>
@@ -357,8 +325,6 @@ let res =
 self.jni_ref().translate_error(res)?;
 crate::bungee::api::chat::BaseComponent::from_raw(&self.jni_ref(),unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) }
 )}
-//
-
 
 	pub fn equals(&self,arg0: jni::objects::JObject<'mc>) 
 -> Result<bool, Box<dyn std::error::Error>>
@@ -371,8 +337,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 res.z()?
 )}
-//
-
 
 #[doc(hidden)]
 	pub fn internal_to_string(&self) 
@@ -385,8 +349,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?.to_string_lossy().to_string()
 )}
-//
-
 
 	pub fn hash_code(&self) 
 -> Result<i32, Box<dyn std::error::Error>>
@@ -398,8 +360,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 res.i()?
 )}
-//
-
 
 	pub fn set_name(&self,arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -411,8 +371,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
-//
-
 
 	pub fn id(&self) 
 -> Result<String, Box<dyn std::error::Error>>
@@ -424,8 +382,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?.to_string_lossy().to_string()
 )}
-//
-
 
 	pub fn get_type(&self) 
 -> Result<String, Box<dyn std::error::Error>>
@@ -437,8 +393,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?.to_string_lossy().to_string()
 )}
-//
-
 
 	pub fn required_action(&self) 
 -> Result<crate::bungee::api::chat::HoverEventAction<'mc>, Box<dyn std::error::Error>>
@@ -451,8 +405,6 @@ let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };let v
 crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),raw_obj
 , crate::bungee::api::chat::HoverEventAction::from_string(variant_str).ok_or(eyre::eyre!("String gaven for variant was invalid"))?
 )}
-//
-
 
 	pub fn set_type(&self,arg0: impl Into<String>) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -464,8 +416,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
-//
-
 
 	pub fn set_id(&self,arg0: impl Into<String>) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -477,8 +427,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
-//
-
 
 	pub fn assert_action(&self,arg0: impl Into<crate::bungee::api::chat::HoverEventAction<'mc>>) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -490,8 +438,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
-//
-
 
 	pub fn wait_with_long(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -514,8 +460,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
-//
-
 
 	pub fn class(&self) 
 -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>>
@@ -527,8 +471,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 unsafe {jni::objects::JClass::from_raw(res.as_jni().l)}
 )}
-//
-
 
 	pub fn notify(&self) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -539,8 +481,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
-//
-
 
 	pub fn notify_all(&self) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -627,8 +567,6 @@ sig.as_str(),vec![]);
 let res = jni.translate_error_no_gen(res)?;
 crate::bungee::api::chat::hover::content::ItemSerializer::from_raw(&jni,res
 )}
-//
-
 
 	pub fn serialize_with_item(&self,arg0: impl Into<crate::bungee::api::chat::hover::content::Item<'mc>>,arg1: jni::objects::JObject<'mc>,arg2: jni::objects::JObject<'mc>) 
 -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>>
@@ -648,9 +586,9 @@ sig += ")Lcom/google/gson/JsonElement;";
 let res = self.jni_ref().call_method(&self.jni_object(),"serialize",sig.as_str(),args);
 let res = 
 self.jni_ref().translate_error(res)?;
-Ok(res.l()?)}
-//
-
+Ok(
+res.l()?
+)}
 
 	pub fn deserialize_with_json_element(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: jni::objects::JObject<'mc>) 
 -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>>
@@ -670,9 +608,9 @@ sig += ")Ljava/lang/Object;";
 let res = self.jni_ref().call_method(&self.jni_object(),"deserialize",sig.as_str(),args);
 let res = 
 self.jni_ref().translate_error(res)?;
-Ok(res.l()?)}
-//
-
+Ok(
+res.l()?
+)}
 
 	pub fn wait_with_long(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -695,8 +633,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
-//
-
 
 	pub fn equals(&self,arg0: jni::objects::JObject<'mc>) 
 -> Result<bool, Box<dyn std::error::Error>>
@@ -709,8 +645,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 res.z()?
 )}
-//
-
 
 #[doc(hidden)]
 	pub fn internal_to_string(&self) 
@@ -723,8 +657,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?.to_string_lossy().to_string()
 )}
-//
-
 
 	pub fn hash_code(&self) 
 -> Result<i32, Box<dyn std::error::Error>>
@@ -736,8 +668,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 res.i()?
 )}
-//
-
 
 	pub fn class(&self) 
 -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>>
@@ -749,8 +679,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 unsafe {jni::objects::JClass::from_raw(res.as_jni().l)}
 )}
-//
-
 
 	pub fn notify(&self) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -761,8 +689,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
-//
-
 
 	pub fn notify_all(&self) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -848,8 +774,6 @@ sig.as_str(),vec![]);
 let res = jni.translate_error_no_gen(res)?;
 crate::bungee::api::chat::hover::content::TextSerializer::from_raw(&jni,res
 )}
-//
-
 
 	pub fn serialize_with_text(&self,arg0: impl Into<crate::bungee::api::chat::hover::content::Text<'mc>>,arg1: jni::objects::JObject<'mc>,arg2: jni::objects::JObject<'mc>) 
 -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>>
@@ -869,9 +793,9 @@ sig += ")Lcom/google/gson/JsonElement;";
 let res = self.jni_ref().call_method(&self.jni_object(),"serialize",sig.as_str(),args);
 let res = 
 self.jni_ref().translate_error(res)?;
-Ok(res.l()?)}
-//
-
+Ok(
+res.l()?
+)}
 
 	pub fn deserialize_with_json_element(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: jni::objects::JObject<'mc>) 
 -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>>
@@ -891,9 +815,9 @@ sig += ")Ljava/lang/Object;";
 let res = self.jni_ref().call_method(&self.jni_object(),"deserialize",sig.as_str(),args);
 let res = 
 self.jni_ref().translate_error(res)?;
-Ok(res.l()?)}
-//
-
+Ok(
+res.l()?
+)}
 
 	pub fn wait_with_long(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -916,8 +840,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
-//
-
 
 	pub fn equals(&self,arg0: jni::objects::JObject<'mc>) 
 -> Result<bool, Box<dyn std::error::Error>>
@@ -930,8 +852,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 res.z()?
 )}
-//
-
 
 #[doc(hidden)]
 	pub fn internal_to_string(&self) 
@@ -944,8 +864,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?.to_string_lossy().to_string()
 )}
-//
-
 
 	pub fn hash_code(&self) 
 -> Result<i32, Box<dyn std::error::Error>>
@@ -957,8 +875,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 res.i()?
 )}
-//
-
 
 	pub fn class(&self) 
 -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>>
@@ -970,8 +886,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 unsafe {jni::objects::JClass::from_raw(res.as_jni().l)}
 )}
-//
-
 
 	pub fn notify(&self) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -982,8 +896,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
-//
-
 
 	pub fn notify_all(&self) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -1069,8 +981,6 @@ sig.as_str(),vec![]);
 let res = jni.translate_error_no_gen(res)?;
 crate::bungee::api::chat::hover::content::Content::from_raw(&jni,res
 )}
-//
-
 
 	pub fn equals(&self,arg0: jni::objects::JObject<'mc>) 
 -> Result<bool, Box<dyn std::error::Error>>
@@ -1083,8 +993,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 res.z()?
 )}
-//
-
 
 #[doc(hidden)]
 	pub fn internal_to_string(&self) 
@@ -1097,8 +1005,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?.to_string_lossy().to_string()
 )}
-//
-
 
 	pub fn hash_code(&self) 
 -> Result<i32, Box<dyn std::error::Error>>
@@ -1110,8 +1016,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 res.i()?
 )}
-//
-
 
 	pub fn assert_action(&self,arg0: impl Into<crate::bungee::api::chat::HoverEventAction<'mc>>) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -1123,8 +1027,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
-//
-
 
 	pub fn required_action(&self) 
 -> Result<crate::bungee::api::chat::HoverEventAction<'mc>, Box<dyn std::error::Error>>
@@ -1137,8 +1039,6 @@ let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };let v
 crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),raw_obj
 , crate::bungee::api::chat::HoverEventAction::from_string(variant_str).ok_or(eyre::eyre!("String gaven for variant was invalid"))?
 )}
-//
-
 
 	pub fn wait_with_long(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -1161,8 +1061,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
-//
-
 
 	pub fn class(&self) 
 -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>>
@@ -1174,8 +1072,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 unsafe {jni::objects::JClass::from_raw(res.as_jni().l)}
 )}
-//
-
 
 	pub fn notify(&self) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -1186,8 +1082,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
-//
-
 
 	pub fn notify_all(&self) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -1271,8 +1165,6 @@ sig.as_str(),args);
 let res = jni.translate_error_no_gen(res)?;
 crate::bungee::api::chat::hover::content::Text::from_raw(&jni,res
 )}
-//
-
 
 	pub fn equals(&self,arg0: jni::objects::JObject<'mc>) 
 -> Result<bool, Box<dyn std::error::Error>>
@@ -1285,8 +1177,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 res.z()?
 )}
-//
-
 
 #[doc(hidden)]
 	pub fn internal_to_string(&self) 
@@ -1299,8 +1189,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?.to_string_lossy().to_string()
 )}
-//
-
 
 	pub fn hash_code(&self) 
 -> Result<i32, Box<dyn std::error::Error>>
@@ -1312,8 +1200,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 res.i()?
 )}
-//
-
 
 	pub fn value(&self) 
 -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>>
@@ -1322,9 +1208,9 @@ res.i()?
 let res = self.jni_ref().call_method(&self.jni_object(),"getValue",sig.as_str(),vec![]);
 let res = 
 self.jni_ref().translate_error(res)?;
-Ok(res.l()?)}
-//
-
+Ok(
+res.l()?
+)}
 
 	pub fn required_action(&self) 
 -> Result<crate::bungee::api::chat::HoverEventAction<'mc>, Box<dyn std::error::Error>>
@@ -1337,8 +1223,6 @@ let raw_obj = unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) };let v
 crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),raw_obj
 , crate::bungee::api::chat::HoverEventAction::from_string(variant_str).ok_or(eyre::eyre!("String gaven for variant was invalid"))?
 )}
-//
-
 
 	pub fn assert_action(&self,arg0: impl Into<crate::bungee::api::chat::HoverEventAction<'mc>>) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -1350,8 +1234,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
-//
-
 
 	pub fn wait_with_long(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -1374,8 +1256,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
-//
-
 
 	pub fn class(&self) 
 -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>>
@@ -1387,8 +1267,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 unsafe {jni::objects::JClass::from_raw(res.as_jni().l)}
 )}
-//
-
 
 	pub fn notify(&self) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -1399,8 +1277,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
-//
-
 
 	pub fn notify_all(&self) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -1487,8 +1363,6 @@ sig.as_str(),vec![]);
 let res = jni.translate_error_no_gen(res)?;
 crate::bungee::api::chat::hover::content::EntitySerializer::from_raw(&jni,res
 )}
-//
-
 
 	pub fn serialize_with_entity(&self,arg0: impl Into<crate::bungee::api::chat::hover::content::Entity<'mc>>,arg1: jni::objects::JObject<'mc>,arg2: jni::objects::JObject<'mc>) 
 -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>>
@@ -1508,9 +1382,9 @@ sig += ")Lcom/google/gson/JsonElement;";
 let res = self.jni_ref().call_method(&self.jni_object(),"serialize",sig.as_str(),args);
 let res = 
 self.jni_ref().translate_error(res)?;
-Ok(res.l()?)}
-//
-
+Ok(
+res.l()?
+)}
 
 	pub fn deserialize_with_json_element(&self,arg0: jni::objects::JObject<'mc>,arg1: jni::objects::JObject<'mc>,arg2: jni::objects::JObject<'mc>) 
 -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>>
@@ -1530,9 +1404,9 @@ sig += ")Ljava/lang/Object;";
 let res = self.jni_ref().call_method(&self.jni_object(),"deserialize",sig.as_str(),args);
 let res = 
 self.jni_ref().translate_error(res)?;
-Ok(res.l()?)}
-//
-
+Ok(
+res.l()?
+)}
 
 	pub fn wait_with_long(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -1555,8 +1429,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
-//
-
 
 	pub fn equals(&self,arg0: jni::objects::JObject<'mc>) 
 -> Result<bool, Box<dyn std::error::Error>>
@@ -1569,8 +1441,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 res.z()?
 )}
-//
-
 
 #[doc(hidden)]
 	pub fn internal_to_string(&self) 
@@ -1583,8 +1453,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 self.jni_ref().get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?.to_string_lossy().to_string()
 )}
-//
-
 
 	pub fn hash_code(&self) 
 -> Result<i32, Box<dyn std::error::Error>>
@@ -1596,8 +1464,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 res.i()?
 )}
-//
-
 
 	pub fn class(&self) 
 -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>>
@@ -1609,8 +1475,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 unsafe {jni::objects::JClass::from_raw(res.as_jni().l)}
 )}
-//
-
 
 	pub fn notify(&self) 
 -> Result<(), Box<dyn std::error::Error>>
@@ -1621,8 +1485,6 @@ self.jni_ref().translate_error(res)?;
 Ok(
 ()
 )}
-//
-
 
 	pub fn notify_all(&self) 
 -> Result<(), Box<dyn std::error::Error>>

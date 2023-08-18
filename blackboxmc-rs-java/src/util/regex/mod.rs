@@ -797,8 +797,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaPattern<'mc> {
 }
 
 impl<'mc> JavaPattern<'mc> {
-    //
-
     pub fn pattern(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
@@ -811,7 +809,6 @@ impl<'mc> JavaPattern<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn as_predicate(
         &self,
@@ -825,7 +822,6 @@ impl<'mc> JavaPattern<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn as_match_predicate(
         &self,
@@ -842,7 +838,6 @@ impl<'mc> JavaPattern<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -857,7 +852,6 @@ impl<'mc> JavaPattern<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn flags(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -867,7 +861,6 @@ impl<'mc> JavaPattern<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn compile_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -894,7 +887,6 @@ impl<'mc> JavaPattern<'mc> {
         let obj = res.l()?;
         crate::util::regex::JavaPattern::from_raw(&jni, obj)
     }
-    //
 
     pub fn quote(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -918,7 +910,6 @@ impl<'mc> JavaPattern<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -944,7 +935,6 @@ impl<'mc> JavaPattern<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -961,7 +951,6 @@ impl<'mc> JavaPattern<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -971,7 +960,6 @@ impl<'mc> JavaPattern<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -981,7 +969,6 @@ impl<'mc> JavaPattern<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");

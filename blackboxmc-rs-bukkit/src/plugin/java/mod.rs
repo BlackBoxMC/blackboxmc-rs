@@ -43,11 +43,8 @@ impl<'mc> JNIInstantiatable<'mc> for JavaPluginLoader<'mc> {
 }
 
 impl<'mc> JavaPluginLoader<'mc> {
-    //['since', '']
-
-    //['forRemoval', 'false']
-
     #[deprecated]
+
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::Server<'mc>>,
@@ -66,7 +63,6 @@ impl<'mc> JavaPluginLoader<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::plugin::java::JavaPluginLoader::from_raw(&jni, res)
     }
-    //
 
     pub fn load_plugin(
         &self,
@@ -85,7 +81,6 @@ impl<'mc> JavaPluginLoader<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_plugin_description(
         &self,
@@ -104,9 +99,6 @@ impl<'mc> JavaPluginLoader<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //
 
     pub fn create_registered_listeners(
         &self,
@@ -135,7 +127,6 @@ impl<'mc> JavaPluginLoader<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn enable_plugin(
         &self,
@@ -154,7 +145,6 @@ impl<'mc> JavaPluginLoader<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn disable_plugin(
         &self,
@@ -173,7 +163,6 @@ impl<'mc> JavaPluginLoader<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -199,7 +188,6 @@ impl<'mc> JavaPluginLoader<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -216,7 +204,6 @@ impl<'mc> JavaPluginLoader<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -231,7 +218,6 @@ impl<'mc> JavaPluginLoader<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -241,7 +227,6 @@ impl<'mc> JavaPluginLoader<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -251,7 +236,6 @@ impl<'mc> JavaPluginLoader<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -261,7 +245,6 @@ impl<'mc> JavaPluginLoader<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -336,7 +319,6 @@ impl<'mc> JavaPlugin<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::plugin::java::JavaPlugin::from_raw(&jni, res)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -351,7 +333,6 @@ impl<'mc> JavaPlugin<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn get_resource(
         &self,
@@ -370,7 +351,6 @@ impl<'mc> JavaPlugin<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //@NotNull
 
     pub fn logger(
         &self,
@@ -384,7 +364,6 @@ impl<'mc> JavaPlugin<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn server(&self) -> Result<crate::Server<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Server;");
@@ -396,7 +375,6 @@ impl<'mc> JavaPlugin<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn description(
         &self,
@@ -410,7 +388,6 @@ impl<'mc> JavaPlugin<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn on_tab_complete(
         &self,
@@ -454,7 +431,6 @@ impl<'mc> JavaPlugin<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn on_command(
         &self,
@@ -486,7 +462,6 @@ impl<'mc> JavaPlugin<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_command(
         &self,
@@ -507,7 +482,6 @@ impl<'mc> JavaPlugin<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_default_biome_provider(
         &self,
@@ -537,7 +511,6 @@ impl<'mc> JavaPlugin<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_enabled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -547,7 +520,6 @@ impl<'mc> JavaPlugin<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_plugin(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -567,7 +539,6 @@ impl<'mc> JavaPlugin<'mc> {
         let obj = res.l()?;
         crate::plugin::java::JavaPlugin::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn config(
         &self,
@@ -582,7 +553,6 @@ impl<'mc> JavaPlugin<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn data_folder(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/io/File;");
@@ -592,7 +562,6 @@ impl<'mc> JavaPlugin<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn save_config(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -602,7 +571,6 @@ impl<'mc> JavaPlugin<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn save_default_config(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -615,7 +583,6 @@ impl<'mc> JavaPlugin<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn save_resource(
         &self,
@@ -626,7 +593,6 @@ impl<'mc> JavaPlugin<'mc> {
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
             self.jni_ref().new_string(arg0.into())?,
         ));
-        // -1
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -640,7 +606,6 @@ impl<'mc> JavaPlugin<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn reload_config(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -650,7 +615,6 @@ impl<'mc> JavaPlugin<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn plugin_loader(
         &self,
@@ -664,7 +628,6 @@ impl<'mc> JavaPlugin<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn on_disable(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -674,7 +637,6 @@ impl<'mc> JavaPlugin<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn on_load(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -684,7 +646,6 @@ impl<'mc> JavaPlugin<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn on_enable(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -694,7 +655,6 @@ impl<'mc> JavaPlugin<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_naggable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -704,13 +664,10 @@ impl<'mc> JavaPlugin<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// <span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="../Plugin.html#setNaggable(boolean)">Plugin</a></code></span>
     /// Set naggable state
     pub fn set_naggable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -721,7 +678,6 @@ impl<'mc> JavaPlugin<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_default_world_generator(
         &self,
@@ -751,7 +707,6 @@ impl<'mc> JavaPlugin<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_providing_plugin(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -771,7 +726,6 @@ impl<'mc> JavaPlugin<'mc> {
         let obj = res.l()?;
         crate::plugin::java::JavaPlugin::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -785,7 +739,6 @@ impl<'mc> JavaPlugin<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn equals(
         &self,
@@ -802,7 +755,6 @@ impl<'mc> JavaPlugin<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -812,7 +764,6 @@ impl<'mc> JavaPlugin<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -838,7 +789,6 @@ impl<'mc> JavaPlugin<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -848,7 +798,6 @@ impl<'mc> JavaPlugin<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -858,7 +807,6 @@ impl<'mc> JavaPlugin<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");

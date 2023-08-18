@@ -61,7 +61,6 @@ impl<'mc> TextComponent<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::bungee::api::chat::TextComponent::from_raw(&jni, res)
     }
-    //
 
     pub fn equals(
         &self,
@@ -78,7 +77,6 @@ impl<'mc> TextComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -93,7 +91,6 @@ impl<'mc> TextComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -103,7 +100,6 @@ impl<'mc> TextComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn duplicate(
         &self,
@@ -119,9 +115,6 @@ impl<'mc> TextComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
-    //
 
     pub fn text(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -135,7 +128,6 @@ impl<'mc> TextComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_text(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -151,7 +143,6 @@ impl<'mc> TextComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn duplicate_without_formatting(
         &self,
@@ -168,7 +159,6 @@ impl<'mc> TextComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn copy_formatting_with_base_component(
         &self,
@@ -194,7 +184,6 @@ impl<'mc> TextComponent<'mc> {
         }
         if let Some(a) = arg2 {
             sig += "Z";
-            // 2
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -205,7 +194,6 @@ impl<'mc> TextComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn retain(
         &self,
@@ -224,7 +212,6 @@ impl<'mc> TextComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn to_legacy_text_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -242,7 +229,6 @@ impl<'mc> TextComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn to_plain_text_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -260,7 +246,6 @@ impl<'mc> TextComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn color_raw(
         &self,
@@ -274,7 +259,6 @@ impl<'mc> TextComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn font(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -288,7 +272,6 @@ impl<'mc> TextComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn font_raw(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -302,7 +285,6 @@ impl<'mc> TextComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn is_bold(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -312,7 +294,6 @@ impl<'mc> TextComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_bold_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -322,7 +303,6 @@ impl<'mc> TextComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_italic(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -332,7 +312,6 @@ impl<'mc> TextComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_italic_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -342,7 +321,6 @@ impl<'mc> TextComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_underlined(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -352,7 +330,6 @@ impl<'mc> TextComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_underlined_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -362,7 +339,6 @@ impl<'mc> TextComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_strikethrough(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -372,7 +348,6 @@ impl<'mc> TextComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_strikethrough_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -385,7 +360,6 @@ impl<'mc> TextComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_obfuscated(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -395,7 +369,6 @@ impl<'mc> TextComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_obfuscated_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -405,7 +378,6 @@ impl<'mc> TextComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_extra_with_base_component(
         &self,
@@ -425,7 +397,6 @@ impl<'mc> TextComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_formatting(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -435,7 +406,6 @@ impl<'mc> TextComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_font(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -451,7 +421,6 @@ impl<'mc> TextComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_bold(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -469,7 +438,6 @@ impl<'mc> TextComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_italic(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -487,7 +455,6 @@ impl<'mc> TextComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_underlined(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -505,7 +472,6 @@ impl<'mc> TextComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_strikethrough(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -523,7 +489,6 @@ impl<'mc> TextComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_obfuscated(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -541,7 +506,6 @@ impl<'mc> TextComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_insertion(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -557,7 +521,6 @@ impl<'mc> TextComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_click_event(
         &self,
@@ -576,7 +539,6 @@ impl<'mc> TextComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_hover_event(
         &self,
@@ -595,11 +557,9 @@ impl<'mc> TextComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_reset(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -610,7 +570,6 @@ impl<'mc> TextComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn insertion(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -624,7 +583,6 @@ impl<'mc> TextComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn click_event(
         &self,
@@ -638,7 +596,6 @@ impl<'mc> TextComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn hover_event(
         &self,
@@ -652,7 +609,6 @@ impl<'mc> TextComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn extra(
         &self,
@@ -673,7 +629,6 @@ impl<'mc> TextComponent<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn set_color(
         &self,
@@ -692,7 +647,6 @@ impl<'mc> TextComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn color(&self) -> Result<crate::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lnet/md_5/bungee/api/ChatColor;");
@@ -704,7 +658,6 @@ impl<'mc> TextComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_reset(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -714,7 +667,6 @@ impl<'mc> TextComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -740,7 +692,6 @@ impl<'mc> TextComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -750,7 +701,6 @@ impl<'mc> TextComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -760,7 +710,6 @@ impl<'mc> TextComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1024,8 +973,6 @@ impl<'mc> HoverEventAction<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-
-    //
 }
 
 impl<'mc> JNIRaw<'mc> for HoverEvent<'mc> {
@@ -1060,8 +1007,6 @@ impl<'mc> JNIInstantiatable<'mc> for HoverEvent<'mc> {
 }
 
 impl<'mc> HoverEvent<'mc> {
-    //
-
     pub fn equals(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -1077,7 +1022,6 @@ impl<'mc> HoverEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1092,7 +1036,6 @@ impl<'mc> HoverEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1102,7 +1045,6 @@ impl<'mc> HoverEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1112,9 +1054,6 @@ impl<'mc> HoverEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
-
-    //
 
     pub fn contents(
         &self,
@@ -1138,7 +1077,6 @@ impl<'mc> HoverEvent<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn is_legacy(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1148,7 +1086,6 @@ impl<'mc> HoverEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn action(
         &self,
@@ -1175,7 +1112,6 @@ impl<'mc> HoverEvent<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn add_content(
         &self,
@@ -1194,11 +1130,9 @@ impl<'mc> HoverEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_legacy(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1209,7 +1143,6 @@ impl<'mc> HoverEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1235,7 +1168,6 @@ impl<'mc> HoverEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1245,7 +1177,6 @@ impl<'mc> HoverEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1303,11 +1234,8 @@ impl<'mc> JNIInstantiatable<'mc> for BaseComponent<'mc> {
 }
 
 impl<'mc> BaseComponent<'mc> {
-    //['since', '']
-
-    //['forRemoval', 'false']
-
     #[deprecated]
+
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::bungee::api::chat::BaseComponent<'mc>, Box<dyn std::error::Error>> {
@@ -1318,7 +1246,6 @@ impl<'mc> BaseComponent<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::bungee::api::chat::BaseComponent::from_raw(&jni, res)
     }
-    //
 
     pub fn duplicate_without_formatting(
         &self,
@@ -1335,7 +1262,6 @@ impl<'mc> BaseComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn copy_formatting_with_base_component(
         &self,
@@ -1361,7 +1287,6 @@ impl<'mc> BaseComponent<'mc> {
         }
         if let Some(a) = arg2 {
             sig += "Z";
-            // 2
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -1372,7 +1297,6 @@ impl<'mc> BaseComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn retain(
         &self,
@@ -1391,7 +1315,6 @@ impl<'mc> BaseComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn to_legacy_text_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1409,7 +1332,6 @@ impl<'mc> BaseComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn to_plain_text_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1427,7 +1349,6 @@ impl<'mc> BaseComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn color_raw(
         &self,
@@ -1441,7 +1362,6 @@ impl<'mc> BaseComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn font(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1455,7 +1375,6 @@ impl<'mc> BaseComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn font_raw(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1469,7 +1388,6 @@ impl<'mc> BaseComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn is_bold(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1479,7 +1397,6 @@ impl<'mc> BaseComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_bold_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -1489,7 +1406,6 @@ impl<'mc> BaseComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_italic(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1499,7 +1415,6 @@ impl<'mc> BaseComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_italic_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -1509,7 +1424,6 @@ impl<'mc> BaseComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_underlined(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1519,7 +1433,6 @@ impl<'mc> BaseComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_underlined_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -1529,7 +1442,6 @@ impl<'mc> BaseComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_strikethrough(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1539,7 +1451,6 @@ impl<'mc> BaseComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_strikethrough_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -1552,7 +1463,6 @@ impl<'mc> BaseComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_obfuscated(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1562,7 +1472,6 @@ impl<'mc> BaseComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_obfuscated_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -1572,7 +1481,6 @@ impl<'mc> BaseComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_extra_with_base_component(
         &self,
@@ -1592,7 +1500,6 @@ impl<'mc> BaseComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_formatting(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1602,7 +1509,6 @@ impl<'mc> BaseComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_font(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -1618,7 +1524,6 @@ impl<'mc> BaseComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_bold(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -1636,7 +1541,6 @@ impl<'mc> BaseComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_italic(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -1654,7 +1558,6 @@ impl<'mc> BaseComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_underlined(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -1672,7 +1575,6 @@ impl<'mc> BaseComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_strikethrough(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -1690,7 +1592,6 @@ impl<'mc> BaseComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_obfuscated(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -1708,7 +1609,6 @@ impl<'mc> BaseComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_insertion(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -1724,7 +1624,6 @@ impl<'mc> BaseComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_click_event(
         &self,
@@ -1743,7 +1642,6 @@ impl<'mc> BaseComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_hover_event(
         &self,
@@ -1762,11 +1660,9 @@ impl<'mc> BaseComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_reset(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1777,7 +1673,6 @@ impl<'mc> BaseComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn insertion(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1791,7 +1686,6 @@ impl<'mc> BaseComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn click_event(
         &self,
@@ -1805,7 +1699,6 @@ impl<'mc> BaseComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn hover_event(
         &self,
@@ -1819,7 +1712,6 @@ impl<'mc> BaseComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn extra(
         &self,
@@ -1840,7 +1732,6 @@ impl<'mc> BaseComponent<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn set_color(
         &self,
@@ -1859,7 +1750,6 @@ impl<'mc> BaseComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1876,7 +1766,6 @@ impl<'mc> BaseComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1891,7 +1780,6 @@ impl<'mc> BaseComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1901,7 +1789,6 @@ impl<'mc> BaseComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn duplicate(
         &self,
@@ -1915,7 +1802,6 @@ impl<'mc> BaseComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn color(&self) -> Result<crate::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lnet/md_5/bungee/api/ChatColor;");
@@ -1927,7 +1813,6 @@ impl<'mc> BaseComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_reset(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1937,7 +1822,6 @@ impl<'mc> BaseComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1963,7 +1847,6 @@ impl<'mc> BaseComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1973,7 +1856,6 @@ impl<'mc> BaseComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1983,7 +1865,6 @@ impl<'mc> BaseComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2062,7 +1943,6 @@ impl<'mc> SelectorComponent<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::bungee::api::chat::SelectorComponent::from_raw(&jni, res)
     }
-    //
 
     pub fn equals(
         &self,
@@ -2079,7 +1959,6 @@ impl<'mc> SelectorComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2094,7 +1973,6 @@ impl<'mc> SelectorComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2104,7 +1982,6 @@ impl<'mc> SelectorComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn duplicate(
         &self,
@@ -2120,7 +1997,6 @@ impl<'mc> SelectorComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn selector(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2134,7 +2010,6 @@ impl<'mc> SelectorComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_selector(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -2150,7 +2025,6 @@ impl<'mc> SelectorComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn duplicate_without_formatting(
         &self,
@@ -2167,7 +2041,6 @@ impl<'mc> SelectorComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn copy_formatting_with_base_component(
         &self,
@@ -2193,7 +2066,6 @@ impl<'mc> SelectorComponent<'mc> {
         }
         if let Some(a) = arg2 {
             sig += "Z";
-            // 2
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -2204,7 +2076,6 @@ impl<'mc> SelectorComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn retain(
         &self,
@@ -2223,7 +2094,6 @@ impl<'mc> SelectorComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn to_legacy_text_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2241,7 +2111,6 @@ impl<'mc> SelectorComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn to_plain_text_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2259,7 +2128,6 @@ impl<'mc> SelectorComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn color_raw(
         &self,
@@ -2273,7 +2141,6 @@ impl<'mc> SelectorComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn font(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2287,7 +2154,6 @@ impl<'mc> SelectorComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn font_raw(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2301,7 +2167,6 @@ impl<'mc> SelectorComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn is_bold(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2311,7 +2176,6 @@ impl<'mc> SelectorComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_bold_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -2321,7 +2185,6 @@ impl<'mc> SelectorComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_italic(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2331,7 +2194,6 @@ impl<'mc> SelectorComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_italic_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -2341,7 +2203,6 @@ impl<'mc> SelectorComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_underlined(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2351,7 +2212,6 @@ impl<'mc> SelectorComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_underlined_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -2361,7 +2221,6 @@ impl<'mc> SelectorComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_strikethrough(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2371,7 +2230,6 @@ impl<'mc> SelectorComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_strikethrough_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -2384,7 +2242,6 @@ impl<'mc> SelectorComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_obfuscated(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2394,7 +2251,6 @@ impl<'mc> SelectorComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_obfuscated_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -2404,7 +2260,6 @@ impl<'mc> SelectorComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_extra_with_base_component(
         &self,
@@ -2424,7 +2279,6 @@ impl<'mc> SelectorComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_formatting(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2434,7 +2288,6 @@ impl<'mc> SelectorComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_font(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -2450,7 +2303,6 @@ impl<'mc> SelectorComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_bold(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -2468,7 +2320,6 @@ impl<'mc> SelectorComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_italic(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -2486,7 +2337,6 @@ impl<'mc> SelectorComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_underlined(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -2504,7 +2354,6 @@ impl<'mc> SelectorComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_strikethrough(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -2522,7 +2371,6 @@ impl<'mc> SelectorComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_obfuscated(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -2540,7 +2388,6 @@ impl<'mc> SelectorComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_insertion(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -2556,7 +2403,6 @@ impl<'mc> SelectorComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_click_event(
         &self,
@@ -2575,7 +2421,6 @@ impl<'mc> SelectorComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_hover_event(
         &self,
@@ -2594,11 +2439,9 @@ impl<'mc> SelectorComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_reset(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2609,7 +2452,6 @@ impl<'mc> SelectorComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn insertion(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2623,7 +2465,6 @@ impl<'mc> SelectorComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn click_event(
         &self,
@@ -2637,7 +2478,6 @@ impl<'mc> SelectorComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn hover_event(
         &self,
@@ -2651,7 +2491,6 @@ impl<'mc> SelectorComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn extra(
         &self,
@@ -2672,7 +2511,6 @@ impl<'mc> SelectorComponent<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn set_color(
         &self,
@@ -2691,7 +2529,6 @@ impl<'mc> SelectorComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn color(&self) -> Result<crate::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lnet/md_5/bungee/api/ChatColor;");
@@ -2703,7 +2540,6 @@ impl<'mc> SelectorComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_reset(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2713,7 +2549,6 @@ impl<'mc> SelectorComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -2739,7 +2574,6 @@ impl<'mc> SelectorComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -2749,7 +2583,6 @@ impl<'mc> SelectorComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2759,7 +2592,6 @@ impl<'mc> SelectorComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2861,7 +2693,6 @@ impl<'mc> ScoreComponent<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::bungee::api::chat::ScoreComponent::from_raw(&jni, res)
     }
-    //
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2875,7 +2706,6 @@ impl<'mc> ScoreComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn equals(
         &self,
@@ -2892,7 +2722,6 @@ impl<'mc> ScoreComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2907,7 +2736,6 @@ impl<'mc> ScoreComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2917,7 +2745,6 @@ impl<'mc> ScoreComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn value(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2931,7 +2758,6 @@ impl<'mc> ScoreComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_name(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -2947,7 +2773,6 @@ impl<'mc> ScoreComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_value(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -2963,7 +2788,6 @@ impl<'mc> ScoreComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn duplicate(
         &self,
@@ -2979,7 +2803,6 @@ impl<'mc> ScoreComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_objective(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -2995,7 +2818,6 @@ impl<'mc> ScoreComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn objective(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3009,7 +2831,6 @@ impl<'mc> ScoreComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn duplicate_without_formatting(
         &self,
@@ -3026,7 +2847,6 @@ impl<'mc> ScoreComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn copy_formatting_with_base_component(
         &self,
@@ -3052,7 +2872,6 @@ impl<'mc> ScoreComponent<'mc> {
         }
         if let Some(a) = arg2 {
             sig += "Z";
-            // 2
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -3063,7 +2882,6 @@ impl<'mc> ScoreComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn retain(
         &self,
@@ -3082,7 +2900,6 @@ impl<'mc> ScoreComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn to_legacy_text_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3100,7 +2917,6 @@ impl<'mc> ScoreComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn to_plain_text_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3118,7 +2934,6 @@ impl<'mc> ScoreComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn color_raw(
         &self,
@@ -3132,7 +2947,6 @@ impl<'mc> ScoreComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn font(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3146,7 +2960,6 @@ impl<'mc> ScoreComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn font_raw(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3160,7 +2973,6 @@ impl<'mc> ScoreComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn is_bold(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3170,7 +2982,6 @@ impl<'mc> ScoreComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_bold_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -3180,7 +2991,6 @@ impl<'mc> ScoreComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_italic(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3190,7 +3000,6 @@ impl<'mc> ScoreComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_italic_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -3200,7 +3009,6 @@ impl<'mc> ScoreComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_underlined(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3210,7 +3018,6 @@ impl<'mc> ScoreComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_underlined_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -3220,7 +3027,6 @@ impl<'mc> ScoreComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_strikethrough(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3230,7 +3036,6 @@ impl<'mc> ScoreComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_strikethrough_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -3243,7 +3048,6 @@ impl<'mc> ScoreComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_obfuscated(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3253,7 +3057,6 @@ impl<'mc> ScoreComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_obfuscated_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -3263,7 +3066,6 @@ impl<'mc> ScoreComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_extra_with_base_component(
         &self,
@@ -3283,7 +3085,6 @@ impl<'mc> ScoreComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_formatting(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3293,7 +3094,6 @@ impl<'mc> ScoreComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_font(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -3309,7 +3109,6 @@ impl<'mc> ScoreComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_bold(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -3327,7 +3126,6 @@ impl<'mc> ScoreComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_italic(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -3345,7 +3143,6 @@ impl<'mc> ScoreComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_underlined(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -3363,7 +3160,6 @@ impl<'mc> ScoreComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_strikethrough(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -3381,7 +3177,6 @@ impl<'mc> ScoreComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_obfuscated(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -3399,7 +3194,6 @@ impl<'mc> ScoreComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_insertion(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -3415,7 +3209,6 @@ impl<'mc> ScoreComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_click_event(
         &self,
@@ -3434,7 +3227,6 @@ impl<'mc> ScoreComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_hover_event(
         &self,
@@ -3453,11 +3245,9 @@ impl<'mc> ScoreComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_reset(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3468,7 +3258,6 @@ impl<'mc> ScoreComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn insertion(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3482,7 +3271,6 @@ impl<'mc> ScoreComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn click_event(
         &self,
@@ -3496,7 +3284,6 @@ impl<'mc> ScoreComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn hover_event(
         &self,
@@ -3510,7 +3297,6 @@ impl<'mc> ScoreComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn extra(
         &self,
@@ -3531,7 +3317,6 @@ impl<'mc> ScoreComponent<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn set_color(
         &self,
@@ -3550,7 +3335,6 @@ impl<'mc> ScoreComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn color(&self) -> Result<crate::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lnet/md_5/bungee/api/ChatColor;");
@@ -3562,7 +3346,6 @@ impl<'mc> ScoreComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_reset(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3572,7 +3355,6 @@ impl<'mc> ScoreComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -3598,7 +3380,6 @@ impl<'mc> ScoreComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -3608,7 +3389,6 @@ impl<'mc> ScoreComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3618,7 +3398,6 @@ impl<'mc> ScoreComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3774,8 +3553,6 @@ impl<'mc> ClickEventAction<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-
-    //
 }
 
 impl<'mc> JNIRaw<'mc> for ClickEvent<'mc> {
@@ -3835,7 +3612,6 @@ impl<'mc> ClickEvent<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::bungee::api::chat::ClickEvent::from_raw(&jni, res)
     }
-    //
 
     pub fn equals(
         &self,
@@ -3852,7 +3628,6 @@ impl<'mc> ClickEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -3867,7 +3642,6 @@ impl<'mc> ClickEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -3877,7 +3651,6 @@ impl<'mc> ClickEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn value(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3891,7 +3664,6 @@ impl<'mc> ClickEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn action(
         &self,
@@ -3918,7 +3690,6 @@ impl<'mc> ClickEvent<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -3944,7 +3715,6 @@ impl<'mc> ClickEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -3954,7 +3724,6 @@ impl<'mc> ClickEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3964,7 +3733,6 @@ impl<'mc> ClickEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -4075,7 +3843,6 @@ impl<'mc> ItemTagSerializer<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::bungee::api::chat::ItemTagSerializer::from_raw(&jni, res)
     }
-    //
 
     pub fn serialize_with_item_tag(
         &self,
@@ -4103,7 +3870,6 @@ impl<'mc> ItemTagSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn deserialize_with_json_element(
         &self,
@@ -4129,7 +3895,6 @@ impl<'mc> ItemTagSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -4155,7 +3920,6 @@ impl<'mc> ItemTagSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -4172,7 +3936,6 @@ impl<'mc> ItemTagSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -4187,7 +3950,6 @@ impl<'mc> ItemTagSerializer<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4197,7 +3959,6 @@ impl<'mc> ItemTagSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -4207,7 +3968,6 @@ impl<'mc> ItemTagSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -4217,7 +3977,6 @@ impl<'mc> ItemTagSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -4307,7 +4066,6 @@ impl<'mc> TranslatableComponent<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::bungee::api::chat::TranslatableComponent::from_raw(&jni, res)
     }
-    //
 
     pub fn equals(
         &self,
@@ -4324,7 +4082,6 @@ impl<'mc> TranslatableComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -4339,7 +4096,6 @@ impl<'mc> TranslatableComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4349,7 +4105,6 @@ impl<'mc> TranslatableComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn duplicate(
         &self,
@@ -4366,7 +4121,6 @@ impl<'mc> TranslatableComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_with_with_string(
         &self,
@@ -4386,7 +4140,6 @@ impl<'mc> TranslatableComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn translate(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -4400,7 +4153,6 @@ impl<'mc> TranslatableComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn with(
         &self,
@@ -4421,7 +4173,6 @@ impl<'mc> TranslatableComponent<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn fallback(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -4435,7 +4186,6 @@ impl<'mc> TranslatableComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_translate(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -4451,7 +4201,6 @@ impl<'mc> TranslatableComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_fallback(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -4467,7 +4216,6 @@ impl<'mc> TranslatableComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn format(
         &self,
@@ -4481,7 +4229,6 @@ impl<'mc> TranslatableComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn duplicate_without_formatting(
         &self,
@@ -4498,7 +4245,6 @@ impl<'mc> TranslatableComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn copy_formatting_with_base_component(
         &self,
@@ -4524,7 +4270,6 @@ impl<'mc> TranslatableComponent<'mc> {
         }
         if let Some(a) = arg2 {
             sig += "Z";
-            // 2
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -4535,7 +4280,6 @@ impl<'mc> TranslatableComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn retain(
         &self,
@@ -4554,7 +4298,6 @@ impl<'mc> TranslatableComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn to_legacy_text_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4572,7 +4315,6 @@ impl<'mc> TranslatableComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn to_plain_text_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4590,7 +4332,6 @@ impl<'mc> TranslatableComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn color_raw(
         &self,
@@ -4604,7 +4345,6 @@ impl<'mc> TranslatableComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn font(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -4618,7 +4358,6 @@ impl<'mc> TranslatableComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn font_raw(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -4632,7 +4371,6 @@ impl<'mc> TranslatableComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn is_bold(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4642,7 +4380,6 @@ impl<'mc> TranslatableComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_bold_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -4652,7 +4389,6 @@ impl<'mc> TranslatableComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_italic(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4662,7 +4398,6 @@ impl<'mc> TranslatableComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_italic_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -4672,7 +4407,6 @@ impl<'mc> TranslatableComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_underlined(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4682,7 +4416,6 @@ impl<'mc> TranslatableComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_underlined_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -4692,7 +4425,6 @@ impl<'mc> TranslatableComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_strikethrough(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4702,7 +4434,6 @@ impl<'mc> TranslatableComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_strikethrough_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -4715,7 +4446,6 @@ impl<'mc> TranslatableComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_obfuscated(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4725,7 +4455,6 @@ impl<'mc> TranslatableComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_obfuscated_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -4735,7 +4464,6 @@ impl<'mc> TranslatableComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_extra_with_base_component(
         &self,
@@ -4755,7 +4483,6 @@ impl<'mc> TranslatableComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_formatting(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4765,7 +4492,6 @@ impl<'mc> TranslatableComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_font(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -4781,7 +4507,6 @@ impl<'mc> TranslatableComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_bold(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -4799,7 +4524,6 @@ impl<'mc> TranslatableComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_italic(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -4817,7 +4541,6 @@ impl<'mc> TranslatableComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_underlined(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -4835,7 +4558,6 @@ impl<'mc> TranslatableComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_strikethrough(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -4853,7 +4575,6 @@ impl<'mc> TranslatableComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_obfuscated(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -4871,7 +4592,6 @@ impl<'mc> TranslatableComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_insertion(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -4887,7 +4607,6 @@ impl<'mc> TranslatableComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_click_event(
         &self,
@@ -4906,7 +4625,6 @@ impl<'mc> TranslatableComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_hover_event(
         &self,
@@ -4925,11 +4643,9 @@ impl<'mc> TranslatableComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_reset(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4940,7 +4656,6 @@ impl<'mc> TranslatableComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn insertion(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -4954,7 +4669,6 @@ impl<'mc> TranslatableComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn click_event(
         &self,
@@ -4968,7 +4682,6 @@ impl<'mc> TranslatableComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn hover_event(
         &self,
@@ -4982,7 +4695,6 @@ impl<'mc> TranslatableComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn extra(
         &self,
@@ -5003,7 +4715,6 @@ impl<'mc> TranslatableComponent<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn set_color(
         &self,
@@ -5022,7 +4733,6 @@ impl<'mc> TranslatableComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn color(&self) -> Result<crate::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lnet/md_5/bungee/api/ChatColor;");
@@ -5034,7 +4744,6 @@ impl<'mc> TranslatableComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_reset(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5044,7 +4753,6 @@ impl<'mc> TranslatableComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -5070,7 +4778,6 @@ impl<'mc> TranslatableComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -5080,7 +4787,6 @@ impl<'mc> TranslatableComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -5090,7 +4796,6 @@ impl<'mc> TranslatableComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -5162,8 +4867,6 @@ impl<'mc> JNIInstantiatable<'mc> for ComponentBuilderJoiner<'mc> {
 }
 
 impl<'mc> ComponentBuilderJoiner<'mc> {
-    //
-
     pub fn join(
         &self,
         arg0: impl Into<crate::bungee::api::chat::ComponentBuilder<'mc>>,
@@ -5229,8 +4932,6 @@ impl<'mc> JNIInstantiatable<'mc> for ItemTag<'mc> {
 }
 
 impl<'mc> ItemTag<'mc> {
-    //
-
     pub fn equals(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -5246,7 +4947,6 @@ impl<'mc> ItemTag<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -5261,7 +4961,6 @@ impl<'mc> ItemTag<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -5271,7 +4970,6 @@ impl<'mc> ItemTag<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn of_nbt(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5293,7 +4991,6 @@ impl<'mc> ItemTag<'mc> {
         let obj = res.l()?;
         crate::bungee::api::chat::ItemTag::from_raw(&jni, obj)
     }
-    //
 
     pub fn nbt(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -5307,7 +5004,6 @@ impl<'mc> ItemTag<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -5333,7 +5029,6 @@ impl<'mc> ItemTag<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -5343,7 +5038,6 @@ impl<'mc> ItemTag<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -5353,7 +5047,6 @@ impl<'mc> ItemTag<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -5433,7 +5126,6 @@ impl<'mc> KeybindComponent<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::bungee::api::chat::KeybindComponent::from_raw(&jni, res)
     }
-    //
 
     pub fn equals(
         &self,
@@ -5450,7 +5142,6 @@ impl<'mc> KeybindComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -5465,7 +5156,6 @@ impl<'mc> KeybindComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -5475,7 +5165,6 @@ impl<'mc> KeybindComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn duplicate(
         &self,
@@ -5491,7 +5180,6 @@ impl<'mc> KeybindComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn keybind(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -5505,7 +5193,6 @@ impl<'mc> KeybindComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_keybind(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -5521,7 +5208,6 @@ impl<'mc> KeybindComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn duplicate_without_formatting(
         &self,
@@ -5538,7 +5224,6 @@ impl<'mc> KeybindComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn copy_formatting_with_base_component(
         &self,
@@ -5564,7 +5249,6 @@ impl<'mc> KeybindComponent<'mc> {
         }
         if let Some(a) = arg2 {
             sig += "Z";
-            // 2
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -5575,7 +5259,6 @@ impl<'mc> KeybindComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn retain(
         &self,
@@ -5594,7 +5277,6 @@ impl<'mc> KeybindComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn to_legacy_text_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5612,7 +5294,6 @@ impl<'mc> KeybindComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn to_plain_text_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -5630,7 +5311,6 @@ impl<'mc> KeybindComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn color_raw(
         &self,
@@ -5644,7 +5324,6 @@ impl<'mc> KeybindComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn font(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -5658,7 +5337,6 @@ impl<'mc> KeybindComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn font_raw(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -5672,7 +5350,6 @@ impl<'mc> KeybindComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn is_bold(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5682,7 +5359,6 @@ impl<'mc> KeybindComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_bold_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -5692,7 +5368,6 @@ impl<'mc> KeybindComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_italic(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5702,7 +5377,6 @@ impl<'mc> KeybindComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_italic_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -5712,7 +5386,6 @@ impl<'mc> KeybindComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_underlined(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5722,7 +5395,6 @@ impl<'mc> KeybindComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_underlined_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -5732,7 +5404,6 @@ impl<'mc> KeybindComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_strikethrough(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5742,7 +5413,6 @@ impl<'mc> KeybindComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_strikethrough_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -5755,7 +5425,6 @@ impl<'mc> KeybindComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_obfuscated(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5765,7 +5434,6 @@ impl<'mc> KeybindComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_obfuscated_raw(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Boolean;");
@@ -5775,7 +5443,6 @@ impl<'mc> KeybindComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_extra_with_base_component(
         &self,
@@ -5795,7 +5462,6 @@ impl<'mc> KeybindComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_formatting(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5805,7 +5471,6 @@ impl<'mc> KeybindComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_font(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -5821,7 +5486,6 @@ impl<'mc> KeybindComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_bold(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -5839,7 +5503,6 @@ impl<'mc> KeybindComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_italic(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -5857,7 +5520,6 @@ impl<'mc> KeybindComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_underlined(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -5875,7 +5537,6 @@ impl<'mc> KeybindComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_strikethrough(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -5893,7 +5554,6 @@ impl<'mc> KeybindComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_obfuscated(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/Boolean;)V");
@@ -5911,7 +5571,6 @@ impl<'mc> KeybindComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_insertion(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -5927,7 +5586,6 @@ impl<'mc> KeybindComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_click_event(
         &self,
@@ -5946,7 +5604,6 @@ impl<'mc> KeybindComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_hover_event(
         &self,
@@ -5965,11 +5622,9 @@ impl<'mc> KeybindComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_reset(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5980,7 +5635,6 @@ impl<'mc> KeybindComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn insertion(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -5994,7 +5648,6 @@ impl<'mc> KeybindComponent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn click_event(
         &self,
@@ -6008,7 +5661,6 @@ impl<'mc> KeybindComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn hover_event(
         &self,
@@ -6022,7 +5674,6 @@ impl<'mc> KeybindComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn extra(
         &self,
@@ -6043,7 +5694,6 @@ impl<'mc> KeybindComponent<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn set_color(
         &self,
@@ -6062,7 +5712,6 @@ impl<'mc> KeybindComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn color(&self) -> Result<crate::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lnet/md_5/bungee/api/ChatColor;");
@@ -6074,7 +5723,6 @@ impl<'mc> KeybindComponent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_reset(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6084,7 +5732,6 @@ impl<'mc> KeybindComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -6110,7 +5757,6 @@ impl<'mc> KeybindComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -6120,7 +5766,6 @@ impl<'mc> KeybindComponent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -6130,7 +5775,6 @@ impl<'mc> KeybindComponent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -6284,8 +5928,6 @@ impl<'mc> ComponentBuilderFormatRetention<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-
-    //
 }
 
 impl<'mc> JNIRaw<'mc> for ComponentBuilder<'mc> {
@@ -6342,7 +5984,6 @@ impl<'mc> ComponentBuilder<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::bungee::api::chat::ComponentBuilder::from_raw(&jni, res)
     }
-    //
 
     pub fn font(
         &self,
@@ -6363,14 +6004,12 @@ impl<'mc> ComponentBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn bold(
         &self,
         arg0: bool,
     ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Lnet/md_5/bungee/api/chat/ComponentBuilder;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6383,14 +6022,12 @@ impl<'mc> ComponentBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn italic(
         &self,
         arg0: bool,
     ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Lnet/md_5/bungee/api/chat/ComponentBuilder;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6403,14 +6040,12 @@ impl<'mc> ComponentBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn underlined(
         &self,
         arg0: bool,
     ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Lnet/md_5/bungee/api/chat/ComponentBuilder;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6423,14 +6058,12 @@ impl<'mc> ComponentBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn strikethrough(
         &self,
         arg0: bool,
     ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Lnet/md_5/bungee/api/chat/ComponentBuilder;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6443,14 +6076,12 @@ impl<'mc> ComponentBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn obfuscated(
         &self,
         arg0: bool,
     ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Lnet/md_5/bungee/api/chat/ComponentBuilder;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6463,7 +6094,6 @@ impl<'mc> ComponentBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn insertion(
         &self,
@@ -6484,7 +6114,6 @@ impl<'mc> ComponentBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn retain(
         &self,
@@ -6505,7 +6134,6 @@ impl<'mc> ComponentBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn append_with_string(
         &self,
@@ -6537,7 +6165,6 @@ impl<'mc> ComponentBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn event_with_hover_event(
         &self,
@@ -6559,7 +6186,6 @@ impl<'mc> ComponentBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn reset(
         &self,
@@ -6573,9 +6199,6 @@ impl<'mc> ComponentBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
-    //
 
     pub fn color(
         &self,
@@ -6598,7 +6221,6 @@ impl<'mc> ComponentBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn current_component(
         &self,
@@ -6615,7 +6237,6 @@ impl<'mc> ComponentBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn reset_cursor(
         &self,
@@ -6629,7 +6250,6 @@ impl<'mc> ComponentBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_cursor(
         &self,
@@ -6648,7 +6268,6 @@ impl<'mc> ComponentBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn cursor(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -6658,7 +6277,6 @@ impl<'mc> ComponentBuilder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn parts(
         &self,
@@ -6679,7 +6297,6 @@ impl<'mc> ComponentBuilder<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn append_legacy(
         &self,
@@ -6700,7 +6317,6 @@ impl<'mc> ComponentBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn remove_component(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -6714,7 +6330,6 @@ impl<'mc> ComponentBuilder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_component(
         &self,
@@ -6733,7 +6348,6 @@ impl<'mc> ComponentBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -6759,7 +6373,6 @@ impl<'mc> ComponentBuilder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -6776,7 +6389,6 @@ impl<'mc> ComponentBuilder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -6791,7 +6403,6 @@ impl<'mc> ComponentBuilder<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -6801,7 +6412,6 @@ impl<'mc> ComponentBuilder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -6811,7 +6421,6 @@ impl<'mc> ComponentBuilder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -6821,7 +6430,6 @@ impl<'mc> ComponentBuilder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");

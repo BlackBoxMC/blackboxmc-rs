@@ -43,8 +43,6 @@ impl<'mc> JNIInstantiatable<'mc> for BukkitTask<'mc> {
 }
 
 impl<'mc> BukkitTask<'mc> {
-    //
-
     pub fn cancel(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
@@ -53,7 +51,6 @@ impl<'mc> BukkitTask<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -63,7 +60,6 @@ impl<'mc> BukkitTask<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_sync(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -73,7 +69,6 @@ impl<'mc> BukkitTask<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn owner(&self) -> Result<Option<crate::plugin::Plugin<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
@@ -89,7 +84,6 @@ impl<'mc> BukkitTask<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn task_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -141,8 +135,6 @@ impl<'mc> JNIInstantiatable<'mc> for BukkitWorker<'mc> {
 }
 
 impl<'mc> BukkitWorker<'mc> {
-    //@Nullable
-
     pub fn owner(&self) -> Result<Option<crate::plugin::Plugin<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
         let res = self
@@ -157,7 +149,6 @@ impl<'mc> BukkitWorker<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn task_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -210,8 +201,6 @@ impl<'mc> JNIInstantiatable<'mc> for BukkitScheduler<'mc> {
 }
 
 impl<'mc> BukkitScheduler<'mc> {
-    //
-
     /// Check if the task queued to be run later.
     /// <p>If a repeating task is currently running, it might not be queued now but could be in the future. A task that is not queued, and not running, will not be queued again.</p>
     pub fn is_queued(&self, arg0: i32) -> Result<bool, Box<dyn std::error::Error>> {
@@ -226,7 +215,6 @@ impl<'mc> BukkitScheduler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn schedule_sync_delayed_task_with_plugin(
         &self,
@@ -261,8 +249,6 @@ impl<'mc> BukkitScheduler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Removes task from scheduler.
     pub fn cancel_task(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -276,7 +262,6 @@ impl<'mc> BukkitScheduler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn cancel_tasks(
         &self,
@@ -295,8 +280,6 @@ impl<'mc> BukkitScheduler<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
-
     /// Check if the task currently running.
     /// <p>A repeating task might not be running currently, but will be running in the future. A task that has finished, and does not repeat, will not be running ever again.</p>
     /// <p>Explicitly, a task is running if there exists a thread for it, and that thread is alive.</p>
@@ -312,7 +295,6 @@ impl<'mc> BukkitScheduler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn active_workers(
         &self,
@@ -337,7 +319,6 @@ impl<'mc> BukkitScheduler<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn pending_tasks(
         &self,
@@ -420,7 +401,6 @@ impl<'mc> BukkitRunnable<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::scheduler::BukkitRunnable::from_raw(&jni, res)
     }
-    //
 
     pub fn cancel(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -430,7 +410,6 @@ impl<'mc> BukkitRunnable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -440,7 +419,6 @@ impl<'mc> BukkitRunnable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn run_task(
         &self,
@@ -461,7 +439,6 @@ impl<'mc> BukkitRunnable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn run_task_asynchronously(
         &self,
@@ -482,7 +459,6 @@ impl<'mc> BukkitRunnable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn run_task_later(
         &self,
@@ -508,7 +484,6 @@ impl<'mc> BukkitRunnable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn run_task_later_asynchronously(
         &self,
@@ -534,7 +509,6 @@ impl<'mc> BukkitRunnable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn run_task_timer(
         &self,
@@ -563,7 +537,6 @@ impl<'mc> BukkitRunnable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn run_task_timer_asynchronously(
         &self,
@@ -592,7 +565,6 @@ impl<'mc> BukkitRunnable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn task_id(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -602,7 +574,6 @@ impl<'mc> BukkitRunnable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -628,7 +599,6 @@ impl<'mc> BukkitRunnable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -645,7 +615,6 @@ impl<'mc> BukkitRunnable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -660,7 +629,6 @@ impl<'mc> BukkitRunnable<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -670,7 +638,6 @@ impl<'mc> BukkitRunnable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -680,7 +647,6 @@ impl<'mc> BukkitRunnable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -690,7 +656,6 @@ impl<'mc> BukkitRunnable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -700,7 +665,6 @@ impl<'mc> BukkitRunnable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");

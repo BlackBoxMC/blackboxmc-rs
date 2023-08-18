@@ -149,8 +149,6 @@ impl<'mc> JNIInstantiatable<'mc> for SignSide<'mc> {
 }
 
 impl<'mc> SignSide<'mc> {
-    //@Deprecated
-
     #[deprecated]
 
     pub fn is_glowing_text(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -161,17 +159,8 @@ impl<'mc> SignSide<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Deprecated
-
     #[deprecated]
-    //@NotNull
-
-    //@Deprecated
-    #[deprecated]
-    //@NotNull
-
-    /// Gets the line of text at the specified index on this side of the sign.
-    /// <p>For example, getLine(0) will return the first line of text.</p>
+    /// Gets the line of text at the specified index on this side of the sign.<p>For example, getLine(0) will return the first line of text.</p>
     pub fn get_line(&self, arg0: i32) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/String;");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -188,7 +177,6 @@ impl<'mc> SignSide<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_line(
         &self,
@@ -212,13 +200,10 @@ impl<'mc> SignSide<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
     #[deprecated]
     /// Sets whether this side of the sign has glowing text.
     pub fn set_glowing_text(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -229,7 +214,6 @@ impl<'mc> SignSide<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_color(
         &self,
@@ -248,7 +232,6 @@ impl<'mc> SignSide<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn color(&self) -> Result<Option<crate::DyeColor<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/DyeColor;");

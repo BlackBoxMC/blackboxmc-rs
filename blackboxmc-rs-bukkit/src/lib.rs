@@ -153,8 +153,6 @@ impl<'mc> JNIInstantiatable<'mc> for Server<'mc> {
 }
 
 impl<'mc> Server<'mc> {
-    //@NotNull
-
     pub fn version(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
@@ -167,7 +165,6 @@ impl<'mc> Server<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn reload(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -177,7 +174,6 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_tag(
         &self,
@@ -210,17 +206,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
-    #[deprecated]
-    //@Nullable
-
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Magic value
-    /// </div>
-    /// Magic value
-    ///
+    #[deprecated("Magic value ")]
     /// Gets the map from the given item ID.
     pub fn get_map(
         &self,
@@ -243,7 +229,6 @@ impl<'mc> Server<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn create_map(
         &self,
@@ -264,7 +249,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -278,7 +262,6 @@ impl<'mc> Server<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn shutdown(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -288,10 +271,7 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
     #[deprecated]
-    //@NotNull
 
     pub fn get_unsafe(&self) -> Result<crate::UnsafeValues<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/UnsafeValues;");
@@ -303,7 +283,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn logger(
         &self,
@@ -317,7 +296,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn port(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -327,7 +305,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn broadcast(
         &self,
@@ -353,7 +330,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn world_container(
         &self,
@@ -368,7 +344,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn get_world_with_uuid(
         &self,
@@ -390,7 +365,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn bukkit_version(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -407,7 +381,6 @@ impl<'mc> Server<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn spigot(&self) -> Result<crate::ServerSpigot<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Server$Spigot;");
@@ -419,7 +392,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_loot_table(
         &self,
@@ -440,7 +412,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_recipe(
         &self,
@@ -461,7 +432,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_boss_bar(
         &self,
@@ -482,7 +452,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn create_chunk_data(
         &self,
@@ -504,7 +473,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn plugin_manager(
         &self,
@@ -521,7 +489,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn item_factory(
         &self,
@@ -535,7 +502,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn online_players(
         &self,
@@ -557,7 +523,6 @@ impl<'mc> Server<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn max_players(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -567,8 +532,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Set the maximum amount of players allowed to be logged in at once.
     pub fn set_max_players(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -582,7 +545,6 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn view_distance(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -592,7 +554,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn simulation_distance(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -605,7 +566,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn ip(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -619,7 +579,6 @@ impl<'mc> Server<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn world_type(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -633,7 +592,6 @@ impl<'mc> Server<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn generate_structures(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -646,7 +604,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn max_world_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -656,7 +613,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn allow_end(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -666,7 +622,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn allow_nether(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -676,7 +631,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn initial_enabled_packs(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -701,7 +655,6 @@ impl<'mc> Server<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn initial_disabled_packs(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -726,7 +679,6 @@ impl<'mc> Server<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn data_pack_manager(
         &self,
@@ -743,11 +695,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //@NotNull
-
-    //@NotNull
 
     pub fn resource_pack(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -761,7 +708,6 @@ impl<'mc> Server<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn resource_pack_hash(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -778,7 +724,6 @@ impl<'mc> Server<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn resource_pack_prompt(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -795,7 +740,6 @@ impl<'mc> Server<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn is_resource_pack_required(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -808,7 +752,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_whitelist(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -818,13 +761,10 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets if the server is whitelisted.
     /// Sets if the server whitelist is enforced. If the whitelist is enforced, non-whitelisted players will be disconnected when the server whitelist is reloaded.
     pub fn set_whitelist(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -835,7 +775,6 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_whitelist_enforced(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -848,12 +787,9 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets if the server whitelist is enforced. If the whitelist is enforced, non-whitelisted players will be disconnected when the server whitelist is reloaded.
     pub fn set_whitelist_enforced(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -864,7 +800,6 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn whitelisted_players(
         &self,
@@ -881,7 +816,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn reload_whitelist(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -891,7 +825,6 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn broadcast_message(
         &self,
@@ -910,9 +843,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
-
-    //@NotNull
 
     pub fn update_folder(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -926,7 +856,6 @@ impl<'mc> Server<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn update_folder_file(
         &self,
@@ -941,7 +870,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn connection_throttle(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
@@ -954,8 +882,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn ticks_per_animal_spawns(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -969,8 +895,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn ticks_per_monster_spawns(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -984,8 +908,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn ticks_per_water_spawns(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -999,8 +921,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn ticks_per_water_ambient_spawns(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -1014,8 +934,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn ticks_per_water_underground_creature_spawns(
@@ -1031,8 +949,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn ticks_per_ambient_spawns(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -1046,7 +962,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn get_ticks_per_spawns(
         &self,
@@ -1065,7 +980,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn get_player_with_string(
         &self,
@@ -1087,7 +1001,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_player_exact(
         &self,
@@ -1108,7 +1021,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn match_player(
         &self,
@@ -1134,7 +1046,6 @@ impl<'mc> Server<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn scheduler(
         &self,
@@ -1148,7 +1059,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn services_manager(
         &self,
@@ -1165,7 +1075,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn worlds(&self) -> Result<Vec<crate::World<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -1182,7 +1091,6 @@ impl<'mc> Server<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn create_world(
         &self,
@@ -1203,7 +1111,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn unload_world_with_string(
         &self,
@@ -1218,7 +1125,6 @@ impl<'mc> Server<'mc> {
         ));
         args.push(val_1);
         sig += "Z";
-        // 3
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         args.push(val_2);
         sig += ")Z";
@@ -1228,7 +1134,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn create_world_border(
         &self,
@@ -1245,7 +1150,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn create_explorer_map_with_world(
         &self,
@@ -1279,7 +1183,6 @@ impl<'mc> Server<'mc> {
         }
         if let Some(a) = arg4 {
             sig += "Z";
-            // 4
             let val_5 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_5);
         }
@@ -1292,7 +1195,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn reload_data(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1302,7 +1204,6 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_plugin_command(
         &self,
@@ -1323,7 +1224,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn save_players(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1333,7 +1233,6 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn dispatch_command(
         &self,
@@ -1359,7 +1258,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_recipe(
         &self,
@@ -1378,7 +1276,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_recipes_for(
         &self,
@@ -1404,7 +1301,6 @@ impl<'mc> Server<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn get_crafting_recipe(
         &self,
@@ -1428,7 +1324,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn craft_item(
         &self,
@@ -1457,7 +1352,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn recipe_iterator(
         &self,
@@ -1471,7 +1365,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn clear_recipes(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1481,7 +1374,6 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn reset_recipes(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1491,7 +1383,6 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_recipe(
         &self,
@@ -1510,7 +1401,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn command_aliases(
         &self,
@@ -1527,7 +1417,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn spawn_radius(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1537,8 +1426,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Sets the radius, in blocks, around each worlds spawn point to protect.
     pub fn set_spawn_radius(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -1552,8 +1439,6 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn should_send_chat_previews(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1567,7 +1452,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_enforcing_secure_profiles(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1580,7 +1464,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn hide_online_players(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1593,7 +1476,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn online_mode(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1603,7 +1485,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn allow_flight(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1613,7 +1494,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_hardcore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1623,7 +1503,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_offline_player_with_string(
         &self,
@@ -1645,7 +1524,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn create_player_profile_with_uuid(
         &self,
@@ -1678,7 +1556,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn ipbans(
         &self,
@@ -1692,7 +1569,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn ban_ip_with_string(
         &self,
@@ -1712,7 +1588,6 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn unban_ip_with_string(
         &self,
@@ -1732,7 +1607,6 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn banned_players(
         &self,
@@ -1749,7 +1623,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_ban_list(
         &self,
@@ -1770,7 +1643,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn operators(
         &self,
@@ -1784,7 +1656,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn default_game_mode(&self) -> Result<crate::GameMode<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/GameMode;");
@@ -1812,7 +1683,6 @@ impl<'mc> Server<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_default_game_mode(
         &self,
@@ -1831,7 +1701,6 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn console_sender(
         &self,
@@ -1848,9 +1717,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //@NotNull
 
     pub fn messenger(
         &self,
@@ -1864,7 +1730,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn help_map(&self) -> Result<crate::help::HelpMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/help/HelpMap;");
@@ -1876,7 +1741,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn create_inventory_with_inventory_holder(
         &self,
@@ -1910,7 +1774,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn create_merchant(
         &self,
@@ -1931,7 +1794,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn max_chained_neighbor_updates(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1944,8 +1806,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn monster_spawn_limit(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -1959,8 +1819,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn animal_spawn_limit(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -1974,8 +1832,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn water_animal_spawn_limit(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -1989,8 +1845,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn water_ambient_spawn_limit(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -2004,8 +1858,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn water_underground_creature_spawn_limit(
@@ -2021,8 +1873,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn ambient_spawn_limit(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -2036,7 +1886,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn get_spawn_limit(
         &self,
@@ -2055,7 +1904,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_primary_thread(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2065,7 +1913,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn motd(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2079,7 +1926,6 @@ impl<'mc> Server<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_motd(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -2095,7 +1941,6 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn shutdown_message(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2116,7 +1961,6 @@ impl<'mc> Server<'mc> {
                 .to_string(),
         ))
     }
-    //@NotNull
 
     pub fn warning_state(
         &self,
@@ -2143,7 +1987,6 @@ impl<'mc> Server<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@Nullable
 
     pub fn scoreboard_manager(
         &self,
@@ -2164,7 +2007,6 @@ impl<'mc> Server<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn get_scoreboard_criteria(
         &self,
@@ -2185,7 +2027,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn server_icon(
         &self,
@@ -2203,7 +2044,6 @@ impl<'mc> Server<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn load_server_icon_with_buffered_image(
         &self,
@@ -2223,8 +2063,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
     /// Set the idle kick timeout. Any players idle for the specified amount of time will be automatically kicked.
     /// <p>A value of 0 will disable the idle kick timeout.</p>
     pub fn set_idle_timeout(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -2239,7 +2077,6 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn idle_timeout(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2249,7 +2086,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn create_boss_bar_with_namespaced_key(
         &self,
@@ -2290,7 +2126,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn boss_bars(
         &self,
@@ -2304,7 +2139,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn remove_boss_bar(
         &self,
@@ -2323,7 +2157,6 @@ impl<'mc> Server<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_entity(
         &self,
@@ -2344,7 +2177,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_advancement(
         &self,
@@ -2365,7 +2197,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn advancement_iterator(
         &self,
@@ -2382,7 +2213,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn create_block_data_with_material(
         &self,
@@ -2412,7 +2242,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn select_entities(
         &self,
@@ -2446,7 +2275,6 @@ impl<'mc> Server<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn structure_manager(
         &self,
@@ -2463,7 +2291,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_registry(
         &self,
@@ -2482,7 +2309,6 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn send_plugin_message(
         &self,
@@ -2509,7 +2335,6 @@ impl<'mc> Server<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn listening_plugin_channels(
         &self,
@@ -2581,7 +2406,6 @@ impl<'mc> ServerSpigot<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::ServerSpigot::from_raw(&jni, res)
     }
-    //
 
     pub fn broadcast_with_base_component(
         &self,
@@ -2601,7 +2425,6 @@ impl<'mc> ServerSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn config(
         &self,
@@ -2616,7 +2439,6 @@ impl<'mc> ServerSpigot<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn restart(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2626,7 +2448,6 @@ impl<'mc> ServerSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -2652,7 +2473,6 @@ impl<'mc> ServerSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -2669,7 +2489,6 @@ impl<'mc> ServerSpigot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2684,7 +2503,6 @@ impl<'mc> ServerSpigot<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2694,7 +2512,6 @@ impl<'mc> ServerSpigot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -2704,7 +2521,6 @@ impl<'mc> ServerSpigot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2714,7 +2530,6 @@ impl<'mc> ServerSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2889,8 +2704,6 @@ impl<'mc> JNIInstantiatable<'mc> for FeatureFlag<'mc> {
 }
 
 impl<'mc> FeatureFlag<'mc> {
-    //@NotNull
-
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self
@@ -3070,8 +2883,6 @@ impl<'mc> JNIInstantiatable<'mc> for Raid<'mc> {
 }
 
 impl<'mc> Raid<'mc> {
-    //@NotNull
-
     pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
@@ -3082,7 +2893,6 @@ impl<'mc> Raid<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_started(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3092,7 +2902,6 @@ impl<'mc> Raid<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn active_ticks(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
@@ -3102,7 +2911,6 @@ impl<'mc> Raid<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn bad_omen_level(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -3112,8 +2920,6 @@ impl<'mc> Raid<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Sets the Bad Omen level.
     ///
     /// If the level is higher than 1, there will be an additional wave that as strong as the final wave.
@@ -3129,7 +2935,6 @@ impl<'mc> Raid<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn status(&self) -> Result<crate::RaidRaidStatus<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Raid$RaidStatus;");
@@ -3154,7 +2959,6 @@ impl<'mc> Raid<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn spawned_groups(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -3167,7 +2971,6 @@ impl<'mc> Raid<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn total_groups(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -3177,7 +2980,6 @@ impl<'mc> Raid<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn total_waves(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -3187,7 +2989,6 @@ impl<'mc> Raid<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn total_health(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -3197,7 +2998,6 @@ impl<'mc> Raid<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //@NotNull
 
     pub fn heroes(
         &self,
@@ -3211,7 +3011,6 @@ impl<'mc> Raid<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn raiders(&self) -> Result<Vec<crate::entity::Raider<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -3270,8 +3069,6 @@ impl<'mc> JNIInstantiatable<'mc> for UnsafeValues<'mc> {
 }
 
 impl<'mc> UnsafeValues<'mc> {
-    //
-
     pub fn get_material(
         &self,
         arg0: impl Into<String>,
@@ -3309,7 +3106,6 @@ impl<'mc> UnsafeValues<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn get_translation_key_with_entity_type(
         &self,
@@ -3333,7 +3129,6 @@ impl<'mc> UnsafeValues<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn to_legacy(
         &self,
@@ -3367,7 +3162,6 @@ impl<'mc> UnsafeValues<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn from_legacy_with_material(
         &self,
@@ -3395,7 +3189,6 @@ impl<'mc> UnsafeValues<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn data_version(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -3405,7 +3198,6 @@ impl<'mc> UnsafeValues<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn check_supported(
         &self,
@@ -3424,7 +3216,6 @@ impl<'mc> UnsafeValues<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn modify_item_stack(
         &self,
@@ -3454,9 +3245,6 @@ impl<'mc> UnsafeValues<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
-    //
 
     pub fn load_advancement(
         &self,
@@ -3486,7 +3274,6 @@ impl<'mc> UnsafeValues<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn remove_advancement(
         &self,
@@ -3505,7 +3292,6 @@ impl<'mc> UnsafeValues<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_default_attribute_modifiers(
         &self,
@@ -3531,7 +3317,6 @@ impl<'mc> UnsafeValues<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn get_creative_category(
         &self,
@@ -3565,7 +3350,6 @@ impl<'mc> UnsafeValues<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn get_block_translation_key(
         &self,
@@ -3588,7 +3372,6 @@ impl<'mc> UnsafeValues<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn get_item_translation_key(
         &self,
@@ -3611,7 +3394,6 @@ impl<'mc> UnsafeValues<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn get_feature_flag(
         &self,
@@ -3673,8 +3455,6 @@ impl<'mc> JNIInstantiatable<'mc> for World<'mc> {
 }
 
 impl<'mc> World<'mc> {
-    //
-
     /// Sets the relative in-game time on the server.
     /// <p>The relative time is analogous to hours * 1000</p>
     /// <p>Note that setting the relative time below the current relative time will actually move the clock forward a day. If you require to rewind time, please see <a href="#setFullTime(long)"><code>setFullTime(long)</code></a></p>
@@ -3690,7 +3470,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn save(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3700,7 +3479,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn time(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
@@ -3710,25 +3488,8 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //@Deprecated
-
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Deprecated in favor of <a href="#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)"><code>setTicksPerSpawns(SpawnCategory, int)</code></a>
-    /// </div>
-    /// Deprecated in favor of <a href="#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)"><code>setTicksPerSpawns(SpawnCategory, int)</code></a>
-    ///
-    /// Sets the world's ticks per water underground creature spawns value
-    /// <p>This value determines how many ticks there are between attempts to spawn water underground creature.</p>
-    /// <p><b>Example Usage:</b></p>
-    /// <ul>
-    /// <li>A value of 1 will mean the server will attempt to spawn water underground creature in this world on every tick.</li>
-    /// <li>A value of 400 will mean the server will attempt to spawn water underground creature in this world every 400th tick.</li>
-    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
-    /// </ul>
-    /// <p><b>Note:</b> If set to 0, water underground creature spawning will be disabled for this world.</p>
-    /// <p>Minecraft default: 1.</p>
+    #[deprecated("Deprecated in favor of <a href='#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)'><code>setTicksPerSpawns(SpawnCategory, int)</code></a> ")]
+    /// Sets the world's ticks per water underground creature spawns value<p>This value determines how many ticks there are between attempts to spawn water underground creature.</p> <p><b>Example Usage:</b></p> <ul><li>A value of 1 will mean the server will attempt to spawn water underground creature in this world on every tick.</li><li>A value of 400 will mean the server will attempt to spawn water underground creature in this world every 400th tick.</li><li>A value below 0 will be reset back to Minecraft's default.</li> </ul> <p><b>Note:</b> If set to 0, water underground creature spawning will be disabled for this world.</p> <p>Minecraft default: 1.</p>
     pub fn set_ticks_per_water_underground_creature_spawns(
         &self,
         arg0: i32,
@@ -3744,7 +3505,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_nearby_entities_with_location(
         &self,
@@ -3797,7 +3557,6 @@ impl<'mc> World<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn play_effect_with_location(
         &self,
@@ -3833,7 +3592,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn spigot(&self) -> Result<crate::WorldSpigot<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World$Spigot;");
@@ -3845,8 +3603,6 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     /// Gets the <a title="interface in org.bukkit" href="Chunk.html"><code>Chunk</code></a> at the given coordinates
     pub fn get_chunk_at_with_int(
         &self,
@@ -3866,7 +3622,6 @@ impl<'mc> World<'mc> {
         }
         if let Some(a) = arg2 {
             sig += "Z";
-            // 2
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -3879,8 +3634,6 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     /// Gets the <a title="interface in org.bukkit.block" href="block/Block.html"><code>Block</code></a> at the given coordinates
     pub fn get_block_at_with_int(
         &self,
@@ -3912,7 +3665,6 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn ray_trace_blocks_with_location(
         &self,
@@ -3946,7 +3698,6 @@ impl<'mc> World<'mc> {
         }
         if let Some(a) = arg4 {
             sig += "Z";
-            // 4
             let val_5 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_5);
         }
@@ -3959,7 +3710,6 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn ray_trace(
         &self,
@@ -3982,7 +3732,6 @@ impl<'mc> World<'mc> {
         let val_4 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg3.into().jni_object().clone())
         });
-        // -1
         let val_5 = jni::objects::JValueGen::Bool(arg4.into());
         let val_6 = jni::objects::JValueGen::Double(arg5.into());
         let val_7 = jni::objects::JValueGen::Object(unsafe {
@@ -4007,7 +3756,6 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_biome_with_int(
         &self,
@@ -4052,7 +3800,6 @@ impl<'mc> World<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_biome_with_int(
         &self,
@@ -4088,7 +3835,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn generate_tree_with_location(
         &self,
@@ -4130,7 +3876,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn entities(&self) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -4147,7 +3892,6 @@ impl<'mc> World<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn living_entities(
         &self,
@@ -4169,7 +3913,6 @@ impl<'mc> World<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn get_entities_by_class_with_classs(
         &self,
@@ -4194,7 +3937,6 @@ impl<'mc> World<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn get_entities_by_classes(
         &self,
@@ -4217,7 +3959,6 @@ impl<'mc> World<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_plugin_chunk_ticket(
         &self,
@@ -4244,7 +3985,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_plugin_chunk_ticket(
         &self,
@@ -4271,8 +4011,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
     /// Retrieves a collection specifying which plugins have tickets for the specified chunk. This collection is not updated when plugin tickets are added or removed to the chunk.
     /// <p>A plugin ticket will prevent a chunk from unloading until it is explicitly removed. A plugin instance may only have one ticket per chunk, but each chunk can have multiple plugin tickets.</p>
     pub fn get_plugin_chunk_tickets(
@@ -4302,7 +4040,6 @@ impl<'mc> World<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn view_distance(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4312,7 +4049,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn simulation_distance(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4325,7 +4061,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn world_type(&self) -> Result<crate::WorldType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/WorldType;");
@@ -4350,8 +4085,6 @@ impl<'mc> World<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn ticks_per_animal_spawns(&self) -> Result<i64, Box<dyn std::error::Error>> {
@@ -4365,8 +4098,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn ticks_per_monster_spawns(&self) -> Result<i64, Box<dyn std::error::Error>> {
@@ -4380,8 +4111,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn ticks_per_water_spawns(&self) -> Result<i64, Box<dyn std::error::Error>> {
@@ -4395,8 +4124,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn ticks_per_water_ambient_spawns(&self) -> Result<i64, Box<dyn std::error::Error>> {
@@ -4410,8 +4137,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn ticks_per_water_underground_creature_spawns(
@@ -4427,8 +4152,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn ticks_per_ambient_spawns(&self) -> Result<i64, Box<dyn std::error::Error>> {
@@ -4442,7 +4165,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn get_ticks_per_spawns(
         &self,
@@ -4461,7 +4183,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn is_hardcore(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4471,8 +4192,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn monster_spawn_limit(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -4486,8 +4205,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn animal_spawn_limit(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -4501,8 +4218,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn water_animal_spawn_limit(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -4516,8 +4231,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn water_ambient_spawn_limit(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -4531,8 +4244,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn water_underground_creature_spawn_limit(
@@ -4548,8 +4259,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn ambient_spawn_limit(&self) -> Result<i32, Box<dyn std::error::Error>> {
@@ -4563,7 +4272,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn get_spawn_limit(
         &self,
@@ -4582,8 +4290,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Gets the temperature for the given block coordinates.
     /// <p>It is safe to run this method when the block does not exist, it will not create the block.</p>
     /// <p>This method will return the raw temperature without adjusting for block height effects.</p>
@@ -4613,8 +4319,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
-
     /// Gets the humidity for the given block coordinates.
     /// <p>It is safe to run this method when the block does not exist, it will not create the block.</p>
     pub fn get_humidity_with_int(
@@ -4643,7 +4347,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn drop_item_with_location(
         &self,
@@ -4679,10 +4382,7 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
-    //@NotNull
 
     pub fn players(&self) -> Result<Vec<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -4699,7 +4399,6 @@ impl<'mc> World<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn drop_item_naturally_with_location(
         &self,
@@ -4735,7 +4434,6 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn world_border(
         &self,
@@ -4753,7 +4451,6 @@ impl<'mc> World<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn spawn_particle_with_particle(
         &self,
@@ -4819,7 +4516,6 @@ impl<'mc> World<'mc> {
         }
         if let Some(a) = arg10 {
             sig += "Z";
-            // 4
             let val_11 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_11);
         }
@@ -4830,7 +4526,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn play_sound_with_location(
         &self,
@@ -4872,7 +4567,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_game_rule_value_with_game_rule(
         &self,
@@ -4892,7 +4586,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //@Nullable
 
     pub fn generator(
         &self,
@@ -4910,7 +4603,6 @@ impl<'mc> World<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@Nullable
 
     pub fn biome_provider(
         &self,
@@ -4931,7 +4623,6 @@ impl<'mc> World<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn can_generate_structures(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4944,7 +4635,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_highest_block_at_with_int(
         &self,
@@ -4978,8 +4668,6 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
     /// Checks if the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates is loaded
     pub fn is_chunk_loaded_with_int(
         &self,
@@ -5003,10 +4691,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //
-
     /// Loads the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates.
     /// <p><b>This method will keep the specified chunk loaded until one of the unload methods is manually called. Callers are advised to instead use getChunkAt which will only temporarily load the requested chunk.</b></p>
     pub fn load_chunk_with_int(
@@ -5027,7 +4711,6 @@ impl<'mc> World<'mc> {
         }
         if let Some(a) = arg2 {
             sig += "Z";
-            // 2
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -5038,8 +4721,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Checks if the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates is generated
     pub fn is_chunk_generated(
         &self,
@@ -5061,15 +4742,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Deprecated
-
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// This method was added to facilitate chunk garbage collection. As of the current Minecraft version chunks are now strictly managed and will not be loaded for more than 1 tick unless they are in use.
-    /// </div>
-    /// This method was added to facilitate chunk garbage collection. As of the current Minecraft version chunks are now strictly managed and will not be loaded for more than 1 tick unless they are in use.
-    ///
+    #[deprecated("This method was added to facilitate chunk garbage collection. As of the current Minecraft version chunks are now strictly managed and will not be loaded for more than 1 tick unless they are in use. ")]
     /// Checks if the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates is loaded and in use by one or more players
     pub fn is_chunk_in_use(
         &self,
@@ -5091,8 +4764,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Safely unloads and optionally saves the <a title="interface in org.bukkit" href="Chunk.html"><code>Chunk</code></a> at the specified coordinates.
     pub fn unload_chunk_with_int(
         &self,
@@ -5112,7 +4783,6 @@ impl<'mc> World<'mc> {
         }
         if let Some(a) = arg2 {
             sig += "Z";
-            // 2
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -5123,8 +4793,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Safely queues the <a title="interface in org.bukkit" href="Chunk.html"><code>Chunk</code></a> at the specified coordinates for unloading.
     pub fn unload_chunk_request(
         &self,
@@ -5146,15 +4814,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Deprecated
-
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// regenerating a single chunk is not likely to produce the same chunk as before as terrain decoration may be spread across chunks. Use of this method should be avoided as it is known to produce buggy results.
-    /// </div>
-    /// regenerating a single chunk is not likely to produce the same chunk as before as terrain decoration may be spread across chunks. Use of this method should be avoided as it is known to produce buggy results.
-    ///
+    #[deprecated("regenerating a single chunk is not likely to produce the same chunk as before as terrain decoration may be spread across chunks. Use of this method should be avoided as it is known to produce buggy results. ")]
     /// Regenerates the <a title="interface in org.bukkit" href="Chunk.html"><code>Chunk</code></a> at the specified coordinates
     pub fn regenerate_chunk(
         &self,
@@ -5176,15 +4836,9 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Deprecated
-
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// This method is not guaranteed to work suitably across all client implementations.
-    /// </div>
-    /// This method is not guaranteed to work suitably across all client implementations.
-    ///
+    #[deprecated(
+        "This method is not guaranteed to work suitably across all client implementations. "
+    )]
     /// Resends the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> to all clients
     pub fn refresh_chunk(&self, arg0: i32, arg1: i32) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(II)Z");
@@ -5202,8 +4856,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Gets whether the chunk at the specified chunk coordinates is force loaded.
     /// <p>A force loaded chunk will not be unloaded due to lack of player activity.</p>
     pub fn is_chunk_force_loaded(
@@ -5226,8 +4878,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets whether the chunk at the specified chunk coordinates is force loaded.
     /// <p>A force loaded chunk will not be unloaded due to lack of player activity.</p>
     pub fn set_chunk_force_loaded(
@@ -5239,7 +4889,6 @@ impl<'mc> World<'mc> {
         let sig = String::from("(IIZ)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5254,7 +4903,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn force_loaded_chunks(
         &self,
@@ -5276,7 +4924,6 @@ impl<'mc> World<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn remove_plugin_chunk_tickets(
         &self,
@@ -5295,7 +4942,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn spawn_arrow_with_location(
         &self,
@@ -5337,7 +4983,6 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn strike_lightning(
         &self,
@@ -5358,7 +5003,6 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn strike_lightning_effect(
         &self,
@@ -5379,7 +5023,6 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn ray_trace_entities_with_location(
         &self,
@@ -5425,7 +5068,6 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn spawn_location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -5440,8 +5082,6 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
     /// Sets the spawn location of the world
     pub fn set_spawn_location_with_int(
         &self,
@@ -5477,7 +5117,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn full_time(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
@@ -5487,8 +5126,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
-
     /// Sets the in-game time on the server
     /// <p>Note that this sets the full time of the world, which may cause adverse effects such as breaking redstone clocks and any scheduled events</p>
     pub fn set_full_time(&self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
@@ -5503,7 +5140,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn game_time(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
@@ -5513,7 +5149,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn has_storm(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5523,12 +5158,9 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Set whether there is a storm. A duration will be set for the new current conditions. This will implicitly call <a href="#setClearWeatherDuration(int)"><code>setClearWeatherDuration(int)</code></a> with 0 ticks to reset the world's clear weather.
     pub fn set_storm(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5539,7 +5171,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn weather_duration(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -5552,8 +5183,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Set the remaining time in ticks of the current conditions.
     pub fn set_weather_duration(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -5567,7 +5196,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_thundering(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5577,12 +5205,9 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Set whether it is thundering. This will implicitly call <a href="#setClearWeatherDuration(int)"><code>setClearWeatherDuration(int)</code></a> with 0 ticks to reset the world's clear weather.
     pub fn set_thundering(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5593,7 +5218,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn thunder_duration(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -5606,8 +5230,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Set the thundering duration.
     pub fn set_thunder_duration(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -5621,7 +5243,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_clear_weather(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5631,8 +5252,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Set the clear weather duration. The clear weather ticks determine whether or not the world will be allowed to rain or storm. If clear weather ticks are &gt; 0, the world will not naturally do either until the duration has elapsed. This method is equivalent to calling <code>/weather clear</code> with a set amount of ticks.
     pub fn set_clear_weather_duration(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -5646,7 +5265,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn clear_weather_duration(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -5659,7 +5277,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn create_explosion_with_double(
         &self,
@@ -5691,13 +5308,11 @@ impl<'mc> World<'mc> {
         }
         if let Some(a) = arg4 {
             sig += "Z";
-            // 3
             let val_5 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_5);
         }
         if let Some(a) = arg5 {
             sig += "Z";
-            // 3
             let val_6 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_6);
         }
@@ -5715,7 +5330,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn pvp(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5725,12 +5339,9 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets the PVP setting for this world.
     pub fn set_pvp(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5741,7 +5352,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn populators(
         &self,
@@ -5763,7 +5373,6 @@ impl<'mc> World<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn spawn_falling_block_with_location(
         &self,
@@ -5797,8 +5406,6 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     /// Get empty chunk snapshot (equivalent to all air blocks), optionally including valid biome data. Used for representing an ungenerated chunk, or for fetching only biome data without loading a chunk.
     pub fn get_empty_chunk_snapshot(
         &self,
@@ -5810,9 +5417,7 @@ impl<'mc> World<'mc> {
         let sig = String::from("(IIZZ)Lorg/bukkit/ChunkSnapshot;");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        // -1
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
-        // -1
         let val_4 = jni::objects::JValueGen::Bool(arg3.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5830,8 +5435,6 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
     /// Sets the spawn flags for this.
     pub fn set_spawn_flags(
         &self,
@@ -5839,9 +5442,7 @@ impl<'mc> World<'mc> {
         arg1: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(ZZ)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
-        // -1
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5855,7 +5456,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn allow_animals(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5865,7 +5465,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn allow_monsters(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5878,7 +5477,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn logical_height(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -5891,7 +5489,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_natural(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5901,7 +5498,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_bed_works(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5911,7 +5507,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_sky_light(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5921,7 +5516,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_ceiling(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5931,7 +5525,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_piglin_safe(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5941,7 +5534,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_respawn_anchor_works(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5954,7 +5546,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_raids(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5964,7 +5555,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_ultra_warm(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5974,7 +5564,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn sea_level(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -5984,7 +5573,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn keep_spawn_in_memory(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5997,12 +5585,9 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets whether the world's spawn area should be kept loaded into memory or not.
     pub fn set_keep_spawn_in_memory(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6013,7 +5598,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_auto_save(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6023,12 +5607,9 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets whether or not the world will automatically save
     pub fn set_auto_save(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6039,7 +5620,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_difficulty(
         &self,
@@ -6058,7 +5638,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn difficulty(&self) -> Result<crate::Difficulty<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Difficulty;");
@@ -6083,7 +5662,6 @@ impl<'mc> World<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn world_folder(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/io/File;");
@@ -6093,12 +5671,9 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
-
     /// Sets whether the world is hardcore or not. In a hardcore world the difficulty is locked to hard.
     pub fn set_hardcore(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6109,25 +5684,8 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Deprecated in favor of <a href="#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)"><code>setTicksPerSpawns(SpawnCategory, int)</code></a>
-    /// </div>
-    /// Deprecated in favor of <a href="#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)"><code>setTicksPerSpawns(SpawnCategory, int)</code></a>
-    ///
-    /// Sets the world's ticks per animal spawns value
-    /// <p>This value determines how many ticks there are between attempts to spawn animals.</p>
-    /// <p><b>Example Usage:</b></p>
-    /// <ul>
-    /// <li>A value of 1 will mean the server will attempt to spawn animals in this world every tick.</li>
-    /// <li>A value of 400 will mean the server will attempt to spawn animals in this world every 400th tick.</li>
-    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
-    /// </ul>
-    /// <p><b>Note:</b> If set to 0, animal spawning will be disabled for this world. We recommend using <a href="#setSpawnFlags(boolean,boolean)"><code>setSpawnFlags(boolean, boolean)</code></a> to control this instead.</p>
-    /// <p>Minecraft default: 400.</p>
+    #[deprecated("Deprecated in favor of <a href='#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)'><code>setTicksPerSpawns(SpawnCategory, int)</code></a> ")]
+    /// Sets the world's ticks per animal spawns value<p>This value determines how many ticks there are between attempts to spawn animals.</p> <p><b>Example Usage:</b></p> <ul><li>A value of 1 will mean the server will attempt to spawn animals in this world every tick.</li><li>A value of 400 will mean the server will attempt to spawn animals in this world every 400th tick.</li><li>A value below 0 will be reset back to Minecraft's default.</li> </ul> <p><b>Note:</b> If set to 0, animal spawning will be disabled for this world. We recommend using <a href="#setSpawnFlags(boolean,boolean)"><code>setSpawnFlags(boolean, boolean)</code></a> to control this instead.</p> <p>Minecraft default: 400.</p>
     pub fn set_ticks_per_animal_spawns(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -6140,25 +5698,8 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Deprecated in favor of <a href="#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)"><code>setTicksPerSpawns(SpawnCategory, int)</code></a>
-    /// </div>
-    /// Deprecated in favor of <a href="#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)"><code>setTicksPerSpawns(SpawnCategory, int)</code></a>
-    ///
-    /// Sets the world's ticks per monster spawns value
-    /// <p>This value determines how many ticks there are between attempts to spawn monsters.</p>
-    /// <p><b>Example Usage:</b></p>
-    /// <ul>
-    /// <li>A value of 1 will mean the server will attempt to spawn monsters in this world on every tick.</li>
-    /// <li>A value of 400 will mean the server will attempt to spawn monsters in this world every 400th tick.</li>
-    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
-    /// </ul>
-    /// <p><b>Note:</b> If set to 0, monsters spawning will be disabled for this world. We recommend using <a href="#setSpawnFlags(boolean,boolean)"><code>setSpawnFlags(boolean, boolean)</code></a> to control this instead.</p>
-    /// <p>Minecraft default: 1.</p>
+    #[deprecated("Deprecated in favor of <a href='#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)'><code>setTicksPerSpawns(SpawnCategory, int)</code></a> ")]
+    /// Sets the world's ticks per monster spawns value<p>This value determines how many ticks there are between attempts to spawn monsters.</p> <p><b>Example Usage:</b></p> <ul><li>A value of 1 will mean the server will attempt to spawn monsters in this world on every tick.</li><li>A value of 400 will mean the server will attempt to spawn monsters in this world every 400th tick.</li><li>A value below 0 will be reset back to Minecraft's default.</li> </ul> <p><b>Note:</b> If set to 0, monsters spawning will be disabled for this world. We recommend using <a href="#setSpawnFlags(boolean,boolean)"><code>setSpawnFlags(boolean, boolean)</code></a> to control this instead.</p> <p>Minecraft default: 1.</p>
     pub fn set_ticks_per_monster_spawns(
         &self,
         arg0: i32,
@@ -6174,25 +5715,8 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Deprecated in favor of <a href="#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)"><code>setTicksPerSpawns(SpawnCategory, int)</code></a>
-    /// </div>
-    /// Deprecated in favor of <a href="#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)"><code>setTicksPerSpawns(SpawnCategory, int)</code></a>
-    ///
-    /// Sets the world's ticks per water mob spawns value
-    /// <p>This value determines how many ticks there are between attempts to spawn water mobs.</p>
-    /// <p><b>Example Usage:</b></p>
-    /// <ul>
-    /// <li>A value of 1 will mean the server will attempt to spawn water mobs in this world on every tick.</li>
-    /// <li>A value of 400 will mean the server will attempt to spawn water mobs in this world every 400th tick.</li>
-    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
-    /// </ul>
-    /// <p><b>Note:</b> If set to 0, water mobs spawning will be disabled for this world.</p>
-    /// <p>Minecraft default: 1.</p>
+    #[deprecated("Deprecated in favor of <a href='#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)'><code>setTicksPerSpawns(SpawnCategory, int)</code></a> ")]
+    /// Sets the world's ticks per water mob spawns value<p>This value determines how many ticks there are between attempts to spawn water mobs.</p> <p><b>Example Usage:</b></p> <ul><li>A value of 1 will mean the server will attempt to spawn water mobs in this world on every tick.</li><li>A value of 400 will mean the server will attempt to spawn water mobs in this world every 400th tick.</li><li>A value below 0 will be reset back to Minecraft's default.</li> </ul> <p><b>Note:</b> If set to 0, water mobs spawning will be disabled for this world.</p> <p>Minecraft default: 1.</p>
     pub fn set_ticks_per_water_spawns(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -6205,25 +5729,8 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Deprecated in favor of <a href="#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)"><code>setTicksPerSpawns(SpawnCategory, int)</code></a>
-    /// </div>
-    /// Deprecated in favor of <a href="#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)"><code>setTicksPerSpawns(SpawnCategory, int)</code></a>
-    ///
-    /// Sets the world's ticks per water ambient mob spawns value
-    /// <p>This value determines how many ticks there are between attempts to spawn water ambient mobs.</p>
-    /// <p><b>Example Usage:</b></p>
-    /// <ul>
-    /// <li>A value of 1 will mean the server will attempt to spawn water ambient mobs in this world on every tick.</li>
-    /// <li>A value of 400 will mean the server will attempt to spawn water ambient mobs in this world every 400th tick.</li>
-    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
-    /// </ul>
-    /// <p><b>Note:</b> If set to 0, water ambient mobs spawning will be disabled for this world.</p>
-    /// <p>Minecraft default: 1.</p>
+    #[deprecated("Deprecated in favor of <a href='#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)'><code>setTicksPerSpawns(SpawnCategory, int)</code></a> ")]
+    /// Sets the world's ticks per water ambient mob spawns value<p>This value determines how many ticks there are between attempts to spawn water ambient mobs.</p> <p><b>Example Usage:</b></p> <ul><li>A value of 1 will mean the server will attempt to spawn water ambient mobs in this world on every tick.</li><li>A value of 400 will mean the server will attempt to spawn water ambient mobs in this world every 400th tick.</li><li>A value below 0 will be reset back to Minecraft's default.</li> </ul> <p><b>Note:</b> If set to 0, water ambient mobs spawning will be disabled for this world.</p> <p>Minecraft default: 1.</p>
     pub fn set_ticks_per_water_ambient_spawns(
         &self,
         arg0: i32,
@@ -6239,25 +5746,8 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Deprecated in favor of <a href="#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)"><code>setTicksPerSpawns(SpawnCategory, int)</code></a>
-    /// </div>
-    /// Deprecated in favor of <a href="#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)"><code>setTicksPerSpawns(SpawnCategory, int)</code></a>
-    ///
-    /// Sets the world's ticks per ambient mob spawns value
-    /// <p>This value determines how many ticks there are between attempts to spawn ambient mobs.</p>
-    /// <p><b>Example Usage:</b></p>
-    /// <ul>
-    /// <li>A value of 1 will mean the server will attempt to spawn ambient mobs in this world on every tick.</li>
-    /// <li>A value of 400 will mean the server will attempt to spawn ambient mobs in this world every 400th tick.</li>
-    /// <li>A value below 0 will be reset back to Minecraft's default.</li>
-    /// </ul>
-    /// <p><b>Note:</b> If set to 0, ambient mobs spawning will be disabled for this world.</p>
-    /// <p>Minecraft default: 1.</p>
+    #[deprecated("Deprecated in favor of <a href='#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)'><code>setTicksPerSpawns(SpawnCategory, int)</code></a> ")]
+    /// Sets the world's ticks per ambient mob spawns value<p>This value determines how many ticks there are between attempts to spawn ambient mobs.</p> <p><b>Example Usage:</b></p> <ul><li>A value of 1 will mean the server will attempt to spawn ambient mobs in this world on every tick.</li><li>A value of 400 will mean the server will attempt to spawn ambient mobs in this world every 400th tick.</li><li>A value below 0 will be reset back to Minecraft's default.</li> </ul> <p><b>Note:</b> If set to 0, ambient mobs spawning will be disabled for this world.</p> <p>Minecraft default: 1.</p>
     pub fn set_ticks_per_ambient_spawns(
         &self,
         arg0: i32,
@@ -6273,7 +5763,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_ticks_per_spawns(
         &self,
@@ -6297,17 +5786,8 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Deprecated in favor of <a href="#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)"><code>setSpawnLimit(SpawnCategory, int)</code></a>
-    /// </div>
-    /// Deprecated in favor of <a href="#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)"><code>setSpawnLimit(SpawnCategory, int)</code></a>
-    ///
-    /// Sets the limit for number of monsters that can spawn in a chunk in this world
-    /// <p><b>Note:</b> If set to a negative number the world will use the server-wide spawn limit instead.</p>
+    #[deprecated("Deprecated in favor of <a href='#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)'><code>setSpawnLimit(SpawnCategory, int)</code></a> ")]
+    /// Sets the limit for number of monsters that can spawn in a chunk in this world<p><b>Note:</b> If set to a negative number the world will use the server-wide spawn limit instead.</p>
     pub fn set_monster_spawn_limit(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -6320,17 +5800,8 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
-    /// </div>
-    /// Deprecated in favor of <a href="#getSpawnLimit(org.bukkit.entity.SpawnCategory)"><code>getSpawnLimit(SpawnCategory)</code></a>
-    ///
-    /// Sets the limit for number of animals that can spawn in a chunk in this world
-    /// <p><b>Note:</b> If set to a negative number the world will use the server-wide spawn limit instead.</p>
+    #[deprecated("Deprecated in favor of <a href='#getSpawnLimit(org.bukkit.entity.SpawnCategory)'><code>getSpawnLimit(SpawnCategory)</code></a> ")]
+    /// Sets the limit for number of animals that can spawn in a chunk in this world<p><b>Note:</b> If set to a negative number the world will use the server-wide spawn limit instead.</p>
     pub fn set_animal_spawn_limit(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -6343,17 +5814,8 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Deprecated in favor of <a href="#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)"><code>setSpawnLimit(SpawnCategory, int)</code></a>
-    /// </div>
-    /// Deprecated in favor of <a href="#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)"><code>setSpawnLimit(SpawnCategory, int)</code></a>
-    ///
-    /// Sets the limit for number of water animals that can spawn in a chunk in this world
-    /// <p><b>Note:</b> If set to a negative number the world will use the server-wide spawn limit instead.</p>
+    #[deprecated("Deprecated in favor of <a href='#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)'><code>setSpawnLimit(SpawnCategory, int)</code></a> ")]
+    /// Sets the limit for number of water animals that can spawn in a chunk in this world<p><b>Note:</b> If set to a negative number the world will use the server-wide spawn limit instead.</p>
     pub fn set_water_animal_spawn_limit(
         &self,
         arg0: i32,
@@ -6369,17 +5831,8 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Deprecated in favor of <a href="#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)"><code>setSpawnLimit(SpawnCategory, int)</code></a>
-    /// </div>
-    /// Deprecated in favor of <a href="#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)"><code>setSpawnLimit(SpawnCategory, int)</code></a>
-    ///
-    /// Sets the limit for number of water underground creature that can spawn in a chunk in this world
-    /// <p><b>Note:</b> If set to a negative number the world will use the server-wide spawn limit instead.</p>
+    #[deprecated("Deprecated in favor of <a href='#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)'><code>setSpawnLimit(SpawnCategory, int)</code></a> ")]
+    /// Sets the limit for number of water underground creature that can spawn in a chunk in this world<p><b>Note:</b> If set to a negative number the world will use the server-wide spawn limit instead.</p>
     pub fn set_water_underground_creature_spawn_limit(
         &self,
         arg0: i32,
@@ -6395,17 +5848,8 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Deprecated in favor of <a href="#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)"><code>setSpawnLimit(SpawnCategory, int)</code></a>
-    /// </div>
-    /// Deprecated in favor of <a href="#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)"><code>setSpawnLimit(SpawnCategory, int)</code></a>
-    ///
-    /// Sets the limit for number of water ambient mobs that can spawn in a chunk in this world
-    /// <p><b>Note:</b> If set to a negative number the world will use the server-wide spawn limit instead.</p>
+    #[deprecated("Deprecated in favor of <a href='#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)'><code>setSpawnLimit(SpawnCategory, int)</code></a> ")]
+    /// Sets the limit for number of water ambient mobs that can spawn in a chunk in this world<p><b>Note:</b> If set to a negative number the world will use the server-wide spawn limit instead.</p>
     pub fn set_water_ambient_spawn_limit(
         &self,
         arg0: i32,
@@ -6421,17 +5865,8 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Deprecated in favor of <a href="#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)"><code>setSpawnLimit(SpawnCategory, int)</code></a>
-    /// </div>
-    /// Deprecated in favor of <a href="#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)"><code>setSpawnLimit(SpawnCategory, int)</code></a>
-    ///
-    /// Sets the limit for number of ambient mobs that can spawn in a chunk in this world
-    /// <p><b>Note:</b> If set to a negative number the world will use the server-wide spawn limit instead.</p>
+    #[deprecated("Deprecated in favor of <a href='#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)'><code>setSpawnLimit(SpawnCategory, int)</code></a> ")]
+    /// Sets the limit for number of ambient mobs that can spawn in a chunk in this world<p><b>Note:</b> If set to a negative number the world will use the server-wide spawn limit instead.</p>
     pub fn set_ambient_spawn_limit(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -6444,7 +5879,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_spawn_limit(
         &self,
@@ -6468,9 +5902,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //
 
     pub fn set_game_rule_value(
         &self,
@@ -6496,7 +5927,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_game_rule(
         &self,
@@ -6515,7 +5945,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_game_rule_default(
         &self,
@@ -6534,7 +5963,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn set_game_rule(
         &self,
@@ -6558,7 +5986,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn locate_nearest_structure_with_location(
         &self,
@@ -6583,7 +6010,6 @@ impl<'mc> World<'mc> {
         let val_3 = jni::objects::JValueGen::Int(arg2.into());
         args.push(val_3);
         sig += "Z";
-        // 5
         let val_4 = jni::objects::JValueGen::Bool(arg3.into());
         args.push(val_4);
         sig += ")Lorg/bukkit/util/StructureSearchResult;";
@@ -6598,7 +6024,6 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn locate_nearest_raid(
         &self,
@@ -6624,7 +6049,6 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn raids(&self) -> Result<Vec<crate::Raid<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -6641,7 +6065,6 @@ impl<'mc> World<'mc> {
         }
         Ok(new_vec)
     }
-    //@Nullable
 
     pub fn ender_dragon_battle(
         &self,
@@ -6662,7 +6085,6 @@ impl<'mc> World<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@NotNull
 
     pub fn feature_flags(
         &self,
@@ -6676,9 +6098,6 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //@NotNull
 
     pub fn get_type_with_int(
         &self,
@@ -6723,7 +6142,6 @@ impl<'mc> World<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_type_with_int(
         &self,
@@ -6759,7 +6177,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn get_block_data_with_int(
         &self,
@@ -6791,7 +6208,6 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_block_data_with_int(
         &self,
@@ -6827,7 +6243,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_highest_block_yat_with_int(
         &self,
@@ -6862,7 +6277,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn get_block_state_with_int(
         &self,
@@ -6894,7 +6308,6 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn spawn_entity_with_location(
         &self,
@@ -6916,7 +6329,6 @@ impl<'mc> World<'mc> {
         args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Z";
-            // 3
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -6929,7 +6341,6 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn spawn_with_location(
         &self,
@@ -6950,7 +6361,6 @@ impl<'mc> World<'mc> {
         args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Z";
-            // 3
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -6970,7 +6380,6 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn seed(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
@@ -6980,7 +6389,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -6994,7 +6402,6 @@ impl<'mc> World<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn uid(&self) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/UUID;");
@@ -7006,7 +6413,6 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn environment(&self) -> Result<crate::WorldEnvironment<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World$Environment;");
@@ -7031,7 +6437,6 @@ impl<'mc> World<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn min_height(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -7041,7 +6446,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn max_height(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -7051,7 +6455,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn send_plugin_message(
         &self,
@@ -7078,7 +6481,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn listening_plugin_channels(
         &self,
@@ -7095,7 +6497,6 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_metadata(
         &self,
@@ -7121,7 +6522,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_metadata(
         &self,
@@ -7150,7 +6550,6 @@ impl<'mc> World<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_metadata(
         &self,
@@ -7169,7 +6568,6 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_metadata(
         &self,
@@ -7195,7 +6593,6 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -7212,7 +6609,6 @@ impl<'mc> World<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -7413,8 +6809,6 @@ impl<'mc> JNIInstantiatable<'mc> for Nameable<'mc> {
 }
 
 impl<'mc> Nameable<'mc> {
-    //@Nullable
-
     pub fn custom_name(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
@@ -7431,7 +6825,6 @@ impl<'mc> Nameable<'mc> {
                 .to_string(),
         ))
     }
-    //
 
     pub fn set_custom_name(
         &self,
@@ -7740,8 +7133,6 @@ impl<'mc> ParticleDustOptions<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::ParticleDustOptions::from_raw(&jni, res)
     }
-    //
-
     pub fn size(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
         let res = self
@@ -7750,8 +7141,6 @@ impl<'mc> ParticleDustOptions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //@Nullable
-
     pub fn color(&self) -> Result<Option<crate::Color<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Color;");
         let res = self
@@ -7765,8 +7154,6 @@ impl<'mc> ParticleDustOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })?))
     }
-    //
-
     pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
@@ -7791,8 +7178,6 @@ impl<'mc> ParticleDustOptions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
-
     pub fn equals(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -7808,8 +7193,6 @@ impl<'mc> ParticleDustOptions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -7823,8 +7206,6 @@ impl<'mc> ParticleDustOptions<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
-
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
@@ -7833,8 +7214,6 @@ impl<'mc> ParticleDustOptions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
@@ -7843,8 +7222,6 @@ impl<'mc> ParticleDustOptions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
-
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
@@ -7853,8 +7230,6 @@ impl<'mc> ParticleDustOptions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
-
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
@@ -7942,8 +7317,6 @@ impl<'mc> ParticleDustTransition<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::ParticleDustTransition::from_raw(&jni, res)
     }
-    //@NotNull
-
     pub fn to_color(&self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Color;");
         let res =
@@ -7954,8 +7327,6 @@ impl<'mc> ParticleDustTransition<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
     pub fn size(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
         let res = self
@@ -7964,8 +7335,6 @@ impl<'mc> ParticleDustTransition<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //@Nullable
-
     pub fn color(&self) -> Result<Option<crate::Color<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Color;");
         let res = self
@@ -7979,8 +7348,6 @@ impl<'mc> ParticleDustTransition<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })?))
     }
-    //
-
     pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
@@ -8005,8 +7372,6 @@ impl<'mc> ParticleDustTransition<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
-
     pub fn equals(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -8022,8 +7387,6 @@ impl<'mc> ParticleDustTransition<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -8037,8 +7400,6 @@ impl<'mc> ParticleDustTransition<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
-
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
@@ -8047,8 +7408,6 @@ impl<'mc> ParticleDustTransition<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
@@ -8057,8 +7416,6 @@ impl<'mc> ParticleDustTransition<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
-
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
@@ -8067,8 +7424,6 @@ impl<'mc> ParticleDustTransition<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
-
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
@@ -8373,22 +7728,13 @@ impl<'mc> Particle<'mc> {
 pub enum EntityEffectEnum {
     ArrowParticles,
     RabbitJump,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     Hurt,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     Death,
     WolfSmoke,
     WolfHearts,
     WolfShake,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     SheepEat,
     IronGolemRose,
@@ -8800,8 +8146,6 @@ impl<'mc> JNIInstantiatable<'mc> for Utility<'mc> {
 }
 
 impl<'mc> Utility<'mc> {
-    //
-
     pub fn equals(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -8817,7 +8161,6 @@ impl<'mc> Utility<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -8832,7 +8175,6 @@ impl<'mc> Utility<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -8842,7 +8184,6 @@ impl<'mc> Utility<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn annotation_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -9233,8 +8574,6 @@ impl<'mc> JNIInstantiatable<'mc> for GameEvent<'mc> {
 }
 
 impl<'mc> GameEvent<'mc> {
-    //
-
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::GameEvent<'mc>>, Box<dyn std::error::Error>> {
@@ -9252,7 +8591,6 @@ impl<'mc> GameEvent<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -9264,7 +8602,6 @@ impl<'mc> GameEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_by_key(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -9286,7 +8623,6 @@ impl<'mc> GameEvent<'mc> {
         let obj = res.l()?;
         crate::GameEvent::from_raw(&jni, obj)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -9312,7 +8648,6 @@ impl<'mc> GameEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -9329,7 +8664,6 @@ impl<'mc> GameEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -9344,7 +8678,6 @@ impl<'mc> GameEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -9354,7 +8687,6 @@ impl<'mc> GameEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -9364,7 +8696,6 @@ impl<'mc> GameEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -9374,7 +8705,6 @@ impl<'mc> GameEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -9441,8 +8771,6 @@ impl<'mc> JNIInstantiatable<'mc> for OfflinePlayer<'mc> {
 }
 
 impl<'mc> OfflinePlayer<'mc> {
-    //@NotNull
-
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
@@ -9455,7 +8783,6 @@ impl<'mc> OfflinePlayer<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn unique_id(
         &self,
@@ -9469,7 +8796,6 @@ impl<'mc> OfflinePlayer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_banned(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9479,9 +8805,6 @@ impl<'mc> OfflinePlayer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
-    //@Nullable
 
     pub fn player(&self) -> Result<Option<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Player;");
@@ -9497,7 +8820,6 @@ impl<'mc> OfflinePlayer<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@Nullable
 
     pub fn last_death_location(
         &self,
@@ -9517,7 +8839,6 @@ impl<'mc> OfflinePlayer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })?))
     }
-    //@Nullable
 
     pub fn bed_spawn_location(
         &self,
@@ -9537,7 +8858,6 @@ impl<'mc> OfflinePlayer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })?))
     }
-    //
 
     pub fn is_online(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9547,7 +8867,6 @@ impl<'mc> OfflinePlayer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn player_profile(
         &self,
@@ -9564,7 +8883,6 @@ impl<'mc> OfflinePlayer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn ban_with_string(
         &self,
@@ -9596,7 +8914,6 @@ impl<'mc> OfflinePlayer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_whitelisted(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9606,12 +8923,9 @@ impl<'mc> OfflinePlayer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets if this player is whitelisted or not
     pub fn set_whitelisted(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9622,7 +8936,6 @@ impl<'mc> OfflinePlayer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn first_played(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
@@ -9632,7 +8945,6 @@ impl<'mc> OfflinePlayer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn last_played(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
@@ -9642,7 +8954,6 @@ impl<'mc> OfflinePlayer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn has_played_before(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9652,7 +8963,6 @@ impl<'mc> OfflinePlayer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn increment_statistic_with_statistic(
         &self,
@@ -9689,7 +8999,6 @@ impl<'mc> OfflinePlayer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn decrement_statistic_with_statistic(
         &self,
@@ -9726,7 +9035,6 @@ impl<'mc> OfflinePlayer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_statistic_with_statistic(
         &self,
@@ -9758,7 +9066,6 @@ impl<'mc> OfflinePlayer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_statistic_with_statistic(
         &self,
@@ -9786,7 +9093,6 @@ impl<'mc> OfflinePlayer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_op(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9796,11 +9102,9 @@ impl<'mc> OfflinePlayer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_op(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9811,7 +9115,6 @@ impl<'mc> OfflinePlayer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -9893,7 +9196,6 @@ impl<'mc> WorldSpigot<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::WorldSpigot::from_raw(&jni, res)
     }
-    //
 
     pub fn strike_lightning(
         &self,
@@ -9904,7 +9206,6 @@ impl<'mc> WorldSpigot<'mc> {
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
-        // -1
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9920,7 +9221,6 @@ impl<'mc> WorldSpigot<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn strike_lightning_effect(
         &self,
@@ -9931,7 +9231,6 @@ impl<'mc> WorldSpigot<'mc> {
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
-        // -1
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9947,7 +9246,6 @@ impl<'mc> WorldSpigot<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -9973,7 +9271,6 @@ impl<'mc> WorldSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -9990,7 +9287,6 @@ impl<'mc> WorldSpigot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -10005,7 +9301,6 @@ impl<'mc> WorldSpigot<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -10015,7 +9310,6 @@ impl<'mc> WorldSpigot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -10025,7 +9319,6 @@ impl<'mc> WorldSpigot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -10035,7 +9328,6 @@ impl<'mc> WorldSpigot<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -10283,8 +9575,6 @@ impl<'mc> WarningWarningState<'mc> {
         )
     }
 
-    //
-
     pub fn value(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
@@ -10317,9 +9607,6 @@ impl<'mc> WarningWarningState<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
-
-    //
 
     pub fn print_for(
         &self,
@@ -10637,8 +9924,6 @@ impl<'mc> JNIInstantiatable<'mc> for Color<'mc> {
 }
 
 impl<'mc> Color<'mc> {
-    //
-
     pub fn equals(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -10654,7 +9939,6 @@ impl<'mc> Color<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -10669,7 +9953,6 @@ impl<'mc> Color<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -10679,7 +9962,6 @@ impl<'mc> Color<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -10693,7 +9975,6 @@ impl<'mc> Color<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn deserialize(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10715,8 +9996,6 @@ impl<'mc> Color<'mc> {
         let obj = res.l()?;
         crate::Color::from_raw(&jni, obj)
     }
-    //@NotNull
-
     /// Creates a new Color object from a red, green, and blue
     pub fn from_rgb_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10747,8 +10026,6 @@ impl<'mc> Color<'mc> {
         let obj = res.l()?;
         crate::Color::from_raw(&jni, obj)
     }
-    //@NotNull
-
     /// Creates a new Color object from an alpha, red, green, and blue
     pub fn from_argb_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10785,8 +10062,6 @@ impl<'mc> Color<'mc> {
         let obj = res.l()?;
         crate::Color::from_raw(&jni, obj)
     }
-    //@NotNull
-
     /// Creates a new Color object from a blue, green, and red
     pub fn from_bgr_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -10817,7 +10092,6 @@ impl<'mc> Color<'mc> {
         let obj = res.l()?;
         crate::Color::from_raw(&jni, obj)
     }
-    //
 
     pub fn alpha(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -10827,8 +10101,6 @@ impl<'mc> Color<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
-
     /// Creates a new Color object with specified component
     pub fn set_alpha(&self, arg0: i32) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/Color;");
@@ -10844,7 +10116,6 @@ impl<'mc> Color<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn red(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -10854,7 +10125,6 @@ impl<'mc> Color<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn green(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -10864,7 +10134,6 @@ impl<'mc> Color<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn blue(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -10874,8 +10143,6 @@ impl<'mc> Color<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
-
     /// Creates a new Color object with specified component
     pub fn set_red(&self, arg0: i32) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/Color;");
@@ -10891,8 +10158,6 @@ impl<'mc> Color<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     /// Creates a new Color object with specified component
     pub fn set_green(&self, arg0: i32) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/Color;");
@@ -10908,8 +10173,6 @@ impl<'mc> Color<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     /// Creates a new Color object with specified component
     pub fn set_blue(&self, arg0: i32) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Lorg/bukkit/Color;");
@@ -10925,7 +10188,6 @@ impl<'mc> Color<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn as_rgb(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -10935,7 +10197,6 @@ impl<'mc> Color<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn as_argb(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -10945,7 +10206,6 @@ impl<'mc> Color<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn as_bgr(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -10955,7 +10215,6 @@ impl<'mc> Color<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn mix_dyes(
         &self,
@@ -10970,7 +10229,6 @@ impl<'mc> Color<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn mix_colors(
         &self,
@@ -10985,7 +10243,6 @@ impl<'mc> Color<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -11011,7 +10268,6 @@ impl<'mc> Color<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -11021,7 +10277,6 @@ impl<'mc> Color<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -11031,7 +10286,6 @@ impl<'mc> Color<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -17927,8 +17181,6 @@ impl<'mc> JNIInstantiatable<'mc> for Chunk<'mc> {
 }
 
 impl<'mc> Chunk<'mc> {
-    //
-
     pub fn is_loaded(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
@@ -17937,8 +17189,6 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Unloads and optionally saves the Chunk
     pub fn unload_with_boolean(
         &self,
@@ -17948,7 +17198,6 @@ impl<'mc> Chunk<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "Z";
-            // 1
             let val_1 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_1);
         }
@@ -17959,8 +17208,6 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Loads the chunk.
     pub fn load_with_boolean(
         &self,
@@ -17970,7 +17217,6 @@ impl<'mc> Chunk<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "Z";
-            // 1
             let val_1 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_1);
         }
@@ -17981,7 +17227,6 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn contains_with_block_data(
         &self,
@@ -18001,7 +17246,6 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -18013,8 +17257,6 @@ impl<'mc> Chunk<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     /// Gets a block from this chunk
     pub fn get_block(
         &self,
@@ -18041,7 +17283,6 @@ impl<'mc> Chunk<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn x(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -18051,7 +17292,6 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn z(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -18061,11 +17301,6 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
-
-    //@NotNull
-
-    //@NotNull
 
     pub fn chunk_snapshot(&self) -> Result<crate::ChunkSnapshot<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/ChunkSnapshot;");
@@ -18080,7 +17315,6 @@ impl<'mc> Chunk<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_entities_loaded(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -18093,7 +17327,6 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_generated(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -18103,7 +17336,6 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_slime_chunk(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -18113,7 +17345,6 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_force_loaded(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -18123,13 +17354,10 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets whether the chunk at the specified chunk coordinates is force loaded.
     /// <p>A force loaded chunk will not be unloaded due to lack of player activity.</p>
     pub fn set_force_loaded(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -18140,7 +17368,6 @@ impl<'mc> Chunk<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn add_plugin_chunk_ticket(
         &self,
@@ -18159,7 +17386,6 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_plugin_chunk_ticket(
         &self,
@@ -18178,7 +17404,6 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn plugin_chunk_tickets(
         &self,
@@ -18200,7 +17425,6 @@ impl<'mc> Chunk<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn inhabited_time(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
@@ -18213,8 +17437,6 @@ impl<'mc> Chunk<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
-
     /// Sets the amount of time in ticks that this chunk has been inhabited.
     pub fn set_inhabited_time(&self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(J)V");
@@ -18228,7 +17450,6 @@ impl<'mc> Chunk<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn load_level(&self) -> Result<crate::ChunkLoadLevel<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Chunk$LoadLevel;");
@@ -18253,7 +17474,6 @@ impl<'mc> Chunk<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,
@@ -18617,7 +17837,6 @@ impl<'mc> VibrationDestinationBlockDestination<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::VibrationDestinationBlockDestination::from_raw(&jni, res)
     }
-    //@NotNull
 
     pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -18629,9 +17848,6 @@ impl<'mc> VibrationDestinationBlockDestination<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //@NotNull
 
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/Block;");
@@ -18643,7 +17859,6 @@ impl<'mc> VibrationDestinationBlockDestination<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -18669,7 +17884,6 @@ impl<'mc> VibrationDestinationBlockDestination<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -18686,7 +17900,6 @@ impl<'mc> VibrationDestinationBlockDestination<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -18701,7 +17914,6 @@ impl<'mc> VibrationDestinationBlockDestination<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -18711,7 +17923,6 @@ impl<'mc> VibrationDestinationBlockDestination<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -18721,7 +17932,6 @@ impl<'mc> VibrationDestinationBlockDestination<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -18731,7 +17941,6 @@ impl<'mc> VibrationDestinationBlockDestination<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -19168,10 +18377,6 @@ impl<'mc> NoteTone<'mc> {
         )
     }
 
-    //
-
-    //
-
     pub fn id(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let sig = String::from("()B");
         let res = self
@@ -19180,9 +18385,8 @@ impl<'mc> NoteTone<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b()?)
     }
-    //@Deprecated
-
     #[deprecated]
+
     pub fn is_sharped(&self, arg0: i8) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(B)Z");
         let val_1 = jni::objects::JValueGen::Byte(arg0.into());
@@ -19195,10 +18399,7 @@ impl<'mc> NoteTone<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Deprecated
-
     #[deprecated]
-    //@Nullable
 
     pub fn get_by_id(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -19233,8 +18434,6 @@ impl<'mc> NoteTone<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )?))
     }
-    //
-
     pub fn is_sharpable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
@@ -19297,7 +18496,6 @@ impl<'mc> Note<'mc> {
         }
         if let Some(a) = arg2 {
             sig += "Z";
-            // 2
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -19308,7 +18506,6 @@ impl<'mc> Note<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::Note::from_raw(&jni, res)
     }
-    //
 
     pub fn equals(
         &self,
@@ -19325,7 +18522,6 @@ impl<'mc> Note<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -19340,7 +18536,6 @@ impl<'mc> Note<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -19350,7 +18545,6 @@ impl<'mc> Note<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn id(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let sig = String::from("()B");
@@ -19360,7 +18554,6 @@ impl<'mc> Note<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b()?)
     }
-    //
 
     pub fn is_sharped(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -19370,7 +18563,6 @@ impl<'mc> Note<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn sharped(&self) -> Result<crate::Note<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Note;");
@@ -19382,7 +18574,6 @@ impl<'mc> Note<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn flat(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -19409,7 +18600,6 @@ impl<'mc> Note<'mc> {
         let obj = res.l()?;
         crate::Note::from_raw(&jni, obj)
     }
-    //
 
     pub fn sharp(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -19436,7 +18626,6 @@ impl<'mc> Note<'mc> {
         let obj = res.l()?;
         crate::Note::from_raw(&jni, obj)
     }
-    //
 
     pub fn natural(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -19463,7 +18652,6 @@ impl<'mc> Note<'mc> {
         let obj = res.l()?;
         crate::Note::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn flattened(&self) -> Result<crate::Note<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Note;");
@@ -19475,7 +18663,6 @@ impl<'mc> Note<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn octave(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -19485,7 +18672,6 @@ impl<'mc> Note<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn tone(&self) -> Result<crate::NoteTone<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Note$Tone;");
@@ -19510,7 +18696,6 @@ impl<'mc> Note<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -19536,7 +18721,6 @@ impl<'mc> Note<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -19546,7 +18730,6 @@ impl<'mc> Note<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -19556,7 +18739,6 @@ impl<'mc> Note<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -19696,54 +18878,24 @@ pub enum EffectEnum {
     Click2,
     Click1,
     BowFire,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     DoorToggle,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     IronDoorToggle,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     TrapdoorToggle,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     IronTrapdoorToggle,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     FenceGateToggle,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     DoorClose,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     IronDoorClose,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     TrapdoorClose,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     IronTrapdoorClose,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     FenceGateClose,
     Extinguish,
@@ -20001,8 +19153,6 @@ impl<'mc> EffectType<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-
-    //
 }
 
 impl<'mc> JNIRaw<'mc> for Effect<'mc> {
@@ -20293,8 +19443,6 @@ impl<'mc> JNIInstantiatable<'mc> for BanEntry<'mc> {
 }
 
 impl<'mc> BanEntry<'mc> {
-    //@Nullable
-
     pub fn reason(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
@@ -20311,7 +19459,6 @@ impl<'mc> BanEntry<'mc> {
                 .to_string(),
         ))
     }
-    //@NotNull
 
     pub fn source(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -20325,7 +19472,6 @@ impl<'mc> BanEntry<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@Nullable
 
     pub fn expiration(
         &self,
@@ -20343,7 +19489,6 @@ impl<'mc> BanEntry<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn remove(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -20353,7 +19498,6 @@ impl<'mc> BanEntry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn save(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -20363,7 +19507,6 @@ impl<'mc> BanEntry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn target(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -20381,7 +19524,6 @@ impl<'mc> BanEntry<'mc> {
                 .to_string(),
         ))
     }
-    //@NotNull
 
     pub fn ban_target(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
@@ -20391,7 +19533,6 @@ impl<'mc> BanEntry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //@NotNull
 
     pub fn created(
         &self,
@@ -20405,7 +19546,6 @@ impl<'mc> BanEntry<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_created(
         &self,
@@ -20424,7 +19564,6 @@ impl<'mc> BanEntry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_source(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -20440,7 +19579,6 @@ impl<'mc> BanEntry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_expiration(
         &self,
@@ -20459,7 +19597,6 @@ impl<'mc> BanEntry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_reason(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -20514,8 +19651,6 @@ impl<'mc> JNIInstantiatable<'mc> for Bukkit<'mc> {
 }
 
 impl<'mc> Bukkit<'mc> {
-    //@NotNull
-
     pub fn version(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -20529,7 +19664,6 @@ impl<'mc> Bukkit<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn reload(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20541,7 +19675,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_tag(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20575,17 +19708,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::Tag::from_raw(&jni, obj)
     }
-    //@Deprecated
-
-    #[deprecated]
-    //@Nullable
-
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Magic value
-    /// </div>
-    /// Magic value
-    ///
+    #[deprecated("Magic value ")]
     /// Gets the map from the given item ID.
     pub fn get_map(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20608,7 +19731,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         Ok(Some(crate::map::MapView::from_raw(&jni, obj)?))
     }
-    //
 
     pub fn create_map(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20630,7 +19752,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::map::MapView::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn name(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20645,7 +19766,6 @@ impl<'mc> Bukkit<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn shutdown(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20657,10 +19777,7 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
     #[deprecated]
-    //@NotNull
 
     pub fn get_unsafe(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20673,7 +19790,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::UnsafeValues::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn logger(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20686,7 +19802,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         blackboxmc_java::util::logging::JavaLogger::from_raw(&jni, obj)
     }
-    //
 
     pub fn port(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20698,7 +19813,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn broadcast(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20726,7 +19840,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn world_container(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20738,7 +19851,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn get_world_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20759,7 +19871,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::World::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn bukkit_version(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20774,7 +19885,6 @@ impl<'mc> Bukkit<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn server(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20787,7 +19897,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::Server::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn spigot(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20800,7 +19909,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::ServerSpigot::from_raw(&jni, obj)
     }
-    //
 
     pub fn get_loot_table(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20822,7 +19930,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::loot::LootTable::from_raw(&jni, obj)
     }
-    //
 
     pub fn get_recipe(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20844,7 +19951,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::inventory::Recipe::from_raw(&jni, obj)
     }
-    //
 
     pub fn get_boss_bar(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20866,7 +19972,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::boss::KeyedBossBar::from_raw(&jni, obj)
     }
-    //
 
     pub fn create_chunk_data(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20889,7 +19994,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::generator::ChunkGeneratorChunkData::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn plugin_manager(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20902,7 +20006,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::plugin::PluginManager::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn item_factory(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20915,7 +20018,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::inventory::ItemFactory::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn online_players(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20934,7 +20036,6 @@ impl<'mc> Bukkit<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn max_players(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20946,8 +20047,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Set the maximum amount of players allowed to be logged in at once.
     pub fn set_max_players(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20966,7 +20065,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn view_distance(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20978,7 +20076,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn simulation_distance(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -20990,7 +20087,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn ip(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21005,7 +20101,6 @@ impl<'mc> Bukkit<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn world_type(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21020,7 +20115,6 @@ impl<'mc> Bukkit<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn generate_structures(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21032,7 +20126,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn max_world_size(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21044,7 +20137,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn allow_end(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21056,7 +20148,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn allow_nether(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21068,7 +20159,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn initial_enabled_packs(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21091,7 +20181,6 @@ impl<'mc> Bukkit<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn initial_disabled_packs(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21114,7 +20203,6 @@ impl<'mc> Bukkit<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn data_pack_manager(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21127,11 +20215,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::packs::DataPackManager::from_raw(&jni, obj)
     }
-    //@NotNull
-
-    //@NotNull
-
-    //@NotNull
 
     pub fn resource_pack(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21146,7 +20229,6 @@ impl<'mc> Bukkit<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn resource_pack_hash(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21161,7 +20243,6 @@ impl<'mc> Bukkit<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn resource_pack_prompt(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21176,7 +20257,6 @@ impl<'mc> Bukkit<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn is_resource_pack_required(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21188,7 +20268,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_whitelist(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21200,8 +20279,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets if the server is whitelisted.
     /// Sets if the server whitelist is enforced. If the whitelist is enforced, non-whitelisted players will be disconnected when the server whitelist is reloaded.
     pub fn set_whitelist(
@@ -21209,7 +20286,6 @@ impl<'mc> Bukkit<'mc> {
         arg0: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let cls = jni.find_class("void");
         let cls = jni.translate_error_with_class(cls)?;
@@ -21222,7 +20298,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_whitelist_enforced(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21234,15 +20309,12 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets if the server whitelist is enforced. If the whitelist is enforced, non-whitelisted players will be disconnected when the server whitelist is reloaded.
     pub fn set_whitelist_enforced(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let cls = jni.find_class("void");
         let cls = jni.translate_error_with_class(cls)?;
@@ -21255,7 +20327,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn whitelisted_players(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21268,7 +20339,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         blackboxmc_java::util::JavaSet::from_raw(&jni, obj)
     }
-    //
 
     pub fn reload_whitelist(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21280,7 +20350,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn broadcast_message(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21301,9 +20370,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
-
-    //@NotNull
 
     pub fn update_folder(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21318,7 +20384,6 @@ impl<'mc> Bukkit<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn update_folder_file(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21330,7 +20395,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn connection_throttle(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21342,8 +20406,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.j()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn ticks_per_animal_spawns(
@@ -21356,8 +20418,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn ticks_per_monster_spawns(
@@ -21370,8 +20430,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn ticks_per_water_spawns(
@@ -21384,8 +20442,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn ticks_per_water_ambient_spawns(
@@ -21399,8 +20455,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn ticks_per_water_underground_creature_spawns(
@@ -21418,8 +20472,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn ticks_per_ambient_spawns(
@@ -21432,7 +20484,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn get_ticks_per_spawns(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21453,7 +20504,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn get_player_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21474,7 +20524,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::entity::Player::from_raw(&jni, obj)
     }
-    //
 
     pub fn get_player_exact(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21496,7 +20545,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::entity::Player::from_raw(&jni, obj)
     }
-    //
 
     pub fn match_player(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21524,7 +20572,6 @@ impl<'mc> Bukkit<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn scheduler(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21537,7 +20584,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::scheduler::BukkitScheduler::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn services_manager(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21550,7 +20596,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::plugin::ServicesManager::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn worlds(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21569,7 +20614,6 @@ impl<'mc> Bukkit<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn create_world(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21591,7 +20635,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::World::from_raw(&jni, obj)
     }
-    //
 
     pub fn unload_world_with_world(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21606,7 +20649,6 @@ impl<'mc> Bukkit<'mc> {
         });
         args.push(val_1);
         sig += "Z";
-        // 3
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         args.push(val_2);
         sig += ")Z";
@@ -21616,7 +20658,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn create_world_border(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21629,7 +20670,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::WorldBorder::from_raw(&jni, obj)
     }
-    //
 
     pub fn create_explorer_map_with_world(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21663,7 +20703,6 @@ impl<'mc> Bukkit<'mc> {
         }
         if let Some(a) = arg4 {
             sig += "Z";
-            // 4
             let val_5 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_5);
         }
@@ -21675,7 +20714,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::inventory::ItemStack::from_raw(&jni, obj)
     }
-    //
 
     pub fn reload_data(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21687,7 +20725,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_plugin_command(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21709,7 +20746,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::command::PluginCommand::from_raw(&jni, obj)
     }
-    //
 
     pub fn save_players(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21721,7 +20757,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn dispatch_command(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21749,7 +20784,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_recipe(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21770,7 +20804,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_recipes_for(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21798,7 +20831,6 @@ impl<'mc> Bukkit<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn get_crafting_recipe(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21823,7 +20855,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::inventory::Recipe::from_raw(&jni, obj)
     }
-    //
 
     pub fn craft_item(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21853,7 +20884,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::inventory::ItemStack::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn recipe_iterator(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21866,7 +20896,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         blackboxmc_java::util::JavaIterator::from_raw(&jni, obj)
     }
-    //
 
     pub fn clear_recipes(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21878,7 +20907,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn reset_recipes(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21890,7 +20918,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_recipe(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21911,7 +20938,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn command_aliases(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21924,7 +20950,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         blackboxmc_java::util::JavaMap::from_raw(&jni, obj)
     }
-    //
 
     pub fn spawn_radius(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21936,8 +20961,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Sets the radius, in blocks, around each worlds spawn point to protect.
     pub fn set_spawn_radius(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21956,8 +20979,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn should_send_chat_previews(
@@ -21970,7 +20991,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_enforcing_secure_profiles(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21982,7 +21002,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn hide_online_players(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -21994,7 +21013,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn online_mode(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22006,7 +21024,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn allow_flight(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22018,7 +21035,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_hardcore(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22030,7 +21046,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_offline_player_with_uuid(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22051,7 +21066,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::OfflinePlayer::from_raw(&jni, obj)
     }
-    //
 
     pub fn create_player_profile_with_uuid(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22080,7 +21094,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::profile::PlayerProfile::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn ipbans(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22093,7 +21106,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         blackboxmc_java::util::JavaSet::from_raw(&jni, obj)
     }
-    //
 
     pub fn ban_ip_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22113,7 +21125,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn unban_ip_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22133,7 +21144,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn banned_players(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22146,7 +21156,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         blackboxmc_java::util::JavaSet::from_raw(&jni, obj)
     }
-    //
 
     pub fn get_ban_list(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22168,7 +21177,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::BanList::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn operators(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22181,7 +21189,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         blackboxmc_java::util::JavaSet::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn default_game_mode(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22206,7 +21213,6 @@ impl<'mc> Bukkit<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_default_game_mode(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22227,7 +21233,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn console_sender(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22240,9 +21245,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::command::ConsoleCommandSender::from_raw(&jni, obj)
     }
-    //@NotNull
-
-    //@NotNull
 
     pub fn messenger(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22255,7 +21257,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::plugin::messaging::Messenger::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn help_map(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22268,7 +21269,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::help::HelpMap::from_raw(&jni, obj)
     }
-    //
 
     pub fn create_inventory_with_inventory_holder(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22303,7 +21303,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::inventory::Inventory::from_raw(&jni, obj)
     }
-    //
 
     pub fn create_merchant(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22325,7 +21324,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::inventory::Merchant::from_raw(&jni, obj)
     }
-    //
 
     pub fn max_chained_neighbor_updates(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22337,8 +21335,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn monster_spawn_limit(
@@ -22351,8 +21347,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn animal_spawn_limit(
@@ -22365,8 +21359,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn water_animal_spawn_limit(
@@ -22379,8 +21371,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn water_ambient_spawn_limit(
@@ -22393,8 +21383,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn water_underground_creature_spawn_limit(
@@ -22412,8 +21400,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn ambient_spawn_limit(
@@ -22426,7 +21412,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn get_spawn_limit(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22447,7 +21432,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_primary_thread(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22459,7 +21443,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn motd(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22474,7 +21457,6 @@ impl<'mc> Bukkit<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_motd(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22495,7 +21477,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn shutdown_message(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22514,7 +21495,6 @@ impl<'mc> Bukkit<'mc> {
                 .to_string(),
         ))
     }
-    //@NotNull
 
     pub fn warning_state(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22539,7 +21519,6 @@ impl<'mc> Bukkit<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@Nullable
 
     pub fn scoreboard_manager(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22557,7 +21536,6 @@ impl<'mc> Bukkit<'mc> {
             &jni, obj,
         )?))
     }
-    //
 
     pub fn get_scoreboard_criteria(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22579,7 +21557,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::scoreboard::Criteria::from_raw(&jni, obj)
     }
-    //@Nullable
 
     pub fn server_icon(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22595,7 +21572,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         Ok(Some(crate::util::CachedServerIcon::from_raw(&jni, obj)?))
     }
-    //
 
     pub fn load_server_icon_with_buffered_image(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22614,8 +21590,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::util::CachedServerIcon::from_raw(&jni, obj)
     }
-    //
-
     /// Set the idle kick timeout. Any players idle for the specified amount of time will be automatically kicked.
     /// <p>A value of 0 will disable the idle kick timeout.</p>
     pub fn set_idle_timeout(
@@ -22635,7 +21609,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn idle_timeout(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22647,7 +21620,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn create_boss_bar_with_namespaced_key(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22687,7 +21659,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::boss::KeyedBossBar::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn boss_bars(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22700,7 +21671,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         blackboxmc_java::util::JavaIterator::from_raw(&jni, obj)
     }
-    //
 
     pub fn remove_boss_bar(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22721,7 +21691,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_entity(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22743,7 +21712,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::entity::Entity::from_raw(&jni, obj)
     }
-    //
 
     pub fn get_advancement(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22765,7 +21733,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::advancement::Advancement::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn advancement_iterator(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22778,7 +21745,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         blackboxmc_java::util::JavaIterator::from_raw(&jni, obj)
     }
-    //
 
     pub fn create_block_data_with_material(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22807,7 +21773,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::block::data::BlockData::from_raw(&jni, obj)
     }
-    //
 
     pub fn select_entities(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22843,7 +21808,6 @@ impl<'mc> Bukkit<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn structure_manager(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22856,7 +21820,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::structure::StructureManager::from_raw(&jni, obj)
     }
-    //
 
     pub fn get_registry(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22876,7 +21839,6 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::Registry::from_raw(&jni, obj)
     }
-    //
 
     pub fn set_server(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -22897,7 +21859,6 @@ impl<'mc> Bukkit<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -22923,7 +21884,6 @@ impl<'mc> Bukkit<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -22940,7 +21900,6 @@ impl<'mc> Bukkit<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -22955,7 +21914,6 @@ impl<'mc> Bukkit<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -22965,7 +21923,6 @@ impl<'mc> Bukkit<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -22975,7 +21932,6 @@ impl<'mc> Bukkit<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -22985,7 +21941,6 @@ impl<'mc> Bukkit<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -23044,8 +21999,6 @@ impl<'mc> JNIInstantiatable<'mc> for ChatColor<'mc> {
 }
 
 impl<'mc> ChatColor<'mc> {
-    //
-
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -23059,9 +22012,6 @@ impl<'mc> ChatColor<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
-
-    //
 
     pub fn char(&self) -> Result<u16, Box<dyn std::error::Error>> {
         let sig = String::from("()C");
@@ -23071,8 +22021,6 @@ impl<'mc> ChatColor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.c()?)
     }
-    //@Nullable
-
     /// Gets the color represented by the specified color code
     pub fn get_by_char_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -23094,7 +22042,6 @@ impl<'mc> ChatColor<'mc> {
         let obj = res.l()?;
         Ok(Some(crate::ChatColor::from_raw(&jni, obj)?))
     }
-    //
 
     pub fn get_last_colors(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -23118,7 +22065,6 @@ impl<'mc> ChatColor<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn is_color(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -23128,7 +22074,6 @@ impl<'mc> ChatColor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_format(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -23138,7 +22083,6 @@ impl<'mc> ChatColor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn as_bungee(
         &self,
@@ -23152,7 +22096,6 @@ impl<'mc> ChatColor<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn strip_color(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -23176,7 +22119,6 @@ impl<'mc> ChatColor<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn translate_alternate_color_codes(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -23256,8 +22198,6 @@ impl<'mc> JNIInstantiatable<'mc> for BanList<'mc> {
 }
 
 impl<'mc> BanList<'mc> {
-    //@NotNull
-
     pub fn entries(
         &self,
     ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -23270,7 +22210,6 @@ impl<'mc> BanList<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_ban_entry_with_object(
         &self,
@@ -23290,7 +22229,6 @@ impl<'mc> BanList<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_ban_with_string(
         &self,
@@ -23330,10 +22268,7 @@ impl<'mc> BanList<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
-    //@NotNull
 
     pub fn ban_entries(
         &self,
@@ -23347,7 +22282,6 @@ impl<'mc> BanList<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_banned_with_object(
         &self,
@@ -23365,7 +22299,6 @@ impl<'mc> BanList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn pardon_with_string(
         &self,
@@ -23606,8 +22539,6 @@ impl<'mc> BanListType<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-
-    //
 }
 /// This designates the warning state for a specific item.
 /// <p>When the server settings dictate 'default' warnings, warnings are printed if the <a href="#value()"><code>value()</code></a> is true.</p>
@@ -23650,8 +22581,6 @@ impl<'mc> JNIInstantiatable<'mc> for Warning<'mc> {
 }
 
 impl<'mc> Warning<'mc> {
-    //
-
     pub fn reason(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
@@ -23664,7 +22593,6 @@ impl<'mc> Warning<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn value(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -23674,7 +22602,6 @@ impl<'mc> Warning<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn equals(
         &self,
@@ -23691,7 +22618,6 @@ impl<'mc> Warning<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -23706,7 +22632,6 @@ impl<'mc> Warning<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -23716,7 +22641,6 @@ impl<'mc> Warning<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn annotation_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -23793,7 +22717,6 @@ impl<'mc> WorldCreator<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::WorldCreator::from_raw(&jni, res)
     }
-    //
 
     pub fn name_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -23816,7 +22739,6 @@ impl<'mc> WorldCreator<'mc> {
         let obj = res.l()?;
         crate::WorldCreator::from_raw(&jni, obj)
     }
-    //
 
     pub fn get_type_with_world_type(
         &self,
@@ -23840,7 +22762,6 @@ impl<'mc> WorldCreator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn copy_with_world(
         &self,
@@ -23862,7 +22783,6 @@ impl<'mc> WorldCreator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn generator_with_string(
         &self,
@@ -23894,8 +22814,6 @@ impl<'mc> WorldCreator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     /// Sets the seed that will be used to create this world
     pub fn seed_with_long(
         &self,
@@ -23917,7 +22835,6 @@ impl<'mc> WorldCreator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn environment_with_worldenvironment(
         &self,
@@ -23941,7 +22858,6 @@ impl<'mc> WorldCreator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn create_world(&self) -> Result<Option<crate::World<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -23956,7 +22872,6 @@ impl<'mc> WorldCreator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })?))
     }
-    //
 
     pub fn biome_provider_with_string(
         &self,
@@ -23988,8 +22903,6 @@ impl<'mc> WorldCreator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     /// Sets whether or not worlds created or loaded with this creator will have structures.
     pub fn generate_structures_with_boolean(
         &self,
@@ -23999,7 +22912,6 @@ impl<'mc> WorldCreator<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "Z";
-            // 1
             let val_1 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_1);
         }
@@ -24015,7 +22927,6 @@ impl<'mc> WorldCreator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn generator_settings_with_string(
         &self,
@@ -24039,8 +22950,6 @@ impl<'mc> WorldCreator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     /// Sets whether the world will be hardcore or not. In a hardcore world the difficulty will be locked to hard.
     pub fn hardcore_with_boolean(
         &self,
@@ -24050,7 +22959,6 @@ impl<'mc> WorldCreator<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "Z";
-            // 1
             let val_1 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_1);
         }
@@ -24063,7 +22971,6 @@ impl<'mc> WorldCreator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_generator_for_name(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -24097,7 +23004,6 @@ impl<'mc> WorldCreator<'mc> {
         let obj = res.l()?;
         crate::generator::ChunkGenerator::from_raw(&jni, obj)
     }
-    //
 
     pub fn get_biome_provider_for_name(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -24131,7 +23037,6 @@ impl<'mc> WorldCreator<'mc> {
         let obj = res.l()?;
         crate::generator::BiomeProvider::from_raw(&jni, obj)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -24157,7 +23062,6 @@ impl<'mc> WorldCreator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -24174,7 +23078,6 @@ impl<'mc> WorldCreator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -24189,7 +23092,6 @@ impl<'mc> WorldCreator<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -24199,7 +23101,6 @@ impl<'mc> WorldCreator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -24209,7 +23110,6 @@ impl<'mc> WorldCreator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -24219,7 +23119,6 @@ impl<'mc> WorldCreator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -24498,8 +23397,6 @@ impl<'mc> JNIInstantiatable<'mc> for SoundGroup<'mc> {
 }
 
 impl<'mc> SoundGroup<'mc> {
-    //
-
     pub fn pitch(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
         let res = self
@@ -24508,7 +23405,6 @@ impl<'mc> SoundGroup<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn volume(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -24518,7 +23414,6 @@ impl<'mc> SoundGroup<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //@NotNull
 
     pub fn break_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -24543,7 +23438,6 @@ impl<'mc> SoundGroup<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn step_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -24568,7 +23462,6 @@ impl<'mc> SoundGroup<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn place_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -24593,7 +23486,6 @@ impl<'mc> SoundGroup<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn hit_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -24618,7 +23510,6 @@ impl<'mc> SoundGroup<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn fall_sound(&self) -> Result<crate::Sound<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Sound;");
@@ -24684,8 +23575,6 @@ impl<'mc> JNIInstantiatable<'mc> for GameRule<'mc> {
 }
 
 impl<'mc> GameRule<'mc> {
-    //@NotNull
-
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
@@ -24698,7 +23587,6 @@ impl<'mc> GameRule<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn equals(
         &self,
@@ -24715,7 +23603,6 @@ impl<'mc> GameRule<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -24730,9 +23617,6 @@ impl<'mc> GameRule<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
-
-    //@NotNull
 
     pub fn get_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -24742,7 +23626,6 @@ impl<'mc> GameRule<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn get_by_name(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -24764,7 +23647,6 @@ impl<'mc> GameRule<'mc> {
         let obj = res.l()?;
         crate::GameRule::from_raw(&jni, obj)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -24790,7 +23672,6 @@ impl<'mc> GameRule<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -24800,7 +23681,6 @@ impl<'mc> GameRule<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -24810,7 +23690,6 @@ impl<'mc> GameRule<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -24820,7 +23699,6 @@ impl<'mc> GameRule<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -24882,15 +23760,7 @@ impl<'mc> JNIInstantiatable<'mc> for ChunkSnapshot<'mc> {
 }
 
 impl<'mc> ChunkSnapshot<'mc> {
-    //@Deprecated
-
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Magic value
-    /// </div>
-    /// Magic value
-    ///
+    #[deprecated("Magic value ")]
     /// Get block data for block at corresponding coordinate in the chunk
     pub fn get_data(
         &self,
@@ -24915,7 +23785,6 @@ impl<'mc> ChunkSnapshot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn contains_with_block_data(
         &self,
@@ -24935,7 +23804,6 @@ impl<'mc> ChunkSnapshot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn capture_full_time(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
@@ -24948,8 +23816,6 @@ impl<'mc> ChunkSnapshot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //@NotNull
-
     /// Get block data for block at corresponding coordinate in the chunk
     pub fn get_block_data(
         &self,
@@ -24976,7 +23842,6 @@ impl<'mc> ChunkSnapshot<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn x(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -24986,7 +23851,6 @@ impl<'mc> ChunkSnapshot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn z(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -24996,8 +23860,6 @@ impl<'mc> ChunkSnapshot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Gets the highest non-air coordinate at the given coordinates
     pub fn get_highest_block_yat(
         &self,
@@ -25019,8 +23881,6 @@ impl<'mc> ChunkSnapshot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
-
     /// Get biome at given coordinates
     pub fn get_biome_with_int(
         &self,
@@ -25063,8 +23923,6 @@ impl<'mc> ChunkSnapshot<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
-
     /// Get light level emitted by block at corresponding coordinate in the chunk
     pub fn get_block_emitted_light(
         &self,
@@ -25089,7 +23947,6 @@ impl<'mc> ChunkSnapshot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn world_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -25103,8 +23960,6 @@ impl<'mc> ChunkSnapshot<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
-
     /// Get block type for block at corresponding coordinate in the chunk
     pub fn get_block_type(
         &self,
@@ -25144,8 +23999,6 @@ impl<'mc> ChunkSnapshot<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
-
     /// Get sky light level for block at corresponding coordinate in the chunk
     pub fn get_block_sky_light(
         &self,
@@ -25170,8 +24023,6 @@ impl<'mc> ChunkSnapshot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Get raw biome temperature at given coordinates
     pub fn get_raw_biome_temperature_with_int(
         &self,
@@ -25202,8 +24053,6 @@ impl<'mc> ChunkSnapshot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
-
     /// Test if section is empty
     pub fn is_section_empty(&self, arg0: i32) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Z");
@@ -25258,8 +24107,6 @@ impl<'mc> JNIInstantiatable<'mc> for MusicInstrument<'mc> {
 }
 
 impl<'mc> MusicInstrument<'mc> {
-    //
-
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<Vec<crate::MusicInstrument<'mc>>, Box<dyn std::error::Error>> {
@@ -25277,7 +24124,6 @@ impl<'mc> MusicInstrument<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -25289,7 +24135,6 @@ impl<'mc> MusicInstrument<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_by_key(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -25311,7 +24156,6 @@ impl<'mc> MusicInstrument<'mc> {
         let obj = res.l()?;
         crate::MusicInstrument::from_raw(&jni, obj)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -25337,7 +24181,6 @@ impl<'mc> MusicInstrument<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -25354,7 +24197,6 @@ impl<'mc> MusicInstrument<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -25369,7 +24211,6 @@ impl<'mc> MusicInstrument<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -25379,7 +24220,6 @@ impl<'mc> MusicInstrument<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -25389,7 +24229,6 @@ impl<'mc> MusicInstrument<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -25399,7 +24238,6 @@ impl<'mc> MusicInstrument<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -25466,8 +24304,6 @@ impl<'mc> JNIInstantiatable<'mc> for Translatable<'mc> {
 }
 
 impl<'mc> Translatable<'mc> {
-    //@NotNull
-
     pub fn translation_key(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self.jni_ref().call_method(
@@ -25529,14 +24365,11 @@ impl<'mc> JNIInstantiatable<'mc> for FireworkEffectBuilder<'mc> {
 }
 
 impl<'mc> FireworkEffectBuilder<'mc> {
-    //@NotNull
-
     pub fn trail(
         &self,
         arg0: bool,
     ) -> Result<crate::FireworkEffectBuilder<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Lorg/bukkit/FireworkEffect$Builder;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -25549,8 +24382,6 @@ impl<'mc> FireworkEffectBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     pub fn build(&self) -> Result<crate::FireworkEffect<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/FireworkEffect;");
         let res = self
@@ -25561,8 +24392,6 @@ impl<'mc> FireworkEffectBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     pub fn with_trail(
         &self,
     ) -> Result<crate::FireworkEffectBuilder<'mc>, Box<dyn std::error::Error>> {
@@ -25575,8 +24404,6 @@ impl<'mc> FireworkEffectBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
     pub fn with(
         &self,
         arg0: impl Into<crate::FireworkEffectType<'mc>>,
@@ -25597,14 +24424,11 @@ impl<'mc> FireworkEffectBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     pub fn flicker(
         &self,
         arg0: bool,
     ) -> Result<crate::FireworkEffectBuilder<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Lorg/bukkit/FireworkEffect$Builder;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -25617,8 +24441,6 @@ impl<'mc> FireworkEffectBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     pub fn with_flicker(
         &self,
     ) -> Result<crate::FireworkEffectBuilder<'mc>, Box<dyn std::error::Error>> {
@@ -25631,8 +24453,6 @@ impl<'mc> FireworkEffectBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
     pub fn with_color_with_colors(
         &self,
         arg0: Vec<impl Into<crate::Color<'mc>>>,
@@ -25648,8 +24468,6 @@ impl<'mc> FireworkEffectBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
     pub fn with_fade_with_colors(
         &self,
         arg0: Vec<impl Into<crate::Color<'mc>>>,
@@ -25665,8 +24483,6 @@ impl<'mc> FireworkEffectBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
     pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
@@ -25691,8 +24507,6 @@ impl<'mc> FireworkEffectBuilder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
-
     pub fn equals(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -25708,8 +24522,6 @@ impl<'mc> FireworkEffectBuilder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -25723,8 +24535,6 @@ impl<'mc> FireworkEffectBuilder<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
-
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
@@ -25733,8 +24543,6 @@ impl<'mc> FireworkEffectBuilder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
@@ -25743,8 +24551,6 @@ impl<'mc> FireworkEffectBuilder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
-
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
@@ -25753,8 +24559,6 @@ impl<'mc> FireworkEffectBuilder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
-
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
@@ -25893,8 +24697,6 @@ impl<'mc> FireworkEffectType<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-
-    //
 }
 
 impl<'mc> JNIRaw<'mc> for FireworkEffect<'mc> {
@@ -25931,8 +24733,6 @@ impl<'mc> JNIInstantiatable<'mc> for FireworkEffect<'mc> {
 }
 
 impl<'mc> FireworkEffect<'mc> {
-    //
-
     pub fn equals(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -25948,7 +24748,6 @@ impl<'mc> FireworkEffect<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -25963,7 +24762,6 @@ impl<'mc> FireworkEffect<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -25973,7 +24771,6 @@ impl<'mc> FireworkEffect<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn builder(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -25986,7 +24783,6 @@ impl<'mc> FireworkEffect<'mc> {
         let obj = res.l()?;
         crate::FireworkEffectBuilder::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn get_type(&self) -> Result<crate::FireworkEffectType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/FireworkEffect$Type;");
@@ -26011,7 +24807,6 @@ impl<'mc> FireworkEffect<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -26025,7 +24820,6 @@ impl<'mc> FireworkEffect<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn deserialize(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -26053,7 +24847,6 @@ impl<'mc> FireworkEffect<'mc> {
         let obj = res.l()?;
         crate::configuration::serialization::ConfigurationSerializable::from_raw(&jni, obj)
     }
-    //
 
     pub fn has_flicker(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -26063,7 +24856,6 @@ impl<'mc> FireworkEffect<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_trail(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -26073,7 +24865,6 @@ impl<'mc> FireworkEffect<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn colors(&self) -> Result<Vec<crate::Color<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -26090,7 +24881,6 @@ impl<'mc> FireworkEffect<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn fade_colors(&self) -> Result<Vec<crate::Color<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -26107,7 +24897,6 @@ impl<'mc> FireworkEffect<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -26133,7 +24922,6 @@ impl<'mc> FireworkEffect<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -26143,7 +24931,6 @@ impl<'mc> FireworkEffect<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -26153,7 +24940,6 @@ impl<'mc> FireworkEffect<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -26339,8 +25125,6 @@ impl<'mc> JNIInstantiatable<'mc> for MinecraftExperimental<'mc> {
 }
 
 impl<'mc> MinecraftExperimental<'mc> {
-    //
-
     pub fn equals(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -26356,7 +25140,6 @@ impl<'mc> MinecraftExperimental<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -26371,7 +25154,6 @@ impl<'mc> MinecraftExperimental<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -26381,7 +25163,6 @@ impl<'mc> MinecraftExperimental<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn annotation_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -26442,8 +25223,6 @@ impl<'mc> JNIInstantiatable<'mc> for Keyed<'mc> {
 }
 
 impl<'mc> Keyed<'mc> {
-    //@NotNull
-
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self
@@ -33864,8 +32643,6 @@ impl<'mc> StatisticType<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-
-    //
 }
 
 impl<'mc> JNIRaw<'mc> for Statistic<'mc> {
@@ -34147,11 +32924,8 @@ impl<'mc> JNIInstantiatable<'mc> for NamespacedKey<'mc> {
 }
 
 impl<'mc> NamespacedKey<'mc> {
-    //['since', '']
-
-    //['forRemoval', 'false']
-
     #[deprecated]
+
     pub fn new_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
@@ -34176,7 +32950,6 @@ impl<'mc> NamespacedKey<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::NamespacedKey::from_raw(&jni, res)
     }
-    //
 
     pub fn equals(
         &self,
@@ -34193,7 +32966,6 @@ impl<'mc> NamespacedKey<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -34208,7 +32980,6 @@ impl<'mc> NamespacedKey<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -34218,7 +32989,6 @@ impl<'mc> NamespacedKey<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn key(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -34232,7 +33002,6 @@ impl<'mc> NamespacedKey<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn minecraft(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -34254,7 +33023,6 @@ impl<'mc> NamespacedKey<'mc> {
         let obj = res.l()?;
         crate::NamespacedKey::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn namespace(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -34268,10 +33036,7 @@ impl<'mc> NamespacedKey<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@Deprecated
-
     #[deprecated]
-    //@NotNull
 
     pub fn random_key(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -34284,7 +33049,6 @@ impl<'mc> NamespacedKey<'mc> {
         let obj = res.l()?;
         crate::NamespacedKey::from_raw(&jni, obj)
     }
-    //
 
     pub fn from_string_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -34313,7 +33077,6 @@ impl<'mc> NamespacedKey<'mc> {
         let obj = res.l()?;
         crate::NamespacedKey::from_raw(&jni, obj)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -34339,7 +33102,6 @@ impl<'mc> NamespacedKey<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -34349,7 +33111,6 @@ impl<'mc> NamespacedKey<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -34359,7 +33120,6 @@ impl<'mc> NamespacedKey<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -34422,10 +33182,6 @@ impl<'mc> JNIInstantiatable<'mc> for RegionAccessor<'mc> {
 }
 
 impl<'mc> RegionAccessor<'mc> {
-    //@NotNull
-
-    //@NotNull
-
     /// Gets the type of the block at the given coordinates.
     pub fn get_type_with_int(
         &self,
@@ -34470,7 +33226,6 @@ impl<'mc> RegionAccessor<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_type_with_int(
         &self,
@@ -34506,8 +33261,6 @@ impl<'mc> RegionAccessor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
     /// Gets the <a title="interface in org.bukkit.block.data" href="block/data/BlockData.html"><code>BlockData</code></a> at the given coordinates.
     pub fn get_block_data_with_int(
         &self,
@@ -34539,7 +33292,6 @@ impl<'mc> RegionAccessor<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_block_data_with_int(
         &self,
@@ -34575,7 +33327,6 @@ impl<'mc> RegionAccessor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_highest_block_yat_with_int(
         &self,
@@ -34610,8 +33361,6 @@ impl<'mc> RegionAccessor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
-
     /// Gets the <a href="block/Biome.html" title="enum in org.bukkit.block"><code>Biome</code></a> at the given coordinates.
     pub fn get_biome_with_int(
         &self,
@@ -34656,7 +33405,6 @@ impl<'mc> RegionAccessor<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_biome_with_int(
         &self,
@@ -34692,8 +33440,6 @@ impl<'mc> RegionAccessor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
     /// Gets the <a href="block/BlockState.html" title="interface in org.bukkit.block"><code>BlockState</code></a> at the given coordinates.
     pub fn get_block_state_with_int(
         &self,
@@ -34725,7 +33471,6 @@ impl<'mc> RegionAccessor<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn generate_tree_with_location(
         &self,
@@ -34765,7 +33510,6 @@ impl<'mc> RegionAccessor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn spawn_entity_with_location(
         &self,
@@ -34787,7 +33531,6 @@ impl<'mc> RegionAccessor<'mc> {
         args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Z";
-            // 3
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -34800,7 +33543,6 @@ impl<'mc> RegionAccessor<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn entities(&self) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -34817,7 +33559,6 @@ impl<'mc> RegionAccessor<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn living_entities(
         &self,
@@ -34839,7 +33580,6 @@ impl<'mc> RegionAccessor<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn get_entities_by_class(
         &self,
@@ -34863,7 +33603,6 @@ impl<'mc> RegionAccessor<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn get_entities_by_classes(
         &self,
@@ -34886,7 +33625,6 @@ impl<'mc> RegionAccessor<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn spawn_with_location(
         &self,
@@ -34907,7 +33645,6 @@ impl<'mc> RegionAccessor<'mc> {
         args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Z";
-            // 3
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -35074,8 +33811,6 @@ impl<'mc> JNIInstantiatable<'mc> for WorldBorder<'mc> {
 }
 
 impl<'mc> WorldBorder<'mc> {
-    //
-
     pub fn size(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res = self
@@ -35084,7 +33819,6 @@ impl<'mc> WorldBorder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn reset(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -35094,7 +33828,6 @@ impl<'mc> WorldBorder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -35106,8 +33839,6 @@ impl<'mc> WorldBorder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
     /// Sets the new border center.
     pub fn set_center_with_double(
         &self,
@@ -35131,7 +33862,6 @@ impl<'mc> WorldBorder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn center(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -35143,7 +33873,6 @@ impl<'mc> WorldBorder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn max_center_coordinate(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -35156,7 +33885,6 @@ impl<'mc> WorldBorder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn damage_buffer(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -35166,8 +33894,6 @@ impl<'mc> WorldBorder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
-
     /// Sets the amount of blocks a player may safely be outside the border before taking damage.
     pub fn set_damage_buffer(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
@@ -35181,7 +33907,6 @@ impl<'mc> WorldBorder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn damage_amount(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -35191,8 +33916,6 @@ impl<'mc> WorldBorder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
-
     /// Sets the amount of damage a player takes when outside the border plus the border buffer.
     pub fn set_damage_amount(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
@@ -35206,7 +33929,6 @@ impl<'mc> WorldBorder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn warning_time(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -35216,8 +33938,6 @@ impl<'mc> WorldBorder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Sets the warning time that causes the screen to be tinted red when a contracting border will reach the player within the specified time.
     pub fn set_warning_time(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -35231,7 +33951,6 @@ impl<'mc> WorldBorder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn warning_distance(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -35244,8 +33963,6 @@ impl<'mc> WorldBorder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Sets the warning distance that causes the screen to be tinted red when the player is within the specified number of blocks from the border.
     pub fn set_warning_distance(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -35259,7 +33976,6 @@ impl<'mc> WorldBorder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_inside(
         &self,
@@ -35278,7 +33994,6 @@ impl<'mc> WorldBorder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn max_size(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -35409,8 +34124,6 @@ impl<'mc> ChunkLoadLevel<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-
-    //
 }
 #[derive(PartialEq, Eq)]
 pub enum SandstoneTypeEnum {
@@ -35888,7 +34601,6 @@ impl<'mc> Vibration<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::Vibration::from_raw(&jni, res)
     }
-    //@NotNull
 
     pub fn origin(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -35900,7 +34612,6 @@ impl<'mc> Vibration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn destination(
         &self,
@@ -35914,7 +34625,6 @@ impl<'mc> Vibration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn arrival_time(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -35924,7 +34634,6 @@ impl<'mc> Vibration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -35950,7 +34659,6 @@ impl<'mc> Vibration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -35967,7 +34675,6 @@ impl<'mc> Vibration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -35982,7 +34689,6 @@ impl<'mc> Vibration<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -35992,7 +34698,6 @@ impl<'mc> Vibration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -36002,7 +34707,6 @@ impl<'mc> Vibration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -36012,7 +34716,6 @@ impl<'mc> Vibration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -36073,8 +34776,6 @@ impl<'mc> JNIInstantiatable<'mc> for RegistrySimpleRegistry<'mc> {
 }
 
 impl<'mc> RegistrySimpleRegistry<'mc> {
-    //
-
     pub fn get_with_namespaced_key(
         &self,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
@@ -36095,7 +34796,6 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn iterator(
         &self,
@@ -36109,7 +34809,6 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -36135,7 +34834,6 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -36152,7 +34850,6 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -36167,7 +34864,6 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -36177,7 +34873,6 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -36187,7 +34882,6 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -36197,7 +34891,6 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -36207,7 +34900,6 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_match(
         &self,
@@ -36228,7 +34920,6 @@ impl<'mc> RegistrySimpleRegistry<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn for_each(
         &self,
@@ -37662,2319 +36353,930 @@ pub enum MaterialEnum {
     BigDripleafStem,
     PottedAzaleaBush,
     PottedFloweringAzaleaBush,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyAir,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStone,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGrass,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDirt,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCobblestone,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWood,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySapling,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBedrock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWater,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStationaryWater,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLava,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStationaryLava,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySand,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGravel,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldOre,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronOre,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCoalOre,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLog,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLeaves,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySponge,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGlass,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLapisOre,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLapisBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDispenser,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySandstone,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyNoteBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBedBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPoweredRail,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDetectorRail,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPistonStickyBase,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWeb,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLongGrass,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDeadBush,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPistonBase,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPistonExtension,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWool,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPistonMovingPiece,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyYellowFlower,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedRose,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBrownMushroom,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedMushroom,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDoubleStep,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStep,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBrick,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyTnt,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBookshelf,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMossyCobblestone,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyObsidian,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyTorch,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFire,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMobSpawner,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWoodStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyChest,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedstoneWire,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamondOre,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamondBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWorkbench,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCrops,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySoil,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFurnace,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBurningFurnace,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySignPost,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWoodenDoor,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLadder,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRails,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCobblestoneStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWallSign,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLever,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStonePlate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronDoorBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWoodPlate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedstoneOre,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGlowingRedstoneOre,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedstoneTorchOff,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedstoneTorchOn,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStoneButton,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySnow,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIce,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySnowBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCactus,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyClay,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySugarCaneBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyJukebox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFence,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPumpkin,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyNetherrack,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySoulSand,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGlowstone,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPortal,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyJackOLantern,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCakeBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiodeBlockOff,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiodeBlockOn,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStainedGlass,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyTrapDoor,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMonsterEggs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySmoothBrick,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyHugeMushroom1,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyHugeMushroom2,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronFence,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyThinGlass,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMelonBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPumpkinStem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMelonStem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyVine,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFenceGate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBrickStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySmoothStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMycel,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWaterLily,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyNetherBrick,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyNetherFence,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyNetherBrickStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyNetherWarts,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEnchantmentTable,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBrewingStand,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCauldron,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEnderPortal,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEnderPortalFrame,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEnderStone,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDragonEgg,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedstoneLampOff,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedstoneLampOn,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWoodDoubleStep,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWoodStep,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCocoa,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySandstoneStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEmeraldOre,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEnderChest,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyTripwireHook,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyTripwire,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEmeraldBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySpruceWoodStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBirchWoodStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyJungleWoodStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCommand,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBeacon,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCobbleWall,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFlowerPot,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCarrot,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPotato,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWoodButton,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySkull,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyAnvil,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyTrappedChest,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldPlate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronPlate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedstoneComparatorOff,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedstoneComparatorOn,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDaylightDetector,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedstoneBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyQuartzOre,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyHopper,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyQuartzBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyQuartzStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyActivatorRail,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDropper,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStainedClay,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStainedGlassPane,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLeaves2,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLog2,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyAcaciaStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDarkOakStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySlimeBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBarrier,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronTrapdoor,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPrismarine,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySeaLantern,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyHayBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCarpet,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyHardClay,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCoalBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPackedIce,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDoublePlant,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStandingBanner,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWallBanner,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDaylightDetectorInverted,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedSandstone,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedSandstoneStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDoubleStoneSlab2,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStoneSlab2,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySpruceFenceGate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBirchFenceGate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyJungleFenceGate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDarkOakFenceGate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyAcaciaFenceGate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySpruceFence,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBirchFence,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyJungleFence,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDarkOakFence,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyAcaciaFence,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySpruceDoor,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBirchDoor,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyJungleDoor,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyAcaciaDoor,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDarkOakDoor,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEndRod,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyChorusPlant,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyChorusFlower,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPurpurBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPurpurPillar,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPurpurStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPurpurDoubleSlab,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPurpurSlab,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEndBricks,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBeetrootBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGrassPath,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEndGateway,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCommandRepeating,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCommandChain,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFrostedIce,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMagma,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyNetherWartBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedNetherBrick,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBoneBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStructureVoid,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyObserver,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWhiteShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyOrangeShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMagentaShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLightBlueShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyYellowShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLimeShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPinkShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGrayShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySilverShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCyanShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPurpleShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBlueShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBrownShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGreenShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBlackShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWhiteGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyOrangeGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMagentaGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLightBlueGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyYellowGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLimeGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPinkGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGrayGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySilverGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCyanGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPurpleGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBlueGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBrownGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGreenGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBlackGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyConcrete,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyConcretePowder,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStructureBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronSpade,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronPickaxe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronAxe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFlintAndSteel,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyApple,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBow,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyArrow,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCoal,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamond,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronIngot,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldIngot,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronSword,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWoodSword,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWoodSpade,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWoodPickaxe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWoodAxe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStoneSword,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStoneSpade,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStonePickaxe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStoneAxe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamondSword,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamondSpade,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamondPickaxe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamondAxe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStick,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBowl,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMushroomSoup,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldSword,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldSpade,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldPickaxe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldAxe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyString,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFeather,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySulphur,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWoodHoe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStoneHoe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronHoe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamondHoe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldHoe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySeeds,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWheat,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBread,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLeatherHelmet,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLeatherChestplate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLeatherLeggings,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLeatherBoots,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyChainmailHelmet,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyChainmailChestplate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyChainmailLeggings,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyChainmailBoots,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronHelmet,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronChestplate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronLeggings,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronBoots,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamondHelmet,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamondChestplate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamondLeggings,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamondBoots,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldHelmet,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldChestplate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldLeggings,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldBoots,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFlint,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPork,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGrilledPork,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPainting,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldenApple,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySign,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWoodDoor,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBucket,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWaterBucket,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLavaBucket,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMinecart,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySaddle,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronDoor,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedstone,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySnowBall,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBoat,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLeather,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMilkBucket,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyClayBrick,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyClayBall,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySugarCane,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPaper,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBook,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySlimeBall,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStorageMinecart,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPoweredMinecart,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEgg,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCompass,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFishingRod,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWatch,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGlowstoneDust,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRawFish,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCookedFish,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyInkSack,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBone,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySugar,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCake,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBed,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiode,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCookie,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMap,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyShears,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMelon,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPumpkinSeeds,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMelonSeeds,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRawBeef,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCookedBeef,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRawChicken,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCookedChicken,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRottenFlesh,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEnderPearl,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBlazeRod,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGhastTear,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldNugget,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyNetherStalk,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPotion,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGlassBottle,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySpiderEye,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFermentedSpiderEye,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBlazePowder,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMagmaCream,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBrewingStandItem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCauldronItem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEyeOfEnder,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySpeckledMelon,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMonsterEgg,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyExpBottle,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFireball,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBookAndQuill,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWrittenBook,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEmerald,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyItemFrame,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFlowerPotItem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCarrotItem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPotatoItem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBakedPotato,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPoisonousPotato,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEmptyMap,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldenCarrot,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySkullItem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCarrotStick,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyNetherStar,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPumpkinPie,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFirework,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFireworkCharge,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEnchantedBook,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedstoneComparator,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyNetherBrickItem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyQuartz,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyExplosiveMinecart,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyHopperMinecart,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPrismarineShard,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPrismarineCrystals,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRabbit,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCookedRabbit,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRabbitStew,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRabbitFoot,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRabbitHide,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyArmorStand,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronBarding,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldBarding,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamondBarding,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLeash,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyNameTag,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCommandMinecart,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMutton,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCookedMutton,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBanner,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEndCrystal,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySpruceDoorItem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBirchDoorItem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyJungleDoorItem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyAcaciaDoorItem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDarkOakDoorItem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyChorusFruit,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyChorusFruitPopped,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBeetroot,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBeetrootSeeds,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBeetrootSoup,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDragonsBreath,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySplashPotion,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySpectralArrow,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyTippedArrow,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLingeringPotion,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyShield,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyElytra,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBoatSpruce,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBoatBirch,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBoatJungle,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBoatAcacia,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBoatDarkOak,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyTotem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyShulkerShell,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronNugget,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyKnowledgeBook,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldRecord,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGreenRecord,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRecord3,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRecord4,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRecord5,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRecord6,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRecord7,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRecord8,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRecord9,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRecord10,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRecord11,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRecord12,
 }
@@ -45893,8 +43195,6 @@ impl<'mc> JNIInstantiatable<'mc> for Registry<'mc> {
 }
 
 impl<'mc> Registry<'mc> {
-    //
-
     pub fn get(
         &self,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
@@ -45914,7 +43214,6 @@ impl<'mc> Registry<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_match(
         &self,
@@ -45935,7 +43234,6 @@ impl<'mc> Registry<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn iterator(
         &self,
@@ -45949,7 +43247,6 @@ impl<'mc> Registry<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn for_each(
         &self,
@@ -46159,7 +43456,6 @@ impl<'mc> VibrationDestinationEntityDestination<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::VibrationDestinationEntityDestination::from_raw(&jni, res)
     }
-    //@NotNull
 
     pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
@@ -46171,7 +43467,6 @@ impl<'mc> VibrationDestinationEntityDestination<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -46197,7 +43492,6 @@ impl<'mc> VibrationDestinationEntityDestination<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -46214,7 +43508,6 @@ impl<'mc> VibrationDestinationEntityDestination<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -46229,7 +43522,6 @@ impl<'mc> VibrationDestinationEntityDestination<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -46239,7 +43531,6 @@ impl<'mc> VibrationDestinationEntityDestination<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -46249,7 +43540,6 @@ impl<'mc> VibrationDestinationEntityDestination<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -46259,7 +43549,6 @@ impl<'mc> VibrationDestinationEntityDestination<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -46798,8 +44087,6 @@ impl<'mc> JNIInstantiatable<'mc> for UndefinedNullability<'mc> {
 }
 
 impl<'mc> UndefinedNullability<'mc> {
-    //
-
     pub fn value(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
@@ -46812,7 +44099,6 @@ impl<'mc> UndefinedNullability<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn equals(
         &self,
@@ -46829,7 +44115,6 @@ impl<'mc> UndefinedNullability<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -46844,7 +44129,6 @@ impl<'mc> UndefinedNullability<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -46854,7 +44138,6 @@ impl<'mc> UndefinedNullability<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn annotation_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -48385,2319 +45668,930 @@ pub enum MaterialMaterialEnum {
     BigDripleafStem,
     PottedAzaleaBush,
     PottedFloweringAzaleaBush,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyAir,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStone,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGrass,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDirt,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCobblestone,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWood,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySapling,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBedrock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWater,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStationaryWater,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLava,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStationaryLava,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySand,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGravel,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldOre,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronOre,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCoalOre,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLog,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLeaves,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySponge,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGlass,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLapisOre,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLapisBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDispenser,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySandstone,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyNoteBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBedBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPoweredRail,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDetectorRail,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPistonStickyBase,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWeb,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLongGrass,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDeadBush,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPistonBase,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPistonExtension,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWool,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPistonMovingPiece,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyYellowFlower,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedRose,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBrownMushroom,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedMushroom,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDoubleStep,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStep,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBrick,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyTnt,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBookshelf,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMossyCobblestone,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyObsidian,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyTorch,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFire,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMobSpawner,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWoodStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyChest,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedstoneWire,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamondOre,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamondBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWorkbench,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCrops,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySoil,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFurnace,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBurningFurnace,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySignPost,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWoodenDoor,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLadder,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRails,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCobblestoneStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWallSign,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLever,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStonePlate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronDoorBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWoodPlate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedstoneOre,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGlowingRedstoneOre,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedstoneTorchOff,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedstoneTorchOn,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStoneButton,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySnow,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIce,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySnowBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCactus,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyClay,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySugarCaneBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyJukebox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFence,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPumpkin,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyNetherrack,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySoulSand,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGlowstone,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPortal,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyJackOLantern,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCakeBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiodeBlockOff,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiodeBlockOn,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStainedGlass,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyTrapDoor,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMonsterEggs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySmoothBrick,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyHugeMushroom1,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyHugeMushroom2,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronFence,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyThinGlass,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMelonBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPumpkinStem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMelonStem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyVine,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFenceGate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBrickStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySmoothStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMycel,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWaterLily,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyNetherBrick,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyNetherFence,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyNetherBrickStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyNetherWarts,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEnchantmentTable,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBrewingStand,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCauldron,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEnderPortal,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEnderPortalFrame,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEnderStone,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDragonEgg,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedstoneLampOff,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedstoneLampOn,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWoodDoubleStep,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWoodStep,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCocoa,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySandstoneStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEmeraldOre,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEnderChest,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyTripwireHook,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyTripwire,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEmeraldBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySpruceWoodStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBirchWoodStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyJungleWoodStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCommand,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBeacon,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCobbleWall,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFlowerPot,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCarrot,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPotato,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWoodButton,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySkull,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyAnvil,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyTrappedChest,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldPlate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronPlate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedstoneComparatorOff,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedstoneComparatorOn,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDaylightDetector,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedstoneBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyQuartzOre,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyHopper,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyQuartzBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyQuartzStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyActivatorRail,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDropper,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStainedClay,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStainedGlassPane,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLeaves2,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLog2,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyAcaciaStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDarkOakStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySlimeBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBarrier,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronTrapdoor,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPrismarine,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySeaLantern,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyHayBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCarpet,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyHardClay,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCoalBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPackedIce,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDoublePlant,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStandingBanner,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWallBanner,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDaylightDetectorInverted,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedSandstone,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedSandstoneStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDoubleStoneSlab2,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStoneSlab2,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySpruceFenceGate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBirchFenceGate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyJungleFenceGate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDarkOakFenceGate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyAcaciaFenceGate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySpruceFence,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBirchFence,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyJungleFence,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDarkOakFence,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyAcaciaFence,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySpruceDoor,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBirchDoor,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyJungleDoor,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyAcaciaDoor,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDarkOakDoor,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEndRod,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyChorusPlant,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyChorusFlower,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPurpurBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPurpurPillar,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPurpurStairs,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPurpurDoubleSlab,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPurpurSlab,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEndBricks,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBeetrootBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGrassPath,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEndGateway,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCommandRepeating,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCommandChain,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFrostedIce,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMagma,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyNetherWartBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedNetherBrick,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBoneBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStructureVoid,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyObserver,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWhiteShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyOrangeShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMagentaShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLightBlueShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyYellowShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLimeShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPinkShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGrayShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySilverShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCyanShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPurpleShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBlueShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBrownShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGreenShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBlackShulkerBox,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWhiteGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyOrangeGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMagentaGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLightBlueGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyYellowGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLimeGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPinkGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGrayGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySilverGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCyanGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPurpleGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBlueGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBrownGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGreenGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBlackGlazedTerracotta,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyConcrete,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyConcretePowder,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStructureBlock,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronSpade,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronPickaxe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronAxe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFlintAndSteel,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyApple,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBow,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyArrow,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCoal,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamond,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronIngot,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldIngot,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronSword,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWoodSword,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWoodSpade,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWoodPickaxe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWoodAxe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStoneSword,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStoneSpade,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStonePickaxe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStoneAxe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamondSword,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamondSpade,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamondPickaxe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamondAxe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStick,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBowl,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMushroomSoup,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldSword,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldSpade,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldPickaxe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldAxe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyString,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFeather,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySulphur,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWoodHoe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStoneHoe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronHoe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamondHoe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldHoe,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySeeds,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWheat,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBread,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLeatherHelmet,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLeatherChestplate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLeatherLeggings,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLeatherBoots,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyChainmailHelmet,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyChainmailChestplate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyChainmailLeggings,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyChainmailBoots,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronHelmet,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronChestplate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronLeggings,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronBoots,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamondHelmet,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamondChestplate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamondLeggings,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamondBoots,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldHelmet,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldChestplate,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldLeggings,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldBoots,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFlint,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPork,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGrilledPork,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPainting,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldenApple,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySign,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWoodDoor,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBucket,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWaterBucket,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLavaBucket,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMinecart,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySaddle,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronDoor,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedstone,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySnowBall,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBoat,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLeather,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMilkBucket,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyClayBrick,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyClayBall,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySugarCane,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPaper,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBook,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySlimeBall,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyStorageMinecart,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPoweredMinecart,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEgg,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCompass,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFishingRod,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWatch,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGlowstoneDust,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRawFish,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCookedFish,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyInkSack,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBone,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySugar,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCake,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBed,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiode,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCookie,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMap,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyShears,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMelon,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPumpkinSeeds,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMelonSeeds,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRawBeef,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCookedBeef,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRawChicken,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCookedChicken,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRottenFlesh,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEnderPearl,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBlazeRod,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGhastTear,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldNugget,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyNetherStalk,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPotion,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGlassBottle,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySpiderEye,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFermentedSpiderEye,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBlazePowder,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMagmaCream,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBrewingStandItem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCauldronItem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEyeOfEnder,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySpeckledMelon,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMonsterEgg,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyExpBottle,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFireball,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBookAndQuill,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyWrittenBook,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEmerald,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyItemFrame,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFlowerPotItem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCarrotItem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPotatoItem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBakedPotato,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPoisonousPotato,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEmptyMap,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldenCarrot,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySkullItem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCarrotStick,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyNetherStar,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPumpkinPie,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFirework,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyFireworkCharge,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEnchantedBook,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRedstoneComparator,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyNetherBrickItem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyQuartz,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyExplosiveMinecart,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyHopperMinecart,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPrismarineShard,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyPrismarineCrystals,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRabbit,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCookedRabbit,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRabbitStew,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRabbitFoot,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRabbitHide,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyArmorStand,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronBarding,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldBarding,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDiamondBarding,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLeash,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyNameTag,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCommandMinecart,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyMutton,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyCookedMutton,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBanner,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyEndCrystal,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySpruceDoorItem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBirchDoorItem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyJungleDoorItem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyAcaciaDoorItem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDarkOakDoorItem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyChorusFruit,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyChorusFruitPopped,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBeetroot,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBeetrootSeeds,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBeetrootSoup,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyDragonsBreath,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySplashPotion,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacySpectralArrow,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyTippedArrow,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyLingeringPotion,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyShield,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyElytra,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBoatSpruce,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBoatBirch,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBoatJungle,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBoatAcacia,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyBoatDarkOak,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyTotem,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyShulkerShell,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyIronNugget,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyKnowledgeBook,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGoldRecord,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyGreenRecord,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRecord3,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRecord4,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRecord5,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRecord6,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRecord7,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRecord8,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRecord9,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRecord10,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRecord11,
-    //['since', '']
-
-    //['forRemoval', 'false']
     #[deprecated]
     LegacyRecord12,
 }
@@ -57219,10 +53113,6 @@ impl<'mc> WorldEnvironment<'mc> {
         )
     }
 
-    //
-
-    //
-
     pub fn id(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
@@ -57231,17 +53121,7 @@ impl<'mc> WorldEnvironment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
-    #[deprecated]
-    //@Nullable
-
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Magic value
-    /// </div>
-    /// Magic value
-    ///
+    #[deprecated("Magic value ")]
     /// Get an environment by ID
     pub fn get_environment(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -57319,8 +53199,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockChangeDelegate<'mc> {
 }
 
 impl<'mc> BlockChangeDelegate<'mc> {
-    //
-
     /// Checks if the specified block is empty (air) or not.
     pub fn is_empty(
         &self,
@@ -57345,7 +53223,6 @@ impl<'mc> BlockChangeDelegate<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn height(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -57355,8 +53232,6 @@ impl<'mc> BlockChangeDelegate<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
-
     /// Get the block data at the location.
     pub fn get_block_data(
         &self,
@@ -57383,7 +53258,6 @@ impl<'mc> BlockChangeDelegate<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_block_data(
         &self,
@@ -57454,8 +53328,6 @@ impl<'mc> JNIInstantiatable<'mc> for StructureType<'mc> {
 }
 
 impl<'mc> StructureType<'mc> {
-    //@NotNull
-
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
@@ -57468,7 +53340,6 @@ impl<'mc> StructureType<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn equals(
         &self,
@@ -57485,7 +53356,6 @@ impl<'mc> StructureType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -57500,7 +53370,6 @@ impl<'mc> StructureType<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -57510,7 +53379,6 @@ impl<'mc> StructureType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -57522,7 +53390,6 @@ impl<'mc> StructureType<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn map_icon(
         &self,
@@ -57552,7 +53419,6 @@ impl<'mc> StructureType<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )?))
     }
-    //@NotNull
 
     pub fn structure_types(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -57565,7 +53431,6 @@ impl<'mc> StructureType<'mc> {
         let obj = res.l()?;
         blackboxmc_java::util::JavaMap::from_raw(&jni, obj)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -57591,7 +53456,6 @@ impl<'mc> StructureType<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -57601,7 +53465,6 @@ impl<'mc> StructureType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -57611,7 +53474,6 @@ impl<'mc> StructureType<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -57754,8 +53616,6 @@ impl<'mc> RaidRaidStatus<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-
-    //
 }
 #[derive(PartialEq, Eq)]
 pub enum InstrumentEnum {
@@ -57987,8 +53847,6 @@ impl<'mc> JNIInstantiatable<'mc> for Tag<'mc> {
 }
 
 impl<'mc> Tag<'mc> {
-    //@NotNull
-
     pub fn values(
         &self,
     ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -58001,7 +53859,6 @@ impl<'mc> Tag<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_tagged(
         &self,
@@ -58020,7 +53877,6 @@ impl<'mc> Tag<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -58247,8 +54103,6 @@ impl<'mc> Location<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::Location::from_raw(&jni, res)
     }
-    //@NotNull
-
     /// Adds the location by another. Not world-aware.
     pub fn add_with_double(
         &self,
@@ -58280,7 +54134,6 @@ impl<'mc> Location<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn equals(
         &self,
@@ -58297,7 +54150,6 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn length(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -58307,7 +54159,6 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -58322,7 +54173,6 @@ impl<'mc> Location<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -58332,7 +54182,6 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -58346,7 +54195,6 @@ impl<'mc> Location<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn zero(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -58358,7 +54206,6 @@ impl<'mc> Location<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn distance(
         &self,
@@ -58377,8 +54224,6 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //@NotNull
-
     /// Performs scalar multiplication, multiplying all components with a scalar. Not world-aware.
     pub fn multiply(&self, arg0: f64) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(D)Lorg/bukkit/Location;");
@@ -58394,7 +54239,6 @@ impl<'mc> Location<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -58406,9 +54250,6 @@ impl<'mc> Location<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //@NotNull
 
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/Block;");
@@ -58420,7 +54261,6 @@ impl<'mc> Location<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn x(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -58430,7 +54270,6 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn y(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -58440,7 +54279,6 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn z(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -58450,7 +54288,6 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //@NotNull
 
     pub fn chunk(&self) -> Result<crate::Chunk<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Chunk;");
@@ -58462,7 +54299,6 @@ impl<'mc> Location<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_world(
         &self,
@@ -58481,7 +54317,6 @@ impl<'mc> Location<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_world_loaded(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -58491,8 +54326,6 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets the x-coordinate of this location
     pub fn set_x(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
@@ -58506,7 +54339,6 @@ impl<'mc> Location<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn block_x(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -58516,8 +54348,6 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Safely converts a double (location coordinate) to an int (block coordinate)
     pub fn loc_to_block(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -58536,8 +54366,6 @@ impl<'mc> Location<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Sets the y-coordinate of this location
     pub fn set_y(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
@@ -58551,7 +54379,6 @@ impl<'mc> Location<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn block_y(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -58561,8 +54388,6 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Sets the z-coordinate of this location
     pub fn set_z(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
@@ -58576,7 +54401,6 @@ impl<'mc> Location<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn block_z(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -58586,8 +54410,6 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Sets the yaw of this location, measured in degrees.
     /// <ul>
     /// <li>A yaw of 0 or 360 represents the positive z direction.</li>
@@ -58607,7 +54429,6 @@ impl<'mc> Location<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn yaw(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -58617,8 +54438,6 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
-
     /// Sets the pitch of this location, measured in degrees.
     /// <ul>
     /// <li>A pitch of 0 represents level forward facing.</li>
@@ -58637,7 +54456,6 @@ impl<'mc> Location<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn pitch(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -58647,7 +54465,6 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //@NotNull
 
     pub fn direction(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/Vector;");
@@ -58659,7 +54476,6 @@ impl<'mc> Location<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_direction(
         &self,
@@ -58680,8 +54496,6 @@ impl<'mc> Location<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     /// Subtracts the location by another. Not world-aware and orientation independent.
     pub fn subtract_with_double(
         &self,
@@ -58713,7 +54527,6 @@ impl<'mc> Location<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn length_squared(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -58723,7 +54536,6 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn distance_squared(
         &self,
@@ -58742,7 +54554,6 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //@NotNull
 
     pub fn to_vector(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/Vector;");
@@ -58754,7 +54565,6 @@ impl<'mc> Location<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn check_finite(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -58764,7 +54574,6 @@ impl<'mc> Location<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -58778,7 +54587,6 @@ impl<'mc> Location<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn deserialize(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -58800,8 +54608,6 @@ impl<'mc> Location<'mc> {
         let obj = res.l()?;
         crate::Location::from_raw(&jni, obj)
     }
-    //
-
     /// Normalizes the given yaw angle to a value between <code>+/-180</code> degrees.
     pub fn normalize_yaw(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -58820,8 +54626,6 @@ impl<'mc> Location<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.f()?)
     }
-    //
-
     /// Normalizes the given pitch angle to a value between <code>+/-90</code> degrees.
     pub fn normalize_pitch(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -58840,7 +54644,6 @@ impl<'mc> Location<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -58866,7 +54669,6 @@ impl<'mc> Location<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -58876,7 +54678,6 @@ impl<'mc> Location<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -58886,7 +54687,6 @@ impl<'mc> Location<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");

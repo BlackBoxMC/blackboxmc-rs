@@ -51,7 +51,6 @@ impl<'mc> HandlerList<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::event::HandlerList::from_raw(&jni, res)
     }
-    //
 
     pub fn unregister_with_registered_listener(
         &self,
@@ -71,7 +70,6 @@ impl<'mc> HandlerList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn register(
         &self,
@@ -90,7 +88,6 @@ impl<'mc> HandlerList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn unregister_all_with_listener(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -112,7 +109,6 @@ impl<'mc> HandlerList<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn bake_all(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -124,7 +120,6 @@ impl<'mc> HandlerList<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn bake(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -134,7 +129,6 @@ impl<'mc> HandlerList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_registered_listeners(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -156,7 +150,6 @@ impl<'mc> HandlerList<'mc> {
         let obj = res.l()?;
         blackboxmc_java::util::JavaArrayList::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn handler_lists(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -169,7 +162,6 @@ impl<'mc> HandlerList<'mc> {
         let obj = res.l()?;
         blackboxmc_java::util::JavaArrayList::from_raw(&jni, obj)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -195,7 +187,6 @@ impl<'mc> HandlerList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -212,7 +203,6 @@ impl<'mc> HandlerList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -227,7 +217,6 @@ impl<'mc> HandlerList<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -237,7 +226,6 @@ impl<'mc> HandlerList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -247,7 +235,6 @@ impl<'mc> HandlerList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -257,7 +244,6 @@ impl<'mc> HandlerList<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -358,8 +344,6 @@ impl<'mc> JNIInstantiatable<'mc> for Cancellable<'mc> {
 }
 
 impl<'mc> Cancellable<'mc> {
-    //
-
     pub fn is_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
@@ -368,12 +352,9 @@ impl<'mc> Cancellable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
     pub fn set_cancelled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -425,8 +406,6 @@ impl<'mc> JNIInstantiatable<'mc> for EventHandler<'mc> {
 }
 
 impl<'mc> EventHandler<'mc> {
-    //
-
     pub fn priority(&self) -> Result<crate::event::EventPriority<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/EventPriority;");
         let res = self
@@ -450,7 +429,6 @@ impl<'mc> EventHandler<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn ignore_cancelled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -460,7 +438,6 @@ impl<'mc> EventHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn equals(
         &self,
@@ -477,7 +454,6 @@ impl<'mc> EventHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -492,7 +468,6 @@ impl<'mc> EventHandler<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -502,7 +477,6 @@ impl<'mc> EventHandler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn annotation_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -637,8 +611,6 @@ impl<'mc> EventResult<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-
-    //
 }
 
 impl<'mc> JNIRaw<'mc> for Event<'mc> {
@@ -681,7 +653,6 @@ impl<'mc> Event<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "Z";
-            // 1
             let val_1 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_1);
         }
@@ -692,7 +663,6 @@ impl<'mc> Event<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::event::Event::from_raw(&jni, res)
     }
-    //@NotNull
 
     pub fn handlers(&self) -> Result<crate::event::HandlerList<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/event/HandlerList;");
@@ -704,7 +674,6 @@ impl<'mc> Event<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn event_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -718,7 +687,6 @@ impl<'mc> Event<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn is_asynchronous(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -728,7 +696,6 @@ impl<'mc> Event<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -754,7 +721,6 @@ impl<'mc> Event<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -771,7 +737,6 @@ impl<'mc> Event<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -786,7 +751,6 @@ impl<'mc> Event<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -796,7 +760,6 @@ impl<'mc> Event<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -806,7 +769,6 @@ impl<'mc> Event<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -816,7 +778,6 @@ impl<'mc> Event<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");

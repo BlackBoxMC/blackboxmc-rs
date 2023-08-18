@@ -45,8 +45,6 @@ impl<'mc> JNIInstantiatable<'mc> for CartographyInventory<'mc> {
 }
 
 impl<'mc> CartographyInventory<'mc> {
-    //
-
     pub fn all_with_item_stack(
         &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
@@ -67,7 +65,6 @@ impl<'mc> CartographyInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn get_item(
         &self,
@@ -90,7 +87,6 @@ impl<'mc> CartographyInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn remove_with_item_stack(
         &self,
@@ -110,7 +106,6 @@ impl<'mc> CartographyInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn clear_with_int(
         &self,
@@ -130,7 +125,6 @@ impl<'mc> CartographyInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -140,7 +134,6 @@ impl<'mc> CartographyInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn iterator_with_int(
         &self,
@@ -162,7 +155,6 @@ impl<'mc> CartographyInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn contains_with_material(
         &self,
@@ -188,7 +180,6 @@ impl<'mc> CartographyInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_with_item_stack(
         &self,
@@ -208,7 +199,6 @@ impl<'mc> CartographyInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -220,7 +210,6 @@ impl<'mc> CartographyInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(
         &self,
@@ -247,7 +236,6 @@ impl<'mc> CartographyInventory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -257,7 +245,6 @@ impl<'mc> CartographyInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn add_item(
         &self,
@@ -272,7 +259,6 @@ impl<'mc> CartographyInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_item(
         &self,
@@ -296,7 +282,6 @@ impl<'mc> CartographyInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn holder(
         &self,
@@ -314,7 +299,6 @@ impl<'mc> CartographyInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -324,7 +308,6 @@ impl<'mc> CartographyInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -338,7 +321,6 @@ impl<'mc> CartographyInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item(
         &self,
@@ -353,9 +335,6 @@ impl<'mc> CartographyInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //
 
     pub fn set_contents(
         &self,
@@ -368,9 +347,6 @@ impl<'mc> CartographyInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //
 
     pub fn set_storage_contents(
         &self,
@@ -386,7 +362,6 @@ impl<'mc> CartographyInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn contains_at_least(
         &self,
@@ -410,7 +385,6 @@ impl<'mc> CartographyInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -420,7 +394,6 @@ impl<'mc> CartographyInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn viewers(
         &self,
@@ -439,7 +412,6 @@ impl<'mc> CartographyInventory<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn for_each(
         &self,
@@ -505,8 +477,6 @@ impl<'mc> JNIInstantiatable<'mc> for Recipe<'mc> {
 }
 
 impl<'mc> Recipe<'mc> {
-    //@NotNull
-
     pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
@@ -588,9 +558,6 @@ impl<'mc> StonecuttingRecipe<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::inventory::StonecuttingRecipe::from_raw(&jni, res)
     }
-    //@NotNull
-
-    //@NotNull
 
     pub fn input(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
@@ -602,7 +569,6 @@ impl<'mc> StonecuttingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_input(
         &self,
@@ -623,7 +589,6 @@ impl<'mc> StonecuttingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
@@ -635,7 +600,6 @@ impl<'mc> StonecuttingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -647,7 +611,6 @@ impl<'mc> StonecuttingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_input_choice(
         &self,
@@ -670,7 +633,6 @@ impl<'mc> StonecuttingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn input_choice(
         &self,
@@ -684,7 +646,6 @@ impl<'mc> StonecuttingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -698,7 +659,6 @@ impl<'mc> StonecuttingRecipe<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_group(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -714,7 +674,6 @@ impl<'mc> StonecuttingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -740,7 +699,6 @@ impl<'mc> StonecuttingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -757,7 +715,6 @@ impl<'mc> StonecuttingRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -772,7 +729,6 @@ impl<'mc> StonecuttingRecipe<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -782,7 +738,6 @@ impl<'mc> StonecuttingRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -792,7 +747,6 @@ impl<'mc> StonecuttingRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -802,7 +756,6 @@ impl<'mc> StonecuttingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -873,11 +826,8 @@ impl<'mc> JNIInstantiatable<'mc> for FurnaceRecipe<'mc> {
 }
 
 impl<'mc> FurnaceRecipe<'mc> {
-    //['since', '']
-
-    //['forRemoval', 'false']
-
     #[deprecated]
+
     pub fn new_with_namespaced_key(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
@@ -928,7 +878,6 @@ impl<'mc> FurnaceRecipe<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::inventory::FurnaceRecipe::from_raw(&jni, res)
     }
-    //
 
     pub fn set_input_with_material(
         &self,
@@ -956,7 +905,6 @@ impl<'mc> FurnaceRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_input_choice_with_recipe_choice(
         &self,
@@ -978,9 +926,6 @@ impl<'mc> FurnaceRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //@NotNull
 
     pub fn input(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
@@ -992,7 +937,6 @@ impl<'mc> FurnaceRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
@@ -1004,7 +948,6 @@ impl<'mc> FurnaceRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -1016,7 +959,6 @@ impl<'mc> FurnaceRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn category(
         &self,
@@ -1044,7 +986,6 @@ impl<'mc> FurnaceRecipe<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn input_choice(
         &self,
@@ -1058,7 +999,6 @@ impl<'mc> FurnaceRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1072,7 +1012,6 @@ impl<'mc> FurnaceRecipe<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_group(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -1088,7 +1027,6 @@ impl<'mc> FurnaceRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_category(
         &self,
@@ -1107,7 +1045,6 @@ impl<'mc> FurnaceRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn experience(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -1117,7 +1054,6 @@ impl<'mc> FurnaceRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn set_experience(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
@@ -1131,7 +1067,6 @@ impl<'mc> FurnaceRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_cooking_time(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -1145,7 +1080,6 @@ impl<'mc> FurnaceRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn cooking_time(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1155,7 +1089,6 @@ impl<'mc> FurnaceRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1181,7 +1114,6 @@ impl<'mc> FurnaceRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1198,7 +1130,6 @@ impl<'mc> FurnaceRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1213,7 +1144,6 @@ impl<'mc> FurnaceRecipe<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1223,7 +1153,6 @@ impl<'mc> FurnaceRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1233,7 +1162,6 @@ impl<'mc> FurnaceRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1243,7 +1171,6 @@ impl<'mc> FurnaceRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1312,8 +1239,6 @@ impl<'mc> JNIInstantiatable<'mc> for HorseInventory<'mc> {
 }
 
 impl<'mc> HorseInventory<'mc> {
-    //@Nullable
-
     pub fn armor(
         &self,
     ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
@@ -1330,7 +1255,6 @@ impl<'mc> HorseInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_armor(
         &self,
@@ -1349,7 +1273,6 @@ impl<'mc> HorseInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_saddle(
         &self,
@@ -1368,7 +1291,6 @@ impl<'mc> HorseInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn saddle(
         &self,
@@ -1386,7 +1308,6 @@ impl<'mc> HorseInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn all_with_item_stack(
         &self,
@@ -1408,7 +1329,6 @@ impl<'mc> HorseInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn get_item(
         &self,
@@ -1431,7 +1351,6 @@ impl<'mc> HorseInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn remove_with_item_stack(
         &self,
@@ -1451,7 +1370,6 @@ impl<'mc> HorseInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn clear_with_int(
         &self,
@@ -1471,7 +1389,6 @@ impl<'mc> HorseInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1481,7 +1398,6 @@ impl<'mc> HorseInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn iterator_with_int(
         &self,
@@ -1503,7 +1419,6 @@ impl<'mc> HorseInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn contains_with_material(
         &self,
@@ -1529,7 +1444,6 @@ impl<'mc> HorseInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_with_item_stack(
         &self,
@@ -1549,7 +1463,6 @@ impl<'mc> HorseInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -1561,7 +1474,6 @@ impl<'mc> HorseInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(
         &self,
@@ -1588,7 +1500,6 @@ impl<'mc> HorseInventory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1598,7 +1509,6 @@ impl<'mc> HorseInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn add_item(
         &self,
@@ -1613,7 +1523,6 @@ impl<'mc> HorseInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_item(
         &self,
@@ -1637,7 +1546,6 @@ impl<'mc> HorseInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn holder(
         &self,
@@ -1655,7 +1563,6 @@ impl<'mc> HorseInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1665,7 +1572,6 @@ impl<'mc> HorseInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -1679,7 +1585,6 @@ impl<'mc> HorseInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item(
         &self,
@@ -1694,9 +1599,6 @@ impl<'mc> HorseInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //
 
     pub fn set_contents(
         &self,
@@ -1709,9 +1611,6 @@ impl<'mc> HorseInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //
 
     pub fn set_storage_contents(
         &self,
@@ -1727,7 +1626,6 @@ impl<'mc> HorseInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn contains_at_least(
         &self,
@@ -1751,7 +1649,6 @@ impl<'mc> HorseInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1761,7 +1658,6 @@ impl<'mc> HorseInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn viewers(
         &self,
@@ -1780,7 +1676,6 @@ impl<'mc> HorseInventory<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn for_each(
         &self,
@@ -1846,8 +1741,6 @@ impl<'mc> JNIInstantiatable<'mc> for ComplexRecipe<'mc> {
 }
 
 impl<'mc> ComplexRecipe<'mc> {
-    //@NotNull
-
     pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
@@ -1858,7 +1751,6 @@ impl<'mc> ComplexRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -1925,8 +1817,6 @@ impl<'mc> JNIInstantiatable<'mc> for DoubleChestInventory<'mc> {
 }
 
 impl<'mc> DoubleChestInventory<'mc> {
-    //@Nullable
-
     pub fn holder(
         &self,
     ) -> Result<Option<crate::block::DoubleChest<'mc>>, Box<dyn std::error::Error>> {
@@ -1945,7 +1835,6 @@ impl<'mc> DoubleChestInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@NotNull
 
     pub fn left_side(
         &self,
@@ -1959,7 +1848,6 @@ impl<'mc> DoubleChestInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn right_side(
         &self,
@@ -1973,7 +1861,6 @@ impl<'mc> DoubleChestInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn all_with_item_stack(
         &self,
@@ -1995,7 +1882,6 @@ impl<'mc> DoubleChestInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn get_item(
         &self,
@@ -2018,7 +1904,6 @@ impl<'mc> DoubleChestInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn remove_with_item_stack(
         &self,
@@ -2038,7 +1923,6 @@ impl<'mc> DoubleChestInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn clear_with_int(
         &self,
@@ -2058,7 +1942,6 @@ impl<'mc> DoubleChestInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2068,7 +1951,6 @@ impl<'mc> DoubleChestInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn iterator_with_int(
         &self,
@@ -2090,7 +1972,6 @@ impl<'mc> DoubleChestInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn contains_with_material(
         &self,
@@ -2116,7 +1997,6 @@ impl<'mc> DoubleChestInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_with_item_stack(
         &self,
@@ -2136,7 +2016,6 @@ impl<'mc> DoubleChestInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -2148,7 +2027,6 @@ impl<'mc> DoubleChestInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(
         &self,
@@ -2175,7 +2053,6 @@ impl<'mc> DoubleChestInventory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2185,7 +2062,6 @@ impl<'mc> DoubleChestInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn add_item(
         &self,
@@ -2200,7 +2076,6 @@ impl<'mc> DoubleChestInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_item(
         &self,
@@ -2224,7 +2099,6 @@ impl<'mc> DoubleChestInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2234,7 +2108,6 @@ impl<'mc> DoubleChestInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -2248,7 +2121,6 @@ impl<'mc> DoubleChestInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item(
         &self,
@@ -2263,9 +2135,6 @@ impl<'mc> DoubleChestInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //
 
     pub fn set_contents(
         &self,
@@ -2278,9 +2147,6 @@ impl<'mc> DoubleChestInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //
 
     pub fn set_storage_contents(
         &self,
@@ -2296,7 +2162,6 @@ impl<'mc> DoubleChestInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn contains_at_least(
         &self,
@@ -2320,7 +2185,6 @@ impl<'mc> DoubleChestInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2330,7 +2194,6 @@ impl<'mc> DoubleChestInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn viewers(
         &self,
@@ -2349,7 +2212,6 @@ impl<'mc> DoubleChestInventory<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn for_each(
         &self,
@@ -2417,10 +2279,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockInventoryHolder<'mc> {
 }
 
 impl<'mc> BlockInventoryHolder<'mc> {
-    //@NotNull
-
-    //@NotNull
-
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/Block;");
         let res = self
@@ -2431,7 +2289,6 @@ impl<'mc> BlockInventoryHolder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn inventory(
         &self,
@@ -2494,8 +2351,6 @@ impl<'mc> JNIInstantiatable<'mc> for JukeboxInventory<'mc> {
 }
 
 impl<'mc> JukeboxInventory<'mc> {
-    //@Nullable
-
     pub fn holder(&self) -> Result<Option<crate::block::Jukebox<'mc>>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -2512,7 +2367,6 @@ impl<'mc> JukeboxInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_record(
         &self,
@@ -2531,7 +2385,6 @@ impl<'mc> JukeboxInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn record(
         &self,
@@ -2549,7 +2402,6 @@ impl<'mc> JukeboxInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn all_with_item_stack(
         &self,
@@ -2571,7 +2423,6 @@ impl<'mc> JukeboxInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn get_item(
         &self,
@@ -2594,7 +2445,6 @@ impl<'mc> JukeboxInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn remove_with_item_stack(
         &self,
@@ -2614,7 +2464,6 @@ impl<'mc> JukeboxInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn clear_with_int(
         &self,
@@ -2634,7 +2483,6 @@ impl<'mc> JukeboxInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2644,7 +2492,6 @@ impl<'mc> JukeboxInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn iterator_with_int(
         &self,
@@ -2666,7 +2513,6 @@ impl<'mc> JukeboxInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn contains_with_material(
         &self,
@@ -2692,7 +2538,6 @@ impl<'mc> JukeboxInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_with_item_stack(
         &self,
@@ -2712,7 +2557,6 @@ impl<'mc> JukeboxInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -2724,7 +2568,6 @@ impl<'mc> JukeboxInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(
         &self,
@@ -2751,7 +2594,6 @@ impl<'mc> JukeboxInventory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2761,7 +2603,6 @@ impl<'mc> JukeboxInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn add_item(
         &self,
@@ -2776,7 +2617,6 @@ impl<'mc> JukeboxInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_item(
         &self,
@@ -2800,7 +2640,6 @@ impl<'mc> JukeboxInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2810,7 +2649,6 @@ impl<'mc> JukeboxInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -2824,7 +2662,6 @@ impl<'mc> JukeboxInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item(
         &self,
@@ -2839,9 +2676,6 @@ impl<'mc> JukeboxInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //
 
     pub fn set_contents(
         &self,
@@ -2854,9 +2688,6 @@ impl<'mc> JukeboxInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //
 
     pub fn set_storage_contents(
         &self,
@@ -2872,7 +2703,6 @@ impl<'mc> JukeboxInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn contains_at_least(
         &self,
@@ -2896,7 +2726,6 @@ impl<'mc> JukeboxInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2906,7 +2735,6 @@ impl<'mc> JukeboxInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn viewers(
         &self,
@@ -2925,7 +2753,6 @@ impl<'mc> JukeboxInventory<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn for_each(
         &self,
@@ -2991,11 +2818,8 @@ impl<'mc> JNIInstantiatable<'mc> for SmithingRecipe<'mc> {
 }
 
 impl<'mc> SmithingRecipe<'mc> {
-    //['since', '']
-
-    //['forRemoval', 'false']
-
     #[deprecated]
+
     pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
@@ -3031,7 +2855,6 @@ impl<'mc> SmithingRecipe<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::inventory::SmithingRecipe::from_raw(&jni, res)
     }
-    //@NotNull
 
     pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
@@ -3043,7 +2866,6 @@ impl<'mc> SmithingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn base(&self) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/RecipeChoice;");
@@ -3055,7 +2877,6 @@ impl<'mc> SmithingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -3067,7 +2888,6 @@ impl<'mc> SmithingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn addition(
         &self,
@@ -3081,7 +2901,6 @@ impl<'mc> SmithingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -3107,7 +2926,6 @@ impl<'mc> SmithingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -3124,7 +2942,6 @@ impl<'mc> SmithingRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -3139,7 +2956,6 @@ impl<'mc> SmithingRecipe<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -3149,7 +2965,6 @@ impl<'mc> SmithingRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -3159,7 +2974,6 @@ impl<'mc> SmithingRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3169,7 +2983,6 @@ impl<'mc> SmithingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3242,8 +3055,6 @@ impl<'mc> JNIInstantiatable<'mc> for CraftingRecipe<'mc> {
 }
 
 impl<'mc> CraftingRecipe<'mc> {
-    //@NotNull
-
     pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
@@ -3254,7 +3065,6 @@ impl<'mc> CraftingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -3266,7 +3076,6 @@ impl<'mc> CraftingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn category(
         &self,
@@ -3294,7 +3103,6 @@ impl<'mc> CraftingRecipe<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3308,7 +3116,6 @@ impl<'mc> CraftingRecipe<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_group(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -3324,7 +3131,6 @@ impl<'mc> CraftingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_category(
         &self,
@@ -3343,7 +3149,6 @@ impl<'mc> CraftingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -3369,7 +3174,6 @@ impl<'mc> CraftingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -3386,7 +3190,6 @@ impl<'mc> CraftingRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -3401,7 +3204,6 @@ impl<'mc> CraftingRecipe<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -3411,7 +3213,6 @@ impl<'mc> CraftingRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -3421,7 +3222,6 @@ impl<'mc> CraftingRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3431,7 +3231,6 @@ impl<'mc> CraftingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3666,10 +3465,6 @@ impl<'mc> InventoryViewProperty<'mc> {
         )
     }
 
-    //
-
-    //
-
     pub fn id(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
@@ -3678,8 +3473,6 @@ impl<'mc> InventoryViewProperty<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
-
     pub fn get_type(
         &self,
     ) -> Result<crate::event::inventory::InventoryType<'mc>, Box<dyn std::error::Error>> {
@@ -3749,8 +3542,6 @@ impl<'mc> InventoryView<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::inventory::InventoryView::from_raw(&jni, res)
     }
-    //@Nullable
-
     /// Gets one item in this inventory view by its raw slot ID.
     pub fn get_item(
         &self,
@@ -3773,7 +3564,6 @@ impl<'mc> InventoryView<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_property(
         &self,
@@ -3797,7 +3587,6 @@ impl<'mc> InventoryView<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn close(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3807,7 +3596,6 @@ impl<'mc> InventoryView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn get_type(
         &self,
@@ -3834,7 +3622,6 @@ impl<'mc> InventoryView<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_item(
         &self,
@@ -3858,8 +3645,6 @@ impl<'mc> InventoryView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
-
     /// Gets the inventory corresponding to the given raw slot ID. If the slot ID is <a href="#OUTSIDE"><code>OUTSIDE</code></a> null will be returned, otherwise behaviour for illegal and negative slot IDs is undefined. May be used with <a href="#convertSlot(int)"><code>convertSlot(int)</code></a> to directly index an underlying inventory.
     pub fn get_inventory(
         &self,
@@ -3882,7 +3667,6 @@ impl<'mc> InventoryView<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@NotNull
 
     pub fn title(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -3896,9 +3680,6 @@ impl<'mc> InventoryView<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
-
-    //@Nullable
 
     pub fn player(
         &self,
@@ -3916,7 +3697,6 @@ impl<'mc> InventoryView<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@NotNull
 
     pub fn top_inventory(
         &self,
@@ -3930,7 +3710,6 @@ impl<'mc> InventoryView<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn bottom_inventory(
         &self,
@@ -3947,8 +3726,6 @@ impl<'mc> InventoryView<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
     /// Converts a raw slot ID into its local slot ID into whichever of the two inventories the slot points to.
     /// <p>If the raw slot refers to the upper inventory, it will be returned unchanged and thus be suitable for getTopInventory().getItem(); if it refers to the lower inventory, the output will differ from the input and be suitable for getBottomInventory().getItem().</p>
     pub fn convert_slot(&self, arg0: i32) -> Result<i32, Box<dyn std::error::Error>> {
@@ -3963,7 +3740,6 @@ impl<'mc> InventoryView<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_cursor(
         &self,
@@ -3982,7 +3758,6 @@ impl<'mc> InventoryView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn cursor(
         &self,
@@ -4000,7 +3775,6 @@ impl<'mc> InventoryView<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn count_slots(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4010,8 +3784,6 @@ impl<'mc> InventoryView<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
-
     /// Determine the type of the slot by its raw slot ID.
     /// <p>If the type of the slot is unknown, then <a href="../event/inventory/InventoryType.SlotType.html#CONTAINER"><code>InventoryType.SlotType.CONTAINER</code></a> will be returned.</p>
     pub fn get_slot_type(
@@ -4045,7 +3817,6 @@ impl<'mc> InventoryView<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn original_title(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -4062,7 +3833,6 @@ impl<'mc> InventoryView<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_title(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -4078,7 +3848,6 @@ impl<'mc> InventoryView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -4104,7 +3873,6 @@ impl<'mc> InventoryView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -4121,7 +3889,6 @@ impl<'mc> InventoryView<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -4136,7 +3903,6 @@ impl<'mc> InventoryView<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4146,7 +3912,6 @@ impl<'mc> InventoryView<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -4156,7 +3921,6 @@ impl<'mc> InventoryView<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -4166,7 +3930,6 @@ impl<'mc> InventoryView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -4265,9 +4028,6 @@ impl<'mc> CampfireRecipe<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::inventory::CampfireRecipe::from_raw(&jni, res)
     }
-    //@NotNull
-
-    //@NotNull
 
     pub fn input(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
@@ -4279,7 +4039,6 @@ impl<'mc> CampfireRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_input(
         &self,
@@ -4300,7 +4059,6 @@ impl<'mc> CampfireRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
@@ -4312,7 +4070,6 @@ impl<'mc> CampfireRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -4324,7 +4081,6 @@ impl<'mc> CampfireRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn category(
         &self,
@@ -4352,7 +4108,6 @@ impl<'mc> CampfireRecipe<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_input_choice(
         &self,
@@ -4375,7 +4130,6 @@ impl<'mc> CampfireRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn input_choice(
         &self,
@@ -4389,7 +4143,6 @@ impl<'mc> CampfireRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -4403,7 +4156,6 @@ impl<'mc> CampfireRecipe<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_group(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -4419,7 +4171,6 @@ impl<'mc> CampfireRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_category(
         &self,
@@ -4438,7 +4189,6 @@ impl<'mc> CampfireRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn experience(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -4448,7 +4198,6 @@ impl<'mc> CampfireRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn set_experience(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
@@ -4462,7 +4211,6 @@ impl<'mc> CampfireRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_cooking_time(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -4476,7 +4224,6 @@ impl<'mc> CampfireRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn cooking_time(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4486,7 +4233,6 @@ impl<'mc> CampfireRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -4512,7 +4258,6 @@ impl<'mc> CampfireRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -4529,7 +4274,6 @@ impl<'mc> CampfireRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -4544,7 +4288,6 @@ impl<'mc> CampfireRecipe<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4554,7 +4297,6 @@ impl<'mc> CampfireRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -4564,7 +4306,6 @@ impl<'mc> CampfireRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -4574,7 +4315,6 @@ impl<'mc> CampfireRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -4640,11 +4380,8 @@ impl<'mc> JNIInstantiatable<'mc> for ItemStack<'mc> {
 }
 
 impl<'mc> ItemStack<'mc> {
-    //['since', '']
-
-    //['forRemoval', 'false']
-
     #[deprecated]
+
     pub fn new_with_material(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::Material<'mc>>,
@@ -4685,7 +4422,6 @@ impl<'mc> ItemStack<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::inventory::ItemStack::from_raw(&jni, res)
     }
-    //@NotNull
 
     pub fn data(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/material/MaterialData;");
@@ -4697,7 +4433,6 @@ impl<'mc> ItemStack<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn equals(
         &self,
@@ -4714,7 +4449,6 @@ impl<'mc> ItemStack<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -4729,7 +4463,6 @@ impl<'mc> ItemStack<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4739,7 +4472,6 @@ impl<'mc> ItemStack<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -4751,7 +4483,6 @@ impl<'mc> ItemStack<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //@NotNull
 
     pub fn get_type(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -4776,7 +4507,6 @@ impl<'mc> ItemStack<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_type(
         &self,
@@ -4795,7 +4525,6 @@ impl<'mc> ItemStack<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_data(
         &self,
@@ -4814,7 +4543,6 @@ impl<'mc> ItemStack<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -4828,7 +4556,6 @@ impl<'mc> ItemStack<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn deserialize(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -4850,7 +4577,6 @@ impl<'mc> ItemStack<'mc> {
         let obj = res.l()?;
         crate::inventory::ItemStack::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn translation_key(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -4867,7 +4593,6 @@ impl<'mc> ItemStack<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4877,7 +4602,6 @@ impl<'mc> ItemStack<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn get_enchantment_level(
         &self,
@@ -4896,15 +4620,7 @@ impl<'mc> ItemStack<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Deprecated
-
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// durability is now part of ItemMeta. To avoid confusion and misuse, <a href="#getItemMeta()"><code>getItemMeta()</code></a>, <a href="#setItemMeta(org.bukkit.inventory.meta.ItemMeta)"><code>setItemMeta(ItemMeta)</code></a> and <a href="meta/Damageable.html#setDamage(int)"><code>Damageable.setDamage(int)</code></a> should be used instead. This is because any call to this method will be overwritten by subsequent setting of ItemMeta which was created before this call.
-    /// </div>
-    /// durability is now part of ItemMeta. To avoid confusion and misuse, <a href="#getItemMeta()"><code>getItemMeta()</code></a>, <a href="#setItemMeta(org.bukkit.inventory.meta.ItemMeta)"><code>setItemMeta(ItemMeta)</code></a> and <a href="meta/Damageable.html#setDamage(int)"><code>Damageable.setDamage(int)</code></a> should be used instead. This is because any call to this method will be overwritten by subsequent setting of ItemMeta which was created before this call.
-    ///
+    #[deprecated("durability is now part of ItemMeta. To avoid confusion and misuse, <a href='#getItemMeta()'><code>getItemMeta()</code></a>, <a href='#setItemMeta(org.bukkit.inventory.meta.ItemMeta)'><code>setItemMeta(ItemMeta)</code></a> and <a href='meta/Damageable.html#setDamage(int)'><code>Damageable.setDamage(int)</code></a> should be used instead. This is because any call to this method will be overwritten by subsequent setting of ItemMeta which was created before this call. ")]
     /// Sets the durability of this item
     pub fn set_durability(&self, arg0: i16) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(S)V");
@@ -4918,7 +4634,6 @@ impl<'mc> ItemStack<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn amount(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4928,7 +4643,6 @@ impl<'mc> ItemStack<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn has_item_meta(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4938,7 +4652,6 @@ impl<'mc> ItemStack<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn item_meta(
         &self,
@@ -4956,8 +4669,6 @@ impl<'mc> ItemStack<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
-
     /// Sets the amount of items in this stack
     pub fn set_amount(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -4971,8 +4682,6 @@ impl<'mc> ItemStack<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn durability(&self) -> Result<i16, Box<dyn std::error::Error>> {
@@ -4983,7 +4692,6 @@ impl<'mc> ItemStack<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.s()?)
     }
-    //
 
     pub fn set_item_meta(
         &self,
@@ -5002,7 +4710,6 @@ impl<'mc> ItemStack<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_similar(
         &self,
@@ -5021,7 +4728,6 @@ impl<'mc> ItemStack<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn contains_enchantment(
         &self,
@@ -5040,7 +4746,6 @@ impl<'mc> ItemStack<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn enchantments(
         &self,
@@ -5054,7 +4759,6 @@ impl<'mc> ItemStack<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_enchantments(
         &self,
@@ -5073,7 +4777,6 @@ impl<'mc> ItemStack<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn add_enchantment(
         &self,
@@ -5097,7 +4800,6 @@ impl<'mc> ItemStack<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn add_unsafe_enchantment(
         &self,
@@ -5121,7 +4823,6 @@ impl<'mc> ItemStack<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn add_unsafe_enchantments(
         &self,
@@ -5140,7 +4841,6 @@ impl<'mc> ItemStack<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_enchantment(
         &self,
@@ -5159,7 +4859,6 @@ impl<'mc> ItemStack<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -5185,7 +4884,6 @@ impl<'mc> ItemStack<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -5195,7 +4893,6 @@ impl<'mc> ItemStack<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -5205,7 +4902,6 @@ impl<'mc> ItemStack<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -5299,7 +4995,6 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::inventory::RecipeChoiceMaterialChoice::from_raw(&jni, res)
     }
-    //
 
     pub fn equals(
         &self,
@@ -5316,7 +5011,6 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -5331,7 +5025,6 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -5341,7 +5034,6 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn clone(
         &self,
@@ -5357,7 +5049,6 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn test_with_object(
         &self,
@@ -5375,7 +5066,6 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn item_stack(
         &self,
@@ -5389,7 +5079,6 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn choices(&self) -> Result<Vec<crate::Material<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -5420,7 +5109,6 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -5446,7 +5134,6 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -5456,7 +5143,6 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -5466,7 +5152,6 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -5476,7 +5161,6 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn negate(
         &self,
@@ -5491,7 +5175,6 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn and(
         &self,
@@ -5513,7 +5196,6 @@ impl<'mc> RecipeChoiceMaterialChoice<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn or(
         &self,
@@ -5826,8 +5508,6 @@ impl<'mc> JNIInstantiatable<'mc> for Inventory<'mc> {
 }
 
 impl<'mc> Inventory<'mc> {
-    //
-
     pub fn all_with_item_stack(
         &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
@@ -5848,8 +5528,6 @@ impl<'mc> Inventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
-
     /// Returns the ItemStack found in the slot at the given index
     pub fn get_item(
         &self,
@@ -5872,7 +5550,6 @@ impl<'mc> Inventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn remove_with_item_stack(
         &self,
@@ -5892,8 +5569,6 @@ impl<'mc> Inventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
-
     /// Clears out a particular slot in the index.
     pub fn clear_with_int(
         &self,
@@ -5913,7 +5588,6 @@ impl<'mc> Inventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5923,8 +5597,6 @@ impl<'mc> Inventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
-
     /// Returns an iterator starting at the given index. If the index is positive, then the first call to next() will return the item at that index; if it is negative, the first call to previous will return the item at index (getSize() + index).
     pub fn iterator_with_int(
         &self,
@@ -5946,7 +5618,6 @@ impl<'mc> Inventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn contains_with_material(
         &self,
@@ -5972,7 +5643,6 @@ impl<'mc> Inventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_with_item_stack(
         &self,
@@ -5992,7 +5662,6 @@ impl<'mc> Inventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -6004,7 +5673,6 @@ impl<'mc> Inventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(
         &self,
@@ -6031,7 +5699,6 @@ impl<'mc> Inventory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -6041,7 +5708,6 @@ impl<'mc> Inventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn add_item(
         &self,
@@ -6056,7 +5722,6 @@ impl<'mc> Inventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_item(
         &self,
@@ -6080,7 +5745,6 @@ impl<'mc> Inventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn holder(
         &self,
@@ -6098,7 +5762,6 @@ impl<'mc> Inventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -6108,8 +5771,6 @@ impl<'mc> Inventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// This method allows you to change the maximum stack size for an inventory.
     /// <p><b>Caveats:</b></p>
     /// <ul>
@@ -6130,7 +5791,6 @@ impl<'mc> Inventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item(
         &self,
@@ -6145,9 +5805,6 @@ impl<'mc> Inventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //
 
     pub fn set_contents(
         &self,
@@ -6160,9 +5817,6 @@ impl<'mc> Inventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //
 
     pub fn set_storage_contents(
         &self,
@@ -6178,7 +5832,6 @@ impl<'mc> Inventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn contains_at_least(
         &self,
@@ -6202,7 +5855,6 @@ impl<'mc> Inventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -6212,7 +5864,6 @@ impl<'mc> Inventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn viewers(
         &self,
@@ -6231,7 +5882,6 @@ impl<'mc> Inventory<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn for_each(
         &self,
@@ -6313,7 +5963,6 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::inventory::RecipeChoiceExactChoice::from_raw(&jni, res)
     }
-    //
 
     pub fn equals(
         &self,
@@ -6330,7 +5979,6 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -6345,7 +5993,6 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -6355,7 +6002,6 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn clone(
         &self,
@@ -6371,7 +6017,6 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn test_with_item_stack(
         &self,
@@ -6391,7 +6036,6 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn item_stack(
         &self,
@@ -6405,7 +6049,6 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn choices(
         &self,
@@ -6424,7 +6067,6 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -6450,7 +6092,6 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -6460,7 +6101,6 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -6470,7 +6110,6 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -6480,7 +6119,6 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn negate(
         &self,
@@ -6495,7 +6133,6 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn and(
         &self,
@@ -6517,7 +6154,6 @@ impl<'mc> RecipeChoiceExactChoice<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn or(
         &self,
@@ -6592,8 +6228,6 @@ impl<'mc> JNIInstantiatable<'mc> for LecternInventory<'mc> {
 }
 
 impl<'mc> LecternInventory<'mc> {
-    //@Nullable
-
     pub fn holder(
         &self,
     ) -> Result<Option<crate::inventory::InventoryHolder<'mc>>, Box<dyn std::error::Error>> {
@@ -6612,7 +6246,6 @@ impl<'mc> LecternInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn all_with_item_stack(
         &self,
@@ -6634,7 +6267,6 @@ impl<'mc> LecternInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn get_item(
         &self,
@@ -6657,7 +6289,6 @@ impl<'mc> LecternInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn remove_with_item_stack(
         &self,
@@ -6677,7 +6308,6 @@ impl<'mc> LecternInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn clear_with_int(
         &self,
@@ -6697,7 +6327,6 @@ impl<'mc> LecternInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6707,7 +6336,6 @@ impl<'mc> LecternInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn iterator_with_int(
         &self,
@@ -6729,7 +6357,6 @@ impl<'mc> LecternInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn contains_with_material(
         &self,
@@ -6755,7 +6382,6 @@ impl<'mc> LecternInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_with_item_stack(
         &self,
@@ -6775,7 +6401,6 @@ impl<'mc> LecternInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -6787,7 +6412,6 @@ impl<'mc> LecternInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(
         &self,
@@ -6814,7 +6438,6 @@ impl<'mc> LecternInventory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -6824,7 +6447,6 @@ impl<'mc> LecternInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn add_item(
         &self,
@@ -6839,7 +6461,6 @@ impl<'mc> LecternInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_item(
         &self,
@@ -6863,7 +6484,6 @@ impl<'mc> LecternInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -6873,7 +6493,6 @@ impl<'mc> LecternInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -6887,7 +6506,6 @@ impl<'mc> LecternInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item(
         &self,
@@ -6902,9 +6520,6 @@ impl<'mc> LecternInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //
 
     pub fn set_contents(
         &self,
@@ -6917,9 +6532,6 @@ impl<'mc> LecternInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //
 
     pub fn set_storage_contents(
         &self,
@@ -6935,7 +6547,6 @@ impl<'mc> LecternInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn contains_at_least(
         &self,
@@ -6959,7 +6570,6 @@ impl<'mc> LecternInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -6969,7 +6579,6 @@ impl<'mc> LecternInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn viewers(
         &self,
@@ -6988,7 +6597,6 @@ impl<'mc> LecternInventory<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn for_each(
         &self,
@@ -7056,8 +6664,6 @@ impl<'mc> JNIInstantiatable<'mc> for BrewerInventory<'mc> {
 }
 
 impl<'mc> BrewerInventory<'mc> {
-    //
-
     pub fn set_fuel(
         &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
@@ -7075,7 +6681,6 @@ impl<'mc> BrewerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn fuel(
         &self,
@@ -7093,7 +6698,6 @@ impl<'mc> BrewerInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@Nullable
 
     pub fn holder(
         &self,
@@ -7113,7 +6717,6 @@ impl<'mc> BrewerInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@Nullable
 
     pub fn ingredient(
         &self,
@@ -7131,7 +6734,6 @@ impl<'mc> BrewerInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_ingredient(
         &self,
@@ -7150,7 +6752,6 @@ impl<'mc> BrewerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn all_with_item_stack(
         &self,
@@ -7172,7 +6773,6 @@ impl<'mc> BrewerInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn get_item(
         &self,
@@ -7195,7 +6795,6 @@ impl<'mc> BrewerInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn remove_with_item_stack(
         &self,
@@ -7215,7 +6814,6 @@ impl<'mc> BrewerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn clear_with_int(
         &self,
@@ -7235,7 +6833,6 @@ impl<'mc> BrewerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -7245,7 +6842,6 @@ impl<'mc> BrewerInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn iterator_with_int(
         &self,
@@ -7267,7 +6863,6 @@ impl<'mc> BrewerInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn contains_with_material(
         &self,
@@ -7293,7 +6888,6 @@ impl<'mc> BrewerInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_with_item_stack(
         &self,
@@ -7313,7 +6907,6 @@ impl<'mc> BrewerInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -7325,7 +6918,6 @@ impl<'mc> BrewerInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(
         &self,
@@ -7352,7 +6944,6 @@ impl<'mc> BrewerInventory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -7362,7 +6953,6 @@ impl<'mc> BrewerInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn add_item(
         &self,
@@ -7377,7 +6967,6 @@ impl<'mc> BrewerInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_item(
         &self,
@@ -7401,7 +6990,6 @@ impl<'mc> BrewerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -7411,7 +6999,6 @@ impl<'mc> BrewerInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -7425,7 +7012,6 @@ impl<'mc> BrewerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item(
         &self,
@@ -7440,9 +7026,6 @@ impl<'mc> BrewerInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //
 
     pub fn set_contents(
         &self,
@@ -7455,9 +7038,6 @@ impl<'mc> BrewerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //
 
     pub fn set_storage_contents(
         &self,
@@ -7473,7 +7053,6 @@ impl<'mc> BrewerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn contains_at_least(
         &self,
@@ -7497,7 +7076,6 @@ impl<'mc> BrewerInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -7507,7 +7085,6 @@ impl<'mc> BrewerInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn viewers(
         &self,
@@ -7526,7 +7103,6 @@ impl<'mc> BrewerInventory<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn for_each(
         &self,
@@ -7592,8 +7168,6 @@ impl<'mc> JNIInstantiatable<'mc> for LoomInventory<'mc> {
 }
 
 impl<'mc> LoomInventory<'mc> {
-    //
-
     pub fn all_with_item_stack(
         &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
@@ -7614,7 +7188,6 @@ impl<'mc> LoomInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn get_item(
         &self,
@@ -7637,7 +7210,6 @@ impl<'mc> LoomInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn remove_with_item_stack(
         &self,
@@ -7657,7 +7229,6 @@ impl<'mc> LoomInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn clear_with_int(
         &self,
@@ -7677,7 +7248,6 @@ impl<'mc> LoomInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -7687,7 +7257,6 @@ impl<'mc> LoomInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn iterator_with_int(
         &self,
@@ -7709,7 +7278,6 @@ impl<'mc> LoomInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn contains_with_material(
         &self,
@@ -7735,7 +7303,6 @@ impl<'mc> LoomInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_with_item_stack(
         &self,
@@ -7755,7 +7322,6 @@ impl<'mc> LoomInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -7767,7 +7333,6 @@ impl<'mc> LoomInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(
         &self,
@@ -7794,7 +7359,6 @@ impl<'mc> LoomInventory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -7804,7 +7368,6 @@ impl<'mc> LoomInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn add_item(
         &self,
@@ -7819,7 +7382,6 @@ impl<'mc> LoomInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_item(
         &self,
@@ -7843,7 +7405,6 @@ impl<'mc> LoomInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn holder(
         &self,
@@ -7861,7 +7422,6 @@ impl<'mc> LoomInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -7871,7 +7431,6 @@ impl<'mc> LoomInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -7885,7 +7444,6 @@ impl<'mc> LoomInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item(
         &self,
@@ -7900,9 +7458,6 @@ impl<'mc> LoomInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //
 
     pub fn set_contents(
         &self,
@@ -7915,9 +7470,6 @@ impl<'mc> LoomInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //
 
     pub fn set_storage_contents(
         &self,
@@ -7933,7 +7485,6 @@ impl<'mc> LoomInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn contains_at_least(
         &self,
@@ -7957,7 +7508,6 @@ impl<'mc> LoomInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -7967,7 +7517,6 @@ impl<'mc> LoomInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn viewers(
         &self,
@@ -7986,7 +7535,6 @@ impl<'mc> LoomInventory<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn for_each(
         &self,
@@ -8076,7 +7624,6 @@ impl<'mc> ShapedRecipe<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::inventory::ShapedRecipe::from_raw(&jni, res)
     }
-    //
 
     pub fn shape_with_strings(
         &self,
@@ -8093,7 +7640,6 @@ impl<'mc> ShapedRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_ingredient_with_char(
         &self,
@@ -8125,7 +7671,6 @@ impl<'mc> ShapedRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn ingredient_map(
         &self,
@@ -8142,7 +7687,6 @@ impl<'mc> ShapedRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn choice_map(
         &self,
@@ -8156,7 +7700,6 @@ impl<'mc> ShapedRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
@@ -8168,7 +7711,6 @@ impl<'mc> ShapedRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -8180,7 +7722,6 @@ impl<'mc> ShapedRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn category(
         &self,
@@ -8208,7 +7749,6 @@ impl<'mc> ShapedRecipe<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -8222,7 +7762,6 @@ impl<'mc> ShapedRecipe<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_group(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -8238,7 +7777,6 @@ impl<'mc> ShapedRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_category(
         &self,
@@ -8257,7 +7795,6 @@ impl<'mc> ShapedRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -8283,7 +7820,6 @@ impl<'mc> ShapedRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -8300,7 +7836,6 @@ impl<'mc> ShapedRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -8315,7 +7850,6 @@ impl<'mc> ShapedRecipe<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -8325,7 +7859,6 @@ impl<'mc> ShapedRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -8335,7 +7868,6 @@ impl<'mc> ShapedRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -8345,7 +7877,6 @@ impl<'mc> ShapedRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -8454,7 +7985,6 @@ impl<'mc> SmithingTransformRecipe<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::inventory::SmithingTransformRecipe::from_raw(&jni, res)
     }
-    //@NotNull
 
     pub fn template(
         &self,
@@ -8468,7 +7998,6 @@ impl<'mc> SmithingTransformRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
@@ -8480,7 +8009,6 @@ impl<'mc> SmithingTransformRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn base(&self) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/RecipeChoice;");
@@ -8492,7 +8020,6 @@ impl<'mc> SmithingTransformRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -8504,7 +8031,6 @@ impl<'mc> SmithingTransformRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn addition(
         &self,
@@ -8518,7 +8044,6 @@ impl<'mc> SmithingTransformRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -8544,7 +8069,6 @@ impl<'mc> SmithingTransformRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -8561,7 +8085,6 @@ impl<'mc> SmithingTransformRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -8576,7 +8099,6 @@ impl<'mc> SmithingTransformRecipe<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -8586,7 +8108,6 @@ impl<'mc> SmithingTransformRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -8596,7 +8117,6 @@ impl<'mc> SmithingTransformRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -8606,7 +8126,6 @@ impl<'mc> SmithingTransformRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -8796,8 +8315,6 @@ impl<'mc> JNIInstantiatable<'mc> for Merchant<'mc> {
 }
 
 impl<'mc> Merchant<'mc> {
-    //@NotNull
-
     pub fn recipes(
         &self,
     ) -> Result<Vec<crate::inventory::MerchantRecipe<'mc>>, Box<dyn std::error::Error>> {
@@ -8818,8 +8335,6 @@ impl<'mc> Merchant<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
-
     /// Get the recipe at a certain index of this merchant's trade list.
     pub fn get_recipe(
         &self,
@@ -8838,7 +8353,6 @@ impl<'mc> Merchant<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_recipe(
         &self,
@@ -8862,7 +8376,6 @@ impl<'mc> Merchant<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn recipe_count(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -8872,7 +8385,6 @@ impl<'mc> Merchant<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_trading(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8882,7 +8394,6 @@ impl<'mc> Merchant<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn trader(
         &self,
@@ -8942,8 +8453,6 @@ impl<'mc> JNIInstantiatable<'mc> for ItemFactory<'mc> {
 }
 
 impl<'mc> ItemFactory<'mc> {
-    //
-
     pub fn equals(
         &self,
         arg0: impl Into<crate::inventory::meta::ItemMeta<'mc>>,
@@ -8970,7 +8479,6 @@ impl<'mc> ItemFactory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_item_meta(
         &self,
@@ -8991,7 +8499,6 @@ impl<'mc> ItemFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn as_meta_for_with_item_meta(
         &self,
@@ -9019,7 +8526,6 @@ impl<'mc> ItemFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_applicable_with_item_meta(
         &self,
@@ -9045,7 +8551,6 @@ impl<'mc> ItemFactory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn update_material(
         &self,
@@ -9088,7 +8593,6 @@ impl<'mc> ItemFactory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn default_leather_color(&self) -> Result<crate::Color<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Color;");
@@ -9103,7 +8607,6 @@ impl<'mc> ItemFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn create_item_stack(
         &self,
@@ -9124,7 +8627,6 @@ impl<'mc> ItemFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_spawn_egg(
         &self,
@@ -9201,8 +8703,6 @@ impl<'mc> JNIInstantiatable<'mc> for EntityEquipment<'mc> {
 }
 
 impl<'mc> EntityEquipment<'mc> {
-    //
-
     pub fn get_item(
         &self,
         arg0: impl Into<crate::inventory::EquipmentSlot<'mc>>,
@@ -9223,7 +8723,6 @@ impl<'mc> EntityEquipment<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn clear(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -9233,7 +8732,6 @@ impl<'mc> EntityEquipment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_item_with_equipment_slot(
         &self,
@@ -9255,7 +8753,6 @@ impl<'mc> EntityEquipment<'mc> {
         args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Z";
-            // 3
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -9266,7 +8763,6 @@ impl<'mc> EntityEquipment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn holder(&self) -> Result<Option<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/entity/Entity;");
@@ -9282,10 +8778,6 @@ impl<'mc> EntityEquipment<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn item_in_hand(
@@ -9300,7 +8792,6 @@ impl<'mc> EntityEquipment<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_item_in_hand(
         &self,
@@ -9319,10 +8810,6 @@ impl<'mc> EntityEquipment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn boots(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
@@ -9335,7 +8822,6 @@ impl<'mc> EntityEquipment<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_boots_with_item_stack(
         &self,
@@ -9351,7 +8837,6 @@ impl<'mc> EntityEquipment<'mc> {
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 2
             let val_2 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_2);
         }
@@ -9362,10 +8847,6 @@ impl<'mc> EntityEquipment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn leggings(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
@@ -9378,7 +8859,6 @@ impl<'mc> EntityEquipment<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_leggings_with_item_stack(
         &self,
@@ -9394,7 +8874,6 @@ impl<'mc> EntityEquipment<'mc> {
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 2
             let val_2 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_2);
         }
@@ -9405,10 +8884,6 @@ impl<'mc> EntityEquipment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn chestplate(
@@ -9423,7 +8898,6 @@ impl<'mc> EntityEquipment<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_chestplate_with_item_stack(
         &self,
@@ -9439,7 +8913,6 @@ impl<'mc> EntityEquipment<'mc> {
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 2
             let val_2 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_2);
         }
@@ -9450,10 +8923,6 @@ impl<'mc> EntityEquipment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn helmet(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
@@ -9466,7 +8935,6 @@ impl<'mc> EntityEquipment<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_helmet_with_item_stack(
         &self,
@@ -9482,7 +8950,6 @@ impl<'mc> EntityEquipment<'mc> {
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 2
             let val_2 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_2);
         }
@@ -9493,7 +8960,6 @@ impl<'mc> EntityEquipment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_in_main_hand(
         &self,
@@ -9510,7 +8976,6 @@ impl<'mc> EntityEquipment<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_item_in_main_hand_with_item_stack(
         &self,
@@ -9526,7 +8991,6 @@ impl<'mc> EntityEquipment<'mc> {
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 2
             let val_2 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_2);
         }
@@ -9537,7 +9001,6 @@ impl<'mc> EntityEquipment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_in_off_hand(
         &self,
@@ -9554,7 +9017,6 @@ impl<'mc> EntityEquipment<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_item_in_off_hand_with_item_stack(
         &self,
@@ -9570,7 +9032,6 @@ impl<'mc> EntityEquipment<'mc> {
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 2
             let val_2 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_2);
         }
@@ -9581,9 +9042,6 @@ impl<'mc> EntityEquipment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //
 
     pub fn set_armor_contents(
         &self,
@@ -9599,8 +9057,6 @@ impl<'mc> EntityEquipment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn item_in_hand_drop_chance(&self) -> Result<f32, Box<dyn std::error::Error>> {
@@ -9614,15 +9070,8 @@ impl<'mc> EntityEquipment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //@Deprecated
+    #[deprecated("entities can duel wield now use the methods for the specific hand instead ")]
 
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// entities can duel wield now use the methods for the specific hand instead
-    /// </div>
-    /// entities can duel wield now use the methods for the specific hand instead
-    ///
     pub fn set_item_in_hand_drop_chance(
         &self,
         arg0: f32,
@@ -9638,7 +9087,6 @@ impl<'mc> EntityEquipment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn item_in_main_hand_drop_chance(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -9651,8 +9099,6 @@ impl<'mc> EntityEquipment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
-
     /// Sets the chance of the item this creature is currently holding in their main hand being dropped upon this creature's death.
     /// <ul>
     /// <li>A drop chance of 0.0F will never drop</li>
@@ -9673,7 +9119,6 @@ impl<'mc> EntityEquipment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn item_in_off_hand_drop_chance(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -9686,8 +9131,6 @@ impl<'mc> EntityEquipment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
-
     /// Sets the chance of the off hand item being dropped upon this creature's death.
     /// <ul>
     /// <li>A drop chance of 0.0F will never drop</li>
@@ -9708,7 +9151,6 @@ impl<'mc> EntityEquipment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn helmet_drop_chance(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -9721,8 +9163,6 @@ impl<'mc> EntityEquipment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
-
     /// Sets the chance of the helmet being dropped upon this creature's death.
     /// <ul>
     /// <li>A drop chance of 0.0F will never drop</li>
@@ -9740,7 +9180,6 @@ impl<'mc> EntityEquipment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn chestplate_drop_chance(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -9753,8 +9192,6 @@ impl<'mc> EntityEquipment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
-
     /// Sets the chance of the chest plate being dropped upon this creature's death.
     /// <ul>
     /// <li>A drop chance of 0.0F will never drop</li>
@@ -9772,7 +9209,6 @@ impl<'mc> EntityEquipment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn leggings_drop_chance(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -9785,8 +9221,6 @@ impl<'mc> EntityEquipment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
-
     /// Sets the chance of the leggings being dropped upon this creature's death.
     /// <ul>
     /// <li>A drop chance of 0.0F will never drop</li>
@@ -9804,7 +9238,6 @@ impl<'mc> EntityEquipment<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn boots_drop_chance(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -9817,8 +9250,6 @@ impl<'mc> EntityEquipment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
-
     /// Sets the chance of the boots being dropped upon this creature's death.
     /// <ul>
     /// <li>A drop chance of 0.0F will never drop</li>
@@ -9881,8 +9312,6 @@ impl<'mc> JNIInstantiatable<'mc> for ChiseledBookshelfInventory<'mc> {
 }
 
 impl<'mc> ChiseledBookshelfInventory<'mc> {
-    //@Nullable
-
     pub fn holder(
         &self,
     ) -> Result<Option<crate::inventory::InventoryHolder<'mc>>, Box<dyn std::error::Error>> {
@@ -9901,7 +9330,6 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn all_with_item_stack(
         &self,
@@ -9923,7 +9351,6 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn get_item(
         &self,
@@ -9946,7 +9373,6 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn remove_with_item_stack(
         &self,
@@ -9966,7 +9392,6 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn clear_with_int(
         &self,
@@ -9986,7 +9411,6 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -9996,7 +9420,6 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn iterator_with_int(
         &self,
@@ -10018,7 +9441,6 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn contains_with_material(
         &self,
@@ -10044,7 +9466,6 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_with_item_stack(
         &self,
@@ -10064,7 +9485,6 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -10076,7 +9496,6 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(
         &self,
@@ -10103,7 +9522,6 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -10113,7 +9531,6 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn add_item(
         &self,
@@ -10128,7 +9545,6 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_item(
         &self,
@@ -10152,7 +9568,6 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -10162,7 +9577,6 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -10176,7 +9590,6 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item(
         &self,
@@ -10191,9 +9604,6 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //
 
     pub fn set_contents(
         &self,
@@ -10206,9 +9616,6 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //
 
     pub fn set_storage_contents(
         &self,
@@ -10224,7 +9631,6 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn contains_at_least(
         &self,
@@ -10248,7 +9654,6 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -10258,7 +9663,6 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn viewers(
         &self,
@@ -10277,7 +9681,6 @@ impl<'mc> ChiseledBookshelfInventory<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn for_each(
         &self,
@@ -10369,7 +9772,6 @@ impl<'mc> ShapelessRecipe<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::inventory::ShapelessRecipe::from_raw(&jni, res)
     }
-    //
 
     pub fn add_ingredient_with_int(
         &self,
@@ -10403,7 +9805,6 @@ impl<'mc> ShapelessRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn remove_ingredient_with_int(
         &self,
@@ -10437,7 +9838,6 @@ impl<'mc> ShapelessRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn ingredient_list(
         &self,
@@ -10459,7 +9859,6 @@ impl<'mc> ShapelessRecipe<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn choice_list(
         &self,
@@ -10478,7 +9877,6 @@ impl<'mc> ShapelessRecipe<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
@@ -10490,7 +9888,6 @@ impl<'mc> ShapelessRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -10502,7 +9899,6 @@ impl<'mc> ShapelessRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn category(
         &self,
@@ -10530,7 +9926,6 @@ impl<'mc> ShapelessRecipe<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -10544,7 +9939,6 @@ impl<'mc> ShapelessRecipe<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_group(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -10560,7 +9954,6 @@ impl<'mc> ShapelessRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_category(
         &self,
@@ -10579,7 +9972,6 @@ impl<'mc> ShapelessRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -10605,7 +9997,6 @@ impl<'mc> ShapelessRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -10622,7 +10013,6 @@ impl<'mc> ShapelessRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -10637,7 +10027,6 @@ impl<'mc> ShapelessRecipe<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -10647,7 +10036,6 @@ impl<'mc> ShapelessRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -10657,7 +10045,6 @@ impl<'mc> ShapelessRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -10667,7 +10054,6 @@ impl<'mc> ShapelessRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -10736,8 +10122,6 @@ impl<'mc> JNIInstantiatable<'mc> for AnvilInventory<'mc> {
 }
 
 impl<'mc> AnvilInventory<'mc> {
-    //@Nullable
-
     pub fn rename_text(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
@@ -10754,7 +10138,6 @@ impl<'mc> AnvilInventory<'mc> {
                 .to_string(),
         ))
     }
-    //
 
     pub fn repair_cost_amount(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -10767,8 +10150,6 @@ impl<'mc> AnvilInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Set the item cost (in amount) to complete the current repair.
     pub fn set_repair_cost_amount(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -10782,7 +10163,6 @@ impl<'mc> AnvilInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn repair_cost(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -10792,8 +10172,6 @@ impl<'mc> AnvilInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Set the item cost (in amount) to complete the current repair.
     /// Set the experience cost (in levels) to complete the current repair.
     pub fn set_repair_cost(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -10808,7 +10186,6 @@ impl<'mc> AnvilInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn maximum_repair_cost(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -10821,8 +10198,6 @@ impl<'mc> AnvilInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Set the maximum experience cost (in levels) to be allowed by the current repair. The default value set by vanilla Minecraft is 40.
     pub fn set_maximum_repair_cost(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -10836,7 +10211,6 @@ impl<'mc> AnvilInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn all_with_item_stack(
         &self,
@@ -10858,7 +10232,6 @@ impl<'mc> AnvilInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn get_item(
         &self,
@@ -10881,7 +10254,6 @@ impl<'mc> AnvilInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn remove_with_item_stack(
         &self,
@@ -10901,7 +10273,6 @@ impl<'mc> AnvilInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn clear_with_int(
         &self,
@@ -10921,7 +10292,6 @@ impl<'mc> AnvilInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -10931,7 +10301,6 @@ impl<'mc> AnvilInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn iterator_with_int(
         &self,
@@ -10953,7 +10322,6 @@ impl<'mc> AnvilInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn contains_with_material(
         &self,
@@ -10979,7 +10347,6 @@ impl<'mc> AnvilInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_with_item_stack(
         &self,
@@ -10999,7 +10366,6 @@ impl<'mc> AnvilInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -11011,7 +10377,6 @@ impl<'mc> AnvilInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(
         &self,
@@ -11038,7 +10403,6 @@ impl<'mc> AnvilInventory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -11048,7 +10412,6 @@ impl<'mc> AnvilInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn add_item(
         &self,
@@ -11063,7 +10426,6 @@ impl<'mc> AnvilInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_item(
         &self,
@@ -11087,7 +10449,6 @@ impl<'mc> AnvilInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn holder(
         &self,
@@ -11105,7 +10466,6 @@ impl<'mc> AnvilInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -11115,7 +10475,6 @@ impl<'mc> AnvilInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -11129,7 +10488,6 @@ impl<'mc> AnvilInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item(
         &self,
@@ -11144,9 +10502,6 @@ impl<'mc> AnvilInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //
 
     pub fn set_contents(
         &self,
@@ -11159,9 +10514,6 @@ impl<'mc> AnvilInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //
 
     pub fn set_storage_contents(
         &self,
@@ -11177,7 +10529,6 @@ impl<'mc> AnvilInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn contains_at_least(
         &self,
@@ -11201,7 +10552,6 @@ impl<'mc> AnvilInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -11211,7 +10561,6 @@ impl<'mc> AnvilInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn viewers(
         &self,
@@ -11230,7 +10579,6 @@ impl<'mc> AnvilInventory<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn for_each(
         &self,
@@ -11296,8 +10644,6 @@ impl<'mc> JNIInstantiatable<'mc> for RecipeChoice<'mc> {
 }
 
 impl<'mc> RecipeChoice<'mc> {
-    //@NotNull
-
     pub fn clone(&self) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -11310,7 +10656,6 @@ impl<'mc> RecipeChoice<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn test_with_item_stack(
         &self,
@@ -11330,7 +10675,6 @@ impl<'mc> RecipeChoice<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn item_stack(
         &self,
@@ -11344,7 +10688,6 @@ impl<'mc> RecipeChoice<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn negate(
         &self,
@@ -11359,7 +10702,6 @@ impl<'mc> RecipeChoice<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn and(
         &self,
@@ -11381,7 +10723,6 @@ impl<'mc> RecipeChoice<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn or(
         &self,
@@ -11453,8 +10794,6 @@ impl<'mc> JNIInstantiatable<'mc> for InventoryHolder<'mc> {
 }
 
 impl<'mc> InventoryHolder<'mc> {
-    //@NotNull
-
     pub fn inventory(
         &self,
     ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
@@ -11692,8 +11031,6 @@ impl<'mc> JNIInstantiatable<'mc> for EnchantingInventory<'mc> {
 }
 
 impl<'mc> EnchantingInventory<'mc> {
-    //@Nullable
-
     pub fn get_item(
         &self,
         arg0: i32,
@@ -11715,7 +11052,6 @@ impl<'mc> EnchantingInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_item_with_int(
         &self,
@@ -11741,7 +11077,6 @@ impl<'mc> EnchantingInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn secondary(
         &self,
@@ -11759,7 +11094,6 @@ impl<'mc> EnchantingInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_secondary(
         &self,
@@ -11778,7 +11112,6 @@ impl<'mc> EnchantingInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn all_with_item_stack(
         &self,
@@ -11800,7 +11133,6 @@ impl<'mc> EnchantingInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn remove_with_item_stack(
         &self,
@@ -11820,7 +11152,6 @@ impl<'mc> EnchantingInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn clear_with_int(
         &self,
@@ -11840,7 +11171,6 @@ impl<'mc> EnchantingInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -11850,7 +11180,6 @@ impl<'mc> EnchantingInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn iterator_with_int(
         &self,
@@ -11872,7 +11201,6 @@ impl<'mc> EnchantingInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn contains_with_material(
         &self,
@@ -11898,7 +11226,6 @@ impl<'mc> EnchantingInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_with_item_stack(
         &self,
@@ -11918,7 +11245,6 @@ impl<'mc> EnchantingInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -11930,7 +11256,6 @@ impl<'mc> EnchantingInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(
         &self,
@@ -11957,7 +11282,6 @@ impl<'mc> EnchantingInventory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -11967,7 +11291,6 @@ impl<'mc> EnchantingInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn add_item(
         &self,
@@ -11982,7 +11305,6 @@ impl<'mc> EnchantingInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn holder(
         &self,
@@ -12000,7 +11322,6 @@ impl<'mc> EnchantingInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -12010,7 +11331,6 @@ impl<'mc> EnchantingInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -12024,7 +11344,6 @@ impl<'mc> EnchantingInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item(
         &self,
@@ -12039,9 +11358,6 @@ impl<'mc> EnchantingInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //
 
     pub fn set_contents(
         &self,
@@ -12054,9 +11370,6 @@ impl<'mc> EnchantingInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //
 
     pub fn set_storage_contents(
         &self,
@@ -12072,7 +11385,6 @@ impl<'mc> EnchantingInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn contains_at_least(
         &self,
@@ -12096,7 +11408,6 @@ impl<'mc> EnchantingInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -12106,7 +11417,6 @@ impl<'mc> EnchantingInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn viewers(
         &self,
@@ -12125,7 +11435,6 @@ impl<'mc> EnchantingInventory<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn for_each(
         &self,
@@ -12229,9 +11538,6 @@ impl<'mc> BlastingRecipe<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::inventory::BlastingRecipe::from_raw(&jni, res)
     }
-    //@NotNull
-
-    //@NotNull
 
     pub fn input(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
@@ -12243,7 +11549,6 @@ impl<'mc> BlastingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_input(
         &self,
@@ -12264,7 +11569,6 @@ impl<'mc> BlastingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
@@ -12276,7 +11580,6 @@ impl<'mc> BlastingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -12288,7 +11591,6 @@ impl<'mc> BlastingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn category(
         &self,
@@ -12316,7 +11618,6 @@ impl<'mc> BlastingRecipe<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_input_choice(
         &self,
@@ -12339,7 +11640,6 @@ impl<'mc> BlastingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn input_choice(
         &self,
@@ -12353,7 +11653,6 @@ impl<'mc> BlastingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -12367,7 +11666,6 @@ impl<'mc> BlastingRecipe<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_group(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -12383,7 +11681,6 @@ impl<'mc> BlastingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_category(
         &self,
@@ -12402,7 +11699,6 @@ impl<'mc> BlastingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn experience(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -12412,7 +11708,6 @@ impl<'mc> BlastingRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn set_experience(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
@@ -12426,7 +11721,6 @@ impl<'mc> BlastingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_cooking_time(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -12440,7 +11734,6 @@ impl<'mc> BlastingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn cooking_time(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -12450,7 +11743,6 @@ impl<'mc> BlastingRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -12476,7 +11768,6 @@ impl<'mc> BlastingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -12493,7 +11784,6 @@ impl<'mc> BlastingRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -12508,7 +11798,6 @@ impl<'mc> BlastingRecipe<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -12518,7 +11807,6 @@ impl<'mc> BlastingRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -12528,7 +11816,6 @@ impl<'mc> BlastingRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -12538,7 +11825,6 @@ impl<'mc> BlastingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -12641,9 +11927,6 @@ impl<'mc> SmokingRecipe<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::inventory::SmokingRecipe::from_raw(&jni, res)
     }
-    //@NotNull
-
-    //@NotNull
 
     pub fn input(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
@@ -12655,7 +11938,6 @@ impl<'mc> SmokingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_input(
         &self,
@@ -12676,7 +11958,6 @@ impl<'mc> SmokingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
@@ -12688,7 +11969,6 @@ impl<'mc> SmokingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -12700,7 +11980,6 @@ impl<'mc> SmokingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn category(
         &self,
@@ -12728,7 +12007,6 @@ impl<'mc> SmokingRecipe<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_input_choice(
         &self,
@@ -12751,7 +12029,6 @@ impl<'mc> SmokingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn input_choice(
         &self,
@@ -12765,7 +12042,6 @@ impl<'mc> SmokingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -12779,7 +12055,6 @@ impl<'mc> SmokingRecipe<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_group(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -12795,7 +12070,6 @@ impl<'mc> SmokingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_category(
         &self,
@@ -12814,7 +12088,6 @@ impl<'mc> SmokingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn experience(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -12824,7 +12097,6 @@ impl<'mc> SmokingRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn set_experience(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
@@ -12838,7 +12110,6 @@ impl<'mc> SmokingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_cooking_time(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -12852,7 +12123,6 @@ impl<'mc> SmokingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn cooking_time(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -12862,7 +12132,6 @@ impl<'mc> SmokingRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -12888,7 +12157,6 @@ impl<'mc> SmokingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -12905,7 +12173,6 @@ impl<'mc> SmokingRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -12920,7 +12187,6 @@ impl<'mc> SmokingRecipe<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -12930,7 +12196,6 @@ impl<'mc> SmokingRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -12940,7 +12205,6 @@ impl<'mc> SmokingRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -12950,7 +12214,6 @@ impl<'mc> SmokingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -13019,8 +12282,6 @@ impl<'mc> JNIInstantiatable<'mc> for CraftingInventory<'mc> {
 }
 
 impl<'mc> CraftingInventory<'mc> {
-    //@NotNull
-
     pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
@@ -13031,7 +12292,6 @@ impl<'mc> CraftingInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_result(
         &self,
@@ -13050,7 +12310,6 @@ impl<'mc> CraftingInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn recipe(
         &self,
@@ -13068,9 +12327,6 @@ impl<'mc> CraftingInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@NotNull
-
-    //
 
     pub fn set_matrix(
         &self,
@@ -13083,7 +12339,6 @@ impl<'mc> CraftingInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn all_with_item_stack(
         &self,
@@ -13105,7 +12360,6 @@ impl<'mc> CraftingInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn get_item(
         &self,
@@ -13128,7 +12382,6 @@ impl<'mc> CraftingInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn remove_with_item_stack(
         &self,
@@ -13148,7 +12401,6 @@ impl<'mc> CraftingInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn clear_with_int(
         &self,
@@ -13168,7 +12420,6 @@ impl<'mc> CraftingInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -13178,7 +12429,6 @@ impl<'mc> CraftingInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn iterator_with_int(
         &self,
@@ -13200,7 +12450,6 @@ impl<'mc> CraftingInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn contains_with_material(
         &self,
@@ -13226,7 +12475,6 @@ impl<'mc> CraftingInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_with_item_stack(
         &self,
@@ -13246,7 +12494,6 @@ impl<'mc> CraftingInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -13258,7 +12505,6 @@ impl<'mc> CraftingInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(
         &self,
@@ -13285,7 +12531,6 @@ impl<'mc> CraftingInventory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -13295,7 +12540,6 @@ impl<'mc> CraftingInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn add_item(
         &self,
@@ -13310,7 +12554,6 @@ impl<'mc> CraftingInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_item(
         &self,
@@ -13334,7 +12577,6 @@ impl<'mc> CraftingInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn holder(
         &self,
@@ -13352,7 +12594,6 @@ impl<'mc> CraftingInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -13362,7 +12603,6 @@ impl<'mc> CraftingInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -13376,7 +12616,6 @@ impl<'mc> CraftingInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item(
         &self,
@@ -13391,9 +12630,6 @@ impl<'mc> CraftingInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //
 
     pub fn set_contents(
         &self,
@@ -13406,9 +12642,6 @@ impl<'mc> CraftingInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //
 
     pub fn set_storage_contents(
         &self,
@@ -13424,7 +12657,6 @@ impl<'mc> CraftingInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn contains_at_least(
         &self,
@@ -13448,7 +12680,6 @@ impl<'mc> CraftingInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -13458,7 +12689,6 @@ impl<'mc> CraftingInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn viewers(
         &self,
@@ -13477,7 +12707,6 @@ impl<'mc> CraftingInventory<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn for_each(
         &self,
@@ -13579,7 +12808,6 @@ impl<'mc> MerchantRecipe<'mc> {
         }
         if let Some(a) = arg3 {
             sig += "Z";
-            // 3
             let val_4 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_4);
         }
@@ -13610,7 +12838,6 @@ impl<'mc> MerchantRecipe<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::inventory::MerchantRecipe::from_raw(&jni, res)
     }
-    //@NotNull
 
     pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
@@ -13622,7 +12849,6 @@ impl<'mc> MerchantRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_ingredient(
         &self,
@@ -13641,7 +12867,6 @@ impl<'mc> MerchantRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_ingredient(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -13655,7 +12880,6 @@ impl<'mc> MerchantRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn ingredients(
         &self,
@@ -13674,7 +12898,6 @@ impl<'mc> MerchantRecipe<'mc> {
         }
         Ok(new_vec)
     }
-    //@Nullable
 
     pub fn adjusted_ingredient1(
         &self,
@@ -13695,7 +12918,6 @@ impl<'mc> MerchantRecipe<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn adjust(
         &self,
@@ -13714,7 +12936,6 @@ impl<'mc> MerchantRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn demand(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -13724,7 +12945,6 @@ impl<'mc> MerchantRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn price_multiplier(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -13737,7 +12957,6 @@ impl<'mc> MerchantRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn special_price(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -13747,8 +12966,6 @@ impl<'mc> MerchantRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Set the demand for this trade.
     pub fn set_demand(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -13762,8 +12979,6 @@ impl<'mc> MerchantRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
-
     /// Set the special price for this trade.
     pub fn set_special_price(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -13777,7 +12992,6 @@ impl<'mc> MerchantRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn uses(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -13787,8 +13001,6 @@ impl<'mc> MerchantRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Set the number of times this trade has been used.
     pub fn set_uses(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -13802,7 +13014,6 @@ impl<'mc> MerchantRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn max_uses(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -13812,8 +13023,6 @@ impl<'mc> MerchantRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Set the maximum number of uses this trade has.
     pub fn set_max_uses(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -13827,7 +13036,6 @@ impl<'mc> MerchantRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_experience_reward(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -13840,12 +13048,9 @@ impl<'mc> MerchantRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Set whether to reward experience to the player for the trade.
     pub fn set_experience_reward(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13856,7 +13061,6 @@ impl<'mc> MerchantRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn villager_experience(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -13869,8 +13073,6 @@ impl<'mc> MerchantRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Sets the amount of experience the villager earns from this trade.
     pub fn set_villager_experience(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -13884,8 +13086,6 @@ impl<'mc> MerchantRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
-
     /// Sets the price multiplier for the cost of this trade.
     pub fn set_price_multiplier(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
@@ -13899,7 +13099,6 @@ impl<'mc> MerchantRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -13925,7 +13124,6 @@ impl<'mc> MerchantRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -13942,7 +13140,6 @@ impl<'mc> MerchantRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -13957,7 +13154,6 @@ impl<'mc> MerchantRecipe<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -13967,7 +13163,6 @@ impl<'mc> MerchantRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -13977,7 +13172,6 @@ impl<'mc> MerchantRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -13987,7 +13181,6 @@ impl<'mc> MerchantRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -14058,8 +13251,6 @@ impl<'mc> JNIInstantiatable<'mc> for MerchantInventory<'mc> {
 }
 
 impl<'mc> MerchantInventory<'mc> {
-    //
-
     pub fn selected_recipe_index(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
@@ -14071,7 +13262,6 @@ impl<'mc> MerchantInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Nullable
 
     pub fn selected_recipe(
         &self,
@@ -14092,7 +13282,6 @@ impl<'mc> MerchantInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@NotNull
 
     pub fn merchant(&self) -> Result<crate::inventory::Merchant<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/Merchant;");
@@ -14104,7 +13293,6 @@ impl<'mc> MerchantInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn all_with_item_stack(
         &self,
@@ -14126,7 +13314,6 @@ impl<'mc> MerchantInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn get_item(
         &self,
@@ -14149,7 +13336,6 @@ impl<'mc> MerchantInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn remove_with_item_stack(
         &self,
@@ -14169,7 +13355,6 @@ impl<'mc> MerchantInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn clear_with_int(
         &self,
@@ -14189,7 +13374,6 @@ impl<'mc> MerchantInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -14199,7 +13383,6 @@ impl<'mc> MerchantInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn iterator_with_int(
         &self,
@@ -14221,7 +13404,6 @@ impl<'mc> MerchantInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn contains_with_material(
         &self,
@@ -14247,7 +13429,6 @@ impl<'mc> MerchantInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_with_item_stack(
         &self,
@@ -14267,7 +13448,6 @@ impl<'mc> MerchantInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -14279,7 +13459,6 @@ impl<'mc> MerchantInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(
         &self,
@@ -14306,7 +13485,6 @@ impl<'mc> MerchantInventory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -14316,7 +13494,6 @@ impl<'mc> MerchantInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn add_item(
         &self,
@@ -14331,7 +13508,6 @@ impl<'mc> MerchantInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_item(
         &self,
@@ -14355,7 +13531,6 @@ impl<'mc> MerchantInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn holder(
         &self,
@@ -14373,7 +13548,6 @@ impl<'mc> MerchantInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -14383,7 +13557,6 @@ impl<'mc> MerchantInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -14397,7 +13570,6 @@ impl<'mc> MerchantInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item(
         &self,
@@ -14412,9 +13584,6 @@ impl<'mc> MerchantInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //
 
     pub fn set_contents(
         &self,
@@ -14427,9 +13596,6 @@ impl<'mc> MerchantInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //
 
     pub fn set_storage_contents(
         &self,
@@ -14445,7 +13611,6 @@ impl<'mc> MerchantInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn contains_at_least(
         &self,
@@ -14469,7 +13634,6 @@ impl<'mc> MerchantInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -14479,7 +13643,6 @@ impl<'mc> MerchantInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn viewers(
         &self,
@@ -14498,7 +13661,6 @@ impl<'mc> MerchantInventory<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn for_each(
         &self,
@@ -14566,8 +13728,6 @@ impl<'mc> JNIInstantiatable<'mc> for LlamaInventory<'mc> {
 }
 
 impl<'mc> LlamaInventory<'mc> {
-    //@Nullable
-
     pub fn decor(
         &self,
     ) -> Result<Option<crate::inventory::ItemStack<'mc>>, Box<dyn std::error::Error>> {
@@ -14584,7 +13744,6 @@ impl<'mc> LlamaInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_decor(
         &self,
@@ -14603,7 +13762,6 @@ impl<'mc> LlamaInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_saddle(
         &self,
@@ -14622,7 +13780,6 @@ impl<'mc> LlamaInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn saddle(
         &self,
@@ -14640,7 +13797,6 @@ impl<'mc> LlamaInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn all_with_item_stack(
         &self,
@@ -14662,7 +13818,6 @@ impl<'mc> LlamaInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn get_item(
         &self,
@@ -14685,7 +13840,6 @@ impl<'mc> LlamaInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn remove_with_item_stack(
         &self,
@@ -14705,7 +13859,6 @@ impl<'mc> LlamaInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn clear_with_int(
         &self,
@@ -14725,7 +13878,6 @@ impl<'mc> LlamaInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -14735,7 +13887,6 @@ impl<'mc> LlamaInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn iterator_with_int(
         &self,
@@ -14757,7 +13908,6 @@ impl<'mc> LlamaInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn contains_with_material(
         &self,
@@ -14783,7 +13933,6 @@ impl<'mc> LlamaInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_with_item_stack(
         &self,
@@ -14803,7 +13952,6 @@ impl<'mc> LlamaInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -14815,7 +13963,6 @@ impl<'mc> LlamaInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(
         &self,
@@ -14842,7 +13989,6 @@ impl<'mc> LlamaInventory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -14852,7 +13998,6 @@ impl<'mc> LlamaInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn add_item(
         &self,
@@ -14867,7 +14012,6 @@ impl<'mc> LlamaInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_item(
         &self,
@@ -14891,7 +14035,6 @@ impl<'mc> LlamaInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn holder(
         &self,
@@ -14909,7 +14052,6 @@ impl<'mc> LlamaInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -14919,7 +14061,6 @@ impl<'mc> LlamaInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -14933,7 +14074,6 @@ impl<'mc> LlamaInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item(
         &self,
@@ -14948,9 +14088,6 @@ impl<'mc> LlamaInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //
 
     pub fn set_contents(
         &self,
@@ -14963,9 +14100,6 @@ impl<'mc> LlamaInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //
 
     pub fn set_storage_contents(
         &self,
@@ -14981,7 +14115,6 @@ impl<'mc> LlamaInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn contains_at_least(
         &self,
@@ -15005,7 +14138,6 @@ impl<'mc> LlamaInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -15015,7 +14147,6 @@ impl<'mc> LlamaInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn viewers(
         &self,
@@ -15034,7 +14165,6 @@ impl<'mc> LlamaInventory<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn for_each(
         &self,
@@ -15102,8 +14232,6 @@ impl<'mc> JNIInstantiatable<'mc> for GrindstoneInventory<'mc> {
 }
 
 impl<'mc> GrindstoneInventory<'mc> {
-    //
-
     pub fn all_with_item_stack(
         &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
@@ -15124,7 +14252,6 @@ impl<'mc> GrindstoneInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn get_item(
         &self,
@@ -15147,7 +14274,6 @@ impl<'mc> GrindstoneInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn remove_with_item_stack(
         &self,
@@ -15167,7 +14293,6 @@ impl<'mc> GrindstoneInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn clear_with_int(
         &self,
@@ -15187,7 +14312,6 @@ impl<'mc> GrindstoneInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -15197,7 +14321,6 @@ impl<'mc> GrindstoneInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn iterator_with_int(
         &self,
@@ -15219,7 +14342,6 @@ impl<'mc> GrindstoneInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn contains_with_material(
         &self,
@@ -15245,7 +14367,6 @@ impl<'mc> GrindstoneInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_with_item_stack(
         &self,
@@ -15265,7 +14386,6 @@ impl<'mc> GrindstoneInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -15277,7 +14397,6 @@ impl<'mc> GrindstoneInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(
         &self,
@@ -15304,7 +14423,6 @@ impl<'mc> GrindstoneInventory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -15314,7 +14432,6 @@ impl<'mc> GrindstoneInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn add_item(
         &self,
@@ -15329,7 +14446,6 @@ impl<'mc> GrindstoneInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_item(
         &self,
@@ -15353,7 +14469,6 @@ impl<'mc> GrindstoneInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn holder(
         &self,
@@ -15371,7 +14486,6 @@ impl<'mc> GrindstoneInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -15381,7 +14495,6 @@ impl<'mc> GrindstoneInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -15395,7 +14508,6 @@ impl<'mc> GrindstoneInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item(
         &self,
@@ -15410,9 +14522,6 @@ impl<'mc> GrindstoneInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //
 
     pub fn set_contents(
         &self,
@@ -15425,9 +14534,6 @@ impl<'mc> GrindstoneInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //
 
     pub fn set_storage_contents(
         &self,
@@ -15443,7 +14549,6 @@ impl<'mc> GrindstoneInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn contains_at_least(
         &self,
@@ -15467,7 +14572,6 @@ impl<'mc> GrindstoneInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -15477,7 +14581,6 @@ impl<'mc> GrindstoneInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn viewers(
         &self,
@@ -15496,7 +14599,6 @@ impl<'mc> GrindstoneInventory<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn for_each(
         &self,
@@ -15598,9 +14700,6 @@ impl<'mc> CookingRecipe<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::inventory::CookingRecipe::from_raw(&jni, res)
     }
-    //@NotNull
-
-    //@NotNull
 
     pub fn input(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
@@ -15612,7 +14711,6 @@ impl<'mc> CookingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_input(
         &self,
@@ -15633,7 +14731,6 @@ impl<'mc> CookingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
@@ -15645,7 +14742,6 @@ impl<'mc> CookingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -15657,7 +14753,6 @@ impl<'mc> CookingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn category(
         &self,
@@ -15685,7 +14780,6 @@ impl<'mc> CookingRecipe<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_input_choice(
         &self,
@@ -15708,7 +14802,6 @@ impl<'mc> CookingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn input_choice(
         &self,
@@ -15722,7 +14815,6 @@ impl<'mc> CookingRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -15736,7 +14828,6 @@ impl<'mc> CookingRecipe<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_group(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -15752,7 +14843,6 @@ impl<'mc> CookingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_category(
         &self,
@@ -15771,7 +14861,6 @@ impl<'mc> CookingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn experience(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -15781,8 +14870,6 @@ impl<'mc> CookingRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
-
     /// Sets the experience given by this recipe.
     pub fn set_experience(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
@@ -15796,8 +14883,6 @@ impl<'mc> CookingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
-
     /// Set the cooking time for this recipe in ticks.
     pub fn set_cooking_time(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -15811,7 +14896,6 @@ impl<'mc> CookingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn cooking_time(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -15821,7 +14905,6 @@ impl<'mc> CookingRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -15847,7 +14930,6 @@ impl<'mc> CookingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -15864,7 +14946,6 @@ impl<'mc> CookingRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -15879,7 +14960,6 @@ impl<'mc> CookingRecipe<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -15889,7 +14969,6 @@ impl<'mc> CookingRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -15899,7 +14978,6 @@ impl<'mc> CookingRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -15909,7 +14987,6 @@ impl<'mc> CookingRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -15984,8 +15061,6 @@ impl<'mc> JNIInstantiatable<'mc> for StonecutterInventory<'mc> {
 }
 
 impl<'mc> StonecutterInventory<'mc> {
-    //
-
     pub fn all_with_item_stack(
         &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
@@ -16006,7 +15081,6 @@ impl<'mc> StonecutterInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn get_item(
         &self,
@@ -16029,7 +15103,6 @@ impl<'mc> StonecutterInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn remove_with_item_stack(
         &self,
@@ -16049,7 +15122,6 @@ impl<'mc> StonecutterInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn clear_with_int(
         &self,
@@ -16069,7 +15141,6 @@ impl<'mc> StonecutterInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -16079,7 +15150,6 @@ impl<'mc> StonecutterInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn iterator_with_int(
         &self,
@@ -16101,7 +15171,6 @@ impl<'mc> StonecutterInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn contains_with_material(
         &self,
@@ -16127,7 +15196,6 @@ impl<'mc> StonecutterInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_with_item_stack(
         &self,
@@ -16147,7 +15215,6 @@ impl<'mc> StonecutterInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -16159,7 +15226,6 @@ impl<'mc> StonecutterInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(
         &self,
@@ -16186,7 +15252,6 @@ impl<'mc> StonecutterInventory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -16196,7 +15261,6 @@ impl<'mc> StonecutterInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn add_item(
         &self,
@@ -16211,7 +15275,6 @@ impl<'mc> StonecutterInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_item(
         &self,
@@ -16235,7 +15298,6 @@ impl<'mc> StonecutterInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn holder(
         &self,
@@ -16253,7 +15315,6 @@ impl<'mc> StonecutterInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -16263,7 +15324,6 @@ impl<'mc> StonecutterInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -16277,7 +15337,6 @@ impl<'mc> StonecutterInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item(
         &self,
@@ -16292,9 +15351,6 @@ impl<'mc> StonecutterInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //
 
     pub fn set_contents(
         &self,
@@ -16307,9 +15363,6 @@ impl<'mc> StonecutterInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //
 
     pub fn set_storage_contents(
         &self,
@@ -16325,7 +15378,6 @@ impl<'mc> StonecutterInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn contains_at_least(
         &self,
@@ -16349,7 +15401,6 @@ impl<'mc> StonecutterInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -16359,7 +15410,6 @@ impl<'mc> StonecutterInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn viewers(
         &self,
@@ -16378,7 +15428,6 @@ impl<'mc> StonecutterInventory<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn for_each(
         &self,
@@ -16582,8 +15631,6 @@ impl<'mc> JNIInstantiatable<'mc> for SmithingInventory<'mc> {
 }
 
 impl<'mc> SmithingInventory<'mc> {
-    //@NotNull
-
     pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
@@ -16594,7 +15641,6 @@ impl<'mc> SmithingInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_result(
         &self,
@@ -16613,7 +15659,6 @@ impl<'mc> SmithingInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn recipe(
         &self,
@@ -16631,7 +15676,6 @@ impl<'mc> SmithingInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn all_with_item_stack(
         &self,
@@ -16653,7 +15697,6 @@ impl<'mc> SmithingInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn get_item(
         &self,
@@ -16676,7 +15719,6 @@ impl<'mc> SmithingInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn remove_with_item_stack(
         &self,
@@ -16696,7 +15738,6 @@ impl<'mc> SmithingInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn clear_with_int(
         &self,
@@ -16716,7 +15757,6 @@ impl<'mc> SmithingInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -16726,7 +15766,6 @@ impl<'mc> SmithingInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn iterator_with_int(
         &self,
@@ -16748,7 +15787,6 @@ impl<'mc> SmithingInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn contains_with_material(
         &self,
@@ -16774,7 +15812,6 @@ impl<'mc> SmithingInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_with_item_stack(
         &self,
@@ -16794,7 +15831,6 @@ impl<'mc> SmithingInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -16806,7 +15842,6 @@ impl<'mc> SmithingInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(
         &self,
@@ -16833,7 +15868,6 @@ impl<'mc> SmithingInventory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -16843,7 +15877,6 @@ impl<'mc> SmithingInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn add_item(
         &self,
@@ -16858,7 +15891,6 @@ impl<'mc> SmithingInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_item(
         &self,
@@ -16882,7 +15914,6 @@ impl<'mc> SmithingInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn holder(
         &self,
@@ -16900,7 +15931,6 @@ impl<'mc> SmithingInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -16910,7 +15940,6 @@ impl<'mc> SmithingInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -16924,7 +15953,6 @@ impl<'mc> SmithingInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item(
         &self,
@@ -16939,9 +15967,6 @@ impl<'mc> SmithingInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //
 
     pub fn set_contents(
         &self,
@@ -16954,9 +15979,6 @@ impl<'mc> SmithingInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //
 
     pub fn set_storage_contents(
         &self,
@@ -16972,7 +15994,6 @@ impl<'mc> SmithingInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn contains_at_least(
         &self,
@@ -16996,7 +16017,6 @@ impl<'mc> SmithingInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -17006,7 +16026,6 @@ impl<'mc> SmithingInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn viewers(
         &self,
@@ -17025,7 +16044,6 @@ impl<'mc> SmithingInventory<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn for_each(
         &self,
@@ -17093,8 +16111,6 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerInventory<'mc> {
 }
 
 impl<'mc> PlayerInventory<'mc> {
-    //@Nullable
-
     pub fn get_item_with_int(
         &self,
         arg0: i32,
@@ -17117,7 +16133,6 @@ impl<'mc> PlayerInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_item_with_int(
         &self,
@@ -17141,7 +16156,6 @@ impl<'mc> PlayerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn holder(
         &self,
@@ -17161,10 +16175,6 @@ impl<'mc> PlayerInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn item_in_hand(
@@ -17179,7 +16189,6 @@ impl<'mc> PlayerInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_item_in_hand(
         &self,
@@ -17198,10 +16207,6 @@ impl<'mc> PlayerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn boots(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
@@ -17214,7 +16219,6 @@ impl<'mc> PlayerInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_boots(
         &self,
@@ -17233,10 +16237,6 @@ impl<'mc> PlayerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn leggings(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
@@ -17249,7 +16249,6 @@ impl<'mc> PlayerInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_leggings(
         &self,
@@ -17268,10 +16267,6 @@ impl<'mc> PlayerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn chestplate(
@@ -17286,7 +16281,6 @@ impl<'mc> PlayerInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_chestplate(
         &self,
@@ -17305,10 +16299,6 @@ impl<'mc> PlayerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Deprecated
-
     #[deprecated]
 
     pub fn helmet(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
@@ -17321,7 +16311,6 @@ impl<'mc> PlayerInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_helmet(
         &self,
@@ -17340,7 +16329,6 @@ impl<'mc> PlayerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_in_main_hand(
         &self,
@@ -17357,7 +16345,6 @@ impl<'mc> PlayerInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_item_in_main_hand(
         &self,
@@ -17376,7 +16363,6 @@ impl<'mc> PlayerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn item_in_off_hand(
         &self,
@@ -17393,7 +16379,6 @@ impl<'mc> PlayerInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_item_in_off_hand(
         &self,
@@ -17412,9 +16397,6 @@ impl<'mc> PlayerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //
 
     pub fn set_armor_contents(
         &self,
@@ -17430,9 +16412,6 @@ impl<'mc> PlayerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //
 
     pub fn set_extra_contents(
         &self,
@@ -17448,7 +16427,6 @@ impl<'mc> PlayerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn held_item_slot(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -17458,8 +16436,6 @@ impl<'mc> PlayerInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Set the slot number of the currently held item.
     /// <p>This validates whether the slot is between 0 and 8 inclusive.</p>
     pub fn set_held_item_slot(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
@@ -17474,7 +16450,6 @@ impl<'mc> PlayerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn all_with_item_stack(
         &self,
@@ -17496,7 +16471,6 @@ impl<'mc> PlayerInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn remove_with_item_stack(
         &self,
@@ -17516,7 +16490,6 @@ impl<'mc> PlayerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn clear_with_int(
         &self,
@@ -17536,7 +16509,6 @@ impl<'mc> PlayerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -17546,7 +16518,6 @@ impl<'mc> PlayerInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn iterator_with_int(
         &self,
@@ -17568,7 +16539,6 @@ impl<'mc> PlayerInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn contains_with_material(
         &self,
@@ -17594,7 +16564,6 @@ impl<'mc> PlayerInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_with_item_stack(
         &self,
@@ -17614,7 +16583,6 @@ impl<'mc> PlayerInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -17626,7 +16594,6 @@ impl<'mc> PlayerInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(
         &self,
@@ -17653,7 +16620,6 @@ impl<'mc> PlayerInventory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -17663,7 +16629,6 @@ impl<'mc> PlayerInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn add_item(
         &self,
@@ -17678,7 +16643,6 @@ impl<'mc> PlayerInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -17688,7 +16652,6 @@ impl<'mc> PlayerInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -17702,7 +16665,6 @@ impl<'mc> PlayerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item(
         &self,
@@ -17717,9 +16679,6 @@ impl<'mc> PlayerInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //
 
     pub fn set_contents(
         &self,
@@ -17732,9 +16691,6 @@ impl<'mc> PlayerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //
 
     pub fn set_storage_contents(
         &self,
@@ -17750,7 +16706,6 @@ impl<'mc> PlayerInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn contains_at_least(
         &self,
@@ -17774,7 +16729,6 @@ impl<'mc> PlayerInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -17784,7 +16738,6 @@ impl<'mc> PlayerInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn viewers(
         &self,
@@ -17803,7 +16756,6 @@ impl<'mc> PlayerInventory<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn for_each(
         &self,
@@ -17871,8 +16823,6 @@ impl<'mc> JNIInstantiatable<'mc> for FurnaceInventory<'mc> {
 }
 
 impl<'mc> FurnaceInventory<'mc> {
-    //@NotNull
-
     pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
         let res = self
@@ -17883,7 +16833,6 @@ impl<'mc> FurnaceInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_result(
         &self,
@@ -17902,7 +16851,6 @@ impl<'mc> FurnaceInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_fuel(
         &self,
@@ -17921,7 +16869,6 @@ impl<'mc> FurnaceInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn fuel(
         &self,
@@ -17939,7 +16886,6 @@ impl<'mc> FurnaceInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@Nullable
 
     pub fn smelting(
         &self,
@@ -17957,7 +16903,6 @@ impl<'mc> FurnaceInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_smelting(
         &self,
@@ -17976,7 +16921,6 @@ impl<'mc> FurnaceInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn holder(
         &self,
@@ -17996,7 +16940,6 @@ impl<'mc> FurnaceInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn all_with_item_stack(
         &self,
@@ -18018,7 +16961,6 @@ impl<'mc> FurnaceInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn get_item(
         &self,
@@ -18041,7 +16983,6 @@ impl<'mc> FurnaceInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn remove_with_item_stack(
         &self,
@@ -18061,7 +17002,6 @@ impl<'mc> FurnaceInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn clear_with_int(
         &self,
@@ -18081,7 +17021,6 @@ impl<'mc> FurnaceInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -18091,7 +17030,6 @@ impl<'mc> FurnaceInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn iterator_with_int(
         &self,
@@ -18113,7 +17051,6 @@ impl<'mc> FurnaceInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn contains_with_material(
         &self,
@@ -18139,7 +17076,6 @@ impl<'mc> FurnaceInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_with_item_stack(
         &self,
@@ -18159,7 +17095,6 @@ impl<'mc> FurnaceInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -18171,7 +17106,6 @@ impl<'mc> FurnaceInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(
         &self,
@@ -18198,7 +17132,6 @@ impl<'mc> FurnaceInventory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -18208,7 +17141,6 @@ impl<'mc> FurnaceInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn add_item(
         &self,
@@ -18223,7 +17155,6 @@ impl<'mc> FurnaceInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_item(
         &self,
@@ -18247,7 +17178,6 @@ impl<'mc> FurnaceInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -18257,7 +17187,6 @@ impl<'mc> FurnaceInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -18271,7 +17200,6 @@ impl<'mc> FurnaceInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item(
         &self,
@@ -18286,9 +17214,6 @@ impl<'mc> FurnaceInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //
 
     pub fn set_contents(
         &self,
@@ -18301,9 +17226,6 @@ impl<'mc> FurnaceInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //
 
     pub fn set_storage_contents(
         &self,
@@ -18319,7 +17241,6 @@ impl<'mc> FurnaceInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn contains_at_least(
         &self,
@@ -18343,7 +17264,6 @@ impl<'mc> FurnaceInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -18353,7 +17273,6 @@ impl<'mc> FurnaceInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn viewers(
         &self,
@@ -18372,7 +17291,6 @@ impl<'mc> FurnaceInventory<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn for_each(
         &self,
@@ -18442,8 +17360,6 @@ impl<'mc> JNIInstantiatable<'mc> for AbstractHorseInventory<'mc> {
 }
 
 impl<'mc> AbstractHorseInventory<'mc> {
-    //
-
     pub fn set_saddle(
         &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
@@ -18461,7 +17377,6 @@ impl<'mc> AbstractHorseInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn saddle(
         &self,
@@ -18479,7 +17394,6 @@ impl<'mc> AbstractHorseInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn all_with_item_stack(
         &self,
@@ -18501,7 +17415,6 @@ impl<'mc> AbstractHorseInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn get_item(
         &self,
@@ -18524,7 +17437,6 @@ impl<'mc> AbstractHorseInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn remove_with_item_stack(
         &self,
@@ -18544,7 +17456,6 @@ impl<'mc> AbstractHorseInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn clear_with_int(
         &self,
@@ -18564,7 +17475,6 @@ impl<'mc> AbstractHorseInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -18574,7 +17484,6 @@ impl<'mc> AbstractHorseInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn iterator_with_int(
         &self,
@@ -18596,7 +17505,6 @@ impl<'mc> AbstractHorseInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn contains_with_material(
         &self,
@@ -18622,7 +17530,6 @@ impl<'mc> AbstractHorseInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_with_item_stack(
         &self,
@@ -18642,7 +17549,6 @@ impl<'mc> AbstractHorseInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -18654,7 +17560,6 @@ impl<'mc> AbstractHorseInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(
         &self,
@@ -18681,7 +17586,6 @@ impl<'mc> AbstractHorseInventory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -18691,7 +17595,6 @@ impl<'mc> AbstractHorseInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn add_item(
         &self,
@@ -18706,7 +17609,6 @@ impl<'mc> AbstractHorseInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_item(
         &self,
@@ -18730,7 +17632,6 @@ impl<'mc> AbstractHorseInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn holder(
         &self,
@@ -18748,7 +17649,6 @@ impl<'mc> AbstractHorseInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -18758,7 +17658,6 @@ impl<'mc> AbstractHorseInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -18772,7 +17671,6 @@ impl<'mc> AbstractHorseInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item(
         &self,
@@ -18787,9 +17685,6 @@ impl<'mc> AbstractHorseInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //
 
     pub fn set_contents(
         &self,
@@ -18802,9 +17697,6 @@ impl<'mc> AbstractHorseInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //
 
     pub fn set_storage_contents(
         &self,
@@ -18820,7 +17712,6 @@ impl<'mc> AbstractHorseInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn contains_at_least(
         &self,
@@ -18844,7 +17735,6 @@ impl<'mc> AbstractHorseInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -18854,7 +17744,6 @@ impl<'mc> AbstractHorseInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn viewers(
         &self,
@@ -18873,7 +17762,6 @@ impl<'mc> AbstractHorseInventory<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn for_each(
         &self,
@@ -18941,8 +17829,6 @@ impl<'mc> JNIInstantiatable<'mc> for BeaconInventory<'mc> {
 }
 
 impl<'mc> BeaconInventory<'mc> {
-    //@Nullable
-
     pub fn get_item(
         &self,
         arg0: i32,
@@ -18964,7 +17850,6 @@ impl<'mc> BeaconInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_item_with_int(
         &self,
@@ -18990,7 +17875,6 @@ impl<'mc> BeaconInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn all_with_item_stack(
         &self,
@@ -19012,7 +17896,6 @@ impl<'mc> BeaconInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn remove_with_item_stack(
         &self,
@@ -19032,7 +17915,6 @@ impl<'mc> BeaconInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn clear_with_int(
         &self,
@@ -19052,7 +17934,6 @@ impl<'mc> BeaconInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -19062,7 +17943,6 @@ impl<'mc> BeaconInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn iterator_with_int(
         &self,
@@ -19084,7 +17964,6 @@ impl<'mc> BeaconInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn contains_with_material(
         &self,
@@ -19110,7 +17989,6 @@ impl<'mc> BeaconInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_with_item_stack(
         &self,
@@ -19130,7 +18008,6 @@ impl<'mc> BeaconInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
@@ -19142,7 +18019,6 @@ impl<'mc> BeaconInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_type(
         &self,
@@ -19169,7 +18045,6 @@ impl<'mc> BeaconInventory<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -19179,7 +18054,6 @@ impl<'mc> BeaconInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn add_item(
         &self,
@@ -19194,7 +18068,6 @@ impl<'mc> BeaconInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn holder(
         &self,
@@ -19212,7 +18085,6 @@ impl<'mc> BeaconInventory<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn max_stack_size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -19222,7 +18094,6 @@ impl<'mc> BeaconInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn set_max_stack_size(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -19236,7 +18107,6 @@ impl<'mc> BeaconInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_item(
         &self,
@@ -19251,9 +18121,6 @@ impl<'mc> BeaconInventory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //
 
     pub fn set_contents(
         &self,
@@ -19266,9 +18133,6 @@ impl<'mc> BeaconInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //
 
     pub fn set_storage_contents(
         &self,
@@ -19284,7 +18148,6 @@ impl<'mc> BeaconInventory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn contains_at_least(
         &self,
@@ -19308,7 +18171,6 @@ impl<'mc> BeaconInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn first_empty(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -19318,7 +18180,6 @@ impl<'mc> BeaconInventory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn viewers(
         &self,
@@ -19337,7 +18198,6 @@ impl<'mc> BeaconInventory<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn for_each(
         &self,
@@ -19438,7 +18298,6 @@ impl<'mc> SmithingTrimRecipe<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::inventory::SmithingTrimRecipe::from_raw(&jni, res)
     }
-    //@NotNull
 
     pub fn template(
         &self,
@@ -19452,7 +18311,6 @@ impl<'mc> SmithingTrimRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn result(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
@@ -19464,7 +18322,6 @@ impl<'mc> SmithingTrimRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn base(&self) -> Result<crate::inventory::RecipeChoice<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/RecipeChoice;");
@@ -19476,7 +18333,6 @@ impl<'mc> SmithingTrimRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -19488,7 +18344,6 @@ impl<'mc> SmithingTrimRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn addition(
         &self,
@@ -19502,7 +18357,6 @@ impl<'mc> SmithingTrimRecipe<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -19528,7 +18382,6 @@ impl<'mc> SmithingTrimRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -19545,7 +18398,6 @@ impl<'mc> SmithingTrimRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -19560,7 +18412,6 @@ impl<'mc> SmithingTrimRecipe<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -19570,7 +18421,6 @@ impl<'mc> SmithingTrimRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -19580,7 +18430,6 @@ impl<'mc> SmithingTrimRecipe<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -19590,7 +18439,6 @@ impl<'mc> SmithingTrimRecipe<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");

@@ -56,7 +56,6 @@ impl<'mc> SelectorComponentSerializer<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::bungee::chat::SelectorComponentSerializer::from_raw(&jni, res)
     }
-    //
 
     pub fn serialize_with_selector_component(
         &self,
@@ -84,7 +83,6 @@ impl<'mc> SelectorComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn deserialize_with_json_element(
         &self,
@@ -110,7 +108,6 @@ impl<'mc> SelectorComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -136,7 +133,6 @@ impl<'mc> SelectorComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -153,7 +149,6 @@ impl<'mc> SelectorComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -168,7 +163,6 @@ impl<'mc> SelectorComponentSerializer<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -178,7 +172,6 @@ impl<'mc> SelectorComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -188,7 +181,6 @@ impl<'mc> SelectorComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -198,7 +190,6 @@ impl<'mc> SelectorComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -286,7 +277,6 @@ impl<'mc> TextComponentSerializer<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::bungee::chat::TextComponentSerializer::from_raw(&jni, res)
     }
-    //
 
     pub fn serialize_with_text_component(
         &self,
@@ -314,7 +304,6 @@ impl<'mc> TextComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn deserialize_with_json_element(
         &self,
@@ -340,7 +329,6 @@ impl<'mc> TextComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -366,7 +354,6 @@ impl<'mc> TextComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -383,7 +370,6 @@ impl<'mc> TextComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -398,7 +384,6 @@ impl<'mc> TextComponentSerializer<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -408,7 +393,6 @@ impl<'mc> TextComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -418,7 +402,6 @@ impl<'mc> TextComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -428,7 +411,6 @@ impl<'mc> TextComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -511,7 +493,6 @@ impl<'mc> BaseComponentSerializer<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::bungee::chat::BaseComponentSerializer::from_raw(&jni, res)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -537,7 +518,6 @@ impl<'mc> BaseComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -554,7 +534,6 @@ impl<'mc> BaseComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -569,7 +548,6 @@ impl<'mc> BaseComponentSerializer<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -579,7 +557,6 @@ impl<'mc> BaseComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -589,7 +566,6 @@ impl<'mc> BaseComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -599,7 +575,6 @@ impl<'mc> BaseComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -672,7 +647,6 @@ impl<'mc> ScoreComponentSerializer<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::bungee::chat::ScoreComponentSerializer::from_raw(&jni, res)
     }
-    //
 
     pub fn serialize_with_score_component(
         &self,
@@ -700,7 +674,6 @@ impl<'mc> ScoreComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn deserialize_with_json_element(
         &self,
@@ -726,7 +699,6 @@ impl<'mc> ScoreComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -752,7 +724,6 @@ impl<'mc> ScoreComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -769,7 +740,6 @@ impl<'mc> ScoreComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -784,7 +754,6 @@ impl<'mc> ScoreComponentSerializer<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -794,7 +763,6 @@ impl<'mc> ScoreComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -804,7 +772,6 @@ impl<'mc> ScoreComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -814,7 +781,6 @@ impl<'mc> ScoreComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -900,7 +866,6 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::bungee::chat::TranslatableComponentSerializer::from_raw(&jni, res)
     }
-    //
 
     pub fn serialize_with_translatable_component(
         &self,
@@ -928,7 +893,6 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn deserialize_with_json_element(
         &self,
@@ -954,7 +918,6 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -980,7 +943,6 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -997,7 +959,6 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1012,7 +973,6 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1022,7 +982,6 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1032,7 +991,6 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1042,7 +1000,6 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1131,7 +1088,6 @@ impl<'mc> KeybindComponentSerializer<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::bungee::chat::KeybindComponentSerializer::from_raw(&jni, res)
     }
-    //
 
     pub fn serialize_with_keybind_component(
         &self,
@@ -1159,7 +1115,6 @@ impl<'mc> KeybindComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn deserialize_with_json_element(
         &self,
@@ -1185,7 +1140,6 @@ impl<'mc> KeybindComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1211,7 +1165,6 @@ impl<'mc> KeybindComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1228,7 +1181,6 @@ impl<'mc> KeybindComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1243,7 +1195,6 @@ impl<'mc> KeybindComponentSerializer<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1253,7 +1204,6 @@ impl<'mc> KeybindComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1263,7 +1213,6 @@ impl<'mc> KeybindComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1273,7 +1222,6 @@ impl<'mc> KeybindComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1346,8 +1294,6 @@ impl<'mc> JNIInstantiatable<'mc> for TranslationRegistry<'mc> {
 }
 
 impl<'mc> TranslationRegistry<'mc> {
-    //
-
     pub fn translate(&self, arg0: impl Into<String>) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Ljava/lang/String;");
         let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
@@ -1366,7 +1312,6 @@ impl<'mc> TranslationRegistry<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1383,7 +1328,6 @@ impl<'mc> TranslationRegistry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1398,7 +1342,6 @@ impl<'mc> TranslationRegistry<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1408,7 +1351,6 @@ impl<'mc> TranslationRegistry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1434,7 +1376,6 @@ impl<'mc> TranslationRegistry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1444,7 +1385,6 @@ impl<'mc> TranslationRegistry<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1454,7 +1394,6 @@ impl<'mc> TranslationRegistry<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1524,9 +1463,6 @@ impl<'mc> ComponentSerializer<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::bungee::chat::ComponentSerializer::from_raw(&jni, res)
     }
-    //
-
-    //
 
     pub fn to_string_with_base_component(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1551,7 +1487,6 @@ impl<'mc> ComponentSerializer<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn deserialize_with_json_element(
         &self,
@@ -1579,7 +1514,6 @@ impl<'mc> ComponentSerializer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1605,7 +1539,6 @@ impl<'mc> ComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1622,7 +1555,6 @@ impl<'mc> ComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1632,7 +1564,6 @@ impl<'mc> ComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1642,7 +1573,6 @@ impl<'mc> ComponentSerializer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1652,7 +1582,6 @@ impl<'mc> ComponentSerializer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");

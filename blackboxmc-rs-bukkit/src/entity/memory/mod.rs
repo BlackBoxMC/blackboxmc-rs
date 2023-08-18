@@ -41,8 +41,6 @@ impl<'mc> JNIInstantiatable<'mc> for MemoryKey<'mc> {
 }
 
 impl<'mc> MemoryKey<'mc> {
-    //
-
     pub fn values(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -54,7 +52,6 @@ impl<'mc> MemoryKey<'mc> {
         let obj = res.l()?;
         blackboxmc_java::util::JavaSet::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -66,7 +63,6 @@ impl<'mc> MemoryKey<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_by_key(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -88,7 +84,6 @@ impl<'mc> MemoryKey<'mc> {
         let obj = res.l()?;
         crate::entity::memory::MemoryKey::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn memory_class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -98,7 +93,6 @@ impl<'mc> MemoryKey<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -124,7 +118,6 @@ impl<'mc> MemoryKey<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -141,7 +134,6 @@ impl<'mc> MemoryKey<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -156,7 +148,6 @@ impl<'mc> MemoryKey<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -166,7 +157,6 @@ impl<'mc> MemoryKey<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -176,7 +166,6 @@ impl<'mc> MemoryKey<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -186,7 +175,6 @@ impl<'mc> MemoryKey<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");

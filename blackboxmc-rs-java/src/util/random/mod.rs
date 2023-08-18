@@ -44,8 +44,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaRandomGeneratorFactory<'mc> {
 }
 
 impl<'mc> JavaRandomGeneratorFactory<'mc> {
-    //
-
     pub fn equidistribution(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self.jni_ref().call_method(
@@ -57,7 +55,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_deprecated(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -67,7 +64,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_stochastic(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -77,7 +73,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_hardware(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -87,7 +82,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn state_bits(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -97,7 +91,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_statistical(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -107,7 +100,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_arbitrarily_jumpable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -120,7 +112,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_jumpable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -130,7 +121,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_leapable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -140,7 +130,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_splittable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -150,7 +139,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_streamable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -160,7 +148,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -174,7 +161,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn group(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -188,7 +174,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn default(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -202,7 +187,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         let obj = res.l()?;
         crate::util::random::JavaRandomGeneratorFactory::from_raw(&jni, obj)
     }
-    //
 
     pub fn of(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -225,7 +209,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         let obj = res.l()?;
         crate::util::random::JavaRandomGeneratorFactory::from_raw(&jni, obj)
     }
-    //
 
     pub fn create_with_bytes(
         &self,
@@ -242,7 +225,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn period(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/math/BigInteger;");
@@ -252,7 +234,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -278,7 +259,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -295,7 +275,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -310,7 +289,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -320,7 +298,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -330,7 +307,6 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -394,8 +370,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaRandomGeneratorSplittableGenerator<'mc>
 }
 
 impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
-    //
-
     pub fn split_with_random_generatorsplittable_generator(
         &self,
         arg0: std::option::Option<
@@ -424,7 +398,6 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
-    //
 
     pub fn of(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -451,7 +424,6 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
         let obj = res.l()?;
         crate::util::random::JavaRandomGeneratorSplittableGenerator::from_raw(&jni, obj)
     }
-    //
 
     pub fn next_boolean(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -461,7 +433,6 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn next_long_with_long(
         &self,
@@ -487,7 +458,6 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn next_float_with_float(
         &self,
@@ -513,7 +483,6 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn next_bytes(&self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(B)V");
@@ -523,7 +492,6 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn next_gaussian_with_double(
         &self,
@@ -549,7 +517,6 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn is_deprecated(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -559,7 +526,6 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn next_exponential(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -569,7 +535,6 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn next_double_with_double(
         &self,
@@ -595,7 +560,6 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn next_int_with_int(
         &self,
@@ -673,8 +637,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaRandomGeneratorStreamableGenerator<'mc>
 }
 
 impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
-    //
-
     pub fn of(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
@@ -700,7 +662,6 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
         let obj = res.l()?;
         crate::util::random::JavaRandomGeneratorStreamableGenerator::from_raw(&jni, obj)
     }
-    //
 
     pub fn next_boolean(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -710,7 +671,6 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn next_long_with_long(
         &self,
@@ -736,7 +696,6 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn next_float_with_float(
         &self,
@@ -762,7 +721,6 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn next_bytes(&self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(B)V");
@@ -772,7 +730,6 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn next_gaussian_with_double(
         &self,
@@ -798,7 +755,6 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn is_deprecated(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -808,7 +764,6 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn next_exponential(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -818,7 +773,6 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn next_double_with_double(
         &self,
@@ -844,7 +798,6 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn next_int_with_int(
         &self,
@@ -915,8 +868,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaRandomGeneratorLeapableGenerator<'mc> {
 }
 
 impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
-    //
-
     pub fn leap_distance(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
@@ -925,7 +876,6 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn leap(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -935,7 +885,6 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn copy_and_leap(
         &self,
@@ -953,7 +902,6 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
-    //
 
     pub fn of(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -980,7 +928,6 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         let obj = res.l()?;
         crate::util::random::JavaRandomGeneratorLeapableGenerator::from_raw(&jni, obj)
     }
-    //
 
     pub fn copy(
         &self,
@@ -1000,7 +947,6 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
-    //
 
     pub fn jump_distance(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -1010,7 +956,6 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn copy_and_jump(
         &self,
@@ -1024,7 +969,6 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn jump(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1034,7 +978,6 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn next_boolean(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1044,7 +987,6 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn next_long_with_long(
         &self,
@@ -1070,7 +1012,6 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn next_float_with_float(
         &self,
@@ -1096,7 +1037,6 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn next_bytes(&self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(B)V");
@@ -1106,7 +1046,6 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn next_gaussian_with_double(
         &self,
@@ -1132,7 +1071,6 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn is_deprecated(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1142,7 +1080,6 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn next_exponential(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -1152,7 +1089,6 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn next_double_with_double(
         &self,
@@ -1178,7 +1114,6 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn next_int_with_int(
         &self,
@@ -1254,8 +1189,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaRandomGenerator<'mc> {
 }
 
 impl<'mc> JavaRandomGenerator<'mc> {
-    //
-
     pub fn next_boolean(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
@@ -1264,7 +1197,6 @@ impl<'mc> JavaRandomGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn next_long_with_long(
         &self,
@@ -1290,7 +1222,6 @@ impl<'mc> JavaRandomGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn next_float_with_float(
         &self,
@@ -1316,7 +1247,6 @@ impl<'mc> JavaRandomGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn next_bytes(&self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(B)V");
@@ -1326,7 +1256,6 @@ impl<'mc> JavaRandomGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn next_gaussian_with_double(
         &self,
@@ -1352,7 +1281,6 @@ impl<'mc> JavaRandomGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn is_deprecated(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1362,7 +1290,6 @@ impl<'mc> JavaRandomGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn next_exponential(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -1372,7 +1299,6 @@ impl<'mc> JavaRandomGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn default(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1385,7 +1311,6 @@ impl<'mc> JavaRandomGenerator<'mc> {
         let obj = res.l()?;
         crate::util::random::JavaRandomGenerator::from_raw(&jni, obj)
     }
-    //
 
     pub fn of(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1407,7 +1332,6 @@ impl<'mc> JavaRandomGenerator<'mc> {
         let obj = res.l()?;
         crate::util::random::JavaRandomGenerator::from_raw(&jni, obj)
     }
-    //
 
     pub fn next_double_with_double(
         &self,
@@ -1433,7 +1357,6 @@ impl<'mc> JavaRandomGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn next_int_with_int(
         &self,
@@ -1505,8 +1428,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaRandomGeneratorArbitrarilyJumpableGener
 }
 
 impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
-    //
-
     pub fn copy_and_jump_with_double(
         &self,
         arg0: std::option::Option<f64>,
@@ -1531,7 +1452,6 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
-    //
 
     pub fn jump_power_of_two(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -1545,7 +1465,6 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn leap(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1555,7 +1474,6 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn jump_with_double(
         &self,
@@ -1575,7 +1493,6 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn of(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1602,7 +1519,6 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         let obj = res.l()?;
         crate::util::random::JavaRandomGeneratorArbitrarilyJumpableGenerator::from_raw(&jni, obj)
     }
-    //
 
     pub fn copy(
         &self,
@@ -1622,7 +1538,6 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
-    //
 
     pub fn leap_distance(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -1632,7 +1547,6 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn copy_and_leap(
         &self,
@@ -1650,7 +1564,6 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
-    //
 
     pub fn jump_distance(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -1660,7 +1573,6 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn next_boolean(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1670,7 +1582,6 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn next_long_with_long(
         &self,
@@ -1696,7 +1607,6 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn next_float_with_float(
         &self,
@@ -1722,7 +1632,6 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn next_bytes(&self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(B)V");
@@ -1732,7 +1641,6 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn next_gaussian_with_double(
         &self,
@@ -1758,7 +1666,6 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn is_deprecated(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1768,7 +1675,6 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn next_exponential(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -1778,7 +1684,6 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn next_double_with_double(
         &self,
@@ -1804,7 +1709,6 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn next_int_with_int(
         &self,
@@ -1882,8 +1786,6 @@ impl<'mc> JNIInstantiatable<'mc> for JavaRandomGeneratorJumpableGenerator<'mc> {
 }
 
 impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
-    //
-
     pub fn jump_distance(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
@@ -1892,7 +1794,6 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn copy_and_jump(
         &self,
@@ -1906,7 +1807,6 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn jump(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1916,7 +1816,6 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn of(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1943,7 +1842,6 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         let obj = res.l()?;
         crate::util::random::JavaRandomGeneratorJumpableGenerator::from_raw(&jni, obj)
     }
-    //
 
     pub fn copy(
         &self,
@@ -1961,7 +1859,6 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
-    //
 
     pub fn next_boolean(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1971,7 +1868,6 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn next_long_with_long(
         &self,
@@ -1997,7 +1893,6 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn next_float_with_float(
         &self,
@@ -2023,7 +1918,6 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn next_bytes(&self, arg0: Vec<i8>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(B)V");
@@ -2033,7 +1927,6 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn next_gaussian_with_double(
         &self,
@@ -2059,7 +1952,6 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn is_deprecated(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2069,7 +1961,6 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn next_exponential(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -2079,7 +1970,6 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn next_double_with_double(
         &self,
@@ -2105,7 +1995,6 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn next_int_with_int(
         &self,

@@ -41,8 +41,6 @@ impl<'mc> JNIInstantiatable<'mc> for Criterias<'mc> {
 }
 
 impl<'mc> Criterias<'mc> {
-    //
-
     pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
@@ -67,7 +65,6 @@ impl<'mc> Criterias<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -84,7 +81,6 @@ impl<'mc> Criterias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -99,7 +95,6 @@ impl<'mc> Criterias<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -109,7 +104,6 @@ impl<'mc> Criterias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -119,7 +113,6 @@ impl<'mc> Criterias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -129,7 +122,6 @@ impl<'mc> Criterias<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -266,8 +258,6 @@ impl<'mc> TeamOptionStatus<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-
-    //
 }
 /// Represents a scoreboard criteria, either custom or built-in to the Minecraft server, used to keep track of and manually or automatically change scores on a scoreboard.
 /// <p>While this class outlines constants for standard criteria, see <a href="#statistic(org.bukkit.Statistic)"><code>statistic(Statistic)</code></a> (and its overloads) to create instances for statistically-backed criteria.</p>
@@ -310,8 +300,6 @@ impl<'mc> JNIInstantiatable<'mc> for Criteria<'mc> {
 }
 
 impl<'mc> Criteria<'mc> {
-    //@NotNull
-
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
@@ -324,7 +312,6 @@ impl<'mc> Criteria<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn create(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -346,7 +333,6 @@ impl<'mc> Criteria<'mc> {
         let obj = res.l()?;
         crate::scoreboard::Criteria::from_raw(&jni, obj)
     }
-    //
 
     pub fn is_read_only(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -356,7 +342,6 @@ impl<'mc> Criteria<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn default_render_type(
         &self,
@@ -386,7 +371,6 @@ impl<'mc> Criteria<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn statistic_with_statistic(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -679,8 +663,6 @@ impl<'mc> JNIInstantiatable<'mc> for Objective<'mc> {
 }
 
 impl<'mc> Objective<'mc> {
-    //@NotNull
-
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res =
@@ -693,7 +675,6 @@ impl<'mc> Objective<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn unregister(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -703,7 +684,6 @@ impl<'mc> Objective<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -717,7 +697,6 @@ impl<'mc> Objective<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn criteria(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -731,7 +710,6 @@ impl<'mc> Objective<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -750,7 +728,6 @@ impl<'mc> Objective<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn scoreboard(
         &self,
@@ -768,7 +745,6 @@ impl<'mc> Objective<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn get_score_with_string(
         &self,
@@ -790,7 +766,6 @@ impl<'mc> Objective<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn tracked_criteria(
         &self,
@@ -807,7 +782,6 @@ impl<'mc> Objective<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_modifiable(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -817,7 +791,6 @@ impl<'mc> Objective<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_display_slot(
         &self,
@@ -836,7 +809,6 @@ impl<'mc> Objective<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn display_slot(
         &self,
@@ -866,7 +838,6 @@ impl<'mc> Objective<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )?))
     }
-    //
 
     pub fn set_render_type(
         &self,
@@ -885,7 +856,6 @@ impl<'mc> Objective<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn render_type(
         &self,
@@ -953,8 +923,6 @@ impl<'mc> JNIInstantiatable<'mc> for Score<'mc> {
 }
 
 impl<'mc> Score<'mc> {
-    //@NotNull
-
     pub fn entry(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
@@ -967,9 +935,6 @@ impl<'mc> Score<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
-
-    //@Nullable
 
     pub fn player(&self) -> Result<Option<crate::OfflinePlayer<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/OfflinePlayer;");
@@ -985,7 +950,6 @@ impl<'mc> Score<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@Nullable
 
     pub fn scoreboard(
         &self,
@@ -1003,7 +967,6 @@ impl<'mc> Score<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@NotNull
 
     pub fn objective(
         &self,
@@ -1017,7 +980,6 @@ impl<'mc> Score<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn score(&self) -> Result<Option<i32>, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1027,8 +989,6 @@ impl<'mc> Score<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(Some(res.i()?))
     }
-    //
-
     /// Sets the current score.
     pub fn set_score(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -1042,7 +1002,6 @@ impl<'mc> Score<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_score_set(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1093,8 +1052,6 @@ impl<'mc> JNIInstantiatable<'mc> for Scoreboard<'mc> {
 }
 
 impl<'mc> Scoreboard<'mc> {
-    //@NotNull
-
     pub fn entries(
         &self,
     ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -1107,10 +1064,7 @@ impl<'mc> Scoreboard<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
-    //@NotNull
 
     pub fn players(
         &self,
@@ -1124,7 +1078,6 @@ impl<'mc> Scoreboard<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn register_new_objective_with_string(
         &self,
@@ -1171,7 +1124,6 @@ impl<'mc> Scoreboard<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_objective_with_display_slot(
         &self,
@@ -1193,7 +1145,6 @@ impl<'mc> Scoreboard<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_objectives_by_criteria_with_criteria(
         &self,
@@ -1218,7 +1169,6 @@ impl<'mc> Scoreboard<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn objectives(
         &self,
@@ -1232,7 +1182,6 @@ impl<'mc> Scoreboard<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_scores_with_offline_player(
         &self,
@@ -1254,7 +1203,6 @@ impl<'mc> Scoreboard<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn reset_scores_with_string(
         &self,
@@ -1274,7 +1222,6 @@ impl<'mc> Scoreboard<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_player_team(
         &self,
@@ -1295,7 +1242,6 @@ impl<'mc> Scoreboard<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_entry_team(
         &self,
@@ -1316,7 +1262,6 @@ impl<'mc> Scoreboard<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_team(
         &self,
@@ -1337,7 +1282,6 @@ impl<'mc> Scoreboard<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn teams(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
@@ -1349,7 +1293,6 @@ impl<'mc> Scoreboard<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn register_new_team(
         &self,
@@ -1370,7 +1313,6 @@ impl<'mc> Scoreboard<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn clear_slot(
         &self,
@@ -1604,8 +1546,6 @@ impl<'mc> JNIInstantiatable<'mc> for Team<'mc> {
 }
 
 impl<'mc> Team<'mc> {
-    //
-
     pub fn remove_entry(
         &self,
         arg0: impl Into<String>,
@@ -1623,7 +1563,6 @@ impl<'mc> Team<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn display_name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1637,7 +1576,6 @@ impl<'mc> Team<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn unregister(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1647,7 +1585,6 @@ impl<'mc> Team<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_color(
         &self,
@@ -1666,7 +1603,6 @@ impl<'mc> Team<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1680,7 +1616,6 @@ impl<'mc> Team<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn add_entry(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -1696,7 +1631,6 @@ impl<'mc> Team<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1706,7 +1640,6 @@ impl<'mc> Team<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn entries(
         &self,
@@ -1720,7 +1653,6 @@ impl<'mc> Team<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn prefix(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1738,7 +1670,6 @@ impl<'mc> Team<'mc> {
                 .to_string(),
         ))
     }
-    //@Nullable
 
     pub fn color(&self) -> Result<Option<crate::ChatColor<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/ChatColor;");
@@ -1753,7 +1684,6 @@ impl<'mc> Team<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })?))
     }
-    //
 
     pub fn set_display_name(
         &self,
@@ -1772,7 +1702,6 @@ impl<'mc> Team<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_prefix(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -1788,7 +1717,6 @@ impl<'mc> Team<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn suffix(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1802,7 +1730,6 @@ impl<'mc> Team<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn set_suffix(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -1818,7 +1745,6 @@ impl<'mc> Team<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn allow_friendly_fire(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1831,12 +1757,9 @@ impl<'mc> Team<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets the team friendly fire state
     pub fn set_allow_friendly_fire(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1847,7 +1770,6 @@ impl<'mc> Team<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn can_see_friendly_invisibles(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1860,15 +1782,12 @@ impl<'mc> Team<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets the team's ability to see <a href="../potion/PotionEffectType.html#INVISIBILITY"><code>invisible</code></a> teammates.
     pub fn set_can_see_friendly_invisibles(
         &self,
         arg0: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1879,10 +1798,7 @@ impl<'mc> Team<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
     #[deprecated]
-    //@NotNull
 
     pub fn name_tag_visibility(
         &self,
@@ -1912,7 +1828,6 @@ impl<'mc> Team<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_name_tag_visibility(
         &self,
@@ -1931,10 +1846,7 @@ impl<'mc> Team<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
     #[deprecated]
-    //@NotNull
 
     pub fn players(
         &self,
@@ -1948,7 +1860,6 @@ impl<'mc> Team<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn scoreboard(
         &self,
@@ -1966,7 +1877,6 @@ impl<'mc> Team<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn add_player(
         &self,
@@ -1985,7 +1895,6 @@ impl<'mc> Team<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_player(
         &self,
@@ -2004,7 +1913,6 @@ impl<'mc> Team<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_player(
         &self,
@@ -2023,7 +1931,6 @@ impl<'mc> Team<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_entry(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -2039,7 +1946,6 @@ impl<'mc> Team<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_option(
         &self,
@@ -2075,7 +1981,6 @@ impl<'mc> Team<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_option(
         &self,
@@ -2146,8 +2051,6 @@ impl<'mc> JNIInstantiatable<'mc> for ScoreboardManager<'mc> {
 }
 
 impl<'mc> ScoreboardManager<'mc> {
-    //@NotNull
-
     pub fn main_scoreboard(
         &self,
     ) -> Result<crate::scoreboard::Scoreboard<'mc>, Box<dyn std::error::Error>> {
@@ -2163,7 +2066,6 @@ impl<'mc> ScoreboardManager<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn new_scoreboard(
         &self,
@@ -2515,6 +2417,4 @@ impl<'mc> TeamOption<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-
-    //
 }

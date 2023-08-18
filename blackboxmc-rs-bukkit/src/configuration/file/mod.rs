@@ -65,7 +65,6 @@ impl<'mc> FileConfiguration<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::configuration::file::FileConfiguration::from_raw(&jni, res)
     }
-    //
 
     pub fn load_with_string(
         &self,
@@ -85,7 +84,6 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn save_with_string(
         &self,
@@ -105,7 +103,6 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn options(
         &self,
@@ -121,7 +118,6 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn save_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -135,7 +131,6 @@ impl<'mc> FileConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn load_from_string(
         &self,
@@ -154,7 +149,6 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn parent(
         &self,
@@ -168,7 +162,6 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_default(
         &self,
@@ -192,7 +185,6 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn defaults(
         &self,
@@ -210,7 +202,6 @@ impl<'mc> FileConfiguration<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn add_defaults_with_configuration(
         &self,
@@ -230,7 +221,6 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_defaults(
         &self,
@@ -249,7 +239,6 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_string_with_string(
         &self,
@@ -281,14 +270,12 @@ impl<'mc> FileConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn get_keys(
         &self,
         arg0: bool,
     ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Set;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -301,7 +288,6 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -315,7 +301,6 @@ impl<'mc> FileConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn get_with_string(
         &self,
@@ -341,7 +326,6 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -356,7 +340,6 @@ impl<'mc> FileConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn get_boolean_with_string(
         &self,
@@ -372,7 +355,6 @@ impl<'mc> FileConfiguration<'mc> {
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 2
             let val_2 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_2);
         }
@@ -383,7 +365,6 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_int_with_string(
         &self,
@@ -409,7 +390,6 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn get_long_with_string(
         &self,
@@ -435,7 +415,6 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn get_double_with_string(
         &self,
@@ -461,7 +440,6 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn contains_with_string(
         &self,
@@ -477,7 +455,6 @@ impl<'mc> FileConfiguration<'mc> {
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 2
             let val_2 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_2);
         }
@@ -488,7 +465,6 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_location_with_string(
         &self,
@@ -518,7 +494,6 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set(
         &self,
@@ -542,7 +517,6 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_set(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -558,7 +532,6 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn root(
         &self,
@@ -576,7 +549,6 @@ impl<'mc> FileConfiguration<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn get_object_with_string(
         &self,
@@ -606,7 +578,6 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn get_color_with_string(
         &self,
@@ -636,7 +607,6 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_item_stack_with_string(
         &self,
@@ -666,7 +636,6 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_offline_player_with_string(
         &self,
@@ -696,14 +665,12 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_values(
         &self,
         arg0: bool,
     ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Map;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -716,7 +683,6 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn create_path_with_configuration_section(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -753,7 +719,6 @@ impl<'mc> FileConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@Nullable
 
     pub fn default_section(
         &self,
@@ -775,7 +740,6 @@ impl<'mc> FileConfiguration<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@Nullable
 
     pub fn current_path(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -793,7 +757,6 @@ impl<'mc> FileConfiguration<'mc> {
                 .to_string(),
         ))
     }
-    //
 
     pub fn is_configuration_section(
         &self,
@@ -812,7 +775,6 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_configuration_section(
         &self,
@@ -834,7 +796,6 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn create_section_with_string(
         &self,
@@ -864,7 +825,6 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_string(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -880,7 +840,6 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_int(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -896,7 +855,6 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_boolean(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -912,7 +870,6 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_double(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -928,7 +885,6 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_long(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -944,7 +900,6 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_list(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -960,7 +915,6 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_string_list(
         &self,
@@ -991,23 +945,6 @@ impl<'mc> FileConfiguration<'mc> {
         }
         Ok(new_vec)
     }
-    //
-
-    //
-
-    //
-
-    //
-
-    //
-
-    //
-
-    //
-
-    //
-
-    //
 
     pub fn get_serializable_with_string(
         &self,
@@ -1047,7 +984,6 @@ impl<'mc> FileConfiguration<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
-    //
 
     pub fn get_vector_with_string(
         &self,
@@ -1077,7 +1013,6 @@ impl<'mc> FileConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_vector(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -1093,7 +1028,6 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_offline_player(
         &self,
@@ -1112,7 +1046,6 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_item_stack(
         &self,
@@ -1131,7 +1064,6 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_color(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -1147,7 +1079,6 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_location(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -1163,7 +1094,6 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_comments(
         &self,
@@ -1194,7 +1124,6 @@ impl<'mc> FileConfiguration<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn get_inline_comments(
         &self,
@@ -1225,7 +1154,6 @@ impl<'mc> FileConfiguration<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1251,7 +1179,6 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1268,7 +1195,6 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1278,7 +1204,6 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1288,7 +1213,6 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1298,7 +1222,6 @@ impl<'mc> FileConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1370,8 +1293,6 @@ impl<'mc> JNIInstantiatable<'mc> for FileConfigurationOptions<'mc> {
 }
 
 impl<'mc> FileConfigurationOptions<'mc> {
-    //
-
     pub fn header_with_string(
         &self,
         arg0: std::option::Option<impl Into<String>>,
@@ -1395,7 +1316,6 @@ impl<'mc> FileConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn configuration(
         &self,
@@ -1411,8 +1331,6 @@ impl<'mc> FileConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="../ConfigurationOptions.html#pathSeparator(char)">ConfigurationOptions</a></code></span>
     /// Sets the char that will be used to separate <a href="../ConfigurationSection.html" title="interface in org.bukkit.configuration"><code>ConfigurationSection</code></a>s
     /// <p>This value does not affect how the <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a> is stored, only in how you access the data. The default value is '.'.</p>
@@ -1437,8 +1355,6 @@ impl<'mc> FileConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="../ConfigurationOptions.html#copyDefaults(boolean)">ConfigurationOptions</a></code></span>
     /// Sets if the <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a> should copy values from its default <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> directly.
     /// <p>If this is true, all values in the default Configuration will be directly copied, making it impossible to distinguish between values that were set and values that are provided by default. As a result, <a href="../ConfigurationSection.html#contains(java.lang.String)"><code>ConfigurationSection.contains(java.lang.String)</code></a> will always return the same value as <a href="../ConfigurationSection.html#isSet(java.lang.String)"><code>ConfigurationSection.isSet(java.lang.String)</code></a>. The default value is false.</p>
@@ -1451,7 +1367,6 @@ impl<'mc> FileConfigurationOptions<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "Z";
-            // 1
             let val_1 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_1);
         }
@@ -1464,8 +1379,6 @@ impl<'mc> FileConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     /// Sets whether or not comments should be loaded and saved.
     /// <p>Defaults to true.</p>
     pub fn parse_comments_with_boolean(
@@ -1477,7 +1390,6 @@ impl<'mc> FileConfigurationOptions<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "Z";
-            // 1
             let val_1 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_1);
         }
@@ -1490,7 +1402,6 @@ impl<'mc> FileConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn footer(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -1512,8 +1423,6 @@ impl<'mc> FileConfigurationOptions<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
-
     /// <span class="deprecated-label">Deprecated.</span>
     /// <div class="deprecation-comment">
     /// Call <a href="#parseComments(boolean)"><code>parseComments(boolean)</code></a> instead.
@@ -1529,7 +1438,6 @@ impl<'mc> FileConfigurationOptions<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "Z";
-            // 1
             let val_1 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_1);
         }
@@ -1542,7 +1450,6 @@ impl<'mc> FileConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1568,7 +1475,6 @@ impl<'mc> FileConfigurationOptions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1585,7 +1491,6 @@ impl<'mc> FileConfigurationOptions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1600,7 +1505,6 @@ impl<'mc> FileConfigurationOptions<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1610,7 +1514,6 @@ impl<'mc> FileConfigurationOptions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1620,7 +1523,6 @@ impl<'mc> FileConfigurationOptions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1630,7 +1532,6 @@ impl<'mc> FileConfigurationOptions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1702,8 +1603,6 @@ impl<'mc> JNIInstantiatable<'mc> for YamlConfigurationOptions<'mc> {
 }
 
 impl<'mc> YamlConfigurationOptions<'mc> {
-    //@NotNull
-
     /// Sets how long a line can be, before it gets split.
     pub fn width_with_int(
         &self,
@@ -1726,7 +1625,6 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn header_with_string(
         &self,
@@ -1751,8 +1649,6 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     /// Sets how much spaces should be used to indent each line.
     /// <p>The minimum value this may be is 2, and the maximum is 9.</p>
     pub fn indent_with_int(
@@ -1776,7 +1672,6 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn configuration(
         &self,
@@ -1793,8 +1688,6 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="../ConfigurationOptions.html#pathSeparator(char)">ConfigurationOptions</a></code></span>
     /// Sets the char that will be used to separate <a href="../ConfigurationSection.html" title="interface in org.bukkit.configuration"><code>ConfigurationSection</code></a>s
     /// <p>This value does not affect how the <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> is stored, only in how you access the data. The default value is '.'.</p>
@@ -1818,8 +1711,6 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="../ConfigurationOptions.html#copyDefaults(boolean)">ConfigurationOptions</a></code></span>
     /// Sets if the <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> should copy values from its default <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a> directly.
     /// <p>If this is true, all values in the default Configuration will be directly copied, making it impossible to distinguish between values that were set and values that are provided by default. As a result, <a href="../ConfigurationSection.html#contains(java.lang.String)"><code>ConfigurationSection.contains(java.lang.String)</code></a> will always return the same value as <a href="../ConfigurationSection.html#isSet(java.lang.String)"><code>ConfigurationSection.isSet(java.lang.String)</code></a>. The default value is false.</p>
@@ -1832,7 +1723,6 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "Z";
-            // 1
             let val_1 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_1);
         }
@@ -1845,8 +1735,6 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="FileConfigurationOptions.html#parseComments(boolean)">FileConfigurationOptions</a></code></span>
     /// Sets whether or not comments should be loaded and saved.
     /// <p>Defaults to true.</p>
@@ -1859,7 +1747,6 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "Z";
-            // 1
             let val_1 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_1);
         }
@@ -1872,8 +1759,6 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     /// <span class="deprecated-label">Deprecated.</span>
     pub fn copy_header_with_boolean(
         &self,
@@ -1884,7 +1769,6 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "Z";
-            // 1
             let val_1 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_1);
         }
@@ -1897,7 +1781,6 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn footer(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -1919,7 +1802,6 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1945,7 +1827,6 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1962,7 +1843,6 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1977,7 +1857,6 @@ impl<'mc> YamlConfigurationOptions<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1987,7 +1866,6 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1997,7 +1875,6 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2007,7 +1884,6 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2087,7 +1963,6 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::configuration::file::YamlConfiguration::from_raw(&jni, res)
     }
-    //@NotNull
 
     pub fn options(
         &self,
@@ -2103,7 +1978,6 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn load_configuration_with_reader(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2123,7 +1997,6 @@ impl<'mc> YamlConfiguration<'mc> {
         let obj = res.l()?;
         crate::configuration::file::YamlConfiguration::from_raw(&jni, obj)
     }
-    //@NotNull
 
     pub fn save_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2137,7 +2010,6 @@ impl<'mc> YamlConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn load_from_string(
         &self,
@@ -2156,7 +2028,6 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn load_with_string(
         &self,
@@ -2176,7 +2047,6 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn save_with_string(
         &self,
@@ -2196,7 +2066,6 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn parent(
         &self,
@@ -2210,7 +2079,6 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_default(
         &self,
@@ -2234,7 +2102,6 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn defaults(
         &self,
@@ -2252,7 +2119,6 @@ impl<'mc> YamlConfiguration<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn add_defaults_with_configuration(
         &self,
@@ -2272,7 +2138,6 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_defaults(
         &self,
@@ -2291,7 +2156,6 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_string_with_string(
         &self,
@@ -2323,14 +2187,12 @@ impl<'mc> YamlConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn get_keys(
         &self,
         arg0: bool,
     ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Set;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2343,7 +2205,6 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2357,7 +2218,6 @@ impl<'mc> YamlConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn get_with_string(
         &self,
@@ -2383,7 +2243,6 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2398,7 +2257,6 @@ impl<'mc> YamlConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn get_boolean_with_string(
         &self,
@@ -2414,7 +2272,6 @@ impl<'mc> YamlConfiguration<'mc> {
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 2
             let val_2 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_2);
         }
@@ -2425,7 +2282,6 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_int_with_string(
         &self,
@@ -2451,7 +2307,6 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn get_long_with_string(
         &self,
@@ -2477,7 +2332,6 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn get_double_with_string(
         &self,
@@ -2503,7 +2357,6 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn contains_with_string(
         &self,
@@ -2519,7 +2372,6 @@ impl<'mc> YamlConfiguration<'mc> {
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 2
             let val_2 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_2);
         }
@@ -2530,7 +2382,6 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_location_with_string(
         &self,
@@ -2560,7 +2411,6 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set(
         &self,
@@ -2584,7 +2434,6 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_set(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -2600,7 +2449,6 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn root(
         &self,
@@ -2618,7 +2466,6 @@ impl<'mc> YamlConfiguration<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn get_object_with_string(
         &self,
@@ -2648,7 +2495,6 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn get_color_with_string(
         &self,
@@ -2678,7 +2524,6 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_item_stack_with_string(
         &self,
@@ -2708,7 +2553,6 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_offline_player_with_string(
         &self,
@@ -2738,14 +2582,12 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn get_values(
         &self,
         arg0: bool,
     ) -> Result<blackboxmc_java::util::JavaMap<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/util/Map;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2758,7 +2600,6 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn create_path_with_configuration_section(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2795,7 +2636,6 @@ impl<'mc> YamlConfiguration<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@Nullable
 
     pub fn default_section(
         &self,
@@ -2817,7 +2657,6 @@ impl<'mc> YamlConfiguration<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@Nullable
 
     pub fn current_path(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2835,7 +2674,6 @@ impl<'mc> YamlConfiguration<'mc> {
                 .to_string(),
         ))
     }
-    //
 
     pub fn is_configuration_section(
         &self,
@@ -2854,7 +2692,6 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_configuration_section(
         &self,
@@ -2876,7 +2713,6 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn create_section_with_string(
         &self,
@@ -2906,7 +2742,6 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_string(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -2922,7 +2757,6 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_int(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -2938,7 +2772,6 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_boolean(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -2954,7 +2787,6 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_double(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -2970,7 +2802,6 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_long(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -2986,7 +2817,6 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_list(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -3002,7 +2832,6 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_string_list(
         &self,
@@ -3033,23 +2862,6 @@ impl<'mc> YamlConfiguration<'mc> {
         }
         Ok(new_vec)
     }
-    //
-
-    //
-
-    //
-
-    //
-
-    //
-
-    //
-
-    //
-
-    //
-
-    //
 
     pub fn get_serializable_with_string(
         &self,
@@ -3089,7 +2901,6 @@ impl<'mc> YamlConfiguration<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
-    //
 
     pub fn get_vector_with_string(
         &self,
@@ -3119,7 +2930,6 @@ impl<'mc> YamlConfiguration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_vector(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -3135,7 +2945,6 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_offline_player(
         &self,
@@ -3154,7 +2963,6 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_item_stack(
         &self,
@@ -3173,7 +2981,6 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_color(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -3189,7 +2996,6 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_location(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -3205,7 +3011,6 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_comments(
         &self,
@@ -3236,7 +3041,6 @@ impl<'mc> YamlConfiguration<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn get_inline_comments(
         &self,
@@ -3267,7 +3071,6 @@ impl<'mc> YamlConfiguration<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -3293,7 +3096,6 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -3310,7 +3112,6 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -3320,7 +3121,6 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -3330,7 +3130,6 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3340,7 +3139,6 @@ impl<'mc> YamlConfiguration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");

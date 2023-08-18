@@ -43,8 +43,6 @@ impl<'mc> JNIInstantiatable<'mc> for MetadataStore<'mc> {
 }
 
 impl<'mc> MetadataStore<'mc> {
-    //
-
     pub fn set_metadata(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -74,7 +72,6 @@ impl<'mc> MetadataStore<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_metadata(
         &self,
@@ -108,7 +105,6 @@ impl<'mc> MetadataStore<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_metadata(
         &self,
@@ -132,7 +128,6 @@ impl<'mc> MetadataStore<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_metadata(
         &self,
@@ -161,7 +156,6 @@ impl<'mc> MetadataStore<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn invalidate_all(
         &self,
@@ -231,7 +225,6 @@ impl<'mc> MetadataValue<'mc> {
         let obj = unsafe { plugin.new_extendable(address, "MetadataValue", name, lib_name) }?;
         Self::from_raw(env, obj)
     }
-    //
 
     pub fn value(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
@@ -241,7 +234,6 @@ impl<'mc> MetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -255,7 +247,6 @@ impl<'mc> MetadataValue<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn as_int(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -265,7 +256,6 @@ impl<'mc> MetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Nullable
 
     pub fn owning_plugin(
         &self,
@@ -283,7 +273,6 @@ impl<'mc> MetadataValue<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn invalidate(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -293,7 +282,6 @@ impl<'mc> MetadataValue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn as_float(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -303,7 +291,6 @@ impl<'mc> MetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn as_double(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -313,7 +300,6 @@ impl<'mc> MetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn as_long(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
@@ -323,7 +309,6 @@ impl<'mc> MetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn as_short(&self) -> Result<i16, Box<dyn std::error::Error>> {
         let sig = String::from("()S");
@@ -333,7 +318,6 @@ impl<'mc> MetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.s()?)
     }
-    //
 
     pub fn as_byte(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let sig = String::from("()B");
@@ -343,7 +327,6 @@ impl<'mc> MetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b()?)
     }
-    //
 
     pub fn as_boolean(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -394,8 +377,6 @@ impl<'mc> JNIInstantiatable<'mc> for Metadatable<'mc> {
 }
 
 impl<'mc> Metadatable<'mc> {
-    //
-
     pub fn set_metadata(
         &self,
         arg0: impl Into<String>,
@@ -420,7 +401,6 @@ impl<'mc> Metadatable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_metadata(
         &self,
@@ -449,7 +429,6 @@ impl<'mc> Metadatable<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_metadata(
         &self,
@@ -468,7 +447,6 @@ impl<'mc> Metadatable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_metadata(
         &self,
@@ -545,7 +523,6 @@ impl<'mc> MetadataStoreBase<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::metadata::MetadataStoreBase::from_raw(&jni, res)
     }
-    //
 
     pub fn set_metadata(
         &self,
@@ -576,7 +553,6 @@ impl<'mc> MetadataStoreBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_metadata(
         &self,
@@ -607,7 +583,6 @@ impl<'mc> MetadataStoreBase<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn has_metadata(
         &self,
@@ -631,7 +606,6 @@ impl<'mc> MetadataStoreBase<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove_metadata(
         &self,
@@ -660,7 +634,6 @@ impl<'mc> MetadataStoreBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn invalidate_all(
         &self,
@@ -679,7 +652,6 @@ impl<'mc> MetadataStoreBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -705,7 +677,6 @@ impl<'mc> MetadataStoreBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -722,7 +693,6 @@ impl<'mc> MetadataStoreBase<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -737,7 +707,6 @@ impl<'mc> MetadataStoreBase<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -747,7 +716,6 @@ impl<'mc> MetadataStoreBase<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -757,7 +725,6 @@ impl<'mc> MetadataStoreBase<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -767,7 +734,6 @@ impl<'mc> MetadataStoreBase<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -914,8 +880,6 @@ impl<'mc> LazyMetadataValueCacheStrategy<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-
-    //
 }
 
 impl<'mc> JNIRaw<'mc> for LazyMetadataValue<'mc> {
@@ -952,8 +916,6 @@ impl<'mc> JNIInstantiatable<'mc> for LazyMetadataValue<'mc> {
 }
 
 impl<'mc> LazyMetadataValue<'mc> {
-    //
-
     pub fn value(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
@@ -962,7 +924,6 @@ impl<'mc> LazyMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn invalidate(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -972,7 +933,6 @@ impl<'mc> LazyMetadataValue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -986,7 +946,6 @@ impl<'mc> LazyMetadataValue<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn as_int(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -996,7 +955,6 @@ impl<'mc> LazyMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Nullable
 
     pub fn owning_plugin(
         &self,
@@ -1014,7 +972,6 @@ impl<'mc> LazyMetadataValue<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn as_float(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -1024,7 +981,6 @@ impl<'mc> LazyMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn as_double(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -1034,7 +990,6 @@ impl<'mc> LazyMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn as_long(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
@@ -1044,7 +999,6 @@ impl<'mc> LazyMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn as_short(&self) -> Result<i16, Box<dyn std::error::Error>> {
         let sig = String::from("()S");
@@ -1054,7 +1008,6 @@ impl<'mc> LazyMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.s()?)
     }
-    //
 
     pub fn as_byte(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let sig = String::from("()B");
@@ -1064,7 +1017,6 @@ impl<'mc> LazyMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b()?)
     }
-    //
 
     pub fn as_boolean(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1074,7 +1026,6 @@ impl<'mc> LazyMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1100,7 +1051,6 @@ impl<'mc> LazyMetadataValue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1117,7 +1067,6 @@ impl<'mc> LazyMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1132,7 +1081,6 @@ impl<'mc> LazyMetadataValue<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1142,7 +1090,6 @@ impl<'mc> LazyMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1152,7 +1099,6 @@ impl<'mc> LazyMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1162,7 +1108,6 @@ impl<'mc> LazyMetadataValue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1253,7 +1198,6 @@ impl<'mc> FixedMetadataValue<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::metadata::FixedMetadataValue::from_raw(&jni, res)
     }
-    //
 
     pub fn value(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
@@ -1263,7 +1207,6 @@ impl<'mc> FixedMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn invalidate(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1273,7 +1216,6 @@ impl<'mc> FixedMetadataValue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1287,7 +1229,6 @@ impl<'mc> FixedMetadataValue<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn as_int(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1297,7 +1238,6 @@ impl<'mc> FixedMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Nullable
 
     pub fn owning_plugin(
         &self,
@@ -1315,7 +1255,6 @@ impl<'mc> FixedMetadataValue<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn as_float(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -1325,7 +1264,6 @@ impl<'mc> FixedMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn as_double(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -1335,7 +1273,6 @@ impl<'mc> FixedMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn as_long(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
@@ -1345,7 +1282,6 @@ impl<'mc> FixedMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn as_short(&self) -> Result<i16, Box<dyn std::error::Error>> {
         let sig = String::from("()S");
@@ -1355,7 +1291,6 @@ impl<'mc> FixedMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.s()?)
     }
-    //
 
     pub fn as_byte(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let sig = String::from("()B");
@@ -1365,7 +1300,6 @@ impl<'mc> FixedMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b()?)
     }
-    //
 
     pub fn as_boolean(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1375,7 +1309,6 @@ impl<'mc> FixedMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1401,7 +1334,6 @@ impl<'mc> FixedMetadataValue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1418,7 +1350,6 @@ impl<'mc> FixedMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1433,7 +1364,6 @@ impl<'mc> FixedMetadataValue<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1443,7 +1373,6 @@ impl<'mc> FixedMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1453,7 +1382,6 @@ impl<'mc> FixedMetadataValue<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1463,7 +1391,6 @@ impl<'mc> FixedMetadataValue<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1531,8 +1458,6 @@ impl<'mc> JNIInstantiatable<'mc> for MetadataValueAdapter<'mc> {
 }
 
 impl<'mc> MetadataValueAdapter<'mc> {
-    //@NotNull
-
     pub fn as_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
         let res = self
@@ -1545,7 +1470,6 @@ impl<'mc> MetadataValueAdapter<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn as_int(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1555,7 +1479,6 @@ impl<'mc> MetadataValueAdapter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Nullable
 
     pub fn owning_plugin(
         &self,
@@ -1573,7 +1496,6 @@ impl<'mc> MetadataValueAdapter<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn as_float(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -1583,7 +1505,6 @@ impl<'mc> MetadataValueAdapter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn as_double(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -1593,7 +1514,6 @@ impl<'mc> MetadataValueAdapter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn as_long(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
@@ -1603,7 +1523,6 @@ impl<'mc> MetadataValueAdapter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
 
     pub fn as_short(&self) -> Result<i16, Box<dyn std::error::Error>> {
         let sig = String::from("()S");
@@ -1613,7 +1532,6 @@ impl<'mc> MetadataValueAdapter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.s()?)
     }
-    //
 
     pub fn as_byte(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let sig = String::from("()B");
@@ -1623,7 +1541,6 @@ impl<'mc> MetadataValueAdapter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b()?)
     }
-    //
 
     pub fn as_boolean(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1633,7 +1550,6 @@ impl<'mc> MetadataValueAdapter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1659,7 +1575,6 @@ impl<'mc> MetadataValueAdapter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1676,7 +1591,6 @@ impl<'mc> MetadataValueAdapter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1691,7 +1605,6 @@ impl<'mc> MetadataValueAdapter<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1701,7 +1614,6 @@ impl<'mc> MetadataValueAdapter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1711,7 +1623,6 @@ impl<'mc> MetadataValueAdapter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1721,7 +1632,6 @@ impl<'mc> MetadataValueAdapter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1731,7 +1641,6 @@ impl<'mc> MetadataValueAdapter<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn value(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
@@ -1741,7 +1650,6 @@ impl<'mc> MetadataValueAdapter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn invalidate(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");

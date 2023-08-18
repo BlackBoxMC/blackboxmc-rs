@@ -522,8 +522,6 @@ impl<'mc> JNIInstantiatable<'mc> for KeyedBossBar<'mc> {
 }
 
 impl<'mc> KeyedBossBar<'mc> {
-    //
-
     pub fn set_color(
         &self,
         arg0: impl Into<crate::boss::BarColor<'mc>>,
@@ -541,7 +539,6 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn add_flag(
         &self,
@@ -560,7 +557,6 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -570,7 +566,6 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -580,11 +575,9 @@ impl<'mc> KeyedBossBar<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -595,7 +588,6 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn color(&self) -> Result<Option<crate::boss::BarColor<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/boss/BarColor;");
@@ -623,7 +615,6 @@ impl<'mc> KeyedBossBar<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )?))
     }
-    //@NotNull
 
     pub fn title(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -637,10 +628,7 @@ impl<'mc> KeyedBossBar<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@Deprecated
-
     #[deprecated]
-    //@NotNull
 
     pub fn players(&self) -> Result<Vec<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -657,7 +645,6 @@ impl<'mc> KeyedBossBar<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_player(
         &self,
@@ -676,7 +663,6 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_player(
         &self,
@@ -695,7 +681,6 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_title(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -711,7 +696,6 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn style(&self) -> Result<crate::boss::BarStyle<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/boss/BarStyle;");
@@ -736,7 +720,6 @@ impl<'mc> KeyedBossBar<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_style(
         &self,
@@ -755,7 +738,6 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_flag(
         &self,
@@ -774,7 +756,6 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_flag(
         &self,
@@ -793,7 +774,6 @@ impl<'mc> KeyedBossBar<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_progress(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
@@ -807,7 +787,6 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn progress(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -817,8 +796,6 @@ impl<'mc> KeyedBossBar<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn show(&self) -> Result<(), Box<dyn std::error::Error>> {
@@ -829,8 +806,6 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn hide(&self) -> Result<(), Box<dyn std::error::Error>> {
@@ -841,7 +816,6 @@ impl<'mc> KeyedBossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -906,8 +880,6 @@ impl<'mc> JNIInstantiatable<'mc> for BossBar<'mc> {
 }
 
 impl<'mc> BossBar<'mc> {
-    //
-
     pub fn set_color(
         &self,
         arg0: impl Into<crate::boss::BarColor<'mc>>,
@@ -925,7 +897,6 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn add_flag(
         &self,
@@ -944,7 +915,6 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -954,7 +924,6 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -964,12 +933,9 @@ impl<'mc> BossBar<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Set if the boss bar is displayed to attached players.
     pub fn set_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -980,7 +946,6 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn color(&self) -> Result<Option<crate::boss::BarColor<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/boss/BarColor;");
@@ -1008,7 +973,6 @@ impl<'mc> BossBar<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )?))
     }
-    //@NotNull
 
     pub fn title(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1022,10 +986,7 @@ impl<'mc> BossBar<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@Deprecated
-
     #[deprecated]
-    //@NotNull
 
     pub fn players(&self) -> Result<Vec<crate::entity::Player<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -1042,7 +1003,6 @@ impl<'mc> BossBar<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_player(
         &self,
@@ -1061,7 +1021,6 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_player(
         &self,
@@ -1080,7 +1039,6 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_title(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -1096,7 +1054,6 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn style(&self) -> Result<crate::boss::BarStyle<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/boss/BarStyle;");
@@ -1121,7 +1078,6 @@ impl<'mc> BossBar<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_style(
         &self,
@@ -1140,7 +1096,6 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_flag(
         &self,
@@ -1159,7 +1114,6 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn has_flag(
         &self,
@@ -1178,8 +1132,6 @@ impl<'mc> BossBar<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets the progress of the bar. Values should be between 0.0 (empty) and 1.0 (full)
     pub fn set_progress(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
@@ -1193,7 +1145,6 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn progress(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -1203,8 +1154,6 @@ impl<'mc> BossBar<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn show(&self) -> Result<(), Box<dyn std::error::Error>> {
@@ -1215,8 +1164,6 @@ impl<'mc> BossBar<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn hide(&self) -> Result<(), Box<dyn std::error::Error>> {
@@ -1268,8 +1215,6 @@ impl<'mc> JNIInstantiatable<'mc> for DragonBattle<'mc> {
 }
 
 impl<'mc> DragonBattle<'mc> {
-    //@Nullable
-
     pub fn boss_bar(
         &self,
     ) -> Result<Option<crate::boss::BossBar<'mc>>, Box<dyn std::error::Error>> {
@@ -1286,7 +1231,6 @@ impl<'mc> DragonBattle<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@Nullable
 
     pub fn ender_dragon(
         &self,
@@ -1304,7 +1248,6 @@ impl<'mc> DragonBattle<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@Nullable
 
     pub fn end_portal_location(
         &self,
@@ -1324,12 +1267,9 @@ impl<'mc> DragonBattle<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })?))
     }
-    //
-
     /// Generate the end portal.
     pub fn generate_end_portal(&self, arg0: bool) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Z");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1340,7 +1280,6 @@ impl<'mc> DragonBattle<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn has_been_previously_killed(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1353,7 +1292,6 @@ impl<'mc> DragonBattle<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn respawn_phase(
         &self,
@@ -1380,7 +1318,6 @@ impl<'mc> DragonBattle<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_respawn_phase(
         &self,
@@ -1399,7 +1336,6 @@ impl<'mc> DragonBattle<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn reset_crystals(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1542,6 +1478,4 @@ impl<'mc> DragonBattleRespawnPhase<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-
-    //
 }

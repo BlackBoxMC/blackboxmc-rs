@@ -53,7 +53,6 @@ impl<'mc> MapCursorCollection<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::map::MapCursorCollection::from_raw(&jni, res)
     }
-    //
 
     pub fn size(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -63,8 +62,6 @@ impl<'mc> MapCursorCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
-
     /// Get a cursor from this collection.
     pub fn get_cursor(
         &self,
@@ -83,7 +80,6 @@ impl<'mc> MapCursorCollection<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn remove_cursor(
         &self,
@@ -102,7 +98,6 @@ impl<'mc> MapCursorCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_cursor_with_int(
         &self,
@@ -135,7 +130,6 @@ impl<'mc> MapCursorCollection<'mc> {
         }
         if let Some(a) = arg4 {
             sig += "Z";
-            // 2
             let val_5 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_5);
         }
@@ -155,7 +149,6 @@ impl<'mc> MapCursorCollection<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -181,7 +174,6 @@ impl<'mc> MapCursorCollection<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -198,7 +190,6 @@ impl<'mc> MapCursorCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -213,7 +204,6 @@ impl<'mc> MapCursorCollection<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -223,7 +213,6 @@ impl<'mc> MapCursorCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -233,7 +222,6 @@ impl<'mc> MapCursorCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -243,7 +231,6 @@ impl<'mc> MapCursorCollection<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -382,10 +369,6 @@ impl<'mc> MapViewScale<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-
-    //
-
-    //@Deprecated
 
     #[deprecated]
 
@@ -564,7 +547,6 @@ impl<'mc> MinecraftFont<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::map::MinecraftFont::from_raw(&jni, res)
     }
-    //
 
     pub fn is_valid(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -580,7 +562,6 @@ impl<'mc> MinecraftFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
 
     pub fn get_char(
         &self,
@@ -603,7 +584,6 @@ impl<'mc> MinecraftFont<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_char(
         &self,
@@ -627,7 +607,6 @@ impl<'mc> MinecraftFont<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn height(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -637,7 +616,6 @@ impl<'mc> MinecraftFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn get_width(&self, arg0: impl Into<String>) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)I");
@@ -653,7 +631,6 @@ impl<'mc> MinecraftFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -679,7 +656,6 @@ impl<'mc> MinecraftFont<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -696,7 +672,6 @@ impl<'mc> MinecraftFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -711,7 +686,6 @@ impl<'mc> MinecraftFont<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -721,7 +695,6 @@ impl<'mc> MinecraftFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -731,7 +704,6 @@ impl<'mc> MinecraftFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -741,7 +713,6 @@ impl<'mc> MinecraftFont<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -979,11 +950,8 @@ impl<'mc> MapCursorType<'mc> {
         )
     }
 
-    //
-
-    //@Deprecated
-
     #[deprecated]
+
     pub fn value(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let sig = String::from("()B");
         let res = self
@@ -992,10 +960,7 @@ impl<'mc> MapCursorType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b()?)
     }
-    //@Deprecated
-
     #[deprecated]
-    //@Nullable
 
     pub fn by_value(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1064,11 +1029,8 @@ impl<'mc> JNIInstantiatable<'mc> for MapCursor<'mc> {
 }
 
 impl<'mc> MapCursor<'mc> {
-    //['since', '']
-
-    //['forRemoval', 'false']
-
     #[deprecated]
+
     pub fn new_with_byte(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i8,
@@ -1093,7 +1055,6 @@ impl<'mc> MapCursor<'mc> {
         let val_4 = jni::objects::JValueGen::Byte(arg3.into());
         args.push(val_4);
         sig += "Z";
-        // 6
         let val_5 = jni::objects::JValueGen::Bool(arg4.into());
         args.push(val_5);
         if let Some(a) = arg5 {
@@ -1110,7 +1071,6 @@ impl<'mc> MapCursor<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::map::MapCursor::from_raw(&jni, res)
     }
-    //@NotNull
 
     pub fn get_type(&self) -> Result<crate::map::MapCursorType<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/map/MapCursor$Type;");
@@ -1135,8 +1095,6 @@ impl<'mc> MapCursor<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn raw_type(&self) -> Result<i8, Box<dyn std::error::Error>> {
@@ -1147,7 +1105,6 @@ impl<'mc> MapCursor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b()?)
     }
-    //
 
     pub fn set_type(
         &self,
@@ -1166,7 +1123,6 @@ impl<'mc> MapCursor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_visible(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1176,12 +1132,9 @@ impl<'mc> MapCursor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Set the visibility status of this cursor.
     pub fn set_visible(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1192,7 +1145,6 @@ impl<'mc> MapCursor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn x(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let sig = String::from("()B");
@@ -1202,7 +1154,6 @@ impl<'mc> MapCursor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b()?)
     }
-    //
 
     pub fn y(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let sig = String::from("()B");
@@ -1212,8 +1163,6 @@ impl<'mc> MapCursor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b()?)
     }
-    //
-
     /// Set the X position of this cursor.
     pub fn set_x(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(B)V");
@@ -1227,8 +1176,6 @@ impl<'mc> MapCursor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
-
     /// Set the Y position of this cursor.
     pub fn set_y(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(B)V");
@@ -1242,7 +1189,6 @@ impl<'mc> MapCursor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn direction(&self) -> Result<i8, Box<dyn std::error::Error>> {
         let sig = String::from("()B");
@@ -1252,8 +1198,6 @@ impl<'mc> MapCursor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b()?)
     }
-    //
-
     /// Set the direction of this cursor.
     pub fn set_direction(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(B)V");
@@ -1267,15 +1211,7 @@ impl<'mc> MapCursor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Deprecated
-
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Magic value
-    /// </div>
-    /// Magic value
-    ///
+    #[deprecated("Magic value ")]
     /// Set the type of this cursor.
     pub fn set_raw_type(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(B)V");
@@ -1289,7 +1225,6 @@ impl<'mc> MapCursor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn caption(&self) -> Result<Option<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1307,7 +1242,6 @@ impl<'mc> MapCursor<'mc> {
                 .to_string(),
         ))
     }
-    //
 
     pub fn set_caption(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -1323,7 +1257,6 @@ impl<'mc> MapCursor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1349,7 +1282,6 @@ impl<'mc> MapCursor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1366,7 +1298,6 @@ impl<'mc> MapCursor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1381,7 +1312,6 @@ impl<'mc> MapCursor<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1391,7 +1321,6 @@ impl<'mc> MapCursor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1401,7 +1330,6 @@ impl<'mc> MapCursor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1411,7 +1339,6 @@ impl<'mc> MapCursor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1495,8 +1422,6 @@ impl<'mc> MapFontCharacterSprite<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::map::MapFontCharacterSprite::from_raw(&jni, res)
     }
-    //
-
     /// Get the value of a pixel of the character.
     pub fn get(&self, arg0: i32, arg1: i32) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(II)Z");
@@ -1514,7 +1439,6 @@ impl<'mc> MapFontCharacterSprite<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn height(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1524,7 +1448,6 @@ impl<'mc> MapFontCharacterSprite<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn width(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1534,7 +1457,6 @@ impl<'mc> MapFontCharacterSprite<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1560,7 +1482,6 @@ impl<'mc> MapFontCharacterSprite<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1577,7 +1498,6 @@ impl<'mc> MapFontCharacterSprite<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1592,7 +1512,6 @@ impl<'mc> MapFontCharacterSprite<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1602,7 +1521,6 @@ impl<'mc> MapFontCharacterSprite<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1612,7 +1530,6 @@ impl<'mc> MapFontCharacterSprite<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1622,7 +1539,6 @@ impl<'mc> MapFontCharacterSprite<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1683,8 +1599,6 @@ impl<'mc> JNIInstantiatable<'mc> for MapCanvas<'mc> {
 }
 
 impl<'mc> MapCanvas<'mc> {
-    //@NotNull
-
     pub fn map_view(&self) -> Result<crate::map::MapView<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/map/MapView;");
         let res =
@@ -1695,7 +1609,6 @@ impl<'mc> MapCanvas<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn cursors(
         &self,
@@ -1709,7 +1622,6 @@ impl<'mc> MapCanvas<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_cursors(
         &self,
@@ -1728,8 +1640,6 @@ impl<'mc> MapCanvas<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
-
     /// Get a pixel from the canvas. If no color is set at the given position for this canvas, then null is returned and the color returned by <a href="#getBasePixelColor(int,int)"><code>getBasePixelColor(int, int)</code></a> is shown on the map.
     pub fn get_pixel_color(
         &self,
@@ -1775,8 +1685,6 @@ impl<'mc> MapCanvas<'mc> {
         let b = self.jni_ref().translate_error(b)?.i()? as u8;
         Ok(Some((r, g, b)))
     }
-    //@NotNull
-
     /// Get a pixel from the layers below this canvas.
     pub fn get_base_pixel_color(
         &self,
@@ -1819,8 +1727,6 @@ impl<'mc> MapCanvas<'mc> {
         let b = self.jni_ref().translate_error(b)?.i()? as u8;
         Ok((r, g, b))
     }
-    //
-
     /// <span class="deprecated-label">Deprecated.</span>
     /// <div class="deprecation-comment">
     /// Magic value, use <a href="#setPixelColor(int,int,java.awt.Color)"><code>setPixelColor(int, int, Color)</code></a>
@@ -1851,19 +1757,8 @@ impl<'mc> MapCanvas<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
-
-    //@Deprecated
-
-    #[deprecated]
-    /// Get a pixel from the canvas. If no color is set at the given position for this canvas, then null is returned and the color returned by <a href="#getBasePixelColor(int,int)"><code>getBasePixelColor(int, int)</code></a> is shown on the map.
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Magic value, use <a href="#getPixelColor(int,int)"><code>getPixelColor(int, int)</code></a>
-    /// </div>
-    /// Magic value, use <a href="#getPixelColor(int,int)"><code>getPixelColor(int, int)</code></a>
-    ///
-    /// Get a pixel from the canvas.
+    #[deprecated("Magic value, use <a href='#getPixelColor(int,int)'><code>getPixelColor(int, int)</code></a> ")]
+    /// Get a pixel from the canvas. If no color is set at the given position for this canvas, then null is returned and the color returned by <a href="#getBasePixelColor(int,int)"><code>getBasePixelColor(int, int)</code></a> is shown on the map. Get a pixel from the canvas.
     pub fn get_pixel(
         &self,
         arg0: i32,
@@ -1884,19 +1779,8 @@ impl<'mc> MapCanvas<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(Some(res.b()?))
     }
-    //@NotNull
-
-    //@Deprecated
-
-    #[deprecated]
-    /// Get a pixel from the layers below this canvas.
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Magic value, use <a href="#getBasePixelColor(int,int)"><code>getBasePixelColor(int, int)</code></a>
-    /// </div>
-    /// Magic value, use <a href="#getBasePixelColor(int,int)"><code>getBasePixelColor(int, int)</code></a>
-    ///
-    /// Get a pixel from the layers below this canvas.
+    #[deprecated("Magic value, use <a href='#getBasePixelColor(int,int)'><code>getBasePixelColor(int, int)</code></a> ")]
+    /// Get a pixel from the layers below this canvas. Get a pixel from the layers below this canvas.
     pub fn get_base_pixel(&self, arg0: i32, arg1: i32) -> Result<i8, Box<dyn std::error::Error>> {
         let sig = String::from("(II)B");
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
@@ -1913,7 +1797,6 @@ impl<'mc> MapCanvas<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b()?)
     }
-    //
 
     pub fn draw_image(
         &self,
@@ -1938,7 +1821,6 @@ impl<'mc> MapCanvas<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn draw_text(
         &self,
@@ -2027,7 +1909,6 @@ impl<'mc> MapRenderer<'mc> {
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
             sig += "Z";
-            // 1
             let val_1 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_1);
         }
@@ -2038,7 +1919,6 @@ impl<'mc> MapRenderer<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::map::MapRenderer::from_raw(&jni, res)
     }
-    //
 
     pub fn initialize(
         &self,
@@ -2057,7 +1937,6 @@ impl<'mc> MapRenderer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_contextual(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2067,7 +1946,6 @@ impl<'mc> MapRenderer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn render(
         &self,
@@ -2100,7 +1978,6 @@ impl<'mc> MapRenderer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -2126,7 +2003,6 @@ impl<'mc> MapRenderer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -2143,7 +2019,6 @@ impl<'mc> MapRenderer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2158,7 +2033,6 @@ impl<'mc> MapRenderer<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2168,7 +2042,6 @@ impl<'mc> MapRenderer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -2178,7 +2051,6 @@ impl<'mc> MapRenderer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2188,7 +2060,6 @@ impl<'mc> MapRenderer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2249,8 +2120,6 @@ impl<'mc> JNIInstantiatable<'mc> for MapView<'mc> {
 }
 
 impl<'mc> MapView<'mc> {
-    //
-
     pub fn set_scale(
         &self,
         arg0: impl Into<crate::map::MapViewScale<'mc>>,
@@ -2268,7 +2137,6 @@ impl<'mc> MapView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn id(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2278,7 +2146,6 @@ impl<'mc> MapView<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_locked(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2288,7 +2155,6 @@ impl<'mc> MapView<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn world(&self) -> Result<crate::World<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World;");
@@ -2300,7 +2166,6 @@ impl<'mc> MapView<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn scale(&self) -> Result<crate::map::MapViewScale<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/map/MapView$Scale;");
@@ -2325,7 +2190,6 @@ impl<'mc> MapView<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_world(
         &self,
@@ -2344,7 +2208,6 @@ impl<'mc> MapView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn center_x(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2354,7 +2217,6 @@ impl<'mc> MapView<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn center_z(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2364,7 +2226,6 @@ impl<'mc> MapView<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_virtual(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2374,8 +2235,6 @@ impl<'mc> MapView<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Set the center X position of this map.
     pub fn set_center_x(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -2389,8 +2248,6 @@ impl<'mc> MapView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
-
     /// Set the center Z position of this map.
     pub fn set_center_z(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -2404,7 +2261,6 @@ impl<'mc> MapView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn renderers(
         &self,
@@ -2423,7 +2279,6 @@ impl<'mc> MapView<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn add_renderer(
         &self,
@@ -2442,7 +2297,6 @@ impl<'mc> MapView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_renderer(
         &self,
@@ -2461,7 +2315,6 @@ impl<'mc> MapView<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_tracking_position(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2474,12 +2327,9 @@ impl<'mc> MapView<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets whether a position cursor should be shown when the map is near its center.
     pub fn set_tracking_position(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2490,7 +2340,6 @@ impl<'mc> MapView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_unlimited_tracking(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2503,12 +2352,9 @@ impl<'mc> MapView<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Whether the map will show a smaller position cursor (true), or no position cursor (false) when cursor is outside of map's range.
     pub fn set_unlimited_tracking(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2519,12 +2365,9 @@ impl<'mc> MapView<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
-
     /// Gets whether the map is locked or not. A locked map may not be explored further.
     pub fn set_locked(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2584,7 +2427,6 @@ impl<'mc> MapFont<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::map::MapFont::from_raw(&jni, res)
     }
-    //
 
     pub fn is_valid(&self, arg0: impl Into<String>) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)Z");
@@ -2600,8 +2442,6 @@ impl<'mc> MapFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Nullable
-
     /// Get the sprite for a given character.
     pub fn get_char(
         &self,
@@ -2624,7 +2464,6 @@ impl<'mc> MapFont<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn set_char(
         &self,
@@ -2648,7 +2487,6 @@ impl<'mc> MapFont<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn height(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2658,7 +2496,6 @@ impl<'mc> MapFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn get_width(&self, arg0: impl Into<String>) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)I");
@@ -2674,7 +2511,6 @@ impl<'mc> MapFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -2700,7 +2536,6 @@ impl<'mc> MapFont<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -2717,7 +2552,6 @@ impl<'mc> MapFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2732,7 +2566,6 @@ impl<'mc> MapFont<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2742,7 +2575,6 @@ impl<'mc> MapFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -2752,7 +2584,6 @@ impl<'mc> MapFont<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2762,7 +2593,6 @@ impl<'mc> MapFont<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2831,8 +2661,6 @@ impl<'mc> JNIInstantiatable<'mc> for MapPaletteMapColorCache<'mc> {
 }
 
 impl<'mc> MapPaletteMapColorCache<'mc> {
-    //
-
     pub fn is_cached(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
@@ -2875,17 +2703,7 @@ impl<'mc> JNIInstantiatable<'mc> for MapPalette<'mc> {
 }
 
 impl<'mc> MapPalette<'mc> {
-    //@Deprecated
-
-    #[deprecated]
-    //@NotNull
-
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Magic value
-    /// </div>
-    /// Magic value
-    ///
+    #[deprecated("Magic value ")]
     /// Get the value of the given color in the palette.
     pub fn get_color(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2925,15 +2743,7 @@ impl<'mc> MapPalette<'mc> {
         let b = jni.translate_error(b)?.i()? as u8;
         Ok((r, g, b))
     }
-    //@Deprecated
-
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Magic value
-    /// </div>
-    /// Magic value
-    ///
+    #[deprecated("Magic value ")]
     /// Get the index of the closest matching color in the palette to the given color.
     pub fn match_color_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2963,7 +2773,6 @@ impl<'mc> MapPalette<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.b()?)
     }
-    //
 
     pub fn resize_image(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2982,9 +2791,6 @@ impl<'mc> MapPalette<'mc> {
         let res = jni.translate_error(res)?;
         Ok(res.l()?)
     }
-    //
-
-    //
 
     pub fn set_map_color_cache(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -3005,7 +2811,6 @@ impl<'mc> MapPalette<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -3031,7 +2836,6 @@ impl<'mc> MapPalette<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -3048,7 +2852,6 @@ impl<'mc> MapPalette<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -3063,7 +2866,6 @@ impl<'mc> MapPalette<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -3073,7 +2875,6 @@ impl<'mc> MapPalette<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -3083,7 +2884,6 @@ impl<'mc> MapPalette<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3093,7 +2893,6 @@ impl<'mc> MapPalette<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");

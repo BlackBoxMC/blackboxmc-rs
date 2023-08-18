@@ -43,8 +43,6 @@ impl<'mc> JNIInstantiatable<'mc> for LootTable<'mc> {
 }
 
 impl<'mc> LootTable<'mc> {
-    //
-
     pub fn populate_loot(
         &self,
         arg0: impl Into<blackboxmc_java::util::JavaRandom<'mc>>,
@@ -77,7 +75,6 @@ impl<'mc> LootTable<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn fill_inventory(
         &self,
@@ -110,7 +107,6 @@ impl<'mc> LootTable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
@@ -980,8 +976,6 @@ impl<'mc> JNIInstantiatable<'mc> for Lootable<'mc> {
 }
 
 impl<'mc> Lootable<'mc> {
-    //
-
     pub fn seed(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
         let res = self
@@ -990,8 +984,6 @@ impl<'mc> Lootable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //
-
     /// Set the seed used when this Loot Table generates loot.
     pub fn set_seed(&self, arg0: i64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(J)V");
@@ -1005,7 +997,6 @@ impl<'mc> Lootable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_loot_table(
         &self,
@@ -1024,7 +1015,6 @@ impl<'mc> Lootable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@Nullable
 
     pub fn loot_table(
         &self,
@@ -1855,8 +1845,6 @@ impl<'mc> LootContextBuilder<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::loot::LootContextBuilder::from_raw(&jni, res)
     }
-    //@NotNull
-
     pub fn build(&self) -> Result<crate::loot::LootContext<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/loot/LootContext;");
         let res = self
@@ -1867,8 +1855,6 @@ impl<'mc> LootContextBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     pub fn luck(
         &self,
         arg0: f32,
@@ -1886,8 +1872,6 @@ impl<'mc> LootContextBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
     pub fn killer(
         &self,
         arg0: impl Into<crate::entity::HumanEntity<'mc>>,
@@ -1908,8 +1892,6 @@ impl<'mc> LootContextBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     pub fn looting_modifier(
         &self,
         arg0: i32,
@@ -1927,8 +1909,6 @@ impl<'mc> LootContextBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
     pub fn looted_entity(
         &self,
         arg0: impl Into<crate::entity::Entity<'mc>>,
@@ -1948,8 +1928,6 @@ impl<'mc> LootContextBuilder<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
-
     pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
@@ -1974,8 +1952,6 @@ impl<'mc> LootContextBuilder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
-
     pub fn equals(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -1991,8 +1967,6 @@ impl<'mc> LootContextBuilder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -2006,8 +1980,6 @@ impl<'mc> LootContextBuilder<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
-
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
@@ -2016,8 +1988,6 @@ impl<'mc> LootContextBuilder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self
@@ -2026,8 +1996,6 @@ impl<'mc> LootContextBuilder<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
-
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
@@ -2036,8 +2004,6 @@ impl<'mc> LootContextBuilder<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
-
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
         let res = self
@@ -2089,8 +2055,6 @@ impl<'mc> JNIInstantiatable<'mc> for LootContext<'mc> {
 }
 
 impl<'mc> LootContext<'mc> {
-    //@NotNull
-
     pub fn location(&self) -> Result<crate::Location<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Location;");
         let res =
@@ -2101,7 +2065,6 @@ impl<'mc> LootContext<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn killer(
         &self,
@@ -2119,7 +2082,6 @@ impl<'mc> LootContext<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn luck(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -2129,7 +2091,6 @@ impl<'mc> LootContext<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn looting_modifier(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2142,7 +2103,6 @@ impl<'mc> LootContext<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Nullable
 
     pub fn looted_entity(
         &self,
@@ -2160,7 +2120,6 @@ impl<'mc> LootContext<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -2186,7 +2145,6 @@ impl<'mc> LootContext<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -2203,7 +2161,6 @@ impl<'mc> LootContext<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2218,7 +2175,6 @@ impl<'mc> LootContext<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2228,7 +2184,6 @@ impl<'mc> LootContext<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -2238,7 +2193,6 @@ impl<'mc> LootContext<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2248,7 +2202,6 @@ impl<'mc> LootContext<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");

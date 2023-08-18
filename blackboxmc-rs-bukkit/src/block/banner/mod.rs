@@ -329,7 +329,6 @@ impl<'mc> Pattern<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::block::banner::Pattern::from_raw(&jni, res)
     }
-    //
 
     pub fn equals(
         &self,
@@ -346,7 +345,6 @@ impl<'mc> Pattern<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -356,7 +354,6 @@ impl<'mc> Pattern<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -370,7 +367,6 @@ impl<'mc> Pattern<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Nullable
 
     pub fn color(&self) -> Result<Option<crate::DyeColor<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/DyeColor;");
@@ -398,9 +394,6 @@ impl<'mc> Pattern<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )?))
     }
-    //@NotNull
-
-    //@NotNull
 
     pub fn pattern(
         &self,
@@ -427,7 +420,6 @@ impl<'mc> Pattern<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -453,7 +445,6 @@ impl<'mc> Pattern<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -468,7 +459,6 @@ impl<'mc> Pattern<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -478,7 +468,6 @@ impl<'mc> Pattern<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -488,7 +477,6 @@ impl<'mc> Pattern<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");

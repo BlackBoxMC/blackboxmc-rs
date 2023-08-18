@@ -43,8 +43,6 @@ impl<'mc> JNIInstantiatable<'mc> for Palette<'mc> {
 }
 
 impl<'mc> Palette<'mc> {
-    //@NotNull
-
     pub fn blocks(&self) -> Result<Vec<crate::block::BlockState<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
         let res = self
@@ -60,7 +58,6 @@ impl<'mc> Palette<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn block_count(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -113,8 +110,6 @@ impl<'mc> JNIInstantiatable<'mc> for StructureManager<'mc> {
 }
 
 impl<'mc> StructureManager<'mc> {
-    //
-
     pub fn copy(
         &self,
         arg0: impl Into<crate::structure::Structure<'mc>>,
@@ -135,7 +130,6 @@ impl<'mc> StructureManager<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_structure(
         &self,
@@ -156,7 +150,6 @@ impl<'mc> StructureManager<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn structures(
         &self,
@@ -170,7 +163,6 @@ impl<'mc> StructureManager<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn register_structure(
         &self,
@@ -198,7 +190,6 @@ impl<'mc> StructureManager<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn load_structure_with_namespaced_key(
         &self,
@@ -214,7 +205,6 @@ impl<'mc> StructureManager<'mc> {
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 2
             let val_2 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_2);
         }
@@ -227,7 +217,6 @@ impl<'mc> StructureManager<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn save_structure_with_namespaced_key(
         &self,
@@ -255,7 +244,6 @@ impl<'mc> StructureManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn delete_structure_with_namespaced_key(
         &self,
@@ -271,7 +259,6 @@ impl<'mc> StructureManager<'mc> {
         args.push(val_1);
         if let Some(a) = arg1 {
             sig += "Z";
-            // 2
             let val_2 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_2);
         }
@@ -282,7 +269,6 @@ impl<'mc> StructureManager<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_structure_file(
         &self,
@@ -301,7 +287,6 @@ impl<'mc> StructureManager<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //@NotNull
 
     pub fn create_structure(
         &self,
@@ -315,7 +300,6 @@ impl<'mc> StructureManager<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn unregister_structure(
         &self,
@@ -379,8 +363,6 @@ impl<'mc> JNIInstantiatable<'mc> for Structure<'mc> {
 }
 
 impl<'mc> Structure<'mc> {
-    //
-
     pub fn fill_with_location(
         &self,
         arg0: impl Into<crate::Location<'mc>>,
@@ -400,7 +382,6 @@ impl<'mc> Structure<'mc> {
         });
         args.push(val_2);
         sig += "Z";
-        // 4
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         args.push(val_3);
         sig += ")V";
@@ -410,7 +391,6 @@ impl<'mc> Structure<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn size(&self) -> Result<crate::util::BlockVector<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/util/BlockVector;");
@@ -422,7 +402,6 @@ impl<'mc> Structure<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn entities(&self) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -439,7 +418,6 @@ impl<'mc> Structure<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn entity_count(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -449,7 +427,6 @@ impl<'mc> Structure<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn palettes(
         &self,
@@ -468,7 +445,6 @@ impl<'mc> Structure<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn palette_count(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -478,7 +454,6 @@ impl<'mc> Structure<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn place_with_region_accessor(
         &self,
@@ -504,7 +479,6 @@ impl<'mc> Structure<'mc> {
         });
         args.push(val_2);
         sig += "Z";
-        // 8
         let val_3 = jni::objects::JValueGen::Bool(arg2.into());
         args.push(val_3);
         sig += "Lorg/bukkit/block/structure/StructureRotation;";
@@ -537,7 +511,6 @@ impl<'mc> Structure<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn persistent_data_container(
         &self,

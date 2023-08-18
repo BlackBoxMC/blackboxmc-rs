@@ -46,8 +46,6 @@ impl<'mc> JNIInstantiatable<'mc> for AdvancementProgress<'mc> {
 }
 
 impl<'mc> AdvancementProgress<'mc> {
-    //
-
     pub fn is_done(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
@@ -56,7 +54,6 @@ impl<'mc> AdvancementProgress<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn advancement(
         &self,
@@ -70,7 +67,6 @@ impl<'mc> AdvancementProgress<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn award_criteria(
         &self,
@@ -89,7 +85,6 @@ impl<'mc> AdvancementProgress<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn revoke_criteria(
         &self,
@@ -108,7 +103,6 @@ impl<'mc> AdvancementProgress<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_date_awarded(
         &self,
@@ -129,7 +123,6 @@ impl<'mc> AdvancementProgress<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn remaining_criteria(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Collection;");
@@ -154,7 +147,6 @@ impl<'mc> AdvancementProgress<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn awarded_criteria(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Collection;");
@@ -336,8 +328,6 @@ impl<'mc> JNIInstantiatable<'mc> for AdvancementDisplay<'mc> {
 }
 
 impl<'mc> AdvancementDisplay<'mc> {
-    //
-
     pub fn is_hidden(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
@@ -346,7 +336,6 @@ impl<'mc> AdvancementDisplay<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn get_type(
         &self,
@@ -373,7 +362,6 @@ impl<'mc> AdvancementDisplay<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn x(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -383,7 +371,6 @@ impl<'mc> AdvancementDisplay<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //
 
     pub fn y(&self) -> Result<f32, Box<dyn std::error::Error>> {
         let sig = String::from("()F");
@@ -393,7 +380,6 @@ impl<'mc> AdvancementDisplay<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    //@NotNull
 
     pub fn description(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -407,7 +393,6 @@ impl<'mc> AdvancementDisplay<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn title(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -421,7 +406,6 @@ impl<'mc> AdvancementDisplay<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn icon(&self) -> Result<crate::inventory::ItemStack<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/inventory/ItemStack;");
@@ -433,7 +417,6 @@ impl<'mc> AdvancementDisplay<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn should_show_toast(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -443,7 +426,6 @@ impl<'mc> AdvancementDisplay<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn should_announce_chat(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -497,8 +479,6 @@ impl<'mc> JNIInstantiatable<'mc> for Advancement<'mc> {
 }
 
 impl<'mc> Advancement<'mc> {
-    //@NotNull
-
     pub fn criteria(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Collection;");
         let res =
@@ -519,7 +499,6 @@ impl<'mc> Advancement<'mc> {
         }
         Ok(new_vec)
     }
-    //@Nullable
 
     pub fn display(
         &self,
@@ -538,7 +517,6 @@ impl<'mc> Advancement<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //@NotNull
 
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");

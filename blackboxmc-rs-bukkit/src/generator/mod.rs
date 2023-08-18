@@ -47,15 +47,7 @@ impl<'mc> JNIInstantiatable<'mc> for ChunkGeneratorChunkData<'mc> {
 }
 
 impl<'mc> ChunkGeneratorChunkData<'mc> {
-    //@Deprecated
-
-    #[deprecated]
-    /// <span class="deprecated-label">Deprecated.</span>
-    /// <div class="deprecation-comment">
-    /// Uses magic values
-    /// </div>
-    /// Uses magic values
-    ///
+    #[deprecated("Uses magic values ")]
     /// Get the block data at x,y,z in the chunk data. Getting blocks outside the chunk's bounds returns 0.
     pub fn get_data(
         &self,
@@ -80,10 +72,6 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b()?)
     }
-    //@NotNull
-
-    //@NotNull
-
     /// Get the type of the block at x, y, z. Getting blocks outside the chunk's bounds returns air.
     /// Get the type and data of the block at x, y, z. Getting blocks outside the chunk's bounds returns air.
     pub fn get_type(
@@ -124,8 +112,6 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
-
     /// Get the type and data of the block at x, y, z. Getting blocks outside the chunk's bounds returns air.
     pub fn get_block_data(
         &self,
@@ -152,8 +138,6 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     /// Get the biome at x, y, z within chunk being generated
     pub fn get_biome(
         &self,
@@ -193,7 +177,6 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_block_with_int(
         &self,
@@ -225,7 +208,6 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn set_region_with_int(
         &self,
@@ -269,8 +251,6 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
     /// Get the type and data of the block at x, y, z. Getting blocks outside the chunk's bounds returns air.
     pub fn get_type_and_data(
         &self,
@@ -297,7 +277,6 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn min_height(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -307,7 +286,6 @@ impl<'mc> ChunkGeneratorChunkData<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn max_height(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -376,7 +354,6 @@ impl<'mc> BiomeProvider<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::generator::BiomeProvider::from_raw(&jni, res)
     }
-    //
 
     pub fn get_biome_with_world_info(
         &self,
@@ -431,7 +408,6 @@ impl<'mc> BiomeProvider<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn get_biomes(
         &self,
@@ -471,7 +447,6 @@ impl<'mc> BiomeProvider<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -497,7 +472,6 @@ impl<'mc> BiomeProvider<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -514,7 +488,6 @@ impl<'mc> BiomeProvider<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -529,7 +502,6 @@ impl<'mc> BiomeProvider<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -539,7 +511,6 @@ impl<'mc> BiomeProvider<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -549,7 +520,6 @@ impl<'mc> BiomeProvider<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -559,7 +529,6 @@ impl<'mc> BiomeProvider<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -625,8 +594,6 @@ impl<'mc> JNIInstantiatable<'mc> for ChunkGeneratorBiomeGrid<'mc> {
 }
 
 impl<'mc> ChunkGeneratorBiomeGrid<'mc> {
-    //@NotNull
-
     /// <span class="deprecated-label">Deprecated.</span>
     /// Get biome at x, z within chunk being generated
     pub fn get_biome_with_int(
@@ -670,7 +637,6 @@ impl<'mc> ChunkGeneratorBiomeGrid<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_biome_with_int(
         &self,
@@ -747,8 +713,6 @@ impl<'mc> JNIInstantiatable<'mc> for BiomeParameterPoint<'mc> {
 }
 
 impl<'mc> BiomeParameterPoint<'mc> {
-    //
-
     pub fn min_erosion(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
         let res =
@@ -757,7 +721,6 @@ impl<'mc> BiomeParameterPoint<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn temperature(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -767,7 +730,6 @@ impl<'mc> BiomeParameterPoint<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn max_temperature(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -780,7 +742,6 @@ impl<'mc> BiomeParameterPoint<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn min_temperature(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -793,7 +754,6 @@ impl<'mc> BiomeParameterPoint<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn humidity(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -803,7 +763,6 @@ impl<'mc> BiomeParameterPoint<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn max_humidity(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -813,7 +772,6 @@ impl<'mc> BiomeParameterPoint<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn min_humidity(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -823,7 +781,6 @@ impl<'mc> BiomeParameterPoint<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn continentalness(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -836,7 +793,6 @@ impl<'mc> BiomeParameterPoint<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn max_continentalness(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -849,7 +805,6 @@ impl<'mc> BiomeParameterPoint<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn min_continentalness(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -862,7 +817,6 @@ impl<'mc> BiomeParameterPoint<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn erosion(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -872,7 +826,6 @@ impl<'mc> BiomeParameterPoint<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn max_erosion(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -882,7 +835,6 @@ impl<'mc> BiomeParameterPoint<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn depth(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -892,7 +844,6 @@ impl<'mc> BiomeParameterPoint<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn max_depth(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -902,7 +853,6 @@ impl<'mc> BiomeParameterPoint<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn min_depth(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -912,7 +862,6 @@ impl<'mc> BiomeParameterPoint<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn weirdness(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -922,7 +871,6 @@ impl<'mc> BiomeParameterPoint<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn max_weirdness(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -932,7 +880,6 @@ impl<'mc> BiomeParameterPoint<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn min_weirdness(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -1006,7 +953,6 @@ impl<'mc> BlockPopulator<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::generator::BlockPopulator::from_raw(&jni, res)
     }
-    //
 
     pub fn populate_with_world_info(
         &self,
@@ -1050,7 +996,6 @@ impl<'mc> BlockPopulator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1076,7 +1021,6 @@ impl<'mc> BlockPopulator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1093,7 +1037,6 @@ impl<'mc> BlockPopulator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1108,7 +1051,6 @@ impl<'mc> BlockPopulator<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1118,7 +1060,6 @@ impl<'mc> BlockPopulator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1128,7 +1069,6 @@ impl<'mc> BlockPopulator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1138,7 +1078,6 @@ impl<'mc> BlockPopulator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1199,8 +1138,6 @@ impl<'mc> JNIInstantiatable<'mc> for LimitedRegion<'mc> {
 }
 
 impl<'mc> LimitedRegion<'mc> {
-    //
-
     pub fn buffer(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
@@ -1209,8 +1146,6 @@ impl<'mc> LimitedRegion<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Checks if the given coordinates are in the region.
     pub fn is_in_region_with_int(
         &self,
@@ -1240,7 +1175,6 @@ impl<'mc> LimitedRegion<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn tile_entities(
         &self,
@@ -1259,9 +1193,6 @@ impl<'mc> LimitedRegion<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
-
-    //@NotNull
 
     pub fn get_type_with_int(
         &self,
@@ -1306,7 +1237,6 @@ impl<'mc> LimitedRegion<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_type_with_int(
         &self,
@@ -1342,7 +1272,6 @@ impl<'mc> LimitedRegion<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn get_block_data_with_int(
         &self,
@@ -1374,7 +1303,6 @@ impl<'mc> LimitedRegion<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_block_data_with_int(
         &self,
@@ -1410,7 +1338,6 @@ impl<'mc> LimitedRegion<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_highest_block_yat_with_int(
         &self,
@@ -1445,7 +1372,6 @@ impl<'mc> LimitedRegion<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn get_biome_with_int(
         &self,
@@ -1490,7 +1416,6 @@ impl<'mc> LimitedRegion<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_biome_with_int(
         &self,
@@ -1526,7 +1451,6 @@ impl<'mc> LimitedRegion<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn get_block_state_with_int(
         &self,
@@ -1558,7 +1482,6 @@ impl<'mc> LimitedRegion<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn generate_tree_with_location(
         &self,
@@ -1598,7 +1521,6 @@ impl<'mc> LimitedRegion<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn spawn_entity_with_location(
         &self,
@@ -1620,7 +1542,6 @@ impl<'mc> LimitedRegion<'mc> {
         args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Z";
-            // 3
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -1633,7 +1554,6 @@ impl<'mc> LimitedRegion<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn entities(&self) -> Result<Vec<crate::entity::Entity<'mc>>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/List;");
@@ -1650,7 +1570,6 @@ impl<'mc> LimitedRegion<'mc> {
         }
         Ok(new_vec)
     }
-    //@NotNull
 
     pub fn living_entities(
         &self,
@@ -1672,7 +1591,6 @@ impl<'mc> LimitedRegion<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn get_entities_by_class(
         &self,
@@ -1696,7 +1614,6 @@ impl<'mc> LimitedRegion<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn get_entities_by_classes(
         &self,
@@ -1719,7 +1636,6 @@ impl<'mc> LimitedRegion<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn spawn_with_location(
         &self,
@@ -1740,7 +1656,6 @@ impl<'mc> LimitedRegion<'mc> {
         args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Z";
-            // 3
             let val_3 = jni::objects::JValueGen::Bool(a.into());
             args.push(val_3);
         }
@@ -1807,8 +1722,6 @@ impl<'mc> JNIInstantiatable<'mc> for WorldInfo<'mc> {
 }
 
 impl<'mc> WorldInfo<'mc> {
-    //
-
     pub fn seed(&self) -> Result<i64, Box<dyn std::error::Error>> {
         let sig = String::from("()J");
         let res = self
@@ -1817,7 +1730,6 @@ impl<'mc> WorldInfo<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -1831,7 +1743,6 @@ impl<'mc> WorldInfo<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn uid(&self) -> Result<blackboxmc_java::util::JavaUUID<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/UUID;");
@@ -1843,7 +1754,6 @@ impl<'mc> WorldInfo<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn environment(&self) -> Result<crate::WorldEnvironment<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/World$Environment;");
@@ -1868,7 +1778,6 @@ impl<'mc> WorldInfo<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn min_height(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1878,7 +1787,6 @@ impl<'mc> WorldInfo<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn max_height(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1963,7 +1871,6 @@ impl<'mc> ChunkGenerator<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::generator::ChunkGenerator::from_raw(&jni, res)
     }
-    //
 
     pub fn generate_noise(
         &self,
@@ -2000,7 +1907,6 @@ impl<'mc> ChunkGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn generate_surface(
         &self,
@@ -2037,7 +1943,6 @@ impl<'mc> ChunkGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn generate_bedrock(
         &self,
@@ -2074,7 +1979,6 @@ impl<'mc> ChunkGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn generate_caves(
         &self,
@@ -2111,7 +2015,6 @@ impl<'mc> ChunkGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_default_biome_provider(
         &self,
@@ -2133,7 +2036,6 @@ impl<'mc> ChunkGenerator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_base_height(
         &self,
@@ -2172,7 +2074,6 @@ impl<'mc> ChunkGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn generate_chunk_data(
         &self,
@@ -2211,7 +2112,6 @@ impl<'mc> ChunkGenerator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn can_spawn(
         &self,
@@ -2238,7 +2138,6 @@ impl<'mc> ChunkGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn get_default_populators(
         &self,
@@ -2264,7 +2163,6 @@ impl<'mc> ChunkGenerator<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn get_fixed_spawn_location(
         &self,
@@ -2292,8 +2190,6 @@ impl<'mc> ChunkGenerator<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn is_parallel_capable(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2307,7 +2203,6 @@ impl<'mc> ChunkGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn should_generate_noise_with_world_info(
         &self,
@@ -2352,7 +2247,6 @@ impl<'mc> ChunkGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn should_generate_surface_with_world_info(
         &self,
@@ -2397,8 +2291,6 @@ impl<'mc> ChunkGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn should_generate_bedrock(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2412,7 +2304,6 @@ impl<'mc> ChunkGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn should_generate_caves_with_world_info(
         &self,
@@ -2457,7 +2348,6 @@ impl<'mc> ChunkGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn should_generate_decorations_with_world_info(
         &self,
@@ -2502,7 +2392,6 @@ impl<'mc> ChunkGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn should_generate_mobs_with_world_info(
         &self,
@@ -2547,7 +2436,6 @@ impl<'mc> ChunkGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn should_generate_structures_with_world_info(
         &self,
@@ -2592,7 +2480,6 @@ impl<'mc> ChunkGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -2618,7 +2505,6 @@ impl<'mc> ChunkGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -2635,7 +2521,6 @@ impl<'mc> ChunkGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2650,7 +2535,6 @@ impl<'mc> ChunkGenerator<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2660,7 +2544,6 @@ impl<'mc> ChunkGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -2670,7 +2553,6 @@ impl<'mc> ChunkGenerator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2680,7 +2562,6 @@ impl<'mc> ChunkGenerator<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");

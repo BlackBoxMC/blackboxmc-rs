@@ -66,7 +66,6 @@ impl<'mc> ArmorTrim<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::inventory::meta::trim::ArmorTrim::from_raw(&jni, res)
     }
-    //
 
     pub fn equals(
         &self,
@@ -83,7 +82,6 @@ impl<'mc> ArmorTrim<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -93,7 +91,6 @@ impl<'mc> ArmorTrim<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn material(
         &self,
@@ -107,9 +104,6 @@ impl<'mc> ArmorTrim<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
-    //@NotNull
 
     pub fn pattern(
         &self,
@@ -123,7 +117,6 @@ impl<'mc> ArmorTrim<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -149,7 +142,6 @@ impl<'mc> ArmorTrim<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -164,7 +156,6 @@ impl<'mc> ArmorTrim<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -174,7 +165,6 @@ impl<'mc> ArmorTrim<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -184,7 +174,6 @@ impl<'mc> ArmorTrim<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -246,8 +235,6 @@ impl<'mc> JNIInstantiatable<'mc> for TrimMaterial<'mc> {
 }
 
 impl<'mc> TrimMaterial<'mc> {
-    //@NotNull
-
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self
@@ -306,8 +293,6 @@ impl<'mc> JNIInstantiatable<'mc> for TrimPattern<'mc> {
 }
 
 impl<'mc> TrimPattern<'mc> {
-    //@NotNull
-
     pub fn key(&self) -> Result<crate::NamespacedKey<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/NamespacedKey;");
         let res = self

@@ -51,7 +51,6 @@ impl<'mc> NumericPrompt<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::NumericPrompt::from_raw(&jni, res)
     }
-    //
 
     pub fn blocks_for_input(
         &self,
@@ -70,7 +69,6 @@ impl<'mc> NumericPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn accept_input(
         &self,
@@ -98,7 +96,6 @@ impl<'mc> NumericPrompt<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -124,7 +121,6 @@ impl<'mc> NumericPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -141,7 +137,6 @@ impl<'mc> NumericPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -156,7 +151,6 @@ impl<'mc> NumericPrompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -166,7 +160,6 @@ impl<'mc> NumericPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -176,7 +169,6 @@ impl<'mc> NumericPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -186,7 +178,6 @@ impl<'mc> NumericPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -196,7 +187,6 @@ impl<'mc> NumericPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_prompt_text(
         &self,
@@ -290,7 +280,6 @@ impl<'mc> ConversationPrefix<'mc> {
         let obj = unsafe { plugin.new_extendable(address, "ConversationPrefix", name, lib_name) }?;
         Self::from_raw(env, obj)
     }
-    //
 
     pub fn get_prefix(
         &self,
@@ -375,7 +364,6 @@ impl<'mc> ConversationFactory<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::ConversationFactory::from_raw(&jni, res)
     }
-    //
 
     pub fn with_prefix(
         &self,
@@ -396,8 +384,6 @@ impl<'mc> ConversationFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     /// Sets the modality of all <a title="class in org.bukkit.conversations" href="Conversation.html"><code>Conversation</code></a>s created by this factory. If a conversation is modal, all messages directed to the player are suppressed for the duration of the conversation.
     /// <p>The default is True.</p>
     pub fn with_modality(
@@ -405,7 +391,6 @@ impl<'mc> ConversationFactory<'mc> {
         arg0: bool,
     ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Lorg/bukkit/conversations/ConversationFactory;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -418,15 +403,12 @@ impl<'mc> ConversationFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     /// Sets the local echo status for all <a href="Conversation.html" title="class in org.bukkit.conversations"><code>Conversation</code></a>s created by this factory. If local echo is enabled, any text submitted to a conversation gets echoed back into the submitter's chat window.
     pub fn with_local_echo(
         &self,
         arg0: bool,
     ) -> Result<crate::conversations::ConversationFactory<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Lorg/bukkit/conversations/ConversationFactory;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -439,8 +421,6 @@ impl<'mc> ConversationFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
-
     /// Sets the number of inactive seconds to wait before automatically abandoning all generated conversations.
     /// <p>The default is 600 seconds (5 minutes).</p>
     pub fn with_timeout(
@@ -460,7 +440,6 @@ impl<'mc> ConversationFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn with_conversation_canceller(
         &self,
@@ -481,7 +460,6 @@ impl<'mc> ConversationFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn with_first_prompt(
         &self,
@@ -504,7 +482,6 @@ impl<'mc> ConversationFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn with_initial_session_data(
         &self,
@@ -525,7 +502,6 @@ impl<'mc> ConversationFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn with_escape_sequence(
         &self,
@@ -547,7 +523,6 @@ impl<'mc> ConversationFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn that_excludes_non_players_with_message(
         &self,
@@ -569,7 +544,6 @@ impl<'mc> ConversationFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_conversation_abandoned_listener(
         &self,
@@ -590,7 +564,6 @@ impl<'mc> ConversationFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn build_conversation(
         &self,
@@ -613,7 +586,6 @@ impl<'mc> ConversationFactory<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -639,7 +611,6 @@ impl<'mc> ConversationFactory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -656,7 +627,6 @@ impl<'mc> ConversationFactory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -671,7 +641,6 @@ impl<'mc> ConversationFactory<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -681,7 +650,6 @@ impl<'mc> ConversationFactory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -691,7 +659,6 @@ impl<'mc> ConversationFactory<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -701,7 +668,6 @@ impl<'mc> ConversationFactory<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -792,7 +758,6 @@ impl<'mc> InactivityConversationCanceller<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::InactivityConversationCanceller::from_raw(&jni, res)
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -804,7 +769,6 @@ impl<'mc> InactivityConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn set_conversation(
         &self,
@@ -823,7 +787,6 @@ impl<'mc> InactivityConversationCanceller<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn cancel_based_on_input(
         &self,
@@ -850,7 +813,6 @@ impl<'mc> InactivityConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -876,7 +838,6 @@ impl<'mc> InactivityConversationCanceller<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -893,7 +854,6 @@ impl<'mc> InactivityConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -908,7 +868,6 @@ impl<'mc> InactivityConversationCanceller<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -918,7 +877,6 @@ impl<'mc> InactivityConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -928,7 +886,6 @@ impl<'mc> InactivityConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -938,7 +895,6 @@ impl<'mc> InactivityConversationCanceller<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1034,7 +990,6 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::ExactMatchConversationCanceller::from_raw(&jni, res)
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1046,7 +1001,6 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn set_conversation(
         &self,
@@ -1065,7 +1019,6 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn cancel_based_on_input(
         &self,
@@ -1092,7 +1045,6 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1118,7 +1070,6 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1135,7 +1086,6 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1150,7 +1100,6 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1160,7 +1109,6 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1170,7 +1118,6 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1180,7 +1127,6 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1251,8 +1197,6 @@ impl<'mc> JNIInstantiatable<'mc> for Conversable<'mc> {
 }
 
 impl<'mc> Conversable<'mc> {
-    //
-
     pub fn is_conversing(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
@@ -1261,7 +1205,6 @@ impl<'mc> Conversable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn accept_conversation_input(
         &self,
@@ -1280,7 +1223,6 @@ impl<'mc> Conversable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn begin_conversation(
         &self,
@@ -1299,7 +1241,6 @@ impl<'mc> Conversable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn abandon_conversation_with_conversation(
         &self,
@@ -1330,7 +1271,6 @@ impl<'mc> Conversable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn send_raw_message_with_uuid(
         &self,
@@ -1486,8 +1426,6 @@ impl<'mc> ConversationConversationState<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-
-    //
 }
 
 impl<'mc> JNIRaw<'mc> for Conversation<'mc> {
@@ -1560,7 +1498,6 @@ impl<'mc> Conversation<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::Conversation::from_raw(&jni, res)
     }
-    //
 
     pub fn begin(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1570,7 +1507,6 @@ impl<'mc> Conversation<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn context(
         &self,
@@ -1584,7 +1520,6 @@ impl<'mc> Conversation<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn state(
         &self,
@@ -1612,7 +1547,6 @@ impl<'mc> Conversation<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@Nullable
 
     pub fn prefix(
         &self,
@@ -1631,7 +1565,6 @@ impl<'mc> Conversation<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn accept_input(&self, arg0: impl Into<String>) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Ljava/lang/String;)V");
@@ -1647,7 +1580,6 @@ impl<'mc> Conversation<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_modal(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1657,7 +1589,6 @@ impl<'mc> Conversation<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn add_conversation_abandoned_listener(
         &self,
@@ -1676,12 +1607,9 @@ impl<'mc> Conversation<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
-
     /// Sets the status of local echo for this conversation. If local echo is enabled, any text submitted to a conversation gets echoed back into the submitter's chat window.
     pub fn set_local_echo_enabled(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1692,7 +1620,6 @@ impl<'mc> Conversation<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn for_whom(
         &self,
@@ -1706,7 +1633,6 @@ impl<'mc> Conversation<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn abandon_with_conversation_abandoned_event(
         &self,
@@ -1728,7 +1654,6 @@ impl<'mc> Conversation<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_local_echo_enabled(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1741,7 +1666,6 @@ impl<'mc> Conversation<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn cancellers(
         &self,
@@ -1763,7 +1687,6 @@ impl<'mc> Conversation<'mc> {
         }
         Ok(new_vec)
     }
-    //
 
     pub fn output_next_prompt(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1776,7 +1699,6 @@ impl<'mc> Conversation<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_conversation_abandoned_listener(
         &self,
@@ -1795,7 +1717,6 @@ impl<'mc> Conversation<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1821,7 +1742,6 @@ impl<'mc> Conversation<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1838,7 +1758,6 @@ impl<'mc> Conversation<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1853,7 +1772,6 @@ impl<'mc> Conversation<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1863,7 +1781,6 @@ impl<'mc> Conversation<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1873,7 +1790,6 @@ impl<'mc> Conversation<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1883,7 +1799,6 @@ impl<'mc> Conversation<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1949,8 +1864,6 @@ impl<'mc> JNIInstantiatable<'mc> for ConversationAbandonedListener<'mc> {
 }
 
 impl<'mc> ConversationAbandonedListener<'mc> {
-    //
-
     pub fn conversation_abandoned(
         &self,
         arg0: impl Into<crate::conversations::ConversationAbandonedEvent<'mc>>,
@@ -2139,7 +2052,6 @@ impl<'mc> ValidatingPrompt<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::ValidatingPrompt::from_raw(&jni, res)
     }
-    //
 
     pub fn blocks_for_input(
         &self,
@@ -2158,7 +2070,6 @@ impl<'mc> ValidatingPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn accept_input(
         &self,
@@ -2186,7 +2097,6 @@ impl<'mc> ValidatingPrompt<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -2212,7 +2122,6 @@ impl<'mc> ValidatingPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -2229,7 +2138,6 @@ impl<'mc> ValidatingPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2244,7 +2152,6 @@ impl<'mc> ValidatingPrompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2254,7 +2161,6 @@ impl<'mc> ValidatingPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -2264,7 +2170,6 @@ impl<'mc> ValidatingPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2274,7 +2179,6 @@ impl<'mc> ValidatingPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2284,7 +2188,6 @@ impl<'mc> ValidatingPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_prompt_text(
         &self,
@@ -2381,7 +2284,6 @@ impl<'mc> RegexPrompt<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::RegexPrompt::from_raw(&jni, res)
     }
-    //
 
     pub fn blocks_for_input(
         &self,
@@ -2400,7 +2302,6 @@ impl<'mc> RegexPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn accept_input(
         &self,
@@ -2428,7 +2329,6 @@ impl<'mc> RegexPrompt<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -2454,7 +2354,6 @@ impl<'mc> RegexPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -2471,7 +2370,6 @@ impl<'mc> RegexPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2486,7 +2384,6 @@ impl<'mc> RegexPrompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2496,7 +2393,6 @@ impl<'mc> RegexPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -2506,7 +2402,6 @@ impl<'mc> RegexPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2516,7 +2411,6 @@ impl<'mc> RegexPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2526,7 +2420,6 @@ impl<'mc> RegexPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_prompt_text(
         &self,
@@ -2624,7 +2517,6 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::ManuallyAbandonedConversationCanceller::from_raw(&jni, res)
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2636,7 +2528,6 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn set_conversation(
         &self,
@@ -2655,7 +2546,6 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn cancel_based_on_input(
         &self,
@@ -2682,7 +2572,6 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -2708,7 +2597,6 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -2725,7 +2613,6 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2740,7 +2627,6 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2750,7 +2636,6 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -2760,7 +2645,6 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2770,7 +2654,6 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2849,7 +2732,6 @@ impl<'mc> StringPrompt<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::StringPrompt::from_raw(&jni, res)
     }
-    //
 
     pub fn blocks_for_input(
         &self,
@@ -2868,7 +2750,6 @@ impl<'mc> StringPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -2894,7 +2775,6 @@ impl<'mc> StringPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -2911,7 +2791,6 @@ impl<'mc> StringPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -2926,7 +2805,6 @@ impl<'mc> StringPrompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2936,7 +2814,6 @@ impl<'mc> StringPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -2946,7 +2823,6 @@ impl<'mc> StringPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2956,7 +2832,6 @@ impl<'mc> StringPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -2966,7 +2841,6 @@ impl<'mc> StringPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_prompt_text(
         &self,
@@ -2990,7 +2864,6 @@ impl<'mc> StringPrompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn accept_input(
         &self,
@@ -3114,7 +2987,6 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::PluginNameConversationPrefix::from_raw(&jni, res)
     }
-    //
 
     pub fn get_prefix(
         &self,
@@ -3138,7 +3010,6 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -3164,7 +3035,6 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -3181,7 +3051,6 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -3196,7 +3065,6 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -3206,7 +3074,6 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -3216,7 +3083,6 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3226,7 +3092,6 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3312,7 +3177,6 @@ impl<'mc> ConversationCanceller<'mc> {
             unsafe { plugin.new_extendable(address, "ConversationCanceller", name, lib_name) }?;
         Self::from_raw(env, obj)
     }
-    //@NotNull
 
     pub fn clone(
         &self,
@@ -3328,7 +3192,6 @@ impl<'mc> ConversationCanceller<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_conversation(
         &self,
@@ -3347,7 +3210,6 @@ impl<'mc> ConversationCanceller<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn cancel_based_on_input(
         &self,
@@ -3426,7 +3288,6 @@ impl<'mc> FixedSetPrompt<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::FixedSetPrompt::from_raw(&jni, res)
     }
-    //
 
     pub fn blocks_for_input(
         &self,
@@ -3445,7 +3306,6 @@ impl<'mc> FixedSetPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn accept_input(
         &self,
@@ -3473,7 +3333,6 @@ impl<'mc> FixedSetPrompt<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -3499,7 +3358,6 @@ impl<'mc> FixedSetPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -3516,7 +3374,6 @@ impl<'mc> FixedSetPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -3531,7 +3388,6 @@ impl<'mc> FixedSetPrompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -3541,7 +3397,6 @@ impl<'mc> FixedSetPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -3551,7 +3406,6 @@ impl<'mc> FixedSetPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3561,7 +3415,6 @@ impl<'mc> FixedSetPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3571,7 +3424,6 @@ impl<'mc> FixedSetPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_prompt_text(
         &self,
@@ -3664,7 +3516,6 @@ impl<'mc> NullConversationPrefix<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::NullConversationPrefix::from_raw(&jni, res)
     }
-    //
 
     pub fn get_prefix(
         &self,
@@ -3688,7 +3539,6 @@ impl<'mc> NullConversationPrefix<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -3714,7 +3564,6 @@ impl<'mc> NullConversationPrefix<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -3731,7 +3580,6 @@ impl<'mc> NullConversationPrefix<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -3746,7 +3594,6 @@ impl<'mc> NullConversationPrefix<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -3756,7 +3603,6 @@ impl<'mc> NullConversationPrefix<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -3766,7 +3612,6 @@ impl<'mc> NullConversationPrefix<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3776,7 +3621,6 @@ impl<'mc> NullConversationPrefix<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -3854,7 +3698,6 @@ impl<'mc> Prompt<'mc> {
         let obj = unsafe { plugin.new_extendable(address, "Prompt", name, lib_name) }?;
         Self::from_raw(env, obj)
     }
-    //
 
     pub fn get_prompt_text(
         &self,
@@ -3878,7 +3721,6 @@ impl<'mc> Prompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn blocks_for_input(
         &self,
@@ -3897,7 +3739,6 @@ impl<'mc> Prompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn accept_input(
         &self,
@@ -3995,7 +3836,6 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::ConversationAbandonedEvent::from_raw(&jni, res)
     }
-    //@Nullable
 
     pub fn canceller(
         &self,
@@ -4014,7 +3854,6 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )?))
     }
-    //
 
     pub fn graceful_exit(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4024,7 +3863,6 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn context(
         &self,
@@ -4038,7 +3876,6 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn source(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
@@ -4048,7 +3885,6 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -4063,7 +3899,6 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -4089,7 +3924,6 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -4106,7 +3940,6 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4116,7 +3949,6 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -4126,7 +3958,6 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -4136,7 +3967,6 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -4230,7 +4060,6 @@ impl<'mc> ConversationContext<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::ConversationContext::from_raw(&jni, res)
     }
-    //@NotNull
 
     pub fn plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
@@ -4242,7 +4071,6 @@ impl<'mc> ConversationContext<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn for_whom(
         &self,
@@ -4256,7 +4084,6 @@ impl<'mc> ConversationContext<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn all_session_data(
         &self,
@@ -4273,7 +4100,6 @@ impl<'mc> ConversationContext<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_session_data(
         &self,
@@ -4290,7 +4116,6 @@ impl<'mc> ConversationContext<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn set_session_data(
         &self,
@@ -4312,7 +4137,6 @@ impl<'mc> ConversationContext<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -4338,7 +4162,6 @@ impl<'mc> ConversationContext<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -4355,7 +4178,6 @@ impl<'mc> ConversationContext<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -4370,7 +4192,6 @@ impl<'mc> ConversationContext<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4380,7 +4201,6 @@ impl<'mc> ConversationContext<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -4390,7 +4210,6 @@ impl<'mc> ConversationContext<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -4400,7 +4219,6 @@ impl<'mc> ConversationContext<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -4479,7 +4297,6 @@ impl<'mc> PlayerNamePrompt<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::PlayerNamePrompt::from_raw(&jni, res)
     }
-    //
 
     pub fn blocks_for_input(
         &self,
@@ -4498,7 +4315,6 @@ impl<'mc> PlayerNamePrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn accept_input(
         &self,
@@ -4526,7 +4342,6 @@ impl<'mc> PlayerNamePrompt<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -4552,7 +4367,6 @@ impl<'mc> PlayerNamePrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -4569,7 +4383,6 @@ impl<'mc> PlayerNamePrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -4584,7 +4397,6 @@ impl<'mc> PlayerNamePrompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4594,7 +4406,6 @@ impl<'mc> PlayerNamePrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -4604,7 +4415,6 @@ impl<'mc> PlayerNamePrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -4614,7 +4424,6 @@ impl<'mc> PlayerNamePrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -4624,7 +4433,6 @@ impl<'mc> PlayerNamePrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_prompt_text(
         &self,
@@ -4713,7 +4521,6 @@ impl<'mc> BooleanPrompt<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::BooleanPrompt::from_raw(&jni, res)
     }
-    //
 
     pub fn blocks_for_input(
         &self,
@@ -4732,7 +4539,6 @@ impl<'mc> BooleanPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn accept_input(
         &self,
@@ -4760,7 +4566,6 @@ impl<'mc> BooleanPrompt<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -4786,7 +4591,6 @@ impl<'mc> BooleanPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -4803,7 +4607,6 @@ impl<'mc> BooleanPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -4818,7 +4621,6 @@ impl<'mc> BooleanPrompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4828,7 +4630,6 @@ impl<'mc> BooleanPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -4838,7 +4639,6 @@ impl<'mc> BooleanPrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -4848,7 +4648,6 @@ impl<'mc> BooleanPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -4858,7 +4657,6 @@ impl<'mc> BooleanPrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_prompt_text(
         &self,
@@ -4947,7 +4745,6 @@ impl<'mc> MessagePrompt<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::conversations::MessagePrompt::from_raw(&jni, res)
     }
-    //
 
     pub fn blocks_for_input(
         &self,
@@ -4966,7 +4763,6 @@ impl<'mc> MessagePrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn accept_input(
         &self,
@@ -4994,7 +4790,6 @@ impl<'mc> MessagePrompt<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -5020,7 +4815,6 @@ impl<'mc> MessagePrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -5037,7 +4831,6 @@ impl<'mc> MessagePrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -5052,7 +4845,6 @@ impl<'mc> MessagePrompt<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -5062,7 +4854,6 @@ impl<'mc> MessagePrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -5072,7 +4863,6 @@ impl<'mc> MessagePrompt<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -5082,7 +4872,6 @@ impl<'mc> MessagePrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -5092,7 +4881,6 @@ impl<'mc> MessagePrompt<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_prompt_text(
         &self,

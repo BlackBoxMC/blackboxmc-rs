@@ -157,8 +157,6 @@ impl<'mc> JNIInstantiatable<'mc> for PluginMessageListener<'mc> {
 }
 
 impl<'mc> PluginMessageListener<'mc> {
-    //
-
     pub fn on_plugin_message_received(
         &self,
         arg0: impl Into<String>,
@@ -267,7 +265,6 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::plugin::messaging::PluginMessageListenerRegistration::from_raw(&jni, res)
     }
-    //
 
     pub fn is_valid(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -277,7 +274,6 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn equals(
         &self,
@@ -294,7 +290,6 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -304,7 +299,6 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn channel(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -318,7 +312,6 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn listener(
         &self,
@@ -333,7 +326,6 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn plugin(&self) -> Result<crate::plugin::Plugin<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/plugin/Plugin;");
@@ -345,7 +337,6 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -371,7 +362,6 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -386,7 +376,6 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -396,7 +385,6 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -406,7 +394,6 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -470,8 +457,6 @@ impl<'mc> JNIInstantiatable<'mc> for Messenger<'mc> {
 }
 
 impl<'mc> Messenger<'mc> {
-    //
-
     pub fn is_reserved_channel(
         &self,
         arg0: impl Into<String>,
@@ -489,7 +474,6 @@ impl<'mc> Messenger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn register_outgoing_plugin_channel(
         &self,
@@ -515,7 +499,6 @@ impl<'mc> Messenger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn unregister_outgoing_plugin_channel_with_plugin(
         &self,
@@ -546,7 +529,6 @@ impl<'mc> Messenger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn register_incoming_plugin_channel(
         &self,
@@ -583,7 +565,6 @@ impl<'mc> Messenger<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
-    //
 
     pub fn unregister_incoming_plugin_channel_with_plugin(
         &self,
@@ -622,7 +603,6 @@ impl<'mc> Messenger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn outgoing_channels(
         &self,
@@ -639,7 +619,6 @@ impl<'mc> Messenger<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn incoming_channels(
         &self,
@@ -656,7 +635,6 @@ impl<'mc> Messenger<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_incoming_channel_registrations_with_plugin(
         &self,
@@ -689,7 +667,6 @@ impl<'mc> Messenger<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_registration_valid(
         &self,
@@ -709,7 +686,6 @@ impl<'mc> Messenger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_incoming_channel_registered(
         &self,
@@ -735,7 +711,6 @@ impl<'mc> Messenger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_outgoing_channel_registered(
         &self,
@@ -761,7 +736,6 @@ impl<'mc> Messenger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn dispatch_incoming_message(
         &self,
@@ -840,7 +814,6 @@ impl<'mc> StandardMessenger<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::plugin::messaging::StandardMessenger::from_raw(&jni, res)
     }
-    //
 
     pub fn validate_and_correct_channel(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -864,7 +837,6 @@ impl<'mc> StandardMessenger<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn is_reserved_channel(
         &self,
@@ -883,7 +855,6 @@ impl<'mc> StandardMessenger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn register_outgoing_plugin_channel(
         &self,
@@ -909,7 +880,6 @@ impl<'mc> StandardMessenger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn unregister_outgoing_plugin_channel_with_plugin(
         &self,
@@ -940,7 +910,6 @@ impl<'mc> StandardMessenger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn register_incoming_plugin_channel(
         &self,
@@ -977,7 +946,6 @@ impl<'mc> StandardMessenger<'mc> {
             unsafe { jni::objects::JObject::from_raw(res.l()?.clone()) },
         )
     }
-    //
 
     pub fn unregister_incoming_plugin_channel_with_plugin(
         &self,
@@ -1016,7 +984,6 @@ impl<'mc> StandardMessenger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_outgoing_channels(
         &self,
@@ -1037,7 +1004,6 @@ impl<'mc> StandardMessenger<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn incoming_channels(
         &self,
@@ -1054,7 +1020,6 @@ impl<'mc> StandardMessenger<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_incoming_channel_registrations_with_plugin(
         &self,
@@ -1087,7 +1052,6 @@ impl<'mc> StandardMessenger<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_registration_valid(
         &self,
@@ -1107,7 +1071,6 @@ impl<'mc> StandardMessenger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_incoming_channel_registered(
         &self,
@@ -1133,7 +1096,6 @@ impl<'mc> StandardMessenger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_outgoing_channel_registered(
         &self,
@@ -1159,7 +1121,6 @@ impl<'mc> StandardMessenger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn dispatch_incoming_message(
         &self,
@@ -1186,7 +1147,6 @@ impl<'mc> StandardMessenger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn validate_channel(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1207,7 +1167,6 @@ impl<'mc> StandardMessenger<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn validate_plugin_message(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1241,7 +1200,6 @@ impl<'mc> StandardMessenger<'mc> {
         let res = jni.translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -1267,7 +1225,6 @@ impl<'mc> StandardMessenger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -1284,7 +1241,6 @@ impl<'mc> StandardMessenger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -1299,7 +1255,6 @@ impl<'mc> StandardMessenger<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1309,7 +1264,6 @@ impl<'mc> StandardMessenger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -1319,7 +1273,6 @@ impl<'mc> StandardMessenger<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1329,7 +1282,6 @@ impl<'mc> StandardMessenger<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -1400,8 +1352,6 @@ impl<'mc> JNIInstantiatable<'mc> for PluginMessageRecipient<'mc> {
 }
 
 impl<'mc> PluginMessageRecipient<'mc> {
-    //
-
     pub fn send_plugin_message(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
@@ -1427,7 +1377,6 @@ impl<'mc> PluginMessageRecipient<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn listening_plugin_channels(
         &self,

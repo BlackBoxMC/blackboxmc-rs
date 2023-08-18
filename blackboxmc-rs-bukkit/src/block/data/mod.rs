@@ -43,8 +43,6 @@ impl<'mc> JNIInstantiatable<'mc> for Hatchable<'mc> {
 }
 
 impl<'mc> Hatchable<'mc> {
-    //
-
     pub fn hatch(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
@@ -53,8 +51,6 @@ impl<'mc> Hatchable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Sets the value of the 'hatch' property.
     pub fn set_hatch(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -68,7 +64,6 @@ impl<'mc> Hatchable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn maximum_hatch(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -78,7 +73,6 @@ impl<'mc> Hatchable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -92,7 +86,6 @@ impl<'mc> Hatchable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn matches(
         &self,
@@ -111,7 +104,6 @@ impl<'mc> Hatchable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn merge(
         &self,
@@ -133,7 +125,6 @@ impl<'mc> Hatchable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn rotate(
         &self,
@@ -152,7 +143,6 @@ impl<'mc> Hatchable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_supported_with_block(
         &self,
@@ -172,7 +162,6 @@ impl<'mc> Hatchable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -197,11 +186,9 @@ impl<'mc> Hatchable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/lang/String;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -216,7 +203,6 @@ impl<'mc> Hatchable<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/SoundGroup;");
@@ -228,7 +214,6 @@ impl<'mc> Hatchable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -241,7 +226,6 @@ impl<'mc> Hatchable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -251,7 +235,6 @@ impl<'mc> Hatchable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -264,7 +247,6 @@ impl<'mc> Hatchable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_preferred_tool(
         &self,
@@ -283,7 +265,6 @@ impl<'mc> Hatchable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -313,7 +294,6 @@ impl<'mc> Hatchable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_face_sturdy(
         &self,
@@ -339,7 +319,6 @@ impl<'mc> Hatchable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -367,7 +346,6 @@ impl<'mc> Hatchable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn mirror(
         &self,
@@ -386,9 +364,6 @@ impl<'mc> Hatchable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Experimental
 
     pub fn create_block_state(
         &self,
@@ -452,8 +427,6 @@ impl<'mc> JNIInstantiatable<'mc> for Lightable<'mc> {
 }
 
 impl<'mc> Lightable<'mc> {
-    //
-
     pub fn is_lit(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
@@ -462,12 +435,9 @@ impl<'mc> Lightable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets the value of the 'lit' property.
     pub fn set_lit(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -478,7 +448,6 @@ impl<'mc> Lightable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -492,7 +461,6 @@ impl<'mc> Lightable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn matches(
         &self,
@@ -511,7 +479,6 @@ impl<'mc> Lightable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn merge(
         &self,
@@ -533,7 +500,6 @@ impl<'mc> Lightable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn rotate(
         &self,
@@ -552,7 +518,6 @@ impl<'mc> Lightable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_supported_with_block(
         &self,
@@ -572,7 +537,6 @@ impl<'mc> Lightable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -597,11 +561,9 @@ impl<'mc> Lightable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/lang/String;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -616,7 +578,6 @@ impl<'mc> Lightable<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/SoundGroup;");
@@ -628,7 +589,6 @@ impl<'mc> Lightable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -641,7 +601,6 @@ impl<'mc> Lightable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -651,7 +610,6 @@ impl<'mc> Lightable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -664,7 +622,6 @@ impl<'mc> Lightable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_preferred_tool(
         &self,
@@ -683,7 +640,6 @@ impl<'mc> Lightable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -713,7 +669,6 @@ impl<'mc> Lightable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_face_sturdy(
         &self,
@@ -739,7 +694,6 @@ impl<'mc> Lightable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -767,7 +721,6 @@ impl<'mc> Lightable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn mirror(
         &self,
@@ -786,9 +739,6 @@ impl<'mc> Lightable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Experimental
 
     pub fn create_block_state(
         &self,
@@ -856,8 +806,6 @@ impl<'mc> JNIInstantiatable<'mc> for FaceAttachable<'mc> {
 }
 
 impl<'mc> FaceAttachable<'mc> {
-    //@NotNull
-
     pub fn attached_face(
         &self,
     ) -> Result<crate::block::data::FaceAttachableAttachedFace<'mc>, Box<dyn std::error::Error>>
@@ -884,7 +832,6 @@ impl<'mc> FaceAttachable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_attached_face(
         &self,
@@ -903,7 +850,6 @@ impl<'mc> FaceAttachable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -917,7 +863,6 @@ impl<'mc> FaceAttachable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn matches(
         &self,
@@ -936,7 +881,6 @@ impl<'mc> FaceAttachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn merge(
         &self,
@@ -958,7 +902,6 @@ impl<'mc> FaceAttachable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn rotate(
         &self,
@@ -977,7 +920,6 @@ impl<'mc> FaceAttachable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_supported_with_block(
         &self,
@@ -997,7 +939,6 @@ impl<'mc> FaceAttachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -1022,11 +963,9 @@ impl<'mc> FaceAttachable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/lang/String;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1041,7 +980,6 @@ impl<'mc> FaceAttachable<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/SoundGroup;");
@@ -1053,7 +991,6 @@ impl<'mc> FaceAttachable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1066,7 +1003,6 @@ impl<'mc> FaceAttachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1076,7 +1012,6 @@ impl<'mc> FaceAttachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1089,7 +1024,6 @@ impl<'mc> FaceAttachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_preferred_tool(
         &self,
@@ -1108,7 +1042,6 @@ impl<'mc> FaceAttachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -1138,7 +1071,6 @@ impl<'mc> FaceAttachable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_face_sturdy(
         &self,
@@ -1164,7 +1096,6 @@ impl<'mc> FaceAttachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -1192,7 +1123,6 @@ impl<'mc> FaceAttachable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn mirror(
         &self,
@@ -1211,9 +1141,6 @@ impl<'mc> FaceAttachable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Experimental
 
     pub fn create_block_state(
         &self,
@@ -1389,8 +1316,6 @@ impl<'mc> JNIInstantiatable<'mc> for Ageable<'mc> {
 }
 
 impl<'mc> Ageable<'mc> {
-    //
-
     pub fn age(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
@@ -1399,8 +1324,6 @@ impl<'mc> Ageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Sets the value of the 'age' property.
     pub fn set_age(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -1414,7 +1337,6 @@ impl<'mc> Ageable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn maximum_age(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1424,7 +1346,6 @@ impl<'mc> Ageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1438,7 +1359,6 @@ impl<'mc> Ageable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn matches(
         &self,
@@ -1457,7 +1377,6 @@ impl<'mc> Ageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn merge(
         &self,
@@ -1479,7 +1398,6 @@ impl<'mc> Ageable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn rotate(
         &self,
@@ -1498,7 +1416,6 @@ impl<'mc> Ageable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_supported_with_block(
         &self,
@@ -1518,7 +1435,6 @@ impl<'mc> Ageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -1543,11 +1459,9 @@ impl<'mc> Ageable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/lang/String;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1562,7 +1476,6 @@ impl<'mc> Ageable<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/SoundGroup;");
@@ -1574,7 +1487,6 @@ impl<'mc> Ageable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1587,7 +1499,6 @@ impl<'mc> Ageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1597,7 +1508,6 @@ impl<'mc> Ageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1610,7 +1520,6 @@ impl<'mc> Ageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_preferred_tool(
         &self,
@@ -1629,7 +1538,6 @@ impl<'mc> Ageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -1659,7 +1567,6 @@ impl<'mc> Ageable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_face_sturdy(
         &self,
@@ -1685,7 +1592,6 @@ impl<'mc> Ageable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -1713,7 +1619,6 @@ impl<'mc> Ageable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn mirror(
         &self,
@@ -1732,9 +1637,6 @@ impl<'mc> Ageable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Experimental
 
     pub fn create_block_state(
         &self,
@@ -1798,8 +1700,6 @@ impl<'mc> JNIInstantiatable<'mc> for Openable<'mc> {
 }
 
 impl<'mc> Openable<'mc> {
-    //
-
     pub fn is_open(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
@@ -1808,12 +1708,9 @@ impl<'mc> Openable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets the value of the 'open' property.
     pub fn set_open(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1824,7 +1721,6 @@ impl<'mc> Openable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -1838,7 +1734,6 @@ impl<'mc> Openable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn matches(
         &self,
@@ -1857,7 +1752,6 @@ impl<'mc> Openable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn merge(
         &self,
@@ -1879,7 +1773,6 @@ impl<'mc> Openable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn rotate(
         &self,
@@ -1898,7 +1791,6 @@ impl<'mc> Openable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_supported_with_block(
         &self,
@@ -1918,7 +1810,6 @@ impl<'mc> Openable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -1943,11 +1834,9 @@ impl<'mc> Openable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/lang/String;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1962,7 +1851,6 @@ impl<'mc> Openable<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/SoundGroup;");
@@ -1974,7 +1862,6 @@ impl<'mc> Openable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -1987,7 +1874,6 @@ impl<'mc> Openable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -1997,7 +1883,6 @@ impl<'mc> Openable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2010,7 +1895,6 @@ impl<'mc> Openable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_preferred_tool(
         &self,
@@ -2029,7 +1913,6 @@ impl<'mc> Openable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -2059,7 +1942,6 @@ impl<'mc> Openable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_face_sturdy(
         &self,
@@ -2085,7 +1967,6 @@ impl<'mc> Openable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -2113,7 +1994,6 @@ impl<'mc> Openable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn mirror(
         &self,
@@ -2132,9 +2012,6 @@ impl<'mc> Openable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Experimental
 
     pub fn create_block_state(
         &self,
@@ -2200,8 +2077,6 @@ impl<'mc> JNIInstantiatable<'mc> for Rail<'mc> {
 }
 
 impl<'mc> Rail<'mc> {
-    //@NotNull
-
     pub fn shape(&self) -> Result<crate::block::data::RailShape<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/data/Rail$Shape;");
         let res = self
@@ -2225,7 +2100,6 @@ impl<'mc> Rail<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_shape(
         &self,
@@ -2244,7 +2118,6 @@ impl<'mc> Rail<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn shapes(
         &self,
@@ -2258,7 +2131,6 @@ impl<'mc> Rail<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_waterlogged(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2268,11 +2140,9 @@ impl<'mc> Rail<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set_waterlogged(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2283,7 +2153,6 @@ impl<'mc> Rail<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -2297,7 +2166,6 @@ impl<'mc> Rail<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn matches(
         &self,
@@ -2316,7 +2184,6 @@ impl<'mc> Rail<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn merge(
         &self,
@@ -2338,7 +2205,6 @@ impl<'mc> Rail<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn rotate(
         &self,
@@ -2357,7 +2223,6 @@ impl<'mc> Rail<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_supported_with_block(
         &self,
@@ -2377,7 +2242,6 @@ impl<'mc> Rail<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -2402,11 +2266,9 @@ impl<'mc> Rail<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/lang/String;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2421,7 +2283,6 @@ impl<'mc> Rail<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/SoundGroup;");
@@ -2433,7 +2294,6 @@ impl<'mc> Rail<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2446,7 +2306,6 @@ impl<'mc> Rail<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2456,7 +2315,6 @@ impl<'mc> Rail<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2469,7 +2327,6 @@ impl<'mc> Rail<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_preferred_tool(
         &self,
@@ -2488,7 +2345,6 @@ impl<'mc> Rail<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -2518,7 +2374,6 @@ impl<'mc> Rail<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_face_sturdy(
         &self,
@@ -2544,7 +2399,6 @@ impl<'mc> Rail<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -2572,7 +2426,6 @@ impl<'mc> Rail<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn mirror(
         &self,
@@ -2591,9 +2444,6 @@ impl<'mc> Rail<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Experimental
 
     pub fn create_block_state(
         &self,
@@ -2657,8 +2507,6 @@ impl<'mc> JNIInstantiatable<'mc> for BlockData<'mc> {
 }
 
 impl<'mc> BlockData<'mc> {
-    //@NotNull
-
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -2671,7 +2519,6 @@ impl<'mc> BlockData<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn matches(
         &self,
@@ -2690,7 +2537,6 @@ impl<'mc> BlockData<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn merge(
         &self,
@@ -2712,7 +2558,6 @@ impl<'mc> BlockData<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn rotate(
         &self,
@@ -2731,7 +2576,6 @@ impl<'mc> BlockData<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_supported_with_block(
         &self,
@@ -2751,7 +2595,6 @@ impl<'mc> BlockData<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -2776,8 +2619,6 @@ impl<'mc> BlockData<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
-
     /// Gets a string, which when passed into a method such as <a href="../../Server.html#createBlockData(java.lang.String)"><code>Server.createBlockData(java.lang.String)</code></a> will recreate this or a similar instance where unspecified states (if any) may be optionally omitted. If this instance was parsed and states are omitted, this exact instance will be creatable when parsed again, else their equality cannot be guaranteed.
     /// <p>This method will only take effect for BlockData instances created by methods such as <a href="../../Server.html#createBlockData(java.lang.String)"><code>Server.createBlockData(String)</code></a> or any similar method whereby states are optionally defined. If otherwise, the result of <a href="#getAsString()"><code>getAsString()</code></a> will be returned. The following behaviour would be expected:</p>
     /// <pre><code>
@@ -2789,7 +2630,6 @@ impl<'mc> BlockData<'mc> {
     /// </code></pre>
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/lang/String;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2804,7 +2644,6 @@ impl<'mc> BlockData<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/SoundGroup;");
@@ -2816,7 +2655,6 @@ impl<'mc> BlockData<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -2829,7 +2667,6 @@ impl<'mc> BlockData<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2839,7 +2676,6 @@ impl<'mc> BlockData<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -2852,7 +2688,6 @@ impl<'mc> BlockData<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_preferred_tool(
         &self,
@@ -2871,7 +2706,6 @@ impl<'mc> BlockData<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -2901,7 +2735,6 @@ impl<'mc> BlockData<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_face_sturdy(
         &self,
@@ -2927,7 +2760,6 @@ impl<'mc> BlockData<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -2955,7 +2787,6 @@ impl<'mc> BlockData<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn mirror(
         &self,
@@ -2974,9 +2805,6 @@ impl<'mc> BlockData<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Experimental
 
     pub fn create_block_state(
         &self,
@@ -3036,8 +2864,6 @@ impl<'mc> JNIInstantiatable<'mc> for Orientable<'mc> {
 }
 
 impl<'mc> Orientable<'mc> {
-    //@NotNull
-
     pub fn axis(&self) -> Result<crate::Axis<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Axis;");
         let res = self
@@ -3061,7 +2887,6 @@ impl<'mc> Orientable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_axis(
         &self,
@@ -3080,7 +2905,6 @@ impl<'mc> Orientable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn axes(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
@@ -3092,7 +2916,6 @@ impl<'mc> Orientable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -3106,7 +2929,6 @@ impl<'mc> Orientable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn matches(
         &self,
@@ -3125,7 +2947,6 @@ impl<'mc> Orientable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn merge(
         &self,
@@ -3147,7 +2968,6 @@ impl<'mc> Orientable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn rotate(
         &self,
@@ -3166,7 +2986,6 @@ impl<'mc> Orientable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_supported_with_block(
         &self,
@@ -3186,7 +3005,6 @@ impl<'mc> Orientable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -3211,11 +3029,9 @@ impl<'mc> Orientable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/lang/String;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3230,7 +3046,6 @@ impl<'mc> Orientable<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/SoundGroup;");
@@ -3242,7 +3057,6 @@ impl<'mc> Orientable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -3255,7 +3069,6 @@ impl<'mc> Orientable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3265,7 +3078,6 @@ impl<'mc> Orientable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3278,7 +3090,6 @@ impl<'mc> Orientable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_preferred_tool(
         &self,
@@ -3297,7 +3108,6 @@ impl<'mc> Orientable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -3327,7 +3137,6 @@ impl<'mc> Orientable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_face_sturdy(
         &self,
@@ -3353,7 +3162,6 @@ impl<'mc> Orientable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -3381,7 +3189,6 @@ impl<'mc> Orientable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn mirror(
         &self,
@@ -3400,9 +3207,6 @@ impl<'mc> Orientable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Experimental
 
     pub fn create_block_state(
         &self,
@@ -3466,8 +3270,6 @@ impl<'mc> JNIInstantiatable<'mc> for Powerable<'mc> {
 }
 
 impl<'mc> Powerable<'mc> {
-    //
-
     pub fn is_powered(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
@@ -3476,12 +3278,9 @@ impl<'mc> Powerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets the value of the 'powered' property.
     pub fn set_powered(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3492,7 +3291,6 @@ impl<'mc> Powerable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -3506,7 +3304,6 @@ impl<'mc> Powerable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn matches(
         &self,
@@ -3525,7 +3322,6 @@ impl<'mc> Powerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn merge(
         &self,
@@ -3547,7 +3343,6 @@ impl<'mc> Powerable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn rotate(
         &self,
@@ -3566,7 +3361,6 @@ impl<'mc> Powerable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_supported_with_block(
         &self,
@@ -3586,7 +3380,6 @@ impl<'mc> Powerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -3611,11 +3404,9 @@ impl<'mc> Powerable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/lang/String;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3630,7 +3421,6 @@ impl<'mc> Powerable<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/SoundGroup;");
@@ -3642,7 +3432,6 @@ impl<'mc> Powerable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -3655,7 +3444,6 @@ impl<'mc> Powerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3665,7 +3453,6 @@ impl<'mc> Powerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -3678,7 +3465,6 @@ impl<'mc> Powerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_preferred_tool(
         &self,
@@ -3697,7 +3483,6 @@ impl<'mc> Powerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -3727,7 +3512,6 @@ impl<'mc> Powerable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_face_sturdy(
         &self,
@@ -3753,7 +3537,6 @@ impl<'mc> Powerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -3781,7 +3564,6 @@ impl<'mc> Powerable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn mirror(
         &self,
@@ -3800,9 +3582,6 @@ impl<'mc> Powerable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Experimental
 
     pub fn create_block_state(
         &self,
@@ -3940,8 +3719,6 @@ impl<'mc> FaceAttachableAttachedFace<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-
-    //
 }
 /// 'level' represents the amount of fluid contained within this block, either by itself or inside a cauldron.
 ///
@@ -3987,8 +3764,6 @@ impl<'mc> JNIInstantiatable<'mc> for Levelled<'mc> {
 }
 
 impl<'mc> Levelled<'mc> {
-    //
-
     /// Sets the value of the 'level' property.
     pub fn set_level(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -4002,7 +3777,6 @@ impl<'mc> Levelled<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn level(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4012,7 +3786,6 @@ impl<'mc> Levelled<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn maximum_level(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4022,7 +3795,6 @@ impl<'mc> Levelled<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -4036,7 +3808,6 @@ impl<'mc> Levelled<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn matches(
         &self,
@@ -4055,7 +3826,6 @@ impl<'mc> Levelled<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn merge(
         &self,
@@ -4077,7 +3847,6 @@ impl<'mc> Levelled<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn rotate(
         &self,
@@ -4096,7 +3865,6 @@ impl<'mc> Levelled<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_supported_with_block(
         &self,
@@ -4116,7 +3884,6 @@ impl<'mc> Levelled<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -4141,11 +3908,9 @@ impl<'mc> Levelled<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/lang/String;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4160,7 +3925,6 @@ impl<'mc> Levelled<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/SoundGroup;");
@@ -4172,7 +3936,6 @@ impl<'mc> Levelled<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4185,7 +3948,6 @@ impl<'mc> Levelled<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4195,7 +3957,6 @@ impl<'mc> Levelled<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4208,7 +3969,6 @@ impl<'mc> Levelled<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_preferred_tool(
         &self,
@@ -4227,7 +3987,6 @@ impl<'mc> Levelled<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -4257,7 +4016,6 @@ impl<'mc> Levelled<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_face_sturdy(
         &self,
@@ -4283,7 +4041,6 @@ impl<'mc> Levelled<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -4311,7 +4068,6 @@ impl<'mc> Levelled<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn mirror(
         &self,
@@ -4330,9 +4086,6 @@ impl<'mc> Levelled<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Experimental
 
     pub fn create_block_state(
         &self,
@@ -4400,8 +4153,6 @@ impl<'mc> JNIInstantiatable<'mc> for MultipleFacing<'mc> {
 }
 
 impl<'mc> MultipleFacing<'mc> {
-    //@NotNull
-
     pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
@@ -4412,7 +4163,6 @@ impl<'mc> MultipleFacing<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn set_face(
         &self,
@@ -4423,7 +4173,6 @@ impl<'mc> MultipleFacing<'mc> {
         let val_1 = jni::objects::JValueGen::Object(unsafe {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
-        // -1
         let val_2 = jni::objects::JValueGen::Bool(arg1.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4437,7 +4186,6 @@ impl<'mc> MultipleFacing<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn allowed_faces(
         &self,
@@ -4451,7 +4199,6 @@ impl<'mc> MultipleFacing<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has_face(
         &self,
@@ -4470,7 +4217,6 @@ impl<'mc> MultipleFacing<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -4484,7 +4230,6 @@ impl<'mc> MultipleFacing<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn matches(
         &self,
@@ -4503,7 +4248,6 @@ impl<'mc> MultipleFacing<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn merge(
         &self,
@@ -4525,7 +4269,6 @@ impl<'mc> MultipleFacing<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn rotate(
         &self,
@@ -4544,7 +4287,6 @@ impl<'mc> MultipleFacing<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_supported_with_block(
         &self,
@@ -4564,7 +4306,6 @@ impl<'mc> MultipleFacing<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -4589,11 +4330,9 @@ impl<'mc> MultipleFacing<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/lang/String;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4608,7 +4347,6 @@ impl<'mc> MultipleFacing<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/SoundGroup;");
@@ -4620,7 +4358,6 @@ impl<'mc> MultipleFacing<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -4633,7 +4370,6 @@ impl<'mc> MultipleFacing<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4643,7 +4379,6 @@ impl<'mc> MultipleFacing<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -4656,7 +4391,6 @@ impl<'mc> MultipleFacing<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_preferred_tool(
         &self,
@@ -4675,7 +4409,6 @@ impl<'mc> MultipleFacing<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -4705,7 +4438,6 @@ impl<'mc> MultipleFacing<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_face_sturdy(
         &self,
@@ -4731,7 +4463,6 @@ impl<'mc> MultipleFacing<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -4759,7 +4490,6 @@ impl<'mc> MultipleFacing<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn mirror(
         &self,
@@ -4778,9 +4508,6 @@ impl<'mc> MultipleFacing<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Experimental
 
     pub fn create_block_state(
         &self,
@@ -4942,8 +4669,6 @@ impl<'mc> RailShape<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-
-    //
 }
 /// 'snowy' denotes whether this block has a snow covered side and top texture (normally because the block above is snow).
 ///
@@ -4985,8 +4710,6 @@ impl<'mc> JNIInstantiatable<'mc> for Snowable<'mc> {
 }
 
 impl<'mc> Snowable<'mc> {
-    //
-
     pub fn is_snowy(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
@@ -4995,12 +4718,9 @@ impl<'mc> Snowable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets the value of the 'snowy' property.
     pub fn set_snowy(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5011,7 +4731,6 @@ impl<'mc> Snowable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -5025,7 +4744,6 @@ impl<'mc> Snowable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn matches(
         &self,
@@ -5044,7 +4762,6 @@ impl<'mc> Snowable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn merge(
         &self,
@@ -5066,7 +4783,6 @@ impl<'mc> Snowable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn rotate(
         &self,
@@ -5085,7 +4801,6 @@ impl<'mc> Snowable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_supported_with_block(
         &self,
@@ -5105,7 +4820,6 @@ impl<'mc> Snowable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -5130,11 +4844,9 @@ impl<'mc> Snowable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/lang/String;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5149,7 +4861,6 @@ impl<'mc> Snowable<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/SoundGroup;");
@@ -5161,7 +4872,6 @@ impl<'mc> Snowable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -5174,7 +4884,6 @@ impl<'mc> Snowable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5184,7 +4893,6 @@ impl<'mc> Snowable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5197,7 +4905,6 @@ impl<'mc> Snowable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_preferred_tool(
         &self,
@@ -5216,7 +4923,6 @@ impl<'mc> Snowable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -5246,7 +4952,6 @@ impl<'mc> Snowable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_face_sturdy(
         &self,
@@ -5272,7 +4977,6 @@ impl<'mc> Snowable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -5300,7 +5004,6 @@ impl<'mc> Snowable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn mirror(
         &self,
@@ -5319,9 +5022,6 @@ impl<'mc> Snowable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Experimental
 
     pub fn create_block_state(
         &self,
@@ -5387,8 +5087,6 @@ impl<'mc> JNIInstantiatable<'mc> for Directional<'mc> {
 }
 
 impl<'mc> Directional<'mc> {
-    //@NotNull
-
     pub fn facing(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/BlockFace;");
         let res = self
@@ -5412,7 +5110,6 @@ impl<'mc> Directional<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_facing(
         &self,
@@ -5431,7 +5128,6 @@ impl<'mc> Directional<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn faces(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
@@ -5443,7 +5139,6 @@ impl<'mc> Directional<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -5457,7 +5152,6 @@ impl<'mc> Directional<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn matches(
         &self,
@@ -5476,7 +5170,6 @@ impl<'mc> Directional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn merge(
         &self,
@@ -5498,7 +5191,6 @@ impl<'mc> Directional<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn rotate(
         &self,
@@ -5517,7 +5209,6 @@ impl<'mc> Directional<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_supported_with_block(
         &self,
@@ -5537,7 +5228,6 @@ impl<'mc> Directional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -5562,11 +5252,9 @@ impl<'mc> Directional<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/lang/String;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5581,7 +5269,6 @@ impl<'mc> Directional<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/SoundGroup;");
@@ -5593,7 +5280,6 @@ impl<'mc> Directional<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -5606,7 +5292,6 @@ impl<'mc> Directional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5616,7 +5301,6 @@ impl<'mc> Directional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -5629,7 +5313,6 @@ impl<'mc> Directional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_preferred_tool(
         &self,
@@ -5648,7 +5331,6 @@ impl<'mc> Directional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -5678,7 +5360,6 @@ impl<'mc> Directional<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_face_sturdy(
         &self,
@@ -5704,7 +5385,6 @@ impl<'mc> Directional<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -5732,7 +5412,6 @@ impl<'mc> Directional<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn mirror(
         &self,
@@ -5751,9 +5430,6 @@ impl<'mc> Directional<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Experimental
 
     pub fn create_block_state(
         &self,
@@ -5923,8 +5599,6 @@ impl<'mc> JNIInstantiatable<'mc> for Rotatable<'mc> {
 }
 
 impl<'mc> Rotatable<'mc> {
-    //@NotNull
-
     pub fn rotation(&self) -> Result<crate::block::BlockFace<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/block/BlockFace;");
         let res =
@@ -5948,7 +5622,6 @@ impl<'mc> Rotatable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_rotation(
         &self,
@@ -5967,7 +5640,6 @@ impl<'mc> Rotatable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -5981,7 +5653,6 @@ impl<'mc> Rotatable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn matches(
         &self,
@@ -6000,7 +5671,6 @@ impl<'mc> Rotatable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn merge(
         &self,
@@ -6022,7 +5692,6 @@ impl<'mc> Rotatable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn rotate(
         &self,
@@ -6041,7 +5710,6 @@ impl<'mc> Rotatable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_supported_with_block(
         &self,
@@ -6061,7 +5729,6 @@ impl<'mc> Rotatable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -6086,11 +5753,9 @@ impl<'mc> Rotatable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/lang/String;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6105,7 +5770,6 @@ impl<'mc> Rotatable<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/SoundGroup;");
@@ -6117,7 +5781,6 @@ impl<'mc> Rotatable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -6130,7 +5793,6 @@ impl<'mc> Rotatable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6140,7 +5802,6 @@ impl<'mc> Rotatable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6153,7 +5814,6 @@ impl<'mc> Rotatable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_preferred_tool(
         &self,
@@ -6172,7 +5832,6 @@ impl<'mc> Rotatable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -6202,7 +5861,6 @@ impl<'mc> Rotatable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_face_sturdy(
         &self,
@@ -6228,7 +5886,6 @@ impl<'mc> Rotatable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -6256,7 +5913,6 @@ impl<'mc> Rotatable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn mirror(
         &self,
@@ -6275,9 +5931,6 @@ impl<'mc> Rotatable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Experimental
 
     pub fn create_block_state(
         &self,
@@ -6341,8 +5994,6 @@ impl<'mc> JNIInstantiatable<'mc> for Hangable<'mc> {
 }
 
 impl<'mc> Hangable<'mc> {
-    //
-
     pub fn is_hanging(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res = self
@@ -6351,12 +6002,9 @@ impl<'mc> Hangable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets the value of the 'hanging' property.
     pub fn set_hanging(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6367,7 +6015,6 @@ impl<'mc> Hangable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -6381,7 +6028,6 @@ impl<'mc> Hangable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn matches(
         &self,
@@ -6400,7 +6046,6 @@ impl<'mc> Hangable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn merge(
         &self,
@@ -6422,7 +6067,6 @@ impl<'mc> Hangable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn rotate(
         &self,
@@ -6441,7 +6085,6 @@ impl<'mc> Hangable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_supported_with_block(
         &self,
@@ -6461,7 +6104,6 @@ impl<'mc> Hangable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -6486,11 +6128,9 @@ impl<'mc> Hangable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/lang/String;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6505,7 +6145,6 @@ impl<'mc> Hangable<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/SoundGroup;");
@@ -6517,7 +6156,6 @@ impl<'mc> Hangable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -6530,7 +6168,6 @@ impl<'mc> Hangable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6540,7 +6177,6 @@ impl<'mc> Hangable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6553,7 +6189,6 @@ impl<'mc> Hangable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_preferred_tool(
         &self,
@@ -6572,7 +6207,6 @@ impl<'mc> Hangable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -6602,7 +6236,6 @@ impl<'mc> Hangable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_face_sturdy(
         &self,
@@ -6628,7 +6261,6 @@ impl<'mc> Hangable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -6656,7 +6288,6 @@ impl<'mc> Hangable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn mirror(
         &self,
@@ -6675,9 +6306,6 @@ impl<'mc> Hangable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Experimental
 
     pub fn create_block_state(
         &self,
@@ -6741,8 +6369,6 @@ impl<'mc> JNIInstantiatable<'mc> for Waterlogged<'mc> {
 }
 
 impl<'mc> Waterlogged<'mc> {
-    //
-
     pub fn is_waterlogged(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
@@ -6751,12 +6377,9 @@ impl<'mc> Waterlogged<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets the value of the 'waterlogged' property.
     pub fn set_waterlogged(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6767,7 +6390,6 @@ impl<'mc> Waterlogged<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -6781,7 +6403,6 @@ impl<'mc> Waterlogged<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn matches(
         &self,
@@ -6800,7 +6421,6 @@ impl<'mc> Waterlogged<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn merge(
         &self,
@@ -6822,7 +6442,6 @@ impl<'mc> Waterlogged<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn rotate(
         &self,
@@ -6841,7 +6460,6 @@ impl<'mc> Waterlogged<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_supported_with_block(
         &self,
@@ -6861,7 +6479,6 @@ impl<'mc> Waterlogged<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -6886,11 +6503,9 @@ impl<'mc> Waterlogged<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/lang/String;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6905,7 +6520,6 @@ impl<'mc> Waterlogged<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/SoundGroup;");
@@ -6917,7 +6531,6 @@ impl<'mc> Waterlogged<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -6930,7 +6543,6 @@ impl<'mc> Waterlogged<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6940,7 +6552,6 @@ impl<'mc> Waterlogged<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -6953,7 +6564,6 @@ impl<'mc> Waterlogged<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_preferred_tool(
         &self,
@@ -6972,7 +6582,6 @@ impl<'mc> Waterlogged<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -7002,7 +6611,6 @@ impl<'mc> Waterlogged<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_face_sturdy(
         &self,
@@ -7028,7 +6636,6 @@ impl<'mc> Waterlogged<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -7056,7 +6663,6 @@ impl<'mc> Waterlogged<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn mirror(
         &self,
@@ -7075,9 +6681,6 @@ impl<'mc> Waterlogged<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Experimental
 
     pub fn create_block_state(
         &self,
@@ -7145,8 +6748,6 @@ impl<'mc> JNIInstantiatable<'mc> for AnaloguePowerable<'mc> {
 }
 
 impl<'mc> AnaloguePowerable<'mc> {
-    //
-
     pub fn power(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
@@ -7155,8 +6756,6 @@ impl<'mc> AnaloguePowerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Sets the value of the 'power' property.
     pub fn set_power(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -7170,7 +6769,6 @@ impl<'mc> AnaloguePowerable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn maximum_power(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -7180,7 +6778,6 @@ impl<'mc> AnaloguePowerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -7194,7 +6791,6 @@ impl<'mc> AnaloguePowerable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn matches(
         &self,
@@ -7213,7 +6809,6 @@ impl<'mc> AnaloguePowerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn merge(
         &self,
@@ -7235,7 +6830,6 @@ impl<'mc> AnaloguePowerable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn rotate(
         &self,
@@ -7254,7 +6848,6 @@ impl<'mc> AnaloguePowerable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_supported_with_block(
         &self,
@@ -7274,7 +6867,6 @@ impl<'mc> AnaloguePowerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -7299,11 +6891,9 @@ impl<'mc> AnaloguePowerable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/lang/String;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7318,7 +6908,6 @@ impl<'mc> AnaloguePowerable<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/SoundGroup;");
@@ -7330,7 +6919,6 @@ impl<'mc> AnaloguePowerable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -7343,7 +6931,6 @@ impl<'mc> AnaloguePowerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -7353,7 +6940,6 @@ impl<'mc> AnaloguePowerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -7366,7 +6952,6 @@ impl<'mc> AnaloguePowerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_preferred_tool(
         &self,
@@ -7385,7 +6970,6 @@ impl<'mc> AnaloguePowerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -7415,7 +6999,6 @@ impl<'mc> AnaloguePowerable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_face_sturdy(
         &self,
@@ -7441,7 +7024,6 @@ impl<'mc> AnaloguePowerable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -7469,7 +7051,6 @@ impl<'mc> AnaloguePowerable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn mirror(
         &self,
@@ -7488,9 +7069,6 @@ impl<'mc> AnaloguePowerable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Experimental
 
     pub fn create_block_state(
         &self,
@@ -7554,8 +7132,6 @@ impl<'mc> JNIInstantiatable<'mc> for Brushable<'mc> {
 }
 
 impl<'mc> Brushable<'mc> {
-    //
-
     pub fn dusted(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
         let res = self
@@ -7564,8 +7140,6 @@ impl<'mc> Brushable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
-
     /// Sets the value of the 'dusted' property.
     pub fn set_dusted(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -7579,7 +7153,6 @@ impl<'mc> Brushable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn maximum_dusted(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -7592,7 +7165,6 @@ impl<'mc> Brushable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -7606,7 +7178,6 @@ impl<'mc> Brushable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn matches(
         &self,
@@ -7625,7 +7196,6 @@ impl<'mc> Brushable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn merge(
         &self,
@@ -7647,7 +7217,6 @@ impl<'mc> Brushable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn rotate(
         &self,
@@ -7666,7 +7235,6 @@ impl<'mc> Brushable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_supported_with_block(
         &self,
@@ -7686,7 +7254,6 @@ impl<'mc> Brushable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -7711,11 +7278,9 @@ impl<'mc> Brushable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/lang/String;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7730,7 +7295,6 @@ impl<'mc> Brushable<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/SoundGroup;");
@@ -7742,7 +7306,6 @@ impl<'mc> Brushable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -7755,7 +7318,6 @@ impl<'mc> Brushable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -7765,7 +7327,6 @@ impl<'mc> Brushable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -7778,7 +7339,6 @@ impl<'mc> Brushable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_preferred_tool(
         &self,
@@ -7797,7 +7357,6 @@ impl<'mc> Brushable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -7827,7 +7386,6 @@ impl<'mc> Brushable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_face_sturdy(
         &self,
@@ -7853,7 +7411,6 @@ impl<'mc> Brushable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -7881,7 +7438,6 @@ impl<'mc> Brushable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn mirror(
         &self,
@@ -7900,9 +7456,6 @@ impl<'mc> Brushable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Experimental
 
     pub fn create_block_state(
         &self,
@@ -7968,8 +7521,6 @@ impl<'mc> JNIInstantiatable<'mc> for Attachable<'mc> {
 }
 
 impl<'mc> Attachable<'mc> {
-    //
-
     pub fn is_attached(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
         let res =
@@ -7978,12 +7529,9 @@ impl<'mc> Attachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
-
     /// Sets the value of the 'attached' property.
     pub fn set_attached(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7994,7 +7542,6 @@ impl<'mc> Attachable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -8008,7 +7555,6 @@ impl<'mc> Attachable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn matches(
         &self,
@@ -8027,7 +7573,6 @@ impl<'mc> Attachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn merge(
         &self,
@@ -8049,7 +7594,6 @@ impl<'mc> Attachable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn rotate(
         &self,
@@ -8068,7 +7612,6 @@ impl<'mc> Attachable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_supported_with_block(
         &self,
@@ -8088,7 +7631,6 @@ impl<'mc> Attachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -8113,11 +7655,9 @@ impl<'mc> Attachable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/lang/String;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8132,7 +7672,6 @@ impl<'mc> Attachable<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/SoundGroup;");
@@ -8144,7 +7683,6 @@ impl<'mc> Attachable<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -8157,7 +7695,6 @@ impl<'mc> Attachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8167,7 +7704,6 @@ impl<'mc> Attachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8180,7 +7716,6 @@ impl<'mc> Attachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_preferred_tool(
         &self,
@@ -8199,7 +7734,6 @@ impl<'mc> Attachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -8229,7 +7763,6 @@ impl<'mc> Attachable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_face_sturdy(
         &self,
@@ -8255,7 +7788,6 @@ impl<'mc> Attachable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -8283,7 +7815,6 @@ impl<'mc> Attachable<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn mirror(
         &self,
@@ -8302,9 +7833,6 @@ impl<'mc> Attachable<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Experimental
 
     pub fn create_block_state(
         &self,
@@ -8370,8 +7898,6 @@ impl<'mc> JNIInstantiatable<'mc> for Bisected<'mc> {
 }
 
 impl<'mc> Bisected<'mc> {
-    //@NotNull
-
     pub fn half(
         &self,
     ) -> Result<crate::block::data::BisectedHalf<'mc>, Box<dyn std::error::Error>> {
@@ -8397,7 +7923,6 @@ impl<'mc> Bisected<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn set_half(
         &self,
@@ -8416,7 +7941,6 @@ impl<'mc> Bisected<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -8430,7 +7954,6 @@ impl<'mc> Bisected<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn matches(
         &self,
@@ -8449,7 +7972,6 @@ impl<'mc> Bisected<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn merge(
         &self,
@@ -8471,7 +7993,6 @@ impl<'mc> Bisected<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn rotate(
         &self,
@@ -8490,7 +8011,6 @@ impl<'mc> Bisected<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn is_supported_with_block(
         &self,
@@ -8510,7 +8030,6 @@ impl<'mc> Bisected<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -8535,11 +8054,9 @@ impl<'mc> Bisected<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //@NotNull
 
     pub fn get_as_string(&self, arg0: bool) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(Z)Ljava/lang/String;");
-        // -1
         let val_1 = jni::objects::JValueGen::Bool(arg0.into());
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8554,7 +8071,6 @@ impl<'mc> Bisected<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //@NotNull
 
     pub fn sound_group(&self) -> Result<crate::SoundGroup<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/SoundGroup;");
@@ -8566,7 +8082,6 @@ impl<'mc> Bisected<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn light_emission(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -8579,7 +8094,6 @@ impl<'mc> Bisected<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn is_occluding(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8589,7 +8103,6 @@ impl<'mc> Bisected<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn requires_correct_tool_for_drops(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -8602,7 +8115,6 @@ impl<'mc> Bisected<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn is_preferred_tool(
         &self,
@@ -8621,7 +8133,6 @@ impl<'mc> Bisected<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn piston_move_reaction(
         &self,
@@ -8651,7 +8162,6 @@ impl<'mc> Bisected<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn is_face_sturdy(
         &self,
@@ -8677,7 +8187,6 @@ impl<'mc> Bisected<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //@NotNull
 
     pub fn placement_material(&self) -> Result<crate::Material<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Lorg/bukkit/Material;");
@@ -8705,7 +8214,6 @@ impl<'mc> Bisected<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn mirror(
         &self,
@@ -8724,9 +8232,6 @@ impl<'mc> Bisected<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //@NotNull
-
-    //@Experimental
 
     pub fn create_block_state(
         &self,
@@ -8856,7 +8361,5 @@ impl<'mc> BisectedHalf<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-
-    //
 }
 pub mod mod_type;

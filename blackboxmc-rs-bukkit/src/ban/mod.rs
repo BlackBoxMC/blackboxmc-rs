@@ -45,8 +45,6 @@ impl<'mc> JNIInstantiatable<'mc> for ProfileBanList<'mc> {
 }
 
 impl<'mc> ProfileBanList<'mc> {
-    //
-
     pub fn add_ban_with_string(
         &self,
         arg0: impl Into<String>,
@@ -85,7 +83,6 @@ impl<'mc> ProfileBanList<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn entries(
         &self,
@@ -99,7 +96,6 @@ impl<'mc> ProfileBanList<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_ban_entry_with_object(
         &self,
@@ -119,10 +115,7 @@ impl<'mc> ProfileBanList<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
-    //@NotNull
 
     pub fn ban_entries(
         &self,
@@ -136,7 +129,6 @@ impl<'mc> ProfileBanList<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_banned_with_object(
         &self,
@@ -154,7 +146,6 @@ impl<'mc> ProfileBanList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn pardon_with_string(
         &self,
@@ -221,8 +212,6 @@ impl<'mc> JNIInstantiatable<'mc> for IpBanList<'mc> {
 }
 
 impl<'mc> IpBanList<'mc> {
-    //@NotNull
-
     pub fn entries(
         &self,
     ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -235,7 +224,6 @@ impl<'mc> IpBanList<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn get_ban_entry_with_object(
         &self,
@@ -255,7 +243,6 @@ impl<'mc> IpBanList<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn add_ban_with_string(
         &self,
@@ -295,10 +282,7 @@ impl<'mc> IpBanList<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@Deprecated
-
     #[deprecated]
-    //@NotNull
 
     pub fn ban_entries(
         &self,
@@ -312,7 +296,6 @@ impl<'mc> IpBanList<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn is_banned_with_object(
         &self,
@@ -330,7 +313,6 @@ impl<'mc> IpBanList<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn pardon_with_string(
         &self,

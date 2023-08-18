@@ -46,8 +46,6 @@ impl<'mc> JNIInstantiatable<'mc> for PersistentDataHolder<'mc> {
 }
 
 impl<'mc> PersistentDataHolder<'mc> {
-    //@NotNull
-
     pub fn persistent_data_container(
         &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
@@ -108,8 +106,6 @@ impl<'mc> JNIInstantiatable<'mc> for PersistentDataTypePrimitivePersistentDataTy
 }
 
 impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
-    //@NotNull
-
     pub fn primitive_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
         let res = self.jni_ref().call_method(
@@ -121,7 +117,6 @@ impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //@NotNull
 
     pub fn complex_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -131,7 +126,6 @@ impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn to_primitive(
         &self,
@@ -155,7 +149,6 @@ impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn from_primitive(
         &self,
@@ -179,7 +172,6 @@ impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -205,7 +197,6 @@ impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -222,7 +213,6 @@ impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -237,7 +227,6 @@ impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -247,7 +236,6 @@ impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -257,7 +245,6 @@ impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -267,7 +254,6 @@ impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -335,8 +321,6 @@ impl<'mc> JNIInstantiatable<'mc> for PersistentDataAdapterContext<'mc> {
 }
 
 impl<'mc> PersistentDataAdapterContext<'mc> {
-    //@NotNull
-
     pub fn new_persistent_data_container(
         &self,
     ) -> Result<crate::persistence::PersistentDataContainer<'mc>, Box<dyn std::error::Error>> {
@@ -431,7 +415,6 @@ impl<'mc> PersistentDataType<'mc> {
         let obj = unsafe { plugin.new_extendable(address, "PersistentDataType", name, lib_name) }?;
         Self::from_raw(env, obj)
     }
-    //@NotNull
 
     pub fn primitive_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -444,7 +427,6 @@ impl<'mc> PersistentDataType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //@NotNull
 
     pub fn complex_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -454,7 +436,6 @@ impl<'mc> PersistentDataType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn to_primitive(
         &self,
@@ -478,7 +459,6 @@ impl<'mc> PersistentDataType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn from_primitive(
         &self,
@@ -562,7 +542,6 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::persistence::PersistentDataTypeBooleanPersistentDataType::from_raw(&jni, res)
     }
-    //@NotNull
 
     pub fn primitive_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -575,7 +554,6 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //@NotNull
 
     pub fn complex_type(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -585,7 +563,6 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn to_primitive_with_boolean(
         &self,
@@ -613,7 +590,6 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b()?)
     }
-    //
 
     pub fn from_primitive_with_object(
         &self,
@@ -637,7 +613,6 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -663,7 +638,6 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn equals(
         &self,
@@ -680,7 +654,6 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -695,7 +668,6 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -705,7 +677,6 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -715,7 +686,6 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -725,7 +695,6 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -793,8 +762,6 @@ impl<'mc> JNIInstantiatable<'mc> for PersistentDataContainer<'mc> {
 }
 
 impl<'mc> PersistentDataContainer<'mc> {
-    //@NotNull
-
     pub fn keys(&self) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/util/Set;");
         let res = self
@@ -805,7 +772,6 @@ impl<'mc> PersistentDataContainer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn has(
         &self,
@@ -833,7 +799,6 @@ impl<'mc> PersistentDataContainer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn remove(
         &self,
@@ -852,7 +817,6 @@ impl<'mc> PersistentDataContainer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get(
         &self,
@@ -878,7 +842,6 @@ impl<'mc> PersistentDataContainer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //
 
     pub fn is_empty(&self) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("()Z");
@@ -888,7 +851,6 @@ impl<'mc> PersistentDataContainer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     pub fn set(
         &self,
@@ -917,7 +879,6 @@ impl<'mc> PersistentDataContainer<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn get_or_default(
         &self,
@@ -946,7 +907,6 @@ impl<'mc> PersistentDataContainer<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    //@NotNull
 
     pub fn adapter_context(
         &self,

@@ -43,8 +43,6 @@ impl<'mc> JNIInstantiatable<'mc> for Attributable<'mc> {
 }
 
 impl<'mc> Attributable<'mc> {
-    //
-
     pub fn get_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
@@ -262,8 +260,6 @@ impl<'mc> JNIInstantiatable<'mc> for AttributeInstance<'mc> {
 }
 
 impl<'mc> AttributeInstance<'mc> {
-    //@NotNull
-
     pub fn modifiers(
         &self,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -284,8 +280,6 @@ impl<'mc> AttributeInstance<'mc> {
         }
         Ok(new_vec)
     }
-    //@Deprecated
-
     #[deprecated]
 
     pub fn value(&self) -> Result<f64, Box<dyn std::error::Error>> {
@@ -296,7 +290,6 @@ impl<'mc> AttributeInstance<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
 
     pub fn default_value(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -306,7 +299,6 @@ impl<'mc> AttributeInstance<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //@NotNull
 
     pub fn attribute(
         &self,
@@ -333,7 +325,6 @@ impl<'mc> AttributeInstance<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn base_value(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -343,8 +334,6 @@ impl<'mc> AttributeInstance<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //
-
     /// Set the base value of this instance.
     pub fn set_base_value(&self, arg0: f64) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(D)V");
@@ -358,7 +347,6 @@ impl<'mc> AttributeInstance<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn add_modifier(
         &self,
@@ -377,7 +365,6 @@ impl<'mc> AttributeInstance<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn remove_modifier(
         &self,
@@ -628,8 +615,6 @@ impl<'mc> AttributeModifierOperation<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-
-    //
 }
 
 impl<'mc> JNIRaw<'mc> for AttributeModifier<'mc> {
@@ -710,7 +695,6 @@ impl<'mc> AttributeModifier<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::attribute::AttributeModifier::from_raw(&jni, res)
     }
-    //@NotNull
 
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/String;");
@@ -724,7 +708,6 @@ impl<'mc> AttributeModifier<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn equals(
         &self,
@@ -741,7 +724,6 @@ impl<'mc> AttributeModifier<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    //
 
     #[doc(hidden)]
     pub fn internal_to_string(&self) -> Result<String, Box<dyn std::error::Error>> {
@@ -756,7 +738,6 @@ impl<'mc> AttributeModifier<'mc> {
             .to_string_lossy()
             .to_string())
     }
-    //
 
     pub fn hash_code(&self) -> Result<i32, Box<dyn std::error::Error>> {
         let sig = String::from("()I");
@@ -766,7 +747,6 @@ impl<'mc> AttributeModifier<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    //@Nullable
 
     pub fn slot(
         &self,
@@ -796,7 +776,6 @@ impl<'mc> AttributeModifier<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )?))
     }
-    //@NotNull
 
     pub fn unique_id(
         &self,
@@ -810,7 +789,6 @@ impl<'mc> AttributeModifier<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //@NotNull
 
     pub fn serialize(
         &self,
@@ -824,7 +802,6 @@ impl<'mc> AttributeModifier<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    //
 
     pub fn deserialize(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -846,7 +823,6 @@ impl<'mc> AttributeModifier<'mc> {
         let obj = res.l()?;
         crate::attribute::AttributeModifier::from_raw(&jni, obj)
     }
-    //
 
     pub fn amount(&self) -> Result<f64, Box<dyn std::error::Error>> {
         let sig = String::from("()D");
@@ -856,7 +832,6 @@ impl<'mc> AttributeModifier<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    //@NotNull
 
     pub fn operation(
         &self,
@@ -883,7 +858,6 @@ impl<'mc> AttributeModifier<'mc> {
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }
-    //
 
     pub fn wait_with_long(
         &self,
@@ -909,7 +883,6 @@ impl<'mc> AttributeModifier<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn class(&self) -> Result<jni::objects::JClass<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Class;");
@@ -919,7 +892,6 @@ impl<'mc> AttributeModifier<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
-    //
 
     pub fn notify(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
@@ -929,7 +901,6 @@ impl<'mc> AttributeModifier<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    //
 
     pub fn notify_all(&self) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("()V");
