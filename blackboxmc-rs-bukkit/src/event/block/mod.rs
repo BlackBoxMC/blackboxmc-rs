@@ -160,7 +160,7 @@ impl<'mc> MoistureChangeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -449,7 +449,7 @@ impl<'mc> BlockReceiveGameEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -723,7 +723,7 @@ impl<'mc> BlockDropItemEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1183,7 +1183,7 @@ impl<'mc> TNTPrimeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1413,7 +1413,7 @@ impl<'mc> BellResonateEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1677,7 +1677,7 @@ impl<'mc> BlockExplodeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2199,7 +2199,7 @@ impl<'mc> CauldronLevelChangeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2566,7 +2566,7 @@ impl<'mc> BlockMultiPlaceEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3004,7 +3004,7 @@ impl<'mc> BlockCanBuildEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3291,7 +3291,7 @@ impl<'mc> BlockSpreadEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3558,7 +3558,7 @@ impl<'mc> BlockDamageAbortEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3829,7 +3829,7 @@ impl<'mc> BlockFormEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -4246,7 +4246,7 @@ impl<'mc> BlockPistonRetractEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -4836,7 +4836,7 @@ impl<'mc> BlockPistonExtendEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -5095,7 +5095,7 @@ impl<'mc> BlockFertilizeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -5369,7 +5369,7 @@ impl<'mc> BrewingStartEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -5618,7 +5618,7 @@ impl<'mc> InventoryBlockStartEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -5892,7 +5892,7 @@ impl<'mc> BlockGrowEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -6228,7 +6228,7 @@ impl<'mc> BlockDispenseArmorEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -6526,7 +6526,7 @@ impl<'mc> BlockCookEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -6805,7 +6805,7 @@ impl<'mc> BlockPistonEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -7083,7 +7083,7 @@ impl<'mc> BlockFadeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -7484,7 +7484,7 @@ impl<'mc> BlockPlaceEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -7790,7 +7790,7 @@ impl<'mc> BlockPhysicsEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -8082,7 +8082,7 @@ impl<'mc> EntityBlockFormEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -8329,7 +8329,7 @@ impl<'mc> SpongeAbsorbEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -8582,7 +8582,7 @@ impl<'mc> BlockExpEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -8923,7 +8923,7 @@ impl<'mc> SignChangeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -9175,7 +9175,7 @@ impl<'mc> LeavesDecayEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -9469,7 +9469,7 @@ impl<'mc> BlockFromToEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -9758,7 +9758,7 @@ impl<'mc> BlockShearEntityEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -10049,7 +10049,7 @@ impl<'mc> FluidLevelChangeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -10329,7 +10329,7 @@ impl<'mc> BlockBurnEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -10653,7 +10653,7 @@ impl<'mc> BlockDispenseEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -10951,7 +10951,7 @@ impl<'mc> BellRingEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -11269,7 +11269,7 @@ impl<'mc> BlockDamageEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -11562,7 +11562,7 @@ impl<'mc> CampfireStartEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -11881,7 +11881,7 @@ impl<'mc> BlockBreakEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -12148,7 +12148,7 @@ impl<'mc> BlockRedstoneEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -12439,7 +12439,7 @@ impl<'mc> BlockIgniteEvent<'mc> {
         arg0: impl Into<crate::block::Block<'mc>>,
         arg1: impl Into<crate::event::block::BlockIgniteEventIgniteCause<'mc>>,
         arg2: impl Into<crate::entity::Entity<'mc>>,
-        arg3: std::option::Option<impl Into<crate::block::Block<'mc>>>,
+        arg3: impl Into<crate::block::Block<'mc>>,
     ) -> Result<crate::event::block::BlockIgniteEvent<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -12458,13 +12458,11 @@ impl<'mc> BlockIgniteEvent<'mc> {
             jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
         });
         args.push(val_3);
-        if let Some(a) = arg3 {
-            sig += "Lorg/bukkit/block/Block;";
-            let val_4 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_4);
-        }
+        sig += "Lorg/bukkit/block/Block;";
+        let val_4 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg3.into().jni_object().clone())
+        });
+        args.push(val_4);
         sig += ")V";
         let cls = jni.find_class("org/bukkit/event/block/BlockIgniteEvent");
         let cls = jni.translate_error_with_class(cls)?;
@@ -12634,7 +12632,7 @@ impl<'mc> BlockIgniteEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -12970,7 +12968,7 @@ impl<'mc> NotePlayEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -13184,7 +13182,7 @@ impl<'mc> BlockEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

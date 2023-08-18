@@ -448,7 +448,7 @@ impl<'mc> BiomeProvider<'mc> {
         Ok(new_vec)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -954,7 +954,7 @@ impl<'mc> BlockPopulator<'mc> {
         crate::generator::BlockPopulator::from_raw(&jni, res)
     }
 
-    pub fn populate_with_world_info(
+    pub fn populate_with_world(
         &self,
         arg0: impl Into<crate::generator::WorldInfo<'mc>>,
         arg1: impl Into<blackboxmc_java::util::JavaRandom<'mc>>,
@@ -997,7 +997,7 @@ impl<'mc> BlockPopulator<'mc> {
         Ok(())
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1147,7 +1147,7 @@ impl<'mc> LimitedRegion<'mc> {
         Ok(res.i()?)
     }
     /// Checks if the given coordinates are in the region.
-    pub fn is_in_region_with_int(
+    pub fn is_in_region_with_location(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -1194,7 +1194,7 @@ impl<'mc> LimitedRegion<'mc> {
         Ok(new_vec)
     }
 
-    pub fn get_type_with_int(
+    pub fn get_type_with_location(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -1238,7 +1238,7 @@ impl<'mc> LimitedRegion<'mc> {
         )
     }
 
-    pub fn set_type_with_int(
+    pub fn set_type_with_location(
         &self,
         arg0: i32,
         arg1: i32,
@@ -1273,7 +1273,7 @@ impl<'mc> LimitedRegion<'mc> {
         Ok(())
     }
 
-    pub fn get_block_data_with_int(
+    pub fn get_block_data_with_location(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -1304,7 +1304,7 @@ impl<'mc> LimitedRegion<'mc> {
         })
     }
 
-    pub fn set_block_data_with_int(
+    pub fn set_block_data_with_location(
         &self,
         arg0: i32,
         arg1: i32,
@@ -1339,11 +1339,10 @@ impl<'mc> LimitedRegion<'mc> {
         Ok(())
     }
 
-    pub fn get_highest_block_yat_with_int(
+    pub fn get_highest_block_yat_with_location(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
-        arg2: std::option::Option<impl Into<crate::HeightMap<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -1354,13 +1353,6 @@ impl<'mc> LimitedRegion<'mc> {
             sig += "I";
             let val_2 = jni::objects::JValueGen::Int(a.into());
             args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "Lorg/bukkit/HeightMap;";
-            let val_3 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_3);
         }
         sig += ")I";
         let res = self.jni_ref().call_method(
@@ -1373,7 +1365,37 @@ impl<'mc> LimitedRegion<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn get_biome_with_int(
+    pub fn get_highest_block_yat_with_int(
+        &self,
+        arg0: i32,
+        arg1: i32,
+        arg2: impl Into<crate::HeightMap<'mc>>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "I";
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        args.push(val_1);
+        sig += "I";
+        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        args.push(val_2);
+        sig += "Lorg/bukkit/HeightMap;";
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
+        });
+        args.push(val_3);
+        sig += ")I";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getHighestBlockYAt",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+
+    pub fn get_biome_with_location(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -1417,7 +1439,7 @@ impl<'mc> LimitedRegion<'mc> {
         )
     }
 
-    pub fn set_biome_with_int(
+    pub fn set_biome_with_location(
         &self,
         arg0: i32,
         arg1: i32,
@@ -1452,7 +1474,7 @@ impl<'mc> LimitedRegion<'mc> {
         Ok(())
     }
 
-    pub fn get_block_state_with_int(
+    pub fn get_block_state_with_location(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -2204,7 +2226,7 @@ impl<'mc> ChunkGenerator<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn should_generate_noise_with_world_info(
+    pub fn should_generate_noise(
         &self,
         arg0: std::option::Option<impl Into<crate::generator::WorldInfo<'mc>>>,
         arg1: std::option::Option<impl Into<blackboxmc_java::util::JavaRandom<'mc>>>,
@@ -2248,7 +2270,7 @@ impl<'mc> ChunkGenerator<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn should_generate_surface_with_world_info(
+    pub fn should_generate_surface(
         &self,
         arg0: std::option::Option<impl Into<crate::generator::WorldInfo<'mc>>>,
         arg1: std::option::Option<impl Into<blackboxmc_java::util::JavaRandom<'mc>>>,
@@ -2305,7 +2327,7 @@ impl<'mc> ChunkGenerator<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn should_generate_caves_with_world_info(
+    pub fn should_generate_caves(
         &self,
         arg0: std::option::Option<impl Into<crate::generator::WorldInfo<'mc>>>,
         arg1: std::option::Option<impl Into<blackboxmc_java::util::JavaRandom<'mc>>>,
@@ -2349,7 +2371,7 @@ impl<'mc> ChunkGenerator<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn should_generate_decorations_with_world_info(
+    pub fn should_generate_decorations(
         &self,
         arg0: std::option::Option<impl Into<crate::generator::WorldInfo<'mc>>>,
         arg1: std::option::Option<impl Into<blackboxmc_java::util::JavaRandom<'mc>>>,
@@ -2393,7 +2415,7 @@ impl<'mc> ChunkGenerator<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn should_generate_mobs_with_world_info(
+    pub fn should_generate_mobs(
         &self,
         arg0: std::option::Option<impl Into<crate::generator::WorldInfo<'mc>>>,
         arg1: std::option::Option<impl Into<blackboxmc_java::util::JavaRandom<'mc>>>,
@@ -2437,7 +2459,7 @@ impl<'mc> ChunkGenerator<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn should_generate_structures_with_world_info(
+    pub fn should_generate_structures(
         &self,
         arg0: std::option::Option<impl Into<crate::generator::WorldInfo<'mc>>>,
         arg1: std::option::Option<impl Into<blackboxmc_java::util::JavaRandom<'mc>>>,
@@ -2481,7 +2503,7 @@ impl<'mc> ChunkGenerator<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

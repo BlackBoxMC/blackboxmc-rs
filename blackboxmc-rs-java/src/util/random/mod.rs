@@ -210,7 +210,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         crate::util::random::JavaRandomGeneratorFactory::from_raw(&jni, obj)
     }
 
-    pub fn create_with_bytes(
+    pub fn create(
         &self,
         arg0: std::option::Option<Vec<i8>>,
     ) -> Result<crate::util::random::JavaRandomGenerator<'mc>, Box<dyn std::error::Error>> {
@@ -235,7 +235,7 @@ impl<'mc> JavaRandomGeneratorFactory<'mc> {
         Ok(res.l()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -370,7 +370,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaRandomGeneratorSplittableGenerator<'mc>
 }
 
 impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
-    pub fn split_with_random_generatorsplittable_generator(
+    pub fn split(
         &self,
         arg0: std::option::Option<
             impl Into<crate::util::random::JavaRandomGeneratorSplittableGenerator<'mc>>,
@@ -434,7 +434,7 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn next_long_with_long(
+    pub fn next_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
@@ -459,7 +459,7 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
         Ok(res.j()?)
     }
 
-    pub fn next_float_with_float(
+    pub fn next_float(
         &self,
         arg0: std::option::Option<f32>,
         arg1: std::option::Option<f32>,
@@ -493,7 +493,7 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
         Ok(())
     }
 
-    pub fn next_gaussian_with_double(
+    pub fn next_gaussian(
         &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
@@ -536,7 +536,7 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
         Ok(res.d()?)
     }
 
-    pub fn next_double_with_double(
+    pub fn next_double(
         &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
@@ -561,7 +561,7 @@ impl<'mc> JavaRandomGeneratorSplittableGenerator<'mc> {
         Ok(res.d()?)
     }
 
-    pub fn next_int_with_int(
+    pub fn next_int(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
@@ -672,7 +672,7 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn next_long_with_long(
+    pub fn next_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
@@ -697,7 +697,7 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
         Ok(res.j()?)
     }
 
-    pub fn next_float_with_float(
+    pub fn next_float(
         &self,
         arg0: std::option::Option<f32>,
         arg1: std::option::Option<f32>,
@@ -731,7 +731,7 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
         Ok(())
     }
 
-    pub fn next_gaussian_with_double(
+    pub fn next_gaussian(
         &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
@@ -774,7 +774,7 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
         Ok(res.d()?)
     }
 
-    pub fn next_double_with_double(
+    pub fn next_double(
         &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
@@ -799,7 +799,7 @@ impl<'mc> JavaRandomGeneratorStreamableGenerator<'mc> {
         Ok(res.d()?)
     }
 
-    pub fn next_int_with_int(
+    pub fn next_int(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
@@ -988,7 +988,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn next_long_with_long(
+    pub fn next_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
@@ -1013,7 +1013,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         Ok(res.j()?)
     }
 
-    pub fn next_float_with_float(
+    pub fn next_float(
         &self,
         arg0: std::option::Option<f32>,
         arg1: std::option::Option<f32>,
@@ -1047,7 +1047,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         Ok(())
     }
 
-    pub fn next_gaussian_with_double(
+    pub fn next_gaussian(
         &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
@@ -1090,7 +1090,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         Ok(res.d()?)
     }
 
-    pub fn next_double_with_double(
+    pub fn next_double(
         &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
@@ -1115,7 +1115,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         Ok(res.d()?)
     }
 
-    pub fn next_int_with_int(
+    pub fn next_int(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
@@ -1198,7 +1198,7 @@ impl<'mc> JavaRandomGenerator<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn next_long_with_long(
+    pub fn next_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
@@ -1223,7 +1223,7 @@ impl<'mc> JavaRandomGenerator<'mc> {
         Ok(res.j()?)
     }
 
-    pub fn next_float_with_float(
+    pub fn next_float(
         &self,
         arg0: std::option::Option<f32>,
         arg1: std::option::Option<f32>,
@@ -1257,7 +1257,7 @@ impl<'mc> JavaRandomGenerator<'mc> {
         Ok(())
     }
 
-    pub fn next_gaussian_with_double(
+    pub fn next_gaussian(
         &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
@@ -1333,7 +1333,7 @@ impl<'mc> JavaRandomGenerator<'mc> {
         crate::util::random::JavaRandomGenerator::from_raw(&jni, obj)
     }
 
-    pub fn next_double_with_double(
+    pub fn next_double(
         &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
@@ -1358,7 +1358,7 @@ impl<'mc> JavaRandomGenerator<'mc> {
         Ok(res.d()?)
     }
 
-    pub fn next_int_with_int(
+    pub fn next_int(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
@@ -1428,7 +1428,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaRandomGeneratorArbitrarilyJumpableGener
 }
 
 impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
-    pub fn copy_and_jump_with_double(
+    pub fn copy_and_jump(
         &self,
         arg0: std::option::Option<f64>,
     ) -> Result<
@@ -1475,10 +1475,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         Ok(())
     }
 
-    pub fn jump_with_double(
-        &self,
-        arg0: std::option::Option<f64>,
-    ) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn jump(&self, arg0: std::option::Option<f64>) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
@@ -1583,7 +1580,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn next_long_with_long(
+    pub fn next_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
@@ -1608,7 +1605,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         Ok(res.j()?)
     }
 
-    pub fn next_float_with_float(
+    pub fn next_float(
         &self,
         arg0: std::option::Option<f32>,
         arg1: std::option::Option<f32>,
@@ -1642,7 +1639,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         Ok(())
     }
 
-    pub fn next_gaussian_with_double(
+    pub fn next_gaussian(
         &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
@@ -1685,7 +1682,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         Ok(res.d()?)
     }
 
-    pub fn next_double_with_double(
+    pub fn next_double(
         &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
@@ -1710,7 +1707,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         Ok(res.d()?)
     }
 
-    pub fn next_int_with_int(
+    pub fn next_int(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
@@ -1869,7 +1866,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn next_long_with_long(
+    pub fn next_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
@@ -1894,7 +1891,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         Ok(res.j()?)
     }
 
-    pub fn next_float_with_float(
+    pub fn next_float(
         &self,
         arg0: std::option::Option<f32>,
         arg1: std::option::Option<f32>,
@@ -1928,7 +1925,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         Ok(())
     }
 
-    pub fn next_gaussian_with_double(
+    pub fn next_gaussian(
         &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
@@ -1971,7 +1968,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         Ok(res.d()?)
     }
 
-    pub fn next_double_with_double(
+    pub fn next_double(
         &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
@@ -1996,7 +1993,7 @@ impl<'mc> JavaRandomGeneratorJumpableGenerator<'mc> {
         Ok(res.d()?)
     }
 
-    pub fn next_int_with_int(
+    pub fn next_int(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,

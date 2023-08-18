@@ -178,7 +178,7 @@ impl<'mc> RemoteServerCommandEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -399,7 +399,7 @@ impl<'mc> PluginEnableEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -694,7 +694,7 @@ impl<'mc> ServerCommandEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -927,7 +927,7 @@ impl<'mc> ServiceUnregisterEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1077,7 +1077,7 @@ impl<'mc> JNIInstantiatable<'mc> for BroadcastMessageEvent<'mc> {
 }
 
 impl<'mc> BroadcastMessageEvent<'mc> {
-    pub fn new_with_boolean(
+    pub fn new_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: bool,
         arg1: impl Into<String>,
@@ -1218,7 +1218,7 @@ impl<'mc> BroadcastMessageEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1369,7 +1369,7 @@ impl<'mc> JNIInstantiatable<'mc> for ServerEvent<'mc> {
 }
 
 impl<'mc> ServerEvent<'mc> {
-    pub fn new_with_boolean(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<bool>,
     ) -> Result<crate::event::server::ServerEvent<'mc>, Box<dyn std::error::Error>> {
@@ -1421,7 +1421,7 @@ impl<'mc> ServerEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1683,7 +1683,7 @@ impl<'mc> TabCompleteEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1912,7 +1912,7 @@ impl<'mc> PluginDisableEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2135,7 +2135,7 @@ impl<'mc> MapInitializeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2345,7 +2345,7 @@ impl<'mc> ServiceEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2693,7 +2693,7 @@ impl<'mc> ServerLoadEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2919,7 +2919,7 @@ impl<'mc> ServiceRegisterEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3233,7 +3233,7 @@ impl<'mc> PluginEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3593,7 +3593,7 @@ impl<'mc> ServerListPingEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

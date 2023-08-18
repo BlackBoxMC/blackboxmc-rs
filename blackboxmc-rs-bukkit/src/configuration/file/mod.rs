@@ -44,7 +44,7 @@ impl<'mc> JNIInstantiatable<'mc> for FileConfiguration<'mc> {
 }
 
 impl<'mc> FileConfiguration<'mc> {
-    pub fn new_with_configuration(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::configuration::Configuration<'mc>>>,
     ) -> Result<crate::configuration::file::FileConfiguration<'mc>, Box<dyn std::error::Error>>
@@ -66,6 +66,23 @@ impl<'mc> FileConfiguration<'mc> {
         crate::configuration::file::FileConfiguration::from_raw(&jni, res)
     }
 
+    pub fn load_with_reader(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/io/File;";
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        args.push(val_1);
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "load", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
     pub fn load_with_string(
         &self,
         arg0: impl Into<String>,
@@ -85,7 +102,7 @@ impl<'mc> FileConfiguration<'mc> {
         Ok(())
     }
 
-    pub fn save_with_string(
+    pub fn save_with_file(
         &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -203,7 +220,7 @@ impl<'mc> FileConfiguration<'mc> {
         )?))
     }
 
-    pub fn add_defaults_with_configuration(
+    pub fn add_defaults_with_map(
         &self,
         arg0: impl Into<crate::configuration::Configuration<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1155,7 +1172,7 @@ impl<'mc> FileConfiguration<'mc> {
         Ok(new_vec)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1293,7 +1310,7 @@ impl<'mc> JNIInstantiatable<'mc> for FileConfigurationOptions<'mc> {
 }
 
 impl<'mc> FileConfigurationOptions<'mc> {
-    pub fn header_with_string(
+    pub fn header(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<crate::configuration::file::FileConfigurationOptions<'mc>, Box<dyn std::error::Error>>
@@ -1334,7 +1351,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="../ConfigurationOptions.html#pathSeparator(char)">ConfigurationOptions</a></code></span>
     /// Sets the char that will be used to separate <a href="../ConfigurationSection.html" title="interface in org.bukkit.configuration"><code>ConfigurationSection</code></a>s
     /// <p>This value does not affect how the <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a> is stored, only in how you access the data. The default value is '.'.</p>
-    pub fn path_separator_with_char(
+    pub fn path_separator(
         &self,
         arg0: std::option::Option<u16>,
     ) -> Result<crate::configuration::file::FileConfigurationOptions<'mc>, Box<dyn std::error::Error>>
@@ -1358,7 +1375,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="../ConfigurationOptions.html#copyDefaults(boolean)">ConfigurationOptions</a></code></span>
     /// Sets if the <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a> should copy values from its default <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> directly.
     /// <p>If this is true, all values in the default Configuration will be directly copied, making it impossible to distinguish between values that were set and values that are provided by default. As a result, <a href="../ConfigurationSection.html#contains(java.lang.String)"><code>ConfigurationSection.contains(java.lang.String)</code></a> will always return the same value as <a href="../ConfigurationSection.html#isSet(java.lang.String)"><code>ConfigurationSection.isSet(java.lang.String)</code></a>. The default value is false.</p>
-    pub fn copy_defaults_with_boolean(
+    pub fn copy_defaults(
         &self,
         arg0: std::option::Option<bool>,
     ) -> Result<crate::configuration::file::FileConfigurationOptions<'mc>, Box<dyn std::error::Error>>
@@ -1381,7 +1398,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
     }
     /// Sets whether or not comments should be loaded and saved.
     /// <p>Defaults to true.</p>
-    pub fn parse_comments_with_boolean(
+    pub fn parse_comments(
         &self,
         arg0: std::option::Option<bool>,
     ) -> Result<crate::configuration::MemoryConfigurationOptions<'mc>, Box<dyn std::error::Error>>
@@ -1429,7 +1446,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
     /// </div>
     /// Call <a href="#parseComments(boolean)"><code>parseComments(boolean)</code></a> instead.
     ///
-    pub fn copy_header_with_boolean(
+    pub fn copy_header(
         &self,
         arg0: std::option::Option<bool>,
     ) -> Result<crate::configuration::file::FileConfigurationOptions<'mc>, Box<dyn std::error::Error>>
@@ -1451,7 +1468,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
         })
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1604,7 +1621,7 @@ impl<'mc> JNIInstantiatable<'mc> for YamlConfigurationOptions<'mc> {
 
 impl<'mc> YamlConfigurationOptions<'mc> {
     /// Sets how long a line can be, before it gets split.
-    pub fn width_with_int(
+    pub fn width(
         &self,
         arg0: std::option::Option<i32>,
     ) -> Result<crate::configuration::file::YamlConfigurationOptions<'mc>, Box<dyn std::error::Error>>
@@ -1626,7 +1643,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         })
     }
 
-    pub fn header_with_string(
+    pub fn header(
         &self,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<crate::configuration::file::FileConfigurationOptions<'mc>, Box<dyn std::error::Error>>
@@ -1651,7 +1668,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
     }
     /// Sets how much spaces should be used to indent each line.
     /// <p>The minimum value this may be is 2, and the maximum is 9.</p>
-    pub fn indent_with_int(
+    pub fn indent(
         &self,
         arg0: std::option::Option<i32>,
     ) -> Result<crate::configuration::file::YamlConfigurationOptions<'mc>, Box<dyn std::error::Error>>
@@ -1691,7 +1708,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="../ConfigurationOptions.html#pathSeparator(char)">ConfigurationOptions</a></code></span>
     /// Sets the char that will be used to separate <a href="../ConfigurationSection.html" title="interface in org.bukkit.configuration"><code>ConfigurationSection</code></a>s
     /// <p>This value does not affect how the <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> is stored, only in how you access the data. The default value is '.'.</p>
-    pub fn path_separator_with_char(
+    pub fn path_separator(
         &self,
         arg0: std::option::Option<u16>,
     ) -> Result<crate::configuration::ConfigurationOptions<'mc>, Box<dyn std::error::Error>> {
@@ -1714,7 +1731,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="../ConfigurationOptions.html#copyDefaults(boolean)">ConfigurationOptions</a></code></span>
     /// Sets if the <a href="../Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> should copy values from its default <a title="interface in org.bukkit.configuration" href="../Configuration.html"><code>Configuration</code></a> directly.
     /// <p>If this is true, all values in the default Configuration will be directly copied, making it impossible to distinguish between values that were set and values that are provided by default. As a result, <a href="../ConfigurationSection.html#contains(java.lang.String)"><code>ConfigurationSection.contains(java.lang.String)</code></a> will always return the same value as <a href="../ConfigurationSection.html#isSet(java.lang.String)"><code>ConfigurationSection.isSet(java.lang.String)</code></a>. The default value is false.</p>
-    pub fn copy_defaults_with_boolean(
+    pub fn copy_defaults(
         &self,
         arg0: std::option::Option<bool>,
     ) -> Result<crate::configuration::file::YamlConfigurationOptions<'mc>, Box<dyn std::error::Error>>
@@ -1738,7 +1755,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="FileConfigurationOptions.html#parseComments(boolean)">FileConfigurationOptions</a></code></span>
     /// Sets whether or not comments should be loaded and saved.
     /// <p>Defaults to true.</p>
-    pub fn parse_comments_with_boolean(
+    pub fn parse_comments(
         &self,
         arg0: std::option::Option<bool>,
     ) -> Result<crate::configuration::file::YamlConfigurationOptions<'mc>, Box<dyn std::error::Error>>
@@ -1760,7 +1777,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         })
     }
     /// <span class="deprecated-label">Deprecated.</span>
-    pub fn copy_header_with_boolean(
+    pub fn copy_header(
         &self,
         arg0: std::option::Option<bool>,
     ) -> Result<crate::configuration::file::YamlConfigurationOptions<'mc>, Box<dyn std::error::Error>>
@@ -1803,7 +1820,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         Ok(new_vec)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1979,7 +1996,7 @@ impl<'mc> YamlConfiguration<'mc> {
         })
     }
 
-    pub fn load_configuration_with_reader(
+    pub fn load_configuration_with_file(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<crate::configuration::file::YamlConfiguration<'mc>, Box<dyn std::error::Error>>
@@ -2029,6 +2046,23 @@ impl<'mc> YamlConfiguration<'mc> {
         Ok(())
     }
 
+    pub fn load_with_reader(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/io/File;";
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        args.push(val_1);
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "load", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
     pub fn load_with_string(
         &self,
         arg0: impl Into<String>,
@@ -2048,7 +2082,7 @@ impl<'mc> YamlConfiguration<'mc> {
         Ok(())
     }
 
-    pub fn save_with_string(
+    pub fn save_with_file(
         &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2120,7 +2154,7 @@ impl<'mc> YamlConfiguration<'mc> {
         )?))
     }
 
-    pub fn add_defaults_with_configuration(
+    pub fn add_defaults_with_map(
         &self,
         arg0: impl Into<crate::configuration::Configuration<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3072,7 +3106,7 @@ impl<'mc> YamlConfiguration<'mc> {
         Ok(new_vec)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

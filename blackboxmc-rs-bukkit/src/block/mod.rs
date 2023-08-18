@@ -115,7 +115,7 @@ impl<'mc> Chest<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -859,7 +859,7 @@ impl<'mc> DaylightDetector<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -1394,7 +1394,7 @@ impl<'mc> Lectern<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -2069,7 +2069,7 @@ impl<'mc> CreatureSpawner<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -2476,7 +2476,7 @@ impl<'mc> Comparator<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -2912,7 +2912,7 @@ impl<'mc> Container<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -3491,7 +3491,7 @@ impl<'mc> EndGateway<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -4013,7 +4013,7 @@ impl<'mc> BlastFurnace<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -4674,7 +4674,7 @@ impl<'mc> EnchantingTable<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -5178,7 +5178,7 @@ impl<'mc> ShulkerBox<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -5824,7 +5824,7 @@ impl<'mc> EntityBlockStorage<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -6348,7 +6348,7 @@ impl<'mc> Beehive<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -6872,7 +6872,7 @@ impl<'mc> SculkCatalyst<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -7394,7 +7394,7 @@ impl<'mc> Furnace<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -7913,7 +7913,7 @@ impl<'mc> Dropper<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -8545,7 +8545,7 @@ impl<'mc> SuspiciousSand<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -8952,7 +8952,7 @@ impl<'mc> Conduit<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -9465,7 +9465,7 @@ impl<'mc> Beacon<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -10295,7 +10295,7 @@ impl<'mc> Block<'mc> {
         Ok(())
     }
     /// Gets the block at the given offsets
-    pub fn get_relative_with_int(
+    pub fn get_relative_with_block_face(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -10449,7 +10449,7 @@ impl<'mc> Block<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn break_naturally_with_item_stack(
+    pub fn break_naturally(
         &self,
         arg0: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10747,10 +10747,9 @@ impl<'mc> JNIInstantiatable<'mc> for Bell<'mc> {
 }
 
 impl<'mc> Bell<'mc> {
-    pub fn ring_with_entity(
+    pub fn ring(
         &self,
         arg0: std::option::Option<impl Into<crate::entity::Entity<'mc>>>,
-        arg1: std::option::Option<impl Into<crate::block::BlockFace<'mc>>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -10761,13 +10760,31 @@ impl<'mc> Bell<'mc> {
             });
             args.push(val_1);
         }
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/block/BlockFace;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "ring", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn ring_with_entity(
+        &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+        arg1: impl Into<crate::block::BlockFace<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Lorg/bukkit/block/BlockFace;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self
             .jni_ref()
@@ -10842,7 +10859,7 @@ impl<'mc> Bell<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -11249,7 +11266,7 @@ impl<'mc> Jigsaw<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -11715,7 +11732,7 @@ impl<'mc> Dispenser<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -12353,7 +12370,7 @@ impl<'mc> BrushableBlock<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -12788,7 +12805,7 @@ impl<'mc> SculkShrieker<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -13300,7 +13317,7 @@ impl<'mc> DecoratedPot<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -13827,7 +13844,7 @@ impl<'mc> Campfire<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -14707,7 +14724,7 @@ impl<'mc> Smoker<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -15219,7 +15236,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -15783,7 +15800,7 @@ impl<'mc> Structure<'mc> {
             .to_string())
     }
 
-    pub fn set_author_with_string(
+    pub fn set_author_with_living_entity(
         &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -16065,7 +16082,7 @@ impl<'mc> Structure<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -16437,7 +16454,7 @@ impl<'mc> EnderChest<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -16850,7 +16867,7 @@ impl<'mc> Bed<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -17461,7 +17478,7 @@ impl<'mc> Jukebox<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -18391,7 +18408,7 @@ impl<'mc> Banner<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -18827,7 +18844,7 @@ impl<'mc> Barrel<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -19451,7 +19468,7 @@ impl<'mc> CommandBlock<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -19886,7 +19903,7 @@ impl<'mc> SculkSensor<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -20469,7 +20486,7 @@ impl<'mc> HangingSign<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -20952,7 +20969,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -21368,7 +21385,7 @@ impl<'mc> TileState<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -21770,7 +21787,7 @@ impl<'mc> BlockState<'mc> {
     /// <p>Unless force is true, this will not modify the state of a block if it is no longer the same type as it was when this state was taken. It will return false in this eventuality.</p>
     /// <p>If force is true, it will set the type of the block to match the new state, set the state data and then return true.</p>
     /// <p>If applyPhysics is true, it will trigger a physics update on surrounding blocks which could cause them to update or disappear.</p>
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -22254,7 +22271,7 @@ impl<'mc> BrewingStand<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -22969,7 +22986,7 @@ impl<'mc> Skull<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -23405,7 +23422,7 @@ impl<'mc> Hopper<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -24125,7 +24142,7 @@ impl<'mc> Sign<'mc> {
         })
     }
 
-    pub fn update_with_boolean(
+    pub fn update(
         &self,
         arg0: std::option::Option<bool>,
         arg1: std::option::Option<bool>,
@@ -24616,7 +24633,7 @@ impl<'mc> DoubleChest<'mc> {
         })
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

@@ -306,7 +306,7 @@ impl<'mc> ItemTagTypePrimitiveTagType<'mc> {
         Ok(res.l()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

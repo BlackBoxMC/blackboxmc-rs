@@ -55,7 +55,7 @@ impl<'mc> JavaErrorManager<'mc> {
         crate::util::logging::JavaErrorManager::from_raw(&jni, res)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -288,7 +288,7 @@ impl<'mc> JavaXMLFormatter<'mc> {
             .to_string())
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -514,7 +514,7 @@ impl<'mc> JavaFormatter<'mc> {
             .to_string())
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -667,7 +667,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaSocketHandler<'mc> {
 }
 
 impl<'mc> JavaSocketHandler<'mc> {
-    pub fn new_with_string(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<i32>,
@@ -900,7 +900,7 @@ impl<'mc> JavaSocketHandler<'mc> {
         })
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1139,7 +1139,7 @@ impl<'mc> JavaSimpleFormatter<'mc> {
             .to_string())
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1483,7 +1483,7 @@ impl<'mc> JavaHandler<'mc> {
         })
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1641,7 +1641,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaMemoryHandler<'mc> {
 }
 
 impl<'mc> JavaMemoryHandler<'mc> {
-    pub fn new_with_handler(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::util::logging::JavaHandler<'mc>>>,
         arg1: std::option::Option<i32>,
@@ -1922,7 +1922,7 @@ impl<'mc> JavaMemoryHandler<'mc> {
         })
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2103,7 +2103,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaLogger<'mc> {
 }
 
 impl<'mc> JavaLogger<'mc> {
-    pub fn config_with_supplier(
+    pub fn config_with_string(
         &self,
         arg0: impl Into<crate::util::function::JavaSupplier<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2122,7 +2122,7 @@ impl<'mc> JavaLogger<'mc> {
         Ok(())
     }
 
-    pub fn warning_with_supplier(
+    pub fn warning_with_string(
         &self,
         arg0: impl Into<crate::util::function::JavaSupplier<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2348,7 +2348,7 @@ impl<'mc> JavaLogger<'mc> {
         Ok(())
     }
 
-    pub fn severe_with_supplier(
+    pub fn severe_with_string(
         &self,
         arg0: impl Into<crate::util::function::JavaSupplier<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2367,7 +2367,7 @@ impl<'mc> JavaLogger<'mc> {
         Ok(())
     }
 
-    pub fn fine_with_supplier(
+    pub fn fine_with_string(
         &self,
         arg0: impl Into<crate::util::function::JavaSupplier<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2386,7 +2386,7 @@ impl<'mc> JavaLogger<'mc> {
         Ok(())
     }
 
-    pub fn finer_with_supplier(
+    pub fn finer_with_string(
         &self,
         arg0: impl Into<crate::util::function::JavaSupplier<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2405,7 +2405,7 @@ impl<'mc> JavaLogger<'mc> {
         Ok(())
     }
 
-    pub fn finest_with_string(
+    pub fn finest_with_supplier(
         &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2455,11 +2455,10 @@ impl<'mc> JavaLogger<'mc> {
             .to_string())
     }
 
-    pub fn log_with_level(
+    pub fn log_with_log_record(
         &self,
         arg0: impl Into<crate::util::logging::JavaLevel<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
-        arg2: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -2475,11 +2474,6 @@ impl<'mc> JavaLogger<'mc> {
             ));
             args.push(val_2);
         }
-        if let Some(a) = arg2 {
-            sig += "Ljava/lang/Object;";
-            let val_3 = jni::objects::JValueGen::Object(a);
-            args.push(val_3);
-        }
         sig += ")V";
         let res = self
             .jni_ref()
@@ -2488,7 +2482,36 @@ impl<'mc> JavaLogger<'mc> {
         Ok(())
     }
 
-    pub fn info_with_supplier(
+    pub fn log_with_level(
+        &self,
+        arg0: impl Into<crate::util::logging::JavaLevel<'mc>>,
+        arg1: impl Into<String>,
+        arg2: jni::objects::JObject<'mc>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/logging/Level;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        sig += "Ljava/lang/Object;";
+        let val_3 = jni::objects::JValueGen::Object(arg2);
+        args.push(val_3);
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "log", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn info_with_string(
         &self,
         arg0: impl Into<crate::util::function::JavaSupplier<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2579,7 +2602,7 @@ impl<'mc> JavaLogger<'mc> {
         })
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2946,7 +2969,7 @@ impl<'mc> JavaConsoleHandler<'mc> {
         })
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3225,7 +3248,7 @@ impl<'mc> JavaLoggingPermission<'mc> {
         Ok(())
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3734,7 +3757,7 @@ impl<'mc> JavaLogRecord<'mc> {
         Ok(())
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3886,7 +3909,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaStreamHandler<'mc> {
 }
 
 impl<'mc> JavaStreamHandler<'mc> {
-    pub fn new_with_output_stream(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<impl Into<crate::util::logging::JavaFormatter<'mc>>>,
@@ -4119,7 +4142,7 @@ impl<'mc> JavaStreamHandler<'mc> {
         })
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -4381,7 +4404,7 @@ impl<'mc> JavaLevel<'mc> {
             .to_string())
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

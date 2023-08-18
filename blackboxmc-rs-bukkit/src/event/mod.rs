@@ -52,6 +52,25 @@ impl<'mc> HandlerList<'mc> {
         crate::event::HandlerList::from_raw(&jni, res)
     }
 
+    pub fn unregister_with_plugin(
+        &self,
+        arg0: impl Into<crate::event::Listener<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/event/Listener;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "unregister", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
     pub fn unregister_with_registered_listener(
         &self,
         arg0: impl Into<crate::plugin::RegisteredListener<'mc>>,
@@ -89,7 +108,7 @@ impl<'mc> HandlerList<'mc> {
         Ok(())
     }
 
-    pub fn unregister_all_with_listener(
+    pub fn unregister_all(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::event::Listener<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -163,7 +182,7 @@ impl<'mc> HandlerList<'mc> {
         blackboxmc_java::util::JavaArrayList::from_raw(&jni, obj)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -645,7 +664,7 @@ impl<'mc> JNIInstantiatable<'mc> for Event<'mc> {
 }
 
 impl<'mc> Event<'mc> {
-    pub fn new_with_boolean(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<bool>,
     ) -> Result<crate::event::Event<'mc>, Box<dyn std::error::Error>> {
@@ -697,7 +716,7 @@ impl<'mc> Event<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

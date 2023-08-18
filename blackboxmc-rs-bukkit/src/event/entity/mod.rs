@@ -308,7 +308,7 @@ impl<'mc> EntityExplodeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -686,7 +686,7 @@ impl<'mc> EntityPortalEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -979,7 +979,7 @@ impl<'mc> StriderTemperatureChangeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1246,7 +1246,7 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
         )
     }
 
-    pub fn set_damage_with_entity_damage_eventdamage_modifier(
+    pub fn set_damage_with_double(
         &self,
         arg0: impl Into<crate::event::entity::EntityDamageEventDamageModifier<'mc>>,
         arg1: std::option::Option<f64>,
@@ -1418,7 +1418,7 @@ impl<'mc> EntityDamageByBlockEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1946,7 +1946,7 @@ impl<'mc> SheepRegrowWoolEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2246,7 +2246,7 @@ impl<'mc> EntityEnterBlockEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2557,7 +2557,7 @@ impl<'mc> EntityPickupItemEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2870,7 +2870,7 @@ impl<'mc> HorseJumpEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3024,7 +3024,7 @@ impl<'mc> JNIInstantiatable<'mc> for ExplosionPrimeEvent<'mc> {
 }
 
 impl<'mc> ExplosionPrimeEvent<'mc> {
-    pub fn new_with_entity(
+    pub fn new_with_explosive(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Entity<'mc>>,
         arg1: std::option::Option<f32>,
@@ -3204,7 +3204,7 @@ impl<'mc> ExplosionPrimeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3818,7 +3818,7 @@ impl<'mc> CreatureSpawnEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -4112,7 +4112,7 @@ impl<'mc> ItemSpawnEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -4530,7 +4530,7 @@ impl<'mc> EntityDropItemEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -5034,7 +5034,7 @@ impl<'mc> SlimeSplitEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -5359,7 +5359,7 @@ impl<'mc> FoodLevelChangeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -5723,7 +5723,7 @@ impl<'mc> EntityTargetLivingEntityEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -6151,7 +6151,7 @@ impl<'mc> EntityShootBowEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -6463,7 +6463,7 @@ impl<'mc> EntityResurrectEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -6752,7 +6752,7 @@ impl<'mc> PiglinBarterEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -7080,7 +7080,7 @@ impl<'mc> PigZombieAngerEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -7383,7 +7383,7 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -7677,7 +7677,7 @@ impl<'mc> EntityToggleSwimEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -8031,7 +8031,7 @@ impl<'mc> EntityTeleportEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -8364,7 +8364,7 @@ impl<'mc> EntityEnterLoveModeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -8718,7 +8718,7 @@ impl<'mc> SheepDyeWoolEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -9005,7 +9005,7 @@ impl<'mc> EntityPoseChangeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -9264,7 +9264,7 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
         )
     }
 
-    pub fn set_damage_with_entity_damage_eventdamage_modifier(
+    pub fn set_damage_with_double(
         &self,
         arg0: impl Into<crate::event::entity::EntityDamageEventDamageModifier<'mc>>,
         arg1: std::option::Option<f64>,
@@ -9436,7 +9436,7 @@ impl<'mc> EntityDamageByEntityEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -9920,7 +9920,7 @@ impl<'mc> VillagerCareerChangeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -10161,7 +10161,7 @@ impl<'mc> EntityEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -10922,7 +10922,7 @@ impl<'mc> EntityPotionEffectEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -11358,7 +11358,7 @@ impl<'mc> ItemMergeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -11684,7 +11684,7 @@ impl<'mc> VillagerAcquireTradeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -12058,7 +12058,7 @@ impl<'mc> LingeringPotionSplashEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -12475,7 +12475,7 @@ impl<'mc> EntityTameEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -12813,7 +12813,7 @@ impl<'mc> EntityBreakDoorEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -13188,7 +13188,7 @@ impl<'mc> EntityBreedEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -13567,7 +13567,7 @@ impl<'mc> EntityPlaceEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -13895,7 +13895,7 @@ impl<'mc> EntityCombustByBlockEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -14186,7 +14186,7 @@ impl<'mc> ItemDespawnEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -14678,7 +14678,7 @@ impl<'mc> EntityRegainHealthEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -14972,7 +14972,7 @@ impl<'mc> BatToggleSleepEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -15264,7 +15264,7 @@ impl<'mc> ProjectileLaunchEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -15852,7 +15852,7 @@ impl<'mc> PlayerDeathEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -16131,7 +16131,7 @@ impl<'mc> AreaEffectCloudApplyEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -16474,7 +16474,7 @@ impl<'mc> EntityChangeBlockEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -16803,7 +16803,7 @@ impl<'mc> EntityCombustByEntityEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -17460,7 +17460,7 @@ impl<'mc> EntityExhaustionEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -17783,7 +17783,7 @@ impl<'mc> PlayerLeashEntityEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -18336,7 +18336,7 @@ impl<'mc> PigZapEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -18615,7 +18615,7 @@ impl<'mc> FireworkExplodeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -18948,7 +18948,7 @@ impl<'mc> ArrowBodyCountChangeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -19351,7 +19351,7 @@ impl<'mc> EntityPortalExitEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -19974,7 +19974,7 @@ impl<'mc> EntityDamageEvent<'mc> {
         )
     }
 
-    pub fn set_damage_with_entity_damage_eventdamage_modifier(
+    pub fn set_damage_with_double(
         &self,
         arg0: impl Into<crate::event::entity::EntityDamageEventDamageModifier<'mc>>,
         arg1: std::option::Option<f64>,
@@ -20147,7 +20147,7 @@ impl<'mc> EntityDamageEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -20425,7 +20425,7 @@ impl<'mc> EntityDeathEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -20716,7 +20716,7 @@ impl<'mc> EntityToggleGlideEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -21274,7 +21274,7 @@ impl<'mc> EntityTargetEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -21725,7 +21725,7 @@ impl<'mc> CreeperPowerEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -22033,7 +22033,7 @@ impl<'mc> SpawnerSpawnEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -22395,7 +22395,7 @@ impl<'mc> EnderDragonChangePhaseEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -22556,8 +22556,8 @@ impl<'mc> ProjectileHitEvent<'mc> {
     pub fn new_with_projectile(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::entity::Projectile<'mc>>,
-        arg1: std::option::Option<impl Into<crate::entity::Entity<'mc>>>,
-        arg2: std::option::Option<impl Into<crate::block::Block<'mc>>>,
+        arg1: impl Into<crate::entity::Entity<'mc>>,
+        arg2: impl Into<crate::block::Block<'mc>>,
         arg3: std::option::Option<impl Into<crate::block::BlockFace<'mc>>>,
     ) -> Result<crate::event::entity::ProjectileHitEvent<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -22567,20 +22567,16 @@ impl<'mc> ProjectileHitEvent<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/entity/Entity;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "Lorg/bukkit/block/Block;";
-            let val_3 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_3);
-        }
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
+        sig += "Lorg/bukkit/block/Block;";
+        let val_3 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
+        });
+        args.push(val_3);
         if let Some(a) = arg3 {
             sig += "Lorg/bukkit/block/BlockFace;";
             let val_4 = jni::objects::JValueGen::Object(unsafe {
@@ -22769,7 +22765,7 @@ impl<'mc> ProjectileHitEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -23043,7 +23039,7 @@ impl<'mc> EntityPortalEnterEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -23343,7 +23339,7 @@ impl<'mc> EntityAirChangeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -23763,7 +23759,7 @@ impl<'mc> EntityUnleashEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -24151,7 +24147,7 @@ impl<'mc> ExpBottleEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -24452,7 +24448,7 @@ impl<'mc> EntityCombustEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -24766,7 +24762,7 @@ impl<'mc> EntitySpellCastEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -25252,7 +25248,7 @@ impl<'mc> EntityTransformEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -25904,7 +25900,7 @@ impl<'mc> PotionSplashEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -26201,7 +26197,7 @@ impl<'mc> EntityInteractEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -26490,7 +26486,7 @@ impl<'mc> EntitySpawnEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -26843,7 +26839,7 @@ impl<'mc> VillagerReplenishTradeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

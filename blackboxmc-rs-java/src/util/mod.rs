@@ -49,7 +49,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaArrayList<'mc> {
 }
 
 impl<'mc> JavaArrayList<'mc> {
-    pub fn new_with_int(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
     ) -> Result<crate::util::JavaArrayList<'mc>, Box<dyn std::error::Error>> {
@@ -68,7 +68,7 @@ impl<'mc> JavaArrayList<'mc> {
         crate::util::JavaArrayList::from_raw(&jni, res)
     }
 
-    pub fn add_with_int(
+    pub fn add_with_object(
         &self,
         arg0: i32,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -91,7 +91,7 @@ impl<'mc> JavaArrayList<'mc> {
         Ok(())
     }
 
-    pub fn remove_with_int(
+    pub fn remove_with_object(
         &self,
         arg0: i32,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -282,7 +282,7 @@ impl<'mc> JavaArrayList<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn add_all_with_int(
+    pub fn add_all_with_collection(
         &self,
         arg0: i32,
         arg1: std::option::Option<impl Into<crate::util::JavaCollection<'mc>>>,
@@ -440,7 +440,7 @@ impl<'mc> JavaArrayList<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn list_iterator_with_int(
+    pub fn list_iterator(
         &self,
         arg0: std::option::Option<i32>,
     ) -> Result<crate::util::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
@@ -493,7 +493,7 @@ impl<'mc> JavaArrayList<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -818,7 +818,7 @@ impl<'mc> JavaAbstractMap<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1127,17 +1127,15 @@ impl<'mc> JNIInstantiatable<'mc> for JavaTreeSet<'mc> {
 impl<'mc> JavaTreeSet<'mc> {
     pub fn new_with_comparator(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::util::JavaComparator<'mc>>>,
+        arg0: impl Into<crate::util::JavaComparator<'mc>>,
     ) -> Result<crate::util::JavaTreeSet<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/util/Comparator;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
-        }
+        sig += "Ljava/util/Comparator;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         sig += ")V";
         let cls = jni.find_class("java/util/TreeSet");
         let cls = jni.translate_error_with_class(cls)?;
@@ -1481,7 +1479,7 @@ impl<'mc> JavaTreeSet<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1618,23 +1616,39 @@ impl<'mc> JNIInstantiatable<'mc> for JavaVector<'mc> {
 }
 
 impl<'mc> JavaVector<'mc> {
-    pub fn new_with_int(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<i32>,
+        arg0: std::option::Option<impl Into<crate::util::JavaCollection<'mc>>>,
     ) -> Result<crate::util::JavaVector<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
-            sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            sig += "Ljava/util/Collection;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
             args.push(val_1);
         }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_2);
-        }
+        sig += ")V";
+        let cls = jni.find_class("java/util/Vector");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::util::JavaVector::from_raw(&jni, res)
+    }
+    pub fn new_with_int(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: i32,
+        arg1: i32,
+    ) -> Result<crate::util::JavaVector<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "I";
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        args.push(val_1);
+        sig += "I";
+        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        args.push(val_2);
         sig += ")V";
         let cls = jni.find_class("java/util/Vector");
         let cls = jni.translate_error_with_class(cls)?;
@@ -1785,7 +1799,7 @@ impl<'mc> JavaVector<'mc> {
         Ok(())
     }
 
-    pub fn add_with_int(
+    pub fn add_with_object(
         &self,
         arg0: i32,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -1808,7 +1822,7 @@ impl<'mc> JavaVector<'mc> {
         Ok(())
     }
 
-    pub fn remove_with_object(
+    pub fn remove_with_int(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2040,7 +2054,7 @@ impl<'mc> JavaVector<'mc> {
         })
     }
 
-    pub fn add_all_with_int(
+    pub fn add_all_with_collection(
         &self,
         arg0: i32,
         arg1: std::option::Option<impl Into<crate::util::JavaCollection<'mc>>>,
@@ -2223,7 +2237,7 @@ impl<'mc> JavaVector<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn list_iterator_with_int(
+    pub fn list_iterator(
         &self,
         arg0: std::option::Option<i32>,
     ) -> Result<crate::util::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
@@ -2262,7 +2276,7 @@ impl<'mc> JavaVector<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3110,7 +3124,7 @@ impl<'mc> JavaMap<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn of_with_object(
+    pub fn of(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -3560,10 +3574,9 @@ impl<'mc> JNIInstantiatable<'mc> for JavaWeakHashMap<'mc> {
 }
 
 impl<'mc> JavaWeakHashMap<'mc> {
-    pub fn new_with_int(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
-        arg1: std::option::Option<f32>,
     ) -> Result<crate::util::JavaWeakHashMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -3572,11 +3585,26 @@ impl<'mc> JavaWeakHashMap<'mc> {
             let val_1 = jni::objects::JValueGen::Int(a.into());
             args.push(val_1);
         }
-        if let Some(a) = arg1 {
-            sig += "F";
-            let val_2 = jni::objects::JValueGen::Float(a.into());
-            args.push(val_2);
-        }
+        sig += ")V";
+        let cls = jni.find_class("java/util/WeakHashMap");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::util::JavaWeakHashMap::from_raw(&jni, res)
+    }
+    pub fn new_with_int(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: i32,
+        arg1: f32,
+    ) -> Result<crate::util::JavaWeakHashMap<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "I";
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        args.push(val_1);
+        sig += "F";
+        let val_2 = jni::objects::JValueGen::Float(arg1.into());
+        args.push(val_2);
         sig += ")V";
         let cls = jni.find_class("java/util/WeakHashMap");
         let cls = jni.translate_error_with_class(cls)?;
@@ -3830,7 +3858,7 @@ impl<'mc> JavaWeakHashMap<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -4223,71 +4251,66 @@ impl<'mc> JavaSet<'mc> {
         })
     }
 
-    pub fn of_with_object(
+    pub fn of(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<jni::objects::JObject<'mc>>,
-        arg1: std::option::Option<jni::objects::JObject<'mc>>,
-        arg2: std::option::Option<jni::objects::JObject<'mc>>,
-        arg3: std::option::Option<jni::objects::JObject<'mc>>,
-        arg4: std::option::Option<jni::objects::JObject<'mc>>,
-        arg5: std::option::Option<jni::objects::JObject<'mc>>,
-        arg6: std::option::Option<jni::objects::JObject<'mc>>,
-        arg7: std::option::Option<jni::objects::JObject<'mc>>,
-        arg8: std::option::Option<jni::objects::JObject<'mc>>,
-        arg9: std::option::Option<jni::objects::JObject<'mc>>,
+        arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
     ) -> Result<crate::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/Object;";
-            let val_1 = jni::objects::JValueGen::Object(a);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/Object;";
-            let val_2 = jni::objects::JValueGen::Object(a);
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "Ljava/lang/Object;";
-            let val_3 = jni::objects::JValueGen::Object(a);
-            args.push(val_3);
-        }
-        if let Some(a) = arg3 {
-            sig += "Ljava/lang/Object;";
-            let val_4 = jni::objects::JValueGen::Object(a);
-            args.push(val_4);
-        }
-        if let Some(a) = arg4 {
-            sig += "Ljava/lang/Object;";
-            let val_5 = jni::objects::JValueGen::Object(a);
-            args.push(val_5);
-        }
-        if let Some(a) = arg5 {
-            sig += "Ljava/lang/Object;";
-            let val_6 = jni::objects::JValueGen::Object(a);
-            args.push(val_6);
-        }
-        if let Some(a) = arg6 {
-            sig += "Ljava/lang/Object;";
-            let val_7 = jni::objects::JValueGen::Object(a);
-            args.push(val_7);
-        }
-        if let Some(a) = arg7 {
-            sig += "Ljava/lang/Object;";
-            let val_8 = jni::objects::JValueGen::Object(a);
-            args.push(val_8);
-        }
-        if let Some(a) = arg8 {
-            sig += "Ljava/lang/Object;";
-            let val_9 = jni::objects::JValueGen::Object(a);
-            args.push(val_9);
-        }
-        if let Some(a) = arg9 {
-            sig += "Ljava/lang/Object;";
-            let val_10 = jni::objects::JValueGen::Object(a);
-            args.push(val_10);
-        }
+        sig += ")Ljava/util/Set;";
+        let cls = jni.find_class("java/util/Set");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "of", sig.as_str(), args);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::util::JavaSet::from_raw(&jni, obj)
+    }
+
+    pub fn of_with_object(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: jni::objects::JObject<'mc>,
+        arg2: jni::objects::JObject<'mc>,
+        arg3: jni::objects::JObject<'mc>,
+        arg4: jni::objects::JObject<'mc>,
+        arg5: jni::objects::JObject<'mc>,
+        arg6: jni::objects::JObject<'mc>,
+        arg7: jni::objects::JObject<'mc>,
+        arg8: jni::objects::JObject<'mc>,
+        arg9: jni::objects::JObject<'mc>,
+    ) -> Result<crate::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/Object;";
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        args.push(val_1);
+        sig += "Ljava/lang/Object;";
+        let val_2 = jni::objects::JValueGen::Object(arg1);
+        args.push(val_2);
+        sig += "Ljava/lang/Object;";
+        let val_3 = jni::objects::JValueGen::Object(arg2);
+        args.push(val_3);
+        sig += "Ljava/lang/Object;";
+        let val_4 = jni::objects::JValueGen::Object(arg3);
+        args.push(val_4);
+        sig += "Ljava/lang/Object;";
+        let val_5 = jni::objects::JValueGen::Object(arg4);
+        args.push(val_5);
+        sig += "Ljava/lang/Object;";
+        let val_6 = jni::objects::JValueGen::Object(arg5);
+        args.push(val_6);
+        sig += "Ljava/lang/Object;";
+        let val_7 = jni::objects::JValueGen::Object(arg6);
+        args.push(val_7);
+        sig += "Ljava/lang/Object;";
+        let val_8 = jni::objects::JValueGen::Object(arg7);
+        args.push(val_8);
+        sig += "Ljava/lang/Object;";
+        let val_9 = jni::objects::JValueGen::Object(arg8);
+        args.push(val_9);
+        sig += "Ljava/lang/Object;";
+        let val_10 = jni::objects::JValueGen::Object(arg9);
+        args.push(val_10);
         sig += ")Ljava/util/Set;";
         let cls = jni.find_class("java/util/Set");
         let cls = jni.translate_error_with_class(cls)?;
@@ -4474,7 +4497,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaBase64<'mc> {
 }
 
 impl<'mc> JavaBase64<'mc> {
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -4784,7 +4807,7 @@ impl<'mc> JavaAbstractCollection<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -5265,7 +5288,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn remove_with_object(
+    pub fn remove(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5433,7 +5456,7 @@ impl<'mc> JavaAbstractQueue<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -5634,7 +5657,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaAbstractMapSimpleEntry<'mc> {
 }
 
 impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
-    pub fn new_with_object(
+    pub fn new_with_mapentry(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -5730,7 +5753,7 @@ impl<'mc> JavaAbstractMapSimpleEntry<'mc> {
         Ok(res.l()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -5978,7 +6001,7 @@ impl<'mc> JavaQueue<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn remove_with_object(
+    pub fn remove(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6354,10 +6377,9 @@ impl<'mc> JNIInstantiatable<'mc> for JavaHashtable<'mc> {
 }
 
 impl<'mc> JavaHashtable<'mc> {
-    pub fn new_with_int(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
-        arg1: std::option::Option<f32>,
     ) -> Result<crate::util::JavaHashtable<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -6366,11 +6388,26 @@ impl<'mc> JavaHashtable<'mc> {
             let val_1 = jni::objects::JValueGen::Int(a.into());
             args.push(val_1);
         }
-        if let Some(a) = arg1 {
-            sig += "F";
-            let val_2 = jni::objects::JValueGen::Float(a.into());
-            args.push(val_2);
-        }
+        sig += ")V";
+        let cls = jni.find_class("java/util/Hashtable");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::util::JavaHashtable::from_raw(&jni, res)
+    }
+    pub fn new_with_int(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: i32,
+        arg1: f32,
+    ) -> Result<crate::util::JavaHashtable<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "I";
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        args.push(val_1);
+        sig += "F";
+        let val_2 = jni::objects::JValueGen::Float(arg1.into());
+        args.push(val_2);
         sig += ")V";
         let cls = jni.find_class("java/util/Hashtable");
         let cls = jni.translate_error_with_class(cls)?;
@@ -6840,7 +6877,7 @@ impl<'mc> JavaHashtable<'mc> {
         Ok(res.l()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -7139,7 +7176,7 @@ impl<'mc> JavaAbstractSet<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -7410,7 +7447,7 @@ impl<'mc> JavaOptionalInt<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn or_else_throw_with_supplier(
+    pub fn or_else_throw(
         &self,
         arg0: std::option::Option<impl Into<crate::util::function::JavaSupplier<'mc>>>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -7449,7 +7486,7 @@ impl<'mc> JavaOptionalInt<'mc> {
         Ok(())
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -7548,6 +7585,27 @@ impl<'mc> JNIInstantiatable<'mc> for JavaTreeMap<'mc> {
 }
 
 impl<'mc> JavaTreeMap<'mc> {
+    pub fn new(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: std::option::Option<impl Into<crate::util::JavaMap<'mc>>>,
+    ) -> Result<crate::util::JavaTreeMap<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        if let Some(a) = arg0 {
+            sig += "Ljava/util/Map;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
+        sig += ")V";
+        let cls = jni.find_class("java/util/TreeMap");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::util::JavaTreeMap::from_raw(&jni, res)
+    }
+
     pub fn last_key(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
         let sig = String::from("()Ljava/lang/Object;");
         let res = self
@@ -8165,7 +8223,7 @@ impl<'mc> JavaTreeMap<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -8631,7 +8689,7 @@ impl<'mc> JavaDeque<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn remove_with_object(
+    pub fn remove(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -9085,7 +9143,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
         Ok(res.d()?)
     }
 
-    pub fn or_else_throw_with_supplier(
+    pub fn or_else_throw(
         &self,
         arg0: std::option::Option<impl Into<crate::util::function::JavaSupplier<'mc>>>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
@@ -9124,7 +9182,7 @@ impl<'mc> JavaOptionalDouble<'mc> {
         Ok(())
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -9347,7 +9405,7 @@ impl<'mc> JavaOptionalLong<'mc> {
         Ok(res.j()?)
     }
 
-    pub fn or_else_throw_with_supplier(
+    pub fn or_else_throw(
         &self,
         arg0: std::option::Option<impl Into<crate::util::function::JavaSupplier<'mc>>>,
     ) -> Result<i64, Box<dyn std::error::Error>> {
@@ -9386,7 +9444,7 @@ impl<'mc> JavaOptionalLong<'mc> {
         Ok(())
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -9492,10 +9550,9 @@ impl<'mc> JNIInstantiatable<'mc> for JavaLinkedHashSet<'mc> {
 }
 
 impl<'mc> JavaLinkedHashSet<'mc> {
-    pub fn new_with_int(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
-        arg1: std::option::Option<f32>,
     ) -> Result<crate::util::JavaLinkedHashSet<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -9504,11 +9561,26 @@ impl<'mc> JavaLinkedHashSet<'mc> {
             let val_1 = jni::objects::JValueGen::Int(a.into());
             args.push(val_1);
         }
-        if let Some(a) = arg1 {
-            sig += "F";
-            let val_2 = jni::objects::JValueGen::Float(a.into());
-            args.push(val_2);
-        }
+        sig += ")V";
+        let cls = jni.find_class("java/util/LinkedHashSet");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::util::JavaLinkedHashSet::from_raw(&jni, res)
+    }
+    pub fn new_with_int(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: i32,
+        arg1: f32,
+    ) -> Result<crate::util::JavaLinkedHashSet<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "I";
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        args.push(val_1);
+        sig += "F";
+        let val_2 = jni::objects::JValueGen::Float(arg1.into());
+        args.push(val_2);
         sig += ")V";
         let cls = jni.find_class("java/util/LinkedHashSet");
         let cls = jni.translate_error_with_class(cls)?;
@@ -9723,7 +9795,7 @@ impl<'mc> JavaLinkedHashSet<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -10468,7 +10540,7 @@ impl<'mc> JavaLocale<'mc> {
             .to_string())
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -10568,23 +10640,39 @@ impl<'mc> JNIInstantiatable<'mc> for JavaHashMap<'mc> {
 }
 
 impl<'mc> JavaHashMap<'mc> {
-    pub fn new_with_int(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<f32>,
+        arg0: std::option::Option<impl Into<crate::util::JavaMap<'mc>>>,
     ) -> Result<crate::util::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
-            sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            sig += "Ljava/util/Map;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
             args.push(val_1);
         }
-        if let Some(a) = arg1 {
-            sig += "F";
-            let val_2 = jni::objects::JValueGen::Float(a.into());
-            args.push(val_2);
-        }
+        sig += ")V";
+        let cls = jni.find_class("java/util/HashMap");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::util::JavaHashMap::from_raw(&jni, res)
+    }
+    pub fn new_with_int(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: i32,
+        arg1: f32,
+    ) -> Result<crate::util::JavaHashMap<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "I";
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        args.push(val_1);
+        sig += "F";
+        let val_2 = jni::objects::JValueGen::Float(arg1.into());
+        args.push(val_2);
         sig += ")V";
         let cls = jni.find_class("java/util/HashMap");
         let cls = jni.translate_error_with_class(cls)?;
@@ -11014,7 +11102,7 @@ impl<'mc> JavaHashMap<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -11131,7 +11219,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaIdentityHashMap<'mc> {
 }
 
 impl<'mc> JavaIdentityHashMap<'mc> {
-    pub fn new_with_int(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
     ) -> Result<crate::util::JavaIdentityHashMap<'mc>, Box<dyn std::error::Error>> {
@@ -11404,7 +11492,7 @@ impl<'mc> JavaIdentityHashMap<'mc> {
             .to_string())
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -11692,24 +11780,40 @@ impl<'mc> JNIInstantiatable<'mc> for JavaLinkedHashMap<'mc> {
 }
 
 impl<'mc> JavaLinkedHashMap<'mc> {
-    pub fn new_with_int(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<f32>,
-        arg2: std::option::Option<bool>,
+        arg0: std::option::Option<impl Into<crate::util::JavaMap<'mc>>>,
     ) -> Result<crate::util::JavaLinkedHashMap<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
-            sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            sig += "Ljava/util/Map;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
             args.push(val_1);
         }
-        if let Some(a) = arg1 {
-            sig += "F";
-            let val_2 = jni::objects::JValueGen::Float(a.into());
-            args.push(val_2);
-        }
+        sig += ")V";
+        let cls = jni.find_class("java/util/LinkedHashMap");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::util::JavaLinkedHashMap::from_raw(&jni, res)
+    }
+    pub fn new_with_int(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: i32,
+        arg1: f32,
+        arg2: std::option::Option<bool>,
+    ) -> Result<crate::util::JavaLinkedHashMap<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "I";
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        args.push(val_1);
+        sig += "F";
+        let val_2 = jni::objects::JValueGen::Float(arg1.into());
+        args.push(val_2);
         if let Some(a) = arg2 {
             sig += "Z";
             let val_3 = jni::objects::JValueGen::Bool(a.into());
@@ -12144,7 +12248,7 @@ impl<'mc> JavaLinkedHashMap<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -12255,7 +12359,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaAbstractSequentialList<'mc> {
 }
 
 impl<'mc> JavaAbstractSequentialList<'mc> {
-    pub fn add_with_int(
+    pub fn add_with_object(
         &self,
         arg0: i32,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -12278,7 +12382,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         Ok(())
     }
 
-    pub fn remove_with_object(
+    pub fn remove_with_int(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12319,7 +12423,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         })
     }
 
-    pub fn add_all_with_int(
+    pub fn add_all_with_collection(
         &self,
         arg0: i32,
         arg1: std::option::Option<impl Into<crate::util::JavaCollection<'mc>>>,
@@ -12365,7 +12469,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         Ok(res.l()?)
     }
 
-    pub fn list_iterator_with_int(
+    pub fn list_iterator(
         &self,
         arg0: std::option::Option<i32>,
     ) -> Result<crate::util::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
@@ -12577,7 +12681,7 @@ impl<'mc> JavaAbstractSequentialList<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -12840,10 +12944,9 @@ impl<'mc> JavaComparator<'mc> {
         crate::util::JavaComparator::from_raw(&jni, obj)
     }
 
-    pub fn then_comparing_with_function(
+    pub fn then_comparing_with_comparator(
         &self,
         arg0: impl Into<crate::util::function::JavaFunction<'mc>>,
-        arg1: std::option::Option<impl Into<crate::util::JavaComparator<'mc>>>,
     ) -> Result<crate::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -12852,13 +12955,33 @@ impl<'mc> JavaComparator<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/util/Comparator;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += ")Ljava/util/Comparator;";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "thenComparing", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::util::JavaComparator::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn then_comparing_with_function(
+        &self,
+        arg0: impl Into<crate::util::function::JavaFunction<'mc>>,
+        arg1: impl Into<crate::util::JavaComparator<'mc>>,
+    ) -> Result<crate::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/function/Function;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Ljava/util/Comparator;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Ljava/util/Comparator;";
         let res =
             self.jni_ref()
@@ -13100,7 +13223,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaRandom<'mc> {
 }
 
 impl<'mc> JavaRandom<'mc> {
-    pub fn new_with_long(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i64>,
     ) -> Result<crate::util::JavaRandom<'mc>, Box<dyn std::error::Error>> {
@@ -13128,7 +13251,7 @@ impl<'mc> JavaRandom<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn next_long_with_long(
+    pub fn next_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i64>,
@@ -13153,7 +13276,7 @@ impl<'mc> JavaRandom<'mc> {
         Ok(res.j()?)
     }
 
-    pub fn next_float_with_float(
+    pub fn next_float(
         &self,
         arg0: std::option::Option<f32>,
         arg1: std::option::Option<f32>,
@@ -13200,7 +13323,7 @@ impl<'mc> JavaRandom<'mc> {
         Ok(())
     }
 
-    pub fn next_gaussian_with_double(
+    pub fn next_gaussian(
         &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
@@ -13225,7 +13348,7 @@ impl<'mc> JavaRandom<'mc> {
         Ok(res.d()?)
     }
 
-    pub fn next_double_with_double(
+    pub fn next_double(
         &self,
         arg0: std::option::Option<f64>,
         arg1: std::option::Option<f64>,
@@ -13250,7 +13373,7 @@ impl<'mc> JavaRandom<'mc> {
         Ok(res.d()?)
     }
 
-    pub fn next_int_with_int(
+    pub fn next_int(
         &self,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
@@ -13275,7 +13398,7 @@ impl<'mc> JavaRandom<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -13440,7 +13563,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaList<'mc> {
 }
 
 impl<'mc> JavaList<'mc> {
-    pub fn add_with_int(
+    pub fn add_with_object(
         &self,
         arg0: i32,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -13463,7 +13586,7 @@ impl<'mc> JavaList<'mc> {
         Ok(())
     }
 
-    pub fn remove_with_int(
+    pub fn remove_with_object(
         &self,
         arg0: i32,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -13650,71 +13773,66 @@ impl<'mc> JavaList<'mc> {
         })
     }
 
-    pub fn of_with_object(
+    pub fn of(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<jni::objects::JObject<'mc>>,
-        arg1: std::option::Option<jni::objects::JObject<'mc>>,
-        arg2: std::option::Option<jni::objects::JObject<'mc>>,
-        arg3: std::option::Option<jni::objects::JObject<'mc>>,
-        arg4: std::option::Option<jni::objects::JObject<'mc>>,
-        arg5: std::option::Option<jni::objects::JObject<'mc>>,
-        arg6: std::option::Option<jni::objects::JObject<'mc>>,
-        arg7: std::option::Option<jni::objects::JObject<'mc>>,
-        arg8: std::option::Option<jni::objects::JObject<'mc>>,
-        arg9: std::option::Option<jni::objects::JObject<'mc>>,
+        arg0: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
     ) -> Result<crate::util::JavaList<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/Object;";
-            let val_1 = jni::objects::JValueGen::Object(a);
-            args.push(val_1);
-        }
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/Object;";
-            let val_2 = jni::objects::JValueGen::Object(a);
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "Ljava/lang/Object;";
-            let val_3 = jni::objects::JValueGen::Object(a);
-            args.push(val_3);
-        }
-        if let Some(a) = arg3 {
-            sig += "Ljava/lang/Object;";
-            let val_4 = jni::objects::JValueGen::Object(a);
-            args.push(val_4);
-        }
-        if let Some(a) = arg4 {
-            sig += "Ljava/lang/Object;";
-            let val_5 = jni::objects::JValueGen::Object(a);
-            args.push(val_5);
-        }
-        if let Some(a) = arg5 {
-            sig += "Ljava/lang/Object;";
-            let val_6 = jni::objects::JValueGen::Object(a);
-            args.push(val_6);
-        }
-        if let Some(a) = arg6 {
-            sig += "Ljava/lang/Object;";
-            let val_7 = jni::objects::JValueGen::Object(a);
-            args.push(val_7);
-        }
-        if let Some(a) = arg7 {
-            sig += "Ljava/lang/Object;";
-            let val_8 = jni::objects::JValueGen::Object(a);
-            args.push(val_8);
-        }
-        if let Some(a) = arg8 {
-            sig += "Ljava/lang/Object;";
-            let val_9 = jni::objects::JValueGen::Object(a);
-            args.push(val_9);
-        }
-        if let Some(a) = arg9 {
-            sig += "Ljava/lang/Object;";
-            let val_10 = jni::objects::JValueGen::Object(a);
-            args.push(val_10);
-        }
+        sig += ")Ljava/util/List;";
+        let cls = jni.find_class("java/util/List");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "of", sig.as_str(), args);
+        let res = jni.translate_error(res)?;
+        let obj = res.l()?;
+        crate::util::JavaList::from_raw(&jni, obj)
+    }
+
+    pub fn of_with_object(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: jni::objects::JObject<'mc>,
+        arg2: jni::objects::JObject<'mc>,
+        arg3: jni::objects::JObject<'mc>,
+        arg4: jni::objects::JObject<'mc>,
+        arg5: jni::objects::JObject<'mc>,
+        arg6: jni::objects::JObject<'mc>,
+        arg7: jni::objects::JObject<'mc>,
+        arg8: jni::objects::JObject<'mc>,
+        arg9: jni::objects::JObject<'mc>,
+    ) -> Result<crate::util::JavaList<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/Object;";
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        args.push(val_1);
+        sig += "Ljava/lang/Object;";
+        let val_2 = jni::objects::JValueGen::Object(arg1);
+        args.push(val_2);
+        sig += "Ljava/lang/Object;";
+        let val_3 = jni::objects::JValueGen::Object(arg2);
+        args.push(val_3);
+        sig += "Ljava/lang/Object;";
+        let val_4 = jni::objects::JValueGen::Object(arg3);
+        args.push(val_4);
+        sig += "Ljava/lang/Object;";
+        let val_5 = jni::objects::JValueGen::Object(arg4);
+        args.push(val_5);
+        sig += "Ljava/lang/Object;";
+        let val_6 = jni::objects::JValueGen::Object(arg5);
+        args.push(val_6);
+        sig += "Ljava/lang/Object;";
+        let val_7 = jni::objects::JValueGen::Object(arg6);
+        args.push(val_7);
+        sig += "Ljava/lang/Object;";
+        let val_8 = jni::objects::JValueGen::Object(arg7);
+        args.push(val_8);
+        sig += "Ljava/lang/Object;";
+        let val_9 = jni::objects::JValueGen::Object(arg8);
+        args.push(val_9);
+        sig += "Ljava/lang/Object;";
+        let val_10 = jni::objects::JValueGen::Object(arg9);
+        args.push(val_10);
         sig += ")Ljava/util/List;";
         let cls = jni.find_class("java/util/List");
         let cls = jni.translate_error_with_class(cls)?;
@@ -13740,7 +13858,7 @@ impl<'mc> JavaList<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn add_all_with_int(
+    pub fn add_all_with_collection(
         &self,
         arg0: i32,
         arg1: std::option::Option<impl Into<crate::util::JavaCollection<'mc>>>,
@@ -13840,7 +13958,7 @@ impl<'mc> JavaList<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn list_iterator_with_int(
+    pub fn list_iterator(
         &self,
         arg0: std::option::Option<i32>,
     ) -> Result<crate::util::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
@@ -14098,7 +14216,7 @@ impl<'mc> JavaUUID<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn compare_to_with_object(
+    pub fn compare_to_with_uuid(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -14166,7 +14284,7 @@ impl<'mc> JavaUUID<'mc> {
         crate::util::JavaUUID::from_raw(&jni, obj)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -14263,23 +14381,39 @@ impl<'mc> JNIInstantiatable<'mc> for JavaHashSet<'mc> {
 }
 
 impl<'mc> JavaHashSet<'mc> {
-    pub fn new_with_int(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<f32>,
+        arg0: std::option::Option<impl Into<crate::util::JavaCollection<'mc>>>,
     ) -> Result<crate::util::JavaHashSet<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
-            sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            sig += "Ljava/util/Collection;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
             args.push(val_1);
         }
-        if let Some(a) = arg1 {
-            sig += "F";
-            let val_2 = jni::objects::JValueGen::Float(a.into());
-            args.push(val_2);
-        }
+        sig += ")V";
+        let cls = jni.find_class("java/util/HashSet");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::util::JavaHashSet::from_raw(&jni, res)
+    }
+    pub fn new_with_int(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: i32,
+        arg1: f32,
+    ) -> Result<crate::util::JavaHashSet<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "I";
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        args.push(val_1);
+        sig += "F";
+        let val_2 = jni::objects::JValueGen::Float(arg1.into());
+        args.push(val_2);
         sig += ")V";
         let cls = jni.find_class("java/util/HashSet");
         let cls = jni.translate_error_with_class(cls)?;
@@ -14494,7 +14628,7 @@ impl<'mc> JavaHashSet<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -14641,7 +14775,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaAbstractList<'mc> {
 }
 
 impl<'mc> JavaAbstractList<'mc> {
-    pub fn add_with_int(
+    pub fn add_with_object(
         &self,
         arg0: i32,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -14664,7 +14798,7 @@ impl<'mc> JavaAbstractList<'mc> {
         Ok(())
     }
 
-    pub fn remove_with_object(
+    pub fn remove_with_int(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14794,7 +14928,7 @@ impl<'mc> JavaAbstractList<'mc> {
         })
     }
 
-    pub fn add_all_with_int(
+    pub fn add_all_with_collection(
         &self,
         arg0: i32,
         arg1: std::option::Option<impl Into<crate::util::JavaCollection<'mc>>>,
@@ -14840,7 +14974,7 @@ impl<'mc> JavaAbstractList<'mc> {
         Ok(res.l()?)
     }
 
-    pub fn list_iterator_with_int(
+    pub fn list_iterator(
         &self,
         arg0: std::option::Option<i32>,
     ) -> Result<crate::util::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
@@ -14963,7 +15097,7 @@ impl<'mc> JavaAbstractList<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -15351,7 +15485,7 @@ impl<'mc> JavaOptional<'mc> {
         Ok(res.l()?)
     }
 
-    pub fn or_else_throw_with_supplier(
+    pub fn or_else_throw(
         &self,
         arg0: std::option::Option<impl Into<crate::util::function::JavaSupplier<'mc>>>,
     ) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
@@ -15409,7 +15543,7 @@ impl<'mc> JavaOptional<'mc> {
         Ok(())
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -15667,7 +15801,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaLinkedList<'mc> {
 }
 
 impl<'mc> JavaLinkedList<'mc> {
-    pub fn new_with_collection(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::util::JavaCollection<'mc>>>,
     ) -> Result<crate::util::JavaLinkedList<'mc>, Box<dyn std::error::Error>> {
@@ -15910,7 +16044,7 @@ impl<'mc> JavaLinkedList<'mc> {
         })
     }
 
-    pub fn add_with_int(
+    pub fn add_with_object(
         &self,
         arg0: i32,
         arg1: std::option::Option<jni::objects::JObject<'mc>>,
@@ -15933,7 +16067,7 @@ impl<'mc> JavaLinkedList<'mc> {
         Ok(())
     }
 
-    pub fn remove_with_object(
+    pub fn remove(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -16040,7 +16174,7 @@ impl<'mc> JavaLinkedList<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn add_all_with_int(
+    pub fn add_all_with_collection(
         &self,
         arg0: i32,
         arg1: std::option::Option<impl Into<crate::util::JavaCollection<'mc>>>,
@@ -16113,7 +16247,7 @@ impl<'mc> JavaLinkedList<'mc> {
         Ok(res.l()?)
     }
 
-    pub fn list_iterator_with_int(
+    pub fn list_iterator(
         &self,
         arg0: std::option::Option<i32>,
     ) -> Result<crate::util::JavaListIterator<'mc>, Box<dyn std::error::Error>> {
@@ -16270,7 +16404,7 @@ impl<'mc> JavaLinkedList<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -16604,7 +16738,7 @@ impl<'mc> JavaLocaleLanguageRange<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -16969,6 +17103,25 @@ impl<'mc> JNIInstantiatable<'mc> for JavaPrimitiveIteratorOfInt<'mc> {
 }
 
 impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
+    pub fn for_each_remaining_with_object(
+        &self,
+        arg0: impl Into<crate::util::function::JavaIntConsumer<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/function/IntConsumer;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")V";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "forEachRemaining", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
     pub fn for_each_remaining_with_consumer(
         &self,
         arg0: impl Into<crate::util::function::JavaConsumer<'mc>>,
@@ -17076,6 +17229,25 @@ impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
             .call_method(&self.jni_object(), "nextLong", sig.as_str(), vec![]);
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
+    }
+
+    pub fn for_each_remaining_with_object(
+        &self,
+        arg0: impl Into<crate::util::function::JavaConsumer<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/function/Consumer;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")V";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "forEachRemaining", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
     }
 
     pub fn for_each_remaining_with_long_consumer(
@@ -17261,7 +17433,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaPrimitiveIterator<'mc> {
 }
 
 impl<'mc> JavaPrimitiveIterator<'mc> {
-    pub fn for_each_remaining_with_consumer(
+    pub fn for_each_remaining_with_object(
         &self,
         arg0: impl Into<crate::util::function::JavaConsumer<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -17433,7 +17605,7 @@ impl<'mc> JavaMapEntry<'mc> {
         Ok(res.l()?)
     }
 
-    pub fn comparing_by_key_with_comparator(
+    pub fn comparing_by_key(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::util::JavaComparator<'mc>>>,
     ) -> Result<crate::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
@@ -17455,7 +17627,7 @@ impl<'mc> JavaMapEntry<'mc> {
         crate::util::JavaComparator::from_raw(&jni, obj)
     }
 
-    pub fn comparing_by_value_with_comparator(
+    pub fn comparing_by_value(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::util::JavaComparator<'mc>>>,
     ) -> Result<crate::util::JavaComparator<'mc>, Box<dyn std::error::Error>> {
@@ -17535,7 +17707,7 @@ impl<'mc> JavaEnumSet<'mc> {
         })
     }
 
-    pub fn copy_of_with_collection(
+    pub fn copy_of_with_enum_set(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::util::JavaCollection<'mc>>,
     ) -> Result<crate::util::JavaEnumSet<'mc>, Box<dyn std::error::Error>> {
@@ -17752,7 +17924,7 @@ impl<'mc> JavaEnumSet<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -17909,47 +18081,57 @@ impl<'mc> JNIInstantiatable<'mc> for JavaDate<'mc> {
 impl<'mc> JavaDate<'mc> {
     #[deprecated]
 
-    pub fn new_with_int(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<i32>,
-        arg1: std::option::Option<i32>,
-        arg2: std::option::Option<i32>,
-        arg3: std::option::Option<i32>,
-        arg4: std::option::Option<i32>,
-        arg5: std::option::Option<i32>,
+        arg0: std::option::Option<impl Into<String>>,
     ) -> Result<crate::util::JavaDate<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
-            sig += "I";
-            let val_1 = jni::objects::JValueGen::Int(a.into());
+            sig += "Ljava/lang/String;";
+            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                jni.new_string(a.into())?,
+            ));
             args.push(val_1);
         }
-        if let Some(a) = arg1 {
-            sig += "I";
-            let val_2 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "I";
-            let val_3 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_3);
-        }
-        if let Some(a) = arg3 {
-            sig += "I";
-            let val_4 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_4);
-        }
-        if let Some(a) = arg4 {
-            sig += "I";
-            let val_5 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_5);
-        }
-        if let Some(a) = arg5 {
-            sig += "I";
-            let val_6 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_6);
-        }
+        sig += ")V";
+        let cls = jni.find_class("java/util/Date");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::util::JavaDate::from_raw(&jni, res)
+    }
+    #[deprecated]
+
+    pub fn new_with_int(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: i32,
+        arg1: i32,
+        arg2: i32,
+        arg3: i32,
+        arg4: i32,
+        arg5: i32,
+    ) -> Result<crate::util::JavaDate<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "I";
+        let val_1 = jni::objects::JValueGen::Int(arg0.into());
+        args.push(val_1);
+        sig += "I";
+        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        args.push(val_2);
+        sig += "I";
+        let val_3 = jni::objects::JValueGen::Int(arg2.into());
+        args.push(val_3);
+        sig += "I";
+        let val_4 = jni::objects::JValueGen::Int(arg3.into());
+        args.push(val_4);
+        sig += "I";
+        let val_5 = jni::objects::JValueGen::Int(arg4.into());
+        args.push(val_5);
+        sig += "I";
+        let val_6 = jni::objects::JValueGen::Int(arg5.into());
+        args.push(val_6);
         sig += ")V";
         let cls = jni.find_class("java/util/Date");
         let cls = jni.translate_error_with_class(cls)?;
@@ -18200,7 +18382,7 @@ impl<'mc> JavaDate<'mc> {
         Ok(res.l()?)
     }
 
-    pub fn compare_to_with_object(
+    pub fn compare_to_with_date(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -18343,7 +18525,7 @@ impl<'mc> JavaDate<'mc> {
         Ok(res.j()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -18441,7 +18623,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaArrayDeque<'mc> {
 }
 
 impl<'mc> JavaArrayDeque<'mc> {
-    pub fn new_with_int(
+    pub fn new(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
     ) -> Result<crate::util::JavaArrayDeque<'mc>, Box<dyn std::error::Error>> {
@@ -18698,7 +18880,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn remove_with_object(
+    pub fn remove(
         &self,
         arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -18933,7 +19115,7 @@ impl<'mc> JavaArrayDeque<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -19066,6 +19248,25 @@ impl<'mc> JNIInstantiatable<'mc> for JavaPrimitiveIteratorOfDouble<'mc> {
 }
 
 impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
+    pub fn for_each_remaining_with_object(
+        &self,
+        arg0: impl Into<crate::util::function::JavaDoubleConsumer<'mc>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/function/DoubleConsumer;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")V";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "forEachRemaining", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
     pub fn for_each_remaining_with_consumer(
         &self,
         arg0: impl Into<crate::util::function::JavaConsumer<'mc>>,
@@ -19428,7 +19629,7 @@ impl<'mc> JavaLocaleBuilder<'mc> {
         })
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

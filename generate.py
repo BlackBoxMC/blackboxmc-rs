@@ -1047,13 +1047,13 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
                 if "modifiers" in m:
                     if(m["modifiers"]&1 != 1): # skip protected/private methods
                         continue
-                if len(m["parameters"]) >= 1:
-                    method_first_arg = camel_case_to_snake_case(m["parameters"][0][1])
                 if last_method is None:
                     options_start_at = len(m["parameters"])+1
                     m["options_start_at"] = options_start_at
                     last_method = m
                     method_buildup.append(m)
+                    if len(m["parameters"]) >= 1:
+                        method_first_arg = camel_case_to_snake_case(m["parameters"][0][1])
                 else:
                     i = 0
                     if len(last_method["parameters"]) > len(m["parameters"]):
@@ -1078,14 +1078,13 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
                 if n == len(methods__) and breaking is not True:
                     method_buildup.append(m)
                     breaking = True
-            else:
-                identifier = method_first_arg.split(".")[len(method_first_arg.split("."))-1].lower()
-                method_map[identifier] = method_buildup.copy()
-                method_buildup = []
-                last_method = None
-                method_first_arg = ""
-                options_start_at = 0
-
+                if breaking:
+                    identifier = method_first_arg.split(".")[len(method_first_arg.split("."))-1].lower()
+                    method_map[identifier] = method_buildup.copy()
+                    method_buildup = []
+                    last_method = None
+                    method_first_arg = ""
+                    options_start_at = 0
 
             for group_name in method_map:
                 methods = method_map[group_name]

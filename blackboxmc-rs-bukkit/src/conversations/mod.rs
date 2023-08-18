@@ -97,7 +97,7 @@ impl<'mc> NumericPrompt<'mc> {
         })
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -587,7 +587,7 @@ impl<'mc> ConversationFactory<'mc> {
         })
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -814,7 +814,7 @@ impl<'mc> InactivityConversationCanceller<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1046,7 +1046,7 @@ impl<'mc> ExactMatchConversationCanceller<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1272,7 +1272,7 @@ impl<'mc> Conversable<'mc> {
         Ok(())
     }
 
-    pub fn send_raw_message_with_uuid(
+    pub fn send_raw_message_with_string(
         &self,
         arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -1634,7 +1634,7 @@ impl<'mc> Conversation<'mc> {
         })
     }
 
-    pub fn abandon_with_conversation_abandoned_event(
+    pub fn abandon(
         &self,
         arg0: std::option::Option<impl Into<crate::conversations::ConversationAbandonedEvent<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1718,7 +1718,7 @@ impl<'mc> Conversation<'mc> {
         Ok(())
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2098,7 +2098,7 @@ impl<'mc> ValidatingPrompt<'mc> {
         })
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2266,7 +2266,7 @@ impl<'mc> JNIInstantiatable<'mc> for RegexPrompt<'mc> {
 }
 
 impl<'mc> RegexPrompt<'mc> {
-    pub fn new_with_string(
+    pub fn new_with_pattern(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
     ) -> Result<crate::conversations::RegexPrompt<'mc>, Box<dyn std::error::Error>> {
@@ -2330,7 +2330,7 @@ impl<'mc> RegexPrompt<'mc> {
         })
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2573,7 +2573,7 @@ impl<'mc> ManuallyAbandonedConversationCanceller<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2751,7 +2751,7 @@ impl<'mc> StringPrompt<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3011,7 +3011,7 @@ impl<'mc> PluginNameConversationPrefix<'mc> {
             .to_string())
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3334,7 +3334,7 @@ impl<'mc> FixedSetPrompt<'mc> {
         })
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3540,7 +3540,7 @@ impl<'mc> NullConversationPrefix<'mc> {
             .to_string())
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3900,7 +3900,7 @@ impl<'mc> ConversationAbandonedEvent<'mc> {
             .to_string())
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -4138,7 +4138,7 @@ impl<'mc> ConversationContext<'mc> {
         Ok(())
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -4343,7 +4343,7 @@ impl<'mc> PlayerNamePrompt<'mc> {
         })
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -4567,7 +4567,7 @@ impl<'mc> BooleanPrompt<'mc> {
         })
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -4791,7 +4791,7 @@ impl<'mc> MessagePrompt<'mc> {
         })
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

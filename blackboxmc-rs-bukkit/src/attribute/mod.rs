@@ -651,13 +651,12 @@ impl<'mc> JNIInstantiatable<'mc> for AttributeModifier<'mc> {
 }
 
 impl<'mc> AttributeModifier<'mc> {
-    pub fn new_with_uuid(
+    pub fn new_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
         arg1: impl Into<String>,
         arg2: f64,
         arg3: std::option::Option<impl Into<crate::attribute::AttributeModifierOperation<'mc>>>,
-        arg4: std::option::Option<impl Into<crate::inventory::EquipmentSlot<'mc>>>,
     ) -> Result<crate::attribute::AttributeModifier<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -681,13 +680,46 @@ impl<'mc> AttributeModifier<'mc> {
             });
             args.push(val_4);
         }
-        if let Some(a) = arg4 {
-            sig += "Lorg/bukkit/inventory/EquipmentSlot;";
-            let val_5 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_5);
-        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/attribute/AttributeModifier");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::attribute::AttributeModifier::from_raw(&jni, res)
+    }
+    pub fn new_with_uuid(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+        arg1: impl Into<String>,
+        arg2: f64,
+        arg3: impl Into<crate::attribute::AttributeModifierOperation<'mc>>,
+        arg4: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+    ) -> Result<crate::attribute::AttributeModifier<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/UUID;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            jni.new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        sig += "D";
+        let val_3 = jni::objects::JValueGen::Double(arg2.into());
+        args.push(val_3);
+        sig += "Lorg/bukkit/attribute/AttributeModifier$Operation;";
+        let val_4 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg3.into().jni_object().clone())
+        });
+        args.push(val_4);
+        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+        let val_5 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg4.into().jni_object().clone())
+        });
+        args.push(val_5);
         sig += ")V";
         let cls = jni.find_class("org/bukkit/attribute/AttributeModifier");
         let cls = jni.translate_error_with_class(cls)?;
@@ -859,7 +891,7 @@ impl<'mc> AttributeModifier<'mc> {
         )
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

@@ -87,7 +87,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         Ok(res.z()?)
     }
     /// Immediately explode this minecart with the given power.
-    pub fn explode_with_double(
+    pub fn explode(
         &self,
         arg0: std::option::Option<f64>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -623,10 +623,27 @@ impl<'mc> ExplosiveMinecart<'mc> {
 
     pub fn teleport_with_location(
         &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn teleport_with_entity(
+        &self,
         arg0: impl Into<crate::Location<'mc>>,
-        arg1: std::option::Option<
-            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
-        >,
+        arg1: impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -635,13 +652,11 @@ impl<'mc> ExplosiveMinecart<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self
             .jni_ref()
@@ -1487,25 +1502,12 @@ impl<'mc> ExplosiveMinecart<'mc> {
             .to_string())
     }
 
-    pub fn send_message_with_uuid(
+    pub fn send_message_with_string(
         &self,
-        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
+        arg0: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Ljava/util/UUID;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/String;";
-            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_2);
-        }
         sig += ")V";
         let res = self
             .jni_ref()
@@ -1514,7 +1516,32 @@ impl<'mc> ExplosiveMinecart<'mc> {
         Ok(())
     }
 
-    pub fn is_permission_set_with_permission(
+    pub fn send_message_with_uuid(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+        arg1: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/UUID;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn is_permission_set_with_string(
         &self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1533,7 +1560,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn has_permission_with_string(
+    pub fn has_permission_with_permission(
         &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1555,9 +1582,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
     pub fn add_attachment_with_plugin(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
-        arg2: std::option::Option<bool>,
-        arg3: std::option::Option<i32>,
+        arg1: impl Into<String>,
+        arg2: bool,
+        arg3: i32,
     ) -> Result<crate::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -1566,23 +1593,17 @@ impl<'mc> ExplosiveMinecart<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/String;";
-            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "Z";
-            let val_3 = jni::objects::JValueGen::Bool(a.into());
-            args.push(val_3);
-        }
-        if let Some(a) = arg3 {
-            sig += "I";
-            let val_4 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_4);
-        }
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        sig += "Z";
+        let val_3 = jni::objects::JValueGen::Bool(arg2.into());
+        args.push(val_3);
+        sig += "I";
+        let val_4 = jni::objects::JValueGen::Int(arg3.into());
+        args.push(val_4);
         sig += ")Lorg/bukkit/permissions/PermissionAttachment;";
         let res =
             self.jni_ref()
@@ -2299,10 +2320,27 @@ impl<'mc> HopperMinecart<'mc> {
 
     pub fn teleport_with_location(
         &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn teleport_with_entity(
+        &self,
         arg0: impl Into<crate::Location<'mc>>,
-        arg1: std::option::Option<
-            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
-        >,
+        arg1: impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -2311,13 +2349,11 @@ impl<'mc> HopperMinecart<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self
             .jni_ref()
@@ -3163,25 +3199,12 @@ impl<'mc> HopperMinecart<'mc> {
             .to_string())
     }
 
-    pub fn send_message_with_uuid(
+    pub fn send_message_with_string(
         &self,
-        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
+        arg0: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Ljava/util/UUID;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/String;";
-            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_2);
-        }
         sig += ")V";
         let res = self
             .jni_ref()
@@ -3190,7 +3213,32 @@ impl<'mc> HopperMinecart<'mc> {
         Ok(())
     }
 
-    pub fn is_permission_set_with_permission(
+    pub fn send_message_with_uuid(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+        arg1: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/UUID;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn is_permission_set_with_string(
         &self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3209,7 +3257,7 @@ impl<'mc> HopperMinecart<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn has_permission_with_string(
+    pub fn has_permission_with_permission(
         &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3231,9 +3279,9 @@ impl<'mc> HopperMinecart<'mc> {
     pub fn add_attachment_with_plugin(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
-        arg2: std::option::Option<bool>,
-        arg3: std::option::Option<i32>,
+        arg1: impl Into<String>,
+        arg2: bool,
+        arg3: i32,
     ) -> Result<crate::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -3242,23 +3290,17 @@ impl<'mc> HopperMinecart<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/String;";
-            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "Z";
-            let val_3 = jni::objects::JValueGen::Bool(a.into());
-            args.push(val_3);
-        }
-        if let Some(a) = arg3 {
-            sig += "I";
-            let val_4 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_4);
-        }
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        sig += "Z";
+        let val_3 = jni::objects::JValueGen::Bool(arg2.into());
+        args.push(val_3);
+        sig += "I";
+        let val_4 = jni::objects::JValueGen::Int(arg3.into());
+        args.push(val_4);
         sig += ")Lorg/bukkit/permissions/PermissionAttachment;";
         let res =
             self.jni_ref()
@@ -4036,10 +4078,27 @@ impl<'mc> StorageMinecart<'mc> {
 
     pub fn teleport_with_location(
         &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn teleport_with_entity(
+        &self,
         arg0: impl Into<crate::Location<'mc>>,
-        arg1: std::option::Option<
-            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
-        >,
+        arg1: impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -4048,13 +4107,11 @@ impl<'mc> StorageMinecart<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self
             .jni_ref()
@@ -4900,25 +4957,12 @@ impl<'mc> StorageMinecart<'mc> {
             .to_string())
     }
 
-    pub fn send_message_with_uuid(
+    pub fn send_message_with_string(
         &self,
-        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
+        arg0: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Ljava/util/UUID;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/String;";
-            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_2);
-        }
         sig += ")V";
         let res = self
             .jni_ref()
@@ -4927,7 +4971,32 @@ impl<'mc> StorageMinecart<'mc> {
         Ok(())
     }
 
-    pub fn is_permission_set_with_permission(
+    pub fn send_message_with_uuid(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+        arg1: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/UUID;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn is_permission_set_with_string(
         &self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4946,7 +5015,7 @@ impl<'mc> StorageMinecart<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn has_permission_with_string(
+    pub fn has_permission_with_permission(
         &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4968,9 +5037,9 @@ impl<'mc> StorageMinecart<'mc> {
     pub fn add_attachment_with_plugin(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
-        arg2: std::option::Option<bool>,
-        arg3: std::option::Option<i32>,
+        arg1: impl Into<String>,
+        arg2: bool,
+        arg3: i32,
     ) -> Result<crate::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -4979,23 +5048,17 @@ impl<'mc> StorageMinecart<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/String;";
-            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "Z";
-            let val_3 = jni::objects::JValueGen::Bool(a.into());
-            args.push(val_3);
-        }
-        if let Some(a) = arg3 {
-            sig += "I";
-            let val_4 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_4);
-        }
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        sig += "Z";
+        let val_3 = jni::objects::JValueGen::Bool(arg2.into());
+        args.push(val_3);
+        sig += "I";
+        let val_4 = jni::objects::JValueGen::Int(arg3.into());
+        args.push(val_4);
         sig += ")Lorg/bukkit/permissions/PermissionAttachment;";
         let res =
             self.jni_ref()
@@ -5773,10 +5836,27 @@ impl<'mc> SpawnerMinecart<'mc> {
 
     pub fn teleport_with_location(
         &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn teleport_with_entity(
+        &self,
         arg0: impl Into<crate::Location<'mc>>,
-        arg1: std::option::Option<
-            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
-        >,
+        arg1: impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -5785,13 +5865,11 @@ impl<'mc> SpawnerMinecart<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self
             .jni_ref()
@@ -6637,25 +6715,12 @@ impl<'mc> SpawnerMinecart<'mc> {
             .to_string())
     }
 
-    pub fn send_message_with_uuid(
+    pub fn send_message_with_string(
         &self,
-        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
+        arg0: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Ljava/util/UUID;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/String;";
-            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_2);
-        }
         sig += ")V";
         let res = self
             .jni_ref()
@@ -6664,7 +6729,32 @@ impl<'mc> SpawnerMinecart<'mc> {
         Ok(())
     }
 
-    pub fn is_permission_set_with_permission(
+    pub fn send_message_with_uuid(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+        arg1: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/UUID;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn is_permission_set_with_string(
         &self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6683,7 +6773,7 @@ impl<'mc> SpawnerMinecart<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn has_permission_with_string(
+    pub fn has_permission_with_permission(
         &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6705,9 +6795,9 @@ impl<'mc> SpawnerMinecart<'mc> {
     pub fn add_attachment_with_plugin(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
-        arg2: std::option::Option<bool>,
-        arg3: std::option::Option<i32>,
+        arg1: impl Into<String>,
+        arg2: bool,
+        arg3: i32,
     ) -> Result<crate::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -6716,23 +6806,17 @@ impl<'mc> SpawnerMinecart<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/String;";
-            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "Z";
-            let val_3 = jni::objects::JValueGen::Bool(a.into());
-            args.push(val_3);
-        }
-        if let Some(a) = arg3 {
-            sig += "I";
-            let val_4 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_4);
-        }
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        sig += "Z";
+        let val_3 = jni::objects::JValueGen::Bool(arg2.into());
+        args.push(val_3);
+        sig += "I";
+        let val_4 = jni::objects::JValueGen::Int(arg3.into());
+        args.push(val_4);
         sig += ")Lorg/bukkit/permissions/PermissionAttachment;";
         let res =
             self.jni_ref()
@@ -7451,10 +7535,27 @@ impl<'mc> PoweredMinecart<'mc> {
 
     pub fn teleport_with_location(
         &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn teleport_with_entity(
+        &self,
         arg0: impl Into<crate::Location<'mc>>,
-        arg1: std::option::Option<
-            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
-        >,
+        arg1: impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -7463,13 +7564,11 @@ impl<'mc> PoweredMinecart<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self
             .jni_ref()
@@ -8315,25 +8414,12 @@ impl<'mc> PoweredMinecart<'mc> {
             .to_string())
     }
 
-    pub fn send_message_with_uuid(
+    pub fn send_message_with_string(
         &self,
-        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
+        arg0: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Ljava/util/UUID;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/String;";
-            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_2);
-        }
         sig += ")V";
         let res = self
             .jni_ref()
@@ -8342,7 +8428,32 @@ impl<'mc> PoweredMinecart<'mc> {
         Ok(())
     }
 
-    pub fn is_permission_set_with_permission(
+    pub fn send_message_with_uuid(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+        arg1: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/UUID;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn is_permission_set_with_string(
         &self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8361,7 +8472,7 @@ impl<'mc> PoweredMinecart<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn has_permission_with_string(
+    pub fn has_permission_with_permission(
         &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8383,9 +8494,9 @@ impl<'mc> PoweredMinecart<'mc> {
     pub fn add_attachment_with_plugin(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
-        arg2: std::option::Option<bool>,
-        arg3: std::option::Option<i32>,
+        arg1: impl Into<String>,
+        arg2: bool,
+        arg3: i32,
     ) -> Result<crate::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -8394,23 +8505,17 @@ impl<'mc> PoweredMinecart<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/String;";
-            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "Z";
-            let val_3 = jni::objects::JValueGen::Bool(a.into());
-            args.push(val_3);
-        }
-        if let Some(a) = arg3 {
-            sig += "I";
-            let val_4 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_4);
-        }
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        sig += "Z";
+        let val_3 = jni::objects::JValueGen::Bool(arg2.into());
+        args.push(val_3);
+        sig += "I";
+        let val_4 = jni::objects::JValueGen::Int(arg3.into());
+        args.push(val_4);
         sig += ")Lorg/bukkit/permissions/PermissionAttachment;";
         let res =
             self.jni_ref()
@@ -9106,10 +9211,27 @@ impl<'mc> RideableMinecart<'mc> {
 
     pub fn teleport_with_location(
         &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn teleport_with_entity(
+        &self,
         arg0: impl Into<crate::Location<'mc>>,
-        arg1: std::option::Option<
-            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
-        >,
+        arg1: impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -9118,13 +9240,11 @@ impl<'mc> RideableMinecart<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self
             .jni_ref()
@@ -9970,25 +10090,12 @@ impl<'mc> RideableMinecart<'mc> {
             .to_string())
     }
 
-    pub fn send_message_with_uuid(
+    pub fn send_message_with_string(
         &self,
-        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
+        arg0: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Ljava/util/UUID;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/String;";
-            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_2);
-        }
         sig += ")V";
         let res = self
             .jni_ref()
@@ -9997,7 +10104,32 @@ impl<'mc> RideableMinecart<'mc> {
         Ok(())
     }
 
-    pub fn is_permission_set_with_permission(
+    pub fn send_message_with_uuid(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+        arg1: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/UUID;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn is_permission_set_with_string(
         &self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10016,7 +10148,7 @@ impl<'mc> RideableMinecart<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn has_permission_with_string(
+    pub fn has_permission_with_permission(
         &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10038,9 +10170,9 @@ impl<'mc> RideableMinecart<'mc> {
     pub fn add_attachment_with_plugin(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
-        arg2: std::option::Option<bool>,
-        arg3: std::option::Option<i32>,
+        arg1: impl Into<String>,
+        arg2: bool,
+        arg3: i32,
     ) -> Result<crate::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -10049,23 +10181,17 @@ impl<'mc> RideableMinecart<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/String;";
-            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "Z";
-            let val_3 = jni::objects::JValueGen::Bool(a.into());
-            args.push(val_3);
-        }
-        if let Some(a) = arg3 {
-            sig += "I";
-            let val_4 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_4);
-        }
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        sig += "Z";
+        let val_3 = jni::objects::JValueGen::Bool(arg2.into());
+        args.push(val_3);
+        sig += "I";
+        let val_4 = jni::objects::JValueGen::Int(arg3.into());
+        args.push(val_4);
         sig += ")Lorg/bukkit/permissions/PermissionAttachment;";
         let res =
             self.jni_ref()
@@ -10804,10 +10930,27 @@ impl<'mc> CommandMinecart<'mc> {
 
     pub fn teleport_with_location(
         &self,
+        arg0: impl Into<crate::entity::Entity<'mc>>,
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/entity/Entity;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += ")Z";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "teleport", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.z()?)
+    }
+
+    pub fn teleport_with_entity(
+        &self,
         arg0: impl Into<crate::Location<'mc>>,
-        arg1: std::option::Option<
-            impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
-        >,
+        arg1: impl Into<crate::event::player::PlayerTeleportEventTeleportCause<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -10816,13 +10959,11 @@ impl<'mc> CommandMinecart<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/event/player/PlayerTeleportEvent$TeleportCause;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self
             .jni_ref()
@@ -11668,25 +11809,12 @@ impl<'mc> CommandMinecart<'mc> {
             .to_string())
     }
 
-    pub fn send_message_with_uuid(
+    pub fn send_message_with_string(
         &self,
-        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
+        arg0: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Ljava/util/UUID;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/String;";
-            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_2);
-        }
         sig += ")V";
         let res = self
             .jni_ref()
@@ -11695,7 +11823,32 @@ impl<'mc> CommandMinecart<'mc> {
         Ok(())
     }
 
-    pub fn is_permission_set_with_permission(
+    pub fn send_message_with_uuid(
+        &self,
+        arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
+        arg1: impl Into<String>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/util/UUID;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        sig += ")V";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "sendMessage", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn is_permission_set_with_string(
         &self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11714,7 +11867,7 @@ impl<'mc> CommandMinecart<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn has_permission_with_string(
+    pub fn has_permission_with_permission(
         &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11736,9 +11889,9 @@ impl<'mc> CommandMinecart<'mc> {
     pub fn add_attachment_with_plugin(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
-        arg1: std::option::Option<impl Into<String>>,
-        arg2: std::option::Option<bool>,
-        arg3: std::option::Option<i32>,
+        arg1: impl Into<String>,
+        arg2: bool,
+        arg3: i32,
     ) -> Result<crate::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -11747,23 +11900,17 @@ impl<'mc> CommandMinecart<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Ljava/lang/String;";
-            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-                self.jni_ref().new_string(a.into())?,
-            ));
-            args.push(val_2);
-        }
-        if let Some(a) = arg2 {
-            sig += "Z";
-            let val_3 = jni::objects::JValueGen::Bool(a.into());
-            args.push(val_3);
-        }
-        if let Some(a) = arg3 {
-            sig += "I";
-            let val_4 = jni::objects::JValueGen::Int(a.into());
-            args.push(val_4);
-        }
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        sig += "Z";
+        let val_3 = jni::objects::JValueGen::Bool(arg2.into());
+        args.push(val_3);
+        sig += "I";
+        let val_4 = jni::objects::JValueGen::Int(arg3.into());
+        args.push(val_4);
         sig += ")Lorg/bukkit/permissions/PermissionAttachment;";
         let res =
             self.jni_ref()

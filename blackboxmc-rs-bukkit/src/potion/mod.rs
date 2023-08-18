@@ -284,7 +284,7 @@ impl<'mc> PotionEffectTypeWrapper<'mc> {
         Ok(())
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -488,7 +488,7 @@ impl<'mc> PotionData<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -680,7 +680,7 @@ impl<'mc> Potion<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn apply_with_item_stack(
+    pub fn apply_with_living_entity(
         &self,
         arg0: impl Into<crate::inventory::ItemStack<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -951,7 +951,7 @@ impl<'mc> Potion<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1065,14 +1065,11 @@ impl<'mc> JNIInstantiatable<'mc> for PotionEffect<'mc> {
 }
 
 impl<'mc> PotionEffect<'mc> {
-    pub fn new_with_potion_effect_type(
+    pub fn new_with_map(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::potion::PotionEffectType<'mc>>,
         arg1: std::option::Option<i32>,
         arg2: std::option::Option<i32>,
-        arg3: std::option::Option<bool>,
-        arg4: std::option::Option<bool>,
-        arg5: std::option::Option<bool>,
     ) -> Result<crate::potion::PotionEffect<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -1091,21 +1088,44 @@ impl<'mc> PotionEffect<'mc> {
             let val_3 = jni::objects::JValueGen::Int(a.into());
             args.push(val_3);
         }
-        if let Some(a) = arg3 {
-            sig += "Z";
-            let val_4 = jni::objects::JValueGen::Bool(a.into());
-            args.push(val_4);
-        }
-        if let Some(a) = arg4 {
-            sig += "Z";
-            let val_5 = jni::objects::JValueGen::Bool(a.into());
-            args.push(val_5);
-        }
-        if let Some(a) = arg5 {
-            sig += "Z";
-            let val_6 = jni::objects::JValueGen::Bool(a.into());
-            args.push(val_6);
-        }
+        sig += ")V";
+        let cls = jni.find_class("org/bukkit/potion/PotionEffect");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.new_object(cls, sig.as_str(), args);
+        let res = jni.translate_error_no_gen(res)?;
+        crate::potion::PotionEffect::from_raw(&jni, res)
+    }
+    pub fn new_with_potion_effect_type(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::potion::PotionEffectType<'mc>>,
+        arg1: i32,
+        arg2: i32,
+        arg3: bool,
+        arg4: bool,
+        arg5: bool,
+    ) -> Result<crate::potion::PotionEffect<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lorg/bukkit/potion/PotionEffectType;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        sig += "I";
+        let val_2 = jni::objects::JValueGen::Int(arg1.into());
+        args.push(val_2);
+        sig += "I";
+        let val_3 = jni::objects::JValueGen::Int(arg2.into());
+        args.push(val_3);
+        sig += "Z";
+        let val_4 = jni::objects::JValueGen::Bool(arg3.into());
+        args.push(val_4);
+        sig += "Z";
+        let val_5 = jni::objects::JValueGen::Bool(arg4.into());
+        args.push(val_5);
+        sig += "Z";
+        let val_6 = jni::objects::JValueGen::Bool(arg5.into());
+        args.push(val_6);
         sig += ")V";
         let cls = jni.find_class("org/bukkit/potion/PotionEffect");
         let cls = jni.translate_error_with_class(cls)?;
@@ -1283,7 +1303,7 @@ impl<'mc> PotionEffect<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1619,7 +1639,7 @@ impl<'mc> PotionEffectType<'mc> {
         Ok(())
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

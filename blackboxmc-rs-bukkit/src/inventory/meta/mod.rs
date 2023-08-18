@@ -601,7 +601,7 @@ impl<'mc> BlockDataMeta<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_attribute_modifiers_with_attribute(
+    pub fn get_attribute_modifiers_with_equipment_slot(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -679,7 +679,7 @@ impl<'mc> BlockDataMeta<'mc> {
     pub fn remove_attribute_modifier_with_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
-        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -688,13 +688,11 @@ impl<'mc> BlockDataMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/attribute/AttributeModifier;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1256,7 +1254,7 @@ impl<'mc> ArmorMeta<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_attribute_modifiers_with_attribute(
+    pub fn get_attribute_modifiers_with_equipment_slot(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -1334,7 +1332,7 @@ impl<'mc> ArmorMeta<'mc> {
     pub fn remove_attribute_modifier_with_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
-        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -1343,13 +1341,11 @@ impl<'mc> ArmorMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/attribute/AttributeModifier;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1917,7 +1913,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_attribute_modifiers_with_attribute(
+    pub fn get_attribute_modifiers_with_equipment_slot(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -1995,7 +1991,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     pub fn remove_attribute_modifier_with_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
-        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -2004,13 +2000,11 @@ impl<'mc> AxolotlBucketMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/attribute/AttributeModifier;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -2675,7 +2669,7 @@ impl<'mc> SkullMeta<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_attribute_modifiers_with_attribute(
+    pub fn get_attribute_modifiers_with_equipment_slot(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -2753,7 +2747,7 @@ impl<'mc> SkullMeta<'mc> {
     pub fn remove_attribute_modifier_with_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
-        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -2762,13 +2756,11 @@ impl<'mc> SkullMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/attribute/AttributeModifier;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -3346,7 +3338,7 @@ impl<'mc> CompassMeta<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_attribute_modifiers_with_attribute(
+    pub fn get_attribute_modifiers_with_equipment_slot(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -3424,7 +3416,7 @@ impl<'mc> CompassMeta<'mc> {
     pub fn remove_attribute_modifier_with_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
-        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -3433,13 +3425,11 @@ impl<'mc> CompassMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/attribute/AttributeModifier;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4058,7 +4048,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_attribute_modifiers_with_attribute(
+    pub fn get_attribute_modifiers_with_equipment_slot(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -4136,7 +4126,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
     pub fn remove_attribute_modifier_with_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
-        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -4145,13 +4135,11 @@ impl<'mc> SuspiciousStewMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/attribute/AttributeModifier;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -4714,7 +4702,7 @@ impl<'mc> CrossbowMeta<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_attribute_modifiers_with_attribute(
+    pub fn get_attribute_modifiers_with_equipment_slot(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -4792,7 +4780,7 @@ impl<'mc> CrossbowMeta<'mc> {
     pub fn remove_attribute_modifier_with_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
-        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -4801,13 +4789,11 @@ impl<'mc> CrossbowMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/attribute/AttributeModifier;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5320,7 +5306,7 @@ impl<'mc> ItemMeta<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_attribute_modifiers_with_attribute(
+    pub fn get_attribute_modifiers_with_equipment_slot(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -5398,7 +5384,7 @@ impl<'mc> ItemMeta<'mc> {
     pub fn remove_attribute_modifier_with_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
-        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -5407,13 +5393,11 @@ impl<'mc> ItemMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/attribute/AttributeModifier;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -5967,7 +5951,7 @@ impl<'mc> Repairable<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_attribute_modifiers_with_attribute(
+    pub fn get_attribute_modifiers_with_equipment_slot(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -6045,7 +6029,7 @@ impl<'mc> Repairable<'mc> {
     pub fn remove_attribute_modifier_with_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
-        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -6054,13 +6038,11 @@ impl<'mc> Repairable<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/attribute/AttributeModifier;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -6729,7 +6711,7 @@ impl<'mc> BannerMeta<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_attribute_modifiers_with_attribute(
+    pub fn get_attribute_modifiers_with_equipment_slot(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -6807,7 +6789,7 @@ impl<'mc> BannerMeta<'mc> {
     pub fn remove_attribute_modifier_with_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
-        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -6816,13 +6798,11 @@ impl<'mc> BannerMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/attribute/AttributeModifier;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -7379,7 +7359,7 @@ impl<'mc> BundleMeta<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_attribute_modifiers_with_attribute(
+    pub fn get_attribute_modifiers_with_equipment_slot(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -7457,7 +7437,7 @@ impl<'mc> BundleMeta<'mc> {
     pub fn remove_attribute_modifier_with_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
-        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -7466,13 +7446,11 @@ impl<'mc> BundleMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/attribute/AttributeModifier;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8036,7 +8014,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_attribute_modifiers_with_attribute(
+    pub fn get_attribute_modifiers_with_equipment_slot(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -8114,7 +8092,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     pub fn remove_attribute_modifier_with_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
-        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -8123,13 +8101,11 @@ impl<'mc> ColorableArmorMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/attribute/AttributeModifier;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -8728,7 +8704,7 @@ impl<'mc> SpawnEggMeta<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_attribute_modifiers_with_attribute(
+    pub fn get_attribute_modifiers_with_equipment_slot(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -8806,7 +8782,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     pub fn remove_attribute_modifier_with_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
-        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -8815,13 +8791,11 @@ impl<'mc> SpawnEggMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/attribute/AttributeModifier;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -9368,7 +9342,7 @@ impl<'mc> Damageable<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_attribute_modifiers_with_attribute(
+    pub fn get_attribute_modifiers_with_equipment_slot(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -9446,7 +9420,7 @@ impl<'mc> Damageable<'mc> {
     pub fn remove_attribute_modifier_with_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
-        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -9455,13 +9429,11 @@ impl<'mc> Damageable<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/attribute/AttributeModifier;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10069,7 +10041,7 @@ impl<'mc> FireworkMeta<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_attribute_modifiers_with_attribute(
+    pub fn get_attribute_modifiers_with_equipment_slot(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -10147,7 +10119,7 @@ impl<'mc> FireworkMeta<'mc> {
     pub fn remove_attribute_modifier_with_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
-        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -10156,13 +10128,11 @@ impl<'mc> FireworkMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/attribute/AttributeModifier;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -10875,7 +10845,7 @@ impl<'mc> PotionMeta<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_attribute_modifiers_with_attribute(
+    pub fn get_attribute_modifiers_with_equipment_slot(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -10953,7 +10923,7 @@ impl<'mc> PotionMeta<'mc> {
     pub fn remove_attribute_modifier_with_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
-        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -10962,13 +10932,11 @@ impl<'mc> PotionMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/attribute/AttributeModifier;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -11520,7 +11488,7 @@ impl<'mc> BlockStateMeta<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_attribute_modifiers_with_attribute(
+    pub fn get_attribute_modifiers_with_equipment_slot(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -11598,7 +11566,7 @@ impl<'mc> BlockStateMeta<'mc> {
     pub fn remove_attribute_modifier_with_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
-        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -11607,13 +11575,11 @@ impl<'mc> BlockStateMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/attribute/AttributeModifier;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -12369,7 +12335,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_attribute_modifiers_with_attribute(
+    pub fn get_attribute_modifiers_with_equipment_slot(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -12447,7 +12413,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
     pub fn remove_attribute_modifier_with_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
-        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -12456,13 +12422,11 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/attribute/AttributeModifier;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13014,7 +12978,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_attribute_modifiers_with_attribute(
+    pub fn get_attribute_modifiers_with_equipment_slot(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -13092,7 +13056,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
     pub fn remove_attribute_modifier_with_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
-        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -13101,13 +13065,11 @@ impl<'mc> KnowledgeBookMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/attribute/AttributeModifier;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -13804,7 +13766,7 @@ impl<'mc> MapMeta<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_attribute_modifiers_with_attribute(
+    pub fn get_attribute_modifiers_with_equipment_slot(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -13882,7 +13844,7 @@ impl<'mc> MapMeta<'mc> {
     pub fn remove_attribute_modifier_with_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
-        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -13891,13 +13853,11 @@ impl<'mc> MapMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/attribute/AttributeModifier;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -14066,7 +14026,7 @@ impl<'mc> BookMetaSpigot<'mc> {
         Ok(new_vec)
     }
 
-    pub fn set_pages_with_base_componentss(
+    pub fn set_pages_with_list(
         &self,
         arg0: Vec<impl Into<blackboxmc_bungee::bungee::api::chat::BaseComponent<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -14092,7 +14052,7 @@ impl<'mc> BookMetaSpigot<'mc> {
         Ok(())
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -14665,7 +14625,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_attribute_modifiers_with_attribute(
+    pub fn get_attribute_modifiers_with_equipment_slot(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -14743,7 +14703,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     pub fn remove_attribute_modifier_with_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
-        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -14752,13 +14712,11 @@ impl<'mc> LeatherArmorMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/attribute/AttributeModifier;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -15319,7 +15277,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_attribute_modifiers_with_attribute(
+    pub fn get_attribute_modifiers_with_equipment_slot(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -15397,7 +15355,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     pub fn remove_attribute_modifier_with_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
-        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -15406,13 +15364,11 @@ impl<'mc> FireworkEffectMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/attribute/AttributeModifier;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16065,7 +16021,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_attribute_modifiers_with_attribute(
+    pub fn get_attribute_modifiers_with_equipment_slot(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -16143,7 +16099,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
     pub fn remove_attribute_modifier_with_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
-        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -16152,13 +16108,11 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/attribute/AttributeModifier;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -16907,7 +16861,7 @@ impl<'mc> BookMeta<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_attribute_modifiers_with_attribute(
+    pub fn get_attribute_modifiers_with_equipment_slot(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -16985,7 +16939,7 @@ impl<'mc> BookMeta<'mc> {
     pub fn remove_attribute_modifier_with_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
-        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -16994,13 +16948,11 @@ impl<'mc> BookMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/attribute/AttributeModifier;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -17554,7 +17506,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_attribute_modifiers_with_attribute(
+    pub fn get_attribute_modifiers_with_equipment_slot(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
     ) -> Result<Vec<crate::attribute::AttributeModifier<'mc>>, Box<dyn std::error::Error>> {
@@ -17632,7 +17584,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     pub fn remove_attribute_modifier_with_attribute(
         &self,
         arg0: impl Into<crate::attribute::Attribute<'mc>>,
-        arg1: std::option::Option<impl Into<crate::attribute::AttributeModifier<'mc>>>,
+        arg1: impl Into<crate::attribute::AttributeModifier<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -17641,13 +17593,11 @@ impl<'mc> MusicInstrumentMeta<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        if let Some(a) = arg1 {
-            sig += "Lorg/bukkit/attribute/AttributeModifier;";
-            let val_2 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_2);
-        }
+        sig += "Lorg/bukkit/attribute/AttributeModifier;";
+        let val_2 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
+        });
+        args.push(val_2);
         sig += ")Z";
         let res = self.jni_ref().call_method(
             &self.jni_object(),

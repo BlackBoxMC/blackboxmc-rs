@@ -57,7 +57,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
         crate::bungee::chat::SelectorComponentSerializer::from_raw(&jni, res)
     }
 
-    pub fn serialize_with_selector_component(
+    pub fn serialize_with_object(
         &self,
         arg0: impl Into<crate::bungee::api::chat::SelectorComponent<'mc>>,
         arg1: jni::objects::JObject<'mc>,
@@ -109,7 +109,7 @@ impl<'mc> SelectorComponentSerializer<'mc> {
         Ok(res.l()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -278,7 +278,7 @@ impl<'mc> TextComponentSerializer<'mc> {
         crate::bungee::chat::TextComponentSerializer::from_raw(&jni, res)
     }
 
-    pub fn serialize_with_text_component(
+    pub fn serialize_with_object(
         &self,
         arg0: impl Into<crate::bungee::api::chat::TextComponent<'mc>>,
         arg1: jni::objects::JObject<'mc>,
@@ -330,7 +330,7 @@ impl<'mc> TextComponentSerializer<'mc> {
         Ok(res.l()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -494,7 +494,7 @@ impl<'mc> BaseComponentSerializer<'mc> {
         crate::bungee::chat::BaseComponentSerializer::from_raw(&jni, res)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -648,7 +648,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
         crate::bungee::chat::ScoreComponentSerializer::from_raw(&jni, res)
     }
 
-    pub fn serialize_with_score_component(
+    pub fn serialize_with_object(
         &self,
         arg0: impl Into<crate::bungee::api::chat::ScoreComponent<'mc>>,
         arg1: jni::objects::JObject<'mc>,
@@ -700,7 +700,7 @@ impl<'mc> ScoreComponentSerializer<'mc> {
         Ok(res.l()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -867,7 +867,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
         crate::bungee::chat::TranslatableComponentSerializer::from_raw(&jni, res)
     }
 
-    pub fn serialize_with_translatable_component(
+    pub fn serialize_with_object(
         &self,
         arg0: impl Into<crate::bungee::api::chat::TranslatableComponent<'mc>>,
         arg1: jni::objects::JObject<'mc>,
@@ -919,7 +919,7 @@ impl<'mc> TranslatableComponentSerializer<'mc> {
         Ok(res.l()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1089,7 +1089,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
         crate::bungee::chat::KeybindComponentSerializer::from_raw(&jni, res)
     }
 
-    pub fn serialize_with_keybind_component(
+    pub fn serialize_with_object(
         &self,
         arg0: impl Into<crate::bungee::api::chat::KeybindComponent<'mc>>,
         arg1: jni::objects::JObject<'mc>,
@@ -1141,7 +1141,7 @@ impl<'mc> KeybindComponentSerializer<'mc> {
         Ok(res.l()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1352,7 +1352,7 @@ impl<'mc> TranslationRegistry<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1464,19 +1464,39 @@ impl<'mc> ComponentSerializer<'mc> {
         crate::bungee::chat::ComponentSerializer::from_raw(&jni, res)
     }
 
-    pub fn to_string_with_base_component(
+    pub fn to_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
+        arg0: std::option::Option<jni::objects::JObject<'mc>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         if let Some(a) = arg0 {
-            sig += "Lnet/md_5/bungee/api/chat/BaseComponent;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
+            sig += "Ljava/lang/Object;";
+            let val_1 = jni::objects::JValueGen::Object(a);
             args.push(val_1);
         }
+        sig += ")Ljava/lang/String;";
+        let cls = jni.find_class("java/lang/String");
+        let cls = jni.translate_error_with_class(cls)?;
+        let res = jni.call_static_method(cls, "toString", sig.as_str(), args);
+        let res = jni.translate_error(res)?;
+        Ok(jni
+            .get_string(unsafe { &jni::objects::JString::from_raw(res.as_jni().l) })?
+            .to_string_lossy()
+            .to_string())
+    }
+
+    pub fn to_string_with_base_component(
+        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
+        arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
+    ) -> Result<String, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lnet/md_5/bungee/api/chat/BaseComponent;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
         sig += ")Ljava/lang/String;";
         let cls = jni.find_class("java/lang/String");
         let cls = jni.translate_error_with_class(cls)?;
@@ -1515,7 +1535,7 @@ impl<'mc> ComponentSerializer<'mc> {
         })
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

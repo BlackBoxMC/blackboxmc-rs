@@ -164,7 +164,7 @@ impl<'mc> JavaPluginLoader<'mc> {
         Ok(())
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -765,7 +765,7 @@ impl<'mc> JavaPlugin<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn wait_with_long(
+    pub fn wait(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
