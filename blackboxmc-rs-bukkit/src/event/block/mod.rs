@@ -2130,7 +2130,7 @@ impl<'mc> CauldronLevelChangeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    #[deprecated("not all cauldron contents are Levelled ")]
+    #[deprecated = "not all cauldron contents are Levelled "]
     /// Sets the new level of the cauldron.
     pub fn set_new_level(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");

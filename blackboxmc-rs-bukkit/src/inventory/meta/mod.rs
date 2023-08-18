@@ -348,7 +348,7 @@ impl<'mc> BlockDataMeta<'mc> {
                     .to_string(),
             );
         }
-        Ok(new_vec)
+        Ok(Some(new_vec))
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1003,7 +1003,7 @@ impl<'mc> ArmorMeta<'mc> {
                     .to_string(),
             );
         }
-        Ok(new_vec)
+        Ok(Some(new_vec))
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1664,7 +1664,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
                     .to_string(),
             );
         }
-        Ok(new_vec)
+        Ok(Some(new_vec))
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2422,7 +2422,7 @@ impl<'mc> SkullMeta<'mc> {
                     .to_string(),
             );
         }
-        Ok(new_vec)
+        Ok(Some(new_vec))
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3093,7 +3093,7 @@ impl<'mc> CompassMeta<'mc> {
                     .to_string(),
             );
         }
-        Ok(new_vec)
+        Ok(Some(new_vec))
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3805,7 +3805,7 @@ impl<'mc> SuspiciousStewMeta<'mc> {
                     .to_string(),
             );
         }
-        Ok(new_vec)
+        Ok(Some(new_vec))
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4461,7 +4461,7 @@ impl<'mc> CrossbowMeta<'mc> {
                     .to_string(),
             );
         }
-        Ok(new_vec)
+        Ok(Some(new_vec))
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5067,7 +5067,7 @@ impl<'mc> ItemMeta<'mc> {
                     .to_string(),
             );
         }
-        Ok(new_vec)
+        Ok(Some(new_vec))
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5442,7 +5442,7 @@ impl<'mc> ItemMeta<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    #[deprecated("internal use only ")]
+    #[deprecated = "internal use only "]
     /// Internal use only! Do not use under any circumstances!
     pub fn set_version(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -5714,7 +5714,7 @@ impl<'mc> Repairable<'mc> {
                     .to_string(),
             );
         }
-        Ok(new_vec)
+        Ok(Some(new_vec))
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6476,7 +6476,7 @@ impl<'mc> BannerMeta<'mc> {
                     .to_string(),
             );
         }
-        Ok(new_vec)
+        Ok(Some(new_vec))
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7126,7 +7126,7 @@ impl<'mc> BundleMeta<'mc> {
                     .to_string(),
             );
         }
-        Ok(new_vec)
+        Ok(Some(new_vec))
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7783,7 +7783,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
                     .to_string(),
             );
         }
-        Ok(new_vec)
+        Ok(Some(new_vec))
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8475,7 +8475,7 @@ impl<'mc> SpawnEggMeta<'mc> {
                     .to_string(),
             );
         }
-        Ok(new_vec)
+        Ok(Some(new_vec))
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -9115,7 +9115,7 @@ impl<'mc> Damageable<'mc> {
                     .to_string(),
             );
         }
-        Ok(new_vec)
+        Ok(Some(new_vec))
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -9816,7 +9816,7 @@ impl<'mc> FireworkMeta<'mc> {
                     .to_string(),
             );
         }
-        Ok(new_vec)
+        Ok(Some(new_vec))
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10622,7 +10622,7 @@ impl<'mc> PotionMeta<'mc> {
                     .to_string(),
             );
         }
-        Ok(new_vec)
+        Ok(Some(new_vec))
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11267,7 +11267,7 @@ impl<'mc> BlockStateMeta<'mc> {
                     .to_string(),
             );
         }
-        Ok(new_vec)
+        Ok(Some(new_vec))
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12116,7 +12116,7 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
                     .to_string(),
             );
         }
-        Ok(new_vec)
+        Ok(Some(new_vec))
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12761,7 +12761,7 @@ impl<'mc> KnowledgeBookMeta<'mc> {
                     .to_string(),
             );
         }
-        Ok(new_vec)
+        Ok(Some(new_vec))
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -13312,7 +13312,7 @@ impl<'mc> MapMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    #[deprecated("These methods are poor API: They rely on the caller to pass in an only an integer property, and have poorly defined implementation behavior if that integer is not a valid map (the current implementation for example will generate a new map with a different ID). The xxxMapView family of methods should be used instead. ")]
+    #[deprecated = "These methods are poor API: They rely on the caller to pass in an only an integer property, and have poorly defined implementation behavior if that integer is not a valid map (the current implementation for example will generate a new map with a different ID). The xxxMapView family of methods should be used instead. "]
     /// Sets the map ID. This is used to determine what map is displayed.
     pub fn set_map_id(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -13551,7 +13551,7 @@ impl<'mc> MapMeta<'mc> {
                     .to_string(),
             );
         }
-        Ok(new_vec)
+        Ok(Some(new_vec))
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14412,7 +14412,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
                     .to_string(),
             );
         }
-        Ok(new_vec)
+        Ok(Some(new_vec))
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -15066,7 +15066,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
                     .to_string(),
             );
         }
-        Ok(new_vec)
+        Ok(Some(new_vec))
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -15812,7 +15812,7 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
                     .to_string(),
             );
         }
-        Ok(new_vec)
+        Ok(Some(new_vec))
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -16654,7 +16654,7 @@ impl<'mc> BookMeta<'mc> {
                     .to_string(),
             );
         }
-        Ok(new_vec)
+        Ok(Some(new_vec))
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {
@@ -17301,7 +17301,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
                     .to_string(),
             );
         }
-        Ok(new_vec)
+        Ok(Some(new_vec))
     }
 
     pub fn has_custom_model_data(&self) -> Result<bool, Box<dyn std::error::Error>> {

@@ -21984,7 +21984,7 @@ impl<'mc> BlockState<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.b()?)
     }
-    #[deprecated("Magic value ")]
+    #[deprecated = "Magic value "]
 
     pub fn set_raw_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(B)V");
@@ -23939,7 +23939,7 @@ impl<'mc> Sign<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated("use <a href='#setWaxed(boolean)'><code>setWaxed(boolean)</code></a> instead ")]
+    #[deprecated = "use <a href='#setWaxed(boolean)'><code>setWaxed(boolean)</code></a> instead "]
     /// Marks whether this sign can be edited by players.
     pub fn set_editable(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");
@@ -23963,7 +23963,7 @@ impl<'mc> Sign<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    #[deprecated("A sign may have multiple writable sides now. Use <a href='#getSide(org.bukkit.block.sign.Side)'><code>getSide(Side)</code></a> and <a href='sign/SignSide.html#getLine(int)'><code>SignSide.getLine(int)</code></a>. ")]
+    #[deprecated = "A sign may have multiple writable sides now. Use <a href='#getSide(org.bukkit.block.sign.Side)'><code>getSide(Side)</code></a> and <a href='sign/SignSide.html#getLine(int)'><code>SignSide.getLine(int)</code></a>. "]
     /// Gets the line of text at the specified index.<p>For example, getLine(0) will return the first line of text on the <a href="sign/Side.html#FRONT"><code>Side.FRONT</code></a>.</p>
     pub fn get_line(&self, arg0: i32) -> Result<String, Box<dyn std::error::Error>> {
         let sig = String::from("(I)Ljava/lang/String;");
@@ -24036,7 +24036,7 @@ impl<'mc> Sign<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated("A sign may have multiple writable sides now. Use <a href='#getSide(org.bukkit.block.sign.Side)'><code>getSide(Side)</code></a> and <a href='sign/SignSide.html#setGlowingText(boolean)'><code>SignSide.setGlowingText(boolean)</code></a>. ")]
+    #[deprecated = "A sign may have multiple writable sides now. Use <a href='#getSide(org.bukkit.block.sign.Side)'><code>getSide(Side)</code></a> and <a href='sign/SignSide.html#setGlowingText(boolean)'><code>SignSide.setGlowingText(boolean)</code></a>. "]
     /// Sets whether this sign has glowing text. Only affects the <a href="sign/Side.html#FRONT"><code>Side.FRONT</code></a>.
     pub fn set_glowing_text(&self, arg0: bool) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(Z)V");

@@ -8187,7 +8187,7 @@ impl<'mc> MaterialData<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.l()?)
     }
-    #[deprecated("Magic value ")]
+    #[deprecated = "Magic value "]
     /// Sets the raw data of this material
     pub fn set_data(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(B)V");

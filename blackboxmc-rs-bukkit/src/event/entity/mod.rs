@@ -2762,7 +2762,7 @@ impl<'mc> HorseJumpEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    #[deprecated("horse jumping was moved client side. ")]
+    #[deprecated = "horse jumping was moved client side. "]
     /// Sets the power of the jump.<p>Jump power can be set to a value above 1.0 which will increase the strength of this jump above the horse's actual jump strength.</p> <p>Setting the jump power to 0 will result in the jump animation still playing, but the horse not leaving the ground. Only canceling this event will result in no jump animation at all.</p>
     pub fn set_power(&self, arg0: f32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(F)V");
@@ -26770,9 +26770,7 @@ impl<'mc> VillagerReplenishTradeEvent<'mc> {
         let obj = res.l()?;
         crate::event::HandlerList::from_raw(&jni, obj)
     }
-    #[deprecated(
-        "MC 1.14 has changed how villagers restock their trades. This has no effect anymore. "
-    )]
+    #[deprecated = "MC 1.14 has changed how villagers restock their trades. This has no effect anymore. "]
     /// Set the bonus uses added.
     pub fn set_bonus(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");

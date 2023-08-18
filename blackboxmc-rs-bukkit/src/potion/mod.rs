@@ -1564,7 +1564,7 @@ impl<'mc> PotionEffectType<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.d()?)
     }
-    #[deprecated("Magic value ")]
+    #[deprecated = "Magic value "]
     /// Gets the effect type specified by the unique id.
     pub fn get_by_id(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -1789,7 +1789,7 @@ impl<'mc> PotionBrewer<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    #[deprecated("Non-Functional ")]
+    #[deprecated = "Non-Functional "]
     /// Returns a collection of <a title="class in org.bukkit.potion" href="PotionEffect.html"><code>PotionEffect</code></a> that would be applied from a potion with the given data value.
     pub fn get_effects_from_damage(
         &self,

@@ -68,7 +68,7 @@ excluded_classes = [
                         "java.util.logging.LogManager",
 
     # tempoerary
-    "java.util.SortedMap", "java.util.SortedSet"
+    "java.util.JavaSortedMap", "java.util.JavaSortedSet"
 ]
 
 interface_names = []
@@ -534,7 +534,13 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
                         ".to_string());")
                 case _:
                     code.append("new_vec.push("+normally+");")
-            code.append("};Ok(new_vec)")
+            code.append("};Ok(")
+            if nullable:
+                code.append("Some(")
+            code.append("new_vec")
+            if nullable:
+                code.append(")")
+            code.append(")")
         case _:
             if return_group["type_name_resolved"] == "blackboxmc_java::lang::JavaEnum":
                 return_group["type_name_resolved"] = "Self"
@@ -1343,8 +1349,8 @@ def parse_classes(library, val, classes):
     mod_path = dir+os.sep+"mod.rs"
     name = val["name"].replace("$", "").replace("-", "_")
 
-    if name == "Result":
-        name = "SpigotResult"
+    if name == "Result" or name == "Option":
+        name = "Spigot"+name
         val["name"] = name
 
     full_name = val["packageName"]+"."+val["name"]
@@ -1564,7 +1570,7 @@ def add_deprecated(arr,comment):
             if comm.endswith(" "):
                 comm = comm[:len(comm)]
             comment = comment.replace(comm,"") # idk why the code below doesn't catch this but ok
-            arr.append("#[deprecated(\""+comm.replace("\"","'")+"\")]")
+            arr.append("#[deprecated = \""+comm.replace("\"","'")+"\"]")
         else:
             arr.append("#[deprecated]")
     else:

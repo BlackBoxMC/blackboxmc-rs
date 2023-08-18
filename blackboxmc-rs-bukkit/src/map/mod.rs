@@ -1211,7 +1211,7 @@ impl<'mc> MapCursor<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated("Magic value ")]
+    #[deprecated = "Magic value "]
     /// Set the type of this cursor.
     pub fn set_raw_type(&self, arg0: i8) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(B)V");
@@ -1757,7 +1757,7 @@ impl<'mc> MapCanvas<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated("Magic value, use <a href='#getPixelColor(int,int)'><code>getPixelColor(int, int)</code></a> ")]
+    #[deprecated = "Magic value, use <a href='#getPixelColor(int,int)'><code>getPixelColor(int, int)</code></a> "]
     /// Get a pixel from the canvas. If no color is set at the given position for this canvas, then null is returned and the color returned by <a href="#getBasePixelColor(int,int)"><code>getBasePixelColor(int, int)</code></a> is shown on the map. Get a pixel from the canvas.
     pub fn get_pixel(
         &self,
@@ -1779,7 +1779,7 @@ impl<'mc> MapCanvas<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(Some(res.b()?))
     }
-    #[deprecated("Magic value, use <a href='#getBasePixelColor(int,int)'><code>getBasePixelColor(int, int)</code></a> ")]
+    #[deprecated = "Magic value, use <a href='#getBasePixelColor(int,int)'><code>getBasePixelColor(int, int)</code></a> "]
     /// Get a pixel from the layers below this canvas. Get a pixel from the layers below this canvas.
     pub fn get_base_pixel(&self, arg0: i32, arg1: i32) -> Result<i8, Box<dyn std::error::Error>> {
         let sig = String::from("(II)B");
@@ -2703,7 +2703,7 @@ impl<'mc> JNIInstantiatable<'mc> for MapPalette<'mc> {
 }
 
 impl<'mc> MapPalette<'mc> {
-    #[deprecated("Magic value ")]
+    #[deprecated = "Magic value "]
     /// Get the value of the given color in the palette.
     pub fn get_color(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2743,7 +2743,7 @@ impl<'mc> MapPalette<'mc> {
         let b = jni.translate_error(b)?.i()? as u8;
         Ok((r, g, b))
     }
-    #[deprecated("Magic value ")]
+    #[deprecated = "Magic value "]
     /// Get the index of the closest matching color in the palette to the given color.
     pub fn match_color_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,

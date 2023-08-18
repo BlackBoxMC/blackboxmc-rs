@@ -206,7 +206,7 @@ impl<'mc> Server<'mc> {
             jni::objects::JObject::from_raw(res.l()?.clone())
         })
     }
-    #[deprecated("Magic value ")]
+    #[deprecated = "Magic value "]
     /// Gets the map from the given item ID.
     pub fn get_map(
         &self,
@@ -3488,7 +3488,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.j()?)
     }
-    #[deprecated("Deprecated in favor of <a href='#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)'><code>setTicksPerSpawns(SpawnCategory, int)</code></a> ")]
+    #[deprecated = "Deprecated in favor of <a href='#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)'><code>setTicksPerSpawns(SpawnCategory, int)</code></a> "]
     /// Sets the world's ticks per water underground creature spawns value<p>This value determines how many ticks there are between attempts to spawn water underground creature.</p> <p><b>Example Usage:</b></p> <ul><li>A value of 1 will mean the server will attempt to spawn water underground creature in this world on every tick.</li><li>A value of 400 will mean the server will attempt to spawn water underground creature in this world every 400th tick.</li><li>A value below 0 will be reset back to Minecraft's default.</li> </ul> <p><b>Note:</b> If set to 0, water underground creature spawning will be disabled for this world.</p> <p>Minecraft default: 1.</p>
     pub fn set_ticks_per_water_underground_creature_spawns(
         &self,
@@ -4742,7 +4742,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    #[deprecated("This method was added to facilitate chunk garbage collection. As of the current Minecraft version chunks are now strictly managed and will not be loaded for more than 1 tick unless they are in use. ")]
+    #[deprecated = "This method was added to facilitate chunk garbage collection. As of the current Minecraft version chunks are now strictly managed and will not be loaded for more than 1 tick unless they are in use. "]
     /// Checks if the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> at the specified coordinates is loaded and in use by one or more players
     pub fn is_chunk_in_use(
         &self,
@@ -4814,7 +4814,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    #[deprecated("regenerating a single chunk is not likely to produce the same chunk as before as terrain decoration may be spread across chunks. Use of this method should be avoided as it is known to produce buggy results. ")]
+    #[deprecated = "regenerating a single chunk is not likely to produce the same chunk as before as terrain decoration may be spread across chunks. Use of this method should be avoided as it is known to produce buggy results. "]
     /// Regenerates the <a title="interface in org.bukkit" href="Chunk.html"><code>Chunk</code></a> at the specified coordinates
     pub fn regenerate_chunk(
         &self,
@@ -4836,9 +4836,7 @@ impl<'mc> World<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    #[deprecated(
-        "This method is not guaranteed to work suitably across all client implementations. "
-    )]
+    #[deprecated = "This method is not guaranteed to work suitably across all client implementations. "]
     /// Resends the <a href="Chunk.html" title="interface in org.bukkit"><code>Chunk</code></a> to all clients
     pub fn refresh_chunk(&self, arg0: i32, arg1: i32) -> Result<bool, Box<dyn std::error::Error>> {
         let sig = String::from("(II)Z");
@@ -5684,7 +5682,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated("Deprecated in favor of <a href='#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)'><code>setTicksPerSpawns(SpawnCategory, int)</code></a> ")]
+    #[deprecated = "Deprecated in favor of <a href='#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)'><code>setTicksPerSpawns(SpawnCategory, int)</code></a> "]
     /// Sets the world's ticks per animal spawns value<p>This value determines how many ticks there are between attempts to spawn animals.</p> <p><b>Example Usage:</b></p> <ul><li>A value of 1 will mean the server will attempt to spawn animals in this world every tick.</li><li>A value of 400 will mean the server will attempt to spawn animals in this world every 400th tick.</li><li>A value below 0 will be reset back to Minecraft's default.</li> </ul> <p><b>Note:</b> If set to 0, animal spawning will be disabled for this world. We recommend using <a href="#setSpawnFlags(boolean,boolean)"><code>setSpawnFlags(boolean, boolean)</code></a> to control this instead.</p> <p>Minecraft default: 400.</p>
     pub fn set_ticks_per_animal_spawns(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -5698,7 +5696,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated("Deprecated in favor of <a href='#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)'><code>setTicksPerSpawns(SpawnCategory, int)</code></a> ")]
+    #[deprecated = "Deprecated in favor of <a href='#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)'><code>setTicksPerSpawns(SpawnCategory, int)</code></a> "]
     /// Sets the world's ticks per monster spawns value<p>This value determines how many ticks there are between attempts to spawn monsters.</p> <p><b>Example Usage:</b></p> <ul><li>A value of 1 will mean the server will attempt to spawn monsters in this world on every tick.</li><li>A value of 400 will mean the server will attempt to spawn monsters in this world every 400th tick.</li><li>A value below 0 will be reset back to Minecraft's default.</li> </ul> <p><b>Note:</b> If set to 0, monsters spawning will be disabled for this world. We recommend using <a href="#setSpawnFlags(boolean,boolean)"><code>setSpawnFlags(boolean, boolean)</code></a> to control this instead.</p> <p>Minecraft default: 1.</p>
     pub fn set_ticks_per_monster_spawns(
         &self,
@@ -5715,7 +5713,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated("Deprecated in favor of <a href='#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)'><code>setTicksPerSpawns(SpawnCategory, int)</code></a> ")]
+    #[deprecated = "Deprecated in favor of <a href='#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)'><code>setTicksPerSpawns(SpawnCategory, int)</code></a> "]
     /// Sets the world's ticks per water mob spawns value<p>This value determines how many ticks there are between attempts to spawn water mobs.</p> <p><b>Example Usage:</b></p> <ul><li>A value of 1 will mean the server will attempt to spawn water mobs in this world on every tick.</li><li>A value of 400 will mean the server will attempt to spawn water mobs in this world every 400th tick.</li><li>A value below 0 will be reset back to Minecraft's default.</li> </ul> <p><b>Note:</b> If set to 0, water mobs spawning will be disabled for this world.</p> <p>Minecraft default: 1.</p>
     pub fn set_ticks_per_water_spawns(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -5729,7 +5727,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated("Deprecated in favor of <a href='#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)'><code>setTicksPerSpawns(SpawnCategory, int)</code></a> ")]
+    #[deprecated = "Deprecated in favor of <a href='#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)'><code>setTicksPerSpawns(SpawnCategory, int)</code></a> "]
     /// Sets the world's ticks per water ambient mob spawns value<p>This value determines how many ticks there are between attempts to spawn water ambient mobs.</p> <p><b>Example Usage:</b></p> <ul><li>A value of 1 will mean the server will attempt to spawn water ambient mobs in this world on every tick.</li><li>A value of 400 will mean the server will attempt to spawn water ambient mobs in this world every 400th tick.</li><li>A value below 0 will be reset back to Minecraft's default.</li> </ul> <p><b>Note:</b> If set to 0, water ambient mobs spawning will be disabled for this world.</p> <p>Minecraft default: 1.</p>
     pub fn set_ticks_per_water_ambient_spawns(
         &self,
@@ -5746,7 +5744,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated("Deprecated in favor of <a href='#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)'><code>setTicksPerSpawns(SpawnCategory, int)</code></a> ")]
+    #[deprecated = "Deprecated in favor of <a href='#setTicksPerSpawns(org.bukkit.entity.SpawnCategory,int)'><code>setTicksPerSpawns(SpawnCategory, int)</code></a> "]
     /// Sets the world's ticks per ambient mob spawns value<p>This value determines how many ticks there are between attempts to spawn ambient mobs.</p> <p><b>Example Usage:</b></p> <ul><li>A value of 1 will mean the server will attempt to spawn ambient mobs in this world on every tick.</li><li>A value of 400 will mean the server will attempt to spawn ambient mobs in this world every 400th tick.</li><li>A value below 0 will be reset back to Minecraft's default.</li> </ul> <p><b>Note:</b> If set to 0, ambient mobs spawning will be disabled for this world.</p> <p>Minecraft default: 1.</p>
     pub fn set_ticks_per_ambient_spawns(
         &self,
@@ -5786,7 +5784,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated("Deprecated in favor of <a href='#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)'><code>setSpawnLimit(SpawnCategory, int)</code></a> ")]
+    #[deprecated = "Deprecated in favor of <a href='#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)'><code>setSpawnLimit(SpawnCategory, int)</code></a> "]
     /// Sets the limit for number of monsters that can spawn in a chunk in this world<p><b>Note:</b> If set to a negative number the world will use the server-wide spawn limit instead.</p>
     pub fn set_monster_spawn_limit(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -5800,7 +5798,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated("Deprecated in favor of <a href='#getSpawnLimit(org.bukkit.entity.SpawnCategory)'><code>getSpawnLimit(SpawnCategory)</code></a> ")]
+    #[deprecated = "Deprecated in favor of <a href='#getSpawnLimit(org.bukkit.entity.SpawnCategory)'><code>getSpawnLimit(SpawnCategory)</code></a> "]
     /// Sets the limit for number of animals that can spawn in a chunk in this world<p><b>Note:</b> If set to a negative number the world will use the server-wide spawn limit instead.</p>
     pub fn set_animal_spawn_limit(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -5814,7 +5812,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated("Deprecated in favor of <a href='#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)'><code>setSpawnLimit(SpawnCategory, int)</code></a> ")]
+    #[deprecated = "Deprecated in favor of <a href='#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)'><code>setSpawnLimit(SpawnCategory, int)</code></a> "]
     /// Sets the limit for number of water animals that can spawn in a chunk in this world<p><b>Note:</b> If set to a negative number the world will use the server-wide spawn limit instead.</p>
     pub fn set_water_animal_spawn_limit(
         &self,
@@ -5831,7 +5829,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated("Deprecated in favor of <a href='#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)'><code>setSpawnLimit(SpawnCategory, int)</code></a> ")]
+    #[deprecated = "Deprecated in favor of <a href='#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)'><code>setSpawnLimit(SpawnCategory, int)</code></a> "]
     /// Sets the limit for number of water underground creature that can spawn in a chunk in this world<p><b>Note:</b> If set to a negative number the world will use the server-wide spawn limit instead.</p>
     pub fn set_water_underground_creature_spawn_limit(
         &self,
@@ -5848,7 +5846,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated("Deprecated in favor of <a href='#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)'><code>setSpawnLimit(SpawnCategory, int)</code></a> ")]
+    #[deprecated = "Deprecated in favor of <a href='#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)'><code>setSpawnLimit(SpawnCategory, int)</code></a> "]
     /// Sets the limit for number of water ambient mobs that can spawn in a chunk in this world<p><b>Note:</b> If set to a negative number the world will use the server-wide spawn limit instead.</p>
     pub fn set_water_ambient_spawn_limit(
         &self,
@@ -5865,7 +5863,7 @@ impl<'mc> World<'mc> {
         self.jni_ref().translate_error(res)?;
         Ok(())
     }
-    #[deprecated("Deprecated in favor of <a href='#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)'><code>setSpawnLimit(SpawnCategory, int)</code></a> ")]
+    #[deprecated = "Deprecated in favor of <a href='#setSpawnLimit(org.bukkit.entity.SpawnCategory,int)'><code>setSpawnLimit(SpawnCategory, int)</code></a> "]
     /// Sets the limit for number of ambient mobs that can spawn in a chunk in this world<p><b>Note:</b> If set to a negative number the world will use the server-wide spawn limit instead.</p>
     pub fn set_ambient_spawn_limit(&self, arg0: i32) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(I)V");
@@ -19708,7 +19706,7 @@ impl<'mc> Bukkit<'mc> {
         let obj = res.l()?;
         crate::Tag::from_raw(&jni, obj)
     }
-    #[deprecated("Magic value ")]
+    #[deprecated = "Magic value "]
     /// Gets the map from the given item ID.
     pub fn get_map(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -23760,7 +23758,7 @@ impl<'mc> JNIInstantiatable<'mc> for ChunkSnapshot<'mc> {
 }
 
 impl<'mc> ChunkSnapshot<'mc> {
-    #[deprecated("Magic value ")]
+    #[deprecated = "Magic value "]
     /// Get block data for block at corresponding coordinate in the chunk
     pub fn get_data(
         &self,
@@ -53121,7 +53119,7 @@ impl<'mc> WorldEnvironment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    #[deprecated("Magic value ")]
+    #[deprecated = "Magic value "]
     /// Get an environment by ID
     pub fn get_environment(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,

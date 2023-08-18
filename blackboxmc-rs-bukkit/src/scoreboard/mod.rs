@@ -2084,38 +2084,38 @@ impl<'mc> ScoreboardManager<'mc> {
     }
 }
 #[derive(PartialEq, Eq)]
-pub enum OptionEnum {
+pub enum SpigotOptionEnum {
     NameTagVisibility,
     DeathMessageVisibility,
     CollisionRule,
 }
-impl std::fmt::Display for OptionEnum {
+impl std::fmt::Display for SpigotOptionEnum {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            OptionEnum::NameTagVisibility => f.write_str("NAME_TAG_VISIBILITY"),
-            OptionEnum::DeathMessageVisibility => f.write_str("DEATH_MESSAGE_VISIBILITY"),
-            OptionEnum::CollisionRule => f.write_str("COLLISION_RULE"),
+            SpigotOptionEnum::NameTagVisibility => f.write_str("NAME_TAG_VISIBILITY"),
+            SpigotOptionEnum::DeathMessageVisibility => f.write_str("DEATH_MESSAGE_VISIBILITY"),
+            SpigotOptionEnum::CollisionRule => f.write_str("COLLISION_RULE"),
         }
     }
 }
-impl<'mc> std::fmt::Display for Option<'mc> {
+impl<'mc> std::fmt::Display for SpigotOption<'mc> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         self.2.fmt(f)
     }
 }
-pub struct Option<'mc>(
+pub struct SpigotOption<'mc>(
     pub(crate) blackboxmc_general::SharedJNIEnv<'mc>,
     pub(crate) jni::objects::JObject<'mc>,
-    pub OptionEnum,
+    pub SpigotOptionEnum,
 );
-impl<'mc> std::ops::Deref for Option<'mc> {
-    type Target = OptionEnum;
+impl<'mc> std::ops::Deref for SpigotOption<'mc> {
+    type Target = SpigotOptionEnum;
     fn deref(&self) -> &Self::Target {
         return &self.2;
     }
 }
 
-impl<'mc> JNIRaw<'mc> for Option<'mc> {
+impl<'mc> JNIRaw<'mc> for SpigotOption<'mc> {
     fn jni_ref(&self) -> blackboxmc_general::SharedJNIEnv<'mc> {
         self.0.clone()
     }
@@ -2125,8 +2125,8 @@ impl<'mc> JNIRaw<'mc> for Option<'mc> {
     }
 }
 
-impl<'mc> JNIInstantiatableEnum<'mc> for Option<'mc> {
-    type Enum = OptionEnum;
+impl<'mc> JNIInstantiatableEnum<'mc> for SpigotOption<'mc> {
+    type Enum = SpigotOptionEnum;
 
     fn from_raw(
         env: &blackboxmc_general::SharedJNIEnv<'mc>,
@@ -2135,12 +2135,12 @@ impl<'mc> JNIInstantiatableEnum<'mc> for Option<'mc> {
         e: Self::Enum,
     ) -> Result<Self, Box<dyn std::error::Error>> {
         if obj.is_null() {
-            return Err(eyre::eyre!("Tried to instantiate Option from null object.").into());
+            return Err(eyre::eyre!("Tried to instantiate SpigotOption from null object.").into());
         }
-        let (valid, name) = env.validate_name(&obj, "org/bukkit/scoreboard/Option")?;
+        let (valid, name) = env.validate_name(&obj, "org/bukkit/scoreboard/SpigotOption")?;
         if !valid {
             Err(eyre::eyre!(
-                "Invalid argument passed. Expected a Option object, got {}",
+                "Invalid argument passed. Expected a SpigotOption object, got {}",
                 name
             )
             .into())
@@ -2150,15 +2150,15 @@ impl<'mc> JNIInstantiatableEnum<'mc> for Option<'mc> {
     }
 }
 
-impl<'mc> Option<'mc> {
-    pub const NAME_TAG_VISIBILITY: OptionEnum = OptionEnum::NameTagVisibility;
-    pub const DEATH_MESSAGE_VISIBILITY: OptionEnum = OptionEnum::DeathMessageVisibility;
-    pub const COLLISION_RULE: OptionEnum = OptionEnum::CollisionRule;
-    pub fn from_string(str: String) -> std::option::Option<OptionEnum> {
+impl<'mc> SpigotOption<'mc> {
+    pub const NAME_TAG_VISIBILITY: SpigotOptionEnum = SpigotOptionEnum::NameTagVisibility;
+    pub const DEATH_MESSAGE_VISIBILITY: SpigotOptionEnum = SpigotOptionEnum::DeathMessageVisibility;
+    pub const COLLISION_RULE: SpigotOptionEnum = SpigotOptionEnum::CollisionRule;
+    pub fn from_string(str: String) -> std::option::Option<SpigotOptionEnum> {
         match str.as_str() {
-            "NAME_TAG_VISIBILITY" => Some(OptionEnum::NameTagVisibility),
-            "DEATH_MESSAGE_VISIBILITY" => Some(OptionEnum::DeathMessageVisibility),
-            "COLLISION_RULE" => Some(OptionEnum::CollisionRule),
+            "NAME_TAG_VISIBILITY" => Some(SpigotOptionEnum::NameTagVisibility),
+            "DEATH_MESSAGE_VISIBILITY" => Some(SpigotOptionEnum::DeathMessageVisibility),
+            "COLLISION_RULE" => Some(SpigotOptionEnum::CollisionRule),
             _ => None,
         }
     }
@@ -2166,14 +2166,14 @@ impl<'mc> Option<'mc> {
     pub fn value_of(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
-    ) -> Result<Option<'mc>, Box<dyn std::error::Error>> {
+    ) -> Result<SpigotOption<'mc>, Box<dyn std::error::Error>> {
         let val_1 = jni::objects::JObject::from(jni.new_string(arg0.into())?);
-        let cls = jni.find_class("org/bukkit/scoreboard/Option");
+        let cls = jni.find_class("org/bukkit/scoreboard/SpigotOption");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(
             cls,
             "valueOf",
-            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/Option;",
+            "(Ljava/lang/String;)Lorg/bukkit/scoreboard/SpigotOption;",
             vec![jni::objects::JValueGen::from(val_1)],
         );
         let res = jni.translate_error(res)?;
@@ -2185,10 +2185,10 @@ impl<'mc> Option<'mc> {
             .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })?
             .to_string_lossy()
             .to_string();
-        Option::from_raw(
+        SpigotOption::from_raw(
             &jni,
             raw_obj,
-            Option::from_string(variant_str)
+            SpigotOption::from_string(variant_str)
                 .ok_or(eyre::eyre!("String gaven for variant was invalid"))?,
         )
     }

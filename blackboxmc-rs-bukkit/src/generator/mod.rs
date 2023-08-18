@@ -47,7 +47,7 @@ impl<'mc> JNIInstantiatable<'mc> for ChunkGeneratorChunkData<'mc> {
 }
 
 impl<'mc> ChunkGeneratorChunkData<'mc> {
-    #[deprecated("Uses magic values ")]
+    #[deprecated = "Uses magic values "]
     /// Get the block data at x,y,z in the chunk data. Getting blocks outside the chunk's bounds returns 0.
     pub fn get_data(
         &self,

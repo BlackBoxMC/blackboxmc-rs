@@ -4620,7 +4620,7 @@ impl<'mc> ItemStack<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.i()?)
     }
-    #[deprecated("durability is now part of ItemMeta. To avoid confusion and misuse, <a href='#getItemMeta()'><code>getItemMeta()</code></a>, <a href='#setItemMeta(org.bukkit.inventory.meta.ItemMeta)'><code>setItemMeta(ItemMeta)</code></a> and <a href='meta/Damageable.html#setDamage(int)'><code>Damageable.setDamage(int)</code></a> should be used instead. This is because any call to this method will be overwritten by subsequent setting of ItemMeta which was created before this call. ")]
+    #[deprecated = "durability is now part of ItemMeta. To avoid confusion and misuse, <a href='#getItemMeta()'><code>getItemMeta()</code></a>, <a href='#setItemMeta(org.bukkit.inventory.meta.ItemMeta)'><code>setItemMeta(ItemMeta)</code></a> and <a href='meta/Damageable.html#setDamage(int)'><code>Damageable.setDamage(int)</code></a> should be used instead. This is because any call to this method will be overwritten by subsequent setting of ItemMeta which was created before this call. "]
     /// Sets the durability of this item
     pub fn set_durability(&self, arg0: i16) -> Result<(), Box<dyn std::error::Error>> {
         let sig = String::from("(S)V");
@@ -9070,7 +9070,7 @@ impl<'mc> EntityEquipment<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.f()?)
     }
-    #[deprecated("entities can duel wield now use the methods for the specific hand instead ")]
+    #[deprecated = "entities can duel wield now use the methods for the specific hand instead "]
 
     pub fn set_item_in_hand_drop_chance(
         &self,
