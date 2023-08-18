@@ -478,7 +478,7 @@ impl<'mc> ReloadCommand<'mc> {
         Ok(())
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1068,7 +1068,7 @@ impl<'mc> TimingsCommand<'mc> {
         Ok(())
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1617,7 +1617,7 @@ impl<'mc> BukkitCommand<'mc> {
         Ok(())
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2188,7 +2188,7 @@ impl<'mc> VersionCommand<'mc> {
         Ok(())
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2748,7 +2748,7 @@ impl<'mc> HelpCommand<'mc> {
         Ok(())
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3319,7 +3319,7 @@ impl<'mc> PluginsCommand<'mc> {
         Ok(())
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

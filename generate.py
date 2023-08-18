@@ -141,6 +141,7 @@ def snake_case_to_camel_case(string):
 
 def func_signature_format(ty, increment, returning, options_start_at=-1):
     thing = ""
+    ty["type_name_resolved"] = ty["type_name_resolved"].replace("<T>","")
     internal_do_into = ty["type_name_resolved"].startswith("crate") or ty["type_name_resolved"].startswith("bukkit") or ty["type_name_resolved"].startswith("blackbox")
     is_string = ty["type_name_resolved"] == "String"
     internal = internal_do_into or ty["type_name_resolved"].startswith("jni")
@@ -1047,13 +1048,13 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
                 if "modifiers" in m:
                     if(m["modifiers"]&1 != 1): # skip protected/private methods
                         continue
+                if len(m["parameters"]) >= 1:
+                    method_first_arg = camel_case_to_snake_case(m["parameters"][0][1])
                 if last_method is None:
                     options_start_at = len(m["parameters"])+1
                     m["options_start_at"] = options_start_at
                     last_method = m
                     method_buildup.append(m)
-                    if len(m["parameters"]) >= 1:
-                        method_first_arg = camel_case_to_snake_case(m["parameters"][0][1])
                 else:
                     i = 0
                     if len(last_method["parameters"]) > len(m["parameters"]):
@@ -1075,23 +1076,24 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
                     i += 1
                 n += 1
 
-                if n == len(methods__) and breaking is not True:
+                if n == len(methods__) and not breaking:
                     method_buildup.append(m)
                     breaking = True
+                
                 if breaking:
+                    method_buildup.append(m)
                     identifier = method_first_arg.split(".")[len(method_first_arg.split("."))-1].lower()
                     method_map[identifier] = method_buildup.copy()
                     method_buildup = []
-                    last_method = None
                     method_first_arg = ""
-                    options_start_at = 0
+                    options_start_at = m["options_start_at"]
 
             for group_name in method_map:
                 methods = method_map[group_name]
                 if group_name != "":
                     new_name = name+"_with_"+group_name.replace("$","").replace("[]","s")
                 else:
-                    new_name = name
+                    new_name = name 
                 new_methods[new_name] = {}
                 new_methods[new_name]["method"] = methods[len(methods)-1]
                 if "@Deprecated" in new_methods[new_name]["method"]["annotations"]:
@@ -1194,7 +1196,10 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             continue
 
         if options_start_at != -1:
-            code.append("let mut args = Vec::new();")
+            if len(func_signature) >= 1:
+                code.append("let mut args = Vec::new();")
+            else:
+                code.append("let args = Vec::new();")
             code.append("let mut sig = String::from(\"(\");")
         else:
             code.append("let sig = String::from(\""+java_call_signature_format(func_signature, return_group["type_name_original"],is_constructor)+"\");")

@@ -191,7 +191,7 @@ impl<'mc> StructureManager<'mc> {
         })
     }
 
-    pub fn load_structure_with_file(
+    pub fn load_structure_with_input_stream(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<crate::structure::Structure<'mc>, Box<dyn std::error::Error>> {
@@ -237,7 +237,7 @@ impl<'mc> StructureManager<'mc> {
         })
     }
 
-    pub fn save_structure_with_namespaced_key(
+    pub fn save_structure_with_output_stream(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: std::option::Option<impl Into<crate::structure::Structure<'mc>>>,
@@ -264,8 +264,33 @@ impl<'mc> StructureManager<'mc> {
 
     pub fn save_structure_with_file(
         &self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: std::option::Option<impl Into<crate::structure::Structure<'mc>>>,
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/io/File;";
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/structure/Structure;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")V";
+        let res =
+            self.jni_ref()
+                .call_method(&self.jni_object(), "saveStructure", sig.as_str(), args);
+        self.jni_ref().translate_error(res)?;
+        Ok(())
+    }
+
+    pub fn save_structure_with_namespaced_key(
+        &self,
         arg0: impl Into<crate::NamespacedKey<'mc>>,
-        arg1: impl Into<crate::structure::Structure<'mc>>,
+        arg1: std::option::Option<impl Into<crate::structure::Structure<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -274,11 +299,13 @@ impl<'mc> StructureManager<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        sig += "Lorg/bukkit/structure/Structure;";
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        args.push(val_2);
+        if let Some(a) = arg1 {
+            sig += "Lorg/bukkit/structure/Structure;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
         sig += ")V";
         let res =
             self.jni_ref()
@@ -497,7 +524,7 @@ impl<'mc> Structure<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn place_with_location(
+    pub fn place_with_region_accessor(
         &self,
         arg0: impl Into<crate::RegionAccessor<'mc>>,
         arg1: impl Into<crate::util::BlockVector<'mc>>,

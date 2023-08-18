@@ -233,7 +233,7 @@ impl<'mc> PistonHead<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -684,7 +684,7 @@ impl<'mc> Chest<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1130,7 +1130,7 @@ impl<'mc> GlassPane<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1533,7 +1533,7 @@ impl<'mc> TripwireHook<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2004,7 +2004,7 @@ impl<'mc> PitcherCrop<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2469,7 +2469,7 @@ impl<'mc> Lectern<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2906,7 +2906,7 @@ impl<'mc> DaylightDetector<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3306,7 +3306,7 @@ impl<'mc> StructureBlock<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3746,7 +3746,7 @@ impl<'mc> PinkPetals<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4174,7 +4174,7 @@ impl<'mc> Piston<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4549,7 +4549,7 @@ impl<'mc> TNT<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4967,7 +4967,7 @@ impl<'mc> Fence<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5705,7 +5705,7 @@ impl<'mc> SculkCatalyst<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6407,7 +6407,7 @@ impl<'mc> Furnace<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -6821,7 +6821,7 @@ impl<'mc> Sapling<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7462,7 +7462,7 @@ impl<'mc> WallHangingSign<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -7944,7 +7944,7 @@ impl<'mc> TechnicalPiston<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8396,7 +8396,7 @@ impl<'mc> Switch<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -8956,7 +8956,7 @@ impl<'mc> BubbleColumn<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -9406,7 +9406,7 @@ impl<'mc> Bell<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -9862,7 +9862,7 @@ impl<'mc> Bamboo<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10297,7 +10297,7 @@ impl<'mc> Jigsaw<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -10703,7 +10703,7 @@ impl<'mc> Chain<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11106,7 +11106,7 @@ impl<'mc> Lantern<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -11562,7 +11562,7 @@ impl<'mc> Dispenser<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12185,7 +12185,7 @@ impl<'mc> RespawnAnchor<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -12571,7 +12571,7 @@ impl<'mc> Cake<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -13001,7 +13001,7 @@ impl<'mc> EndPortalFrame<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -13407,7 +13407,7 @@ impl<'mc> DecoratedPot<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -13853,7 +13853,7 @@ impl<'mc> GlowLichen<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14397,7 +14397,7 @@ impl<'mc> Observer<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -14984,7 +14984,7 @@ impl<'mc> Stairs<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -15588,7 +15588,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -16209,7 +16209,7 @@ impl<'mc> EnderChest<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -16698,7 +16698,7 @@ impl<'mc> Bed<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -17220,7 +17220,7 @@ impl<'mc> AmethystCluster<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -17699,7 +17699,7 @@ impl<'mc> NoteBlock<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -18196,7 +18196,7 @@ impl<'mc> MangrovePropagule<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -18718,7 +18718,7 @@ impl<'mc> SculkSensor<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -19197,7 +19197,7 @@ impl<'mc> BigDripleaf<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -19625,7 +19625,7 @@ impl<'mc> Ladder<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -20088,7 +20088,7 @@ impl<'mc> Scaffolding<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -20499,7 +20499,7 @@ impl<'mc> BrewingStand<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -20883,7 +20883,7 @@ impl<'mc> Fire<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -21384,7 +21384,7 @@ impl<'mc> Hopper<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -21858,7 +21858,7 @@ impl<'mc> Repeater<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -22305,7 +22305,7 @@ impl<'mc> Slab<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -22706,7 +22706,7 @@ impl<'mc> Snow<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -23319,7 +23319,7 @@ impl<'mc> Cocoa<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -23828,7 +23828,7 @@ impl<'mc> Comparator<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -24231,7 +24231,7 @@ impl<'mc> RedstoneRail<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -24691,7 +24691,7 @@ impl<'mc> CaveVinesPlant<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -25075,7 +25075,7 @@ impl<'mc> Light<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -25509,7 +25509,7 @@ impl<'mc> SmallDripleaf<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -25978,7 +25978,7 @@ impl<'mc> TrapDoor<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -26527,7 +26527,7 @@ impl<'mc> Grindstone<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -27143,7 +27143,7 @@ impl<'mc> Beehive<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -27549,7 +27549,7 @@ impl<'mc> CoralWallFan<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -27995,7 +27995,7 @@ impl<'mc> SculkVein<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -28531,7 +28531,7 @@ impl<'mc> Tripwire<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -29087,7 +29087,7 @@ impl<'mc> Wall<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -29705,7 +29705,7 @@ impl<'mc> Farmland<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -30133,7 +30133,7 @@ impl<'mc> Gate<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -30720,7 +30720,7 @@ impl<'mc> SculkShrieker<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -31258,7 +31258,7 @@ impl<'mc> Campfire<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -31720,7 +31720,7 @@ impl<'mc> Dripleaf<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -32169,7 +32169,7 @@ impl<'mc> SeaPickle<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -32578,7 +32578,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -33229,7 +33229,7 @@ impl<'mc> WallSign<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -33717,7 +33717,7 @@ impl<'mc> RedstoneWire<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -34079,7 +34079,7 @@ impl<'mc> Jukebox<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -34591,7 +34591,7 @@ impl<'mc> Barrel<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -35047,7 +35047,7 @@ impl<'mc> CommandBlock<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -35488,7 +35488,7 @@ impl<'mc> Door<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -36077,7 +36077,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -36452,7 +36452,7 @@ impl<'mc> HangingSign<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -36937,7 +36937,7 @@ impl<'mc> Candle<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -37457,7 +37457,7 @@ impl<'mc> PointedDripstone<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -37863,7 +37863,7 @@ impl<'mc> LightningRod<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -38424,7 +38424,7 @@ impl<'mc> Sign<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -39061,7 +39061,7 @@ impl<'mc> CaveVines<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -39513,7 +39513,7 @@ impl<'mc> TurtleEgg<'mc> {
         Ok(())
     }
 
-    pub fn is_supported_with_location(
+    pub fn is_supported_with_block(
         &self,
         arg0: impl Into<crate::block::Block<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {

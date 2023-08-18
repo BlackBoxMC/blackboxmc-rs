@@ -119,7 +119,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
         Ok(())
     }
 
-    pub fn unregister_class_with_string(
+    pub fn unregister_class_with_class(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: jni::objects::JClass<'mc>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -186,7 +186,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

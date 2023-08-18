@@ -41,7 +41,7 @@ impl<'mc> JNIInstantiatable<'mc> for TextComponent<'mc> {
 }
 
 impl<'mc> TextComponent<'mc> {
-    pub fn new(
+    pub fn new_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>>,
     ) -> Result<crate::bungee::api::chat::TextComponent<'mc>, Box<dyn std::error::Error>> {
@@ -56,15 +56,17 @@ impl<'mc> TextComponent<'mc> {
     }
     pub fn new_with_text_component(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bungee::api::chat::TextComponent<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bungee::api::chat::TextComponent<'mc>>>,
     ) -> Result<crate::bungee::api::chat::TextComponent<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Lnet/md_5/bungee/api/chat/TextComponent;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
+        if let Some(a) = arg0 {
+            sig += "Lnet/md_5/bungee/api/chat/TextComponent;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
         sig += ")V";
         let cls = jni.find_class("net/md_5/bungee/api/chat/TextComponent");
         let cls = jni.translate_error_with_class(cls)?;
@@ -224,7 +226,7 @@ impl<'mc> TextComponent<'mc> {
         Ok(())
     }
 
-    pub fn to_legacy_text(
+    pub fn to_legacy_text_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -241,7 +243,7 @@ impl<'mc> TextComponent<'mc> {
             .to_string())
     }
 
-    pub fn to_plain_text(
+    pub fn to_plain_text_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -390,7 +392,7 @@ impl<'mc> TextComponent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn add_extra_with_string(
+    pub fn add_extra_with_base_component(
         &self,
         arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -679,7 +681,7 @@ impl<'mc> TextComponent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1155,7 +1157,7 @@ impl<'mc> HoverEvent<'mc> {
         Ok(())
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1327,7 +1329,7 @@ impl<'mc> BaseComponent<'mc> {
         Ok(())
     }
 
-    pub fn to_legacy_text(
+    pub fn to_legacy_text_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -1344,7 +1346,7 @@ impl<'mc> BaseComponent<'mc> {
             .to_string())
     }
 
-    pub fn to_plain_text(
+    pub fn to_plain_text_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -1493,7 +1495,7 @@ impl<'mc> BaseComponent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn add_extra_with_string(
+    pub fn add_extra_with_base_component(
         &self,
         arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1834,7 +1836,7 @@ impl<'mc> BaseComponent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1936,7 +1938,7 @@ impl<'mc> JNIInstantiatable<'mc> for SelectorComponent<'mc> {
 }
 
 impl<'mc> SelectorComponent<'mc> {
-    pub fn new_with_string(
+    pub fn new_with_selector_component(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::bungee::api::chat::SelectorComponent<'mc>>,
     ) -> Result<crate::bungee::api::chat::SelectorComponent<'mc>, Box<dyn std::error::Error>> {
@@ -2106,7 +2108,7 @@ impl<'mc> SelectorComponent<'mc> {
         Ok(())
     }
 
-    pub fn to_legacy_text(
+    pub fn to_legacy_text_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -2123,7 +2125,7 @@ impl<'mc> SelectorComponent<'mc> {
             .to_string())
     }
 
-    pub fn to_plain_text(
+    pub fn to_plain_text_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -2272,7 +2274,7 @@ impl<'mc> SelectorComponent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn add_extra_with_string(
+    pub fn add_extra_with_base_component(
         &self,
         arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2561,7 +2563,7 @@ impl<'mc> SelectorComponent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2670,10 +2672,11 @@ impl<'mc> JNIInstantiatable<'mc> for ScoreComponent<'mc> {
 }
 
 impl<'mc> ScoreComponent<'mc> {
-    pub fn new_with_score_component(
+    pub fn new_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
         arg1: std::option::Option<impl Into<String>>,
+        arg2: std::option::Option<impl Into<String>>,
     ) -> Result<crate::bungee::api::chat::ScoreComponent<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -2689,36 +2692,13 @@ impl<'mc> ScoreComponent<'mc> {
             ));
             args.push(val_2);
         }
-        sig += ")V";
-        let cls = jni.find_class("net/md_5/bungee/api/chat/ScoreComponent");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.new_object(cls, sig.as_str(), args);
-        let res = jni.translate_error_no_gen(res)?;
-        crate::bungee::api::chat::ScoreComponent::from_raw(&jni, res)
-    }
-    pub fn new_with_string(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<String>,
-        arg1: impl Into<String>,
-        arg2: impl Into<String>,
-    ) -> Result<crate::bungee::api::chat::ScoreComponent<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Ljava/lang/String;";
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            jni.new_string(arg0.into())?,
-        ));
-        args.push(val_1);
-        sig += "Ljava/lang/String;";
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            jni.new_string(arg1.into())?,
-        ));
-        args.push(val_2);
-        sig += "Ljava/lang/String;";
-        let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            jni.new_string(arg2.into())?,
-        ));
-        args.push(val_3);
+        if let Some(a) = arg2 {
+            sig += "Ljava/lang/String;";
+            let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                jni.new_string(a.into())?,
+            ));
+            args.push(val_3);
+        }
         sig += ")V";
         let cls = jni.find_class("net/md_5/bungee/api/chat/ScoreComponent");
         let cls = jni.translate_error_with_class(cls)?;
@@ -2934,7 +2914,7 @@ impl<'mc> ScoreComponent<'mc> {
         Ok(())
     }
 
-    pub fn to_legacy_text(
+    pub fn to_legacy_text_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -2951,7 +2931,7 @@ impl<'mc> ScoreComponent<'mc> {
             .to_string())
     }
 
-    pub fn to_plain_text(
+    pub fn to_plain_text_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -3100,7 +3080,7 @@ impl<'mc> ScoreComponent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn add_extra_with_string(
+    pub fn add_extra_with_base_component(
         &self,
         arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3389,7 +3369,7 @@ impl<'mc> ScoreComponent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3724,7 +3704,7 @@ impl<'mc> ClickEvent<'mc> {
         )
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3877,7 +3857,7 @@ impl<'mc> ItemTagSerializer<'mc> {
         crate::bungee::api::chat::ItemTagSerializer::from_raw(&jni, res)
     }
 
-    pub fn serialize_with_object(
+    pub fn serialize_with_item_tag(
         &self,
         arg0: impl Into<crate::bungee::api::chat::ItemTag<'mc>>,
         arg1: jni::objects::JObject<'mc>,
@@ -3929,7 +3909,7 @@ impl<'mc> ItemTagSerializer<'mc> {
         Ok(res.l()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -4077,7 +4057,7 @@ impl<'mc> JNIInstantiatable<'mc> for TranslatableComponent<'mc> {
 }
 
 impl<'mc> TranslatableComponent<'mc> {
-    pub fn new(
+    pub fn new_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<String>>,
         arg1: std::option::Option<Vec<jni::objects::JObject<'mc>>>,
@@ -4155,7 +4135,7 @@ impl<'mc> TranslatableComponent<'mc> {
         })
     }
 
-    pub fn add_with_with_base_component(
+    pub fn add_with_with_string(
         &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4332,7 +4312,7 @@ impl<'mc> TranslatableComponent<'mc> {
         Ok(())
     }
 
-    pub fn to_legacy_text(
+    pub fn to_legacy_text_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -4349,7 +4329,7 @@ impl<'mc> TranslatableComponent<'mc> {
             .to_string())
     }
 
-    pub fn to_plain_text(
+    pub fn to_plain_text_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -4498,7 +4478,7 @@ impl<'mc> TranslatableComponent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn add_extra_with_string(
+    pub fn add_extra_with_base_component(
         &self,
         arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4787,7 +4767,7 @@ impl<'mc> TranslatableComponent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -5038,7 +5018,7 @@ impl<'mc> ItemTag<'mc> {
             .to_string())
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -5139,7 +5119,7 @@ impl<'mc> JNIInstantiatable<'mc> for KeybindComponent<'mc> {
 }
 
 impl<'mc> KeybindComponent<'mc> {
-    pub fn new(
+    pub fn new_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<String>>,
     ) -> Result<crate::bungee::api::chat::KeybindComponent<'mc>, Box<dyn std::error::Error>> {
@@ -5311,7 +5291,7 @@ impl<'mc> KeybindComponent<'mc> {
         Ok(())
     }
 
-    pub fn to_legacy_text(
+    pub fn to_legacy_text_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -5328,7 +5308,7 @@ impl<'mc> KeybindComponent<'mc> {
             .to_string())
     }
 
-    pub fn to_plain_text(
+    pub fn to_plain_text_with_base_components(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -5477,7 +5457,7 @@ impl<'mc> KeybindComponent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn add_extra_with_string(
+    pub fn add_extra_with_base_component(
         &self,
         arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -5766,7 +5746,7 @@ impl<'mc> KeybindComponent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -5997,7 +5977,7 @@ impl<'mc> JNIInstantiatable<'mc> for ComponentBuilder<'mc> {
 }
 
 impl<'mc> ComponentBuilder<'mc> {
-    pub fn new(
+    pub fn new_with_component_builder(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::bungee::api::chat::ComponentBuilder<'mc>>>,
     ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
@@ -6019,15 +5999,17 @@ impl<'mc> ComponentBuilder<'mc> {
     }
     pub fn new_with_base_component(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
+        arg0: std::option::Option<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
     ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Lnet/md_5/bungee/api/chat/BaseComponent;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
+        if let Some(a) = arg0 {
+            sig += "Lnet/md_5/bungee/api/chat/BaseComponent;";
+            let val_1 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_1);
+        }
         sig += ")V";
         let cls = jni.find_class("net/md_5/bungee/api/chat/ComponentBuilder");
         let cls = jni.translate_error_with_class(cls)?;
@@ -6186,10 +6168,12 @@ impl<'mc> ComponentBuilder<'mc> {
         })
     }
 
-    pub fn append_with_base_component(
+    pub fn append_with_component_builderjoiner(
         &self,
         arg0: impl Into<crate::bungee::api::chat::ComponentBuilderJoiner<'mc>>,
-        arg1: impl Into<crate::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+        >,
     ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -6198,11 +6182,13 @@ impl<'mc> ComponentBuilder<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        sig += "Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;";
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        args.push(val_2);
+        if let Some(a) = arg1 {
+            sig += "Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
         sig += ")Lnet/md_5/bungee/api/chat/ComponentBuilder;";
         let res = self
             .jni_ref()
@@ -6215,10 +6201,25 @@ impl<'mc> ComponentBuilder<'mc> {
 
     pub fn append_with_string(
         &self,
-        arg0: Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
+        arg0: impl Into<String>,
+        arg1: std::option::Option<
+            impl Into<crate::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+        >,
     ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
         sig += ")Lnet/md_5/bungee/api/chat/ComponentBuilder;";
         let res = self
             .jni_ref()
@@ -6231,21 +6232,20 @@ impl<'mc> ComponentBuilder<'mc> {
 
     pub fn append_with_base_components(
         &self,
-        arg0: impl Into<String>,
-        arg1: impl Into<crate::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+        arg0: Vec<impl Into<crate::bungee::api::chat::BaseComponent<'mc>>>,
+        arg1: std::option::Option<
+            impl Into<crate::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+        >,
     ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "Ljava/lang/String;";
-        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg0.into())?,
-        ));
-        args.push(val_1);
-        sig += "Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;";
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        args.push(val_2);
+        if let Some(a) = arg1 {
+            sig += "Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
         sig += ")Lnet/md_5/bungee/api/chat/ComponentBuilder;";
         let res = self
             .jni_ref()
@@ -6256,7 +6256,38 @@ impl<'mc> ComponentBuilder<'mc> {
         })
     }
 
-    pub fn event_with_click_event(
+    pub fn append_with_base_component(
+        &self,
+        arg0: impl Into<crate::bungee::api::chat::BaseComponent<'mc>>,
+        arg1: std::option::Option<
+            impl Into<crate::bungee::api::chat::ComponentBuilderFormatRetention<'mc>>,
+        >,
+    ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Lnet/md_5/bungee/api/chat/BaseComponent;";
+        let val_1 = jni::objects::JValueGen::Object(unsafe {
+            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
+        });
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "Lnet/md_5/bungee/api/chat/ComponentBuilder$FormatRetention;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
+        sig += ")Lnet/md_5/bungee/api/chat/ComponentBuilder;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "append", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::bungee::api::chat::ComponentBuilder::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn event_with_hover_event(
         &self,
         arg0: impl Into<crate::bungee::api::chat::HoverEvent<'mc>>,
     ) -> Result<crate::bungee::api::chat::ComponentBuilder<'mc>, Box<dyn std::error::Error>> {
@@ -6439,7 +6470,7 @@ impl<'mc> ComponentBuilder<'mc> {
         })
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

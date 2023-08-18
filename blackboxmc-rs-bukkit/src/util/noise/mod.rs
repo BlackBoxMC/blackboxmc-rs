@@ -46,7 +46,7 @@ impl<'mc> JNIInstantiatable<'mc> for SimplexNoiseGenerator<'mc> {
 }
 
 impl<'mc> SimplexNoiseGenerator<'mc> {
-    pub fn new_with_random(
+    pub fn new_with_world(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::World<'mc>>,
     ) -> Result<crate::util::noise::SimplexNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
@@ -98,36 +98,48 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
     pub fn noise_with_double(
         &self,
         arg0: f64,
-        arg1: f64,
-        arg2: f64,
-        arg3: i32,
-        arg4: f64,
-        arg5: f64,
-        arg6: bool,
+        arg1: std::option::Option<f64>,
+        arg2: std::option::Option<f64>,
+        arg3: std::option::Option<i32>,
+        arg4: std::option::Option<f64>,
+        arg5: std::option::Option<f64>,
+        arg6: std::option::Option<bool>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "D";
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         args.push(val_1);
-        sig += "D";
-        let val_2 = jni::objects::JValueGen::Double(arg1.into());
-        args.push(val_2);
-        sig += "D";
-        let val_3 = jni::objects::JValueGen::Double(arg2.into());
-        args.push(val_3);
-        sig += "I";
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
-        args.push(val_4);
-        sig += "D";
-        let val_5 = jni::objects::JValueGen::Double(arg4.into());
-        args.push(val_5);
-        sig += "D";
-        let val_6 = jni::objects::JValueGen::Double(arg5.into());
-        args.push(val_6);
-        sig += "Z";
-        let val_7 = jni::objects::JValueGen::Bool(arg6.into());
-        args.push(val_7);
+        if let Some(a) = arg1 {
+            sig += "D";
+            let val_2 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "D";
+            let val_3 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_3);
+        }
+        if let Some(a) = arg3 {
+            sig += "I";
+            let val_4 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_4);
+        }
+        if let Some(a) = arg4 {
+            sig += "D";
+            let val_5 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_5);
+        }
+        if let Some(a) = arg5 {
+            sig += "D";
+            let val_6 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_6);
+        }
+        if let Some(a) = arg6 {
+            sig += "Z";
+            let val_7 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_7);
+        }
         sig += ")D";
         let res = self
             .jni_ref()
@@ -139,10 +151,10 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
     pub fn get_noise_with_double(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: f64,
-        arg1: f64,
-        arg2: f64,
-        arg3: i32,
-        arg4: f64,
+        arg1: std::option::Option<f64>,
+        arg2: std::option::Option<f64>,
+        arg3: std::option::Option<i32>,
+        arg4: std::option::Option<f64>,
         arg5: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -150,18 +162,26 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
         sig += "D";
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         args.push(val_1);
-        sig += "D";
-        let val_2 = jni::objects::JValueGen::Double(arg1.into());
-        args.push(val_2);
-        sig += "D";
-        let val_3 = jni::objects::JValueGen::Double(arg2.into());
-        args.push(val_3);
-        sig += "I";
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
-        args.push(val_4);
-        sig += "D";
-        let val_5 = jni::objects::JValueGen::Double(arg4.into());
-        args.push(val_5);
+        if let Some(a) = arg1 {
+            sig += "D";
+            let val_2 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "D";
+            let val_3 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_3);
+        }
+        if let Some(a) = arg3 {
+            sig += "I";
+            let val_4 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_4);
+        }
+        if let Some(a) = arg4 {
+            sig += "D";
+            let val_5 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_5);
+        }
         if let Some(a) = arg5 {
             sig += "D";
             let val_6 = jni::objects::JValueGen::Double(a.into());
@@ -193,7 +213,7 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -342,7 +362,7 @@ impl<'mc> JNIInstantiatable<'mc> for PerlinNoiseGenerator<'mc> {
 }
 
 impl<'mc> PerlinNoiseGenerator<'mc> {
-    pub fn new_with_random(
+    pub fn new_with_world(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::World<'mc>>,
     ) -> Result<crate::util::noise::PerlinNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
@@ -392,36 +412,48 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
     pub fn noise_with_double(
         &self,
         arg0: f64,
-        arg1: f64,
-        arg2: f64,
-        arg3: i32,
-        arg4: f64,
-        arg5: f64,
-        arg6: bool,
+        arg1: std::option::Option<f64>,
+        arg2: std::option::Option<f64>,
+        arg3: std::option::Option<i32>,
+        arg4: std::option::Option<f64>,
+        arg5: std::option::Option<f64>,
+        arg6: std::option::Option<bool>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "D";
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         args.push(val_1);
-        sig += "D";
-        let val_2 = jni::objects::JValueGen::Double(arg1.into());
-        args.push(val_2);
-        sig += "D";
-        let val_3 = jni::objects::JValueGen::Double(arg2.into());
-        args.push(val_3);
-        sig += "I";
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
-        args.push(val_4);
-        sig += "D";
-        let val_5 = jni::objects::JValueGen::Double(arg4.into());
-        args.push(val_5);
-        sig += "D";
-        let val_6 = jni::objects::JValueGen::Double(arg5.into());
-        args.push(val_6);
-        sig += "Z";
-        let val_7 = jni::objects::JValueGen::Bool(arg6.into());
-        args.push(val_7);
+        if let Some(a) = arg1 {
+            sig += "D";
+            let val_2 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "D";
+            let val_3 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_3);
+        }
+        if let Some(a) = arg3 {
+            sig += "I";
+            let val_4 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_4);
+        }
+        if let Some(a) = arg4 {
+            sig += "D";
+            let val_5 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_5);
+        }
+        if let Some(a) = arg5 {
+            sig += "D";
+            let val_6 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_6);
+        }
+        if let Some(a) = arg6 {
+            sig += "Z";
+            let val_7 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_7);
+        }
         sig += ")D";
         let res = self
             .jni_ref()
@@ -433,10 +465,10 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
     pub fn get_noise_with_double(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: f64,
-        arg1: f64,
-        arg2: f64,
-        arg3: i32,
-        arg4: f64,
+        arg1: std::option::Option<f64>,
+        arg2: std::option::Option<f64>,
+        arg3: std::option::Option<i32>,
+        arg4: std::option::Option<f64>,
         arg5: std::option::Option<f64>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
@@ -444,18 +476,26 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         sig += "D";
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         args.push(val_1);
-        sig += "D";
-        let val_2 = jni::objects::JValueGen::Double(arg1.into());
-        args.push(val_2);
-        sig += "D";
-        let val_3 = jni::objects::JValueGen::Double(arg2.into());
-        args.push(val_3);
-        sig += "I";
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
-        args.push(val_4);
-        sig += "D";
-        let val_5 = jni::objects::JValueGen::Double(arg4.into());
-        args.push(val_5);
+        if let Some(a) = arg1 {
+            sig += "D";
+            let val_2 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "D";
+            let val_3 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_3);
+        }
+        if let Some(a) = arg3 {
+            sig += "I";
+            let val_4 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_4);
+        }
+        if let Some(a) = arg4 {
+            sig += "D";
+            let val_5 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_5);
+        }
         if let Some(a) = arg5 {
             sig += "D";
             let val_6 = jni::objects::JValueGen::Double(a.into());
@@ -487,7 +527,7 @@ impl<'mc> PerlinNoiseGenerator<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -636,7 +676,7 @@ impl<'mc> JNIInstantiatable<'mc> for SimplexOctaveGenerator<'mc> {
 }
 
 impl<'mc> SimplexOctaveGenerator<'mc> {
-    pub fn new_with_world(
+    pub fn new_with_random(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<blackboxmc_java::util::JavaRandom<'mc>>,
         arg1: i32,
@@ -699,10 +739,10 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         arg0: f64,
         arg1: f64,
         arg2: f64,
-        arg3: f64,
-        arg4: f64,
-        arg5: f64,
-        arg6: bool,
+        arg3: std::option::Option<f64>,
+        arg4: std::option::Option<f64>,
+        arg5: std::option::Option<f64>,
+        arg6: std::option::Option<bool>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -715,18 +755,26 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         sig += "D";
         let val_3 = jni::objects::JValueGen::Double(arg2.into());
         args.push(val_3);
-        sig += "D";
-        let val_4 = jni::objects::JValueGen::Double(arg3.into());
-        args.push(val_4);
-        sig += "D";
-        let val_5 = jni::objects::JValueGen::Double(arg4.into());
-        args.push(val_5);
-        sig += "D";
-        let val_6 = jni::objects::JValueGen::Double(arg5.into());
-        args.push(val_6);
-        sig += "Z";
-        let val_7 = jni::objects::JValueGen::Bool(arg6.into());
-        args.push(val_7);
+        if let Some(a) = arg3 {
+            sig += "D";
+            let val_4 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_4);
+        }
+        if let Some(a) = arg4 {
+            sig += "D";
+            let val_5 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_5);
+        }
+        if let Some(a) = arg5 {
+            sig += "D";
+            let val_6 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_6);
+        }
+        if let Some(a) = arg6 {
+            sig += "Z";
+            let val_7 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_7);
+        }
         sig += ")D";
         let res = self
             .jni_ref()
@@ -823,7 +871,7 @@ impl<'mc> SimplexOctaveGenerator<'mc> {
         Ok(res.d()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1057,9 +1105,9 @@ impl<'mc> OctaveGenerator<'mc> {
         arg0: f64,
         arg1: f64,
         arg2: f64,
-        arg3: f64,
-        arg4: f64,
-        arg5: bool,
+        arg3: std::option::Option<f64>,
+        arg4: std::option::Option<f64>,
+        arg5: std::option::Option<bool>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -1072,15 +1120,21 @@ impl<'mc> OctaveGenerator<'mc> {
         sig += "D";
         let val_3 = jni::objects::JValueGen::Double(arg2.into());
         args.push(val_3);
-        sig += "D";
-        let val_4 = jni::objects::JValueGen::Double(arg3.into());
-        args.push(val_4);
-        sig += "D";
-        let val_5 = jni::objects::JValueGen::Double(arg4.into());
-        args.push(val_5);
-        sig += "Z";
-        let val_6 = jni::objects::JValueGen::Bool(arg5.into());
-        args.push(val_6);
+        if let Some(a) = arg3 {
+            sig += "D";
+            let val_4 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_4);
+        }
+        if let Some(a) = arg4 {
+            sig += "D";
+            let val_5 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_5);
+        }
+        if let Some(a) = arg5 {
+            sig += "Z";
+            let val_6 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_6);
+        }
         sig += ")D";
         let res = self
             .jni_ref()
@@ -1089,7 +1143,7 @@ impl<'mc> OctaveGenerator<'mc> {
         Ok(res.d()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1232,7 +1286,7 @@ impl<'mc> JNIInstantiatable<'mc> for PerlinOctaveGenerator<'mc> {
 }
 
 impl<'mc> PerlinOctaveGenerator<'mc> {
-    pub fn new_with_random(
+    pub fn new_with_long(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i64,
         arg1: i32,
@@ -1359,9 +1413,9 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         arg0: f64,
         arg1: f64,
         arg2: f64,
-        arg3: f64,
-        arg4: f64,
-        arg5: bool,
+        arg3: std::option::Option<f64>,
+        arg4: std::option::Option<f64>,
+        arg5: std::option::Option<bool>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -1374,15 +1428,21 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         sig += "D";
         let val_3 = jni::objects::JValueGen::Double(arg2.into());
         args.push(val_3);
-        sig += "D";
-        let val_4 = jni::objects::JValueGen::Double(arg3.into());
-        args.push(val_4);
-        sig += "D";
-        let val_5 = jni::objects::JValueGen::Double(arg4.into());
-        args.push(val_5);
-        sig += "Z";
-        let val_6 = jni::objects::JValueGen::Bool(arg5.into());
-        args.push(val_6);
+        if let Some(a) = arg3 {
+            sig += "D";
+            let val_4 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_4);
+        }
+        if let Some(a) = arg4 {
+            sig += "D";
+            let val_5 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_5);
+        }
+        if let Some(a) = arg5 {
+            sig += "Z";
+            let val_6 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_6);
+        }
         sig += ")D";
         let res = self
             .jni_ref()
@@ -1391,7 +1451,7 @@ impl<'mc> PerlinOctaveGenerator<'mc> {
         Ok(res.d()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1581,36 +1641,48 @@ impl<'mc> NoiseGenerator<'mc> {
     pub fn noise_with_double(
         &self,
         arg0: f64,
-        arg1: f64,
-        arg2: f64,
-        arg3: i32,
-        arg4: f64,
-        arg5: f64,
-        arg6: bool,
+        arg1: std::option::Option<f64>,
+        arg2: std::option::Option<f64>,
+        arg3: std::option::Option<i32>,
+        arg4: std::option::Option<f64>,
+        arg5: std::option::Option<f64>,
+        arg6: std::option::Option<bool>,
     ) -> Result<f64, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "D";
         let val_1 = jni::objects::JValueGen::Double(arg0.into());
         args.push(val_1);
-        sig += "D";
-        let val_2 = jni::objects::JValueGen::Double(arg1.into());
-        args.push(val_2);
-        sig += "D";
-        let val_3 = jni::objects::JValueGen::Double(arg2.into());
-        args.push(val_3);
-        sig += "I";
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
-        args.push(val_4);
-        sig += "D";
-        let val_5 = jni::objects::JValueGen::Double(arg4.into());
-        args.push(val_5);
-        sig += "D";
-        let val_6 = jni::objects::JValueGen::Double(arg5.into());
-        args.push(val_6);
-        sig += "Z";
-        let val_7 = jni::objects::JValueGen::Bool(arg6.into());
-        args.push(val_7);
+        if let Some(a) = arg1 {
+            sig += "D";
+            let val_2 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "D";
+            let val_3 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_3);
+        }
+        if let Some(a) = arg3 {
+            sig += "I";
+            let val_4 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_4);
+        }
+        if let Some(a) = arg4 {
+            sig += "D";
+            let val_5 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_5);
+        }
+        if let Some(a) = arg5 {
+            sig += "D";
+            let val_6 = jni::objects::JValueGen::Double(a.into());
+            args.push(val_6);
+        }
+        if let Some(a) = arg6 {
+            sig += "Z";
+            let val_7 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_7);
+        }
         sig += ")D";
         let res = self
             .jni_ref()
@@ -1619,7 +1691,7 @@ impl<'mc> NoiseGenerator<'mc> {
         Ok(res.d()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

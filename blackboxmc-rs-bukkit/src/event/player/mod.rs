@@ -162,7 +162,7 @@ impl<'mc> PlayerToggleFlightEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -672,7 +672,7 @@ impl<'mc> PlayerFishEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -997,7 +997,7 @@ impl<'mc> PlayerShearEntityEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1557,7 +1557,7 @@ impl<'mc> PlayerInteractEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1899,7 +1899,7 @@ impl<'mc> AsyncPlayerChatPreviewEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2190,7 +2190,7 @@ impl<'mc> PlayerAnimationEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2534,7 +2534,7 @@ impl<'mc> PlayerBucketEntityEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2992,7 +2992,7 @@ impl<'mc> PlayerPortalEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3261,7 +3261,7 @@ impl<'mc> PlayerDropItemEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3666,7 +3666,7 @@ impl<'mc> PlayerResourcePackStatusEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -4085,7 +4085,7 @@ impl<'mc> PlayerExpCooldownChangeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -4338,7 +4338,7 @@ impl<'mc> PlayerUnregisterChannelEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -4607,7 +4607,7 @@ impl<'mc> PlayerToggleSneakEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -4998,7 +4998,7 @@ impl<'mc> PlayerArmorStandManipulateEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -5303,7 +5303,7 @@ impl<'mc> PlayerInteractEntityEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -5466,8 +5466,8 @@ impl<'mc> PlayerBucketFillEvent<'mc> {
         arg2: impl Into<crate::block::Block<'mc>>,
         arg3: impl Into<crate::block::BlockFace<'mc>>,
         arg4: impl Into<crate::Material<'mc>>,
-        arg5: impl Into<crate::inventory::ItemStack<'mc>>,
-        arg6: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+        arg5: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg6: std::option::Option<impl Into<crate::inventory::EquipmentSlot<'mc>>>,
     ) -> Result<crate::event::player::PlayerBucketFillEvent<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -5496,16 +5496,20 @@ impl<'mc> PlayerBucketFillEvent<'mc> {
             jni::objects::JObject::from_raw(arg4.into().jni_object().clone())
         });
         args.push(val_5);
-        sig += "Lorg/bukkit/inventory/ItemStack;";
-        let val_6 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg5.into().jni_object().clone())
-        });
-        args.push(val_6);
-        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
-        let val_7 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg6.into().jni_object().clone())
-        });
-        args.push(val_7);
+        if let Some(a) = arg5 {
+            sig += "Lorg/bukkit/inventory/ItemStack;";
+            let val_6 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_6);
+        }
+        if let Some(a) = arg6 {
+            sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+            let val_7 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_7);
+        }
         sig += ")V";
         let cls = jni.find_class("org/bukkit/event/player/PlayerBucketFillEvent");
         let cls = jni.translate_error_with_class(cls)?;
@@ -5721,7 +5725,7 @@ impl<'mc> PlayerBucketFillEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -6044,7 +6048,7 @@ impl<'mc> PlayerItemConsumeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -6263,7 +6267,7 @@ impl<'mc> PlayerEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -6783,7 +6787,7 @@ impl<'mc> PlayerTeleportEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -7052,7 +7056,7 @@ impl<'mc> PlayerQuitEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -7375,7 +7379,7 @@ impl<'mc> PlayerMoveEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -7727,7 +7731,7 @@ impl<'mc> PlayerEditBookEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -8143,7 +8147,7 @@ impl<'mc> PlayerJoinEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -8589,7 +8593,7 @@ impl<'mc> PlayerSignOpenEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -8997,7 +9001,7 @@ impl<'mc> PlayerItemHeldEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -9259,7 +9263,7 @@ impl<'mc> PlayerLevelChangeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -9748,7 +9752,7 @@ impl<'mc> PlayerBedEnterEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -9910,8 +9914,8 @@ impl<'mc> PlayerBucketEmptyEvent<'mc> {
         arg2: impl Into<crate::block::Block<'mc>>,
         arg3: impl Into<crate::block::BlockFace<'mc>>,
         arg4: impl Into<crate::Material<'mc>>,
-        arg5: impl Into<crate::inventory::ItemStack<'mc>>,
-        arg6: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+        arg5: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg6: std::option::Option<impl Into<crate::inventory::EquipmentSlot<'mc>>>,
     ) -> Result<crate::event::player::PlayerBucketEmptyEvent<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -9940,16 +9944,20 @@ impl<'mc> PlayerBucketEmptyEvent<'mc> {
             jni::objects::JObject::from_raw(arg4.into().jni_object().clone())
         });
         args.push(val_5);
-        sig += "Lorg/bukkit/inventory/ItemStack;";
-        let val_6 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg5.into().jni_object().clone())
-        });
-        args.push(val_6);
-        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
-        let val_7 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg6.into().jni_object().clone())
-        });
-        args.push(val_7);
+        if let Some(a) = arg5 {
+            sig += "Lorg/bukkit/inventory/ItemStack;";
+            let val_6 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_6);
+        }
+        if let Some(a) = arg6 {
+            sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+            let val_7 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_7);
+        }
         sig += ")V";
         let cls = jni.find_class("org/bukkit/event/player/PlayerBucketEmptyEvent");
         let cls = jni.translate_error_with_class(cls)?;
@@ -10165,7 +10173,7 @@ impl<'mc> PlayerBucketEmptyEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -10466,7 +10474,7 @@ impl<'mc> PlayerBedLeaveEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -10806,7 +10814,7 @@ impl<'mc> PlayerSwapHandItemsEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -11287,7 +11295,7 @@ impl<'mc> PlayerSpawnChangeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -11541,7 +11549,7 @@ impl<'mc> PlayerRiptideEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -11773,7 +11781,7 @@ impl<'mc> PlayerCommandSendEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -12033,7 +12041,7 @@ impl<'mc> PlayerChatTabCompleteEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -12320,7 +12328,7 @@ impl<'mc> PlayerVelocityEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -12592,7 +12600,7 @@ impl<'mc> PlayerToggleSprintEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -12862,8 +12870,8 @@ impl<'mc> PlayerBucketEvent<'mc> {
         arg2: impl Into<crate::block::Block<'mc>>,
         arg3: impl Into<crate::block::BlockFace<'mc>>,
         arg4: impl Into<crate::Material<'mc>>,
-        arg5: impl Into<crate::inventory::ItemStack<'mc>>,
-        arg6: impl Into<crate::inventory::EquipmentSlot<'mc>>,
+        arg5: std::option::Option<impl Into<crate::inventory::ItemStack<'mc>>>,
+        arg6: std::option::Option<impl Into<crate::inventory::EquipmentSlot<'mc>>>,
     ) -> Result<crate::event::player::PlayerBucketEvent<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -12892,16 +12900,20 @@ impl<'mc> PlayerBucketEvent<'mc> {
             jni::objects::JObject::from_raw(arg4.into().jni_object().clone())
         });
         args.push(val_5);
-        sig += "Lorg/bukkit/inventory/ItemStack;";
-        let val_6 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg5.into().jni_object().clone())
-        });
-        args.push(val_6);
-        sig += "Lorg/bukkit/inventory/EquipmentSlot;";
-        let val_7 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg6.into().jni_object().clone())
-        });
-        args.push(val_7);
+        if let Some(a) = arg5 {
+            sig += "Lorg/bukkit/inventory/ItemStack;";
+            let val_6 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_6);
+        }
+        if let Some(a) = arg6 {
+            sig += "Lorg/bukkit/inventory/EquipmentSlot;";
+            let val_7 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_7);
+        }
         sig += ")V";
         let cls = jni.find_class("org/bukkit/event/player/PlayerBucketEvent");
         let cls = jni.translate_error_with_class(cls)?;
@@ -13106,7 +13118,7 @@ impl<'mc> PlayerBucketEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -13566,7 +13578,7 @@ impl<'mc> PlayerRespawnEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -13927,7 +13939,7 @@ impl<'mc> PlayerUnleashEntityEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -14225,7 +14237,7 @@ impl<'mc> PlayerPickupArrowEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -14548,7 +14560,7 @@ impl<'mc> PlayerKickEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -14837,7 +14849,7 @@ impl<'mc> PlayerGameModeChangeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -15131,7 +15143,7 @@ impl<'mc> PlayerTakeLecternBookEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -15387,7 +15399,7 @@ impl<'mc> PlayerRegisterChannelEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -15758,7 +15770,7 @@ impl<'mc> PlayerStatisticIncrementEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -16096,7 +16108,7 @@ impl<'mc> PlayerInteractAtEntityEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -16454,7 +16466,7 @@ impl<'mc> PlayerItemMendEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -16709,7 +16721,7 @@ impl<'mc> PlayerLocaleChangeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -16970,7 +16982,7 @@ impl<'mc> PlayerChangedMainHandEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -17500,7 +17512,7 @@ impl<'mc> PlayerLoginEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -17749,7 +17761,7 @@ impl<'mc> PlayerAdvancementDoneEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -18250,7 +18262,7 @@ impl<'mc> PlayerPreLoginEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -18504,7 +18516,7 @@ impl<'mc> PlayerExpChangeEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -18752,7 +18764,7 @@ impl<'mc> PlayerItemBreakEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -19064,7 +19076,7 @@ impl<'mc> PlayerRecipeBookClickEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -19425,7 +19437,7 @@ impl<'mc> PlayerChatEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -19678,7 +19690,7 @@ impl<'mc> PlayerChannelEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -19928,7 +19940,7 @@ impl<'mc> PlayerShowEntityEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -20223,7 +20235,7 @@ impl<'mc> PlayerHarvestBlockEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -20524,7 +20536,7 @@ impl<'mc> PlayerItemDamageEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -20870,7 +20882,7 @@ impl<'mc> PlayerCommandPreprocessEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -21356,7 +21368,7 @@ impl<'mc> PlayerBucketFishEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -21602,7 +21614,7 @@ impl<'mc> PlayerChangedWorldEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -21877,7 +21889,7 @@ impl<'mc> PlayerRecipeDiscoverEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -22264,7 +22276,7 @@ impl<'mc> AsyncPlayerPreLoginEvent<'mc> {
             .to_string())
     }
 
-    pub fn disallow_with_player_pre_login_eventresult(
+    pub fn disallow_with_async_player_pre_login_eventresult(
         &self,
         arg0: impl Into<crate::event::player::AsyncPlayerPreLoginEventResult<'mc>>,
         arg1: impl Into<String>,
@@ -22435,7 +22447,7 @@ impl<'mc> AsyncPlayerPreLoginEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -22782,7 +22794,7 @@ impl<'mc> PlayerEggThrowEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -23032,7 +23044,7 @@ impl<'mc> PlayerHideEntityEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -23314,7 +23326,7 @@ impl<'mc> PlayerPickupItemEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -23658,7 +23670,7 @@ impl<'mc> AsyncPlayerChatEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

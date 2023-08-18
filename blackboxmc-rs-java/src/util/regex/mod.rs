@@ -911,7 +911,7 @@ impl<'mc> JavaPattern<'mc> {
             .to_string())
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

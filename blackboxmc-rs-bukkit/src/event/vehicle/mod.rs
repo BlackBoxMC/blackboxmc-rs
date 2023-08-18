@@ -125,7 +125,7 @@ impl<'mc> VehicleUpdateEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -395,7 +395,7 @@ impl<'mc> VehicleEnterEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -723,7 +723,7 @@ impl<'mc> VehicleEntityCollisionEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1002,7 +1002,7 @@ impl<'mc> VehicleExitEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1226,7 +1226,7 @@ impl<'mc> VehicleCollisionEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1476,7 +1476,7 @@ impl<'mc> VehicleBlockCollisionEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1729,7 +1729,7 @@ impl<'mc> VehicleCreateEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2002,7 +2002,7 @@ impl<'mc> VehicleMoveEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2278,7 +2278,7 @@ impl<'mc> VehicleDestroyEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2585,7 +2585,7 @@ impl<'mc> VehicleDamageEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2805,7 +2805,7 @@ impl<'mc> VehicleEvent<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

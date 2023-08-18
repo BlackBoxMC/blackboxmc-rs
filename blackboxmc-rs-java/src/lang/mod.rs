@@ -54,7 +54,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaInteger<'mc> {
 impl<'mc> JavaInteger<'mc> {
     #[deprecated]
 
-    pub fn new_with_string(
+    pub fn new_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
     ) -> Result<crate::lang::JavaInteger<'mc>, Box<dyn std::error::Error>> {
@@ -141,7 +141,7 @@ impl<'mc> JavaInteger<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn to_string(
+    pub fn to_string_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
         arg1: std::option::Option<i32>,
@@ -169,7 +169,7 @@ impl<'mc> JavaInteger<'mc> {
             .to_string())
     }
 
-    pub fn hash_code(
+    pub fn hash_code_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -270,7 +270,7 @@ impl<'mc> JavaInteger<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn compare_to_with_integer(
+    pub fn compare_to_with_object(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -724,7 +724,7 @@ impl<'mc> JavaInteger<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -815,7 +815,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaFloat<'mc> {
 impl<'mc> JavaFloat<'mc> {
     #[deprecated]
 
-    pub fn new_with_string(
+    pub fn new_with_double(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: f64,
     ) -> Result<crate::lang::JavaFloat<'mc>, Box<dyn std::error::Error>> {
@@ -866,7 +866,7 @@ impl<'mc> JavaFloat<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn to_string(
+    pub fn to_string_with_float(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<f32>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -888,7 +888,7 @@ impl<'mc> JavaFloat<'mc> {
             .to_string())
     }
 
-    pub fn hash_code(
+    pub fn hash_code_with_float(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<f32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -1007,7 +1007,7 @@ impl<'mc> JavaFloat<'mc> {
         Ok(res.f()?)
     }
 
-    pub fn compare_to_with_float(
+    pub fn compare_to_with_object(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -1138,7 +1138,7 @@ impl<'mc> JavaFloat<'mc> {
         })
     }
 
-    pub fn is_na_n(
+    pub fn is_na_n_with_float(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<f32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1200,7 +1200,7 @@ impl<'mc> JavaFloat<'mc> {
         Ok(res.f()?)
     }
 
-    pub fn is_infinite(
+    pub fn is_infinite_with_float(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<f32>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1237,7 +1237,7 @@ impl<'mc> JavaFloat<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1448,7 +1448,7 @@ impl<'mc> JavaCharacter<'mc> {
             .to_string())
     }
 
-    pub fn is_java_identifier_start_with_char(
+    pub fn is_java_identifier_start_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1465,7 +1465,7 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn is_java_identifier_part_with_char(
+    pub fn is_java_identifier_part_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1498,7 +1498,7 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn to_string(
+    pub fn to_string_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<u16>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -1520,7 +1520,7 @@ impl<'mc> JavaCharacter<'mc> {
             .to_string())
     }
 
-    pub fn hash_code(
+    pub fn hash_code_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<u16>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -1557,7 +1557,7 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.c()?)
     }
 
-    pub fn compare_to_with_object(&self, arg0: u16) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn compare_to_with_character(&self, arg0: u16) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "Ljava/lang/Character;";
@@ -1575,7 +1575,7 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn is_digit_with_int(
+    pub fn is_digit_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: u16,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1592,7 +1592,7 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn is_lower_case_with_int(
+    pub fn is_lower_case_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: u16,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1609,7 +1609,7 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn is_upper_case_with_char(
+    pub fn is_upper_case_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1626,7 +1626,7 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn is_whitespace_with_int(
+    pub fn is_whitespace_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: u16,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1834,16 +1834,18 @@ impl<'mc> JavaCharacter<'mc> {
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: Vec<u16>,
         arg1: i32,
-        arg2: i32,
+        arg2: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
         args.push(val_2);
-        sig += "I";
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        args.push(val_3);
+        if let Some(a) = arg2 {
+            sig += "I";
+            let val_3 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_3);
+        }
         sig += ")I";
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
@@ -1852,38 +1854,22 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn code_point_before_with_char_sequence(
-        jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: Vec<u16>,
-        arg1: i32,
-    ) -> Result<i32, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "I";
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        args.push(val_2);
-        sig += ")I";
-        let cls = jni.find_class("int");
-        let cls = jni.translate_error_with_class(cls)?;
-        let res = jni.call_static_method(cls, "codePointBefore", sig.as_str(), args);
-        let res = jni.translate_error(res)?;
-        Ok(res.i()?)
-    }
-
     pub fn code_point_before_with_chars(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: Vec<u16>,
         arg1: i32,
-        arg2: i32,
+        arg2: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
         let val_2 = jni::objects::JValueGen::Int(arg1.into());
         args.push(val_2);
-        sig += "I";
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        args.push(val_3);
+        if let Some(a) = arg2 {
+            sig += "I";
+            let val_3 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_3);
+        }
         sig += ")I";
         let cls = jni.find_class("int");
         let cls = jni.translate_error_with_class(cls)?;
@@ -1892,7 +1878,7 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn offset_by_code_points_with_char_sequence(
+    pub fn offset_by_code_points_with_chars(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: Vec<u16>,
         arg1: i32,
@@ -1926,7 +1912,7 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn to_lower_case_with_int(
+    pub fn to_lower_case_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: u16,
     ) -> Result<u16, Box<dyn std::error::Error>> {
@@ -1943,7 +1929,7 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.c()?)
     }
 
-    pub fn to_upper_case_with_char(
+    pub fn to_upper_case_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -1994,7 +1980,7 @@ impl<'mc> JavaCharacter<'mc> {
         })
     }
 
-    pub fn get_type_with_char(
+    pub fn get_type_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -2011,7 +1997,7 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn is_letter_with_char(
+    pub fn is_letter_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2028,7 +2014,7 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn is_letter_or_digit_with_int(
+    pub fn is_letter_or_digit_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: u16,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2063,7 +2049,7 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn is_title_case_with_int(
+    pub fn is_title_case_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: u16,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2080,7 +2066,7 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn is_defined_with_int(
+    pub fn is_defined_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: u16,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2115,7 +2101,7 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn is_unicode_identifier_start_with_int(
+    pub fn is_unicode_identifier_start_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: u16,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2132,7 +2118,7 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn is_unicode_identifier_part_with_int(
+    pub fn is_unicode_identifier_part_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: u16,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2149,7 +2135,7 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn is_identifier_ignorable_with_int(
+    pub fn is_identifier_ignorable_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: u16,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2166,7 +2152,7 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn to_title_case_with_int(
+    pub fn to_title_case_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: u16,
     ) -> Result<u16, Box<dyn std::error::Error>> {
@@ -2183,7 +2169,7 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.c()?)
     }
 
-    pub fn digit_with_int(
+    pub fn digit_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: u16,
         arg1: i32,
@@ -2204,7 +2190,7 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn get_numeric_value_with_int(
+    pub fn get_numeric_value_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: u16,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -2221,7 +2207,7 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn is_space_char_with_int(
+    pub fn is_space_char_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: u16,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2238,7 +2224,7 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn is_isocontrol_with_char(
+    pub fn is_isocontrol_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2255,7 +2241,7 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn get_directionality_with_int(
+    pub fn get_directionality_with_char(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: u16,
     ) -> Result<i8, Box<dyn std::error::Error>> {
@@ -2272,7 +2258,7 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.b()?)
     }
 
-    pub fn is_mirrored_with_char(
+    pub fn is_mirrored_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -2445,7 +2431,7 @@ impl<'mc> JavaCharacter<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2533,7 +2519,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaByte<'mc> {
 impl<'mc> JavaByte<'mc> {
     #[deprecated]
 
-    pub fn new_with_byte(
+    pub fn new_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
     ) -> Result<crate::lang::JavaByte<'mc>, Box<dyn std::error::Error>> {
@@ -2568,7 +2554,7 @@ impl<'mc> JavaByte<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn to_string(
+    pub fn to_string_with_byte(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i8>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -2590,7 +2576,7 @@ impl<'mc> JavaByte<'mc> {
             .to_string())
     }
 
-    pub fn hash_code(
+    pub fn hash_code_with_byte(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i8>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -2609,7 +2595,7 @@ impl<'mc> JavaByte<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn compare_to_with_byte(
+    pub fn compare_to_with_object(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -2823,7 +2809,7 @@ impl<'mc> JavaByte<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2915,7 +2901,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaLong<'mc> {
 impl<'mc> JavaLong<'mc> {
     #[deprecated]
 
-    pub fn new_with_string(
+    pub fn new_with_long(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i64,
     ) -> Result<crate::lang::JavaLong<'mc>, Box<dyn std::error::Error>> {
@@ -3002,7 +2988,7 @@ impl<'mc> JavaLong<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn to_string(
+    pub fn to_string_with_long(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3030,7 +3016,7 @@ impl<'mc> JavaLong<'mc> {
             .to_string())
     }
 
-    pub fn hash_code(
+    pub fn hash_code_with_long(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i64>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -3131,7 +3117,7 @@ impl<'mc> JavaLong<'mc> {
         Ok(res.j()?)
     }
 
-    pub fn compare_to_with_object(&self, arg0: i64) -> Result<i32, Box<dyn std::error::Error>> {
+    pub fn compare_to_with_long(&self, arg0: i64) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "Ljava/lang/Long;";
@@ -3572,7 +3558,7 @@ impl<'mc> JavaLong<'mc> {
         Ok(res.j()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3703,18 +3689,31 @@ impl<'mc> JNIInstantiatable<'mc> for JavaString<'mc> {
 }
 
 impl<'mc> JavaString<'mc> {
-    pub fn new(
+    #[deprecated]
+
+    pub fn new_with_bytes(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: std::option::Option<impl Into<crate::lang::JavaStringBuilder<'mc>>>,
+        arg0: std::option::Option<Vec<i8>>,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<i32>,
+        arg3: std::option::Option<i32>,
     ) -> Result<crate::lang::JavaString<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg0 {
-            sig += "Ljava/lang/StringBuilder;";
-            let val_1 = jni::objects::JValueGen::Object(unsafe {
-                jni::objects::JObject::from_raw(a.into().jni_object().clone())
-            });
-            args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "I";
+            let val_3 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_3);
+        }
+        if let Some(a) = arg3 {
+            sig += "I";
+            let val_4 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_4);
         }
         sig += ")V";
         let cls = jni.find_class("java/lang/String");
@@ -3723,26 +3722,24 @@ impl<'mc> JavaString<'mc> {
         let res = jni.translate_error_no_gen(res)?;
         crate::lang::JavaString::from_raw(&jni, res)
     }
-    #[deprecated]
-
-    pub fn new_with_bytes(
+    pub fn new_with_chars(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: Vec<i8>,
-        arg1: i32,
-        arg2: i32,
-        arg3: i32,
+        arg0: std::option::Option<Vec<u16>>,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<i32>,
     ) -> Result<crate::lang::JavaString<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "I";
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        args.push(val_2);
-        sig += "I";
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        args.push(val_3);
-        sig += "I";
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
-        args.push(val_4);
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "I";
+            let val_3 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_3);
+        }
         sig += ")V";
         let cls = jni.find_class("java/lang/String");
         let cls = jni.translate_error_with_class(cls)?;
@@ -3752,17 +3749,16 @@ impl<'mc> JavaString<'mc> {
     }
     pub fn new_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: Vec<i8>,
-        arg1: std::option::Option<impl Into<String>>,
+        arg0: std::option::Option<impl Into<String>>,
     ) -> Result<crate::lang::JavaString<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        if let Some(a) = arg1 {
+        if let Some(a) = arg0 {
             sig += "Ljava/lang/String;";
-            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
                 jni.new_string(a.into())?,
             ));
-            args.push(val_2);
+            args.push(val_1);
         }
         sig += ")V";
         let cls = jni.find_class("java/lang/String");
@@ -3773,23 +3769,21 @@ impl<'mc> JavaString<'mc> {
     }
     pub fn new_with_ints(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
-        arg0: Vec<i8>,
-        arg1: i32,
-        arg2: i32,
-        arg3: std::option::Option<jni::objects::JObject<'mc>>,
+        arg0: std::option::Option<Vec<i32>>,
+        arg1: std::option::Option<i32>,
+        arg2: std::option::Option<i32>,
     ) -> Result<crate::lang::JavaString<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
-        sig += "I";
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        args.push(val_2);
-        sig += "I";
-        let val_3 = jni::objects::JValueGen::Int(arg2.into());
-        args.push(val_3);
-        if let Some(a) = arg3 {
-            sig += "Ljava/nio/charset/Charset;";
-            let val_4 = jni::objects::JValueGen::Object(a);
-            args.push(val_4);
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "I";
+            let val_3 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_3);
         }
         sig += ")V";
         let cls = jni.find_class("java/lang/String");
@@ -3872,7 +3866,7 @@ impl<'mc> JavaString<'mc> {
         Ok(())
     }
 
-    pub fn compare_to_with_string(
+    pub fn compare_to_with_object(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -3889,9 +3883,10 @@ impl<'mc> JavaString<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn index_of_with_int(
+    pub fn index_of_with_string(
         &self,
         arg0: impl Into<String>,
+        arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -3900,6 +3895,11 @@ impl<'mc> JavaString<'mc> {
             self.jni_ref().new_string(arg0.into())?,
         ));
         args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
         sig += ")I";
         let res = self
             .jni_ref()
@@ -3908,19 +3908,21 @@ impl<'mc> JavaString<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn index_of_with_string(
+    pub fn index_of_with_int(
         &self,
         arg0: i32,
-        arg1: i32,
+        arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         args.push(val_1);
-        sig += "I";
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        args.push(val_2);
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
         sig += ")I";
         let res = self
             .jni_ref()
@@ -4010,7 +4012,7 @@ impl<'mc> JavaString<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn region_matches_with_int(
+    pub fn region_matches_with_boolean(
         &self,
         arg0: bool,
         arg1: i32,
@@ -4072,19 +4074,46 @@ impl<'mc> JavaString<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn last_index_of_with_string(
+    pub fn last_index_of_with_int(
         &self,
         arg0: i32,
-        arg1: i32,
+        arg1: std::option::Option<i32>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
         sig += "I";
         let val_1 = jni::objects::JValueGen::Int(arg0.into());
         args.push(val_1);
-        sig += "I";
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        args.push(val_2);
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
+        sig += ")I";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "lastIndexOf", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        Ok(res.i()?)
+    }
+
+    pub fn last_index_of_with_string(
+        &self,
+        arg0: impl Into<String>,
+        arg1: std::option::Option<i32>,
+    ) -> Result<i32, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
+        if let Some(a) = arg1 {
+            sig += "I";
+            let val_2 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_2);
+        }
         sig += ")I";
         let res = self
             .jni_ref()
@@ -4202,7 +4231,7 @@ impl<'mc> JavaString<'mc> {
             .to_string())
     }
 
-    pub fn to_lower_case(
+    pub fn to_lower_case_with_locale(
         &self,
         arg0: std::option::Option<impl Into<crate::util::JavaLocale<'mc>>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -4227,7 +4256,7 @@ impl<'mc> JavaString<'mc> {
             .to_string())
     }
 
-    pub fn to_upper_case(
+    pub fn to_upper_case_with_locale(
         &self,
         arg0: std::option::Option<impl Into<crate::util::JavaLocale<'mc>>>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -4330,7 +4359,7 @@ impl<'mc> JavaString<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn format_with_string(
+    pub fn format_with_locale(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::util::JavaLocale<'mc>>,
         arg1: impl Into<String>,
@@ -4567,7 +4596,7 @@ impl<'mc> JavaString<'mc> {
         })
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -4669,7 +4698,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaBoolean<'mc> {
 impl<'mc> JavaBoolean<'mc> {
     #[deprecated]
 
-    pub fn new_with_boolean(
+    pub fn new_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
     ) -> Result<crate::lang::JavaBoolean<'mc>, Box<dyn std::error::Error>> {
@@ -4704,7 +4733,7 @@ impl<'mc> JavaBoolean<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn to_string(
+    pub fn to_string_with_boolean(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<bool>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -4726,7 +4755,7 @@ impl<'mc> JavaBoolean<'mc> {
             .to_string())
     }
 
-    pub fn hash_code(
+    pub fn hash_code_with_boolean(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<bool>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -4745,7 +4774,7 @@ impl<'mc> JavaBoolean<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn compare_to_with_boolean(
+    pub fn compare_to_with_object(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -4919,7 +4948,7 @@ impl<'mc> JavaBoolean<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -5010,7 +5039,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaDouble<'mc> {
 impl<'mc> JavaDouble<'mc> {
     #[deprecated]
 
-    pub fn new_with_double(
+    pub fn new_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
     ) -> Result<crate::lang::JavaDouble<'mc>, Box<dyn std::error::Error>> {
@@ -5045,7 +5074,7 @@ impl<'mc> JavaDouble<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn to_string(
+    pub fn to_string_with_double(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<f64>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -5067,7 +5096,7 @@ impl<'mc> JavaDouble<'mc> {
             .to_string())
     }
 
-    pub fn hash_code(
+    pub fn hash_code_with_double(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<f64>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -5186,7 +5215,7 @@ impl<'mc> JavaDouble<'mc> {
         Ok(res.d()?)
     }
 
-    pub fn compare_to_with_double(
+    pub fn compare_to_with_object(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -5317,7 +5346,7 @@ impl<'mc> JavaDouble<'mc> {
         })
     }
 
-    pub fn is_na_n(
+    pub fn is_na_n_with_double(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<f64>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5359,7 +5388,7 @@ impl<'mc> JavaDouble<'mc> {
         Ok(res.d()?)
     }
 
-    pub fn is_infinite(
+    pub fn is_infinite_with_double(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<f64>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -5416,7 +5445,7 @@ impl<'mc> JavaDouble<'mc> {
         Ok(res.d()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -5504,7 +5533,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaShort<'mc> {
 impl<'mc> JavaShort<'mc> {
     #[deprecated]
 
-    pub fn new_with_short(
+    pub fn new_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
     ) -> Result<crate::lang::JavaShort<'mc>, Box<dyn std::error::Error>> {
@@ -5539,7 +5568,7 @@ impl<'mc> JavaShort<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn to_string(
+    pub fn to_string_with_short(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i16>,
     ) -> Result<String, Box<dyn std::error::Error>> {
@@ -5561,7 +5590,7 @@ impl<'mc> JavaShort<'mc> {
             .to_string())
     }
 
-    pub fn hash_code(
+    pub fn hash_code_with_short(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<i16>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -5598,7 +5627,7 @@ impl<'mc> JavaShort<'mc> {
         Ok(res.s()?)
     }
 
-    pub fn compare_to_with_short(
+    pub fn compare_to_with_object(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
@@ -5812,7 +5841,7 @@ impl<'mc> JavaShort<'mc> {
         Ok(res.s()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

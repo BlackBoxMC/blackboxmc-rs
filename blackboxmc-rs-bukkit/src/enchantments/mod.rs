@@ -322,7 +322,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -535,7 +535,7 @@ impl<'mc> EnchantmentOffer<'mc> {
         Ok(())
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -797,7 +797,7 @@ impl<'mc> EnchantmentTarget<'mc> {
         )
     }
 
-    pub fn includes_with_item_stack(
+    pub fn includes_with_material(
         &self,
         arg0: impl Into<crate::Material<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1119,7 +1119,7 @@ impl<'mc> Enchantment<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

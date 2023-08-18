@@ -52,7 +52,7 @@ impl<'mc> HandlerList<'mc> {
         crate::event::HandlerList::from_raw(&jni, res)
     }
 
-    pub fn unregister_with_plugin(
+    pub fn unregister_with_listener(
         &self,
         arg0: impl Into<crate::event::Listener<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -108,7 +108,7 @@ impl<'mc> HandlerList<'mc> {
         Ok(())
     }
 
-    pub fn unregister_all(
+    pub fn unregister_all_with_listener(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::event::Listener<'mc>>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -182,7 +182,7 @@ impl<'mc> HandlerList<'mc> {
         blackboxmc_java::util::JavaArrayList::from_raw(&jni, obj)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -664,7 +664,7 @@ impl<'mc> JNIInstantiatable<'mc> for Event<'mc> {
 }
 
 impl<'mc> Event<'mc> {
-    pub fn new(
+    pub fn new_with_boolean(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<bool>,
     ) -> Result<crate::event::Event<'mc>, Box<dyn std::error::Error>> {
@@ -716,7 +716,7 @@ impl<'mc> Event<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

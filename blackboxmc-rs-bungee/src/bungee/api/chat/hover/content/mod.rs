@@ -184,7 +184,7 @@ Ok(
 ()
 )}
 
-	pub fn wait(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
+	pub fn wait_with_long(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -439,7 +439,7 @@ Ok(
 ()
 )}
 
-	pub fn wait(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
+	pub fn wait_with_long(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -568,7 +568,7 @@ let res = jni.translate_error_no_gen(res)?;
 crate::bungee::api::chat::hover::content::ItemSerializer::from_raw(&jni,res
 )}
 
-	pub fn serialize_with_object(&self,arg0: impl Into<crate::bungee::api::chat::hover::content::Item<'mc>>,arg1: jni::objects::JObject<'mc>,arg2: jni::objects::JObject<'mc>) 
+	pub fn serialize_with_item(&self,arg0: impl Into<crate::bungee::api::chat::hover::content::Item<'mc>>,arg1: jni::objects::JObject<'mc>,arg2: jni::objects::JObject<'mc>) 
 -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -612,7 +612,7 @@ Ok(
 res.l()?
 )}
 
-	pub fn wait(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
+	pub fn wait_with_long(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -775,7 +775,7 @@ let res = jni.translate_error_no_gen(res)?;
 crate::bungee::api::chat::hover::content::TextSerializer::from_raw(&jni,res
 )}
 
-	pub fn serialize_with_object(&self,arg0: impl Into<crate::bungee::api::chat::hover::content::Text<'mc>>,arg1: jni::objects::JObject<'mc>,arg2: jni::objects::JObject<'mc>) 
+	pub fn serialize_with_text(&self,arg0: impl Into<crate::bungee::api::chat::hover::content::Text<'mc>>,arg1: jni::objects::JObject<'mc>,arg2: jni::objects::JObject<'mc>) 
 -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -819,7 +819,7 @@ Ok(
 res.l()?
 )}
 
-	pub fn wait(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
+	pub fn wait_with_long(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -1040,7 +1040,7 @@ crate::bungee::api::chat::HoverEventAction::from_raw(&self.jni_ref(),raw_obj
 , crate::bungee::api::chat::HoverEventAction::from_string(variant_str).ok_or(eyre::eyre!("String gaven for variant was invalid"))?
 )}
 
-	pub fn wait(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
+	pub fn wait_with_long(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -1150,7 +1150,7 @@ Ok(Self(env.clone(), obj))
     }
     
 impl<'mc> Text<'mc> {
-	pub fn new_with_base_components(jni: &blackboxmc_general::SharedJNIEnv<'mc>,arg0: impl Into<String>) 
+	pub fn new_with_string(jni: &blackboxmc_general::SharedJNIEnv<'mc>,arg0: impl Into<String>) 
 -> Result<crate::bungee::api::chat::hover::content::Text<'mc>, Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -1235,7 +1235,7 @@ Ok(
 ()
 )}
 
-	pub fn wait(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
+	pub fn wait_with_long(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -1364,7 +1364,7 @@ let res = jni.translate_error_no_gen(res)?;
 crate::bungee::api::chat::hover::content::EntitySerializer::from_raw(&jni,res
 )}
 
-	pub fn serialize_with_object(&self,arg0: impl Into<crate::bungee::api::chat::hover::content::Entity<'mc>>,arg1: jni::objects::JObject<'mc>,arg2: jni::objects::JObject<'mc>) 
+	pub fn serialize_with_entity(&self,arg0: impl Into<crate::bungee::api::chat::hover::content::Entity<'mc>>,arg1: jni::objects::JObject<'mc>,arg2: jni::objects::JObject<'mc>) 
 -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();
@@ -1408,7 +1408,7 @@ Ok(
 res.l()?
 )}
 
-	pub fn wait(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
+	pub fn wait_with_long(&self,arg0: std::option::Option<i64>,arg1: std::option::Option<i32>) 
 -> Result<(), Box<dyn std::error::Error>>
 
 {let mut args = Vec::new();

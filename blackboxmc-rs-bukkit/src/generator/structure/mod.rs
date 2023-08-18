@@ -53,7 +53,7 @@ impl<'mc> StructureType<'mc> {
         crate::generator::structure::StructureType::from_raw(&jni, res)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -236,7 +236,7 @@ impl<'mc> Structure<'mc> {
         })
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

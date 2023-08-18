@@ -220,7 +220,7 @@ impl<'mc> BukkitScheduler<'mc> {
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
         arg1: impl Into<crate::scheduler::BukkitRunnable<'mc>>,
-        arg2: i64,
+        arg2: std::option::Option<i64>,
     ) -> Result<i32, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -234,9 +234,11 @@ impl<'mc> BukkitScheduler<'mc> {
             jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
         });
         args.push(val_2);
-        sig += "J";
-        let val_3 = jni::objects::JValueGen::Long(arg2.into());
-        args.push(val_3);
+        if let Some(a) = arg2 {
+            sig += "J";
+            let val_3 = jni::objects::JValueGen::Long(a.into());
+            args.push(val_3);
+        }
         sig += ")I";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -573,7 +575,7 @@ impl<'mc> BukkitRunnable<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

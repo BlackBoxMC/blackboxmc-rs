@@ -173,7 +173,7 @@ impl<'mc> PersistentDataTypePrimitivePersistentDataType<'mc> {
         Ok(res.l()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -564,7 +564,7 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
         Ok(unsafe { jni::objects::JClass::from_raw(res.as_jni().l) })
     }
 
-    pub fn to_primitive_with_object(
+    pub fn to_primitive_with_boolean(
         &self,
         arg0: bool,
         arg1: impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>,
@@ -591,7 +591,7 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
         Ok(res.b()?)
     }
 
-    pub fn from_primitive_with_byte(
+    pub fn from_primitive_with_object(
         &self,
         arg0: jni::objects::JObject<'mc>,
         arg1: impl Into<crate::persistence::PersistentDataAdapterContext<'mc>>,
@@ -614,7 +614,7 @@ impl<'mc> PersistentDataTypeBooleanPersistentDataType<'mc> {
         Ok(res.l()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

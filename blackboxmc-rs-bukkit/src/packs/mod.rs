@@ -426,7 +426,7 @@ impl<'mc> DataPackManager<'mc> {
         Ok(new_vec)
     }
 
-    pub fn is_enabled_by_feature_with_material(
+    pub fn is_enabled_by_feature_with_entity_type(
         &self,
         arg0: impl Into<crate::entity::EntityType<'mc>>,
         arg1: impl Into<crate::World<'mc>>,

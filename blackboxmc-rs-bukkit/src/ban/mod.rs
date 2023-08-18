@@ -45,43 +45,6 @@ impl<'mc> JNIInstantiatable<'mc> for ProfileBanList<'mc> {
 }
 
 impl<'mc> ProfileBanList<'mc> {
-    pub fn add_ban_with_player_profile(
-        &self,
-        arg0: jni::objects::JObject<'mc>,
-        arg1: impl Into<String>,
-        arg2: impl Into<blackboxmc_java::util::JavaDate<'mc>>,
-        arg3: impl Into<String>,
-    ) -> Result<crate::BanEntry<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Ljava/lang/Object;";
-        let val_1 = jni::objects::JValueGen::Object(arg0);
-        args.push(val_1);
-        sig += "Ljava/lang/String;";
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg1.into())?,
-        ));
-        args.push(val_2);
-        sig += "Ljava/util/Date;";
-        let val_3 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg2.into().jni_object().clone())
-        });
-        args.push(val_3);
-        sig += "Ljava/lang/String;";
-        let val_4 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg3.into())?,
-        ));
-        args.push(val_4);
-        sig += ")Lorg/bukkit/BanEntry;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "addBan", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::BanEntry::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
     pub fn add_ban_with_object(
         &self,
         arg0: jni::objects::JObject<'mc>,
@@ -169,7 +132,7 @@ impl<'mc> ProfileBanList<'mc> {
         })
     }
 
-    pub fn get_ban_entry_with_string(
+    pub fn get_ban_entry_with_object(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<crate::BanEntry<'mc>, Box<dyn std::error::Error>> {
@@ -202,7 +165,7 @@ impl<'mc> ProfileBanList<'mc> {
         })
     }
 
-    pub fn is_banned_with_string(
+    pub fn is_banned_with_object(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -219,7 +182,7 @@ impl<'mc> ProfileBanList<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn pardon_with_object(
+    pub fn pardon_with_string(
         &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -297,7 +260,7 @@ impl<'mc> IpBanList<'mc> {
         })
     }
 
-    pub fn get_ban_entry_with_string(
+    pub fn get_ban_entry_with_object(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<crate::BanEntry<'mc>, Box<dyn std::error::Error>> {
@@ -317,6 +280,41 @@ impl<'mc> IpBanList<'mc> {
     }
 
     pub fn add_ban_with_object(
+        &self,
+        arg0: jni::objects::JObject<'mc>,
+        arg1: impl Into<String>,
+        arg2: jni::objects::JObject<'mc>,
+        arg3: impl Into<String>,
+    ) -> Result<crate::BanEntry<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/Object;";
+        let val_1 = jni::objects::JValueGen::Object(arg0);
+        args.push(val_1);
+        sig += "Ljava/lang/String;";
+        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg1.into())?,
+        ));
+        args.push(val_2);
+        sig += "Ljava/time/Instant;";
+        let val_3 = jni::objects::JValueGen::Object(arg2);
+        args.push(val_3);
+        sig += "Ljava/lang/String;";
+        let val_4 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg3.into())?,
+        ));
+        args.push(val_4);
+        sig += ")Lorg/bukkit/BanEntry;";
+        let res = self
+            .jni_ref()
+            .call_method(&self.jni_object(), "addBan", sig.as_str(), args);
+        let res = self.jni_ref().translate_error(res)?;
+        crate::BanEntry::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
+    pub fn add_ban_with_string(
         &self,
         arg0: impl Into<String>,
         arg1: impl Into<String>,
@@ -369,7 +367,7 @@ impl<'mc> IpBanList<'mc> {
         })
     }
 
-    pub fn is_banned_with_string(
+    pub fn is_banned_with_object(
         &self,
         arg0: jni::objects::JObject<'mc>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -386,7 +384,7 @@ impl<'mc> IpBanList<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn pardon_with_object(
+    pub fn pardon_with_string(
         &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {

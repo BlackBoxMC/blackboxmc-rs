@@ -54,7 +54,7 @@ impl<'mc> CommandSenderSpigot<'mc> {
         crate::command::CommandSenderSpigot::from_raw(&jni, res)
     }
 
-    pub fn send_message_with_base_components(
+    pub fn send_message_with_base_component(
         &self,
         arg0: impl Into<blackboxmc_bungee::bungee::api::chat::BaseComponent<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -76,7 +76,9 @@ impl<'mc> CommandSenderSpigot<'mc> {
     pub fn send_message_with_uuid(
         &self,
         arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
-        arg1: impl Into<blackboxmc_bungee::bungee::api::chat::BaseComponent<'mc>>,
+        arg1: std::option::Option<
+            impl Into<blackboxmc_bungee::bungee::api::chat::BaseComponent<'mc>>,
+        >,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -85,11 +87,13 @@ impl<'mc> CommandSenderSpigot<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        sig += "Lnet/md_5/bungee/api/chat/BaseComponent;";
-        let val_2 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg1.into().jni_object().clone())
-        });
-        args.push(val_2);
+        if let Some(a) = arg1 {
+            sig += "Lnet/md_5/bungee/api/chat/BaseComponent;";
+            let val_2 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_2);
+        }
         sig += ")V";
         let res = self
             .jni_ref()
@@ -98,7 +102,7 @@ impl<'mc> CommandSenderSpigot<'mc> {
         Ok(())
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -279,7 +283,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
         })
     }
 
-    pub fn send_message_with_string(
+    pub fn send_message_with_strings(
         &self,
         arg0: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -296,7 +300,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
     pub fn send_message_with_uuid(
         &self,
         arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
-        arg1: impl Into<String>,
+        arg1: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -305,11 +309,13 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        sig += "Ljava/lang/String;";
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg1.into())?,
-        ));
-        args.push(val_2);
+        if let Some(a) = arg1 {
+            sig += "Ljava/lang/String;";
+            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_2);
+        }
         sig += ")V";
         let res = self
             .jni_ref()
@@ -318,7 +324,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
         Ok(())
     }
 
-    pub fn is_permission_set_with_string(
+    pub fn is_permission_set_with_permission(
         &self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -337,7 +343,7 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn has_permission_with_permission(
+    pub fn has_permission_with_string(
         &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -359,9 +365,9 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
     pub fn add_attachment_with_plugin(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
-        arg1: impl Into<String>,
-        arg2: bool,
-        arg3: i32,
+        arg1: std::option::Option<impl Into<String>>,
+        arg2: std::option::Option<bool>,
+        arg3: std::option::Option<i32>,
     ) -> Result<crate::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -370,17 +376,23 @@ impl<'mc> RemoteConsoleCommandSender<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        sig += "Ljava/lang/String;";
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg1.into())?,
-        ));
-        args.push(val_2);
-        sig += "Z";
-        let val_3 = jni::objects::JValueGen::Bool(arg2.into());
-        args.push(val_3);
-        sig += "I";
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
-        args.push(val_4);
+        if let Some(a) = arg1 {
+            sig += "Ljava/lang/String;";
+            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "Z";
+            let val_3 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_3);
+        }
+        if let Some(a) = arg3 {
+            sig += "I";
+            let val_4 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_4);
+        }
         sig += ")Lorg/bukkit/permissions/PermissionAttachment;";
         let res =
             self.jni_ref()
@@ -699,7 +711,7 @@ impl<'mc> SimpleCommandMap<'mc> {
         Ok(())
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1285,7 +1297,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
         Ok(())
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1635,7 +1647,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
         })
     }
 
-    pub fn send_message_with_string(
+    pub fn send_message_with_strings(
         &self,
         arg0: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -1652,7 +1664,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
     pub fn send_message_with_uuid(
         &self,
         arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
-        arg1: impl Into<String>,
+        arg1: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -1661,11 +1673,13 @@ impl<'mc> ConsoleCommandSender<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        sig += "Ljava/lang/String;";
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg1.into())?,
-        ));
-        args.push(val_2);
+        if let Some(a) = arg1 {
+            sig += "Ljava/lang/String;";
+            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_2);
+        }
         sig += ")V";
         let res = self
             .jni_ref()
@@ -1674,7 +1688,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
         Ok(())
     }
 
-    pub fn is_permission_set_with_string(
+    pub fn is_permission_set_with_permission(
         &self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1693,7 +1707,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn has_permission_with_permission(
+    pub fn has_permission_with_string(
         &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -1715,9 +1729,9 @@ impl<'mc> ConsoleCommandSender<'mc> {
     pub fn add_attachment_with_plugin(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
-        arg1: impl Into<String>,
-        arg2: bool,
-        arg3: i32,
+        arg1: std::option::Option<impl Into<String>>,
+        arg2: std::option::Option<bool>,
+        arg3: std::option::Option<i32>,
     ) -> Result<crate::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -1726,17 +1740,23 @@ impl<'mc> ConsoleCommandSender<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        sig += "Ljava/lang/String;";
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg1.into())?,
-        ));
-        args.push(val_2);
-        sig += "Z";
-        let val_3 = jni::objects::JValueGen::Bool(arg2.into());
-        args.push(val_3);
-        sig += "I";
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
-        args.push(val_4);
+        if let Some(a) = arg1 {
+            sig += "Ljava/lang/String;";
+            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "Z";
+            let val_3 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_3);
+        }
+        if let Some(a) = arg3 {
+            sig += "I";
+            let val_4 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_4);
+        }
         sig += ")Lorg/bukkit/permissions/PermissionAttachment;";
         let res =
             self.jni_ref()
@@ -1890,7 +1910,7 @@ impl<'mc> ConsoleCommandSender<'mc> {
         Ok(())
     }
 
-    pub fn send_raw_message_with_string(
+    pub fn send_raw_message_with_uuid(
         &self,
         arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
         arg1: std::option::Option<impl Into<String>>,
@@ -2440,7 +2460,7 @@ impl<'mc> Command<'mc> {
         Ok(())
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3005,7 +3025,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
         Ok(())
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3178,7 +3198,7 @@ impl<'mc> PluginCommandYamlParser<'mc> {
         Ok(new_vec)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3379,7 +3399,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
         })
     }
 
-    pub fn send_message_with_string(
+    pub fn send_message_with_strings(
         &self,
         arg0: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3396,7 +3416,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
     pub fn send_message_with_uuid(
         &self,
         arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
-        arg1: impl Into<String>,
+        arg1: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -3405,11 +3425,13 @@ impl<'mc> ProxiedCommandSender<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        sig += "Ljava/lang/String;";
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg1.into())?,
-        ));
-        args.push(val_2);
+        if let Some(a) = arg1 {
+            sig += "Ljava/lang/String;";
+            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_2);
+        }
         sig += ")V";
         let res = self
             .jni_ref()
@@ -3418,7 +3440,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
         Ok(())
     }
 
-    pub fn is_permission_set_with_string(
+    pub fn is_permission_set_with_permission(
         &self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3437,7 +3459,7 @@ impl<'mc> ProxiedCommandSender<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn has_permission_with_permission(
+    pub fn has_permission_with_string(
         &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3459,9 +3481,9 @@ impl<'mc> ProxiedCommandSender<'mc> {
     pub fn add_attachment_with_plugin(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
-        arg1: impl Into<String>,
-        arg2: bool,
-        arg3: i32,
+        arg1: std::option::Option<impl Into<String>>,
+        arg2: std::option::Option<bool>,
+        arg3: std::option::Option<i32>,
     ) -> Result<crate::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -3470,17 +3492,23 @@ impl<'mc> ProxiedCommandSender<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        sig += "Ljava/lang/String;";
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg1.into())?,
-        ));
-        args.push(val_2);
-        sig += "Z";
-        let val_3 = jni::objects::JValueGen::Bool(arg2.into());
-        args.push(val_3);
-        sig += "I";
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
-        args.push(val_4);
+        if let Some(a) = arg1 {
+            sig += "Ljava/lang/String;";
+            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "Z";
+            let val_3 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_3);
+        }
+        if let Some(a) = arg3 {
+            sig += "I";
+            let val_4 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_4);
+        }
         sig += ")Lorg/bukkit/permissions/PermissionAttachment;";
         let res =
             self.jni_ref()
@@ -3779,7 +3807,7 @@ impl<'mc> CommandSender<'mc> {
         })
     }
 
-    pub fn send_message_with_string(
+    pub fn send_message_with_strings(
         &self,
         arg0: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3796,7 +3824,7 @@ impl<'mc> CommandSender<'mc> {
     pub fn send_message_with_uuid(
         &self,
         arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
-        arg1: impl Into<String>,
+        arg1: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -3805,11 +3833,13 @@ impl<'mc> CommandSender<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        sig += "Ljava/lang/String;";
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg1.into())?,
-        ));
-        args.push(val_2);
+        if let Some(a) = arg1 {
+            sig += "Ljava/lang/String;";
+            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_2);
+        }
         sig += ")V";
         let res = self
             .jni_ref()
@@ -3818,7 +3848,7 @@ impl<'mc> CommandSender<'mc> {
         Ok(())
     }
 
-    pub fn is_permission_set_with_string(
+    pub fn is_permission_set_with_permission(
         &self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3837,7 +3867,7 @@ impl<'mc> CommandSender<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn has_permission_with_permission(
+    pub fn has_permission_with_string(
         &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -3859,9 +3889,9 @@ impl<'mc> CommandSender<'mc> {
     pub fn add_attachment_with_plugin(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
-        arg1: impl Into<String>,
-        arg2: bool,
-        arg3: i32,
+        arg1: std::option::Option<impl Into<String>>,
+        arg2: std::option::Option<bool>,
+        arg3: std::option::Option<i32>,
     ) -> Result<crate::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -3870,17 +3900,23 @@ impl<'mc> CommandSender<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        sig += "Ljava/lang/String;";
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg1.into())?,
-        ));
-        args.push(val_2);
-        sig += "Z";
-        let val_3 = jni::objects::JValueGen::Bool(arg2.into());
-        args.push(val_3);
-        sig += "I";
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
-        args.push(val_4);
+        if let Some(a) = arg1 {
+            sig += "Ljava/lang/String;";
+            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "Z";
+            let val_3 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_3);
+        }
+        if let Some(a) = arg3 {
+            sig += "I";
+            let val_4 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_4);
+        }
         sig += ")Lorg/bukkit/permissions/PermissionAttachment;";
         let res =
             self.jni_ref()
@@ -4670,7 +4706,7 @@ impl<'mc> PluginCommand<'mc> {
         Ok(())
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -4859,7 +4895,7 @@ impl<'mc> BlockCommandSender<'mc> {
         })
     }
 
-    pub fn send_message_with_string(
+    pub fn send_message_with_strings(
         &self,
         arg0: Vec<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -4876,7 +4912,7 @@ impl<'mc> BlockCommandSender<'mc> {
     pub fn send_message_with_uuid(
         &self,
         arg0: impl Into<blackboxmc_java::util::JavaUUID<'mc>>,
-        arg1: impl Into<String>,
+        arg1: std::option::Option<impl Into<String>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -4885,11 +4921,13 @@ impl<'mc> BlockCommandSender<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        sig += "Ljava/lang/String;";
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg1.into())?,
-        ));
-        args.push(val_2);
+        if let Some(a) = arg1 {
+            sig += "Ljava/lang/String;";
+            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_2);
+        }
         sig += ")V";
         let res = self
             .jni_ref()
@@ -4898,7 +4936,7 @@ impl<'mc> BlockCommandSender<'mc> {
         Ok(())
     }
 
-    pub fn is_permission_set_with_string(
+    pub fn is_permission_set_with_permission(
         &self,
         arg0: impl Into<crate::permissions::Permission<'mc>>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4917,7 +4955,7 @@ impl<'mc> BlockCommandSender<'mc> {
         Ok(res.z()?)
     }
 
-    pub fn has_permission_with_permission(
+    pub fn has_permission_with_string(
         &self,
         arg0: impl Into<String>,
     ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -4939,9 +4977,9 @@ impl<'mc> BlockCommandSender<'mc> {
     pub fn add_attachment_with_plugin(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
-        arg1: impl Into<String>,
-        arg2: bool,
-        arg3: i32,
+        arg1: std::option::Option<impl Into<String>>,
+        arg2: std::option::Option<bool>,
+        arg3: std::option::Option<i32>,
     ) -> Result<crate::permissions::PermissionAttachment<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -4950,17 +4988,23 @@ impl<'mc> BlockCommandSender<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        sig += "Ljava/lang/String;";
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg1.into())?,
-        ));
-        args.push(val_2);
-        sig += "Z";
-        let val_3 = jni::objects::JValueGen::Bool(arg2.into());
-        args.push(val_3);
-        sig += "I";
-        let val_4 = jni::objects::JValueGen::Int(arg3.into());
-        args.push(val_4);
+        if let Some(a) = arg1 {
+            sig += "Ljava/lang/String;";
+            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_2);
+        }
+        if let Some(a) = arg2 {
+            sig += "Z";
+            let val_3 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_3);
+        }
+        if let Some(a) = arg3 {
+            sig += "I";
+            let val_4 = jni::objects::JValueGen::Int(a.into());
+            args.push(val_4);
+        }
         sig += ")Lorg/bukkit/permissions/PermissionAttachment;";
         let res =
             self.jni_ref()

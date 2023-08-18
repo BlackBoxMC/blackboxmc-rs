@@ -207,7 +207,7 @@ impl<'mc> ChatColor<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn of_with_color(
+    pub fn of_with_string(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<String>,
     ) -> Result<crate::bungee::api::ChatColor<'mc>, Box<dyn std::error::Error>> {
@@ -336,7 +336,7 @@ impl<'mc> ChatColor<'mc> {
             .to_string())
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

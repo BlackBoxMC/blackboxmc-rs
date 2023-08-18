@@ -62,7 +62,7 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="ConfigurationOptions.html#pathSeparator(char)">ConfigurationOptions</a></code></span>
     /// Sets the char that will be used to separate <a title="interface in org.bukkit.configuration" href="ConfigurationSection.html"><code>ConfigurationSection</code></a>s
     /// <p>This value does not affect how the <a href="Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> is stored, only in how you access the data. The default value is '.'.</p>
-    pub fn path_separator(
+    pub fn path_separator_with_char(
         &self,
         arg0: std::option::Option<u16>,
     ) -> Result<crate::configuration::MemoryConfigurationOptions<'mc>, Box<dyn std::error::Error>>
@@ -86,7 +86,7 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
     /// <span class="descfrm-type-label">Description copied from class:&nbsp;<code><a href="ConfigurationOptions.html#copyDefaults(boolean)">ConfigurationOptions</a></code></span>
     /// Sets if the <a href="Configuration.html" title="interface in org.bukkit.configuration"><code>Configuration</code></a> should copy values from its default <a title="interface in org.bukkit.configuration" href="Configuration.html"><code>Configuration</code></a> directly.
     /// <p>If this is true, all values in the default Configuration will be directly copied, making it impossible to distinguish between values that were set and values that are provided by default. As a result, <a href="ConfigurationSection.html#contains(java.lang.String)"><code>ConfigurationSection.contains(java.lang.String)</code></a> will always return the same value as <a href="ConfigurationSection.html#isSet(java.lang.String)"><code>ConfigurationSection.isSet(java.lang.String)</code></a>. The default value is false.</p>
-    pub fn copy_defaults(
+    pub fn copy_defaults_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
     ) -> Result<crate::configuration::MemoryConfigurationOptions<'mc>, Box<dyn std::error::Error>>
@@ -108,7 +108,7 @@ impl<'mc> MemoryConfigurationOptions<'mc> {
         })
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1211,7 +1211,7 @@ impl<'mc> MemorySection<'mc> {
         Ok(new_vec)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1398,7 +1398,7 @@ impl<'mc> Configuration<'mc> {
         )?))
     }
 
-    pub fn add_defaults_with_configuration(
+    pub fn add_defaults_with_map(
         &self,
         arg0: impl Into<blackboxmc_java::util::JavaMap<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -2361,7 +2361,7 @@ impl<'mc> JNIInstantiatable<'mc> for MemoryConfiguration<'mc> {
 }
 
 impl<'mc> MemoryConfiguration<'mc> {
-    pub fn new(
+    pub fn new_with_configuration(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<impl Into<crate::configuration::Configuration<'mc>>>,
     ) -> Result<crate::configuration::MemoryConfiguration<'mc>, Box<dyn std::error::Error>> {
@@ -2451,7 +2451,7 @@ impl<'mc> MemoryConfiguration<'mc> {
         )?))
     }
 
-    pub fn add_defaults_with_map(
+    pub fn add_defaults_with_configuration(
         &self,
         arg0: impl Into<crate::configuration::Configuration<'mc>>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -3403,7 +3403,7 @@ impl<'mc> MemoryConfiguration<'mc> {
         Ok(new_vec)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -3557,7 +3557,7 @@ impl<'mc> ConfigurationOptions<'mc> {
     }
     /// Sets the char that will be used to separate <a href="ConfigurationSection.html" title="interface in org.bukkit.configuration"><code>ConfigurationSection</code></a>s
     /// <p>This value does not affect how the <a title="interface in org.bukkit.configuration" href="Configuration.html"><code>Configuration</code></a> is stored, only in how you access the data. The default value is '.'.</p>
-    pub fn path_separator(
+    pub fn path_separator_with_char(
         &self,
         arg0: std::option::Option<u16>,
     ) -> Result<crate::configuration::ConfigurationOptions<'mc>, Box<dyn std::error::Error>> {
@@ -3579,7 +3579,7 @@ impl<'mc> ConfigurationOptions<'mc> {
     }
     /// Sets if the <a title="interface in org.bukkit.configuration" href="Configuration.html"><code>Configuration</code></a> should copy values from its default <a title="interface in org.bukkit.configuration" href="Configuration.html"><code>Configuration</code></a> directly.
     /// <p>If this is true, all values in the default Configuration will be directly copied, making it impossible to distinguish between values that were set and values that are provided by default. As a result, <a href="ConfigurationSection.html#contains(java.lang.String)"><code>ConfigurationSection.contains(java.lang.String)</code></a> will always return the same value as <a href="ConfigurationSection.html#isSet(java.lang.String)"><code>ConfigurationSection.isSet(java.lang.String)</code></a>. The default value is false.</p>
-    pub fn copy_defaults(
+    pub fn copy_defaults_with_boolean(
         &self,
         arg0: std::option::Option<bool>,
     ) -> Result<crate::configuration::ConfigurationOptions<'mc>, Box<dyn std::error::Error>> {
@@ -3600,7 +3600,7 @@ impl<'mc> ConfigurationOptions<'mc> {
         })
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

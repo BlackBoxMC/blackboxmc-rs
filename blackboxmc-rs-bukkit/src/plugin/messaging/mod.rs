@@ -338,7 +338,7 @@ impl<'mc> PluginMessageListenerRegistration<'mc> {
         })
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -636,34 +636,10 @@ impl<'mc> Messenger<'mc> {
         })
     }
 
-    pub fn get_incoming_channel_registrations_with_string(
-        &self,
-        arg0: impl Into<crate::plugin::Plugin<'mc>>,
-    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "Lorg/bukkit/plugin/Plugin;";
-        let val_1 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
-        });
-        args.push(val_1);
-        sig += ")Ljava/util/Set;";
-        let res = self.jni_ref().call_method(
-            &self.jni_object(),
-            "getIncomingChannelRegistrations",
-            sig.as_str(),
-            args,
-        );
-        let res = self.jni_ref().translate_error(res)?;
-        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
     pub fn get_incoming_channel_registrations_with_plugin(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
-        arg1: impl Into<String>,
+        arg1: std::option::Option<impl Into<String>>,
     ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -672,11 +648,13 @@ impl<'mc> Messenger<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        sig += "Ljava/lang/String;";
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg1.into())?,
-        ));
-        args.push(val_2);
+        if let Some(a) = arg1 {
+            sig += "Ljava/lang/String;";
+            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_2);
+        }
         sig += ")Ljava/util/Set;";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1043,10 +1021,34 @@ impl<'mc> StandardMessenger<'mc> {
         })
     }
 
+    pub fn get_incoming_channel_registrations_with_string(
+        &self,
+        arg0: impl Into<String>,
+    ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
+        let mut args = Vec::new();
+        let mut sig = String::from("(");
+        sig += "Ljava/lang/String;";
+        let val_1 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+            self.jni_ref().new_string(arg0.into())?,
+        ));
+        args.push(val_1);
+        sig += ")Ljava/util/Set;";
+        let res = self.jni_ref().call_method(
+            &self.jni_object(),
+            "getIncomingChannelRegistrations",
+            sig.as_str(),
+            args,
+        );
+        let res = self.jni_ref().translate_error(res)?;
+        blackboxmc_java::util::JavaSet::from_raw(&self.jni_ref(), unsafe {
+            jni::objects::JObject::from_raw(res.l()?.clone())
+        })
+    }
+
     pub fn get_incoming_channel_registrations_with_plugin(
         &self,
         arg0: impl Into<crate::plugin::Plugin<'mc>>,
-        arg1: impl Into<String>,
+        arg1: std::option::Option<impl Into<String>>,
     ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -1055,11 +1057,13 @@ impl<'mc> StandardMessenger<'mc> {
             jni::objects::JObject::from_raw(arg0.into().jni_object().clone())
         });
         args.push(val_1);
-        sig += "Ljava/lang/String;";
-        let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg1.into())?,
-        ));
-        args.push(val_2);
+        if let Some(a) = arg1 {
+            sig += "Ljava/lang/String;";
+            let val_2 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_2);
+        }
         sig += ")Ljava/util/Set;";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1221,7 +1225,7 @@ impl<'mc> StandardMessenger<'mc> {
         Ok(())
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

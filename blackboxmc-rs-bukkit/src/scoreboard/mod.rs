@@ -41,7 +41,7 @@ impl<'mc> JNIInstantiatable<'mc> for Criterias<'mc> {
 }
 
 impl<'mc> Criterias<'mc> {
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -746,7 +746,7 @@ impl<'mc> Objective<'mc> {
         )?))
     }
 
-    pub fn get_score_with_offline_player(
+    pub fn get_score_with_string(
         &self,
         arg0: impl Into<String>,
     ) -> Result<crate::scoreboard::Score<'mc>, Box<dyn std::error::Error>> {
@@ -1083,8 +1083,8 @@ impl<'mc> Scoreboard<'mc> {
         &self,
         arg0: impl Into<String>,
         arg1: impl Into<String>,
-        arg2: impl Into<String>,
-        arg3: impl Into<crate::scoreboard::RenderType<'mc>>,
+        arg2: std::option::Option<impl Into<String>>,
+        arg3: std::option::Option<impl Into<crate::scoreboard::RenderType<'mc>>>,
     ) -> Result<crate::scoreboard::Objective<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -1098,16 +1098,20 @@ impl<'mc> Scoreboard<'mc> {
             self.jni_ref().new_string(arg1.into())?,
         ));
         args.push(val_2);
-        sig += "Ljava/lang/String;";
-        let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg2.into())?,
-        ));
-        args.push(val_3);
-        sig += "Lorg/bukkit/scoreboard/RenderType;";
-        let val_4 = jni::objects::JValueGen::Object(unsafe {
-            jni::objects::JObject::from_raw(arg3.into().jni_object().clone())
-        });
-        args.push(val_4);
+        if let Some(a) = arg2 {
+            sig += "Ljava/lang/String;";
+            let val_3 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_3);
+        }
+        if let Some(a) = arg3 {
+            sig += "Lorg/bukkit/scoreboard/RenderType;";
+            let val_4 = jni::objects::JValueGen::Object(unsafe {
+                jni::objects::JObject::from_raw(a.into().jni_object().clone())
+            });
+            args.push(val_4);
+        }
         sig += ")Lorg/bukkit/scoreboard/Objective;";
         let res = self.jni_ref().call_method(
             &self.jni_object(),
@@ -1121,7 +1125,7 @@ impl<'mc> Scoreboard<'mc> {
         })
     }
 
-    pub fn get_objective_with_string(
+    pub fn get_objective_with_display_slot(
         &self,
         arg0: impl Into<crate::scoreboard::DisplaySlot<'mc>>,
     ) -> Result<crate::scoreboard::Objective<'mc>, Box<dyn std::error::Error>> {
@@ -1142,7 +1146,7 @@ impl<'mc> Scoreboard<'mc> {
         })
     }
 
-    pub fn get_objectives_by_criteria_with_string(
+    pub fn get_objectives_by_criteria_with_criteria(
         &self,
         arg0: impl Into<crate::scoreboard::Criteria<'mc>>,
     ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -1179,7 +1183,7 @@ impl<'mc> Scoreboard<'mc> {
         })
     }
 
-    pub fn get_scores_with_string(
+    pub fn get_scores_with_offline_player(
         &self,
         arg0: impl Into<crate::OfflinePlayer<'mc>>,
     ) -> Result<blackboxmc_java::util::JavaSet<'mc>, Box<dyn std::error::Error>> {
@@ -1200,7 +1204,7 @@ impl<'mc> Scoreboard<'mc> {
         })
     }
 
-    pub fn reset_scores_with_offline_player(
+    pub fn reset_scores_with_string(
         &self,
         arg0: impl Into<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {

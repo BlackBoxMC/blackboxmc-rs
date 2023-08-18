@@ -303,7 +303,7 @@ impl<'mc> JNIInstantiatable<'mc> for Pattern<'mc> {
 }
 
 impl<'mc> Pattern<'mc> {
-    pub fn new_with_map(
+    pub fn new_with_dye_color(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: impl Into<crate::DyeColor<'mc>>,
         arg1: std::option::Option<impl Into<crate::block::banner::PatternType<'mc>>>,
@@ -421,7 +421,7 @@ impl<'mc> Pattern<'mc> {
         )
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,

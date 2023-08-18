@@ -98,12 +98,15 @@ impl<'mc> MapCursorCollection<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         Ok(res.z()?)
     }
-    /// Add a cursor to the collection.
-    pub fn add_cursor_with_map_cursor(
+
+    pub fn add_cursor_with_int(
         &self,
         arg0: i32,
         arg1: std::option::Option<i32>,
         arg2: std::option::Option<i8>,
+        arg3: std::option::Option<i8>,
+        arg4: std::option::Option<bool>,
+        arg5: std::option::Option<impl Into<String>>,
     ) -> Result<crate::map::MapCursor<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -120,6 +123,23 @@ impl<'mc> MapCursorCollection<'mc> {
             let val_3 = jni::objects::JValueGen::Byte(a.into());
             args.push(val_3);
         }
+        if let Some(a) = arg3 {
+            sig += "B";
+            let val_4 = jni::objects::JValueGen::Byte(a.into());
+            args.push(val_4);
+        }
+        if let Some(a) = arg4 {
+            sig += "Z";
+            let val_5 = jni::objects::JValueGen::Bool(a.into());
+            args.push(val_5);
+        }
+        if let Some(a) = arg5 {
+            sig += "Ljava/lang/String;";
+            let val_6 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                self.jni_ref().new_string(a.into())?,
+            ));
+            args.push(val_6);
+        }
         sig += ")Lorg/bukkit/map/MapCursor;";
         let res = self
             .jni_ref()
@@ -130,48 +150,7 @@ impl<'mc> MapCursorCollection<'mc> {
         })
     }
 
-    pub fn add_cursor_with_int(
-        &self,
-        arg0: i32,
-        arg1: i32,
-        arg2: i8,
-        arg3: i8,
-        arg4: bool,
-        arg5: impl Into<String>,
-    ) -> Result<crate::map::MapCursor<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
-        let mut sig = String::from("(");
-        sig += "I";
-        let val_1 = jni::objects::JValueGen::Int(arg0.into());
-        args.push(val_1);
-        sig += "I";
-        let val_2 = jni::objects::JValueGen::Int(arg1.into());
-        args.push(val_2);
-        sig += "B";
-        let val_3 = jni::objects::JValueGen::Byte(arg2.into());
-        args.push(val_3);
-        sig += "B";
-        let val_4 = jni::objects::JValueGen::Byte(arg3.into());
-        args.push(val_4);
-        sig += "Z";
-        let val_5 = jni::objects::JValueGen::Bool(arg4.into());
-        args.push(val_5);
-        sig += "Ljava/lang/String;";
-        let val_6 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            self.jni_ref().new_string(arg5.into())?,
-        ));
-        args.push(val_6);
-        sig += ")Lorg/bukkit/map/MapCursor;";
-        let res = self
-            .jni_ref()
-            .call_method(&self.jni_object(), "addCursor", sig.as_str(), args);
-        let res = self.jni_ref().translate_error(res)?;
-        crate::map::MapCursor::from_raw(&self.jni_ref(), unsafe {
-            jni::objects::JObject::from_raw(res.l()?.clone())
-        })
-    }
-
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -653,7 +632,7 @@ impl<'mc> MinecraftFont<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1059,7 +1038,7 @@ impl<'mc> MapCursor<'mc> {
         arg2: i8,
         arg3: i8,
         arg4: bool,
-        arg5: impl Into<String>,
+        arg5: std::option::Option<impl Into<String>>,
     ) -> Result<crate::map::MapCursor<'mc>, Box<dyn std::error::Error>> {
         let mut args = Vec::new();
         let mut sig = String::from("(");
@@ -1078,11 +1057,13 @@ impl<'mc> MapCursor<'mc> {
         sig += "Z";
         let val_5 = jni::objects::JValueGen::Bool(arg4.into());
         args.push(val_5);
-        sig += "Ljava/lang/String;";
-        let val_6 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
-            jni.new_string(arg5.into())?,
-        ));
-        args.push(val_6);
+        if let Some(a) = arg5 {
+            sig += "Ljava/lang/String;";
+            let val_6 = jni::objects::JValueGen::Object(jni::objects::JObject::from(
+                jni.new_string(a.into())?,
+            ));
+            args.push(val_6);
+        }
         sig += ")V";
         let cls = jni.find_class("org/bukkit/map/MapCursor");
         let cls = jni.translate_error_with_class(cls)?;
@@ -1277,7 +1258,7 @@ impl<'mc> MapCursor<'mc> {
         Ok(())
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1477,7 +1458,7 @@ impl<'mc> MapFontCharacterSprite<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -1920,7 +1901,7 @@ impl<'mc> MapRenderer<'mc> {
         let obj = unsafe { plugin.new_extendable(address, "MapRenderer", name, lib_name) }?;
         Self::from_raw(env, obj)
     }
-    pub fn new(
+    pub fn new_with_boolean(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: std::option::Option<bool>,
     ) -> Result<crate::map::MapRenderer<'mc>, Box<dyn std::error::Error>> {
@@ -1998,7 +1979,7 @@ impl<'mc> MapRenderer<'mc> {
         Ok(())
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2531,7 +2512,7 @@ impl<'mc> MapFont<'mc> {
         Ok(res.i()?)
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
@@ -2764,7 +2745,7 @@ impl<'mc> MapPalette<'mc> {
     }
     #[deprecated = "Magic value "]
     /// Get the index of the closest matching color in the palette to the given color.
-    pub fn match_color_with_color(
+    pub fn match_color_with_int(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
         arg0: i32,
         arg1: std::option::Option<i32>,
@@ -2831,7 +2812,7 @@ impl<'mc> MapPalette<'mc> {
         Ok(())
     }
 
-    pub fn wait(
+    pub fn wait_with_long(
         &self,
         arg0: std::option::Option<i64>,
         arg1: std::option::Option<i32>,
