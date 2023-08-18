@@ -375,10 +375,12 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
 
         code.append("sig.as_str(),"+arr+");")
 
+        if return_group["type_name_resolved"] != "()":
+            code.append("let res = ")
         if is_constructor:
-            code.append("let res = jni.translate_error_no_gen(res)"+end_line+";")
+            code.append("jni.translate_error_no_gen(res)"+end_line+";")
         else:
-            code.append("let res = jni.translate_error(res)"+end_line+";")
+            code.append("jni.translate_error(res)"+end_line+";")
     else:
         code.append(
             "let res = "+prefix+".call_method("+
@@ -496,27 +498,24 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
                 case "java.util.Collection":
                     code.append("let col = blackboxmc_java::util::JavaCollection::from_raw(&"+
                                                 prefix+",res.l()"+end_line+")"+end_line+";"+
-                                "let iter = col.iterator()"+end_line+";"+
-                                "        while iter.has_next()"+end_line+" {"+
-                                "            let obj = iter.next()"+end_line+";")
-                    normally = gen+"::from_raw(&"+val_1+",obj,)"+end_line
+                                "let iter = col.iterator()"+end_line+";")
                 case "java.util.List":
                     code.append("let list = blackboxmc_java::util::JavaList::from_raw(&"+val_1+", res.l()"+end_line+")"+end_line+";"+
-                                "let size = list.size()"+end_line+";"+
-                                "for i in 0..=size {"+
-                                "let obj = list.get(i)"+end_line+";")
-                    if return_group["generics"][0]["type_name_original"] in enums:
-                        code.append("let variant = "+val_1+".call_method(list.get(i)"+end_line+", \"toString\", \"()Ljava/lang/String;\", vec![]); let variant = "+prefix+".translate_error(variant)"+end_line+";"+
-                                    "let variant_str = "+val_1+""+
-                                    "    .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })"+end_line+
-                                    "    .to_string_lossy()"+
-                                    "    .to_string();")
-                        val_3 = gen+"::from_string(variant_str).ok_or(eyre::eyre!(\"String gaven for variant was invalid\"))"+end_line+","
-                    else:
-                        val_3 = ""
-                    normally = gen+"::from_raw(&"+val_1+",obj,"+val_3+")"+end_line
+                                "let iter = list.iterator()"+end_line+";")
                 case _:
-                    print("Unhandled map type:\t\t"+return_group["type_name_original"])
+                    print("Unhandled map type as return type:\t\t"+return_group["type_name_original"])
+                    return None
+            code.append("while iter.has_next()"+end_line+" {"+
+                "            let obj = iter.next()"+end_line+";")
+            if return_group["generics"][0]["type_name_original"] in enums:
+                code.append("let variant = "+val_1+".call_method(&obj, \"toString\", \"()Ljava/lang/String;\", vec![]); let variant = "+prefix+".translate_error(variant)"+end_line+";"+
+                            "let variant_str = "+val_1+""+
+                            "    .get_string(unsafe { &jni::objects::JString::from_raw(variant.as_jni().l) })"+end_line+
+                            "    .to_string_lossy()"+
+                            "    .to_string();")
+                val_3 = gen+"::from_string(variant_str).ok_or(eyre::eyre!(\"String gaven for variant was invalid\"))"+end_line+","
+            else:
+                val_3 = ""
             match gen:
                 case "()" | "u16" | "i8" | "i16" | "bool" | "i32" | "i64" | "f32" | "f64":
                     return None
@@ -533,7 +532,7 @@ def return_format(return_group, prefix, static, method, obj_call, func_signature
                         ".to_string_lossy()"+
                         ".to_string());")
                 case _:
-                    code.append("new_vec.push("+normally+");")
+                    code.append("new_vec.push("+gen+"::from_raw(&"+val_1+",obj,"+val_3+")"+end_line+");")
             code.append("};Ok(")
             if nullable:
                 code.append("Some(")
@@ -1204,7 +1203,7 @@ def parse_methods(library,name,methods,mod_path,is_enum,is_trait,is_trait_decl,v
             continue
 
         if options_start_at != -1:
-            if len(func_signature) >= 1:
+            if len(func_signature) > 1:
                 code.append("let mut args = Vec::new();")
             else:
                 code.append("let args = Vec::new();")

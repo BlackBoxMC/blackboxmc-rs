@@ -239,7 +239,7 @@ impl<'mc> BlockDataMeta<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -355,9 +355,9 @@ impl<'mc> BlockDataMeta<'mc> {
         }
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -874,7 +874,7 @@ impl<'mc> ArmorMeta<'mc> {
     pub fn clone(
         &self,
     ) -> Result<crate::inventory::meta::ArmorMeta<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/meta/ArmorMeta;";
         let res = self
@@ -1050,9 +1050,9 @@ impl<'mc> ArmorMeta<'mc> {
         }
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -1595,7 +1595,7 @@ impl<'mc> AxolotlBucketMeta<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -1751,9 +1751,9 @@ impl<'mc> AxolotlBucketMeta<'mc> {
         }
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -2284,7 +2284,7 @@ impl<'mc> SkullMeta<'mc> {
     pub fn clone(
         &self,
     ) -> Result<crate::inventory::meta::ItemMeta<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/meta/ItemMeta;";
         let res = self
@@ -2549,9 +2549,9 @@ impl<'mc> SkullMeta<'mc> {
         }
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -3065,7 +3065,7 @@ impl<'mc> JNIInstantiatable<'mc> for CompassMeta<'mc> {
 
 impl<'mc> CompassMeta<'mc> {
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -3260,9 +3260,9 @@ impl<'mc> CompassMeta<'mc> {
         }
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -3779,7 +3779,7 @@ impl<'mc> JNIInstantiatable<'mc> for SuspiciousStewMeta<'mc> {
 
 impl<'mc> SuspiciousStewMeta<'mc> {
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -3814,9 +3814,9 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::potion::PotionEffect::from_raw(&self.jni_ref(), obj)?);
         }
         Ok(new_vec)
@@ -4012,9 +4012,9 @@ impl<'mc> SuspiciousStewMeta<'mc> {
         }
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -4551,9 +4551,9 @@ impl<'mc> CrossbowMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::inventory::ItemStack::from_raw(&self.jni_ref(), obj)?);
         }
         Ok(new_vec)
@@ -4591,7 +4591,7 @@ impl<'mc> CrossbowMeta<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -4707,9 +4707,9 @@ impl<'mc> CrossbowMeta<'mc> {
         }
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -5237,7 +5237,7 @@ impl<'mc> ItemMeta<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -5353,9 +5353,9 @@ impl<'mc> ItemMeta<'mc> {
         }
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -5878,7 +5878,7 @@ impl<'mc> Repairable<'mc> {
     pub fn clone(
         &self,
     ) -> Result<crate::inventory::meta::Repairable<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/meta/Repairable;";
         let res = self
@@ -6040,9 +6040,9 @@ impl<'mc> Repairable<'mc> {
         }
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -6611,9 +6611,9 @@ impl<'mc> BannerMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::block::banner::Pattern::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -6725,7 +6725,7 @@ impl<'mc> BannerMeta<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -6841,9 +6841,9 @@ impl<'mc> BannerMeta<'mc> {
         }
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -7392,9 +7392,9 @@ impl<'mc> BundleMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::inventory::ItemStack::from_raw(&self.jni_ref(), obj)?);
         }
         Ok(new_vec)
@@ -7414,7 +7414,7 @@ impl<'mc> BundleMeta<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -7530,9 +7530,9 @@ impl<'mc> BundleMeta<'mc> {
         }
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -8051,7 +8051,7 @@ impl<'mc> ColorableArmorMeta<'mc> {
     pub fn clone(
         &self,
     ) -> Result<crate::inventory::meta::ColorableArmorMeta<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/meta/ColorableArmorMeta;";
         let res = self
@@ -8227,9 +8227,9 @@ impl<'mc> ColorableArmorMeta<'mc> {
         }
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -8784,7 +8784,7 @@ impl<'mc> SpawnEggMeta<'mc> {
     pub fn clone(
         &self,
     ) -> Result<crate::inventory::meta::SpawnEggMeta<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/meta/SpawnEggMeta;";
         let res = self
@@ -8959,9 +8959,9 @@ impl<'mc> SpawnEggMeta<'mc> {
         }
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -9477,7 +9477,7 @@ impl<'mc> Damageable<'mc> {
     pub fn clone(
         &self,
     ) -> Result<crate::inventory::meta::Damageable<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/meta/Damageable;";
         let res = self
@@ -9639,9 +9639,9 @@ impl<'mc> Damageable<'mc> {
         }
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -10155,7 +10155,7 @@ impl<'mc> JNIInstantiatable<'mc> for FireworkMeta<'mc> {
 
 impl<'mc> FireworkMeta<'mc> {
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -10173,9 +10173,9 @@ impl<'mc> FireworkMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::FireworkEffect::from_raw(&self.jni_ref(), obj)?);
         }
         Ok(new_vec)
@@ -10380,9 +10380,9 @@ impl<'mc> FireworkMeta<'mc> {
         }
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -10916,7 +10916,7 @@ impl<'mc> PotionMeta<'mc> {
     pub fn clone(
         &self,
     ) -> Result<crate::inventory::meta::ItemMeta<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/meta/ItemMeta;";
         let res = self
@@ -10967,9 +10967,9 @@ impl<'mc> PotionMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::potion::PotionEffect::from_raw(&self.jni_ref(), obj)?);
         }
         Ok(new_vec)
@@ -11226,9 +11226,9 @@ impl<'mc> PotionMeta<'mc> {
         }
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -11794,7 +11794,7 @@ impl<'mc> BlockStateMeta<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -11910,9 +11910,9 @@ impl<'mc> BlockStateMeta<'mc> {
         }
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -12562,7 +12562,7 @@ impl<'mc> JNIInstantiatable<'mc> for EnchantmentStorageMeta<'mc> {
 
 impl<'mc> EnchantmentStorageMeta<'mc> {
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -12817,9 +12817,9 @@ impl<'mc> EnchantmentStorageMeta<'mc> {
         }
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -13335,7 +13335,7 @@ impl<'mc> JNIInstantiatable<'mc> for KnowledgeBookMeta<'mc> {
 
 impl<'mc> KnowledgeBookMeta<'mc> {
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -13353,9 +13353,9 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::NamespacedKey::from_raw(&self.jni_ref(), obj)?);
         }
         Ok(new_vec)
@@ -13501,9 +13501,9 @@ impl<'mc> KnowledgeBookMeta<'mc> {
         }
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -14037,7 +14037,7 @@ impl<'mc> MapMeta<'mc> {
     pub fn clone(
         &self,
     ) -> Result<crate::inventory::meta::ItemMeta<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/meta/ItemMeta;";
         let res = self
@@ -14331,9 +14331,9 @@ impl<'mc> MapMeta<'mc> {
         }
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -14886,9 +14886,9 @@ impl<'mc> BookMetaSpigot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec
                 .push(blackboxmc_bungee::bungee::api::chat::BaseComponent::from_raw(&self.0, obj)?);
         }
@@ -15103,7 +15103,7 @@ impl<'mc> LeatherArmorMeta<'mc> {
     pub fn clone(
         &self,
     ) -> Result<crate::inventory::meta::LeatherArmorMeta<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/meta/LeatherArmorMeta;";
         let res = self
@@ -15248,9 +15248,9 @@ impl<'mc> LeatherArmorMeta<'mc> {
         }
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -15769,7 +15769,7 @@ impl<'mc> FireworkEffectMeta<'mc> {
     pub fn clone(
         &self,
     ) -> Result<crate::inventory::meta::FireworkEffectMeta<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/meta/FireworkEffectMeta;";
         let res = self
@@ -15942,9 +15942,9 @@ impl<'mc> FireworkEffectMeta<'mc> {
         }
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -16462,7 +16462,7 @@ impl<'mc> JNIInstantiatable<'mc> for TropicalFishBucketMeta<'mc> {
 
 impl<'mc> TropicalFishBucketMeta<'mc> {
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -16728,9 +16728,9 @@ impl<'mc> TropicalFishBucketMeta<'mc> {
         }
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -17246,7 +17246,7 @@ impl<'mc> BookMeta<'mc> {
     pub fn clone(
         &self,
     ) -> Result<crate::inventory::meta::BookMeta<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/meta/BookMeta;";
         let res = self
@@ -17361,9 +17361,9 @@ impl<'mc> BookMeta<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -17610,9 +17610,9 @@ impl<'mc> BookMeta<'mc> {
         }
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -18130,7 +18130,7 @@ impl<'mc> MusicInstrumentMeta<'mc> {
     pub fn clone(
         &self,
     ) -> Result<crate::inventory::meta::MusicInstrumentMeta<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/meta/MusicInstrumentMeta;";
         let res = self
@@ -18296,9 +18296,9 @@ impl<'mc> MusicInstrumentMeta<'mc> {
         }
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?

@@ -344,9 +344,9 @@ impl<'mc> BukkitScheduler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::scheduler::BukkitWorker::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -365,9 +365,9 @@ impl<'mc> BukkitScheduler<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::scheduler::BukkitTask::from_raw(
                 &self.jni_ref(),
                 obj,

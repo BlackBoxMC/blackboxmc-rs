@@ -115,7 +115,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
         let cls = jni.find_class("void");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "registerClass", sig.as_str(), args);
-        let res = jni.translate_error(res)?;
+        jni.translate_error(res)?;
         Ok(())
     }
 
@@ -132,7 +132,7 @@ impl<'mc> ConfigurationSerialization<'mc> {
         let cls = jni.find_class("void");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "unregisterClass", sig.as_str(), args);
-        let res = jni.translate_error(res)?;
+        jni.translate_error(res)?;
         Ok(())
     }
 

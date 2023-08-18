@@ -84,7 +84,7 @@ impl<'mc> SimplexNoiseGenerator<'mc> {
     pub fn instance(
         jni: &blackboxmc_general::SharedJNIEnv<'mc>,
     ) -> Result<crate::util::noise::PerlinNoiseGenerator<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/util/noise/PerlinNoiseGenerator;";
         let cls = jni.find_class("org/bukkit/util/noise/PerlinNoiseGenerator");

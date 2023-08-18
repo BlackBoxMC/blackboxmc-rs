@@ -690,9 +690,9 @@ impl<'mc> SimpleCommandMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -1126,9 +1126,9 @@ impl<'mc> FormattedCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -1207,9 +1207,9 @@ impl<'mc> FormattedCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -1344,7 +1344,7 @@ impl<'mc> FormattedCommandAlias<'mc> {
         let cls = jni.find_class("void");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "broadcastCommandMessage", sig.as_str(), args);
-        let res = jni.translate_error(res)?;
+        jni.translate_error(res)?;
         Ok(())
     }
 
@@ -1540,9 +1540,9 @@ impl<'mc> TabCompleter<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -2378,9 +2378,9 @@ impl<'mc> Command<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -2459,9 +2459,9 @@ impl<'mc> Command<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -2596,7 +2596,7 @@ impl<'mc> Command<'mc> {
         let cls = jni.find_class("void");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "broadcastCommandMessage", sig.as_str(), args);
-        let res = jni.translate_error(res)?;
+        jni.translate_error(res)?;
         Ok(())
     }
 
@@ -2960,9 +2960,9 @@ impl<'mc> MultipleCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -3041,9 +3041,9 @@ impl<'mc> MultipleCommandAlias<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -3178,7 +3178,7 @@ impl<'mc> MultipleCommandAlias<'mc> {
         let cls = jni.find_class("void");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "broadcastCommandMessage", sig.as_str(), args);
-        let res = jni.translate_error(res)?;
+        jni.translate_error(res)?;
         Ok(())
     }
 
@@ -3364,9 +3364,9 @@ impl<'mc> PluginCommandYamlParser<'mc> {
         let res = jni.translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&jni, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::command::Command::from_raw(&jni, obj)?);
         }
         Ok(new_vec)
@@ -3883,9 +3883,9 @@ impl<'mc> TabExecutor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -4403,9 +4403,9 @@ impl<'mc> CommandMap<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -4547,9 +4547,9 @@ impl<'mc> PluginCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -4826,9 +4826,9 @@ impl<'mc> PluginCommand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -4963,7 +4963,7 @@ impl<'mc> PluginCommand<'mc> {
         let cls = jni.find_class("void");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "broadcastCommandMessage", sig.as_str(), args);
-        let res = jni.translate_error(res)?;
+        jni.translate_error(res)?;
         Ok(())
     }
 

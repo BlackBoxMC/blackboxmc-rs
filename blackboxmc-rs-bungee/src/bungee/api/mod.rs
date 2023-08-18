@@ -171,7 +171,7 @@ impl<'mc> JNIInstantiatable<'mc> for ChatColor<'mc> {
 
 impl<'mc> ChatColor<'mc> {
     pub fn name(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/String;";
         let res = self

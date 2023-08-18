@@ -518,9 +518,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
         }
         Ok(new_vec)
@@ -863,9 +863,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
         }
         Ok(new_vec)
@@ -1395,7 +1395,7 @@ impl<'mc> ExplosiveMinecart<'mc> {
     pub fn spigot(
         &self,
     ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/command/CommandSender$Spigot;";
         let res = self
@@ -1449,9 +1449,9 @@ impl<'mc> ExplosiveMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -2255,9 +2255,9 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
         }
         Ok(new_vec)
@@ -2600,9 +2600,9 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
         }
         Ok(new_vec)
@@ -3132,7 +3132,7 @@ impl<'mc> HopperMinecart<'mc> {
     pub fn spigot(
         &self,
     ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/command/CommandSender$Spigot;";
         let res = self
@@ -3186,9 +3186,9 @@ impl<'mc> HopperMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -4053,9 +4053,9 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
         }
         Ok(new_vec)
@@ -4398,9 +4398,9 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
         }
         Ok(new_vec)
@@ -4930,7 +4930,7 @@ impl<'mc> StorageMinecart<'mc> {
     pub fn spigot(
         &self,
     ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/command/CommandSender$Spigot;";
         let res = self
@@ -4984,9 +4984,9 @@ impl<'mc> StorageMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -5851,9 +5851,9 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
         }
         Ok(new_vec)
@@ -6196,9 +6196,9 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
         }
         Ok(new_vec)
@@ -6728,7 +6728,7 @@ impl<'mc> SpawnerMinecart<'mc> {
     pub fn spigot(
         &self,
     ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/command/CommandSender$Spigot;";
         let res = self
@@ -6782,9 +6782,9 @@ impl<'mc> SpawnerMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -7590,9 +7590,9 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
         }
         Ok(new_vec)
@@ -7935,9 +7935,9 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
         }
         Ok(new_vec)
@@ -8467,7 +8467,7 @@ impl<'mc> PoweredMinecart<'mc> {
     pub fn spigot(
         &self,
     ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/command/CommandSender$Spigot;";
         let res = self
@@ -8521,9 +8521,9 @@ impl<'mc> PoweredMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -9306,9 +9306,9 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
         }
         Ok(new_vec)
@@ -9651,9 +9651,9 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
         }
         Ok(new_vec)
@@ -10183,7 +10183,7 @@ impl<'mc> RideableMinecart<'mc> {
     pub fn spigot(
         &self,
     ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/command/CommandSender$Spigot;";
         let res = self
@@ -10237,9 +10237,9 @@ impl<'mc> RideableMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -11064,9 +11064,9 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
         }
         Ok(new_vec)
@@ -11409,9 +11409,9 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::Entity::from_raw(&self.jni_ref(), obj)?);
         }
         Ok(new_vec)
@@ -11941,7 +11941,7 @@ impl<'mc> CommandMinecart<'mc> {
     pub fn spigot(
         &self,
     ) -> Result<crate::command::CommandSenderSpigot<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/command/CommandSender$Spigot;";
         let res = self
@@ -11995,9 +11995,9 @@ impl<'mc> CommandMinecart<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,

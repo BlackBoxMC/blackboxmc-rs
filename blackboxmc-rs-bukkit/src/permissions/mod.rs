@@ -1037,9 +1037,9 @@ impl<'mc> Permission<'mc> {
         let res = jni.translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&jni, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::permissions::Permission::from_raw(&jni, obj)?);
         }
         Ok(new_vec)

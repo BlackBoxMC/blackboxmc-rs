@@ -214,7 +214,7 @@ impl<'mc> Chest<'mc> {
     }
 
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/Block;";
         let res = self
@@ -397,9 +397,9 @@ impl<'mc> Chest<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -1175,9 +1175,9 @@ impl<'mc> DaylightDetector<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -1565,7 +1565,7 @@ impl<'mc> Lectern<'mc> {
     }
 
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/Block;";
         let res = self
@@ -1748,9 +1748,9 @@ impl<'mc> Lectern<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -2439,9 +2439,9 @@ impl<'mc> CreatureSpawner<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -2864,9 +2864,9 @@ impl<'mc> Comparator<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -3137,7 +3137,7 @@ impl<'mc> Container<'mc> {
     }
 
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/Block;";
         let res = self
@@ -3320,9 +3320,9 @@ impl<'mc> Container<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -3915,9 +3915,9 @@ impl<'mc> EndGateway<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -4036,7 +4036,7 @@ impl<'mc> BlastFurnace<'mc> {
     pub fn inventory(
         &self,
     ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/Inventory;";
         let res =
@@ -4051,7 +4051,7 @@ impl<'mc> BlastFurnace<'mc> {
     pub fn snapshot_inventory(
         &self,
     ) -> Result<crate::inventory::FurnaceInventory<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/FurnaceInventory;";
         let res = self.jni_ref().call_method(
@@ -4274,7 +4274,7 @@ impl<'mc> BlastFurnace<'mc> {
     }
 
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/Block;";
         let res = self
@@ -4457,9 +4457,9 @@ impl<'mc> BlastFurnace<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -5169,9 +5169,9 @@ impl<'mc> EnchantingTable<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -5510,7 +5510,7 @@ impl<'mc> ShulkerBox<'mc> {
     }
 
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/Block;";
         let res = self
@@ -5693,9 +5693,9 @@ impl<'mc> ShulkerBox<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -6022,9 +6022,9 @@ impl<'mc> EntityBlockStorage<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(obj);
         }
         Ok(new_vec)
@@ -6355,9 +6355,9 @@ impl<'mc> EntityBlockStorage<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -6564,9 +6564,9 @@ impl<'mc> Beehive<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(obj);
         }
         Ok(new_vec)
@@ -6897,9 +6897,9 @@ impl<'mc> Beehive<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -7457,9 +7457,9 @@ impl<'mc> SculkCatalyst<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -7578,7 +7578,7 @@ impl<'mc> Furnace<'mc> {
     pub fn inventory(
         &self,
     ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/Inventory;";
         let res =
@@ -7593,7 +7593,7 @@ impl<'mc> Furnace<'mc> {
     pub fn snapshot_inventory(
         &self,
     ) -> Result<crate::inventory::FurnaceInventory<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/FurnaceInventory;";
         let res = self.jni_ref().call_method(
@@ -7816,7 +7816,7 @@ impl<'mc> Furnace<'mc> {
     }
 
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/Block;";
         let res = self
@@ -7999,9 +7999,9 @@ impl<'mc> Furnace<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -8353,7 +8353,7 @@ impl<'mc> Dropper<'mc> {
     }
 
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/Block;";
         let res = self
@@ -8536,9 +8536,9 @@ impl<'mc> Dropper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -9184,9 +9184,9 @@ impl<'mc> SuspiciousSand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -9609,9 +9609,9 @@ impl<'mc> Conduit<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -10140,9 +10140,9 @@ impl<'mc> Beacon<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -11038,9 +11038,9 @@ impl<'mc> Block<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -11553,9 +11553,9 @@ impl<'mc> Bell<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -11978,9 +11978,9 @@ impl<'mc> Jigsaw<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -12281,7 +12281,7 @@ impl<'mc> Dispenser<'mc> {
     }
 
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/Block;";
         let res = self
@@ -12464,9 +12464,9 @@ impl<'mc> Dispenser<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -13118,9 +13118,9 @@ impl<'mc> BrushableBlock<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -13571,9 +13571,9 @@ impl<'mc> SculkShrieker<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -13769,15 +13769,12 @@ impl<'mc> DecoratedPot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
-            let variant = self.jni_ref().call_method(
-                list.get(i)?,
-                "toString",
-                "()Ljava/lang/String;",
-                vec![],
-            );
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            let variant =
+                self.jni_ref()
+                    .call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
             let variant = self.jni_ref().translate_error(variant)?;
             let variant_str = self
                 .jni_ref()
@@ -14101,9 +14098,9 @@ impl<'mc> DecoratedPot<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -14646,9 +14643,9 @@ impl<'mc> Campfire<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -15143,7 +15140,7 @@ impl<'mc> Smoker<'mc> {
     pub fn inventory(
         &self,
     ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/Inventory;";
         let res =
@@ -15158,7 +15155,7 @@ impl<'mc> Smoker<'mc> {
     pub fn snapshot_inventory(
         &self,
     ) -> Result<crate::inventory::FurnaceInventory<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/FurnaceInventory;";
         let res = self.jni_ref().call_method(
@@ -15381,7 +15378,7 @@ impl<'mc> Smoker<'mc> {
     }
 
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/Block;";
         let res = self
@@ -15564,9 +15561,9 @@ impl<'mc> Smoker<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -16092,9 +16089,9 @@ impl<'mc> CalibratedSculkSensor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -16320,9 +16317,9 @@ impl<'mc> Structure<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -17346,9 +17343,9 @@ impl<'mc> EnderChest<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -17777,9 +17774,9 @@ impl<'mc> Bed<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -17958,7 +17955,7 @@ impl<'mc> Jukebox<'mc> {
     pub fn inventory(
         &self,
     ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/Inventory;";
         let res =
@@ -18225,7 +18222,7 @@ impl<'mc> Jukebox<'mc> {
     }
 
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/Block;";
         let res = self
@@ -18408,9 +18405,9 @@ impl<'mc> Jukebox<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -18965,9 +18962,9 @@ impl<'mc> Banner<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::block::banner::Pattern::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -19372,9 +19369,9 @@ impl<'mc> Banner<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -19645,7 +19642,7 @@ impl<'mc> Barrel<'mc> {
     }
 
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/Block;";
         let res = self
@@ -19828,9 +19825,9 @@ impl<'mc> Barrel<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -20468,9 +20465,9 @@ impl<'mc> CommandBlock<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -20921,9 +20918,9 @@ impl<'mc> SculkSensor<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -21522,9 +21519,9 @@ impl<'mc> HangingSign<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -21663,7 +21660,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
     pub fn inventory(
         &self,
     ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/Inventory;";
         let res =
@@ -21842,7 +21839,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
     }
 
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/Block;";
         let res = self
@@ -22025,9 +22022,9 @@ impl<'mc> ChiseledBookshelf<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -22457,9 +22454,9 @@ impl<'mc> TileState<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -22877,9 +22874,9 @@ impl<'mc> BlockState<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -22998,7 +22995,7 @@ impl<'mc> BrewingStand<'mc> {
     pub fn inventory(
         &self,
     ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/Inventory;";
         let res =
@@ -23013,7 +23010,7 @@ impl<'mc> BrewingStand<'mc> {
     pub fn snapshot_inventory(
         &self,
     ) -> Result<crate::inventory::BrewerInventory<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/BrewerInventory;";
         let res = self.jni_ref().call_method(
@@ -23198,7 +23195,7 @@ impl<'mc> BrewingStand<'mc> {
     }
 
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/Block;";
         let res = self
@@ -23381,9 +23378,9 @@ impl<'mc> BrewingStand<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -24112,9 +24109,9 @@ impl<'mc> Skull<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -24385,7 +24382,7 @@ impl<'mc> Hopper<'mc> {
     }
 
     pub fn block(&self) -> Result<crate::block::Block<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/Block;";
         let res = self
@@ -24568,9 +24565,9 @@ impl<'mc> Hopper<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,
@@ -25304,9 +25301,9 @@ impl<'mc> Sign<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::metadata::MetadataValue::from_raw(
                 &self.jni_ref(),
                 obj,

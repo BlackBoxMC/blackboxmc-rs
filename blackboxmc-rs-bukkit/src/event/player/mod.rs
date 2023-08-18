@@ -5183,7 +5183,7 @@ impl<'mc> PlayerArmorStandManipulateEvent<'mc> {
     pub fn right_clicked(
         &self,
     ) -> Result<crate::entity::ArmorStand<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/ArmorStand;";
         let res =
@@ -21456,9 +21456,9 @@ impl<'mc> PlayerHarvestBlockEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::inventory::ItemStack::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
@@ -22531,7 +22531,7 @@ impl<'mc> PlayerBucketFishEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::Fish<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/Fish;";
         let res = self

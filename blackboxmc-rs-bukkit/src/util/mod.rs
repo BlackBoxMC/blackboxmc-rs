@@ -169,7 +169,7 @@ impl<'mc> NumberConversions<'mc> {
         let cls = jni.find_class("void");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "checkFinite", sig.as_str(), args);
-        let res = jni.translate_error(res)?;
+        jni.translate_error(res)?;
         Ok(())
     }
 
@@ -539,7 +539,7 @@ impl<'mc> BlockIterator<'mc> {
     }
 
     pub fn next(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -1915,7 +1915,7 @@ impl<'mc> BoundingBox<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::util::BoundingBox<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/util/BoundingBox;";
         let res = self
@@ -2855,7 +2855,7 @@ impl<'mc> BlockVector<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::util::BlockVector<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/util/BlockVector;";
         let res = self
@@ -4765,7 +4765,7 @@ impl<'mc> Vector<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::util::Vector<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/util/Vector;";
         let res = self

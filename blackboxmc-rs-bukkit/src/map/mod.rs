@@ -2429,9 +2429,9 @@ impl<'mc> MapView<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.jni_ref(), res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::map::MapRenderer::from_raw(&self.jni_ref(), obj)?);
         }
         Ok(new_vec)
@@ -3017,7 +3017,7 @@ impl<'mc> MapPalette<'mc> {
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
-        let res = jni.translate_error(res)?;
+        jni.translate_error(res)?;
         Ok(())
     }
 

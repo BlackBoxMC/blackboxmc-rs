@@ -259,9 +259,9 @@ impl<'mc> EntityExplodeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::block::Block::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
@@ -947,7 +947,7 @@ impl<'mc> StriderTemperatureChangeEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::Strider<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/Strider;";
         let res = self
@@ -1968,7 +1968,7 @@ impl<'mc> SheepRegrowWoolEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::Sheep<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/Sheep;";
         let res = self
@@ -2615,7 +2615,7 @@ impl<'mc> EntityPickupItemEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::LivingEntity<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/LivingEntity;";
         let res = self
@@ -2940,7 +2940,7 @@ impl<'mc> HorseJumpEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::AbstractHorse<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/AbstractHorse;";
         let res = self
@@ -3890,7 +3890,7 @@ impl<'mc> CreatureSpawnEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::LivingEntity<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/LivingEntity;";
         let res = self
@@ -4229,7 +4229,7 @@ impl<'mc> ItemSpawnEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::Item<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/Item;";
         let res = self
@@ -5240,7 +5240,7 @@ impl<'mc> SlimeSplitEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::Slime<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/Slime;";
         let res = self
@@ -5574,7 +5574,7 @@ impl<'mc> FoodLevelChangeEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::HumanEntity<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/HumanEntity;";
         let res = self
@@ -5892,7 +5892,7 @@ impl<'mc> EntityTargetLivingEntityEvent<'mc> {
     pub fn target(
         &self,
     ) -> Result<Option<crate::entity::LivingEntity<'mc>>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/LivingEntity;";
         let res = self
@@ -6302,7 +6302,7 @@ impl<'mc> EntityShootBowEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::LivingEntity<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/LivingEntity;";
         let res = self
@@ -6730,7 +6730,7 @@ impl<'mc> EntityResurrectEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::LivingEntity<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/LivingEntity;";
         let res = self
@@ -7043,7 +7043,7 @@ impl<'mc> PiglinBarterEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::Piglin<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/Piglin;";
         let res = self
@@ -7091,9 +7091,9 @@ impl<'mc> PiglinBarterEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::inventory::ItemStack::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
@@ -7385,7 +7385,7 @@ impl<'mc> PigZombieAngerEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::PigZombie<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/PigZombie;";
         let res = self
@@ -7687,7 +7687,7 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::LivingEntity<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/LivingEntity;";
         let res = self
@@ -7707,9 +7707,9 @@ impl<'mc> EntityCreatePortalEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::block::BlockState::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
@@ -8724,7 +8724,7 @@ impl<'mc> EntityEnterLoveModeEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::Animals<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/Animals;";
         let res = self
@@ -9135,7 +9135,7 @@ impl<'mc> SheepDyeWoolEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::Sheep<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/Sheep;";
         let res = self
@@ -10363,7 +10363,7 @@ impl<'mc> VillagerCareerChangeEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::Villager<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/Villager;";
         let res = self
@@ -11951,7 +11951,7 @@ impl<'mc> ItemMergeEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::Item<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/Item;";
         let res = self
@@ -12295,7 +12295,7 @@ impl<'mc> VillagerAcquireTradeEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/Entity;";
         let res = self
@@ -12620,7 +12620,7 @@ impl<'mc> LingeringPotionSplashEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/Entity;";
         let res = self
@@ -13140,7 +13140,7 @@ impl<'mc> EntityTameEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::LivingEntity<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/LivingEntity;";
         let res = self
@@ -13426,7 +13426,7 @@ impl<'mc> EntityBreakDoorEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/Entity;";
         let res = self
@@ -13811,7 +13811,7 @@ impl<'mc> EntityBreedEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::LivingEntity<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/LivingEntity;";
         let res = self
@@ -14941,7 +14941,7 @@ impl<'mc> ItemDespawnEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::Item<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/Item;";
         let res = self
@@ -16068,7 +16068,7 @@ impl<'mc> ProjectileLaunchEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/Entity;";
         let res = self
@@ -16523,7 +16523,7 @@ impl<'mc> JNIInstantiatable<'mc> for PlayerDeathEvent<'mc> {
 
 impl<'mc> PlayerDeathEvent<'mc> {
     pub fn entity(&self) -> Result<crate::entity::Player<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/Player;";
         let res = self
@@ -16710,9 +16710,9 @@ impl<'mc> PlayerDeathEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::inventory::ItemStack::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
@@ -16990,7 +16990,7 @@ impl<'mc> AreaEffectCloudApplyEvent<'mc> {
     pub fn entity(
         &self,
     ) -> Result<crate::entity::AreaEffectCloud<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/AreaEffectCloud;";
         let res = self
@@ -17041,9 +17041,9 @@ impl<'mc> AreaEffectCloudApplyEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::LivingEntity::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
@@ -18374,7 +18374,7 @@ impl<'mc> EntityExhaustionEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::HumanEntity<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/HumanEntity;";
         let res = self
@@ -19265,7 +19265,7 @@ impl<'mc> PigZapEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::Pig<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/Pig;";
         let res = self
@@ -19357,9 +19357,9 @@ impl<'mc> PigZapEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::Entity::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
@@ -19657,7 +19657,7 @@ impl<'mc> FireworkExplodeEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::Firework<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/Firework;";
         let res = self
@@ -19967,7 +19967,7 @@ impl<'mc> ArrowBodyCountChangeEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::LivingEntity<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/LivingEntity;";
         let res = self
@@ -21546,7 +21546,7 @@ impl<'mc> EntityDeathEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::LivingEntity<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/LivingEntity;";
         let res = self
@@ -21568,9 +21568,9 @@ impl<'mc> EntityDeathEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::inventory::ItemStack::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
@@ -22948,7 +22948,7 @@ impl<'mc> CreeperPowerEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::Creeper<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/Creeper;";
         let res = self
@@ -23594,7 +23594,7 @@ impl<'mc> EnderDragonChangePhaseEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::EnderDragon<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/EnderDragon;";
         let res = self
@@ -23993,7 +23993,7 @@ impl<'mc> ProjectileHitEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::Entity<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/Entity;";
         let res = self
@@ -25413,7 +25413,7 @@ impl<'mc> ExpBottleEvent<'mc> {
     pub fn entity(
         &self,
     ) -> Result<crate::entity::ThrownExpBottle<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/ThrownExpBottle;";
         let res = self
@@ -26181,7 +26181,7 @@ impl<'mc> EntitySpellCastEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::Spellcaster<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/Spellcaster;";
         let res = self
@@ -26689,9 +26689,9 @@ impl<'mc> EntityTransformEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::Entity::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
@@ -27250,7 +27250,7 @@ impl<'mc> PotionSplashEvent<'mc> {
     }
 
     pub fn entity(&self) -> Result<crate::entity::ThrownPotion<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/ThrownPotion;";
         let res = self
@@ -28359,7 +28359,7 @@ impl<'mc> VillagerReplenishTradeEvent<'mc> {
     pub fn entity(
         &self,
     ) -> Result<crate::entity::AbstractVillager<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/entity/AbstractVillager;";
         let res = self

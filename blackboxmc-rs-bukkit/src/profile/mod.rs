@@ -376,7 +376,7 @@ impl<'mc> PlayerProfile<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self

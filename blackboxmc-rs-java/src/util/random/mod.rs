@@ -986,7 +986,7 @@ impl<'mc> JavaRandomGeneratorLeapableGenerator<'mc> {
         crate::util::random::JavaRandomGeneratorJumpableGenerator<'mc>,
         Box<dyn std::error::Error>,
     > {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/util/random/RandomGenerator$JumpableGenerator;";
         let res = self
@@ -1611,7 +1611,7 @@ impl<'mc> JavaRandomGeneratorArbitrarilyJumpableGenerator<'mc> {
         crate::util::random::JavaRandomGeneratorLeapableGenerator<'mc>,
         Box<dyn std::error::Error>,
     > {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/util/random/RandomGenerator$LeapableGenerator;";
         let res = self

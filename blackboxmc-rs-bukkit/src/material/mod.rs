@@ -91,7 +91,7 @@ impl<'mc> Chest<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::Chest<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/Chest;";
         let res = self
@@ -452,7 +452,7 @@ impl<'mc> Diode<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -829,7 +829,7 @@ impl<'mc> Pumpkin<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -1157,7 +1157,7 @@ impl<'mc> FlowerPot<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -1445,7 +1445,7 @@ impl<'mc> PoweredRail<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::PoweredRail<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/PoweredRail;";
         let res = self
@@ -1826,7 +1826,7 @@ impl<'mc> TripwireHook<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/MaterialData;";
         let res = self
@@ -2232,7 +2232,7 @@ impl<'mc> SimpleAttachableMaterialData<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/MaterialData;";
         let res = self
@@ -2649,7 +2649,7 @@ impl<'mc> Torch<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::Torch<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/Torch;";
         let res = self
@@ -3036,7 +3036,7 @@ impl<'mc> Comparator<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/MaterialData;";
         let res = self
@@ -3407,7 +3407,7 @@ impl<'mc> Button<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/MaterialData;";
         let res = self
@@ -3797,7 +3797,7 @@ impl<'mc> Coal<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -4249,7 +4249,7 @@ impl<'mc> Tree<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -4590,7 +4590,7 @@ impl<'mc> PistonBaseMaterial<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/MaterialData;";
         let res = self
@@ -4963,7 +4963,7 @@ impl<'mc> TrapDoor<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/MaterialData;";
         let res = self
@@ -5395,7 +5395,7 @@ impl<'mc> Crops<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -5710,7 +5710,7 @@ impl<'mc> SpawnEgg<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -6011,7 +6011,7 @@ impl<'mc> MonsterEggs<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/MaterialData;";
         let res = self
@@ -6031,12 +6031,12 @@ impl<'mc> MonsterEggs<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
-            let variant =
-                self.0
-                    .call_method(list.get(i)?, "toString", "()Ljava/lang/String;", vec![]);
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            let variant = self
+                .0
+                .call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
             let variant = self.jni_ref().translate_error(variant)?;
             let variant_str = self
                 .0
@@ -6376,7 +6376,7 @@ impl<'mc> Furnace<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::Furnace<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/Furnace;";
         let res = self
@@ -6705,7 +6705,7 @@ impl<'mc> Rails<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -7073,7 +7073,7 @@ impl<'mc> Sapling<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/MaterialData;";
         let res = self
@@ -7471,7 +7471,7 @@ impl<'mc> PistonExtensionMaterial<'mc> {
     pub fn clone(
         &self,
     ) -> Result<crate::material::PistonExtensionMaterial<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/PistonExtensionMaterial;";
         let res = self
@@ -7855,7 +7855,7 @@ impl<'mc> Lever<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/MaterialData;";
         let res = self
@@ -8225,7 +8225,7 @@ impl<'mc> DirectionalContainer<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/MaterialData;";
         let res = self
@@ -8564,7 +8564,7 @@ impl<'mc> NetherWarts<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::NetherWarts<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/NetherWarts;";
         let res = self
@@ -8893,7 +8893,7 @@ impl<'mc> MaterialData<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -9144,7 +9144,7 @@ impl<'mc> LongGrass<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -9457,7 +9457,7 @@ impl<'mc> Tripwire<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -9777,7 +9777,7 @@ impl<'mc> TexturedMaterial<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/MaterialData;";
         let res = self
@@ -9821,12 +9821,12 @@ impl<'mc> TexturedMaterial<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
-            let variant =
-                self.0
-                    .call_method(list.get(i)?, "toString", "()Ljava/lang/String;", vec![]);
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            let variant = self
+                .0
+                .call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
             let variant = self.jni_ref().translate_error(variant)?;
             let variant_str = self
                 .0
@@ -10196,7 +10196,7 @@ impl<'mc> Dispenser<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::Dispenser<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/Dispenser;";
         let res = self
@@ -10524,7 +10524,7 @@ impl<'mc> Cake<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -10844,7 +10844,7 @@ impl<'mc> Gate<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/MaterialData;";
         let res = self
@@ -11325,7 +11325,7 @@ impl<'mc> Step<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/MaterialData;";
         let res = self
@@ -11368,12 +11368,12 @@ impl<'mc> Step<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
-            let variant =
-                self.0
-                    .call_method(list.get(i)?, "toString", "()Ljava/lang/String;", vec![]);
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            let variant = self
+                .0
+                .call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
             let variant = self.jni_ref().translate_error(variant)?;
             let variant_str = self
                 .0
@@ -11679,7 +11679,7 @@ impl<'mc> SmoothBrick<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/MaterialData;";
         let res = self
@@ -11699,12 +11699,12 @@ impl<'mc> SmoothBrick<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
-            let variant =
-                self.0
-                    .call_method(list.get(i)?, "toString", "()Ljava/lang/String;", vec![]);
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
+            let variant = self
+                .0
+                .call_method(&obj, "toString", "()Ljava/lang/String;", vec![]);
             let variant = self.jni_ref().translate_error(variant)?;
             let variant_str = self
                 .0
@@ -12070,7 +12070,7 @@ impl<'mc> Leaves<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/MaterialData;";
         let res = self
@@ -12449,7 +12449,7 @@ impl<'mc> Dye<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/MaterialData;";
         let res = self
@@ -12755,7 +12755,7 @@ impl<'mc> PressurePlate<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/MaterialData;";
         let res = self
@@ -13063,7 +13063,7 @@ impl<'mc> Observer<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -13395,7 +13395,7 @@ impl<'mc> Stairs<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::Stairs<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/Stairs;";
         let res = self
@@ -13817,7 +13817,7 @@ impl<'mc> Sandstone<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -14136,7 +14136,7 @@ impl<'mc> EnderChest<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::EnderChest<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/EnderChest;";
         let res = self
@@ -14453,7 +14453,7 @@ impl<'mc> FurnaceAndDispenser<'mc> {
     pub fn clone(
         &self,
     ) -> Result<crate::material::FurnaceAndDispenser<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/FurnaceAndDispenser;";
         let res = self
@@ -14803,7 +14803,7 @@ impl<'mc> Bed<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/MaterialData;";
         let res = self
@@ -15147,7 +15147,7 @@ impl<'mc> RedstoneWire<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/MaterialData;";
         let res = self
@@ -15435,7 +15435,7 @@ impl<'mc> WoodenStep<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/MaterialData;";
         let res = self
@@ -15793,7 +15793,7 @@ impl<'mc> Vine<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/MaterialData;";
         let res = self
@@ -16140,7 +16140,7 @@ impl<'mc> Wood<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/MaterialData;";
         let res = self
@@ -16454,7 +16454,7 @@ impl<'mc> Banner<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -16806,7 +16806,7 @@ impl<'mc> Mushroom<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -17194,7 +17194,7 @@ impl<'mc> RedstoneTorch<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::RedstoneTorch<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/RedstoneTorch;";
         let res = self
@@ -17699,7 +17699,7 @@ impl<'mc> CocoaPlant<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -18116,7 +18116,7 @@ impl<'mc> Door<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -18651,7 +18651,7 @@ impl<'mc> ExtendedRails<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/MaterialData;";
         let res = self
@@ -19003,7 +19003,7 @@ impl<'mc> Cauldron<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -19278,7 +19278,7 @@ impl<'mc> Ladder<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::Ladder<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/Ladder;";
         let res = self
@@ -19633,7 +19633,7 @@ impl<'mc> Command<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -19919,7 +19919,7 @@ impl<'mc> DetectorRail<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::DetectorRail<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/DetectorRail;";
         let res = self
@@ -20325,7 +20325,7 @@ impl<'mc> Hopper<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -20702,7 +20702,7 @@ impl<'mc> Skull<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -21021,7 +21021,7 @@ impl<'mc> Sign<'mc> {
     }
 
     pub fn clone(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -21413,7 +21413,7 @@ impl<'mc> Wool<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::material::MaterialData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/material/MaterialData;";
         let res = self

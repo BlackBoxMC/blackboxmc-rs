@@ -149,9 +149,9 @@ impl<'mc> InventoryOpenEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::HumanEntity::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
@@ -409,7 +409,7 @@ impl<'mc> PrepareItemCraftEvent<'mc> {
     pub fn inventory(
         &self,
     ) -> Result<crate::inventory::CraftingInventory<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/CraftingInventory;";
         let res =
@@ -469,9 +469,9 @@ impl<'mc> PrepareItemCraftEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::HumanEntity::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
@@ -718,7 +718,7 @@ impl<'mc> PrepareAnvilEvent<'mc> {
     pub fn inventory(
         &self,
     ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/Inventory;";
         let res =
@@ -781,9 +781,9 @@ impl<'mc> PrepareAnvilEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::HumanEntity::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
@@ -1188,9 +1188,9 @@ impl<'mc> BrewEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::inventory::ItemStack::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
@@ -2110,7 +2110,7 @@ impl<'mc> SmithItemEvent<'mc> {
     pub fn inventory(
         &self,
     ) -> Result<crate::inventory::SmithingInventory<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/SmithingInventory;";
         let res =
@@ -2458,9 +2458,9 @@ impl<'mc> SmithItemEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::HumanEntity::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
@@ -3224,7 +3224,7 @@ impl<'mc> PrepareGrindstoneEvent<'mc> {
     pub fn inventory(
         &self,
     ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/Inventory;";
         let res =
@@ -3287,9 +3287,9 @@ impl<'mc> PrepareGrindstoneEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::HumanEntity::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
@@ -4024,7 +4024,7 @@ impl<'mc> CraftItemEvent<'mc> {
     pub fn inventory(
         &self,
     ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/Inventory;";
         let res =
@@ -4389,9 +4389,9 @@ impl<'mc> CraftItemEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::HumanEntity::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
@@ -5329,9 +5329,9 @@ impl<'mc> InventoryInteractEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::HumanEntity::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
@@ -5607,9 +5607,9 @@ impl<'mc> InventoryEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::HumanEntity::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
@@ -6211,9 +6211,9 @@ impl<'mc> InventoryCreativeEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::HumanEntity::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
@@ -7294,7 +7294,7 @@ impl<'mc> PrepareSmithingEvent<'mc> {
     pub fn inventory(
         &self,
     ) -> Result<crate::inventory::Inventory<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/Inventory;";
         let res =
@@ -7357,9 +7357,9 @@ impl<'mc> PrepareSmithingEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::HumanEntity::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
@@ -7613,7 +7613,7 @@ impl<'mc> TradeSelectEvent<'mc> {
     pub fn inventory(
         &self,
     ) -> Result<crate::inventory::MerchantInventory<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/inventory/MerchantInventory;";
         let res =
@@ -7735,9 +7735,9 @@ impl<'mc> TradeSelectEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::HumanEntity::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
@@ -8688,9 +8688,9 @@ impl<'mc> InventoryClickEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::HumanEntity::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
@@ -9184,9 +9184,9 @@ impl<'mc> InventoryDragEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::HumanEntity::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
@@ -9813,9 +9813,9 @@ impl<'mc> InventoryCloseEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::HumanEntity::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)
@@ -10127,9 +10127,9 @@ impl<'mc> PrepareInventoryResultEvent<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(crate::entity::HumanEntity::from_raw(&self.0, obj)?);
         }
         Ok(new_vec)

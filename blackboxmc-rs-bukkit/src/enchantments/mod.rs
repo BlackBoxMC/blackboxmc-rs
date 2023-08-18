@@ -275,7 +275,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
-        let res = jni.translate_error(res)?;
+        jni.translate_error(res)?;
         Ok(())
     }
 
@@ -307,7 +307,7 @@ impl<'mc> EnchantmentWrapper<'mc> {
         let cls = jni.find_class("void");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "stopAcceptingRegistrations", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
+        jni.translate_error(res)?;
         Ok(())
     }
 
@@ -1026,7 +1026,7 @@ impl<'mc> Enchantment<'mc> {
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
-        let res = jni.translate_error(res)?;
+        jni.translate_error(res)?;
         Ok(())
     }
 
@@ -1094,7 +1094,7 @@ impl<'mc> Enchantment<'mc> {
         let cls = jni.find_class("void");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "stopAcceptingRegistrations", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
+        jni.translate_error(res)?;
         Ok(())
     }
 

@@ -124,7 +124,7 @@ impl<'mc> FileConfiguration<'mc> {
     pub fn options(
         &self,
     ) -> Result<crate::configuration::ConfigurationOptions<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/configuration/ConfigurationOptions;";
         let res = self
@@ -950,9 +950,9 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -1129,9 +1129,9 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -1159,9 +1159,9 @@ impl<'mc> FileConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -1355,7 +1355,7 @@ impl<'mc> FileConfigurationOptions<'mc> {
     pub fn configuration(
         &self,
     ) -> Result<crate::configuration::Configuration<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/configuration/Configuration;";
         let res =
@@ -1446,9 +1446,9 @@ impl<'mc> FileConfigurationOptions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -1730,7 +1730,7 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         &self,
     ) -> Result<crate::configuration::file::YamlConfiguration<'mc>, Box<dyn std::error::Error>>
     {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/configuration/file/YamlConfiguration;";
         let res =
@@ -1843,9 +1843,9 @@ impl<'mc> YamlConfigurationOptions<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -2038,7 +2038,7 @@ impl<'mc> YamlConfiguration<'mc> {
     pub fn options(
         &self,
     ) -> Result<crate::configuration::ConfigurationOptions<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/configuration/ConfigurationOptions;";
         let res = self
@@ -2938,9 +2938,9 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -3117,9 +3117,9 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?
@@ -3147,9 +3147,9 @@ impl<'mc> YamlConfiguration<'mc> {
         let res = self.jni_ref().translate_error(res)?;
         let mut new_vec = Vec::new();
         let list = blackboxmc_java::util::JavaList::from_raw(&self.0, res.l()?)?;
-        let size = list.size()?;
-        for i in 0..=size {
-            let obj = list.get(i)?;
+        let iter = list.iterator()?;
+        while iter.has_next()? {
+            let obj = iter.next()?;
             new_vec.push(
                 self.jni_ref()
                     .get_string(unsafe { &jni::objects::JString::from_raw(*obj) })?

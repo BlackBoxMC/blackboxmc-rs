@@ -17905,7 +17905,7 @@ impl<'mc> JavaPrimitiveIteratorOfInt<'mc> {
     }
 
     pub fn next(&self) -> Result<i32, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Integer;";
         let res = self
@@ -18051,7 +18051,7 @@ impl<'mc> JavaPrimitiveIteratorOfLong<'mc> {
     }
 
     pub fn next(&self) -> Result<jni::objects::JObject<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Object;";
         let res = self
@@ -18548,7 +18548,7 @@ impl<'mc> JNIInstantiatable<'mc> for JavaEnumSet<'mc> {
 
 impl<'mc> JavaEnumSet<'mc> {
     pub fn clone(&self) -> Result<crate::util::JavaEnumSet<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/util/EnumSet;";
         let res = self
@@ -19800,7 +19800,7 @@ impl<'mc> JavaArrayDeque<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::util::JavaArrayDeque<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/util/ArrayDeque;";
         let res = self
@@ -20205,7 +20205,7 @@ impl<'mc> JavaPrimitiveIteratorOfDouble<'mc> {
     }
 
     pub fn next(&self) -> Result<f64, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Ljava/lang/Double;";
         let res = self

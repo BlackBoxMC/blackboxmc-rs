@@ -75,7 +75,7 @@ impl<'mc> Hatchable<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -468,7 +468,7 @@ impl<'mc> Lightable<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -888,7 +888,7 @@ impl<'mc> FaceAttachable<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -1420,7 +1420,7 @@ impl<'mc> Ageable<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -1813,7 +1813,7 @@ impl<'mc> Openable<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -2263,7 +2263,7 @@ impl<'mc> Rail<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -2633,7 +2633,7 @@ impl<'mc> JNIInstantiatable<'mc> for BlockData<'mc> {
 
 impl<'mc> BlockData<'mc> {
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -3061,7 +3061,7 @@ impl<'mc> Orientable<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -3454,7 +3454,7 @@ impl<'mc> Powerable<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -3994,7 +3994,7 @@ impl<'mc> Levelled<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -4434,7 +4434,7 @@ impl<'mc> MultipleFacing<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -4984,7 +4984,7 @@ impl<'mc> Snowable<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -5410,7 +5410,7 @@ impl<'mc> Directional<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -5947,7 +5947,7 @@ impl<'mc> Rotatable<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -6340,7 +6340,7 @@ impl<'mc> Hangable<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -6733,7 +6733,7 @@ impl<'mc> Waterlogged<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -7139,7 +7139,7 @@ impl<'mc> AnaloguePowerable<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -7544,7 +7544,7 @@ impl<'mc> Brushable<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -7939,7 +7939,7 @@ impl<'mc> Attachable<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -8356,7 +8356,7 @@ impl<'mc> Bisected<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self

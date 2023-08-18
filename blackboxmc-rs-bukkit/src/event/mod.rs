@@ -125,7 +125,7 @@ impl<'mc> HandlerList<'mc> {
         let cls = jni.find_class("void");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "unregisterAll", sig.as_str(), args);
-        let res = jni.translate_error(res)?;
+        jni.translate_error(res)?;
         Ok(())
     }
 
@@ -136,7 +136,7 @@ impl<'mc> HandlerList<'mc> {
         let cls = jni.find_class("void");
         let cls = jni.translate_error_with_class(cls)?;
         let res = jni.call_static_method(cls, "bakeAll", sig.as_str(), vec![]);
-        let res = jni.translate_error(res)?;
+        jni.translate_error(res)?;
         Ok(())
     }
 

@@ -164,7 +164,7 @@ impl<'mc> PistonHead<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -633,7 +633,7 @@ impl<'mc> Chest<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -1096,7 +1096,7 @@ impl<'mc> GlassPane<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -1516,7 +1516,7 @@ impl<'mc> TripwireHook<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -2004,7 +2004,7 @@ impl<'mc> PitcherCrop<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -2487,7 +2487,7 @@ impl<'mc> Lectern<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -2942,7 +2942,7 @@ impl<'mc> DaylightDetector<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -3360,7 +3360,7 @@ impl<'mc> StructureBlock<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -3818,7 +3818,7 @@ impl<'mc> PinkPetals<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -4264,7 +4264,7 @@ impl<'mc> Piston<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -4657,7 +4657,7 @@ impl<'mc> TNT<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -5092,7 +5092,7 @@ impl<'mc> Fence<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -5902,7 +5902,7 @@ impl<'mc> SculkCatalyst<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -6657,7 +6657,7 @@ impl<'mc> Furnace<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -7089,7 +7089,7 @@ impl<'mc> Sapling<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -7783,7 +7783,7 @@ impl<'mc> WallHangingSign<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -8283,7 +8283,7 @@ impl<'mc> TechnicalPiston<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -8752,7 +8752,7 @@ impl<'mc> Switch<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -9348,7 +9348,7 @@ impl<'mc> BubbleColumn<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -9816,7 +9816,7 @@ impl<'mc> Bell<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -10290,7 +10290,7 @@ impl<'mc> Bamboo<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -10743,7 +10743,7 @@ impl<'mc> Jigsaw<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -11166,7 +11166,7 @@ impl<'mc> Chain<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -11586,7 +11586,7 @@ impl<'mc> Lantern<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -12060,7 +12060,7 @@ impl<'mc> Dispenser<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -12737,7 +12737,7 @@ impl<'mc> RespawnAnchor<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -13141,7 +13141,7 @@ impl<'mc> Cake<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -13589,7 +13589,7 @@ impl<'mc> EndPortalFrame<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -14012,7 +14012,7 @@ impl<'mc> DecoratedPot<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -14475,7 +14475,7 @@ impl<'mc> GlowLichen<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -15054,7 +15054,7 @@ impl<'mc> Observer<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -15677,7 +15677,7 @@ impl<'mc> Stairs<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -16316,7 +16316,7 @@ impl<'mc> CalibratedSculkSensor<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -16972,7 +16972,7 @@ impl<'mc> EnderChest<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -17479,7 +17479,7 @@ impl<'mc> Bed<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -18036,7 +18036,7 @@ impl<'mc> AmethystCluster<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -18533,7 +18533,7 @@ impl<'mc> NoteBlock<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -19065,7 +19065,7 @@ impl<'mc> MangrovePropagule<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -19605,7 +19605,7 @@ impl<'mc> SculkSensor<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -20102,7 +20102,7 @@ impl<'mc> BigDripleaf<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -20547,7 +20547,7 @@ impl<'mc> Ladder<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -21028,7 +21028,7 @@ impl<'mc> Scaffolding<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -21457,7 +21457,7 @@ impl<'mc> BrewingStand<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -21859,7 +21859,7 @@ impl<'mc> Fire<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -22378,7 +22378,7 @@ impl<'mc> Hopper<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -22870,7 +22870,7 @@ impl<'mc> Repeater<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -23335,7 +23335,7 @@ impl<'mc> Slab<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -23754,7 +23754,7 @@ impl<'mc> Snow<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -24420,7 +24420,7 @@ impl<'mc> Cocoa<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -24947,7 +24947,7 @@ impl<'mc> Comparator<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -25368,7 +25368,7 @@ impl<'mc> RedstoneRail<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -25846,7 +25846,7 @@ impl<'mc> CaveVinesPlant<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -26247,7 +26247,7 @@ impl<'mc> Light<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -26698,7 +26698,7 @@ impl<'mc> SmallDripleaf<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -27184,7 +27184,7 @@ impl<'mc> TrapDoor<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -27750,7 +27750,7 @@ impl<'mc> Grindstone<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -28402,7 +28402,7 @@ impl<'mc> Beehive<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -28825,7 +28825,7 @@ impl<'mc> CoralWallFan<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -29288,7 +29288,7 @@ impl<'mc> SculkVein<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -29860,7 +29860,7 @@ impl<'mc> Tripwire<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -30434,7 +30434,7 @@ impl<'mc> Wall<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -31106,7 +31106,7 @@ impl<'mc> Farmland<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -31552,7 +31552,7 @@ impl<'mc> Gate<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -32175,7 +32175,7 @@ impl<'mc> SculkShrieker<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -32749,7 +32749,7 @@ impl<'mc> Campfire<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -33228,7 +33228,7 @@ impl<'mc> Dripleaf<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -33695,7 +33695,7 @@ impl<'mc> SeaPickle<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -34121,7 +34121,7 @@ impl<'mc> RedstoneWallTorch<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -34825,7 +34825,7 @@ impl<'mc> WallSign<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -35331,7 +35331,7 @@ impl<'mc> RedstoneWire<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -35711,7 +35711,7 @@ impl<'mc> Jukebox<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -36258,7 +36258,7 @@ impl<'mc> Barrel<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -36732,7 +36732,7 @@ impl<'mc> CommandBlock<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -37191,7 +37191,7 @@ impl<'mc> Door<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -37798,7 +37798,7 @@ impl<'mc> ChiseledBookshelf<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -38190,7 +38190,7 @@ impl<'mc> HangingSign<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -38693,7 +38693,7 @@ impl<'mc> Candle<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -39231,7 +39231,7 @@ impl<'mc> PointedDripstone<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -39654,7 +39654,7 @@ impl<'mc> LightningRod<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -40250,7 +40250,7 @@ impl<'mc> Sign<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -40940,7 +40940,7 @@ impl<'mc> CaveVines<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self
@@ -41410,7 +41410,7 @@ impl<'mc> TurtleEgg<'mc> {
     }
 
     pub fn clone(&self) -> Result<crate::block::data::BlockData<'mc>, Box<dyn std::error::Error>> {
-        let mut args = Vec::new();
+        let args = Vec::new();
         let mut sig = String::from("(");
         sig += ")Lorg/bukkit/block/data/BlockData;";
         let res = self

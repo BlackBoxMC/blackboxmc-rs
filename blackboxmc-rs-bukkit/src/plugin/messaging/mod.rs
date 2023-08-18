@@ -1259,7 +1259,7 @@ impl<'mc> StandardMessenger<'mc> {
             sig.as_str(),
             vec![jni::objects::JValueGen::from(val_1)],
         );
-        let res = jni.translate_error(res)?;
+        jni.translate_error(res)?;
         Ok(())
     }
 
@@ -1292,7 +1292,7 @@ impl<'mc> StandardMessenger<'mc> {
                 jni::objects::JValueGen::from(val_3),
             ],
         );
-        let res = jni.translate_error(res)?;
+        jni.translate_error(res)?;
         Ok(())
     }
 

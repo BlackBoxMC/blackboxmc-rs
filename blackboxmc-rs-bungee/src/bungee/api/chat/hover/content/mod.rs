@@ -57,7 +57,8 @@ let val_3 = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from
 let cls = jni.find_class("net/md_5/bungee/api/chat/hover/content/Item"); let cls = jni.translate_error_with_class(cls)?;
 let res = jni.new_object(cls,
 sig.as_str(),vec![jni::objects::JValueGen::from(val_1),jni::objects::JValueGen::from(val_2),jni::objects::JValueGen::from(val_3)]);
-let res = jni.translate_error_no_gen(res)?;
+let res = 
+jni.translate_error_no_gen(res)?;
 crate::bungee::api::chat::hover::content::Item::from_raw(&jni,res
 )}
 
@@ -326,7 +327,8 @@ let val_3 = jni::objects::JValueGen::Object(unsafe { jni::objects::JObject::from
 let cls = jni.find_class("net/md_5/bungee/api/chat/hover/content/Entity"); let cls = jni.translate_error_with_class(cls)?;
 let res = jni.new_object(cls,
 sig.as_str(),vec![jni::objects::JValueGen::from(val_1),jni::objects::JValueGen::from(val_2),jni::objects::JValueGen::from(val_3)]);
-let res = jni.translate_error_no_gen(res)?;
+let res = 
+jni.translate_error_no_gen(res)?;
 crate::bungee::api::chat::hover::content::Entity::from_raw(&jni,res
 )}
 
@@ -592,7 +594,8 @@ impl<'mc> ItemSerializer<'mc> {
 let cls = jni.find_class("net/md_5/bungee/api/chat/hover/content/ItemSerializer"); let cls = jni.translate_error_with_class(cls)?;
 let res = jni.new_object(cls,
 sig.as_str(),vec![]);
-let res = jni.translate_error_no_gen(res)?;
+let res = 
+jni.translate_error_no_gen(res)?;
 crate::bungee::api::chat::hover::content::ItemSerializer::from_raw(&jni,res
 )}
 
@@ -813,7 +816,8 @@ impl<'mc> TextSerializer<'mc> {
 let cls = jni.find_class("net/md_5/bungee/api/chat/hover/content/TextSerializer"); let cls = jni.translate_error_with_class(cls)?;
 let res = jni.new_object(cls,
 sig.as_str(),vec![]);
-let res = jni.translate_error_no_gen(res)?;
+let res = 
+jni.translate_error_no_gen(res)?;
 crate::bungee::api::chat::hover::content::TextSerializer::from_raw(&jni,res
 )}
 
@@ -1034,7 +1038,8 @@ impl<'mc> Content<'mc> {
 let cls = jni.find_class("net/md_5/bungee/api/chat/hover/content/Content"); let cls = jni.translate_error_with_class(cls)?;
 let res = jni.new_object(cls,
 sig.as_str(),vec![]);
-let res = jni.translate_error_no_gen(res)?;
+let res = 
+jni.translate_error_no_gen(res)?;
 crate::bungee::api::chat::hover::content::Content::from_raw(&jni,res
 )}
 
@@ -1232,7 +1237,8 @@ sig += ")V";
 let cls = jni.find_class("net/md_5/bungee/api/chat/hover/content/Text"); let cls = jni.translate_error_with_class(cls)?;
 let res = jni.new_object(cls,
 sig.as_str(),args);
-let res = jni.translate_error_no_gen(res)?;
+let res = 
+jni.translate_error_no_gen(res)?;
 crate::bungee::api::chat::hover::content::Text::from_raw(&jni,res
 )}
 
@@ -1444,7 +1450,8 @@ impl<'mc> EntitySerializer<'mc> {
 let cls = jni.find_class("net/md_5/bungee/api/chat/hover/content/EntitySerializer"); let cls = jni.translate_error_with_class(cls)?;
 let res = jni.new_object(cls,
 sig.as_str(),vec![]);
-let res = jni.translate_error_no_gen(res)?;
+let res = 
+jni.translate_error_no_gen(res)?;
 crate::bungee::api::chat::hover::content::EntitySerializer::from_raw(&jni,res
 )}
 
